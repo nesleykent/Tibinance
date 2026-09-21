@@ -360,13 +360,13 @@ export async function readMarket(bitmap, onStep = () => {}) {
        * that was read - now measured from the header itself, a landmark the
        * crop no longer depends on, rather than from the crop edge.
        */
-      const above = rows[0]._top;
-      /*
-       * _top is relative to the body crop. Normal header-to-row padding can be
-       * more than half a row pitch, so rounding creates a phantom missing row.
-       * Count only complete row pitches above the first recognised offer.
-       */
-      const missingAbove = median > 0 ? Math.max(0, Math.floor(above / median)) : 0;
+      // Do not infer a missing first offer from the first OCR glyph's distance
+      // to the crop edge. That distance includes the normal visual padding below
+      // Tibia's column header and Tesseract's glyph bounding-box offset, so it is
+      // not a row-count measurement. Missing rows BETWEEN recognised offers are
+      // still detected above from doubled row gaps. The top row itself is instead
+      // protected by the low-confidence body pass and the row checksum.
+      const missingAbove = 0;
       if (missingAbove > 0) {
         warnings.push(`${tbl.side}: ${missingAbove} offer${missingAbove === 1 ? '' : 's'} ` +
           `above the first row read could not be recognised — the top row holds the ` +
