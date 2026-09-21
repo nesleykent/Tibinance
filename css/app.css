@@ -136,7 +136,7 @@ td.num.neg{color:var(--bad)}
 .cnums{
   grid-column:5; justify-self:end;
   display:grid; grid-auto-flow:column; gap:0 14px; align-items:center;
-  grid-template-columns:22ch 8ch 21ch 18ch;
+  grid-template-columns:22ch 13ch 21ch 19ch;
   color:var(--muted); font-variant-numeric:tabular-nums;
   font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.74rem;
 }
@@ -144,17 +144,17 @@ td.num.neg{color:var(--bad)}
 .cnums b{color:var(--ink);font-weight:600}
 .cnums i{font-style:normal;opacity:.55}
 /* drop the widest pairs first when there is not room for all four */
-@media(max-width:860px){
-  .cnums{grid-template-columns:22ch 8ch 21ch}
+@media(max-width:920px){
+  .cnums{grid-template-columns:22ch 13ch 21ch}
   .cnums .gold{display:none}
 }
 @media(max-width:730px){
-  .cnums{grid-template-columns:22ch 8ch}
+  .cnums{grid-template-columns:22ch 13ch}
   .cnums .vol{display:none}
 }
 @media(max-width:620px){
   .cline{grid-template-columns:1.2em 1fr 1em 6.2em}
-  .cnums{grid-column:1 / -1;justify-self:start;grid-template-columns:22ch 8ch;padding-left:2.2em}
+  .cnums{grid-column:1 / -1;justify-self:start;grid-template-columns:22ch 13ch;padding-left:2.2em}
 }
 .cbody{padding:0 10px 10px;border-top:1px solid var(--line);margin-top:2px}
 .cbody .cfile{
@@ -221,3 +221,22 @@ td.best::before{
 .kept h5{margin:0 0 4px;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink)}
 .kept p{margin:0 0 6px;font-size:.78rem;line-height:1.45}
 .kept .fine{color:var(--muted);font-size:.73rem}
+
+/* ---- accounting columns ---------------------------------------------- */
+/* the flex row is a span inside the cell, never the cell itself */
+.acct{
+  display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+  font-variant-numeric:tabular-nums lining-nums;
+}
+.acct .cur{
+  color:var(--muted); opacity:.5; font-size:.85em; font-weight:400; flex:0 0 auto;
+}
+.acct .val{flex:0 0 auto}
+td.money{text-align:right}
+td.money.neg,td.money.neg .val{color:var(--bad)}
+td.money.best .cur{opacity:.7}
+.dash{color:var(--muted);opacity:.5}
+
+/* a per-row SI prefix cannot be factored into a column marker, so these cells
+   carry the full symbol with the value and stay plainly right-aligned */
+td.qty{text-align:right;font-variant-numeric:tabular-nums lining-nums;white-space:nowrap}

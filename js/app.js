@@ -12,18 +12,25 @@ const $ = id => document.getElementById(id);
 const SI_GROUP = '\u202F';
 const nf = new Intl.NumberFormat('en-US');
 const fmt = n => nf.format(n).replace(/,/g, SI_GROUP);
-// Gold sums run to billions. SI prefixes keep the column narrow; the exact
-// figure stays available in the cell's tooltip.
-const fmtSI = n => {
+/*
+ * Gold sums run to billions, so they are written with an SI prefix.
+ *
+ * A prefix is not a word that can stand on its own: "10 G" means nothing. The
+ * prefix and the unit symbol together form one inseparable symbol, written with
+ * no space between them - 10 Ggp, not 10 G gp. The only space is the one
+ * between the numeric value and that symbol, and it is a narrow NO-BREAK space
+ * so the quantity never splits across lines.
+ */
+const fmtSI = (n, unit = '') => {
   if (!Number.isFinite(n)) return '—';
   const a = Math.abs(n);
-  for (const [div, suf] of [[1e9, 'G'], [1e6, 'M'], [1e3, 'k']]) {
+  for (const [div, prefix] of [[1e9, 'G'], [1e6, 'M'], [1e3, 'k']]) {
     if (a >= div) {
       const v = (n / div).toPrecision(3).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '');
-      return `${v}${SI_GROUP}${suf}`;
+      return `${v}${SI_GROUP}${prefix}${unit}`;
     }
   }
-  return fmt(n);
+  return unit ? `${fmt(n)}${SI_GROUP}${unit}` : fmt(n);
 };
 const esc = s => String(s).replace(/[&<>"']/g, c =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -40,6 +47,43 @@ const spread = r => r.sell - r.buy;
  * cannot be rebuilt from the stored best price and volume, and are persisted.
  */
 const goldOf = rows => rows.reduce((t, r) => t + r.amount * r.price, 0);
+
+/*
+ * Accounting presentation for the monetary columns.
+ *
+ *   - the currency symbol sits at the left edge of the cell, the digits at the
+ *     right, so a column of figures reads as one block
+ *   - negatives are wrapped in parentheses rather than carrying a minus sign
+ *   - a true zero is shown as a dash, so it is not mistaken for a small value
+ *   - digits are grouped in threes (ISO 80000-1 thin space, never a comma)
+ *
+ * The grouping and the prefix rules are the SI ones; only the placement of the
+ * symbol is the accounting convention, which applies to a column of figures
+ * rather than to a quantity written in a sentence.
+ */
+const acct = (n, unit) => {
+  // The flex row lives INSIDE the cell: a <td> must keep display:table-cell or
+  // it stops taking part in the table's column sizing.
+  const body = !Number.isFinite(n) || n === 0
+    ? '<span class="dash">—</span>'
+    : (n < 0 ? `(${fmt(Math.abs(n))})` : fmt(n));
+  return `<span class="acct"><span class="cur">${unit}</span><span class="val">${body}</span></span>`;
+};
+
+/*
+ * Same, for sums large enough to want an SI prefix.
+ *
+ * Here the symbol stays WITH the value - 1.93 Ggp - instead of being factored
+ * out to the left of the cell. A symbol can only become a column marker when it
+ * is identical on every row, and these are not: one row is Mgp and the next is
+ * Ggp. Splitting them would leave "gp … 1.93 G", and a prefix with no unit
+ * attached to it is not a quantity.
+ */
+const acctSI = (n, unit) => {
+  if (!Number.isFinite(n)) return '<span class="dash">—</span>';
+  const v = fmtSI(Math.abs(n), unit);
+  return n < 0 ? `(${v})` : v;
+};
 
 /* ---------------------------------------------------------------- analysis */
 function analyse(state) {
@@ -195,10 +239,10 @@ function render(state) {
   // Each figure sits in its own fixed-width cell so the columns line up down
   // the whole list; ragged numbers are unreadable when scanning a batch.
   const nums = a.sell
-    ? `<span class="cn price"><b>${fmt(a.sell)}</b>/<b>${fmt(a.buy)}</b> <i>gp/TC</i></span>
-       <span class="cn spread">Δ${fmt(a.spread)}</span>
-       <span class="cn vol">${fmt(a.sellVolume)}/${fmt(a.buyVolume)} <i>TC</i></span>
-       <span class="cn gold">${fmtSI(a.goldDemand)}/${fmtSI(a.goldSupply)} <i>gp</i></span>`
+    ? `<span class="cn price"><b>${fmt(a.sell)}</b>/<b>${fmt(a.buy)}</b>&#8239;<i>gp/TC</i></span>
+       <span class="cn spread">Δ${a.spread < 0 ? `(${fmt(Math.abs(a.spread))})` : fmt(a.spread)}&#8239;<i>gp/TC</i></span>
+       <span class="cn vol">${fmt(a.sellVolume)}/${fmt(a.buyVolume)}&#8239;<i>TC</i></span>
+       <span class="cn gold">${fmtSI(a.goldDemand, 'gp')}/${fmtSI(a.goldSupply, 'gp')}</span>`
     : '';
 
   el.innerHTML = `<details ${state.open ? 'open' : ''}>
@@ -391,8 +435,8 @@ async function renderTable() {
       if (vals.length > 1) best[k] = BEST[k] < 0 ? Math.min(...vals) : Math.max(...vals);
     }
   }
-  const mark = (r, k) => (best[k] !== undefined && valueOf(r, k) === best[k])
-    ? ` class="num best" title="${esc(BEST_WHY[k])}"` : ' class="num"';
+  const mark = (r, k, extra = '') => (best[k] !== undefined && valueOf(r, k) === best[k])
+    ? ` class="num ${extra} best" title="${esc(BEST_WHY[k])}"` : ` class="num ${extra}"`;
 
   const worlds = new Set(rows.map(r => r.world)).size;
   $('count').textContent = rows.length
@@ -403,14 +447,14 @@ async function renderTable() {
   $('tbody').innerHTML = rows.map(r => `<tr>
       <td>${esc(r.world)}</td><td>${esc(r.type)}</td>
       <td class="be be-${esc(r.battleye)}">${esc(r.battleye)}</td>
-      <td${mark(r, 'sell')}>${fmt(r.sell)}</td>
-      <td${mark(r, 'sellVolume')}>${fmt(r.sellVolume)}</td>
-      <td${mark(r, 'goldDemand')} title="${Number.isFinite(r.goldDemand) ? fmt(r.goldDemand) + ' gp' : 'not recorded'}">${fmtSI(r.goldDemand)}</td>
-      <td${mark(r, 'buy')}>${fmt(r.buy)}</td>
-      <td${mark(r, 'buyVolume')}>${fmt(r.buyVolume)}</td>
-      <td${mark(r, 'goldSupply')} title="${Number.isFinite(r.goldSupply) ? fmt(r.goldSupply) + ' gp' : 'not recorded'}">${fmtSI(r.goldSupply)}</td>
-      <td class="num${spread(r) < 0 ? ' neg' : ''}${best.spread === spread(r) ? ' best' : ''}"
-          title="${best.spread === spread(r) ? esc(BEST_WHY.spread) : (spread(r) < 0 ? 'crossed market — a price is almost certainly misread' : '')}">${fmt(spread(r))}</td>
+      <td${mark(r, 'sell', 'money')}>${acct(r.sell, 'gp/TC')}</td>
+      <td${mark(r, 'sellVolume', 'money')}>${acct(r.sellVolume, 'TC')}</td>
+      <td${mark(r, 'goldDemand', 'qty')} title="${Number.isFinite(r.goldDemand) ? fmt(r.goldDemand) + SI_GROUP + 'gp' : 'not recorded'}">${acctSI(r.goldDemand, 'gp')}</td>
+      <td${mark(r, 'buy', 'money')}>${acct(r.buy, 'gp/TC')}</td>
+      <td${mark(r, 'buyVolume', 'money')}>${acct(r.buyVolume, 'TC')}</td>
+      <td${mark(r, 'goldSupply', 'qty')} title="${Number.isFinite(r.goldSupply) ? fmt(r.goldSupply) + SI_GROUP + 'gp' : 'not recorded'}">${acctSI(r.goldSupply, 'gp')}</td>
+      <td class="num money${spread(r) < 0 ? ' neg' : ''}${best.spread === spread(r) ? ' best' : ''}"
+          title="${best.spread === spread(r) ? esc(BEST_WHY.spread) : (spread(r) < 0 ? 'crossed market — a price is almost certainly misread' : '')}">${acct(spread(r), 'gp/TC')}</td>
       <td><time datetime="${esc(r.capturedAt)}">${esc(r.capturedAt)}</time></td>
       <td class="hash" title="${esc(r.hash)}">${esc(r.hash.slice(0, 10))}</td>
       <td><button class="del" data-del="${esc(r.hash)}" title="Remove">✕</button></td>
@@ -538,7 +582,9 @@ document.querySelector('#table thead').addEventListener('click', e => {
 $('exportJson').addEventListener('click', () =>
   download('observations.json', JSON.stringify(rowsCache, null, 2), 'application/json'));
 $('exportCsv').addEventListener('click', () => {
-  const head = 'World,Type,BattlEye,Sell,Sell Volume,Gold Demand,Buy,Buy Volume,Gold Supply,Spread,Capture,Hash';
+    // Units belong in the header of a data file; the values stay plain integers.
+const head = 'World,Type,BattlEye,Sell (gp/TC),Sell Volume (TC),Gold Demand (gp),' +
+               'Buy (gp/TC),Buy Volume (TC),Gold Supply (gp),Spread (gp/TC),Capture,Hash';
   const body = rowsCache.map(r => [r.world, r.type, r.battleye, r.sell, r.sellVolume,
     r.goldDemand ?? '', r.buy, r.buyVolume, r.goldSupply ?? '', spread(r), r.capturedAt, r.hash]
     .map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');

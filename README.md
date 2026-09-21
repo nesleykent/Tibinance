@@ -175,20 +175,63 @@ The database table is the comparison view.
 
 ## Numbers
 
-Quantities follow **ISO 80000-1 (SI)**: digits are written in groups of three
-separated by a thin space, and the unit follows the value.
+Quantities follow **ISO 80000-1 (SI)**.
+
+### Digit grouping
+
+Digits go in groups of three separated by a thin space:
 
 ```
-48 784 gp/TC        225 625 TC
+48 784        225 625        1 931 863 450
 ```
 
-A comma or a point is never used to group digits, because the two swap meaning
-between locales — `48,784` reads as forty-eight thousand in one country and as
-`48.784` in another. The thin space is unambiguous everywhere. It is a narrow
-no-break space (U+202F), so a quantity never wraps across lines.
+Never a comma or a point, because the two swap meaning between locales —
+`48,784` reads as forty-eight thousand in one country and as `48.784` in
+another. The separator is a narrow no-break space (U+202F), so a number never
+wraps across lines.
 
-Exports are different on purpose: `observations.json` and the CSV carry plain
-integers with no separators at all, because those files are read by machines.
+### Units and prefixes
+
+A unit follows its value, separated by one narrow no-break space:
+
+```
+4 084 gp/TC        39 600 TC
+```
+
+Gold sums reach billions, so they take an SI prefix. **A prefix is bound to the
+unit symbol with no space between them** — the two form a single inseparable
+symbol:
+
+```
+1.93 Ggp        89.3 Mgp        10 Ggp
+```
+
+Not `1.93 G gp`, and never a bare `1.93 G`: a prefix on its own is not a
+quantity. Hover any of these for the exact figure.
+
+Prefix symbols are case-sensitive — `k` for 10³, `M` for 10⁶, `G` for 10⁹ — and
+are never compounded.
+
+### Accounting presentation
+
+The database table is a table of figures, so it is set the way a ledger is:
+
+| | |
+|---|---|
+| Symbol placement | the unit sits at the left edge of the cell, digits at the right, so a column reads as one block |
+| Negative values | in parentheses — `(1 000)` — not with a minus sign |
+| Zero and missing | an em dash, so neither is mistaken for a small value |
+| Alignment | tabular lining figures, so digits line up down the column |
+
+A symbol is factored out to the cell edge **only when it is the same on every
+row**. The gold columns carry a different prefix per row — `Mgp` on one,
+`Ggp` on the next — so there the full symbol stays with its value instead.
+
+### Where none of this applies
+
+`observations.json` and the CSV carry plain integers with no separators,
+prefixes or symbols at all, because they are read by machines. The CSV states
+each unit in its column heading instead: `Sell (gp/TC)`, `Gold Demand (gp)`.
 
 ## Dates and times
 
