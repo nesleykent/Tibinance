@@ -358,6 +358,56 @@ export async function readMarket(bitmap, onStep = () => {}) {
       else if (!rows[j].ok && v.ok) rows[j] = v;
     }
     rows.sort((p, q) => p._cy - q._cy);
+
+    /*
+     * If both full-table passes miss a row, the regular row pitch still tells
+     * us exactly where that row should be. Re-read only that narrow horizontal
+     * band as SINGLE_LINE. This is deliberately a rescue pass, not a third
+     * full-table interpretation: it runs only inside a gap large enough to hold
+     * one or more missing offers, and a recovered row still has to parse into
+     * all three numeric columns.
+     */
+    const rescueMissingRows = async () => {
+      if (rows.length < 3) return;
+      const gs = rows.slice(1).map((r, j) => r._cy - rows[j]._cy);
+      const normal = [...gs].sort((x, y) => x - y)[Math.floor(gs.length / 2)];
+      if (!(normal > 0)) return;
+
+      const rescued = [];
+      for (let j = 0; j < rows.length - 1; j++) {
+        const left = rows[j], right = rows[j + 1];
+        const missing = Math.max(0, Math.round((right._cy - left._cy) / normal) - 1);
+        for (let m = 1; m <= missing; m++) {
+          const expected = left._cy + normal * m;
+          const half = Math.max(a.h * SCALE * 0.65, normal * 0.38);
+          const sy0 = Math.max(0, Math.floor(expected - half));
+          const sy1 = Math.min(crop.height, Math.ceil(expected + half));
+          if (sy1 <= sy0) continue;
+
+          const stripe = cropCanvas(crop, 0, sy0, crop.width, sy1, 1);
+          await worker.setParameters({
+            tessedit_pageseg_mode: Tesseract.PSM.SINGLE_LINE,
+            tessedit_char_whitelist: '0123456789,'
+          });
+          const found = parseRows(words(await worker.recognize(stripe), 0));
+          for (const v of found) {
+            v._cy += sy0;
+            v._top += sy0;
+            // A rescue is useful only near the row position predicted by pitch.
+            if (Math.abs(v._cy - expected) <= half) rescued.push(v);
+          }
+        }
+      }
+
+      for (const v of rescued.sort((p, q) => p._cy - q._cy)) {
+        const j = rows.findIndex(r => Math.abs(r._cy - v._cy) <= rowTol);
+        if (j < 0) rows.push(v);
+        else if (!rows[j].ok && v.ok) rows[j] = v;
+      }
+      rows.sort((p, q) => p._cy - q._cy);
+    };
+    await rescueMissingRows();
+
     /*
      * Offer rows are evenly spaced. A row that OCR missed entirely leaves no
      * numbers to checksum, so the only trace it leaves is a double-height gap
