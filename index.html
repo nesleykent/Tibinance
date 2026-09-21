@@ -65,7 +65,14 @@
       <div class="actions">
         <input type="search" id="filter" class="filter" placeholder="filter world…" aria-label="Filter by world">
         <label class="mini"><input type="checkbox" id="latestOnly"> latest per world</label>
+        <label class="mini" title="IAS 1.38 — present the preceding capture alongside the current one"><input type="checkbox" id="comparatives"> comparatives</label>
         <label class="mini"><input type="checkbox" id="compare" checked> highlight best</label>
+        <label class="mini" title="ISO 80000-1 asks for a thin space; accounting asks for a comma. The two cannot both be honoured, so pick one.">digits
+          <select id="sep" class="sep" aria-label="Thousands separator">
+            <option value=",">48,784</option>
+            <option value="&#8239;">48&#8239;784</option>
+          </select>
+        </label>
         <button id="exportJson" class="btn">Export JSON</button>
         <button id="exportCsv" class="btn">Export CSV</button>
         <button id="importBtn" class="btn">Import</button>
@@ -73,9 +80,20 @@
         <input type="file" id="importFile" accept="application/json" hidden>
       </div>
     </div>
+    <details id="disclosure" class="disclosure" hidden>
+      <summary id="disclosureLine"></summary>
+      <div id="disclosureNote" class="note"></div>
+    </details>
     <div class="table-wrap">
       <table id="table">
         <thead>
+          <tr class="grp">
+            <th colspan="3"></th>
+            <th colspan="3" class="g-sell" title="Offers to sell coins: what sellers are asking, and the gold that would satisfy them">Sell side</th>
+            <th colspan="3" class="g-buy" title="Offers to buy coins: what buyers are bidding, and the gold they have committed">Buy side</th>
+            <th class="g-derived" title="Derived measure — not read from the screenshot">Derived</th>
+            <th colspan="3"></th>
+          </tr>
           <tr>
             <th data-sort="world">World</th><th data-sort="type">Type</th><th data-sort="battleye">BattlEye</th>
             <th class="num" data-sort="sell" title="Best (lowest) Sell price. Lower is cheaper to buy coins.">Sell <span class="unit">gp/TC</span></th>

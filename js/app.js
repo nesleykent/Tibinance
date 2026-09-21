@@ -5,13 +5,32 @@ import { readMarket, disposeOcr } from './ocr.js';
 import * as store from './store.js';
 
 const $ = id => document.getElementById(id);
-// ISO 80000-1 (SI): digits are written in groups of three separated by a thin
-// space. A comma or a point is never used as the group separator, because the
-// two swap meaning between locales - 48,784 reads as 48784 in one place and as
-// 48.784 in another. A narrow NO-BREAK space keeps a number from wrapping.
-const SI_GROUP = '\u202F';
+/*
+ * Digit grouping, and the one place where the two standards in use here
+ * genuinely contradict each other.
+ *
+ *   ISO 80000-1 (SI): groups of three separated by a thin space. A comma or a
+ *     point "shall not be used", because the two swap meaning between locales -
+ *     48,784 is forty-eight thousand in one country and 48.784 in another.
+ *   Accounting: the comma (or the point, depending on locale) IS the thousands
+ *     separator, and a ledger is expected to show it.
+ *
+ * No single rendering satisfies both, so the separator is a setting. Everything
+ * else stays SI regardless: prefixes bound to their unit, one narrow no-break
+ * space between value and symbol, ISO 8601 timestamps.
+ */
+const SI_GROUP = '\u202F';        // narrow no-break space
+const SEP_KEY = 'tc_group_sep';
+const SEPARATORS = { ',': 'comma', [SI_GROUP]: 'space' };
+
+let groupSep = ',';
+try {
+  const saved = localStorage.getItem(SEP_KEY);
+  if (saved && saved in SEPARATORS) groupSep = saved;
+} catch { /* private mode or blocked storage - keep the default */ }
+
 const nf = new Intl.NumberFormat('en-US');
-const fmt = n => nf.format(n).replace(/,/g, SI_GROUP);
+const fmt = n => nf.format(n).replace(/,/g, groupSep);
 /*
  * Gold sums run to billions, so they are written with an SI prefix.
  *
@@ -27,7 +46,7 @@ const fmtSI = (n, unit = '') => {
   for (const [div, prefix] of [[1e9, 'G'], [1e6, 'M'], [1e3, 'k']]) {
     if (a >= div) {
       const v = (n / div).toPrecision(3).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '');
-      return `${v}${SI_GROUP}${prefix}${unit}`;
+      return `${v}${SI_GROUP}${prefix}${unit}`;   // value-to-symbol space is always SI
     }
   }
   return unit ? `${fmt(n)}${SI_GROUP}${unit}` : fmt(n);
@@ -405,6 +424,78 @@ const BEST_WHY = {
 
 const valueOf = (r, k) => (k === 'spread' ? spread(r) : r[k]);
 
+/*
+ * IFRS 18 "Presentation and Disclosure in Financial Statements" replaces IAS 1
+ * for periods beginning on or after 1 January 2027, early application allowed.
+ * What it asks of a set of figures like this one:
+ *
+ *   - state the presentation currency, the level of rounding and the period
+ *     covered, so a reader knows what the numbers are and when they are from
+ *   - present items in defined categories, keeping a derived subtotal visibly
+ *     apart from the figures it is computed from
+ *   - do not offset items that are separate
+ *   - label items meaningfully; never park something under "other"
+ *   - where a measure is not defined by any standard, say so and reconcile it
+ *     to the underlying figures (the treatment IFRS 18 requires of
+ *     management-defined performance measures)
+ */
+function disclosure(rows, priorRows = []) {
+  const el = $('disclosure');
+  if (!rows.length) { el.hidden = true; return; }
+  el.hidden = false;
+  // the period must cover everything presented, comparatives included
+  const times = [...rows, ...priorRows].map(r => r.capturedAt).sort();
+  const period = times[0] === times[times.length - 1]
+    ? `as at ${times[0]}`
+    : `${times[0]} to ${times[times.length - 1]}`;
+
+  $('disclosureLine').innerHTML =
+    `Presented in <b>gp</b> (Tibia gold) · rates <b>gp/TC</b> · volumes <b>TC</b> · ` +
+    `unrounded · ${esc(period)} <span class="what">Basis of preparation</span>`;
+
+  $('disclosureNote').innerHTML = `
+    <dl>
+      <dt>Presentation currency and rounding</dt>
+      <dd>Gold pieces (<b>gp</b>). Prices are rates in <b>gp/TC</b>; volumes are coins
+          in <b>TC</b>. No rounding is applied to what is stored. Gold sums are shown
+          with an SI prefix (k, M, G) for legibility only — hover any figure for the
+          recorded value, and the exports carry it in full.</dd>
+
+      <dt>Period covered</dt>
+      <dd>${esc(period)}, in local client time as recorded by the screenshot, written
+          to ISO 8601.</dd>
+
+      <dt>Categories</dt>
+      <dd>Figures are grouped by the side of the market they come from. Sell side and
+          buy side are presented <b>gross and are never offset</b> against one another:
+          a single net figure would conceal how thin or deep either side is.</dd>
+
+      <dt>Derived measures</dt>
+      <dd>These are not read from the screenshot and are defined by nobody but this
+          project, so each is reconciled to the figures it comes from:
+          <ul>
+            <li><b>Spread</b> = best Sell − best Buy</li>
+            <li><b>Gold Demand</b> = Σ (sell amount × sell price) over every visible sell offer</li>
+            <li><b>Gold Supply</b> = Σ (buy amount × buy price) over every visible buy offer</li>
+          </ul>
+          Spread is computed when the table is drawn. The two gold sums are stored,
+          because they are sums over individual offers and cannot be rebuilt once the
+          offers themselves are gone.</dd>
+
+      <dt>Basis of the underlying figures</dt>
+      <dd>Read from the market window by OCR in the browser. Each offer is checked
+          against the screenshot's own Total Price column — amount × price must equal
+          the total — and a row failing that check cannot be saved without being
+          corrected first. Every column is labelled for what it holds; nothing is
+          aggregated into an "other" line.</dd>
+
+      <dt>Comparatives</dt>
+      <dd>With <b>comparatives</b> enabled, each world shows the capture immediately
+          preceding the one displayed. Worlds captured only once have no comparative
+          and show none.</dd>
+    </dl>`;
+}
+
 async function renderTable() {
   rowsCache = await store.all();
   let rows = [...rowsCache];
@@ -438,11 +529,41 @@ async function renderTable() {
   const mark = (r, k, extra = '') => (best[k] !== undefined && valueOf(r, k) === best[k])
     ? ` class="num ${extra} best" title="${esc(BEST_WHY[k])}"` : ` class="num ${extra}"`;
 
+  /*
+   * IAS 1.38: present the corresponding figures for the preceding period. Here
+   * that is the capture immediately before each row's own, for the same world.
+   */
+  const priors = new Map();
+  if ($('comparatives').checked) {
+    for (const r of rows) {
+      const earlier = rowsCache
+        .filter(o => o.world === r.world && o.capturedAt < r.capturedAt)
+        .sort((a, b) => b.capturedAt.localeCompare(a.capturedAt))[0];
+      if (earlier) priors.set(r.hash, earlier);
+    }
+  }
+
   const worlds = new Set(rows.map(r => r.world)).size;
   $('count').textContent = rows.length
     ? `${rows.length} row${rows.length === 1 ? '' : 's'} · ${worlds} world${worlds === 1 ? '' : 's'}`
     : '0 rows';
   $('empty').hidden = rows.length > 0;
+
+  const priorRow = r => {
+    const p = priors.get(r.hash);
+    if (!p) return '';
+    return `<tr class="prior">
+      <td colspan="3"><span class="plabel">preceding</span> <time datetime="${esc(p.capturedAt)}">${esc(p.capturedAt)}</time></td>
+      <td class="num money">${acct(p.sell, 'gp/TC')}</td>
+      <td class="num money">${acct(p.sellVolume, 'TC')}</td>
+      <td class="num qty">${acctSI(p.goldDemand, 'gp')}</td>
+      <td class="num money">${acct(p.buy, 'gp/TC')}</td>
+      <td class="num money">${acct(p.buyVolume, 'TC')}</td>
+      <td class="num qty">${acctSI(p.goldSupply, 'gp')}</td>
+      <td class="num money">${acct(spread(p), 'gp/TC')}</td>
+      <td colspan="3"></td>
+    </tr>`;
+  };
 
   $('tbody').innerHTML = rows.map(r => `<tr>
       <td>${esc(r.world)}</td><td>${esc(r.type)}</td>
@@ -458,7 +579,8 @@ async function renderTable() {
       <td><time datetime="${esc(r.capturedAt)}">${esc(r.capturedAt)}</time></td>
       <td class="hash" title="${esc(r.hash)}">${esc(r.hash.slice(0, 10))}</td>
       <td><button class="del" data-del="${esc(r.hash)}" title="Remove">✕</button></td>
-    </tr>`).join('');
+    </tr>${priorRow(r)}`).join('');
+  disclosure(rows, [...priors.values()]);
 
   for (const th of document.querySelectorAll('#table thead th[data-sort]')) {
     th.classList.toggle('sorted', th.dataset.sort === sortBy.key);
@@ -568,6 +690,13 @@ $('tbody').addEventListener('click', async e => {
 });
 $('latestOnly').addEventListener('change', renderTable);
 $('compare').addEventListener('change', renderTable);
+$('comparatives').addEventListener('change', renderTable);
+$('sep').addEventListener('change', e => {
+  groupSep = e.target.value;
+  try { localStorage.setItem(SEP_KEY, groupSep); } catch { /* not persisted */ }
+  for (const c of cards.values()) render(c);   // cards carry numbers too
+  renderTable();
+});
 $('filter').addEventListener('input', renderTable);
 document.querySelector('#table thead').addEventListener('click', e => {
   const key = e.target.closest('th[data-sort]')?.dataset.sort;
@@ -609,4 +738,5 @@ $('clearBtn').addEventListener('click', async () => {
 });
 window.addEventListener('beforeunload', () => { disposeOcr(); });
 
+$('sep').value = groupSep;
 store.loadBaseline().then(renderTable).catch(renderTable);

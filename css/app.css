@@ -240,3 +240,43 @@ td.money.best .cur{opacity:.7}
 /* a per-row SI prefix cannot be factored into a column marker, so these cells
    carry the full symbol with the value and stay plainly right-aligned */
 td.qty{text-align:right;font-variant-numeric:tabular-nums lining-nums;white-space:nowrap}
+
+.sep{
+  background:#0d0b09;border:1px solid var(--line);color:var(--ink);
+  border-radius:6px;padding:3px 5px;font-size:.78rem;
+  font-family:ui-monospace,Menlo,monospace;margin-left:4px;
+}
+.sep:focus{outline:1px solid var(--gold);border-color:var(--gold)}
+
+/* ---- IFRS presentation ----------------------------------------------- */
+.disclosure{
+  margin:0 0 8px;padding:8px 12px;font-size:.75rem;line-height:1.5;color:var(--muted);
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+}
+.disclosure b{color:var(--ink);font-weight:600}
+tr.prior td{
+  border-bottom:1px solid var(--line);color:var(--muted);opacity:.72;
+  font-size:.95em;padding-top:2px;padding-bottom:6px;
+}
+tr.prior .plabel{
+  text-transform:uppercase;font-size:.66rem;letter-spacing:.06em;
+  color:var(--muted);opacity:.8;margin-right:6px;
+}
+tr.prior + tr td{border-top:0}
+
+/* ---- IFRS 18 structured presentation ---------------------------------- */
+tr.grp th{
+  border-bottom:1px solid var(--line);padding-bottom:3px;
+  font-size:.66rem;letter-spacing:.08em;color:var(--muted);text-align:center;
+}
+tr.grp .g-sell,tr.grp .g-buy{border-bottom-color:var(--gold-dim)}
+tr.grp .g-derived{color:var(--gold);opacity:.8}
+.disclosure summary{cursor:pointer;list-style:none}
+.disclosure summary::-webkit-details-marker{display:none}
+.disclosure .note{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.note dl{margin:0;display:grid;gap:10px}
+.note dt{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink)}
+.note dd{margin:2px 0 0;font-size:.78rem;line-height:1.5;color:var(--muted)}
+.note ul{margin:4px 0 0;padding-left:18px}
+.note li{margin:2px 0}
+.note b{color:var(--ink);font-weight:600}

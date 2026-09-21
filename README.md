@@ -177,18 +177,27 @@ The database table is the comparison view.
 
 Quantities follow **ISO 80000-1 (SI)**.
 
-### Digit grouping
+### Digit grouping — where the two standards disagree
 
-Digits go in groups of three separated by a thin space:
+This is the one point where the conventions in use here genuinely contradict
+each other:
+
+| | |
+|---|---|
+| **ISO 80000-1 (SI)** | groups of three separated by a thin space. A comma or a point *shall not* be used, because the two swap meaning between locales — `48,784` is forty-eight thousand in one country and `48.784` in another. |
+| **Financial reporting** | the comma (or the point, by locale) *is* the thousands separator, and a statement of figures is expected to show it. IFRS 18 does not prescribe a character. |
+
+No single rendering satisfies both, so it is a setting — the **digits** control
+above the table:
 
 ```
-48 784        225 625        1 931 863 450
+48,784      accounting (default)
+48 784      ISO 80000-1
 ```
 
-Never a comma or a point, because the two swap meaning between locales —
-`48,784` reads as forty-eight thousand in one country and as `48.784` in
-another. The separator is a narrow no-break space (U+202F), so a number never
-wraps across lines.
+The choice is remembered per browser. Everything else stays SI whichever you
+pick: prefixes bound to their unit, one narrow no-break space between a value
+and its symbol, ISO 8601 timestamps.
 
 ### Units and prefixes
 
@@ -212,9 +221,26 @@ quantity. Hover any of these for the exact figure.
 Prefix symbols are case-sensitive — `k` for 10³, `M` for 10⁶, `G` for 10⁹ — and
 are never compounded.
 
+## Presentation — IFRS 18
+
+The table follows **IFRS 18 *Presentation and Disclosure in Financial
+Statements***, which supersedes IAS 1 for periods beginning on or after
+1 January 2027 and may be applied early.
+
+| IFRS 18 asks for | Here |
+|---|---|
+| Presentation currency, level of rounding, period covered | Stated above the table, and the period covers the comparatives as well as the current figures |
+| Items presented in defined categories | Columns are grouped **Sell side** / **Buy side**, with the derived subtotal held apart under **Derived** |
+| No offsetting of separate items | Gold demand and gold supply are shown gross. A single net figure would hide how thin or deep either side is |
+| Meaningful labels, nothing dumped in "other" | Every column names exactly what it holds; there is no residual category |
+| Measures not defined by a standard disclosed and reconciled | *Basis of preparation* names Spread, Gold Demand and Gold Supply as this project's own measures and gives the formula behind each |
+| Comparative information for the preceding period | **comparatives** shows the capture immediately before each row, per world |
+
+Open **Basis of preparation** above the table for the full note.
+
 ### Accounting presentation
 
-The database table is a table of figures, so it is set the way a ledger is:
+Within that structure the figures are set the way a ledger is:
 
 | | |
 |---|---|
