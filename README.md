@@ -116,11 +116,41 @@ gap of twice the normal pitch. That is measured between rows, like against like,
 and is reliable enough to block a save.
 
 A row missing from the *top* of the list leaves no such gap; it shows up as a
-blank band under the column header. That one blocks a save too, because the top
+blank band under the column header. The bottom edge of that header is taken as
+the **median** of its words' bounding boxes, not the lowest: Tesseract glues the
+column divider `|` onto some header words, a pipe is taller than a letter, and
+taking the lowest edge started the crop a few pixels inside the first offer row
+and shaved it off — the row holding the best price. That one detail was behind
+most of these warnings. That one blocks a save too, because the top
 row is the one that matters — it holds the best price.
 
 If only a single row is read, there is no spacing to judge anything by, and that
 is called out rather than quietly accepted.
+
+### Screenshots at other resolutions and UI scales
+
+Tibia draws its interface with a fixed bitmap font, so glyphs are the same size
+in pixels on any monitor — until something scales the picture. A client at 2×
+UI scale, a HiDPI capture, or a screenshot someone resized before sending all
+change the glyph height, and a fixed upscale factor then lands the text either
+too small to read or so large it smears.
+
+So the crop is scaled to bring glyphs to a constant height, measured from the
+column header found in that particular image. If the section labels and headings
+cannot be read at all, the whole image is re-read once at 2×, with the
+coordinates mapped back — the retry continues until the *headings* are legible,
+not merely the "Sell Offers:" label above them, which is larger and survives a
+downscale the headings do not.
+
+Measured on one screenshot rendered at several scales:
+
+| Width | Result |
+|---|---|
+| 855 px | rejected, with a message saying the capture is too small |
+| 1111 px | rejected |
+| 1282 px | read in full |
+| 1453 – 2565 px | read in full |
+| 3420 px | reads, may flag one row for checking |
 
 ### Header rows that did not survive OCR
 

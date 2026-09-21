@@ -12,7 +12,24 @@
  * gives every row a free checksum. Rows that fail it are surfaced for the
  * user to correct rather than being silently trusted.
  */
-const SCALE = 3;          // upscale factor for the body crops
+/*
+ * Tibia draws its interface with a fixed bitmap font, so glyphs are the same
+ * size in pixels whatever the monitor - until the screenshot is scaled. A
+ * client at 2x UI scale, a HiDPI capture, or a screenshot someone resized
+ * before sending all change the glyph height, and a fixed upscale factor then
+ * lands the text either too small for Tesseract or so large it smears.
+ *
+ * So the crop is scaled to bring glyphs to roughly TARGET_GLYPH pixels tall,
+ * measured from the column header actually found in this image.
+ */
+const TARGET_GLYPH = 42;
+const scaleFor = h => {
+  // Not rounded to an integer, and allowed below 1. A capture that is already
+  // large has blurry glyphs from whatever enlarged it, and enlarging those
+  // again only spreads the blur; bringing them back down sharpens them.
+  const k = TARGET_GLYPH / Math.max(1, h);
+  return Math.max(0.5, Math.min(6, k));
+};
 const MIN_CONF = 25;        // anchors: these must be right, nothing checks them
 /*
  * The body pass can afford a much lower bar. Every row it produces is verified
@@ -65,22 +82,71 @@ const norm = t => t.toLowerCase().replace(/[^a-z]/g, '');
  * both tables are drawn with identical column positions, so a header row that
  * did read cleanly can stand in for one that did not (see reuseGeometry).
  */
-function headerRow(anchors, afterY) {
+/*
+ * Column headers for the table that starts at `afterY`, searched only as far as
+ * `beforeY` - where the next section begins.
+ *
+ * The bound is the whole point. Without it, a header that OCR read imperfectly
+ * does not fail: the search walks on into the NEXT table and returns its header
+ * instead, so the first table is then cropped from the second table's rows. It
+ * is silent and it is wrong, and it happens whenever a single word is missed.
+ *
+ * A partial result is returned rather than nothing, because the two tables are
+ * drawn with identical column positions - so a column edge missing here can be
+ * filled from the other table (see mergeHeaders).
+ */
+function headerRow(anchors, afterY, beforeY = Infinity) {
   const amounts = anchors
-    .filter(w => norm(w.t) === 'amount' && !w.t.includes(':') && w.y > afterY)
+    .filter(w => norm(w.t) === 'amount' && !w.t.includes(':') &&
+                 w.y > afterY && w.y < beforeY)
     .sort((a, b) => a.y - b.y);
+
+  let partial = null;
   for (const a of amounts) {
     const line = anchors.filter(w => sameLine(w, a));
     const tok = n => line.find(w => norm(w.t) === n);
     const piece = tok('piece'), total = tok('total');
+    if (!piece || !total) continue;      // the slider row has neither
     const prices = line.filter(w => norm(w.t) === 'price').sort((x, y) => x.x - y.x);
-    // Amount + Piece Price + Total Price on one line is the signature of the
-    // offer-table header, and tells it apart from the "Amount:" form field.
-    if (piece && total && prices.length >= 2) {
-      return { amount: a, piece, pieceR: prices[0].r, total, totalR: prices[1].r };
+
+    // "Price" belongs to whichever of Piece / Total it sits nearer to, so a
+    // single surviving token still lands in the right column.
+    let pieceR = null, totalR = null;
+    for (const pr of prices) {
+      if (Math.abs(pr.x - piece.r) <= Math.abs(pr.x - total.r)) pieceR ??= pr.r;
+      else totalR ??= pr.r;
     }
+    /*
+     * The bottom of the header line, taken as a MEDIAN rather than a maximum.
+     * Tesseract glues the column divider "|" onto some header words, and a pipe
+     * is a taller glyph than a letter, so those boxes reach several pixels
+     * lower than the text does. Taking the lowest edge therefore starts the
+     * crop inside the first offer row and shaves it off - which is the row
+     * holding the best price. The median ignores the few contaminated boxes.
+     */
+    const parts = [a, piece, total, ...prices].filter(Boolean);
+    const bottoms = parts.map(w => w.b).sort((x, y) => x - y);
+    const bottom = bottoms[bottoms.length >> 1];
+    const head = { amount: a, piece, pieceR, total, totalR, bottom };
+    if (pieceR !== null && totalR !== null) return head;
+    partial ??= head;                    // keep the best incomplete candidate
   }
-  return null;
+  return partial;
+}
+
+/**
+ * Fill gaps in each header from the others. Both tables share their column
+ * positions exactly, so an edge read on one is the edge on the other.
+ */
+function mergeHeaders(heads) {
+  const pieceR = heads.find(h => h?.pieceR != null)?.pieceR;
+  const totalR = heads.find(h => h?.totalR != null)?.totalR;
+  for (const h of heads) {
+    if (!h) continue;
+    h.pieceR ??= pieceR;
+    h.totalR ??= totalR;
+  }
+  return heads;
 }
 
 /** Borrow a sibling table's column geometry, keeping this table's own vertical position. */
@@ -93,6 +159,7 @@ function reuseGeometry(donor, donorTableY, tableY) {
     pieceR: donor.pieceR,
     total: shift(donor.total),
     totalR: donor.totalR,
+    bottom: donor.bottom != null ? donor.bottom + dy : undefined,
     borrowed: true
   };
 }
@@ -142,27 +209,64 @@ export async function readMarket(bitmap, onStep = () => {}) {
     tessedit_pageseg_mode: Tesseract.PSM.SPARSE_TEXT,
     tessedit_char_whitelist: ''
   });
-  const anchors = words(await worker.recognize(full));
 
-  const tables = locateTables(anchors);
-  if (tables.length < 2) {
-    throw new Error('Could not find both the Sell Offers and Buy Offers tables. ' +
-                    'Make sure the whole market window is visible in the screenshot.');
+  /*
+   * The anchor pass reads the section labels and column headings off the whole
+   * image. On a screenshot that has been scaled down they are too small to
+   * read, so it is retried on an enlarged copy with the coordinates mapped
+   * back.
+   *
+   * The retry has to continue until the COLUMN HEADINGS are found, not merely
+   * the section labels. "Sell Offers:" is larger and survives a downscale that
+   * the headings below it do not - stopping at the labels leaves the headings
+   * unread and the screenshot rejected.
+   */
+  const readAnchors = async k => {
+    if (k === 1) return words(await worker.recognize(full));
+    onStep(`re-reading at ${k}× — the screenshot looks scaled down`);
+    const big = cropCanvas(full, 0, 0, full.width, full.height, k);
+    return words(await worker.recognize(big)).map(w => ({
+      ...w, x: w.x / k, r: w.r / k, y: w.y / k, b: w.b / k,
+      h: w.h / k, cx: w.cx / k, cy: w.cy / k
+    }));
+  };
+
+  const complete = h => h && h.pieceR != null && h.totalR != null;
+  let anchors = [], tables = [], stops = [], heads = [];
+  // One retry, at 2x. A third pass costs as much again and has never yet
+  // rescued a screenshot that 2x could not: below roughly 1100px wide the
+  // glyphs are a handful of pixels tall and the information is simply gone.
+  for (const k of [1, 2]) {
+    if (k > 1 && full.width * k > 4200) break;
+    anchors = await readAnchors(k);
+    tables = locateTables(anchors);
+    if (tables.length < 2) continue;
+    const creates = anchors.filter(w => /^create/i.test(w.t)).sort((a, b) => a.y - b.y);
+    stops = [...tables.slice(1).map(t => t.y), creates.length ? creates[0].y : bitmap.height];
+    heads = mergeHeaders(tables.map((t, i) => headerRow(anchors, t.y, stops[i])));
+    if (heads.some(complete)) break;
   }
-  const creates = anchors.filter(w => /^create/i.test(w.t)).sort((a, b) => a.y - b.y);
-  const stops = [...tables.slice(1).map(t => t.y), creates.length ? creates[0].y : bitmap.height];
 
-  // Resolve every header row first, so a table whose header OCR'd poorly can
-  // borrow the geometry of one that came through cleanly.
-  const heads = tables.map(t => headerRow(anchors, t.y));
-  const donorIdx = heads.findIndex(Boolean);
+  if (tables.length < 2) {
+    throw new Error(full.width < 1100
+      ? `This screenshot is only ${full.width}px wide — the market text is too small ` +
+        'to read. Send the original capture rather than a resized or forwarded copy.'
+      : 'Could not find both the Sell Offers and Buy Offers tables. Make sure the ' +
+        'whole market window is visible and not covered by another window.');
+  }
+  const donorIdx = heads.findIndex(complete);
   if (donorIdx === -1) {
-    throw new Error('Could not find the Amount / Piece Price / Total Price column ' +
-                    'headers in either table. Make sure the whole market window is ' +
-                    'visible and not covered by another window.');
+    const tooSmall = full.width < 1300
+      ? ` — at ${full.width}px wide the headings are only a few pixels tall`
+      : '';
+    throw new Error('Found the tables but could not read the Amount / Piece Price / ' +
+      'Total Price headings' + tooSmall + '. Send the original capture rather than a ' +
+      'resized copy.');
   }
   for (let i = 0; i < heads.length; i++) {
-    if (!heads[i]) heads[i] = reuseGeometry(heads[donorIdx], tables[donorIdx].y, tables[i].y);
+    if (!complete(heads[i])) {
+      heads[i] = reuseGeometry(heads[donorIdx], tables[donorIdx].y, tables[i].y);
+    }
   }
 
   const result = {};
@@ -183,11 +287,12 @@ export async function readMarket(bitmap, onStep = () => {}) {
     // Just under the header. Including the header changes how Tesseract
     // segments the block and costs a row at the far end, so the first row is
     // protected by reading confidence instead (see MIN_CONF_BODY).
-    const headerBottom = Math.max(a.b, h.total.b);
+    const headerBottom = h.bottom ?? Math.max(a.b, h.total.b);
     const y0 = Math.floor(headerBottom + 1);
     const y1 = Math.floor(stop - a.h * 0.8);
     if (y1 <= y0) { result[tbl.side] = []; continue; }
 
+    const SCALE = scaleFor(a.h);
     const crop = cropCanvas(full, x0, y0, x1, y1, SCALE);
     await worker.setParameters({
       tessedit_pageseg_mode: Tesseract.PSM.SINGLE_BLOCK,
