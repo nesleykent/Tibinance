@@ -9,9 +9,28 @@ No backend, no build step, no API key, no cost.
 
 ## What is stored, and what is not
 
-Stored — exactly these nine fields, nothing else:
+Stored — exactly these eleven fields, nothing else:
 
-`World · Type · BattlEye · Sell · Sell Volume · Buy · Buy Volume · Capture Date · Screenshot Hash`
+`World · Type · BattlEye · Sell · Sell Volume · Gold Demand · Buy · Buy Volume ·
+Gold Supply · Capture Date · Screenshot Hash`
+
+### Gold supply and demand
+
+Two aggregates over every visible offer, not just the best one:
+
+| | |
+|---|---|
+| **Gold Demand** | `Σ (sell amount × sell price)` — the gold sellers are asking for. Buy out every coin on offer and this is the bill. |
+| **Gold Supply** | `Σ (buy amount × buy price)` — gold committed in buy offers. Tibia escrows the gold behind a buy offer, so this is real gold standing ready on that world. |
+
+Unlike the spread these are sums over rows, so they cannot be rebuilt from the
+best price and the volume once the rows are gone — which is why they are stored.
+
+They run to billions, so the table shows them with SI prefixes (`10 G`,
+`1.93 G`) and keeps the exact figure in the cell's tooltip. The CSV carries the
+full integer.
+
+Both are optional fields: rows exported before they existed still import.
 
 **Spread is not one of them.** It is exactly `Sell − Buy`, so it is computed when
 the table is drawn rather than written to the database — a stored copy could only

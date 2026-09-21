@@ -4,7 +4,17 @@ const API = 'https://api.tibiadata.com/v4';
 const WORLDS_TTL = 6 * 60 * 60 * 1000;
 
 async function getJSON(url) {
-  const r = await fetch(url, { headers: { Accept: 'application/json' } });
+  let r;
+  try {
+    r = await fetch(url, { headers: { Accept: 'application/json' } });
+  } catch (e) {
+    // TibiaData answers an unknown character with a 502 that carries no CORS
+    // header, so the browser reports it as a bare network failure rather than
+    // as a status. Both causes are named, because we cannot tell them apart.
+    throw new Error('TibiaData could not be reached — check the character name ' +
+                    'in the filename is spelled exactly as in game, and that you ' +
+                    'are online');
+  }
   if (!r.ok) {
     if (r.status === 502) {
       throw new Error('TibiaData returned 502 — the character name is most likely ' +

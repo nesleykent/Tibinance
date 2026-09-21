@@ -5,16 +5,25 @@
  * toRecord() builds a fresh object from that list, so a character name, a
  * filename or image data cannot reach storage even if a caller passes one in.
  */
-export const ALLOWED = ['world', 'type', 'battleye', 'sell', 'sellVolume',
-                        'buy', 'buyVolume', 'capturedAt', 'hash'];
+export const REQUIRED = ['world', 'type', 'battleye', 'sell', 'sellVolume',
+                         'buy', 'buyVolume', 'capturedAt', 'hash'];
+
+// Gold supply/demand cannot be recomputed from the fields above - they are sums
+// over every visible offer - so they are stored. They are optional so that rows
+// exported before they existed still import cleanly.
+export const OPTIONAL = ['goldSupply', 'goldDemand'];
+export const ALLOWED = [...REQUIRED, ...OPTIONAL];
 
 export function toRecord(input) {
   const rec = {};
-  for (const k of ALLOWED) {
+  for (const k of REQUIRED) {
     if (input[k] === undefined || input[k] === null || input[k] === '') {
       throw new Error(`Refusing to store an incomplete record: "${k}" is missing`);
     }
     rec[k] = input[k];
+  }
+  for (const k of OPTIONAL) {
+    rec[k] = Number.isFinite(input[k]) ? input[k] : null;
   }
   // belt and braces: nothing outside ALLOWED can have survived
   const extra = Object.keys(rec).filter(k => !ALLOWED.includes(k));

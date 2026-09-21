@@ -11,23 +11,22 @@ body{
   padding:0 16px 64px;
 }
 a{color:var(--gold)}
-.top{max-width:1180px;margin:0 auto;padding:32px 0 8px}
-h1{margin:0;font-size:1.65rem;letter-spacing:-.01em}
-.sub{margin:6px 0 0;color:var(--muted)}
+.top{max-width:1180px;margin:0 auto;padding:20px 0 6px}
+h1{margin:0;font-size:1.35rem;letter-spacing:-.01em}
+.sub{margin:4px 0 0;color:var(--muted);font-size:.85rem}
 
 .privacy{
-  max-width:1180px;margin:18px auto;display:grid;gap:8px;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;
+  max-width:1180px;margin:10px auto;background:var(--panel);
+  border:1px solid var(--line);border-radius:var(--radius);
+  padding:8px 14px;color:var(--muted);font-size:.8rem;
 }
-.privacy-item{color:var(--muted);font-size:.88rem}
 .tick{color:var(--ok);font-weight:700;margin-right:6px}
 
 main{max-width:1180px;margin:0 auto}
 
 .drop{
   border:2px dashed var(--gold-dim); border-radius:var(--radius);
-  background:var(--panel); padding:34px 20px; text-align:center; cursor:pointer;
+  background:var(--panel); padding:22px 20px; text-align:center; cursor:pointer;
   transition:background .15s,border-color .15s;
 }
 .drop:hover,.drop:focus-visible{background:var(--panel-2);border-color:var(--gold);outline:none}
@@ -81,8 +80,8 @@ code{background:#000;padding:2px 6px;border-radius:4px;font-size:.92em;color:var
 .mini{color:var(--muted);font-size:.82rem;display:flex;align-items:center;gap:5px}
 
 .table-wrap{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:.87rem;min-width:960px}
-th,td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+table{width:100%;border-collapse:collapse;font-size:.82rem;min-width:1080px}
+th,td{padding:6px 10px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
 th{color:var(--muted);font-weight:600;font-size:.76rem;text-transform:uppercase;letter-spacing:.05em}
 tbody tr:last-child td{border-bottom:none}
 tbody tr:hover{background:var(--panel-2)}
@@ -103,33 +102,56 @@ footer{max-width:1180px;margin:40px auto 0;color:var(--muted);font-size:.78rem;b
 /* a negative spread means a crossed market got saved past the warning */
 td.num.neg{color:var(--bad)}
 
-/* ---- queue bar + compact cards -------------------------------------- */
+/* ---- queue bar + one-line cards -------------------------------------- */
 .qbar{
   position:sticky; top:0; z-index:5;
   display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;
   background:var(--panel-2); border:1px solid var(--line); border-radius:var(--radius);
-  padding:10px 14px; margin:18px 0 10px;
+  padding:8px 12px; margin:14px 0 8px;
 }
-.qstat{font-size:.85rem;color:var(--muted)}
+.qstat{font-size:.82rem;color:var(--muted)}
 .qstat b{color:var(--ink)}
 .qstat .attn{color:var(--warn)}
 .qactions{display:flex;gap:8px;flex-wrap:wrap}
 
-.card summary{
-  list-style:none; cursor:pointer; display:grid; gap:2px 12px; align-items:center;
-  grid-template-columns:1fr auto;
+.queue{gap:4px;margin:0 0 14px}
+.card{padding:0;border-left-width:3px}
+.cline{
+  display:flex; align-items:center; gap:8px; padding:6px 10px;
+  font-size:.79rem; white-space:nowrap; overflow:hidden;
 }
+.card summary{list-style:none;cursor:pointer}
 .card summary::-webkit-details-marker{display:none}
-.card summary:focus-visible{outline:1px solid var(--gold);border-radius:6px}
-.cfile{font-size:.9rem;font-weight:600;word-break:break-all}
-.cmeta{font-size:.8rem;color:var(--muted);grid-column:1}
-.cmeta b{color:var(--ink);font-weight:600}
+.card summary:focus-visible{outline:1px solid var(--gold);outline-offset:-1px}
+.cflag{flex:0 0 auto;width:1em;text-align:center;color:var(--muted)}
+.card.ok .cflag{color:var(--ok)}
+.card.warn .cflag{color:var(--warn)}
+.card.bad .cflag{color:var(--bad)}
+.cworld{flex:0 0 auto;min-width:5.5em}
+.cbe{flex:0 0 auto;font-size:.7rem;cursor:help}
+.ctime{flex:0 0 auto;color:var(--muted);font-family:ui-monospace,Menlo,monospace;font-size:.74rem}
+.cmsg{flex:1 1 auto;overflow:hidden;text-overflow:ellipsis}
 .cnums{
-  grid-column:2; grid-row:1 / span 2; text-align:right; white-space:nowrap;
-  font-size:.82rem; color:var(--muted); font-variant-numeric:tabular-nums;
+  margin-left:auto; flex:0 1 auto; overflow:hidden; text-overflow:ellipsis;
+  color:var(--muted); font-variant-numeric:tabular-nums;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.74rem;
 }
-.cnums b{color:var(--ink);font-family:ui-monospace,Menlo,monospace}
-.chev{color:var(--muted);font-size:.75rem;margin-left:6px}
-details[open] .chev{transform:rotate(90deg);display:inline-block}
-.cbody{margin-top:10px;border-top:1px solid var(--line);padding-top:10px}
-.card.saving{opacity:.5}
+.cnums b{color:var(--ink);font-weight:600}
+.cnums i{font-style:normal;opacity:.6}
+.cnums .sep{opacity:.4;margin:0 2px}
+.cbody{padding:0 10px 10px;border-top:1px solid var(--line);margin-top:2px}
+.cbody .cfile{
+  font-family:ui-monospace,Menlo,monospace;font-size:.72rem;color:var(--muted);
+  padding:6px 0;word-break:break-all;
+}
+details[open] > summary .cline{border-bottom:1px solid transparent}
+.card.saving{opacity:.45}
+
+/* the drop zone yields space once a batch is being reviewed */
+.drop.compact{padding:12px 16px}
+.drop.compact .drop-inner span,.drop.compact .drop-inner small{display:none}
+.drop.compact .drop-inner strong{font-size:.9rem}
+
+/* SI: the unit is part of the quantity, but subordinate to the number */
+.unit{color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0}
+td.num.neg{color:var(--bad)}

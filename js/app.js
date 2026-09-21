@@ -12,6 +12,19 @@ const $ = id => document.getElementById(id);
 const SI_GROUP = '\u202F';
 const nf = new Intl.NumberFormat('en-US');
 const fmt = n => nf.format(n).replace(/,/g, SI_GROUP);
+// Gold sums run to billions. SI prefixes keep the column narrow; the exact
+// figure stays available in the cell's tooltip.
+const fmtSI = n => {
+  if (!Number.isFinite(n)) return '—';
+  const a = Math.abs(n);
+  for (const [div, suf] of [[1e9, 'G'], [1e6, 'M'], [1e3, 'k']]) {
+    if (a >= div) {
+      const v = (n / div).toPrecision(3).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '');
+      return `${v}${SI_GROUP}${suf}`;
+    }
+  }
+  return fmt(n);
+};
 const esc = s => String(s).replace(/[&<>"']/g, c =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 // capturedAt is already ISO 8601; it is displayed exactly as it is stored.
@@ -20,10 +33,23 @@ const esc = s => String(s).replace(/[&<>"']/g, c =>
    in the database would only create something that can fall out of step. */
 const spread = r => r.sell - r.buy;
 
+/*
+ * Gold demand - what sellers are asking for, summed over every visible sell
+ * offer. Gold supply - gold escrowed in buy offers, i.e. gold actually
+ * committed on that world. Both are sums over rows, so unlike the spread they
+ * cannot be rebuilt from the stored best price and volume, and are persisted.
+ */
+const goldOf = rows => rows.reduce((t, r) => t + r.amount * r.price, 0);
+
 /* ---------------------------------------------------------------- analysis */
 function analyse(state) {
   const { sell, buy } = state.rows;
   const warn = [...(state.ocrWarnings ?? [])];
+  // Without a world there is nothing to file the observation under. Flagging it
+  // here is what keeps it out of the "ready" count and out of Save all.
+  if (!state.world) {
+    warn.push(state.worldNote ?? 'the world could not be resolved from the filename');
+  }
   const live = s => s.filter(r => r.amount > 0 && r.price > 0);
   const S = live(sell), B = live(buy);
 
@@ -57,6 +83,8 @@ function analyse(state) {
     sell: bestSell, buy: bestBuy,
     sellVolume: S.reduce((a, r) => a + r.amount, 0),
     buyVolume: B.reduce((a, r) => a + r.amount, 0),
+    goldDemand: goldOf(S),
+    goldSupply: goldOf(B),
     sellRows: S.length, buyRows: B.length,
     spread: spread({ sell: bestSell, buy: bestBuy }),
     warn, ok: warn.length === 0
@@ -106,49 +134,60 @@ function rowsHtml(state, side) {
 
 function render(state) {
   const el = cardEl(state.id);
+  el.title = state.name;
 
-  if (state.status === 'error' || state.status === 'dup') {
-    const bad = state.status === 'error';
-    el.className = `card ${bad ? 'bad' : 'warn'}`;
-    el.innerHTML = `<h3>${esc(state.name)}</h3>
-      <div class="steps ${bad ? 'msg-bad' : 'msg-warn'}">${esc(bad ? state.error
-        : 'Already in the database — this exact screenshot was processed before.')}</div>`;
-    updateQueueBar();
-    return;
+  // Every card is a single row. A batch of thirty has to stay scannable, so
+  // the filename moves to the tooltip and the world leads instead.
+  const line = (cls, flag, mid, right) => {
+    el.className = `card ${cls}`;
+    el.innerHTML = `<div class="cline"><span class="cflag">${flag}</span>${mid}
+      <span class="cnums">${right ?? ''}</span></div>`;
+  };
+
+  if (state.status === 'error') {
+    line('bad', '✕', `<span class="cmsg msg-bad">${esc(state.error)}</span>`,
+         `<span class="cfile">${esc(state.name)}</span>`);
+    updateQueueBar(); return;
+  }
+  if (state.status === 'dup') {
+    line('warn', '⇄', `<span class="cmsg msg-warn">${esc(state.dupNote ?? 'Already in the database')}</span>`,
+         `<span class="cfile">${esc(state.name)}</span>`);
+    updateQueueBar(); return;
   }
   if (state.status !== 'review') {
-    el.className = 'card';
-    el.innerHTML = `<h3>${esc(state.name)}</h3><div class="steps">${steps(state)}
-      <div>${esc(state.stage ?? 'working…')}</div></div>`;
-    updateQueueBar();
-    return;
+    line('', '…', `<span class="cmsg">${esc(state.stage ?? 'working…')}</span>`,
+         `<span class="cfile">${esc(state.name)}</span>`);
+    updateQueueBar(); return;
   }
 
   const a = analyse(state);
   state.analysis = a;
-  // problems open themselves; clean reads stay folded so a batch stays scannable
-  state.open ??= !a.ok;
+  state.open ??= !a.ok;              // problems open themselves
   el.className = `card ${a.ok ? 'ok' : 'warn'}`;
 
   const w = state.world;
-  const meta = w
-    ? `<b>${esc(w.world)}</b> · ${esc(w.type)} · BattlEye <b class="be-${esc(w.battleye)}">${esc(w.battleye)}</b> · ${esc(state.capturedAt)}`
-    : `<span class="msg-warn">${esc(state.worldNote ?? 'world unresolved')}</span>`;
+  const time = (state.capturedAt ?? '').slice(11);
+  const head = w
+    ? `<b class="cworld">${esc(w.world)}</b>
+       <span class="cbe be-${esc(w.battleye)}" title="${esc(w.type)} · BattlEye ${esc(w.battleye)}">●</span>
+       <span class="ctime">${esc(time)}</span>`
+    : `<span class="cmsg msg-warn">${esc(state.worldNote ?? 'world unresolved')}</span>`;
   const nums = a.sell
-    ? `<b>${fmt(a.sell)}</b> / <b>${fmt(a.buy)}</b> gp/TC<br>
-       ${fmt(a.sellVolume)} / ${fmt(a.buyVolume)} TC · spread <b>${fmt(a.spread)}</b>`
-    : '—';
-  const flag = a.ok ? '' : `<div class="steps msg-warn">${a.warn.map(x => `<div>⚠ ${esc(x)}</div>`).join('')}</div>`;
+    ? `<b>${fmt(a.sell)}</b>/<b>${fmt(a.buy)}</b> <i>gp/TC</i>
+       <span class="sep">·</span> Δ${fmt(a.spread)}
+       <span class="sep">·</span> ${fmt(a.sellVolume)}/${fmt(a.buyVolume)} <i>TC</i>
+       <span class="sep">·</span> ${fmtSI(a.goldDemand)}/${fmtSI(a.goldSupply)} <i>gp</i>`
+    : '';
 
   el.innerHTML = `<details ${state.open ? 'open' : ''}>
-    <summary>
-      <span class="cfile">${a.ok ? '✓' : '⚠'} ${esc(state.name)}<span class="chev">▶</span></span>
-      <span class="cmeta">${meta}</span>
+    <summary><span class="cline">
+      <span class="cflag">${a.ok ? '✓' : '⚠'}</span>${head}
       <span class="cnums">${nums}</span>
-    </summary>
+    </span></summary>
     <div class="cbody">
+      <div class="cfile">${esc(state.name)}</div>
       <div class="rows">${rowsHtml(state, 'sell')}${rowsHtml(state, 'buy')}</div>
-      ${flag}
+      ${a.ok ? '' : `<div class="steps msg-warn">${a.warn.map(x => `<div>⚠ ${esc(x)}</div>`).join('')}</div>`}
       <div class="btnrow">
         <button class="btn primary" data-save="${state.id}" ${a.ok ? '' : 'disabled'}>Save</button>
         ${a.ok ? '' : `<button class="btn" data-force="${state.id}">Save anyway</button>`}
@@ -164,9 +203,10 @@ function render(state) {
 function updateQueueBar() {
   const bar = $('qbar');
   const list = [...cards.values()];
-  if (!list.length) { bar.hidden = true; $('queue').hidden = true; return; }
+  if (!list.length) { bar.hidden = true; $('queue').hidden = true; $('drop').classList.remove('compact'); return; }
   bar.hidden = false;
-  const ready = list.filter(c => c.status === 'review' && c.analysis?.ok).length;
+  $('drop').classList.add('compact');
+  const ready = list.filter(c => c.status === 'review' && c.analysis?.ok && c.world).length;
   const attn = list.filter(c => c.status === 'review' && !c.analysis?.ok).length;
   const busy = list.filter(c => c.status === 'work').length;
   const other = list.filter(c => c.status === 'error' || c.status === 'dup').length;
@@ -196,7 +236,15 @@ async function handleFile(file) {
     state.hash = await sha256(file);
     render(state);
 
-    if (await store.hasHash(state.hash)) { state.status = 'dup'; render(state); return; }
+    // Two identical screenshots dropped together are both new to the database,
+    // and storing by hash would silently collapse them into one row.
+    const alreadyQueued = [...cards.values()].some(c => c !== state && c.hash === state.hash);
+    if (alreadyQueued || await store.hasHash(state.hash)) {
+      state.status = 'dup';
+      state.dupNote = alreadyQueued ? 'Identical to another screenshot in this batch'
+                                    : 'Already in the database';
+      render(state); return;
+    }
 
     // 2. filename -> character + capture time. The name lives in this scope only.
     const { character, capturedAt } = parseFilename(file.name);
@@ -232,7 +280,12 @@ async function handleFile(file) {
 
 async function save(id) {
   const state = cards.get(id);
-  if (!state?.world) return;
+  if (!state) return false;
+  if (!state.world) {           // surfaced on the card rather than swallowed
+    state.open = true;
+    render(state);
+    return false;
+  }
   const a = state.analysis ?? analyse(state);
   try {
     await store.put({
@@ -241,6 +294,7 @@ async function save(id) {
       battleye: state.world.battleye,
       sell: a.sell, sellVolume: a.sellVolume,
       buy: a.buy, buyVolume: a.buyVolume,
+      goldSupply: a.goldSupply, goldDemand: a.goldDemand,
       capturedAt: state.capturedAt,
       hash: state.hash
     });
@@ -249,8 +303,12 @@ async function save(id) {
     if (!$('queue').children.length) $('queue').hidden = true;
     updateQueueBar();
     await renderTable();
+    return true;
   } catch (e) {
-    alert(`Could not save: ${e.message}`);
+    state.status = 'error';
+    state.error = `Could not save: ${e.message}`;
+    render(state);
+    return false;
   }
 }
 
@@ -271,7 +329,9 @@ async function renderTable() {
       <td>${esc(r.world)}</td><td>${esc(r.type)}</td>
       <td class="be be-${esc(r.battleye)}">${esc(r.battleye)}</td>
       <td class="num">${fmt(r.sell)}</td><td class="num">${fmt(r.sellVolume)}</td>
+      <td class="num" title="${Number.isFinite(r.goldDemand) ? fmt(r.goldDemand) + ' gp' : 'not recorded'}">${fmtSI(r.goldDemand)}</td>
       <td class="num">${fmt(r.buy)}</td><td class="num">${fmt(r.buyVolume)}</td>
+      <td class="num" title="${Number.isFinite(r.goldSupply) ? fmt(r.goldSupply) + ' gp' : 'not recorded'}">${fmtSI(r.goldSupply)}</td>
       <td class="num${spread(r) < 0 ? ' neg' : ''}">${fmt(spread(r))}</td>
       <td><time datetime="${esc(r.capturedAt)}">${esc(r.capturedAt)}</time></td>
       <td class="hash" title="${esc(r.hash)}">${esc(r.hash.slice(0, 10))}</td>
@@ -340,11 +400,16 @@ $('saveAll').addEventListener('click', async () => {
   btn.disabled = true;
   // snapshot first: save() mutates `cards` as it goes
   const ready = [...cards.values()].filter(c => c.status === 'review' && c.analysis?.ok);
+  let stored = 0;
   for (const c of ready) {
     $(`card-${c.id}`)?.classList.add('saving');
-    await save(c.id);
+    if (await save(c.id)) stored++;
+    else $(`card-${c.id}`)?.classList.remove('saving');
   }
   updateQueueBar();
+  if (stored < ready.length) {
+    alert(`Stored ${stored} of ${ready.length}. The rest stayed in the list with the reason shown on each card.`);
+  }
 });
 
 $('discardAll').addEventListener('click', () => {
@@ -375,9 +440,9 @@ $('latestOnly').addEventListener('change', renderTable);
 $('exportJson').addEventListener('click', () =>
   download('observations.json', JSON.stringify(rowsCache, null, 2), 'application/json'));
 $('exportCsv').addEventListener('click', () => {
-  const head = 'World,Type,BattlEye,Sell,Sell Volume,Buy,Buy Volume,Spread,Capture,Hash';
+  const head = 'World,Type,BattlEye,Sell,Sell Volume,Gold Demand,Buy,Buy Volume,Gold Supply,Spread,Capture,Hash';
   const body = rowsCache.map(r => [r.world, r.type, r.battleye, r.sell, r.sellVolume,
-    r.buy, r.buyVolume, spread(r), r.capturedAt, r.hash]
+    r.goldDemand ?? '', r.buy, r.buyVolume, r.goldSupply ?? '', spread(r), r.capturedAt, r.hash]
     .map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
   download('observations.csv', `${head}\n${body}`, 'text/csv');
 });
