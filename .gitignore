@@ -1,0 +1,22 @@
+# Screenshots must never be committed. The site processes them in the browser
+# and never writes them to disk, but this keeps a stray copy out of git too.
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.gif
+*.bmp
+screenshots/
+samples/
+
+# Local artefacts of the CLI in tools/
+*.db
+.api_cache.json
+__pycache__/
+*.pyc
+
+.DS_Store
+node_modules/
+
+# local editor/agent config
+.claude/

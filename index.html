@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tibinance</title>
+<meta name="description" content="Drag in Tibia market screenshots; prices are extracted in your browser and only anonymous market data is stored.">
+<link rel="stylesheet" href="css/app.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪙</text></svg>">
+</head>
+<body>
+<header class="top">
+  <h1>Tibinance</h1>
+  <p class="sub">Tibia Coins market tracker. Drop your daily market screenshots — everything runs in your browser.</p>
+</header>
+
+<section class="privacy" aria-label="Privacy summary">
+  <div class="privacy-item"><span class="tick">✓</span> Screenshots never leave your device and are never stored</div>
+  <div class="privacy-item"><span class="tick">✓</span> Character names are used only for the world lookup, then discarded</div>
+  <div class="privacy-item"><span class="tick">✓</span> Only anonymous market data is saved</div>
+</section>
+
+<main>
+  <div id="drop" class="drop" tabindex="0" role="button" aria-label="Drop screenshots here or press Enter to browse">
+    <div class="drop-inner">
+      <strong>Drop screenshots here</strong>
+      <span>or click to choose files</span>
+      <small>Filename format: <code>2026-09-21_124317718_Character Name_Hotkey.jpeg</code></small>
+    </div>
+    <input type="file" id="file" multiple accept="image/*" hidden>
+  </div>
+
+  <div id="queue" class="queue" hidden></div>
+
+  <section class="results" aria-label="Stored observations">
+    <div class="results-head">
+      <h2>Database <span id="count" class="count">0</span></h2>
+      <div class="actions">
+        <label class="mini"><input type="checkbox" id="latestOnly"> latest per world</label>
+        <button id="exportJson" class="btn">Export JSON</button>
+        <button id="exportCsv" class="btn">Export CSV</button>
+        <button id="importBtn" class="btn">Import</button>
+        <button id="clearBtn" class="btn danger">Clear</button>
+        <input type="file" id="importFile" accept="application/json" hidden>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table id="table">
+        <thead>
+          <tr>
+            <th>World</th><th>Type</th><th>BattlEye</th>
+            <th class="num">Sell <span class="unit">gp/TC</span></th>
+            <th class="num">Sell Volume <span class="unit">TC</span></th>
+            <th class="num">Buy <span class="unit">gp/TC</span></th>
+            <th class="num">Buy Volume <span class="unit">TC</span></th>
+            <th>Capture</th><th>Hash</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <p id="empty" class="empty">Nothing stored yet — drop a screenshot above.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>Market data read locally with Tesseract · world data from
+     <a href="https://tibiadata.com" target="_blank" rel="noopener noreferrer">TibiaData API v4</a>.
+     Not affiliated with CipSoft. Tibia is a trademark of CipSoft GmbH.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
