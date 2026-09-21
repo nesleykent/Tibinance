@@ -190,12 +190,15 @@ function render(state) {
     ? `<b class="cworld">${esc(w.world)}</b>
        <span class="cbe be-${esc(w.battleye)}" title="${esc(w.type)} · BattlEye ${esc(w.battleye)}">●</span>
        <span class="ctime">${esc(time)}</span>`
-    : `<span class="cmsg msg-warn">${esc(state.worldNote ?? 'world unresolved')}</span>`;
+    : `<b class="cworld">—</b><span class="cbe">○</span><span class="ctime"></span>
+       <span class="cmsg msg-warn">${esc(state.worldNote ?? 'world unresolved')}</span>`;
+  // Each figure sits in its own fixed-width cell so the columns line up down
+  // the whole list; ragged numbers are unreadable when scanning a batch.
   const nums = a.sell
-    ? `<b>${fmt(a.sell)}</b>/<b>${fmt(a.buy)}</b> <i>gp/TC</i>
-       <span class="sep">·</span> Δ${fmt(a.spread)}
-       <span class="sep">·</span> ${fmt(a.sellVolume)}/${fmt(a.buyVolume)} <i>TC</i>
-       <span class="sep">·</span> ${fmtSI(a.goldDemand)}/${fmtSI(a.goldSupply)} <i>gp</i>`
+    ? `<span class="cn price"><b>${fmt(a.sell)}</b>/<b>${fmt(a.buy)}</b> <i>gp/TC</i></span>
+       <span class="cn spread">Δ${fmt(a.spread)}</span>
+       <span class="cn vol">${fmt(a.sellVolume)}/${fmt(a.buyVolume)} <i>TC</i></span>
+       <span class="cn gold">${fmtSI(a.goldDemand)}/${fmtSI(a.goldSupply)} <i>gp</i></span>`
     : '';
 
   el.innerHTML = `<details ${state.open ? 'open' : ''}>

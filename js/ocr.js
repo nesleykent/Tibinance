@@ -13,7 +13,15 @@
  * user to correct rather than being silently trusted.
  */
 const SCALE = 3;          // upscale factor for the body crops
-const MIN_CONF = 25;
+const MIN_CONF = 25;        // anchors: these must be right, nothing checks them
+/*
+ * The body pass can afford a much lower bar. Every row it produces is verified
+ * by amount x price == total, so a shaky read is caught and shown for
+ * correction rather than trusted. Being strict here did the opposite of what it
+ * looked like: it threw away first rows that were merely faint, and a row
+ * thrown away leaves nothing to check at all.
+ */
+const MIN_CONF_BODY = 8;
 
 let workerPromise = null;
 function getWorker() {
@@ -21,11 +29,11 @@ function getWorker() {
   return workerPromise;
 }
 
-function words(result) {
+function words(result, minConf = MIN_CONF) {
   const out = [];
   for (const w of result.data.words ?? []) {
     const t = (w.text ?? '').trim();
-    if (!t || w.confidence <= MIN_CONF) continue;
+    if (!t || w.confidence <= minConf) continue;
     const { x0, y0, x1, y1 } = w.bbox;
     out.push({ t, x: x0, r: x1, y: y0, b: y1, h: y1 - y0,
                cx: (x0 + x1) / 2, cy: (y0 + y1) / 2, conf: w.confidence });
@@ -172,9 +180,11 @@ export async function readMarket(bitmap, onStep = () => {}) {
     // The Ends At date starts only a few px right of the Total column, so the
     // crop stops at the Total column itself - never at the Ends At header.
     const x1 = Math.ceil(h.totalR + a.h * 0.25);
-    // Start just below the header: the first offer row begins almost
-    // immediately after it, so generous padding here clips that row away.
-    const y0 = Math.floor(Math.max(a.b, h.total.b) + 1);
+    // Just under the header. Including the header changes how Tesseract
+    // segments the block and costs a row at the far end, so the first row is
+    // protected by reading confidence instead (see MIN_CONF_BODY).
+    const headerBottom = Math.max(a.b, h.total.b);
+    const y0 = Math.floor(headerBottom + 1);
     const y1 = Math.floor(stop - a.h * 0.8);
     if (y1 <= y0) { result[tbl.side] = []; continue; }
 
@@ -183,7 +193,7 @@ export async function readMarket(bitmap, onStep = () => {}) {
       tessedit_pageseg_mode: Tesseract.PSM.SINGLE_BLOCK,
       tessedit_char_whitelist: '0123456789,'
     });
-    const body = words(await worker.recognize(crop));
+    const body = words(await worker.recognize(crop), MIN_CONF_BODY);
 
     // numbers are right-aligned, so match each token to the nearest column edge
     const edges = {
@@ -218,6 +228,10 @@ export async function readMarket(bitmap, onStep = () => {}) {
      * between the rows that did survive. Without this, a dropped row silently
      * lowers the volume and can hide the best price.
      */
+    if (rows.length === 1) {
+      warnings.push(`${tbl.side}: only one offer was read. With a single row there is ` +
+        `no spacing to check the rest against, so confirm it against the screenshot`);
+    }
     const gaps = rows.slice(1).map((r, j) => r._cy - rows[j]._cy);
     if (gaps.length >= 2) {
       const sorted = [...gaps].sort((x, y) => x - y);
@@ -236,16 +250,17 @@ export async function readMarket(bitmap, onStep = () => {}) {
       }
 
       /*
-       * A row missing from the TOP of the list leaves no gap between surviving
-       * rows; the only trace is the blank band under the column header. That
-       * distance depends on where OCR placed the header, which moves by a few
-       * pixels between screenshots — so this is a hint to check, never a block.
-       * The threshold sits well clear of a normal first row (~0.4 of a row
-       * pitch) and of a genuinely missing one (~1.4).
+       * A row missing from the TOP leaves no gap between surviving rows. It is
+       * found instead in the blank band between the header and the first row
+       * that was read - now measured from the header itself, a landmark the
+       * crop no longer depends on, rather than from the crop edge.
        */
-      if (median > 0 && rows[0]._top > median * 0.85) {
-        notices.push(`${tbl.side}: there may be one more offer above the first row ` +
-          `read — worth checking, since the top row holds the best price`);
+      const above = rows[0]._top;
+      const missingAbove = median > 0 ? Math.max(0, Math.round(above / median)) : 0;
+      if (missingAbove > 0) {
+        warnings.push(`${tbl.side}: ${missingAbove} offer${missingAbove === 1 ? '' : 's'} ` +
+          `above the first row read could not be recognised — the top row holds the ` +
+          `best price, so add ${missingAbove === 1 ? 'it' : 'them'} before saving`);
       }
     }
     rows.forEach(r => { delete r._cy; delete r._top; });

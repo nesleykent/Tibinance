@@ -117,28 +117,45 @@ td.num.neg{color:var(--bad)}
 .queue{gap:4px;margin:0 0 14px}
 .card{padding:0;border-left-width:3px}
 .cline{
-  display:flex; align-items:center; gap:8px; padding:6px 10px;
+  display:grid; align-items:center; gap:0 10px; padding:6px 10px;
+  grid-template-columns:1.2em 8.5em 1em 6.2em 1fr;
   font-size:.79rem; white-space:nowrap; overflow:hidden;
 }
 .card summary{list-style:none;cursor:pointer}
 .card summary::-webkit-details-marker{display:none}
 .card summary:focus-visible{outline:1px solid var(--gold);outline-offset:-1px}
-.cflag{flex:0 0 auto;width:1em;text-align:center;color:var(--muted)}
+.cflag{text-align:center;color:var(--muted)}
 .card.ok .cflag{color:var(--ok)}
 .card.warn .cflag{color:var(--warn)}
 .card.bad .cflag{color:var(--bad)}
-.cworld{flex:0 0 auto;min-width:5.5em}
-.cbe{flex:0 0 auto;font-size:.7rem;cursor:help}
-.ctime{flex:0 0 auto;color:var(--muted);font-family:ui-monospace,Menlo,monospace;font-size:.74rem}
-.cmsg{flex:1 1 auto;overflow:hidden;text-overflow:ellipsis}
+.cworld{overflow:hidden;text-overflow:ellipsis}
+.cbe{font-size:.7rem;cursor:help;text-align:center}
+.ctime{color:var(--muted);font-family:ui-monospace,Menlo,monospace;font-size:.74rem}
+.cmsg{grid-column:5;overflow:hidden;text-overflow:ellipsis}
+/* one fixed-width cell per figure, so every card lines up vertically */
 .cnums{
-  margin-left:auto; flex:0 1 auto; overflow:hidden; text-overflow:ellipsis;
+  grid-column:5; justify-self:end;
+  display:grid; grid-auto-flow:column; gap:0 14px; align-items:center;
+  grid-template-columns:22ch 8ch 21ch 18ch;
   color:var(--muted); font-variant-numeric:tabular-nums;
   font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.74rem;
 }
+.cnums .cn{text-align:right;overflow:hidden;text-overflow:ellipsis}
 .cnums b{color:var(--ink);font-weight:600}
-.cnums i{font-style:normal;opacity:.6}
-.cnums .sep{opacity:.4;margin:0 2px}
+.cnums i{font-style:normal;opacity:.55}
+/* drop the widest pairs first when there is not room for all four */
+@media(max-width:860px){
+  .cnums{grid-template-columns:22ch 8ch 21ch}
+  .cnums .gold{display:none}
+}
+@media(max-width:730px){
+  .cnums{grid-template-columns:22ch 8ch}
+  .cnums .vol{display:none}
+}
+@media(max-width:620px){
+  .cline{grid-template-columns:1.2em 1fr 1em 6.2em}
+  .cnums{grid-column:1 / -1;justify-self:start;grid-template-columns:22ch 8ch;padding-left:2.2em}
+}
 .cbody{padding:0 10px 10px;border-top:1px solid var(--line);margin-top:2px}
 .cbody .cfile{
   font-family:ui-monospace,Menlo,monospace;font-size:.72rem;color:var(--muted);

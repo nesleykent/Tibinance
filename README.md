@@ -92,6 +92,20 @@ catches OCR errors that would otherwise pass silently.
 Other blocking checks: a crossed market (best Buy ≥ best Sell), and a first row
 that is not the best price (the market is sorted, so that means a misread).
 
+### Reading at low confidence, on purpose
+
+The body pass accepts words Tesseract is barely confident about. That sounds
+reckless and is the opposite: every row it produces is checked by
+`amount × price == total`, so a shaky read is caught and shown for correction.
+
+Being strict did the damage it looked like it was preventing. A faint first row
+was discarded for low confidence — and a discarded row leaves no numbers to check
+at all, so it vanished silently, taking the best price and part of the volume
+with it. A misread row announces itself; a missing row does not.
+
+The anchor pass that locates the columns keeps a high bar, because nothing
+downstream verifies it.
+
 ### Rows that were missed entirely
 
 A checksum can only vouch for a row that was read. A row OCR skipped leaves no
@@ -101,13 +115,12 @@ Offer rows are evenly spaced, so one skipped in the middle of the list leaves a
 gap of twice the normal pitch. That is measured between rows, like against like,
 and is reliable enough to block a save.
 
-A row missing from the *top* of the list leaves no such gap. The only trace is
-the blank band under the column header — and that distance shifts by a few pixels
-depending on where OCR placed the header, which is not a firm enough basis to
-stop you saving. So it is raised as a note to check, not as a blocker.
+A row missing from the *top* of the list leaves no such gap; it shows up as a
+blank band under the column header. That one blocks a save too, because the top
+row is the one that matters — it holds the best price.
 
-The distinction matters: a warning that fires on most of a batch trains you to
-click through all of them.
+If only a single row is read, there is no spacing to judge anything by, and that
+is called out rather than quietly accepted.
 
 ### Header rows that did not survive OCR
 
