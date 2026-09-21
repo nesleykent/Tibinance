@@ -294,11 +294,24 @@ export async function readMarket(bitmap, onStep = () => {}) {
 
     const SCALE = scaleFor(a.h);
     const crop = cropCanvas(full, x0, y0, x1, y1, SCALE);
-    await worker.setParameters({
-      tessedit_pageseg_mode: Tesseract.PSM.SINGLE_BLOCK,
-      tessedit_char_whitelist: '0123456789,'
-    });
-    const body = words(await worker.recognize(crop), MIN_CONF_BODY);
+    /*
+     * One segmentation mode is not reliable enough for the market grid. In real
+     * captures SINGLE_BLOCK can silently drop an otherwise perfectly readable
+     * first or middle row. Read the same crop twice with complementary layouts
+     * and merge the parsed rows below. This costs one extra body OCR pass, but
+     * avoids saving incomplete order books.
+     */
+    const readBody = async psm => {
+      await worker.setParameters({
+        tessedit_pageseg_mode: psm,
+        tessedit_char_whitelist: '0123456789,'
+      });
+      return words(await worker.recognize(crop), MIN_CONF_BODY);
+    };
+    const bodyPasses = [
+      await readBody(Tesseract.PSM.SINGLE_BLOCK),
+      await readBody(Tesseract.PSM.SPARSE_TEXT),
+    ];
 
     // numbers are right-aligned, so match each token to the nearest column edge
     const edges = {
@@ -308,25 +321,43 @@ export async function readMarket(bitmap, onStep = () => {}) {
     };
     const guard = edges.total + a.h * SCALE;
 
-    const rows = [];
-    for (const row of clusterRows(body)) {
-      const cell = {};
-      for (const w of row) {
-        const txt = w.t.replace(/[^0-9,]/g, '');
-        if (!txt || w.r > guard) continue;
-        const col = Object.keys(edges).reduce((best, c) =>
-          Math.abs(edges[c] - w.r) < Math.abs(edges[best] - w.r) ? c : best);
-        cell[col] = (cell[col] ?? '') + txt;
+    const parseRows = body => {
+      const parsed = [];
+      for (const row of clusterRows(body)) {
+        const cell = {};
+        for (const w of row) {
+          const txt = w.t.replace(/[^0-9,]/g, '');
+          if (!txt || w.r > guard) continue;
+          const col = Object.keys(edges).reduce((best, c) =>
+            Math.abs(edges[c] - w.r) < Math.abs(edges[best] - w.r) ? c : best);
+          cell[col] = (cell[col] ?? '') + txt;
+        }
+        const keys = ['amount', 'price', 'total'];
+        if (!keys.every(k => cell[k] && /^[\d,]+$/.test(cell[k]))) continue;
+        const v = Object.fromEntries(keys.map(k => [k, parseInt(cell[k].replace(/,/g, ''), 10)]));
+        if (keys.some(k => !Number.isFinite(v[k]) || v[k] <= 0)) continue;
+        v.ok = v.amount * v.price === v.total;
+        v._cy = row.reduce((t, w) => t + w.cy, 0) / row.length;
+        v._top = Math.min(...row.map(w => w.y));
+        parsed.push(v);
       }
-      const keys = ['amount', 'price', 'total'];
-      if (!keys.every(k => cell[k] && /^[\d,]+$/.test(cell[k]))) continue;
-      const v = Object.fromEntries(keys.map(k => [k, parseInt(cell[k].replace(/,/g, ''), 10)]));
-      if (keys.some(k => !Number.isFinite(v[k]) || v[k] <= 0)) continue;
-      v.ok = v.amount * v.price === v.total;
-      v._cy = row.reduce((t, w) => t + w.cy, 0) / row.length;
-      v._top = Math.min(...row.map(w => w.y));
-      rows.push(v);
+      return parsed;
+    };
+
+    /*
+     * Merge the two OCR passes by visual row. Prefer a checksum-valid reading
+     * when both passes saw the same row differently. Rows found by only one pass
+     * are retained, which is what recovers lines dropped by SINGLE_BLOCK.
+     */
+    const candidates = bodyPasses.flatMap(parseRows).sort((p, q) => p._cy - q._cy);
+    const rows = [];
+    const rowTol = Math.max(3, a.h * SCALE * 0.55);
+    for (const v of candidates) {
+      const j = rows.findIndex(r => Math.abs(r._cy - v._cy) <= rowTol);
+      if (j < 0) rows.push(v);
+      else if (!rows[j].ok && v.ok) rows[j] = v;
     }
+    rows.sort((p, q) => p._cy - q._cy);
     /*
      * Offer rows are evenly spaced. A row that OCR missed entirely leaves no
      * numbers to checksum, so the only trace it leaves is a double-height gap
@@ -355,23 +386,12 @@ export async function readMarket(bitmap, onStep = () => {}) {
       }
 
       /*
-       * A row missing from the TOP leaves no gap between surviving rows. It is
-       * found instead in the blank band between the header and the first row
-       * that was read - now measured from the header itself, a landmark the
-       * crop no longer depends on, rather than from the crop edge.
+       * Do not infer a missing first row from the blank band above the first OCR
+       * box. Tesseract's glyph boxes do not start at a stable offset from the
+       * header, so that test produced systematic false positives. Missing rows
+       * are instead recovered by the complementary OCR pass above; unresolved
+       * omissions between surviving rows are still caught by the gap check.
        */
-      // Do not infer a missing first offer from the first OCR glyph's distance
-      // to the crop edge. That distance includes the normal visual padding below
-      // Tibia's column header and Tesseract's glyph bounding-box offset, so it is
-      // not a row-count measurement. Missing rows BETWEEN recognised offers are
-      // still detected above from doubled row gaps. The top row itself is instead
-      // protected by the low-confidence body pass and the row checksum.
-      const missingAbove = 0;
-      if (missingAbove > 0) {
-        warnings.push(`${tbl.side}: ${missingAbove} offer${missingAbove === 1 ? '' : 's'} ` +
-          `above the first row read could not be recognised — the top row holds the ` +
-          `best price, so add ${missingAbove === 1 ? 'it' : 'them'} before saving`);
-      }
     }
     rows.forEach(r => { delete r._cy; delete r._top; });
     result[tbl.side] = rows;
