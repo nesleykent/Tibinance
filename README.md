@@ -73,8 +73,37 @@ catches OCR errors that would otherwise pass silently.
 Other blocking checks: a crossed market (best Buy ≥ best Sell), and a first row
 that is not the best price (the market is sorted, so that means a misread).
 
+### Rows that were missed entirely
+
+A checksum can only vouch for a row that was read. A row OCR skipped leaves no
+numbers to check, yet it still lowers the volume and can hide the best price.
+
+Offer rows are evenly spaced, so a skipped one leaves a gap of twice the normal
+pitch. The reader measures the spacing between rows and reports how many are
+unaccounted for. The first row is a special case — it leaves no gap between
+surviving rows — so it is caught instead by the blank band between the column
+header and the first row that was read. That distance is measured from the row's
+top edge rather than its centre; centres carry the glyph height plus the variance
+in where OCR placed the header, which is enough to invent rows that are not
+actually missing.
+
+### Header rows that did not survive OCR
+
+Both tables are drawn with identical column positions. If the `Amount /
+Piece Price / Total Price` headers cannot be read for one table, that table
+borrows the other's column geometry instead of failing. Only when neither
+table's header can be found does the screenshot error out.
+
 Every row is editable, so a partially cut-off offer can be corrected or removed
 before saving — it is excluded from the volume sums.
+
+### Working through a batch
+
+Drop a whole day's screenshots at once. Each becomes a single-line card showing
+world, BattlEye, best prices, volumes and spread. A clean read stays folded; any
+screenshot needing attention opens itself. The bar above the list counts what is
+ready and what is not, and **Save all ready** stores every card that passes its
+checks, leaving the rest for you to correct.
 
 ### BattlEye
 

@@ -23,7 +23,7 @@ const spread = r => r.sell - r.buy;
 /* ---------------------------------------------------------------- analysis */
 function analyse(state) {
   const { sell, buy } = state.rows;
-  const warn = [];
+  const warn = [...(state.ocrWarnings ?? [])];
   const live = s => s.filter(r => r.amount > 0 && r.price > 0);
   const S = live(sell), B = live(buy);
 
@@ -106,43 +106,80 @@ function rowsHtml(state, side) {
 
 function render(state) {
   const el = cardEl(state.id);
-  if (state.status === 'error') {
-    el.className = 'card bad';
-    el.innerHTML = `<h3>${esc(state.name)}</h3><div class="steps msg-bad">${esc(state.error)}</div>`;
-    return;
-  }
-  if (state.status === 'dup') {
-    el.className = 'card warn';
+
+  if (state.status === 'error' || state.status === 'dup') {
+    const bad = state.status === 'error';
+    el.className = `card ${bad ? 'bad' : 'warn'}`;
     el.innerHTML = `<h3>${esc(state.name)}</h3>
-      <div class="steps msg-warn">Already in the database — this exact screenshot was processed before.</div>`;
+      <div class="steps ${bad ? 'msg-bad' : 'msg-warn'}">${esc(bad ? state.error
+        : 'Already in the database — this exact screenshot was processed before.')}</div>`;
+    updateQueueBar();
     return;
   }
   if (state.status !== 'review') {
     el.className = 'card';
     el.innerHTML = `<h3>${esc(state.name)}</h3><div class="steps">${steps(state)}
       <div>${esc(state.stage ?? 'working…')}</div></div>`;
+    updateQueueBar();
     return;
   }
 
   const a = analyse(state);
   state.analysis = a;
+  // problems open themselves; clean reads stay folded so a batch stays scannable
+  state.open ??= !a.ok;
   el.className = `card ${a.ok ? 'ok' : 'warn'}`;
-  const warnHtml = a.warn.length
-    ? `<div class="steps msg-warn">${a.warn.map(w => `<div>⚠ ${esc(w)}</div>`).join('')}</div>` : '';
-  const sum = a.sell ? `<div class="summary">
-      best Sell <b>${fmt(a.sell)}&#8239;gp/TC</b> · volume <b>${fmt(a.sellVolume)}&#8239;TC</b> &nbsp;|&nbsp;
-      best Buy <b>${fmt(a.buy)}&#8239;gp/TC</b> · volume <b>${fmt(a.buyVolume)}&#8239;TC</b> &nbsp;|&nbsp;
-      spread ${fmt(a.spread)}&#8239;gp/TC</div>` : '';
 
-  el.innerHTML = `<h3>${esc(state.name)}</h3>
-    <div class="steps">${steps(state)}</div>
-    <div class="rows">${rowsHtml(state, 'sell')}${rowsHtml(state, 'buy')}</div>
-    ${sum}${warnHtml}
-    <div class="btnrow">
-      <button class="btn primary" data-save="${state.id}" ${a.ok ? '' : 'disabled'}>Save to database</button>
-      ${a.ok ? '' : `<button class="btn" data-force="${state.id}">Save anyway</button>`}
-      <button class="btn" data-discard="${state.id}">Discard</button>
-    </div>`;
+  const w = state.world;
+  const meta = w
+    ? `<b>${esc(w.world)}</b> · ${esc(w.type)} · BattlEye <b class="be-${esc(w.battleye)}">${esc(w.battleye)}</b> · ${esc(state.capturedAt)}`
+    : `<span class="msg-warn">${esc(state.worldNote ?? 'world unresolved')}</span>`;
+  const nums = a.sell
+    ? `<b>${fmt(a.sell)}</b> / <b>${fmt(a.buy)}</b> gp/TC<br>
+       ${fmt(a.sellVolume)} / ${fmt(a.buyVolume)} TC · spread <b>${fmt(a.spread)}</b>`
+    : '—';
+  const flag = a.ok ? '' : `<div class="steps msg-warn">${a.warn.map(x => `<div>⚠ ${esc(x)}</div>`).join('')}</div>`;
+
+  el.innerHTML = `<details ${state.open ? 'open' : ''}>
+    <summary>
+      <span class="cfile">${a.ok ? '✓' : '⚠'} ${esc(state.name)}<span class="chev">▶</span></span>
+      <span class="cmeta">${meta}</span>
+      <span class="cnums">${nums}</span>
+    </summary>
+    <div class="cbody">
+      <div class="rows">${rowsHtml(state, 'sell')}${rowsHtml(state, 'buy')}</div>
+      ${flag}
+      <div class="btnrow">
+        <button class="btn primary" data-save="${state.id}" ${a.ok ? '' : 'disabled'}>Save</button>
+        ${a.ok ? '' : `<button class="btn" data-force="${state.id}">Save anyway</button>`}
+        <button class="btn" data-discard="${state.id}">Discard</button>
+      </div>
+    </div>
+  </details>`;
+  el.querySelector('details').addEventListener('toggle', e => { state.open = e.target.open; });
+  updateQueueBar();
+}
+
+/** One line of truth about the batch, plus the bulk actions. */
+function updateQueueBar() {
+  const bar = $('qbar');
+  const list = [...cards.values()];
+  if (!list.length) { bar.hidden = true; $('queue').hidden = true; return; }
+  bar.hidden = false;
+  const ready = list.filter(c => c.status === 'review' && c.analysis?.ok).length;
+  const attn = list.filter(c => c.status === 'review' && !c.analysis?.ok).length;
+  const busy = list.filter(c => c.status === 'work').length;
+  const other = list.filter(c => c.status === 'error' || c.status === 'dup').length;
+  $('qstat').innerHTML = [
+    `<b>${list.length}</b> screenshot${list.length === 1 ? '' : 's'}`,
+    busy ? `${busy} reading…` : '',
+    ready ? `<b>${ready}</b> ready` : '',
+    attn ? `<span class="attn">${attn} need${attn === 1 ? 's' : ''} attention</span>` : '',
+    other ? `${other} skipped` : ''
+  ].filter(Boolean).join(' · ');
+  const sa = $('saveAll');
+  sa.disabled = ready === 0;
+  sa.textContent = ready ? `Save all ready (${ready})` : 'Save all ready';
 }
 
 /* --------------------------------------------------------------- pipeline */
@@ -181,6 +218,7 @@ async function handleFile(file) {
     state.world = world;
     state.rows.sell = (market.sell ?? []).map(r => ({ ...r }));
     state.rows.buy = (market.buy ?? []).map(r => ({ ...r }));
+    state.ocrWarnings = market.warnings ?? [];
     state.status = 'review';
     if (!world) state.worldNote ||= 'World lookup failed — fix the filename and retry';
     render(state);
@@ -209,6 +247,7 @@ async function save(id) {
     cards.delete(id);
     $(`card-${id}`)?.remove();
     if (!$('queue').children.length) $('queue').hidden = true;
+    updateQueueBar();
     await renderTable();
   } catch (e) {
     alert(`Could not save: ${e.message}`);
@@ -294,6 +333,34 @@ $('queue').addEventListener('input', e => {
   const again = document.querySelector(
     `#card-${state.id} input[data-s="${i.dataset.s}"][data-i="${i.dataset.i}"][data-f="${i.dataset.f}"]`);
   if (again) { again.focus(); again.setSelectionRange(pos, pos); }
+});
+
+$('saveAll').addEventListener('click', async () => {
+  const btn = $('saveAll');
+  btn.disabled = true;
+  // snapshot first: save() mutates `cards` as it goes
+  const ready = [...cards.values()].filter(c => c.status === 'review' && c.analysis?.ok);
+  for (const c of ready) {
+    $(`card-${c.id}`)?.classList.add('saving');
+    await save(c.id);
+  }
+  updateQueueBar();
+});
+
+$('discardAll').addEventListener('click', () => {
+  const n = cards.size;
+  if (!n || !confirm(`Discard all ${n} screenshot(s) without saving?`)) return;
+  cards.clear();
+  $('queue').innerHTML = '';
+  $('queue').hidden = true;
+  updateQueueBar();
+});
+
+$('expandAll').addEventListener('click', () => {
+  const anyClosed = [...cards.values()].some(c => c.status === 'review' && !c.open);
+  for (const c of cards.values()) if (c.status === 'review') c.open = anyClosed;
+  for (const c of cards.values()) if (c.status === 'review') render(c);
+  $('expandAll').textContent = anyClosed ? 'Collapse all' : 'Expand all';
 });
 
 $('tbody').addEventListener('click', async e => {

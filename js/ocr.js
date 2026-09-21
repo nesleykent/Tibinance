@@ -49,18 +49,44 @@ function locateTables(anchors) {
 }
 
 /** Column headers of the first table below `afterY`. */
+const norm = t => t.toLowerCase().replace(/[^a-z]/g, '');
+
+/*
+ * Column headers of the first table below `afterY`, or null if this table's
+ * header row did not survive OCR. Returning null rather than throwing matters:
+ * both tables are drawn with identical column positions, so a header row that
+ * did read cleanly can stand in for one that did not (see reuseGeometry).
+ */
 function headerRow(anchors, afterY) {
-  const amounts = anchors.filter(w => w.t === 'Amount' && w.y > afterY).sort((a, b) => a.y - b.y);
-  if (!amounts.length) throw new Error('Could not find the "Amount" column header');
-  const a = amounts[0];
-  const line = anchors.filter(w => sameLine(w, a));
-  const tok = n => line.find(w => w.t.toLowerCase() === n);
-  const piece = tok('piece'), total = tok('total');
-  const prices = line.filter(w => w.t.toLowerCase() === 'price').sort((x, y) => x.x - y.x);
-  if (!piece || !total || prices.length < 2) {
-    throw new Error('Could not identify the Piece Price / Total Price columns');
+  const amounts = anchors
+    .filter(w => norm(w.t) === 'amount' && !w.t.includes(':') && w.y > afterY)
+    .sort((a, b) => a.y - b.y);
+  for (const a of amounts) {
+    const line = anchors.filter(w => sameLine(w, a));
+    const tok = n => line.find(w => norm(w.t) === n);
+    const piece = tok('piece'), total = tok('total');
+    const prices = line.filter(w => norm(w.t) === 'price').sort((x, y) => x.x - y.x);
+    // Amount + Piece Price + Total Price on one line is the signature of the
+    // offer-table header, and tells it apart from the "Amount:" form field.
+    if (piece && total && prices.length >= 2) {
+      return { amount: a, piece, pieceR: prices[0].r, total, totalR: prices[1].r };
+    }
   }
-  return { amount: a, piece, pieceR: prices[0].r, total, totalR: prices[1].r };
+  return null;
+}
+
+/** Borrow a sibling table's column geometry, keeping this table's own vertical position. */
+function reuseGeometry(donor, donorTableY, tableY) {
+  const dy = tableY - donorTableY;
+  const shift = w => ({ ...w, y: w.y + dy, b: w.b + dy, cy: w.cy + dy });
+  return {
+    amount: shift(donor.amount),
+    piece: shift(donor.piece),
+    pieceR: donor.pieceR,
+    total: shift(donor.total),
+    totalR: donor.totalR,
+    borrowed: true
+  };
 }
 
 /** Group tokens into visual rows by vertical proximity. */
@@ -118,11 +144,25 @@ export async function readMarket(bitmap, onStep = () => {}) {
   const creates = anchors.filter(w => /^create/i.test(w.t)).sort((a, b) => a.y - b.y);
   const stops = [...tables.slice(1).map(t => t.y), creates.length ? creates[0].y : bitmap.height];
 
+  // Resolve every header row first, so a table whose header OCR'd poorly can
+  // borrow the geometry of one that came through cleanly.
+  const heads = tables.map(t => headerRow(anchors, t.y));
+  const donorIdx = heads.findIndex(Boolean);
+  if (donorIdx === -1) {
+    throw new Error('Could not find the Amount / Piece Price / Total Price column ' +
+                    'headers in either table. Make sure the whole market window is ' +
+                    'visible and not covered by another window.');
+  }
+  for (let i = 0; i < heads.length; i++) {
+    if (!heads[i]) heads[i] = reuseGeometry(heads[donorIdx], tables[donorIdx].y, tables[i].y);
+  }
+
   const result = {};
+  const warnings = [];
   for (let i = 0; i < tables.length; i++) {
     const tbl = tables[i], stop = stops[i];
     onStep(`reading ${tbl.side} offers`);
-    const h = headerRow(anchors, tbl.y);
+    const h = heads[i];
     const a = h.amount;
 
     // Integer pixel bounds: fractional ones make drawImage resample, which
@@ -167,10 +207,49 @@ export async function readMarket(bitmap, onStep = () => {}) {
       const v = Object.fromEntries(keys.map(k => [k, parseInt(cell[k].replace(/,/g, ''), 10)]));
       if (keys.some(k => !Number.isFinite(v[k]) || v[k] <= 0)) continue;
       v.ok = v.amount * v.price === v.total;
+      v._cy = row.reduce((t, w) => t + w.cy, 0) / row.length;
+      v._top = Math.min(...row.map(w => w.y));
       rows.push(v);
     }
+    /*
+     * Offer rows are evenly spaced. A row that OCR missed entirely leaves no
+     * numbers to checksum, so the only trace it leaves is a double-height gap
+     * between the rows that did survive. Without this, a dropped row silently
+     * lowers the volume and can hide the best price.
+     */
+    const gaps = rows.slice(1).map((r, j) => r._cy - rows[j]._cy);
+    if (gaps.length >= 2) {
+      const sorted = [...gaps].sort((x, y) => x - y);
+      const median = sorted[Math.floor(sorted.length / 2)];
+      const missed = gaps.reduce((n, g) => n + Math.max(0, Math.round(g / median) - 1), 0);
+      /*
+       * A gap only betrays a row missed BETWEEN two that were read. The first
+       * row leaves no such gap - and it is the costly one, because it holds the
+       * best price. It is caught instead by its distance from the top of the
+       * crop, which starts immediately below the column header.
+       */
+      // Measured from the row's TOP edge, not its centre: the crop begins one
+      // pixel under the header, so with nothing missing the first row starts
+      // within a few pixels of it. Centres carry the glyph height plus the
+      // variance in where OCR put the header, which is enough to invent rows
+      // that are not missing at all.
+      const leading = median > 0 && rows[0]._top > median * 0.6
+        ? Math.round(rows[0]._top / median) : 0;
+      const total = missed + leading;
+      if (median > 0 && total > 0) {
+        const where = leading
+          ? (missed ? 'at the top of the list and between other rows'
+                    : 'at the top of the list, where the best price sits')
+          : 'between the rows that were read';
+        warnings.push(`${tbl.side}: spacing suggests ${total} offer row` +
+          `${total === 1 ? '' : 's'} ${where} could not be recognised — ` +
+          `compare with the screenshot and add ${total === 1 ? 'it' : 'them'}`);
+      }
+    }
+    rows.forEach(r => { delete r._cy; delete r._top; });
     result[tbl.side] = rows;
   }
+  result.warnings = warnings;
   return result;
 }
 

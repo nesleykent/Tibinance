@@ -102,3 +102,34 @@ footer{max-width:1180px;margin:40px auto 0;color:var(--muted);font-size:.78rem;b
 
 /* a negative spread means a crossed market got saved past the warning */
 td.num.neg{color:var(--bad)}
+
+/* ---- queue bar + compact cards -------------------------------------- */
+.qbar{
+  position:sticky; top:0; z-index:5;
+  display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;
+  background:var(--panel-2); border:1px solid var(--line); border-radius:var(--radius);
+  padding:10px 14px; margin:18px 0 10px;
+}
+.qstat{font-size:.85rem;color:var(--muted)}
+.qstat b{color:var(--ink)}
+.qstat .attn{color:var(--warn)}
+.qactions{display:flex;gap:8px;flex-wrap:wrap}
+
+.card summary{
+  list-style:none; cursor:pointer; display:grid; gap:2px 12px; align-items:center;
+  grid-template-columns:1fr auto;
+}
+.card summary::-webkit-details-marker{display:none}
+.card summary:focus-visible{outline:1px solid var(--gold);border-radius:6px}
+.cfile{font-size:.9rem;font-weight:600;word-break:break-all}
+.cmeta{font-size:.8rem;color:var(--muted);grid-column:1}
+.cmeta b{color:var(--ink);font-weight:600}
+.cnums{
+  grid-column:2; grid-row:1 / span 2; text-align:right; white-space:nowrap;
+  font-size:.82rem; color:var(--muted); font-variant-numeric:tabular-nums;
+}
+.cnums b{color:var(--ink);font-family:ui-monospace,Menlo,monospace}
+.chev{color:var(--muted);font-size:.75rem;margin-left:6px}
+details[open] .chev{transform:rotate(90deg);display:inline-block}
+.cbody{margin-top:10px;border-top:1px solid var(--line);padding-top:10px}
+.card.saving{opacity:.5}
