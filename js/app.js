@@ -121,15 +121,34 @@ function steps(state) {
 
 function rowsHtml(state, side) {
   const rows = state.rows[side];
+  const noun = side === 'sell' ? 'Sell' : 'Buy';
   const body = rows.map((r, i) => `
     <div class="rowline ${r.bad ? 'bad' : ''}">
-      <input data-s="${side}" data-i="${i}" data-f="amount" value="${fmt(r.amount)}" aria-label="${side} row ${i + 1} amount">
-      <input data-s="${side}" data-i="${i}" data-f="price"  value="${fmt(r.price)}"  aria-label="${side} row ${i + 1} price">
-      <input data-s="${side}" data-i="${i}" data-f="total"  value="${r.total ? fmt(r.total) : ''}" aria-label="${side} row ${i + 1} total">
-      <span class="flag ${r.bad ? 'bad' : 'ok'}">${r.bad ? '✕' : '✓'}</span>
+      <input data-s="${side}" data-i="${i}" data-f="amount" value="${fmt(r.amount)}"
+             aria-label="${noun} offer ${i + 1}, amount in Tibia Coins">
+      <input data-s="${side}" data-i="${i}" data-f="price"  value="${fmt(r.price)}"
+             aria-label="${noun} offer ${i + 1}, price per coin in gold">
+      <input data-s="${side}" data-i="${i}" data-f="total"  value="${r.total ? fmt(r.total) : ''}"
+             aria-label="${noun} offer ${i + 1}, total price in gold">
+      <span class="flag ${r.bad ? 'bad' : 'ok'}"
+            title="${r.bad ? 'amount × price does not equal the total' : 'amount × price matches the total'}"
+            >${r.bad ? '✕' : '✓'}</span>
+      <button class="rowdel" data-s="${side}" data-i="${i}"
+              title="Remove this offer — it will not count towards the volume"
+              aria-label="Remove ${noun} offer ${i + 1}">✕</button>
     </div>`).join('');
-  return `<div><h4>${side} offers (${rows.length})</h4>${body}
-    <button class="btn mini-add" data-add="${side}">+ row</button></div>`;
+  return `<div class="side">
+    <h4>${noun} offers <span class="n">${rows.length}</span></h4>
+    <div class="rowhead">
+      <span>Amount <i>TC</i></span>
+      <span>Piece Price <i>gp/TC</i></span>
+      <span>Total Price <i>gp</i></span>
+      <span title="amount × price must equal the total">=</span>
+      <span></span>
+    </div>
+    ${body || '<p class="norows">no offers read</p>'}
+    <button class="btn mini-add" data-add="${side}">+ add offer</button>
+  </div>`;
 }
 
 function render(state) {
@@ -187,7 +206,8 @@ function render(state) {
     <div class="cbody">
       <div class="cfile">${esc(state.name)}</div>
       <div class="rows">${rowsHtml(state, 'sell')}${rowsHtml(state, 'buy')}</div>
-      ${a.ok ? '' : `<div class="steps msg-warn">${a.warn.map(x => `<div>⚠ ${esc(x)}</div>`).join('')}</div>`}
+      ${a.warn.length ? `<div class="steps msg-warn">${a.warn.map(x => `<div>⚠ ${esc(x)}</div>`).join('')}</div>` : ''}
+      ${(state.ocrNotices ?? []).length ? `<div class="steps msg-note">${state.ocrNotices.map(x => `<div>ⓘ ${esc(x)}</div>`).join('')}</div>` : ''}
       <div class="btnrow">
         <button class="btn primary" data-save="${state.id}" ${a.ok ? '' : 'disabled'}>Save</button>
         ${a.ok ? '' : `<button class="btn" data-force="${state.id}">Save anyway</button>`}
@@ -267,6 +287,7 @@ async function handleFile(file) {
     state.rows.sell = (market.sell ?? []).map(r => ({ ...r }));
     state.rows.buy = (market.buy ?? []).map(r => ({ ...r }));
     state.ocrWarnings = market.warnings ?? [];
+    state.ocrNotices = market.notices ?? [];
     state.status = 'review';
     if (!world) state.worldNote ||= 'World lookup failed — fix the filename and retry';
     render(state);
@@ -314,29 +335,88 @@ async function save(id) {
 
 /* ------------------------------------------------------------------ table */
 let rowsCache = [];
+let sortBy = { key: 'capturedAt', dir: -1 };
+
+/*
+ * Which direction counts as "best" per column, for the comparison highlight.
+ *  -1 -> lowest wins   (cheapest coins, tightest spread)
+ *  +1 -> highest wins  (most gold offered, deepest book)
+ */
+const BEST = {
+  sell: -1, buy: +1, spread: -1,
+  sellVolume: +1, buyVolume: +1, goldSupply: +1, goldDemand: +1
+};
+const BEST_WHY = {
+  sell: 'cheapest coins of the worlds shown',
+  buy: 'most gold paid per coin of the worlds shown',
+  spread: 'tightest spread of the worlds shown',
+  sellVolume: 'most coins on sale of the worlds shown',
+  buyVolume: 'most coins wanted of the worlds shown',
+  goldSupply: 'most gold committed in buy offers of the worlds shown',
+  goldDemand: 'most gold asked for by sellers of the worlds shown'
+};
+
+const valueOf = (r, k) => (k === 'spread' ? spread(r) : r[k]);
 
 async function renderTable() {
   rowsCache = await store.all();
-  let rows = [...rowsCache].sort((x, y) =>
-    y.capturedAt.localeCompare(x.capturedAt) || x.world.localeCompare(y.world));
+  let rows = [...rowsCache];
+
+  const q = $('filter').value.trim().toLowerCase();
+  if (q) rows = rows.filter(r => r.world.toLowerCase().includes(q));
+
+  rows.sort((x, y) => {
+    const a = valueOf(x, sortBy.key), b = valueOf(y, sortBy.key);
+    const cmp = typeof a === 'string' ? a.localeCompare(b) : (a ?? -Infinity) - (b ?? -Infinity);
+    return cmp * sortBy.dir || y.capturedAt.localeCompare(x.capturedAt);
+  });
+
   if ($('latestOnly').checked) {
-    const seen = new Set();
-    rows = rows.filter(r => !seen.has(r.world) && seen.add(r.world));
+    const byWorld = new Map();
+    for (const r of [...rows].sort((x, y) => y.capturedAt.localeCompare(x.capturedAt))) {
+      if (!byWorld.has(r.world)) byWorld.set(r.world, r);
+    }
+    rows = rows.filter(r => byWorld.get(r.world) === r);
   }
-  $('count').textContent = `${rows.length} row${rows.length === 1 ? '' : 's'}`;
+
+  // extremes are computed over exactly the rows on screen, so the highlight
+  // always answers "best of what I am looking at"
+  const best = {};
+  if ($('compare').checked && rows.length > 1) {
+    for (const k of Object.keys(BEST)) {
+      const vals = rows.map(r => valueOf(r, k)).filter(Number.isFinite);
+      if (vals.length > 1) best[k] = BEST[k] < 0 ? Math.min(...vals) : Math.max(...vals);
+    }
+  }
+  const mark = (r, k) => (best[k] !== undefined && valueOf(r, k) === best[k])
+    ? ` class="num best" title="${esc(BEST_WHY[k])}"` : ' class="num"';
+
+  const worlds = new Set(rows.map(r => r.world)).size;
+  $('count').textContent = rows.length
+    ? `${rows.length} row${rows.length === 1 ? '' : 's'} · ${worlds} world${worlds === 1 ? '' : 's'}`
+    : '0 rows';
   $('empty').hidden = rows.length > 0;
+
   $('tbody').innerHTML = rows.map(r => `<tr>
       <td>${esc(r.world)}</td><td>${esc(r.type)}</td>
       <td class="be be-${esc(r.battleye)}">${esc(r.battleye)}</td>
-      <td class="num">${fmt(r.sell)}</td><td class="num">${fmt(r.sellVolume)}</td>
-      <td class="num" title="${Number.isFinite(r.goldDemand) ? fmt(r.goldDemand) + ' gp' : 'not recorded'}">${fmtSI(r.goldDemand)}</td>
-      <td class="num">${fmt(r.buy)}</td><td class="num">${fmt(r.buyVolume)}</td>
-      <td class="num" title="${Number.isFinite(r.goldSupply) ? fmt(r.goldSupply) + ' gp' : 'not recorded'}">${fmtSI(r.goldSupply)}</td>
-      <td class="num${spread(r) < 0 ? ' neg' : ''}">${fmt(spread(r))}</td>
+      <td${mark(r, 'sell')}>${fmt(r.sell)}</td>
+      <td${mark(r, 'sellVolume')}>${fmt(r.sellVolume)}</td>
+      <td${mark(r, 'goldDemand')} title="${Number.isFinite(r.goldDemand) ? fmt(r.goldDemand) + ' gp' : 'not recorded'}">${fmtSI(r.goldDemand)}</td>
+      <td${mark(r, 'buy')}>${fmt(r.buy)}</td>
+      <td${mark(r, 'buyVolume')}>${fmt(r.buyVolume)}</td>
+      <td${mark(r, 'goldSupply')} title="${Number.isFinite(r.goldSupply) ? fmt(r.goldSupply) + ' gp' : 'not recorded'}">${fmtSI(r.goldSupply)}</td>
+      <td class="num${spread(r) < 0 ? ' neg' : ''}${best.spread === spread(r) ? ' best' : ''}"
+          title="${best.spread === spread(r) ? esc(BEST_WHY.spread) : (spread(r) < 0 ? 'crossed market — a price is almost certainly misread' : '')}">${fmt(spread(r))}</td>
       <td><time datetime="${esc(r.capturedAt)}">${esc(r.capturedAt)}</time></td>
       <td class="hash" title="${esc(r.hash)}">${esc(r.hash.slice(0, 10))}</td>
       <td><button class="del" data-del="${esc(r.hash)}" title="Remove">✕</button></td>
     </tr>`).join('');
+
+  for (const th of document.querySelectorAll('#table thead th[data-sort]')) {
+    th.classList.toggle('sorted', th.dataset.sort === sortBy.key);
+    th.dataset.dir = th.dataset.sort === sortBy.key ? (sortBy.dir < 0 ? 'desc' : 'asc') : '';
+  }
 }
 
 function download(name, text, type) {
@@ -376,6 +456,10 @@ $('queue').addEventListener('click', e => {
     cards.delete(b.dataset.discard);
     $(`card-${b.dataset.discard}`)?.remove();
     if (!$('queue').children.length) $('queue').hidden = true;
+  } else if (b.classList.contains('rowdel')) {
+    const state = cards.get(b.closest('.card').id.slice(5));
+    state.rows[b.dataset.s].splice(+b.dataset.i, 1);
+    render(state);
   } else if (b.dataset.add) {
     const state = cards.get(b.closest('.card').id.slice(5));
     state.rows[b.dataset.add].push({ amount: 0, price: 0, total: 0 });
@@ -436,6 +520,17 @@ $('tbody').addEventListener('click', async e => {
   }
 });
 $('latestOnly').addEventListener('change', renderTable);
+$('compare').addEventListener('change', renderTable);
+$('filter').addEventListener('input', renderTable);
+document.querySelector('#table thead').addEventListener('click', e => {
+  const key = e.target.closest('th[data-sort]')?.dataset.sort;
+  if (!key) return;
+  // first click on a new column sorts descending for numbers, ascending for text
+  sortBy = sortBy.key === key
+    ? { key, dir: -sortBy.dir }
+    : { key, dir: typeof valueOf(rowsCache[0] ?? {}, key) === 'string' ? 1 : -1 };
+  renderTable();
+});
 
 $('exportJson').addEventListener('click', () =>
   download('observations.json', JSON.stringify(rowsCache, null, 2), 'application/json'));

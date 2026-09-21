@@ -158,7 +158,8 @@ export async function readMarket(bitmap, onStep = () => {}) {
   }
 
   const result = {};
-  const warnings = [];
+  const warnings = [];   // blocking
+  const notices = [];    // informational
   for (let i = 0; i < tables.length; i++) {
     const tbl = tables[i], stop = stops[i];
     onStep(`reading ${tbl.side} offers`);
@@ -228,28 +229,30 @@ export async function readMarket(bitmap, onStep = () => {}) {
        * best price. It is caught instead by its distance from the top of the
        * crop, which starts immediately below the column header.
        */
-      // Measured from the row's TOP edge, not its centre: the crop begins one
-      // pixel under the header, so with nothing missing the first row starts
-      // within a few pixels of it. Centres carry the glyph height plus the
-      // variance in where OCR put the header, which is enough to invent rows
-      // that are not missing at all.
-      const leading = median > 0 && rows[0]._top > median * 0.6
-        ? Math.round(rows[0]._top / median) : 0;
-      const total = missed + leading;
-      if (median > 0 && total > 0) {
-        const where = leading
-          ? (missed ? 'at the top of the list and between other rows'
-                    : 'at the top of the list, where the best price sits')
-          : 'between the rows that were read';
-        warnings.push(`${tbl.side}: spacing suggests ${total} offer row` +
-          `${total === 1 ? '' : 's'} ${where} could not be recognised — ` +
-          `compare with the screenshot and add ${total === 1 ? 'it' : 'them'}`);
+      if (median > 0 && missed > 0) {
+        warnings.push(`${tbl.side}: a gap between rows means ${missed} offer` +
+          `${missed === 1 ? '' : 's'} in the middle of the list could not be read — ` +
+          `add ${missed === 1 ? 'it' : 'them'} before saving`);
+      }
+
+      /*
+       * A row missing from the TOP of the list leaves no gap between surviving
+       * rows; the only trace is the blank band under the column header. That
+       * distance depends on where OCR placed the header, which moves by a few
+       * pixels between screenshots — so this is a hint to check, never a block.
+       * The threshold sits well clear of a normal first row (~0.4 of a row
+       * pitch) and of a genuinely missing one (~1.4).
+       */
+      if (median > 0 && rows[0]._top > median * 0.85) {
+        notices.push(`${tbl.side}: there may be one more offer above the first row ` +
+          `read — worth checking, since the top row holds the best price`);
       }
     }
     rows.forEach(r => { delete r._cy; delete r._top; });
     result[tbl.side] = rows;
   }
   result.warnings = warnings;
+  result.notices = notices;
   return result;
 }
 

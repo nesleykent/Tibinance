@@ -97,14 +97,17 @@ that is not the best price (the market is sorted, so that means a misread).
 A checksum can only vouch for a row that was read. A row OCR skipped leaves no
 numbers to check, yet it still lowers the volume and can hide the best price.
 
-Offer rows are evenly spaced, so a skipped one leaves a gap of twice the normal
-pitch. The reader measures the spacing between rows and reports how many are
-unaccounted for. The first row is a special case — it leaves no gap between
-surviving rows — so it is caught instead by the blank band between the column
-header and the first row that was read. That distance is measured from the row's
-top edge rather than its centre; centres carry the glyph height plus the variance
-in where OCR placed the header, which is enough to invent rows that are not
-actually missing.
+Offer rows are evenly spaced, so one skipped in the middle of the list leaves a
+gap of twice the normal pitch. That is measured between rows, like against like,
+and is reliable enough to block a save.
+
+A row missing from the *top* of the list leaves no such gap. The only trace is
+the blank band under the column header — and that distance shifts by a few pixels
+depending on where OCR placed the header, which is not a firm enough basis to
+stop you saving. So it is raised as a note to check, not as a blocker.
+
+The distinction matters: a warning that fires on most of a batch trains you to
+click through all of them.
 
 ### Header rows that did not survive OCR
 
@@ -115,6 +118,14 @@ table's header can be found does the screenshot error out.
 
 Every row is editable, so a partially cut-off offer can be corrected or removed
 before saving — it is excluded from the volume sums.
+
+### Reviewing the offers
+
+Each side is laid out with the Tibia client's own column names — **Amount (TC)**,
+**Piece Price (gp/TC)**, **Total Price (gp)** — followed by the checksum result
+and a button to drop the row. Every field is editable, so an offer that was
+misread can be corrected, and one that is cut off at the edge of the screenshot
+can be removed. Removed rows do not count towards the volume or the gold totals.
 
 ### Working through a batch
 
@@ -136,6 +147,18 @@ Derived from the authoritative TibiaData fields, never guessed:
 
 Comparing the date to the public rollout would be wrong: Luminera was created in
 2005-07 but reports a BattlEye date of 2017-09-05.
+
+## Comparing worlds
+
+The database table is the comparison view.
+
+- **Click any column heading** to sort by it; click again to reverse.
+- **highlight best** marks the standout value in each column *among the rows
+  currently on screen* — cheapest Sell, highest Buy, tightest spread, deepest
+  book, most gold. Filter first and the highlight re-answers for that subset.
+- **filter world** narrows to matching worlds.
+- **latest per world** keeps only the newest observation per world, which is
+  usually what you want when comparing a day's captures.
 
 ## Numbers
 
