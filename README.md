@@ -13,6 +13,15 @@ Stored — exactly these nine fields, nothing else:
 
 `World · Type · BattlEye · Sell · Sell Volume · Buy · Buy Volume · Capture Date · Screenshot Hash`
 
+**Spread is not one of them.** It is exactly `Sell − Buy`, so it is computed when
+the table is drawn rather than written to the database — a stored copy could only
+ever fall out of step with the two values it comes from. It appears in the table
+and in the CSV export; `observations.json` stays canonical at the nine fields
+above, so it round-trips through Import unchanged.
+
+A negative spread is shown in red. It means a crossed market was saved past the
+warning with *Save anyway*, which almost always indicates a misread price.
+
 Never stored, never uploaded, never committed:
 
 - **the screenshot** — decoded into a canvas, read, then discarded; the only thing

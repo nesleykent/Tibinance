@@ -81,7 +81,7 @@ code{background:#000;padding:2px 6px;border-radius:4px;font-size:.92em;color:var
 .mini{color:var(--muted);font-size:.82rem;display:flex;align-items:center;gap:5px}
 
 .table-wrap{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:.87rem;min-width:860px}
+table{width:100%;border-collapse:collapse;font-size:.87rem;min-width:960px}
 th,td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
 th{color:var(--muted);font-weight:600;font-size:.76rem;text-transform:uppercase;letter-spacing:.05em}
 tbody tr:last-child td{border-bottom:none}
@@ -99,3 +99,6 @@ footer{max-width:1180px;margin:40px auto 0;color:var(--muted);font-size:.78rem;b
 
 /* SI: the unit is part of the quantity, but subordinate to the number */
 .unit{color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0}
+
+/* a negative spread means a crossed market got saved past the warning */
+td.num.neg{color:var(--bad)}

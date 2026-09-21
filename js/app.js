@@ -16,6 +16,10 @@ const esc = s => String(s).replace(/[&<>"']/g, c =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 // capturedAt is already ISO 8601; it is displayed exactly as it is stored.
 
+/* Spread is derived, never stored: it is exactly sell - buy, so keeping a copy
+   in the database would only create something that can fall out of step. */
+const spread = r => r.sell - r.buy;
+
 /* ---------------------------------------------------------------- analysis */
 function analyse(state) {
   const { sell, buy } = state.rows;
@@ -54,7 +58,7 @@ function analyse(state) {
     sellVolume: S.reduce((a, r) => a + r.amount, 0),
     buyVolume: B.reduce((a, r) => a + r.amount, 0),
     sellRows: S.length, buyRows: B.length,
-    spread: bestSell - bestBuy,
+    spread: spread({ sell: bestSell, buy: bestBuy }),
     warn, ok: warn.length === 0
   };
 }
@@ -229,6 +233,7 @@ async function renderTable() {
       <td class="be be-${esc(r.battleye)}">${esc(r.battleye)}</td>
       <td class="num">${fmt(r.sell)}</td><td class="num">${fmt(r.sellVolume)}</td>
       <td class="num">${fmt(r.buy)}</td><td class="num">${fmt(r.buyVolume)}</td>
+      <td class="num${spread(r) < 0 ? ' neg' : ''}">${fmt(spread(r))}</td>
       <td><time datetime="${esc(r.capturedAt)}">${esc(r.capturedAt)}</time></td>
       <td class="hash" title="${esc(r.hash)}">${esc(r.hash.slice(0, 10))}</td>
       <td><button class="del" data-del="${esc(r.hash)}" title="Remove">✕</button></td>
@@ -303,9 +308,9 @@ $('latestOnly').addEventListener('change', renderTable);
 $('exportJson').addEventListener('click', () =>
   download('observations.json', JSON.stringify(rowsCache, null, 2), 'application/json'));
 $('exportCsv').addEventListener('click', () => {
-  const head = 'World,Type,BattlEye,Sell,Sell Volume,Buy,Buy Volume,Capture,Hash';
+  const head = 'World,Type,BattlEye,Sell,Sell Volume,Buy,Buy Volume,Spread,Capture,Hash';
   const body = rowsCache.map(r => [r.world, r.type, r.battleye, r.sell, r.sellVolume,
-    r.buy, r.buyVolume, r.capturedAt, r.hash]
+    r.buy, r.buyVolume, spread(r), r.capturedAt, r.hash]
     .map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
   download('observations.csv', `${head}\n${body}`, 'text/csv');
 });
