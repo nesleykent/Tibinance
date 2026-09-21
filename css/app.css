@@ -280,3 +280,25 @@ tr.grp .g-derived{color:var(--gold);opacity:.8}
 .note ul{margin:4px 0 0;padding-left:18px}
 .note li{margin:2px 0}
 .note b{color:var(--ink);font-weight:600}
+
+/* ---- opportunities & routes ------------------------------------------ */
+td.opp,td.num.opp{color:var(--gold)}
+td.opp.strong{font-weight:700}
+td.opp.strong::before{
+  content:'';position:absolute;left:2px;top:50%;transform:translateY(-50%);
+  width:3px;height:3px;border-radius:50%;background:var(--gold);
+}
+td.opp{position:relative}
+td.money.opp .cur{opacity:.7}
+
+.arb{margin-top:28px}
+.arb-head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.arb-head h2{margin:0;font-size:1.05rem}
+.arb-note{
+  margin:8px 0 10px;padding:8px 12px;font-size:.78rem;line-height:1.5;color:var(--muted);
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+}
+.arb-note b{color:var(--ink)}
+#arbTable{min-width:760px}
+tr.unprofitable td{opacity:.45}
+.cap{color:var(--warn);cursor:help;margin-left:2px}

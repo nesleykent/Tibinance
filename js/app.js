@@ -3,6 +3,7 @@ import { parseFilename } from './filename.js';
 import { lookupWorld, worldInfo } from './tibiadata.js';
 import { readMarket, disposeOcr } from './ocr.js';
 import * as store from './store.js';
+import * as stats from './stats.js';
 
 const $ = id => document.getElementById(id);
 /*
@@ -148,6 +149,10 @@ function analyse(state) {
     buyVolume: B.reduce((a, r) => a + r.amount, 0),
     goldDemand: goldOf(S),
     goldSupply: goldOf(B),
+    // quantity available at the best price - the binding constraint on any
+    // cross-world trade, since only these coins change hands at that price
+    sellTopAmount: S.filter(r => r.price === bestSell).reduce((a, r) => a + r.amount, 0),
+    buyTopAmount: B.filter(r => r.price === bestBuy).reduce((a, r) => a + r.amount, 0),
     sellRows: S.length, buyRows: B.length,
     spread: spread({ sell: bestSell, buy: bestBuy }),
     warn, ok: warn.length === 0
@@ -382,6 +387,7 @@ async function save(id) {
       sell: a.sell, sellVolume: a.sellVolume,
       buy: a.buy, buyVolume: a.buyVolume,
       goldSupply: a.goldSupply, goldDemand: a.goldDemand,
+      sellTopAmount: a.sellTopAmount, buyTopAmount: a.buyTopAmount,
       capturedAt: state.capturedAt,
       hash: state.hash
     });
@@ -408,18 +414,19 @@ let sortBy = { key: 'capturedAt', dir: -1 };
  *  -1 -> lowest wins   (cheapest coins, tightest spread)
  *  +1 -> highest wins  (most gold offered, deepest book)
  */
+/*
+ * Which direction is favourable for each measure, for the opportunity flag.
+ *  -1 -> lower is better   (cheaper coins, tighter spread)
+ *  +1 -> higher is better  (deeper book, more gold committed)
+ */
 const BEST = {
   sell: -1, buy: +1, spread: -1,
   sellVolume: +1, buyVolume: +1, goldSupply: +1, goldDemand: +1
 };
-const BEST_WHY = {
-  sell: 'cheapest coins of the worlds shown',
-  buy: 'most gold paid per coin of the worlds shown',
-  spread: 'tightest spread of the worlds shown',
-  sellVolume: 'most coins on sale of the worlds shown',
-  buyVolume: 'most coins wanted of the worlds shown',
-  goldSupply: 'most gold committed in buy offers of the worlds shown',
-  goldDemand: 'most gold asked for by sellers of the worlds shown'
+const MEASURE = {
+  sell: 'ask', buy: 'bid', spread: 'spread',
+  sellVolume: 'coins on sale', buyVolume: 'coins wanted',
+  goldSupply: 'gold committed by buyers', goldDemand: 'gold asked by sellers'
 };
 
 const valueOf = (r, k) => (k === 'spread' ? spread(r) : r[k]);
@@ -517,17 +524,39 @@ async function renderTable() {
     rows = rows.filter(r => byWorld.get(r.world) === r);
   }
 
-  // extremes are computed over exactly the rows on screen, so the highlight
-  // always answers "best of what I am looking at"
-  const best = {};
-  if ($('compare').checked && rows.length > 1) {
+  /*
+   * Opportunities are found statistically rather than by taking the extreme.
+   * The cheapest world is always "the cheapest"; that says nothing about
+   * whether it is cheap enough to act on. A modified z-score against the median
+   * and MAD of the worlds on screen answers the useful question - how far this
+   * world sits from the rest - and is not dragged around by the very outlier it
+   * is looking for, as a mean and standard deviation would be.
+   */
+  const flags = new Map();
+  if ($('compare').checked && rows.length > 2) {
     for (const k of Object.keys(BEST)) {
-      const vals = rows.map(r => valueOf(r, k)).filter(Number.isFinite);
-      if (vals.length > 1) best[k] = BEST[k] < 0 ? Math.min(...vals) : Math.max(...vals);
+      const vals = rows.map(r => valueOf(r, k));
+      if (vals.filter(Number.isFinite).length < 3) continue;
+      const finite = vals.filter(Number.isFinite);
+      const med = stats.median(finite);
+      const z = stats.zScores(vals.map(v => (Number.isFinite(v) ? v : med)));
+      rows.forEach((r, i) => {
+        const score = z[i] * BEST[k];        // positive = favourable direction
+        if (score < stats.NOTABLE) return;
+        const strong = score >= stats.OUTLIER;
+        flags.set(`${r.hash}:${k}`, {
+          cls: strong ? 'opp strong' : 'opp',
+          title: `${MEASURE[k]} is ${score.toFixed(1)} MAD ${BEST[k] < 0 ? 'below' : 'above'} ` +
+                 `the median of ${fmt(Math.round(med))} across the ${rows.length} rows shown` +
+                 (strong ? ' — a clear outlier' : '')
+        });
+      });
     }
   }
-  const mark = (r, k, extra = '') => (best[k] !== undefined && valueOf(r, k) === best[k])
-    ? ` class="num ${extra} best" title="${esc(BEST_WHY[k])}"` : ` class="num ${extra}"`;
+  const mark = (r, k, extra = '') => {
+    const f = flags.get(`${r.hash}:${k}`);
+    return f ? ` class="num ${extra} ${f.cls}" title="${esc(f.title)}"` : ` class="num ${extra}"`;
+  };
 
   /*
    * IAS 1.38: present the corresponding figures for the preceding period. Here
@@ -574,18 +603,59 @@ async function renderTable() {
       <td${mark(r, 'buy', 'money')}>${acct(r.buy, 'gp/TC')}</td>
       <td${mark(r, 'buyVolume', 'money')}>${acct(r.buyVolume, 'TC')}</td>
       <td${mark(r, 'goldSupply', 'qty')} title="${Number.isFinite(r.goldSupply) ? fmt(r.goldSupply) + SI_GROUP + 'gp' : 'not recorded'}">${acctSI(r.goldSupply, 'gp')}</td>
-      <td class="num money${spread(r) < 0 ? ' neg' : ''}${best.spread === spread(r) ? ' best' : ''}"
-          title="${best.spread === spread(r) ? esc(BEST_WHY.spread) : (spread(r) < 0 ? 'crossed market — a price is almost certainly misread' : '')}">${acct(spread(r), 'gp/TC')}</td>
+      <td class="num money${spread(r) < 0 ? ' neg' : ''} ${flags.get(`${r.hash}:spread`)?.cls ?? ''}"
+          title="${esc(flags.get(`${r.hash}:spread`)?.title ?? (spread(r) < 0 ? 'crossed market — a price is almost certainly misread' : ''))}">${acct(spread(r), 'gp/TC')}</td>
       <td><time datetime="${esc(r.capturedAt)}">${esc(r.capturedAt)}</time></td>
       <td class="hash" title="${esc(r.hash)}">${esc(r.hash.slice(0, 10))}</td>
       <td><button class="del" data-del="${esc(r.hash)}" title="Remove">✕</button></td>
     </tr>${priorRow(r)}`).join('');
   disclosure(rows, [...priors.values()]);
+  renderRoutes(rows);
 
   for (const th of document.querySelectorAll('#table thead th[data-sort]')) {
     th.classList.toggle('sorted', th.dataset.sort === sortBy.key);
     th.dataset.dir = th.dataset.sort === sortBy.key ? (sortBy.dir < 0 ? 'desc' : 'asc') : '';
   }
+}
+
+/*
+ * Cross-world routes. Only the newest observation per world is used: two
+ * captures of the same world minutes apart are not two venues, and pairing them
+ * would invent a route out of nothing but the passage of time.
+ */
+function renderRoutes(rows) {
+  const latest = new Map();
+  for (const r of [...rows].sort((a, b) => a.capturedAt.localeCompare(b.capturedAt))) {
+    latest.set(r.world, r);          // later captures overwrite earlier ones
+  }
+  const list = stats.routes([...latest.values()]);
+  const net = $('arbFees').checked;
+
+  $('arb').hidden = latest.size < 2;
+  $('arbCount').textContent = list.length
+    ? `${list.length} open across ${latest.size} worlds`
+    : `none across ${latest.size} worlds`;
+  $('arbEmpty').hidden = list.length > 0;
+
+  $('arbBody').innerHTML = list.slice(0, 12).map(r => {
+    const profitable = !net || r.netTotal === null || r.netTotal > 0;
+    const sizeCell = r.coins === null
+      ? '<span class="dash" title="the amount available at the best price was not recorded for one of these worlds">—</span>'
+      : fmt(r.coins) + (r.coins === stats.OFFER_MAX ? '<span class="cap" title="a single offer is capped at 64,000 items">*</span>' : '');
+    return `<tr class="${profitable ? '' : 'unprofitable'}">
+      <td>${esc(r.from)}</td>
+      <td class="num money">${acct(r.ask, 'gp/TC')}</td>
+      <td>${esc(r.to)}</td>
+      <td class="num money">${acct(r.bid, 'gp/TC')}</td>
+      <td class="num money opp">${acct(r.grossPerCoin, 'gp/TC')}</td>
+      <td class="num">${r.returnPct.toFixed(2)}%</td>
+      <td class="num">${sizeCell}</td>
+      <td class="num qty">${r.fees === null ? '<span class="dash">—</span>' : acctSI(r.fees, 'gp')}</td>
+      <td class="num qty ${r.netTotal !== null && r.netTotal <= 0 ? 'neg' : 'opp'}"
+          title="${r.netTotal === null ? 'size unknown, so the fee cannot be worked out' : fmt(Math.round(r.netTotal)) + ' gp on ' + esc(r.to)}">
+        ${r.netTotal === null ? '<span class="dash">—</span>' : acctSI(Math.round(r.netTotal), 'gp')}</td>
+    </tr>`;
+  }).join('');
 }
 
 function download(name, text, type) {
@@ -691,6 +761,7 @@ $('tbody').addEventListener('click', async e => {
 $('latestOnly').addEventListener('change', renderTable);
 $('compare').addEventListener('change', renderTable);
 $('comparatives').addEventListener('change', renderTable);
+$('arbFees').addEventListener('change', renderTable);
 $('sep').addEventListener('change', e => {
   groupSep = e.target.value;
   try { localStorage.setItem(SEP_KEY, groupSep); } catch { /* not persisted */ }

@@ -161,17 +161,65 @@ Derived from the authoritative TibiaData fields, never guessed:
 Comparing the date to the public rollout would be wrong: Luminera was created in
 2005-07 but reports a BattlEye date of 2017-09-05.
 
-## Comparing worlds
+## Finding opportunities
 
-The database table is the comparison view.
+### The highlight is statistical, not "the biggest number"
 
-- **Click any column heading** to sort by it; click again to reverse.
-- **highlight best** marks the standout value in each column *among the rows
-  currently on screen* — cheapest Sell, highest Buy, tightest spread, deepest
-  book, most gold. Filter first and the highlight re-answers for that subset.
+The cheapest world is always the cheapest. That tells you nothing about whether
+it is cheap *enough to act on*. So a cell is flagged by how far it sits from the
+other worlds on screen, using a **modified z-score** — the distance from the
+median, in units of the median absolute deviation.
+
+Mean and standard deviation would be the wrong tools. With a handful of worlds,
+one of which is the outlier being hunted, the mean is dragged toward it and the
+deviation inflated, so the outlier partly conceals itself and ordinary worlds
+look stranger than they are. The median and MAD do not move when a few values
+are extreme, which is the whole point when the extremes are what you want.
+
+Past 2 MAD a cell is marked; past 3.5 — the conventional outlier line — it is
+marked strongly. Hover for the score and the median it is measured against.
+At least three rows are needed before any of this means anything.
+
+### Cross-world routes
+
+Tibia Coins sit on the **account**; gold sits on the **character**; the Market is
+entered from a depot and so is **per world**. Coins bought on one world can be
+sold on another, and the gold arrives on that second world. A route converts
+gold held on one world into more gold held on another.
+
+Buy on A at A's best **ask**, sell on B at B's best **bid**. The route exists
+only while B's bid is above A's ask.
+
+**Fees, from the game manual:** accepting an offer that already exists is free.
+Placing your own costs **2% of the offer price, minimum 20 gp, maximum
+1,000,000 gp**, on each side.
+
+That cap changes everything and is easy to get wrong. On a route moving
+~2.5 Ggp, an uncapped 2% would be ~103 Mgp and would swallow 91% of the edge;
+capped, the two fees come to 2 Mgp and the route clears ~111 Mgp. A flat 2%
+would report a strong route as marginal.
+
+The floor matters at the other end. A route can show a healthy percentage and
+still lose money when only a few hundred coins sit at the best price, because
+the fees do not shrink with the trade. Those rows are greyed and their net shown
+in parentheses.
+
+**Size** is the quantity at the best price on *both* sides — what can be taken
+before the price moves — capped at the 64,000 items a single offer allows.
+
+### Reading the routes honestly
+
+Each world is priced from its own most recent capture, and those captures were
+not simultaneous. A route describes what two order books showed when you looked
+at them. It is not a quote, and nothing here checks whether the offers still
+stand.
+
+### Comparing observations
+
+- **Click any column heading** to sort; click again to reverse.
 - **filter world** narrows to matching worlds.
-- **latest per world** keeps only the newest observation per world, which is
-  usually what you want when comparing a day's captures.
+- **latest per world** keeps only the newest observation per world.
+- **comparatives** shows each world's preceding capture beneath it.
 
 ## Numbers
 

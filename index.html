@@ -111,6 +111,41 @@
       <p id="empty" class="empty">Nothing stored yet — drop a screenshot above.</p>
     </div>
   </section>
+
+  <section id="arb" class="arb" aria-label="Cross-world opportunities" hidden>
+    <div class="arb-head">
+      <h2>Cross-world routes <span id="arbCount" class="count"></span></h2>
+      <label class="mini" title="Accepting an offer that already exists is free; placing your own costs 2% of the offer, min 20 gp, max 1,000,000 gp on each side."><input type="checkbox" id="arbFees" checked> net of 2% offer fees</label>
+    </div>
+    <p class="arb-note">
+      Tibia Coins sit on the <b>account</b>, gold sits on the <b>character</b>, and the
+      Market is entered from a depot — so it is per world. Coins bought on one world can
+      be sold on another, and the gold comes back on that second world. A route turns
+      gold held on one world into more gold held on another.
+      <br><b>Read these with the timestamps in mind:</b> each world is priced from its own
+      most recent capture, and those were not taken at the same moment. A route is what the
+      two order books showed when you looked, not a quote. <b>Size</b> is the quantity at
+      the best price on both sides, so it is what can be taken before the price moves;
+      a single offer is capped at 64,000 items.
+    </p>
+    <div class="table-wrap">
+      <table id="arbTable">
+        <thead>
+          <tr>
+            <th>Buy on</th><th class="num">Ask <span class="unit">gp/TC</span></th>
+            <th>Sell on</th><th class="num">Bid <span class="unit">gp/TC</span></th>
+            <th class="num">Edge <span class="unit">gp/TC</span></th>
+            <th class="num">Return</th>
+            <th class="num">Size <span class="unit">TC</span></th>
+            <th class="num">Fees <span class="unit">gp</span></th>
+            <th class="num">Net</th>
+          </tr>
+        </thead>
+        <tbody id="arbBody"></tbody>
+      </table>
+      <p id="arbEmpty" class="empty">No world currently bids above another's ask — no route open.</p>
+    </div>
+  </section>
 </main>
 
 <footer>

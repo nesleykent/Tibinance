@@ -8,10 +8,14 @@
 export const REQUIRED = ['world', 'type', 'battleye', 'sell', 'sellVolume',
                          'buy', 'buyVolume', 'capturedAt', 'hash'];
 
-// Gold supply/demand cannot be recomputed from the fields above - they are sums
-// over every visible offer - so they are stored. They are optional so that rows
-// exported before they existed still import cleanly.
-export const OPTIONAL = ['goldSupply', 'goldDemand'];
+/*
+ * These cannot be recomputed from the fields above and so are stored. The gold
+ * figures are sums over every visible offer; the top amounts are the quantity
+ * available at the best price, which is what actually limits how much of a
+ * cross-world price difference can be taken. All optional, so rows exported
+ * before they existed still import cleanly.
+ */
+export const OPTIONAL = ['goldSupply', 'goldDemand', 'sellTopAmount', 'buyTopAmount'];
 export const ALLOWED = [...REQUIRED, ...OPTIONAL];
 
 export function toRecord(input) {
