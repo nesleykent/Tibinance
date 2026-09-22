@@ -112,6 +112,46 @@
       </section>
 
     </div>
+
+    <section class="section observations-section" aria-label="Observations">
+      <div class="results-head">
+        <div>
+          <h2>Observations <span class="count" id="obsCount"></span></h2>
+          <p class="results-meta" id="obsMeta"></p>
+        </div>
+        <div class="actions">
+          <input type="search" id="obsFilter" class="filter" placeholder="filter world…" aria-label="Filter observations by world">
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table id="obsTable">
+          <thead>
+            <tr class="grp">
+              <th colspan="3"></th>
+              <th colspan="3" class="g-sell" title="Offers to sell coins: what sellers are asking, and the gold that would satisfy them">Sell side</th>
+              <th colspan="3" class="g-buy" title="Offers to buy coins: what buyers are bidding, and the gold they have committed">Buy side</th>
+              <th class="g-derived" title="Derived measure — computed, not stored directly">Derived</th>
+              <th colspan="2"></th>
+            </tr>
+            <tr>
+              <th data-sort="world">World</th><th data-sort="type">Type</th><th data-sort="battleye">BattlEye</th>
+              <th class="num" data-sort="sell" title="Best (lowest) Sell price. Lower is cheaper to buy coins.">Sell Price</th>
+              <th class="num" data-sort="sellVolume" title="Coins offered for sale across every visible offer.">Sell Volume</th>
+              <th class="num" data-sort="goldDemand" title="Gold sellers are asking for: sum of amount × price over every visible sell offer.">Gold Demand</th>
+              <th class="num" data-sort="buy" title="Best (highest) Buy price. Higher pays more for your coins.">Buy Price</th>
+              <th class="num" data-sort="buyVolume" title="Coins wanted across every visible buy offer.">Buy Volume</th>
+              <th class="num" data-sort="goldSupply" title="Gold escrowed in buy offers: sum of amount × price over every visible buy offer.">Gold Supply</th>
+              <th class="num" data-sort="spread" title="Sell Price − Buy Price. Tighter means a more liquid market.">Spread</th>
+              <th data-sort="source" title="Your own screenshot, or backfilled TibiaMarket legacy history">Source</th>
+              <th data-sort="capturedAt">Capture</th>
+            </tr>
+          </thead>
+          <tbody id="obsBody"></tbody>
+        </table>
+        <p id="obsEmpty" class="empty" hidden>No observations for the selected worlds in this range.</p>
+      </div>
+    </section>
+
   </div>
 </section>
 

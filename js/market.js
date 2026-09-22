@@ -80,6 +80,10 @@ let pickerOpen = false;
 let pickerQuery = '';
 let pickerActiveIndex = 0;
 
+/* Observations table sort state - defaults to newest first, same convention
+   as Manage's captures table. */
+let obsSortBy = { key: 'capturedAt', dir: -1 };
+
 const groupBy = (rows, key) => {
   const m = {};
   for (const r of rows) (m[r[key]] ??= []).push(r);
@@ -191,6 +195,27 @@ function computeDomain() {
   }
   const days = { '7D': 7, '30D': 30, '90D': 90, '1Y': 365 }[preset] ?? 30;
   const end = latestObservedTime(basis);
+  return [end - days * DAY, end];
+}
+
+/*
+ * The Latest table and the Observations table below are cross-world
+ * comparisons, not an examination of one world - their whole purpose is
+ * every selected world at once, so unlike the chart domain above they are
+ * never narrowed to whichever world happens to be focused. Same Range
+ * control, same preset/custom values, computed across every selected world
+ * combined instead of just one.
+ */
+function tableDomain() {
+  if (customRange) return [customRange.start, customRange.end];
+  const worlds = selectedInOrder();
+  if (preset === 'ALL') {
+    const ts = worlds.flatMap(w => (seriesByWorld.get(w) ?? []).map(p => p.t));
+    if (!ts.length) return [Date.now() - 30 * DAY, Date.now()];
+    return [Math.min(...ts), Math.max(...ts)];
+  }
+  const days = { '7D': 7, '30D': 30, '90D': 90, '1Y': 365 }[preset] ?? 30;
+  const end = latestObservedTime(worlds);
   return [end - days * DAY, end];
 }
 
@@ -630,18 +655,91 @@ function renderSnapshot(domain) {
   }).join('');
 }
 
+/* ------------------------------------------------------- observations table
+ * Every observation - screenshot and legacy alike - for every selected
+ * world in one plain, sortable, filterable table. The charts above are
+ * built to stay legible as the dataset grows, but a chart is still a chart:
+ * when what's needed is just seeing the actual rows without decoding a
+ * shape, a table is the more honest tool for the job (HIG's own "Charting
+ * data" guidance: use a table over a chart when analysis, not a trend, is
+ * the point). This is the one view in Market that is never chart-shaped.
+ */
+const obsValueOf = (r, k) => r[k];
+
+function renderObservationsTable(domain) {
+  let rows = [];
+  for (const w of selectedInOrder()) {
+    const meta = worldMeta.get(w) ?? {};
+    const pts = (seriesByWorld.get(w) ?? []).filter(p => p.t >= domain[0] && p.t <= domain[1]);
+    for (const p of pts) {
+      rows.push({
+        world: w, type: meta.type ?? '—', battleye: meta.battleye ?? '—',
+        sell: p.sell, buy: p.buy, spread: p.spread,
+        sellVolume: p.sellVolume, buyVolume: p.buyVolume,
+        goldDemand: p.goldDemand, goldSupply: p.goldSupply,
+        source: p.source, capturedAt: p.capturedAt
+      });
+    }
+  }
+
+  const q = $('obsFilter').value.trim().toLowerCase();
+  if (q) rows = rows.filter(r => r.world.toLowerCase().includes(q));
+
+  rows.sort((a, b) => {
+    const av = obsValueOf(a, obsSortBy.key), bv = obsValueOf(b, obsSortBy.key);
+    const cmp = typeof av === 'string' ? av.localeCompare(bv) : (av ?? -Infinity) - (bv ?? -Infinity);
+    return cmp * obsSortBy.dir || b.capturedAt.localeCompare(a.capturedAt);
+  });
+
+  const worldCount = new Set(rows.map(r => r.world)).size;
+  $('obsCount').textContent = rows.length
+    ? `${rows.length} observation${rows.length === 1 ? '' : 's'} · ${worldCount} world${worldCount === 1 ? '' : 's'}`
+    : '0 observations';
+  $('obsEmpty').hidden = rows.length > 0;
+  $('obsTable').closest('.table-wrap').hidden = rows.length === 0;
+
+  const times = rows.map(r => r.capturedAt).sort();
+  $('obsMeta').textContent = times.length
+    ? (times[0] === times[times.length - 1] ? `As of ${times[0]}` : `${times[0]} – ${times[times.length - 1]}`)
+    : '';
+
+  $('obsBody').innerHTML = rows.map(r => `<tr>
+      <td class="world">
+        <button type="button" class="world-focus-btn" data-focus-world="${esc(r.world)}" aria-pressed="${r.world === focusedWorld}">${esc(r.world)}</button>
+      </td>
+      <td>${esc(r.type)}</td>
+      <td class="be be-${esc(r.battleye)}">${esc(r.battleye)}</td>
+      <td class="num">${num(r.sell)}</td>
+      <td class="num">${num(r.sellVolume)}</td>
+      <td class="num">${num(r.goldDemand)}</td>
+      <td class="num">${num(r.buy)}</td>
+      <td class="num">${num(r.buyVolume)}</td>
+      <td class="num">${num(r.goldSupply)}</td>
+      <td class="num${r.spread < 0 ? ' neg' : ''}"${r.spread < 0 ? ' title="crossed market — a price is almost certainly misread"' : ''}>${num(r.spread)}</td>
+      <td class="${r.source === 'legacy' ? 'source-legacy' : ''}">${r.source === 'legacy' ? 'Legacy' : 'Screenshot'}</td>
+      <td><time datetime="${esc(r.capturedAt)}">${esc(r.capturedAt)}</time></td>
+    </tr>`).join('');
+
+  for (const th of document.querySelectorAll('#obsTable thead th[data-sort]')) {
+    th.classList.toggle('sorted', th.dataset.sort === obsSortBy.key);
+    th.dataset.dir = th.dataset.sort === obsSortBy.key ? (obsSortBy.dir < 0 ? 'desc' : 'asc') : '';
+  }
+}
+
 /* --------------------------------------------------------------- compose */
 function renderAll() {
   ensureFocus();
-  const domain = computeDomain();
+  const chartDomain = computeDomain();
+  const listDomain = tableDomain();
   $('marketLoading').hidden = true;
   $('marketEmpty').hidden = allWorlds.length > 0;
   $('marketBody').hidden = allWorlds.length === 0;
   if (!allWorlds.length) return;
-  renderPriceSection(domain);
-  renderSnapshot(domain);
+  renderPriceSection(chartDomain);
+  renderSnapshot(listDomain);
   renderMetricTabs();
-  renderAnalysisSection(domain);
+  renderAnalysisSection(chartDomain);
+  renderObservationsTable(listDomain);
 }
 
 async function backfillLegacy() {
@@ -766,6 +864,20 @@ function wireControls() {
   $('snapTable').addEventListener('click', e => {
     const b = e.target.closest('[data-focus-world]');
     if (b) focusWorld(b.dataset.focusWorld);
+  });
+
+  $('obsTable').addEventListener('click', e => {
+    const b = e.target.closest('[data-focus-world]');
+    if (b) focusWorld(b.dataset.focusWorld);
+  });
+  $('obsFilter').addEventListener('input', () => renderObservationsTable(tableDomain()));
+  document.querySelector('#obsTable thead').addEventListener('click', e => {
+    const key = e.target.closest('th[data-sort]')?.dataset.sort;
+    if (!key) return;
+    obsSortBy = obsSortBy.key === key
+      ? { key, dir: -obsSortBy.dir }
+      : { key, dir: key === 'world' || key === 'type' || key === 'battleye' || key === 'source' ? 1 : -1 };
+    renderObservationsTable(tableDomain());
   });
 }
 
