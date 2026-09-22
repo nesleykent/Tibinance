@@ -15,7 +15,6 @@
     <nav class="nav" role="tablist" aria-label="View">
       <button id="tab-market" class="navlink" type="button" role="tab" aria-selected="true" aria-controls="view-market">Market</button>
       <button id="tab-manage" class="navlink" type="button" role="tab" aria-selected="false" aria-controls="view-manage">Manage</button>
-      <button id="tab-history" class="navlink" type="button" role="tab" aria-selected="false" aria-controls="view-history">History</button>
     </nav>
   </div>
   <p class="sub">A private, local history of the Tibia Coin market — built from your own screenshots, kept in this browser.</p>
@@ -211,49 +210,6 @@
       </table>
       <p id="empty" class="empty" hidden>Nothing stored yet — drop a screenshot above.</p>
     </div>
-  </section>
-
-</section>
-
-<section id="view-history" class="view" role="tabpanel" aria-labelledby="tab-history" hidden>
-
-  <section class="section" aria-label="History">
-    <div class="results-head">
-      <div>
-        <h2>History <span class="count" id="historyCount"></span></h2>
-        <p class="results-meta">Every world's real captured values, side by side: one row per day, one column per world. Screenshot and legacy history both included — nothing averaged away.</p>
-      </div>
-      <div class="actions">
-        <input type="search" id="historyFilter" class="filter" placeholder="filter world…" aria-label="Filter worlds shown as columns">
-      </div>
-    </div>
-
-    <div class="history-toolbar">
-      <div class="field-group">
-        <span class="controls-label" id="historyRangeLabel">Range</span>
-        <div id="historyRange" class="segmented" role="radiogroup" aria-labelledby="historyRangeLabel">
-          <button type="button" data-range="7D" role="radio" aria-checked="false">7D</button>
-          <button type="button" data-range="30D" role="radio" aria-checked="false">30D</button>
-          <button type="button" data-range="90D" role="radio" aria-checked="true">90D</button>
-          <button type="button" data-range="1Y" role="radio" aria-checked="false">1Y</button>
-          <button type="button" data-range="ALL" role="radio" aria-checked="false">All</button>
-        </div>
-      </div>
-      <div class="field-group">
-        <span class="controls-label" id="historyMetricLabel">Metric</span>
-        <div id="historyMetric" class="segmented" role="radiogroup" aria-labelledby="historyMetricLabel"></div>
-      </div>
-      <p class="metric-note" id="historyMetricNote"></p>
-    </div>
-
-    <p id="historyLoading" class="loading">Loading…</p>
-    <div class="table-wrap history-table-wrap" id="historyTableWrap">
-      <table id="historyTable">
-        <thead><tr id="historyHeadRow"></tr></thead>
-        <tbody id="historyBody"></tbody>
-      </table>
-    </div>
-    <p id="historyEmpty" class="empty" hidden></p>
   </section>
 
 </section>

@@ -4,10 +4,6 @@ import { lookupWorld, worldInfo } from './tibiadata.js';
 import { readMarket, disposeOcr } from './ocr.js';
 import * as store from './store.js';
 import * as market from './market.js';
-// named historyView, not history: window.history (the navigation API) is
-// already used below in showView(), and importing a module as `history`
-// would silently shadow it.
-import * as historyView from './history.js';
 import { fmt, esc, spread, goldOf, num } from './format.js';
 
 const $ = id => document.getElementById(id);
@@ -293,7 +289,6 @@ async function save(id) {
     updateQueueBar();
     await renderTable();
     market.refresh();    // a save can introduce a brand-new world, or extend an existing one
-    historyView.refresh();
     return true;
   } catch (e) {
     state.status = 'error';
@@ -367,7 +362,7 @@ function download(name, text, type) {
 }
 
 /* -------------------------------------------------------------------- views */
-const VIEWS = ['market', 'manage', 'history'];
+const VIEWS = ['market', 'manage'];
 
 function showView(name) {
   const view = VIEWS.includes(name) ? name : 'market';
@@ -380,7 +375,6 @@ function showView(name) {
     history.replaceState(null, '', `#${view}`);
   }
   if (view === 'market') market.refresh();
-  if (view === 'history') historyView.refresh();
 }
 
 for (const v of VIEWS) $(`tab-${v}`).addEventListener('click', () => showView(v));
@@ -482,7 +476,6 @@ $('tbody').addEventListener('click', async e => {
     await store.remove(h);
     await renderTable();
     market.refresh();
-    historyView.refresh();
   }
 });
 $('filter').addEventListener('input', renderTable);
@@ -515,7 +508,6 @@ $('importFile').addEventListener('change', async e => {
     const { added, skipped } = await store.importRows(JSON.parse(await f.text()));
     await renderTable();
     market.refresh();
-    historyView.refresh();
     alert(`Imported ${added} row(s), skipped ${skipped}.`);
   } catch (err) { alert(`Import failed: ${err.message}`); }
   e.target.value = '';
@@ -525,7 +517,6 @@ $('clearBtn').addEventListener('click', async () => {
     await store.clear();
     await renderTable();
     market.refresh();
-    historyView.refresh();
   }
 });
 window.addEventListener('beforeunload', () => { disposeOcr(); });
