@@ -10,36 +10,121 @@
 </head>
 <body>
 <header class="top">
-  <h1>Tibinance</h1>
-  <p class="sub">Tibia Coins market tracker. Drop your daily market screenshots — everything runs in your browser.</p>
+  <div class="topbar">
+    <h1 class="wordmark">Tibinance</h1>
+    <nav class="nav" role="tablist" aria-label="View">
+      <button id="tab-market" class="navlink" type="button" role="tab" aria-selected="true" aria-controls="view-market">Market</button>
+      <button id="tab-manage" class="navlink" type="button" role="tab" aria-selected="false" aria-controls="view-manage">Manage</button>
+    </nav>
+  </div>
+  <p class="sub">Tibia Coins market tracker. Drop your daily market screenshots in Manage — everything runs in your browser.</p>
 </header>
 
-<section class="privacy" aria-label="What is kept">
-  <details>
-    <summary><span class="tick">✓</span> Screenshots and character names are never kept —
-      only anonymous market data. <span class="what">What exactly?</span></summary>
-    <div class="kept">
-      <div>
-        <h5>Written to the database</h5>
-        <p>World, Type, BattlEye, Sell, Sell&nbsp;Volume, Gold&nbsp;Demand, Buy,
-           Buy&nbsp;Volume, Gold&nbsp;Supply, Capture&nbsp;Date, Screenshot&nbsp;Hash.</p>
-        <p class="fine">Eleven fields. Nothing else can be written — the code builds each
-           record from that fixed list.</p>
+<main>
+
+<section id="view-market" class="view" role="tabpanel" aria-labelledby="tab-market">
+
+  <div class="toolbar">
+    <details class="popover" id="worldPopover">
+      <summary class="btn toolbar-btn"><span id="worldSummary">All worlds</span></summary>
+      <div class="popover-panel">
+        <input type="search" id="worldFilter" class="field wide" placeholder="Filter worlds" aria-label="Filter worlds">
+        <div class="popover-row">
+          <button id="worldsAll" class="linkbtn">Select all</button>
+          <button id="worldsNone" class="linkbtn">Select none</button>
+        </div>
+        <div id="worldList" class="worldlist"></div>
       </div>
-      <div>
-        <h5>Never written anywhere</h5>
-        <p>The screenshot itself, the filename, and the character name in it.</p>
-        <p class="fine">The image is decoded, read, then dropped; only the SHA-256 of its
-           bytes is kept, to spot a screenshot you already processed. The character name is
-           used for the TibiaData world lookup and discarded. Both appear on screen while you
-           review a card — that is the browser showing you the file you just dropped, not the
-           database.</p>
-      </div>
+    </details>
+
+    <div id="rangePresets" class="segmented" role="group" aria-label="Range">
+      <button data-range="7D" class="segmented-item">7D</button>
+      <button data-range="30D" class="segmented-item">30D</button>
+      <button data-range="90D" class="segmented-item">90D</button>
+      <button data-range="1Y" class="segmented-item">1Y</button>
+      <button data-range="ALL" class="segmented-item active">All</button>
     </div>
-  </details>
+
+    <details class="popover" id="customRangePopover">
+      <summary class="btn toolbar-btn">Custom range</summary>
+      <div class="popover-panel popover-panel-row">
+        <input type="datetime-local" id="rangeStart" class="field" aria-label="Custom range start">
+        <span class="toolbar-sep">–</span>
+        <input type="datetime-local" id="rangeEnd" class="field" aria-label="Custom range end">
+      </div>
+    </details>
+  </div>
+
+  <p id="marketEmpty" class="empty">No worlds yet — add a screenshot in <a href="#" data-goto="manage">Manage</a> to start tracking one.</p>
+  <p id="legacyStatus" class="legacystatus" hidden></p>
+
+  <div id="marketBody" hidden>
+
+    <section class="primary-section">
+      <div class="section-head">
+        <h2>Price</h2>
+        <div class="legend">
+          <span id="priceLegend" class="legend-worlds"></span>
+          <span class="legend-key">
+            <span class="legend-line legend-line-sell"></span>Sell
+            <span class="legend-line legend-line-buy"></span>Buy
+          </span>
+        </div>
+      </div>
+      <div id="priceChart" class="chart-primary"></div>
+    </section>
+
+    <section class="snapshot">
+      <div class="section-head">
+        <h2>Latest <span id="snapCount" class="count"></span></h2>
+      </div>
+      <div class="table-wrap">
+        <table id="snapTable">
+          <thead><tr></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p id="snapEmpty" class="empty" hidden>No selected worlds have data yet.</p>
+    </section>
+
+    <section class="secondary-section">
+      <div class="section-head">
+        <h2>Analysis</h2>
+        <div id="metricTabs" class="segmented" role="tablist" aria-label="Secondary metric"></div>
+      </div>
+      <div id="secondaryChart" class="chart-secondary"></div>
+    </section>
+
+  </div>
 </section>
 
-<main>
+<section id="view-manage" class="view" role="tabpanel" aria-labelledby="tab-manage" hidden>
+
+  <section class="privacy" aria-label="What is kept">
+    <details>
+      <summary><span class="tick">✓</span> Screenshots and character names are never kept —
+        only anonymous market data. <span class="what">What exactly?</span></summary>
+      <div class="kept">
+        <div>
+          <h5>Written to the database</h5>
+          <p>World, Type, BattlEye, Sell, Sell&nbsp;Volume, Gold&nbsp;Demand, Buy,
+             Buy&nbsp;Volume, Gold&nbsp;Supply, Capture&nbsp;Date, Screenshot&nbsp;Hash.</p>
+          <p class="fine">Eleven fields. Nothing else can be written — the code builds each
+             record from that fixed list.</p>
+        </div>
+        <div>
+          <h5>Never written anywhere</h5>
+          <p>The screenshot itself, the filename, and the character name in it.</p>
+          <p class="fine">The image is decoded, read, then dropped; only the SHA-256 of its
+             bytes is kept, to spot a screenshot you already processed. The character name is
+             used for the TibiaData world lookup and discarded. Both appear on screen while you
+             review a card — that is the browser showing you the file you just dropped, not the
+             database.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
   <div id="drop" class="drop" tabindex="0" role="button" aria-label="Drop screenshots here or press Enter to browse">
     <div class="drop-inner">
       <strong>Drop screenshots here</strong>
@@ -59,20 +144,11 @@
   </div>
   <div id="queue" class="queue" hidden></div>
 
-  <section class="results" aria-label="Stored observations">
+  <section class="captures" aria-label="Stored captures">
     <div class="results-head">
-      <h2>Database <span id="count" class="count">0</span></h2>
+      <h2>Captures <span id="count" class="count">0</span></h2>
       <div class="actions">
         <input type="search" id="filter" class="filter" placeholder="filter world…" aria-label="Filter by world">
-        <label class="mini"><input type="checkbox" id="latestOnly"> latest per world</label>
-        <label class="mini" title="IAS 1.38 — present the preceding capture alongside the current one"><input type="checkbox" id="comparatives"> comparatives</label>
-        <label class="mini"><input type="checkbox" id="compare" checked> highlight best</label>
-        <label class="mini" title="ISO 80000-1 asks for a thin space; accounting asks for a comma. The two cannot both be honoured, so pick one.">digits
-          <select id="sep" class="sep" aria-label="Thousands separator">
-            <option value=",">48,784</option>
-            <option value="&#8239;">48&#8239;784</option>
-          </select>
-        </label>
         <button id="exportJson" class="btn">Export JSON</button>
         <button id="exportCsv" class="btn">Export CSV</button>
         <button id="importBtn" class="btn">Import</button>
@@ -96,13 +172,13 @@
           </tr>
           <tr>
             <th data-sort="world">World</th><th data-sort="type">Type</th><th data-sort="battleye">BattlEye</th>
-            <th class="num" data-sort="sell" title="Best (lowest) Sell price. Lower is cheaper to buy coins.">Sell <span class="unit">gp/TC</span></th>
-            <th class="num" data-sort="sellVolume" title="Coins offered for sale across every visible offer.">Sell Vol <span class="unit">TC</span></th>
-            <th class="num" data-sort="goldDemand" title="Gold sellers are asking for: sum of amount × price over every visible sell offer. Shown with an SI prefix; hover a value for the exact figure.">Gold Demand</th>
-            <th class="num" data-sort="buy" title="Best (highest) Buy price. Higher pays more for your coins.">Buy <span class="unit">gp/TC</span></th>
-            <th class="num" data-sort="buyVolume" title="Coins wanted across every visible buy offer.">Buy Vol <span class="unit">TC</span></th>
-            <th class="num" data-sort="goldSupply" title="Gold escrowed in buy offers: sum of amount × price over every visible buy offer. Shown with an SI prefix; hover a value for the exact figure.">Gold Supply</th>
-            <th class="num" data-sort="spread" title="Sell − Buy. Tighter means a more liquid market.">Spread <span class="unit">gp/TC</span></th>
+            <th class="num" data-sort="sell" title="Best (lowest) Sell price. Lower is cheaper to buy coins.">Sell Price</th>
+            <th class="num" data-sort="sellVolume" title="Coins offered for sale across every visible offer.">Sell Volume</th>
+            <th class="num" data-sort="goldDemand" title="Gold sellers are asking for: sum of amount × price over every visible sell offer.">Gold Demand</th>
+            <th class="num" data-sort="buy" title="Best (highest) Buy price. Higher pays more for your coins.">Buy Price</th>
+            <th class="num" data-sort="buyVolume" title="Coins wanted across every visible buy offer.">Buy Volume</th>
+            <th class="num" data-sort="goldSupply" title="Gold escrowed in buy offers: sum of amount × price over every visible buy offer.">Gold Supply</th>
+            <th class="num" data-sort="spread" title="Sell − Buy. Tighter means a more liquid market.">Spread</th>
             <th data-sort="capturedAt">Capture</th><th>Hash</th><th></th>
           </tr>
         </thead>
@@ -112,11 +188,14 @@
     </div>
   </section>
 
+</section>
+
 </main>
 
 <footer>
   <p>Market data read locally with Tesseract · world data from
-     <a href="https://tibiadata.com" target="_blank" rel="noopener noreferrer">TibiaData API v4</a>.
+     <a href="https://tibiadata.com" target="_blank" rel="noopener noreferrer">TibiaData API v4</a> ·
+     legacy history from <a href="https://tibiamarket.top" target="_blank" rel="noopener noreferrer">TibiaMarket</a>.
      Not affiliated with CipSoft. Tibia is a trademark of CipSoft GmbH.</p>
 </footer>
 

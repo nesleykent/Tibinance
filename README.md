@@ -1,11 +1,30 @@
 # Tibinance
 
-**Tibia Coins market tracker.** 
+**Tibia Coins market tracker.**
 A static site for GitHub Pages. Drag in your daily Tibia market screenshots; the
 browser hashes them, reads the Sell/Buy tables, resolves the world through
-TibiaData, and stores **only anonymous market data**.
+TibiaData, and stores **only anonymous market data**. Existing worlds also get
+their price history backfilled from TibiaMarket, so a new screenshot continues
+a timeline instead of starting one.
 
 No backend, no build step, no API key, no cost.
+
+## Two views
+
+**Market** is the analysis view: every world is a time series, not a table of
+repeated rows. Pick one or several worlds and Sell/Buy price, Spread, the two
+volumes and the two gold sums are charted over time, with 7D/30D/90D/1Y/All
+presets or any custom date range. A **Latest** table above the charts compares
+the worlds currently selected, statistically flagging whichever is out of line
+with the rest — see [Finding an outlier](#finding-an-outlier-not-the-biggest-number).
+
+**Manage** is where the dataset is built: drop screenshots, review and correct
+what OCR read before saving, see every individual capture (including several
+from the same world), and import, export or delete data. This is also where
+the privacy boundary lives — see below.
+
+A world only ever reaches the Market view by first being saved from a
+screenshot in Manage. See [Legacy history from TibiaMarket](#legacy-history-from-tibiamarket).
 
 ## What is stored, and what is not
 
@@ -26,17 +45,15 @@ Two aggregates over every visible offer, not just the best one:
 Unlike the spread these are sums over rows, so they cannot be rebuilt from the
 best price and the volume once the rows are gone — which is why they are stored.
 
-They run to billions, so the table shows them with SI prefixes (`10 G`,
-`1.93 G`) and keeps the exact figure in the cell's tooltip. The CSV carries the
+They run to billions, so tables show them with SI prefixes (`10 G`,
+`1.93 G`) and keep the exact figure in the cell's tooltip. The CSV carries the
 full integer.
 
 Both are optional fields: rows exported before they existed still import.
 
 **Spread is not one of them.** It is exactly `Sell − Buy`, so it is computed when
-the table is drawn rather than written to the database — a stored copy could only
-ever fall out of step with the two values it comes from. It appears in the table
-and in the CSV export; `observations.json` stays canonical at the nine fields
-above, so it round-trips through Import unchanged.
+a table or chart is drawn rather than written to the database — a stored copy
+could only ever fall out of step with the two values it comes from.
 
 A negative spread is shown in red. It means a crossed market was saved past the
 warning with *Save anyway*, which almost always indicates a misread price.
@@ -50,11 +67,14 @@ Never stored, never uploaded, never committed:
 
 This is enforced in code, not by convention. `js/store.js` defines an `ALLOWED`
 list and `toRecord()` builds a fresh object from it, so a caller cannot write a
-character name or a filename into the database even by mistake.
+character name or a filename into the database even by mistake. TibiaMarket's
+legacy history carries no screenshot or character data at all — it is public
+market history keyed only by world and time — so it lives in its own
+IndexedDB store and never touches that boundary.
 
 `.gitignore` blocks image files, so a stray screenshot cannot be committed either.
 
-## How a screenshot is processed
+## How a screenshot is processed (Manage)
 
 ```
 file ──► SHA-256 ──► duplicate? ──► stop
@@ -191,14 +211,31 @@ Derived from the authoritative TibiaData fields, never guessed:
 Comparing the date to the public rollout would be wrong: Luminera was created in
 2005-07 but reports a BattlEye date of 2017-09-05.
 
-## Finding opportunities
+## The Market view
 
-### The highlight is statistical, not "the biggest number"
+### Every world is a series, not a row
+
+Manage stores one row per screenshot. Market never shows that table directly —
+it groups every row for a world into one time series, merges in that world's
+TibiaMarket history if any was fetched, and sorts the result by capture time.
+Each point keeps its own **source** (`screenshot` or `legacy`), so a chart can
+show real gaps rather than interpolating across the ones this project has no
+data for — a metric only TibiaMarket-style aggregate stats give (like volume)
+simply has no line where only legacy points exist.
+
+### Ranges
+
+**7D / 30D / 90D / 1Y / All** are quick presets against "now". A custom range
+is set with the two date/time fields next to them, which take over from the
+presets the moment both are filled in.
+
+### Finding an outlier, not "the biggest number"
 
 The cheapest world is always the cheapest. That tells you nothing about whether
-it is cheap *enough to act on*. So a cell is flagged by how far it sits from the
-other worlds on screen, using a **modified z-score** — the distance from the
-median, in units of the median absolute deviation.
+it is cheap *enough to act on*. So the **Latest** table above the charts flags a
+world by how far its latest figure sits from the other selected worlds, using a
+**modified z-score** — the distance from the median, in units of the median
+absolute deviation.
 
 Mean and standard deviation would be the wrong tools. With a handful of worlds,
 one of which is the outlier being hunted, the mean is dragged toward it and the
@@ -208,82 +245,67 @@ are extreme, which is the whole point when the extremes are what you want.
 
 Past 2 MAD a cell is marked; past 3.5 — the conventional outlier line — it is
 marked strongly. Hover for the score and the median it is measured against.
-At least three rows are needed before any of this means anything.
+At least three selected worlds are needed before any of this means anything.
 
-### Cross-world routes
+A world whose latest observation falls outside the range currently shown is
+still listed (so it does not simply disappear when you narrow the range) but
+dimmed, with a tooltip saying so.
 
-Tibia Coins sit on the **account**; gold sits on the **character**; the Market is
-entered from a depot and so is **per world**. Coins bought on one world can be
-sold on another, and the gold arrives on that second world. A route converts
-gold held on one world into more gold held on another.
+## Legacy history from TibiaMarket
 
-Buy on A at A's best **ask**, sell on B at B's best **bid**. The route exists
-only while B's bid is above A's ask.
+[tibiamarket.top](https://tibiamarket.top) collected Tibia Coin prices
+automatically from the Tibia client until CipSoft banned that collection
+method; Tibinance exists to keep that analysis experience going through
+user-supplied screenshots instead. The history TibiaMarket already gathered,
+though, is still worth having — its API (`api.tibiamarket.top`, documented at
+`/docs`) keeps serving it, with an open CORS policy, so it is read straight
+from the browser exactly like TibiaData.
 
-**Fees, from the game manual:** accepting an offer that already exists is free.
-Placing your own costs **2% of the offer price, minimum 20 gp, maximum
-1,000,000 gp**, on each side.
+**Scoping is strict, and one-directional.** A world enters Tibinance only by
+being saved from a screenshot in Manage. Only once it exists in the local
+database does Tibinance fetch that world's Tibia Coin history from TibiaMarket,
+to extend its timeline backwards. TibiaMarket's own world list is never
+consulted to decide which worlds to show — a world with rich TibiaMarket
+history that you have never screenshotted stays entirely out of Tibinance.
+Add a screenshot from a new world and *that* world becomes eligible on the
+next fetch.
 
-That cap changes everything and is easy to get wrong. On a route moving
-~2.5 Ggp, an uncapped 2% would be ~103 Mgp and would swallow 91% of the edge;
-capped, the two fees come to 2 Mgp and the route clears ~111 Mgp. A flat 2%
-would report a strong route as marginal.
+The fetch itself runs quietly in the background (Market shows a one-line
+status while it is in progress) and only once per world — a per-world flag in
+IndexedDB (`legacyMeta`) remembers whether it already succeeded, so it is not
+re-fetched on every visit. The API allows one request every 5 seconds, so
+backfilling several worlds at once takes a few seconds per world; a failed
+fetch (network trouble, an unrecognised world name) is simply retried the next
+time the data changes, not looped on the spot.
 
-The floor matters at the other end. A route can show a healthy percentage and
-still lose money when only a few hundred coins sit at the best price, because
-the fees do not shrink with the trade. Those rows are greyed and their net shown
-in parentheses.
+Legacy points carry only what TibiaMarket exposes — the best Sell and Buy
+price at that time — mapped directly onto this project's own `sell`/`buy`
+fields (TibiaMarket uses the same convention: the lowest sell offer, the
+highest buy offer). It has no analogue for the OCR-derived volumes or gold
+sums, so those stay unset on a legacy point rather than being approximated
+from TibiaMarket's own (differently defined) monthly turnover figures — hence
+the gaps described above.
 
-**Size** is the quantity at the best price on *both* sides — what can be taken
-before the price moves — capped at the 64,000 items a single offer allows.
-
-### Reading the routes honestly
-
-Each world is priced from its own most recent capture, and those captures were
-not simultaneous. A route describes what two order books showed when you looked
-at them. It is not a quote, and nothing here checks whether the offers still
-stand.
-
-### Comparing observations
-
-- **Click any column heading** to sort; click again to reverse.
-- **filter world** narrows to matching worlds.
-- **latest per world** keeps only the newest observation per world.
-- **comparatives** shows each world's preceding capture beneath it.
+Legacy history is cached locally but is not part of Export/Import: it is
+derived, re-fetchable data scoped to whatever worlds exist locally, not part
+of the dataset you built. Only the `observations` store (your screenshots)
+round-trips through Export/Import/the committed baseline.
 
 ## Numbers
 
-Quantities follow **ISO 80000-1 (SI)**.
-
-### Digit grouping — where the two standards disagree
-
-This is the one point where the conventions in use here genuinely contradict
-each other:
-
-| | |
-|---|---|
-| **ISO 80000-1 (SI)** | groups of three separated by a thin space. A comma or a point *shall not* be used, because the two swap meaning between locales — `48,784` is forty-eight thousand in one country and `48.784` in another. |
-| **Financial reporting** | the comma (or the point, by locale) *is* the thousands separator, and a statement of figures is expected to show it. IFRS 18 does not prescribe a character. |
-
-No single rendering satisfies both, so it is a setting — the **digits** control
-above the table:
-
-```
-48,784      accounting (default)
-48 784      ISO 80000-1
-```
-
-The choice is remembered per browser. Everything else stays SI whichever you
-pick: prefixes bound to their unit, one narrow no-break space between a value
-and its symbol, ISO 8601 timestamps.
-
-### Units and prefixes
-
-A unit follows its value, separated by one narrow no-break space:
+Quantities follow **ISO 80000-1 (SI)**: a unit follows its value, separated by
+one narrow no-break space —
 
 ```
 4 084 gp/TC        39 600 TC
 ```
+
+Digit grouping itself just uses the browser's own locale (`Intl.NumberFormat`
+with no locale override), so a figure reads the way everything else on your
+system already does. There is no separator to pick and nothing to remember —
+this is presentation, not a setting.
+
+### Units and prefixes
 
 Gold sums reach billions, so they take an SI prefix. **A prefix is bound to the
 unit symbol with no space between them** — the two form a single inseparable
@@ -299,20 +321,19 @@ quantity. Hover any of these for the exact figure.
 Prefix symbols are case-sensitive — `k` for 10³, `M` for 10⁶, `G` for 10⁹ — and
 are never compounded.
 
-## Presentation — IFRS 18
+## Presentation — IFRS 18 (Manage's captures table)
 
-The table follows **IFRS 18 *Presentation and Disclosure in Financial
+The captures table follows **IFRS 18 *Presentation and Disclosure in Financial
 Statements***, which supersedes IAS 1 for periods beginning on or after
 1 January 2027 and may be applied early.
 
 | IFRS 18 asks for | Here |
 |---|---|
-| Presentation currency, level of rounding, period covered | Stated above the table, and the period covers the comparatives as well as the current figures |
+| Presentation currency, level of rounding, period covered | Stated above the table |
 | Items presented in defined categories | Columns are grouped **Sell side** / **Buy side**, with the derived subtotal held apart under **Derived** |
 | No offsetting of separate items | Gold demand and gold supply are shown gross. A single net figure would hide how thin or deep either side is |
 | Meaningful labels, nothing dumped in "other" | Every column names exactly what it holds; there is no residual category |
 | Measures not defined by a standard disclosed and reconciled | *Basis of preparation* names Spread, Gold Demand and Gold Supply as this project's own measures and gives the formula behind each |
-| Comparative information for the preceding period | **comparatives** shows the capture immediately before each row, per world |
 
 Open **Basis of preparation** above the table for the full note.
 
@@ -361,12 +382,13 @@ Settings → Pages → Source: *Deploy from a branch* → `main` / `root`.
 Rows live in IndexedDB on the device that scanned them. To publish a shared
 dataset:
 
-1. **Export JSON**
+1. **Export JSON** (Manage)
 2. Commit the file as `data/observations.json`
 
 Every visitor then loads that baseline on boot and merges it with their own local
 rows. **Import** merges a JSON file back in. Duplicate hashes are skipped
-throughout, so re-importing is safe.
+throughout, so re-importing is safe. TibiaMarket legacy history is not part of
+this file — see [Legacy history from TibiaMarket](#legacy-history-from-tibiamarket).
 
 ## Filename format
 
@@ -381,19 +403,23 @@ Character names may contain spaces but not underscores.
 ## Files
 
 ```
-index.html               UI
-css/app.css              styles
-js/app.js                orchestration, review UI, export/import
-js/ocr.js                layout-aware market reader
-js/tibiadata.js          API client, caching, BattlEye derivation
-js/store.js              IndexedDB + the privacy whitelist
-js/filename.js           filename parsing
-js/hash.js               SHA-256
-data/observations.json   committed baseline (starts empty)
-tools/tcmarket.py        optional CLI for the same pipeline (see tools/README.cli.md)
+index.html               UI shell for both views
+css/app.css               styles
+js/app.js                 router, orchestration, Manage's review UI, export/import
+js/market.js               Market view: per-world series, ranges, charts, snapshot
+js/tibiamarket.js          TibiaMarket API client (legacy history, rate-limited)
+js/format.js                shared number/text presentation (no settings)
+js/ocr.js                 layout-aware market reader
+js/tibiadata.js            API client, caching, BattlEye derivation
+js/store.js                IndexedDB (screenshots + legacy history) + the privacy whitelist
+js/filename.js              filename parsing
+js/hash.js                  SHA-256
+data/observations.json    committed baseline (starts empty)
+tools/tcmarket.py         optional CLI for the same pipeline (see tools/README.cli.md)
 ```
 
 `tools/` is independent of the site: a Python CLI that runs the identical
 pipeline from a terminal and stores rows in SQLite. Useful for bulk back-fills.
 
-Tesseract.js is loaded from a CDN. Not affiliated with CipSoft.
+Tesseract.js is loaded from a CDN. Not affiliated with CipSoft, tibiamarket.top
+or the TibiaMarket API's author.

@@ -3,107 +3,10 @@ import { parseFilename } from './filename.js';
 import { lookupWorld, worldInfo } from './tibiadata.js';
 import { readMarket, disposeOcr } from './ocr.js';
 import * as store from './store.js';
-import * as stats from './stats.js';
+import * as market from './market.js';
+import { fmt, esc, spread, goldOf, acct } from './format.js';
 
 const $ = id => document.getElementById(id);
-/*
- * Digit grouping, and the one place where the two standards in use here
- * genuinely contradict each other.
- *
- *   ISO 80000-1 (SI): groups of three separated by a thin space. A comma or a
- *     point "shall not be used", because the two swap meaning between locales -
- *     48,784 is forty-eight thousand in one country and 48.784 in another.
- *   Accounting: the comma (or the point, depending on locale) IS the thousands
- *     separator, and a ledger is expected to show it.
- *
- * No single rendering satisfies both, so the separator is a setting. Everything
- * else stays SI regardless: prefixes bound to their unit, one narrow no-break
- * space between value and symbol, ISO 8601 timestamps.
- */
-const SI_GROUP = '\u202F';        // narrow no-break space
-const SEP_KEY = 'tc_group_sep';
-const SEPARATORS = { ',': 'comma', [SI_GROUP]: 'space' };
-
-let groupSep = ',';
-try {
-  const saved = localStorage.getItem(SEP_KEY);
-  if (saved && saved in SEPARATORS) groupSep = saved;
-} catch { /* private mode or blocked storage - keep the default */ }
-
-const nf = new Intl.NumberFormat('en-US');
-const fmt = n => nf.format(n).replace(/,/g, groupSep);
-/*
- * Gold sums run to billions, so they are written with an SI prefix.
- *
- * A prefix is not a word that can stand on its own: "10 G" means nothing. The
- * prefix and the unit symbol together form one inseparable symbol, written with
- * no space between them - 10 Ggp, not 10 G gp. The only space is the one
- * between the numeric value and that symbol, and it is a narrow NO-BREAK space
- * so the quantity never splits across lines.
- */
-const fmtSI = (n, unit = '') => {
-  if (!Number.isFinite(n)) return '—';
-  const a = Math.abs(n);
-  for (const [div, prefix] of [[1e9, 'G'], [1e6, 'M'], [1e3, 'k']]) {
-    if (a >= div) {
-      const v = (n / div).toPrecision(3).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '');
-      return `${v}${SI_GROUP}${prefix}${unit}`;   // value-to-symbol space is always SI
-    }
-  }
-  return unit ? `${fmt(n)}${SI_GROUP}${unit}` : fmt(n);
-};
-const esc = s => String(s).replace(/[&<>"']/g, c =>
-  ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-// capturedAt is already ISO 8601; it is displayed exactly as it is stored.
-
-/* Spread is derived, never stored: it is exactly sell - buy, so keeping a copy
-   in the database would only create something that can fall out of step. */
-const spread = r => r.sell - r.buy;
-
-/*
- * Gold demand - what sellers are asking for, summed over every visible sell
- * offer. Gold supply - gold escrowed in buy offers, i.e. gold actually
- * committed on that world. Both are sums over rows, so unlike the spread they
- * cannot be rebuilt from the stored best price and volume, and are persisted.
- */
-const goldOf = rows => rows.reduce((t, r) => t + r.amount * r.price, 0);
-
-/*
- * Accounting presentation for the monetary columns.
- *
- *   - the currency symbol sits at the left edge of the cell, the digits at the
- *     right, so a column of figures reads as one block
- *   - negatives are wrapped in parentheses rather than carrying a minus sign
- *   - a true zero is shown as a dash, so it is not mistaken for a small value
- *   - digits are grouped in threes (ISO 80000-1 thin space, never a comma)
- *
- * The grouping and the prefix rules are the SI ones; only the placement of the
- * symbol is the accounting convention, which applies to a column of figures
- * rather than to a quantity written in a sentence.
- */
-const acct = (n, unit) => {
-  // The flex row lives INSIDE the cell: a <td> must keep display:table-cell or
-  // it stops taking part in the table's column sizing.
-  const body = !Number.isFinite(n) || n === 0
-    ? '<span class="dash">—</span>'
-    : (n < 0 ? `(${fmt(Math.abs(n))})` : fmt(n));
-  return `<span class="acct"><span class="cur">${unit}</span><span class="val">${body}</span></span>`;
-};
-
-/*
- * Same, for sums large enough to want an SI prefix.
- *
- * Here the symbol stays WITH the value - 1.93 Ggp - instead of being factored
- * out to the left of the cell. A symbol can only become a column marker when it
- * is identical on every row, and these are not: one row is Mgp and the next is
- * Ggp. Splitting them would leave "gp … 1.93 G", and a prefix with no unit
- * attached to it is not a quantity.
- */
-const acctSI = (n, unit) => {
-  if (!Number.isFinite(n)) return '<span class="dash">—</span>';
-  const v = fmtSI(Math.abs(n), unit);
-  return n < 0 ? `(${v})` : v;
-};
 
 /* ---------------------------------------------------------------- analysis */
 function analyse(state) {
@@ -263,10 +166,10 @@ function render(state) {
   // Each figure sits in its own fixed-width cell so the columns line up down
   // the whole list; ragged numbers are unreadable when scanning a batch.
   const nums = a.sell
-    ? `<span class="cn price"><b>${fmt(a.sell)}</b>/<b>${fmt(a.buy)}</b>&#8239;<i>gp/TC</i></span>
-       <span class="cn spread">Δ${a.spread < 0 ? `(${fmt(Math.abs(a.spread))})` : fmt(a.spread)}&#8239;<i>gp/TC</i></span>
-       <span class="cn vol">${fmt(a.sellVolume)}/${fmt(a.buyVolume)}&#8239;<i>TC</i></span>
-       <span class="cn gold">${fmtSI(a.goldDemand, 'gp')}/${fmtSI(a.goldSupply, 'gp')}</span>`
+    ? `<span class="cn price"><b>${fmt(a.sell)}</b>/<b>${fmt(a.buy)}</b></span>
+       <span class="cn spread">Δ${a.spread < 0 ? `(${fmt(Math.abs(a.spread))})` : fmt(a.spread)}</span>
+       <span class="cn vol">${fmt(a.sellVolume)}/${fmt(a.buyVolume)}</span>
+       <span class="cn gold">${fmt(a.goldDemand)}/${fmt(a.goldSupply)}</span>`
     : '';
 
   el.innerHTML = `<details ${state.open ? 'open' : ''}>
@@ -351,14 +254,14 @@ async function handleFile(file) {
       .then(worldInfo)
       .catch(e => { state.worldNote = e.message; return null; });
 
-    const [market, world] = await Promise.all([ocrP, worldP]);
+    const [reading, world] = await Promise.all([ocrP, worldP]);
     bitmap.close?.();                     // drop the pixels immediately
 
     state.world = world;
-    state.rows.sell = (market.sell ?? []).map(r => ({ ...r }));
-    state.rows.buy = (market.buy ?? []).map(r => ({ ...r }));
-    state.ocrWarnings = market.warnings ?? [];
-    state.ocrNotices = market.notices ?? [];
+    state.rows.sell = (reading.sell ?? []).map(r => ({ ...r }));
+    state.rows.buy = (reading.buy ?? []).map(r => ({ ...r }));
+    state.ocrWarnings = reading.warnings ?? [];
+    state.ocrNotices = reading.notices ?? [];
     state.status = 'review';
     if (!world) state.worldNote ||= 'World lookup failed — fix the filename and retry';
     render(state);
@@ -396,6 +299,7 @@ async function save(id) {
     if (!$('queue').children.length) $('queue').hidden = true;
     updateQueueBar();
     await renderTable();
+    market.refresh();    // a save can introduce a brand-new world, or extend an existing one
     return true;
   } catch (e) {
     state.status = 'error';
@@ -405,29 +309,9 @@ async function save(id) {
   }
 }
 
-/* ------------------------------------------------------------------ table */
+/* ------------------------------------------------------------ captures list */
 let rowsCache = [];
 let sortBy = { key: 'capturedAt', dir: -1 };
-
-/*
- * Which direction counts as "best" per column, for the comparison highlight.
- *  -1 -> lowest wins   (cheapest coins, tightest spread)
- *  +1 -> highest wins  (most gold offered, deepest book)
- */
-/*
- * Which direction is favourable for each measure, for the opportunity flag.
- *  -1 -> lower is better   (cheaper coins, tighter spread)
- *  +1 -> higher is better  (deeper book, more gold committed)
- */
-const BEST = {
-  sell: -1, buy: +1, spread: -1,
-  sellVolume: +1, buyVolume: +1, goldSupply: +1, goldDemand: +1
-};
-const MEASURE = {
-  sell: 'ask', buy: 'bid', spread: 'spread',
-  sellVolume: 'coins on sale', buyVolume: 'coins wanted',
-  goldSupply: 'gold committed by buyers', goldDemand: 'gold asked by sellers'
-};
 
 const valueOf = (r, k) => (k === 'spread' ? spread(r) : r[k]);
 
@@ -446,27 +330,23 @@ const valueOf = (r, k) => (k === 'spread' ? spread(r) : r[k]);
  *     to the underlying figures (the treatment IFRS 18 requires of
  *     management-defined performance measures)
  */
-function disclosure(rows, priorRows = []) {
+function disclosure(rows) {
   const el = $('disclosure');
   if (!rows.length) { el.hidden = true; return; }
   el.hidden = false;
-  // the period must cover everything presented, comparatives included
-  const times = [...rows, ...priorRows].map(r => r.capturedAt).sort();
+  const times = rows.map(r => r.capturedAt).sort();
   const period = times[0] === times[times.length - 1]
     ? `as at ${times[0]}`
     : `${times[0]} to ${times[times.length - 1]}`;
 
   $('disclosureLine').innerHTML =
-    `Presented in <b>gp</b> (Tibia gold) · rates <b>gp/TC</b> · volumes <b>TC</b> · ` +
-    `unrounded · ${esc(period)} <span class="what">Basis of preparation</span>`;
+    `Unrounded · ${esc(period)} <span class="what">Basis of preparation</span>`;
 
   $('disclosureNote').innerHTML = `
     <dl>
-      <dt>Presentation currency and rounding</dt>
-      <dd>Gold pieces (<b>gp</b>). Prices are rates in <b>gp/TC</b>; volumes are coins
-          in <b>TC</b>. No rounding is applied to what is stored. Gold sums are shown
-          with an SI prefix (k, M, G) for legibility only — hover any figure for the
-          recorded value, and the exports carry it in full.</dd>
+      <dt>Rounding</dt>
+      <dd>No rounding is applied to what is stored or shown — every figure is the
+          exact value read or computed, grouped in threes for legibility only.</dd>
 
       <dt>Period covered</dt>
       <dd>${esc(period)}, in local client time as recorded by the screenshot, written
@@ -495,11 +375,6 @@ function disclosure(rows, priorRows = []) {
           the total — and a row failing that check cannot be saved without being
           corrected first. Every column is labelled for what it holds; nothing is
           aggregated into an "other" line.</dd>
-
-      <dt>Comparatives</dt>
-      <dd>With <b>comparatives</b> enabled, each world shows the capture immediately
-          preceding the one displayed. Worlds captured only once have no comparative
-          and show none.</dd>
     </dl>`;
 }
 
@@ -516,100 +391,28 @@ async function renderTable() {
     return cmp * sortBy.dir || y.capturedAt.localeCompare(x.capturedAt);
   });
 
-  if ($('latestOnly').checked) {
-    const byWorld = new Map();
-    for (const r of [...rows].sort((x, y) => y.capturedAt.localeCompare(x.capturedAt))) {
-      if (!byWorld.has(r.world)) byWorld.set(r.world, r);
-    }
-    rows = rows.filter(r => byWorld.get(r.world) === r);
-  }
-
-  /*
-   * Opportunities are found statistically rather than by taking the extreme.
-   * The cheapest world is always "the cheapest"; that says nothing about
-   * whether it is cheap enough to act on. A modified z-score against the median
-   * and MAD of the worlds on screen answers the useful question - how far this
-   * world sits from the rest - and is not dragged around by the very outlier it
-   * is looking for, as a mean and standard deviation would be.
-   */
-  const flags = new Map();
-  if ($('compare').checked && rows.length > 2) {
-    for (const k of Object.keys(BEST)) {
-      const vals = rows.map(r => valueOf(r, k));
-      if (vals.filter(Number.isFinite).length < 3) continue;
-      const finite = vals.filter(Number.isFinite);
-      const med = stats.median(finite);
-      const z = stats.zScores(vals.map(v => (Number.isFinite(v) ? v : med)));
-      rows.forEach((r, i) => {
-        const score = z[i] * BEST[k];        // positive = favourable direction
-        if (score < stats.NOTABLE) return;
-        const strong = score >= stats.OUTLIER;
-        flags.set(`${r.hash}:${k}`, {
-          cls: strong ? 'opp strong' : 'opp',
-          title: `${MEASURE[k]} is ${score.toFixed(1)} MAD ${BEST[k] < 0 ? 'below' : 'above'} ` +
-                 `the median of ${fmt(Math.round(med))} across the ${rows.length} rows shown` +
-                 (strong ? ' — a clear outlier' : '')
-        });
-      });
-    }
-  }
-  const mark = (r, k, extra = '') => {
-    const f = flags.get(`${r.hash}:${k}`);
-    return f ? ` class="num ${extra} ${f.cls}" title="${esc(f.title)}"` : ` class="num ${extra}"`;
-  };
-
-  /*
-   * IAS 1.38: present the corresponding figures for the preceding period. Here
-   * that is the capture immediately before each row's own, for the same world.
-   */
-  const priors = new Map();
-  if ($('comparatives').checked) {
-    for (const r of rows) {
-      const earlier = rowsCache
-        .filter(o => o.world === r.world && o.capturedAt < r.capturedAt)
-        .sort((a, b) => b.capturedAt.localeCompare(a.capturedAt))[0];
-      if (earlier) priors.set(r.hash, earlier);
-    }
-  }
-
   const worlds = new Set(rows.map(r => r.world)).size;
   $('count').textContent = rows.length
     ? `${rows.length} row${rows.length === 1 ? '' : 's'} · ${worlds} world${worlds === 1 ? '' : 's'}`
     : '0 rows';
   $('empty').hidden = rows.length > 0;
 
-  const priorRow = r => {
-    const p = priors.get(r.hash);
-    if (!p) return '';
-    return `<tr class="prior">
-      <td colspan="3"><span class="plabel">preceding</span> <time datetime="${esc(p.capturedAt)}">${esc(p.capturedAt)}</time></td>
-      <td class="num money">${acct(p.sell, 'gp/TC')}</td>
-      <td class="num money">${acct(p.sellVolume, 'TC')}</td>
-      <td class="num qty">${acctSI(p.goldDemand, 'gp')}</td>
-      <td class="num money">${acct(p.buy, 'gp/TC')}</td>
-      <td class="num money">${acct(p.buyVolume, 'TC')}</td>
-      <td class="num qty">${acctSI(p.goldSupply, 'gp')}</td>
-      <td class="num money">${acct(spread(p), 'gp/TC')}</td>
-      <td colspan="3"></td>
-    </tr>`;
-  };
-
   $('tbody').innerHTML = rows.map(r => `<tr>
       <td>${esc(r.world)}</td><td>${esc(r.type)}</td>
       <td class="be be-${esc(r.battleye)}">${esc(r.battleye)}</td>
-      <td${mark(r, 'sell', 'money')}>${acct(r.sell, 'gp/TC')}</td>
-      <td${mark(r, 'sellVolume', 'money')}>${acct(r.sellVolume, 'TC')}</td>
-      <td${mark(r, 'goldDemand', 'qty')} title="${Number.isFinite(r.goldDemand) ? fmt(r.goldDemand) + SI_GROUP + 'gp' : 'not recorded'}">${acctSI(r.goldDemand, 'gp')}</td>
-      <td${mark(r, 'buy', 'money')}>${acct(r.buy, 'gp/TC')}</td>
-      <td${mark(r, 'buyVolume', 'money')}>${acct(r.buyVolume, 'TC')}</td>
-      <td${mark(r, 'goldSupply', 'qty')} title="${Number.isFinite(r.goldSupply) ? fmt(r.goldSupply) + SI_GROUP + 'gp' : 'not recorded'}">${acctSI(r.goldSupply, 'gp')}</td>
-      <td class="num money${spread(r) < 0 ? ' neg' : ''} ${flags.get(`${r.hash}:spread`)?.cls ?? ''}"
-          title="${esc(flags.get(`${r.hash}:spread`)?.title ?? (spread(r) < 0 ? 'crossed market — a price is almost certainly misread' : ''))}">${acct(spread(r), 'gp/TC')}</td>
+      <td class="num money">${acct(r.sell)}</td>
+      <td class="num money">${acct(r.sellVolume)}</td>
+      <td class="num money">${acct(r.goldDemand)}</td>
+      <td class="num money">${acct(r.buy)}</td>
+      <td class="num money">${acct(r.buyVolume)}</td>
+      <td class="num money">${acct(r.goldSupply)}</td>
+      <td class="num money${spread(r) < 0 ? ' neg' : ''}"
+          title="${spread(r) < 0 ? 'crossed market — a price is almost certainly misread' : ''}">${acct(spread(r))}</td>
       <td><time datetime="${esc(r.capturedAt)}">${esc(r.capturedAt)}</time></td>
       <td class="hash" title="${esc(r.hash)}">${esc(r.hash.slice(0, 10))}</td>
       <td><button class="del" data-del="${esc(r.hash)}" title="Remove">✕</button></td>
-    </tr>${priorRow(r)}`).join('');
-  disclosure(rows, [...priors.values()]);
+    </tr>`).join('');
+  disclosure(rows);
 
   for (const th of document.querySelectorAll('#table thead th[data-sort]')) {
     th.classList.toggle('sorted', th.dataset.sort === sortBy.key);
@@ -623,6 +426,29 @@ function download(name, text, type) {
   a.href = url; a.download = name; a.click();
   URL.revokeObjectURL(url);
 }
+
+/* -------------------------------------------------------------------- views */
+function showView(name) {
+  const isMarket = name !== 'manage';
+  $('view-market').hidden = !isMarket;
+  $('view-manage').hidden = isMarket;
+  $('tab-market').classList.toggle('active', isMarket);
+  $('tab-manage').classList.toggle('active', !isMarket);
+  $('tab-market').setAttribute('aria-selected', String(isMarket));
+  $('tab-manage').setAttribute('aria-selected', String(!isMarket));
+  if (location.hash !== `#${isMarket ? 'market' : 'manage'}`) {
+    history.replaceState(null, '', `#${isMarket ? 'market' : 'manage'}`);
+  }
+  if (isMarket) market.refresh();
+}
+
+$('tab-market').addEventListener('click', () => showView('market'));
+$('tab-manage').addEventListener('click', () => showView('manage'));
+document.addEventListener('click', e => {
+  const a = e.target.closest('[data-goto]');
+  if (a) { e.preventDefault(); showView(a.dataset.goto); }
+});
+window.addEventListener('hashchange', () => showView(location.hash.slice(1)));
 
 /* ------------------------------------------------------------------ wiring */
 const drop = $('drop');
@@ -715,16 +541,8 @@ $('tbody').addEventListener('click', async e => {
   if (h && confirm('Remove this observation from the database?')) {
     await store.remove(h);
     await renderTable();
+    market.refresh();
   }
-});
-$('latestOnly').addEventListener('change', renderTable);
-$('compare').addEventListener('change', renderTable);
-$('comparatives').addEventListener('change', renderTable);
-$('sep').addEventListener('change', e => {
-  groupSep = e.target.value;
-  try { localStorage.setItem(SEP_KEY, groupSep); } catch { /* not persisted */ }
-  for (const c of cards.values()) render(c);   // cards carry numbers too
-  renderTable();
 });
 $('filter').addEventListener('input', renderTable);
 document.querySelector('#table thead').addEventListener('click', e => {
@@ -740,8 +558,8 @@ document.querySelector('#table thead').addEventListener('click', e => {
 $('exportJson').addEventListener('click', () =>
   download('observations.json', JSON.stringify(rowsCache, null, 2), 'application/json'));
 $('exportCsv').addEventListener('click', () => {
-    // Units belong in the header of a data file; the values stay plain integers.
-const head = 'World,Type,BattlEye,Sell (gp/TC),Sell Volume (TC),Gold Demand (gp),' +
+  // Units belong in the header of a data file; the values stay plain integers.
+  const head = 'World,Type,BattlEye,Sell (gp/TC),Sell Volume (TC),Gold Demand (gp),' +
                'Buy (gp/TC),Buy Volume (TC),Gold Supply (gp),Spread (gp/TC),Capture,Hash';
   const body = rowsCache.map(r => [r.world, r.type, r.battleye, r.sell, r.sellVolume,
     r.goldDemand ?? '', r.buy, r.buyVolume, r.goldSupply ?? '', spread(r), r.capturedAt, r.hash]
@@ -755,6 +573,7 @@ $('importFile').addEventListener('change', async e => {
   try {
     const { added, skipped } = await store.importRows(JSON.parse(await f.text()));
     await renderTable();
+    market.refresh();
     alert(`Imported ${added} row(s), skipped ${skipped}.`);
   } catch (err) { alert(`Import failed: ${err.message}`); }
   e.target.value = '';
@@ -763,9 +582,10 @@ $('clearBtn').addEventListener('click', async () => {
   if (confirm('Delete every stored observation on this device?')) {
     await store.clear();
     await renderTable();
+    market.refresh();
   }
 });
 window.addEventListener('beforeunload', () => { disposeOcr(); });
 
-$('sep').value = groupSep;
+showView(location.hash.slice(1) || 'market');
 store.loadBaseline().then(renderTable).catch(renderTable);

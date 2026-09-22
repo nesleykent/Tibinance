@@ -1,125 +1,224 @@
+/*
+ * Design tokens. Every spacing, radius, border and type-size value used
+ * below comes from one of these scales rather than a one-off number tuned
+ * to some particular element - so a control's rhythm stays consistent as
+ * content, viewport and data change, instead of per-element magic numbers.
+ */
 :root{
+  /* colour */
   --bg:#12100d; --panel:#1b1814; --panel-2:#221e19; --line:#332c23;
-  --ink:#ece5d8; --muted:#9c9081; --gold:#d9a441; --gold-dim:#8a6a2a;
-  --ok:#5fae62; --warn:#d8a13a; --bad:#cf5a4e; --radius:10px;
+  --ink:#ece5d8; --muted:#9c9091; --gold:#d9a441; --gold-dim:#8a6a2a;
+  --ok:#5fae62; --warn:#d8a13a; --bad:#cf5a4e;
+  --surface-inset:#0d0b09;   /* recessed background - text inputs, code */
+  --on-gold:#1a1409;         /* text/ink colour on a gold-filled control */
+
+  /* spacing scale - 4px rhythm, use the nearest step rather than a raw px */
+  --space-1:2px; --space-2:4px; --space-3:6px; --space-4:8px;
+  --space-5:10px; --space-6:12px; --space-7:16px; --space-8:20px;
+  --space-9:24px; --space-10:32px; --space-11:40px; --space-12:56px;
+
+  /* radii */
+  --radius-xs:4px; --radius-sm:6px; --radius-md:8px; --radius-lg:10px;
+
+  /* borders */
+  --border-w:1px;
+  --border:var(--border-w) solid var(--line);
+
+  /* type scale */
+  --text-2xs:.68rem; --text-xs:.72rem; --text-sm:.78rem; --text-base:.84rem;
+  --text-md:.9rem; --text-lg:1.05rem; --text-xl:1.35rem;
+  --font-sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+
+  /* the measure every top-level section aligns to, and a narrower one for
+     content that should read as secondary/compact rather than dominant */
+  --content-width:1180px;
+  --content-narrow:640px;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
+/* an explicit display: on a class must never outrank the hidden attribute */
+[hidden]{display:none!important}
 body{
   background:var(--bg); color:var(--ink);
-  font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  padding:0 16px 64px;
+  font:var(--text-base)/1.5 var(--font-sans);
+  padding:0 var(--space-7) var(--space-12);
 }
 a{color:var(--gold)}
-.top{max-width:1180px;margin:0 auto;padding:20px 0 6px}
-h1{margin:0;font-size:1.35rem;letter-spacing:-.01em}
-.sub{margin:4px 0 0;color:var(--muted);font-size:.85rem}
+code{background:var(--surface-inset);padding:var(--space-1) var(--space-4);border-radius:var(--radius-xs);font-size:.92em;color:var(--gold)}
+
+.top{max-width:var(--content-width);margin:0 auto;padding:var(--space-8) 0 var(--space-3)}
+main,footer,.top{max-width:var(--content-width);margin-left:auto;margin-right:auto}
+main{padding:0}
+
+/* ---- header: identity, navigation, subtitle ---------------------------
+   One row, vertically centred: the wordmark anchors the left edge, the
+   Market/Manage nav is grouped on the right with its own internal spacing.
+   The subtitle is a separate block below, aligned to the page measure - it
+   belongs to the page, not to the nav beside it. */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:var(--space-9)}
+.wordmark{margin:0;font-size:var(--text-xl);font-weight:700;letter-spacing:-.01em}
+.sub{margin:var(--space-3) 0 0;color:var(--muted);font-size:var(--text-sm)}
+
+.nav{display:flex;align-items:center;gap:var(--space-9)}
+.navlink{
+  background:none;border:none;padding:0 0 var(--space-3);margin:0;
+  color:var(--muted);font:inherit;font-size:var(--text-md);font-weight:500;
+  cursor:pointer;position:relative;line-height:1.2;
+}
+.navlink:hover{color:var(--ink)}
+.navlink.active{color:var(--ink);font-weight:600}
+/* the indicator is sized to the label's own box only - never the gap around it */
+.navlink.active::after{
+  content:'';position:absolute;left:0;right:0;bottom:0;height:2px;
+  background:var(--gold);border-radius:var(--radius-xs);
+}
+.view[hidden]{display:none}
 
 .privacy{
-  max-width:1180px;margin:10px auto;background:var(--panel);
-  border:1px solid var(--line);border-radius:var(--radius);
-  padding:8px 14px;color:var(--muted);font-size:.8rem;
+  margin:var(--space-5) 0;background:var(--panel);
+  border:var(--border);border-radius:var(--radius-lg);
+  padding:var(--space-4) var(--space-7);color:var(--muted);font-size:var(--text-sm);
 }
-.tick{color:var(--ok);font-weight:700;margin-right:6px}
-
-main{max-width:1180px;margin:0 auto}
+.tick{color:var(--ok);font-weight:700;margin-right:var(--space-3)}
 
 .drop{
-  border:2px dashed var(--gold-dim); border-radius:var(--radius);
-  background:var(--panel); padding:22px 20px; text-align:center; cursor:pointer;
+  border:2px dashed var(--gold-dim); border-radius:var(--radius-lg);
+  background:var(--panel); padding:var(--space-9) var(--space-8); text-align:center; cursor:pointer;
   transition:background .15s,border-color .15s;
 }
 .drop:hover,.drop:focus-visible{background:var(--panel-2);border-color:var(--gold);outline:none}
 .drop.over{background:#2a2419;border-color:var(--gold)}
-.drop-inner strong{display:block;font-size:1.05rem}
-.drop-inner span{display:block;color:var(--muted);margin:4px 0 10px}
-.drop-inner small{color:var(--muted);font-size:.78rem}
-code{background:#000;padding:2px 6px;border-radius:4px;font-size:.92em;color:var(--gold)}
+.drop-inner strong{display:block;font-size:var(--text-lg)}
+.drop-inner span{display:block;color:var(--muted);margin:var(--space-3) 0 var(--space-5)}
+.drop-inner small{color:var(--muted);font-size:var(--text-sm)}
+/* the drop zone yields space once a batch is being reviewed */
+.drop.compact{padding:var(--space-6) var(--space-7)}
+.drop.compact .drop-inner span,.drop.compact .drop-inner small{display:none}
+.drop.compact .drop-inner strong{font-size:var(--text-md)}
 
-.queue{margin:18px 0;display:grid;gap:10px}
-.card{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--muted);border-radius:var(--radius);padding:12px 14px}
+/* ---- buttons, inputs: one shared control language ---------------------- */
+.btn{
+  background:var(--panel-2);border:var(--border);color:var(--ink);
+  padding:var(--space-4) var(--space-6);border-radius:var(--radius-md);
+  cursor:pointer;font:inherit;font-size:var(--text-sm);
+}
+.btn:hover{border-color:var(--gold)}
+.btn.primary{background:var(--gold);color:var(--on-gold);border-color:var(--gold);font-weight:600}
+.btn.active{background:var(--gold);color:var(--on-gold);border-color:var(--gold);font-weight:600}
+.btn.danger:hover{border-color:var(--bad);color:var(--bad)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.mini-add{font-size:var(--text-xs);padding:var(--space-3) var(--space-4);margin-top:var(--space-1)}
+
+.field{
+  background:var(--surface-inset);border:var(--border);color:var(--ink);
+  border-radius:var(--radius-sm);padding:var(--space-4) var(--space-5);
+  font:inherit;font-size:var(--text-sm);
+}
+.field:focus{outline:1px solid var(--gold);border-color:var(--gold)}
+.filter{width:9.5em}
+.field.wide{width:100%}
+
+/* ---- panels: the one recurring "boxed section" look ---------------------
+   Every card, table wrapper and control group in the app is this same
+   background/border/radius; grouped in one rule so it stays one visual
+   decision instead of being redeclared per component. */
+.panel,.card,.table-wrap,.disclosure{
+  background:var(--panel);border:var(--border);border-radius:var(--radius-lg);
+}
+
+.queue{margin:var(--space-8) 0;display:grid;gap:var(--space-5)}
+.card{border-left:3px solid var(--muted);padding:var(--space-6) var(--space-7)}
 .card.ok{border-left-color:var(--ok)}
 .card.warn{border-left-color:var(--warn)}
 .card.bad{border-left-color:var(--bad)}
-.card h3{margin:0 0 4px;font-size:.92rem;font-weight:600;word-break:break-all}
-.card .steps{margin:6px 0 0;color:var(--muted);font-size:.83rem;display:grid;gap:3px}
+.card .steps{margin:var(--space-3) 0 0;color:var(--muted);font-size:var(--text-sm);display:grid;gap:var(--space-1)}
 .card .steps b{color:var(--ink);font-weight:600}
 .msg-bad{color:var(--bad)}
 .msg-warn{color:var(--warn)}
+.msg-note{color:var(--muted)}
 
-.rows{margin-top:10px;border-top:1px solid var(--line);padding-top:10px;display:grid;gap:12px}
+.rows{margin-top:var(--space-5);border-top:var(--border);padding-top:var(--space-5);display:grid;gap:var(--space-6)}
 @media(min-width:720px){.rows{grid-template-columns:1fr 1fr}}
-.rows h4{margin:0 0 6px;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
-.rowline{display:grid;grid-template-columns:1fr 1fr 1.3fr auto;gap:6px;align-items:center;margin-bottom:4px}
+.side h4{margin:0 0 var(--space-3);font-size:var(--text-sm);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.side h4 .n{color:var(--ink);font-weight:700}
+.rowhead,.rowline{
+  display:grid;grid-template-columns:1fr 1fr 1.35fr 1.1em 1.3em;
+  gap:var(--space-3);align-items:center;margin-bottom:var(--space-2);
+}
+.rowhead{
+  font-size:var(--text-2xs);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);
+  text-align:right;padding:0 var(--space-3) var(--space-1);border-bottom:var(--border);margin-bottom:var(--space-3);
+}
+.rowhead i{font-style:normal;opacity:.65;text-transform:none;letter-spacing:0}
 .rowline input{
-  background:#0d0b09;border:1px solid var(--line);color:var(--ink);
-  border-radius:6px;padding:4px 6px;font:12px ui-monospace,SFMono-Regular,Menlo,monospace;
+  background:var(--surface-inset);border:var(--border);color:var(--ink);
+  border-radius:var(--radius-sm);padding:var(--space-2) var(--space-3);font:12px var(--font-mono);
   text-align:right;width:100%;
 }
 .rowline input:focus{outline:1px solid var(--gold);border-color:var(--gold)}
 .rowline.bad input{border-color:var(--bad)}
-.flag{font-size:.72rem;width:1.2em;text-align:center}
+.flag{font-size:var(--text-xs);width:1.2em;text-align:center}
 .flag.ok{color:var(--ok)} .flag.bad{color:var(--bad)}
-.summary{font-size:.82rem;color:var(--muted);margin-top:6px}
-.card .btnrow{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+.rowdel{background:none;border:none;color:var(--line);cursor:pointer;font-size:var(--text-sm);padding:0}
+.rowdel:hover{color:var(--bad)}
+.norows{color:var(--muted);font-size:var(--text-sm);margin:var(--space-2) 0}
+.card .btnrow{margin-top:var(--space-5);display:flex;gap:var(--space-4);flex-wrap:wrap}
 
-.btn{
-  background:var(--panel-2);border:1px solid var(--line);color:var(--ink);
-  padding:7px 12px;border-radius:7px;cursor:pointer;font-size:.85rem;
-}
-.btn:hover{border-color:var(--gold)}
-.btn.primary{background:var(--gold);color:#1a1409;border-color:var(--gold);font-weight:600}
-.btn.danger:hover{border-color:var(--bad);color:var(--bad)}
-.btn:disabled{opacity:.5;cursor:not-allowed}
+.results-head{display:flex;flex-wrap:wrap;gap:var(--space-5);align-items:center;justify-content:space-between;margin-bottom:var(--space-5)}
+.results-head h2{margin:0;font-size:var(--text-lg)}
+.count{color:var(--muted);font-weight:400;font-size:var(--text-md)}
+.actions{display:flex;gap:var(--space-4);flex-wrap:wrap;align-items:center}
+.captures{margin-top:var(--space-10)}
 
-.results{margin-top:26px}
-.results-head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:10px}
-.results-head h2{margin:0;font-size:1.05rem}
-.count{color:var(--muted);font-weight:400;font-size:.9rem}
-.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.mini{color:var(--muted);font-size:.82rem;display:flex;align-items:center;gap:5px}
-
-.table-wrap{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:.82rem;min-width:1080px}
-th,td{padding:6px 10px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
-th{color:var(--muted);font-weight:600;font-size:.76rem;text-transform:uppercase;letter-spacing:.05em}
+/* ---- data tables --------------------------------------------------------
+   Intrinsic column sizing throughout: text columns size to their content,
+   numeric columns use tabular figures and right-align, and the wrapper
+   scrolls horizontally rather than the page squeezing a fixed layout. */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:var(--text-base)}
+th,td{padding:var(--space-3) var(--space-5);text-align:left;border-bottom:var(--border);white-space:nowrap}
+th{color:var(--muted);font-weight:600;font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.05em}
 tbody tr:last-child td{border-bottom:none}
 tbody tr:hover{background:var(--panel-2)}
 .num{text-align:right;font-variant-numeric:tabular-nums}
-td.num{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
-.be{font-weight:600;font-size:.8rem}
+td.num{font-family:var(--font-mono)}
+.be{font-weight:600;font-size:var(--text-sm)}
 .be-Green{color:var(--ok)} .be-Yellow{color:var(--warn)} .be-Off{color:var(--muted)}
-.hash{font-family:ui-monospace,Menlo,monospace;font-size:.72rem;color:var(--muted)}
-.del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:0 4px}
+.hash{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--muted)}
+.del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:0 var(--space-2)}
 .del:hover{color:var(--bad)}
-.empty{color:var(--muted);text-align:center;padding:26px;margin:0}
+.empty{color:var(--muted);text-align:center;padding:var(--space-9);margin:0}
 
-footer{max-width:1180px;margin:40px auto 0;color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padding-top:14px}
-
-/* SI: the unit is part of the quantity, but subordinate to the number */
+/* the unit is part of the quantity, but subordinate to the number */
 .unit{color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0}
-
 /* a negative spread means a crossed market got saved past the warning */
 td.num.neg{color:var(--bad)}
 
-/* ---- queue bar + one-line cards -------------------------------------- */
+footer{margin:var(--space-11) auto 0;color:var(--muted);font-size:var(--text-sm);border-top:var(--border);padding-top:var(--space-6)}
+
+/* ---- queue bar + one-line review cards ---------------------------------
+   The card line uses a small set of intrinsic-width slots (an icon glyph,
+   a status glyph, tabular-number cells sized to the widest value each unit
+   can print) so it stays aligned down a batch of any length; at narrower
+   viewports the least essential slots drop rather than the layout breaking. */
 .qbar{
   position:sticky; top:0; z-index:5;
-  display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;
-  background:var(--panel-2); border:1px solid var(--line); border-radius:var(--radius);
-  padding:8px 12px; margin:14px 0 8px;
+  display:flex; flex-wrap:wrap; gap:var(--space-5); align-items:center; justify-content:space-between;
+  background:var(--panel-2); border:var(--border); border-radius:var(--radius-lg);
+  padding:var(--space-4) var(--space-6); margin:var(--space-7) 0 var(--space-4);
 }
-.qstat{font-size:.82rem;color:var(--muted)}
+.qstat{font-size:var(--text-sm);color:var(--muted)}
 .qstat b{color:var(--ink)}
 .qstat .attn{color:var(--warn)}
-.qactions{display:flex;gap:8px;flex-wrap:wrap}
+.qactions{display:flex;gap:var(--space-4);flex-wrap:wrap}
 
-.queue{gap:4px;margin:0 0 14px}
-.card{padding:0;border-left-width:3px}
+.queue{gap:var(--space-2);margin:0 0 var(--space-7)}
+.queue .card{padding:0;border-left-width:3px}
 .cline{
-  display:grid; align-items:center; gap:0 10px; padding:6px 10px;
+  display:grid; align-items:center; gap:0 var(--space-5); padding:var(--space-3) var(--space-5);
   grid-template-columns:1.2em 8.5em 1em 6.2em 1fr;
-  font-size:.79rem; white-space:nowrap; overflow:hidden;
+  font-size:var(--text-sm); white-space:nowrap; overflow:hidden;
 }
 .card summary{list-style:none;cursor:pointer}
 .card summary::-webkit-details-marker{display:none}
@@ -129,16 +228,17 @@ td.num.neg{color:var(--bad)}
 .card.warn .cflag{color:var(--warn)}
 .card.bad .cflag{color:var(--bad)}
 .cworld{overflow:hidden;text-overflow:ellipsis}
-.cbe{font-size:.7rem;cursor:help;text-align:center}
-.ctime{color:var(--muted);font-family:ui-monospace,Menlo,monospace;font-size:.74rem}
+.cbe{font-size:var(--text-xs);cursor:help;text-align:center}
+.ctime{color:var(--muted);font-family:var(--font-mono);font-size:var(--text-xs)}
 .cmsg{grid-column:5;overflow:hidden;text-overflow:ellipsis}
-/* one fixed-width cell per figure, so every card lines up vertically */
+/* one fixed-width cell per figure, sized to that unit's own widest value,
+   so every card in the batch lines up vertically regardless of row count */
 .cnums{
   grid-column:5; justify-self:end;
-  display:grid; grid-auto-flow:column; gap:0 14px; align-items:center;
+  display:grid; grid-auto-flow:column; gap:0 var(--space-7); align-items:center;
   grid-template-columns:22ch 13ch 21ch 19ch;
   color:var(--muted); font-variant-numeric:tabular-nums;
-  font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.74rem;
+  font-family:var(--font-mono); font-size:var(--text-xs);
 }
 .cnums .cn{text-align:right;overflow:hidden;text-overflow:ellipsis}
 .cnums b{color:var(--ink);font-weight:600}
@@ -156,136 +256,159 @@ td.num.neg{color:var(--bad)}
   .cline{grid-template-columns:1.2em 1fr 1em 6.2em}
   .cnums{grid-column:1 / -1;justify-self:start;grid-template-columns:22ch 13ch;padding-left:2.2em}
 }
-.cbody{padding:0 10px 10px;border-top:1px solid var(--line);margin-top:2px}
+.cbody{padding:0 var(--space-5) var(--space-5);border-top:var(--border);margin-top:var(--space-1)}
 .cbody .cfile{
-  font-family:ui-monospace,Menlo,monospace;font-size:.72rem;color:var(--muted);
-  padding:6px 0;word-break:break-all;
+  font-family:var(--font-mono);font-size:var(--text-xs);color:var(--muted);
+  padding:var(--space-3) 0;word-break:break-all;
 }
 details[open] > summary .cline{border-bottom:1px solid transparent}
 .card.saving{opacity:.45}
 
-/* the drop zone yields space once a batch is being reviewed */
-.drop.compact{padding:12px 16px}
-.drop.compact .drop-inner span,.drop.compact .drop-inner small{display:none}
-.drop.compact .drop-inner strong{font-size:.9rem}
-
-/* SI: the unit is part of the quantity, but subordinate to the number */
-.unit{color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0}
-td.num.neg{color:var(--bad)}
-
-/* ---- offer editor ---------------------------------------------------- */
-.side h4{margin:0 0 6px;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
-.side h4 .n{color:var(--ink);font-weight:700}
-.rowhead,.rowline{
-  display:grid;grid-template-columns:1fr 1fr 1.35fr 1.1em 1.3em;
-  gap:6px;align-items:center;margin-bottom:4px;
-}
-.rowhead{
-  font-size:.66rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);
-  text-align:right;padding:0 6px 2px;border-bottom:1px solid var(--line);margin-bottom:6px;
-}
-.rowhead i{font-style:normal;opacity:.65;text-transform:none;letter-spacing:0}
-.rowdel{background:none;border:none;color:var(--line);cursor:pointer;font-size:.8rem;padding:0}
-.rowdel:hover{color:var(--bad)}
-.norows{color:var(--muted);font-size:.78rem;margin:4px 0}
-.mini-add{font-size:.72rem;padding:4px 8px;margin-top:2px}
-.msg-note{color:var(--muted)}
-
-/* ---- comparing rows -------------------------------------------------- */
-.filter{
-  background:#0d0b09;border:1px solid var(--line);color:var(--ink);
-  border-radius:7px;padding:6px 9px;font-size:.82rem;width:9.5em;
-}
-.filter:focus{outline:1px solid var(--gold);border-color:var(--gold)}
+/* ---- sortable tables ----------------------------------------------------- */
 th[data-sort]{cursor:pointer;user-select:none;white-space:nowrap}
 th[data-sort]:hover{color:var(--ink)}
-th[data-sort]::after{content:'';opacity:.35;margin-left:4px;font-size:.9em}
+th[data-sort]::after{content:'';opacity:.35;margin-left:var(--space-2);font-size:.9em}
 th[data-sort][data-dir="asc"]::after{content:'▲';opacity:.9}
 th[data-sort][data-dir="desc"]::after{content:'▼';opacity:.9}
 th.sorted{color:var(--gold)}
-td.best{color:var(--gold);font-weight:600;position:relative}
-td.best::before{
-  content:'';position:absolute;left:2px;top:50%;transform:translateY(-50%);
-  width:3px;height:3px;border-radius:50%;background:var(--gold);
-}
 
-/* ---- what is kept ---------------------------------------------------- */
+/* ---- what is kept -------------------------------------------------------- */
 .privacy summary{cursor:pointer;list-style:none}
 .privacy summary::-webkit-details-marker{display:none}
-.privacy .what{color:var(--gold);text-decoration:underline dotted;margin-left:2px}
+.privacy .what{color:var(--gold);text-decoration:underline dotted;margin-left:var(--space-1)}
 .privacy[open],.privacy details[open]{color:var(--muted)}
 .kept{
-  display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  margin-top:10px;padding-top:10px;border-top:1px solid var(--line);
+  display:grid;gap:var(--space-7);grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  margin-top:var(--space-5);padding-top:var(--space-5);border-top:var(--border);
 }
-.kept h5{margin:0 0 4px;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink)}
-.kept p{margin:0 0 6px;font-size:.78rem;line-height:1.45}
-.kept .fine{color:var(--muted);font-size:.73rem}
+.kept h5{margin:0 0 var(--space-2);font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.06em;color:var(--ink)}
+.kept p{margin:0 0 var(--space-3);font-size:var(--text-sm);line-height:1.45}
+.kept .fine{color:var(--muted);font-size:var(--text-xs)}
 
-/* ---- accounting columns ---------------------------------------------- */
-/* the flex row is a span inside the cell, never the cell itself */
-.acct{
-  display:flex; align-items:baseline; justify-content:space-between; gap:12px;
-  font-variant-numeric:tabular-nums lining-nums;
-}
-.acct .cur{
-  color:var(--muted); opacity:.5; font-size:.85em; font-weight:400; flex:0 0 auto;
-}
-.acct .val{flex:0 0 auto}
-td.money{text-align:right}
-td.money.neg,td.money.neg .val{color:var(--bad)}
-td.money.best .cur{opacity:.7}
+/* ---- accounting columns -------------------------------------------------- */
+td.money{text-align:right;font-variant-numeric:tabular-nums lining-nums}
+td.money.neg{color:var(--bad)}
 .dash{color:var(--muted);opacity:.5}
 
-/* a per-row SI prefix cannot be factored into a column marker, so these cells
-   carry the full symbol with the value and stay plainly right-aligned */
-td.qty{text-align:right;font-variant-numeric:tabular-nums lining-nums;white-space:nowrap}
-
-.sep{
-  background:#0d0b09;border:1px solid var(--line);color:var(--ink);
-  border-radius:6px;padding:3px 5px;font-size:.78rem;
-  font-family:ui-monospace,Menlo,monospace;margin-left:4px;
-}
-.sep:focus{outline:1px solid var(--gold);border-color:var(--gold)}
-
-/* ---- IFRS presentation ----------------------------------------------- */
+/* ---- IFRS presentation ---------------------------------------------------- */
 .disclosure{
-  margin:0 0 8px;padding:8px 12px;font-size:.75rem;line-height:1.5;color:var(--muted);
-  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  margin:0 0 var(--space-4);padding:var(--space-4) var(--space-6);font-size:var(--text-sm);line-height:1.5;color:var(--muted);
 }
 .disclosure b{color:var(--ink);font-weight:600}
-tr.prior td{
-  border-bottom:1px solid var(--line);color:var(--muted);opacity:.72;
-  font-size:.95em;padding-top:2px;padding-bottom:6px;
-}
-tr.prior .plabel{
-  text-transform:uppercase;font-size:.66rem;letter-spacing:.06em;
-  color:var(--muted);opacity:.8;margin-right:6px;
-}
-tr.prior + tr td{border-top:0}
+.disclosure summary{cursor:pointer;list-style:none}
+.disclosure summary::-webkit-details-marker{display:none}
+.disclosure .note{margin-top:var(--space-5);padding-top:var(--space-5);border-top:var(--border)}
+.note dl{margin:0;display:grid;gap:var(--space-5)}
+.note dt{font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.06em;color:var(--ink)}
+.note dd{margin:var(--space-1) 0 0;font-size:var(--text-sm);line-height:1.5;color:var(--muted)}
+.note ul{margin:var(--space-2) 0 0;padding-left:18px}
+.note li{margin:var(--space-1) 0}
+.note b{color:var(--ink);font-weight:600}
 
-/* ---- IFRS 18 structured presentation ---------------------------------- */
 tr.grp th{
-  border-bottom:1px solid var(--line);padding-bottom:3px;
-  font-size:.66rem;letter-spacing:.08em;color:var(--muted);text-align:center;
+  border-bottom:var(--border);padding-bottom:var(--space-2);
+  font-size:var(--text-2xs);letter-spacing:.08em;color:var(--muted);text-align:center;
 }
 tr.grp .g-sell,tr.grp .g-buy{border-bottom-color:var(--gold-dim)}
 tr.grp .g-derived{color:var(--gold);opacity:.8}
-.disclosure summary{cursor:pointer;list-style:none}
-.disclosure summary::-webkit-details-marker{display:none}
-.disclosure .note{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
-.note dl{margin:0;display:grid;gap:10px}
-.note dt{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink)}
-.note dd{margin:2px 0 0;font-size:.78rem;line-height:1.5;color:var(--muted)}
-.note ul{margin:4px 0 0;padding-left:18px}
-.note li{margin:2px 0}
-.note b{color:var(--ink);font-weight:600}
 
-td.opp,td.num.opp{color:var(--gold)}
+/* ---- statistical outlier flag (Market's Latest table) --------------------- */
+td.opp,td.num.opp{color:var(--gold);position:relative}
 td.opp.strong{font-weight:700}
 td.opp.strong::before{
   content:'';position:absolute;left:2px;top:50%;transform:translateY(-50%);
   width:3px;height:3px;border-radius:50%;background:var(--gold);
 }
-td.opp{position:relative}
-td.money.opp .cur{opacity:.7}
+
+/* ============================================================================
+   Market view
+   Hierarchy, top to bottom: query controls -> primary visualisation (Sell and
+   Buy price together) -> latest values (compact) -> secondary analysis (one
+   metric at a time). Chrome is minimal by design: the toolbar and the tables
+   are the only bordered elements: the charts sit in open space, distinguished
+   by size and position rather than by another box around them.
+   ============================================================================ */
+
+/* ---- query toolbar: controls, not content ------------------------------- */
+.toolbar{display:flex;align-items:center;gap:var(--space-6);flex-wrap:wrap;margin:var(--space-8) 0 var(--space-9)}
+.toolbar-sep{color:var(--muted)}
+
+/* a compact button that discloses a small panel - used for the world picker
+   and the custom date range, so neither permanently occupies page width */
+.popover{position:relative}
+.popover > summary{list-style:none}
+.popover > summary::-webkit-details-marker{display:none}
+.toolbar-btn::after{content:'';display:inline-block;margin-left:var(--space-3);
+  border:4px solid transparent;border-top-color:var(--muted);border-bottom:0;translate:0 2px}
+.popover[open] .toolbar-btn{border-color:var(--gold);color:var(--ink)}
+.popover-panel{
+  position:absolute;top:calc(100% + var(--space-3));left:0;z-index:10;
+  background:var(--panel);border:var(--border);border-radius:var(--radius-lg);
+  padding:var(--space-5);width:max-content;max-width:min(90vw,20em);
+  box-shadow:0 8px 24px rgba(0,0,0,.4);
+}
+.popover-panel-row{display:flex;align-items:center;gap:var(--space-4);max-width:none}
+.popover-panel-row .field{font-family:var(--font-mono)}
+.popover-row{display:flex;gap:var(--space-5);margin:var(--space-3) 0}
+.linkbtn{background:none;border:none;color:var(--gold);cursor:pointer;font:inherit;font-size:var(--text-xs);padding:0}
+.linkbtn:hover{text-decoration:underline}
+
+.worldlist{max-height:16em;overflow-y:auto;display:grid;gap:1px;margin-top:var(--space-3)}
+.worldrow{
+  display:flex;align-items:center;gap:var(--space-4);padding:var(--space-2);border-radius:var(--radius-sm);
+  font-size:var(--text-sm);cursor:pointer;
+}
+.worldrow:hover{background:var(--panel-2)}
+.worldrow input{accent-color:var(--gold)}
+.swatch{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
+.wname{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* a small button-row, reused for range presets and the secondary-metric tabs */
+.segmented{display:flex;gap:var(--space-2);flex-wrap:wrap}
+.segmented-item{
+  background:none;border:var(--border);color:var(--muted);
+  padding:var(--space-3) var(--space-5);border-radius:var(--radius-md);
+  cursor:pointer;font:inherit;font-size:var(--text-sm);
+}
+.segmented-item:hover{color:var(--ink)}
+.segmented-item.active{background:var(--gold);color:var(--on-gold);border-color:var(--gold);font-weight:600}
+
+.legacystatus{color:var(--muted);font-size:var(--text-sm);margin:0 0 var(--space-6)}
+
+/* ---- section rhythm: a label row, then its content, nothing boxed ------- */
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:var(--space-5);flex-wrap:wrap;margin-bottom:var(--space-4)}
+.section-head h2{margin:0;font-size:var(--text-lg)}
+
+.primary-section{margin-bottom:var(--space-9)}
+.chart-primary{width:100%}
+.chart-svg{width:100%;height:auto;display:block}
+.chart-empty{color:var(--muted);font-size:var(--text-sm);padding:var(--space-11) 0;text-align:center}
+.gridline{stroke:var(--line);stroke-width:1}
+.axislabel{fill:var(--muted);font-size:9px;font-family:var(--font-mono)}
+
+/* per-world colour key (doubles as a quick way to hide a world) plus the
+   fixed Sell/Buy line-style key, which is the same for every world so it is
+   stated once rather than per chart */
+.legend{display:flex;align-items:center;gap:var(--space-6);flex-wrap:wrap}
+.legend-worlds{display:flex;flex-wrap:wrap;gap:var(--space-2)}
+.legend-chip{
+  display:inline-flex;align-items:center;gap:var(--space-3);
+  background:none;border:none;color:var(--muted);cursor:pointer;
+  font:inherit;font-size:var(--text-xs);padding:var(--space-1) 0;
+}
+.legend-chip:hover{color:var(--bad)}
+.legend-key{display:flex;align-items:center;gap:var(--space-2);color:var(--muted);font-size:var(--text-xs)}
+.legend-line{width:16px;height:0;border-top:2px solid var(--muted);display:inline-block;margin-left:var(--space-4)}
+.legend-key .legend-line:first-child{margin-left:0}
+.legend-line-buy{border-top-style:dashed}
+
+/* ---- latest values: compact, not a wide dominant table ------------------- */
+.snapshot{max-width:var(--content-narrow);margin-bottom:var(--space-10)}
+.snapshot .table-wrap{background:none;border:none;border-radius:0}
+.snapshot table{font-size:var(--text-sm)}
+.snapshot th,.snapshot td{padding:var(--space-2) var(--space-4)}
+.snapshot th:first-child,.snapshot td:first-child{padding-left:0}
+tr.stale{opacity:.55}
+
+.secondary-section{margin-bottom:var(--space-8)}
+.chart-secondary{width:100%}
