@@ -440,7 +440,7 @@ td.num.neg{color:var(--bad);background:none}
  */
 .market-grid{
   display:grid;
-  grid-template-columns:minmax(0,1fr) minmax(300px,360px);
+  grid-template-columns:minmax(0,1fr) minmax(340px,440px);
   grid-template-areas:"price latest" "analysis latest";
   column-gap:var(--space-10);row-gap:var(--space-11);
   align-items:start;
@@ -491,6 +491,9 @@ tr.focused .world-focus-btn{color:var(--accent)}
 .chart-primary{width:100%}
 .chart-svg{width:100%;height:auto;display:block}
 .chart-empty{color:var(--muted);font-size:var(--text-sm);padding:var(--space-11) 0;text-align:center}
+/* names what a near-empty-looking detail chart actually shows, so a
+   genuinely thin dataset reads as "not much here yet" rather than broken */
+.chart-note{margin:var(--space-3) 0 0;color:var(--muted);font-size:var(--text-xs);text-align:center}
 .gridline{stroke:var(--line);stroke-width:1}
 .axislabel{fill:var(--muted);font-size:10px;font-family:var(--font-sans)}
 

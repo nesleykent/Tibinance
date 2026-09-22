@@ -92,6 +92,22 @@ const shortDate = ms => new Date(ms).toISOString().slice(0, 10);
    placing points on a shared time axis. */
 const toMs = capturedAt => Date.parse(`${capturedAt}Z`);
 
+/* A compact "how stale is this" figure for the Latest table - real prices
+   run to five and six digits, which left no room in a sidebar column for a
+   full date next to Sell/Buy/Spread; how long ago a row is from is also the
+   more useful thing to see at a glance there than the date itself, since it
+   is what "stale" (below) is telling you about. The exact timestamp is
+   still one hover away via the cell's title. */
+function relativeAge(ms) {
+  const diff = Math.max(0, Date.now() - ms);
+  const MIN = 60000, HOUR = 3600000, MONTH = 30 * DAY, YEAR = 365 * DAY;
+  if (diff < HOUR) return `${Math.max(1, Math.round(diff / MIN))}m`;
+  if (diff < DAY) return `${Math.round(diff / HOUR)}h`;
+  if (diff < MONTH) return `${Math.round(diff / DAY)}d`;
+  if (diff < YEAR) return `${Math.round(diff / MONTH)}mo`;
+  return `${Math.round(diff / YEAR)}y`;
+}
+
 function mergePoints(screenshotRows, legacyRows) {
   const pts = [];
   for (const r of screenshotRows) {
@@ -302,6 +318,30 @@ function timeGapThreshold(pts) {
   return Math.max(median * 4, DAY * 3);
 }
 
+/*
+ * How much of the domain's own width is actually spanned by connected data,
+ * as opposed to the width between the first and last point. Four points -
+ * two clustered right after the domain starts, two clustered right before
+ * it ends, with days of nothing between them - span the full domain by
+ * first-to-last measure alone, yet still read as two illegible slivers with
+ * a wasteland in between; summing only the span WITHIN each gap-separated
+ * run (and excluding the gaps themselves) catches that case, since a real
+ * gap already has to be found to draw the line honestly in the first place.
+ */
+function coveredFraction(pts, domain) {
+  if (pts.length < 2) return 0;
+  const gapThreshold = timeGapThreshold(pts);
+  const runs = [];
+  let cur = [pts[0]];
+  for (let i = 1; i < pts.length; i++) {
+    if (pts[i].t - pts[i - 1].t > gapThreshold) { runs.push(cur); cur = []; }
+    cur.push(pts[i]);
+  }
+  runs.push(cur);
+  const covered = runs.reduce((sum, run) => sum + (run.at(-1).t - run[0].t), 0);
+  return covered / ((domain[1] - domain[0]) || 1);
+}
+
 /** Points for one field, split into runs wherever the field is missing or a
     real time gap intervenes - each run is drawn as its own path segment. */
 function fieldRuns(pts, key, gapThreshold) {
@@ -366,11 +406,26 @@ function renderDetailChart(container, { pts, domain, height, fields, ariaLabel, 
   };
   const layers = fields.map((f, i) => seriesFor(f, i === 0 ? colors.a : colors.b)).join('');
 
+  /*
+   * A handful of real points inside a domain sized for the requested range
+   * (say, seven days with just one or two screenshots in it) draw correctly
+   * but read as broken - a near-empty plot with a barely-visible mark in one
+   * corner. Naming what's actually there turns "is this a bug?" into "there
+   * just isn't much data here yet", without changing the domain itself
+   * (which would misrepresent the range that was asked for).
+   */
+  const sparse = pts.length <= 3 || coveredFraction(pts, domain) < 0.15;
+  const note = sparse
+    ? (pts.length <= 3
+        ? `Only ${pts.length} observation${pts.length === 1 ? '' : 's'} in this range.`
+        : `These observations are clustered in small parts of this range.`)
+    : '';
+
   container.innerHTML = `<svg viewBox="0 0 ${W} ${H}" class="chart-svg" role="img" aria-label="${esc(ariaLabel)}">
     ${gridLines}${xLabels}${layers}
     <rect class="chart-hit" x="${padL.toFixed(1)}" y="${padT.toFixed(1)}" width="${innerW.toFixed(1)}" height="${innerH.toFixed(1)}"/>
     <line class="chart-cursor" x1="0" y1="${padT}" x2="0" y2="${(H - padB).toFixed(1)}" hidden/>
-  </svg>`;
+  </svg>${note ? `<p class="chart-note">${esc(note)}</p>` : ''}`;
 
   let readout = wrap.querySelector('.chart-readout');
   if (!readout) {
@@ -560,7 +615,8 @@ function renderSnapshot(domain) {
   $('snapTable').closest('.table-wrap').hidden = rows.length === 0;
 
   $('snapTable').querySelector('thead tr').innerHTML =
-    `<th>World</th>${cols.map(c => `<th class="num">${esc(c.label)}</th>`).join('')}<th>Updated</th>`;
+    `<th>World</th>${cols.map(c => `<th class="num">${esc(c.label)}</th>`).join('')}` +
+    `<th title="How long ago this row's observation was captured">Updated</th>`;
 
   $('snapTable').querySelector('tbody').innerHTML = rows.map(r => {
     const rowCls = [r.stale ? 'stale' : '', r.world === focusedWorld ? 'focused' : ''].filter(Boolean).join(' ');
@@ -569,7 +625,7 @@ function renderSnapshot(domain) {
         <button type="button" class="world-focus-btn" data-focus-world="${esc(r.world)}" aria-pressed="${r.world === focusedWorld}">${esc(r.world)}</button>
       </td>
       ${cols.map(c => cellHtml(r, c)).join('')}
-      <td class="hash">${esc(r.capturedAt.slice(0, 10))}</td>
+      <td class="hash" title="${esc(r.capturedAt)}">${esc(relativeAge(toMs(r.capturedAt)))}</td>
     </tr>`;
   }).join('');
 }
