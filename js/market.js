@@ -7,10 +7,19 @@
  * sorted by their own capture time, each still tagged with where it came
  * from.
  *
- * Layout follows one hierarchy, top to bottom: query controls (world/range,
- * which govern every section below) -> the primary visualisation (Sell and
- * Buy price, together) -> latest values (compact) -> secondary analysis (one
- * metric at a time, chosen from a small control, not six charts at once).
+ * World selection and chart visualisation are one problem, not two: rather
+ * than overlaying every selected world's Sell/Buy lines on one axis (world
+ * encoded by colour, Sell/Buy by line style), which stops being legible past
+ * a handful of worlds and forces a large colour-to-name legend, the chart
+ * always has exactly one FOCUSED world drawn in full detail - two clear
+ * lines, real gridlines, hover inspection - while every other selected
+ * world gets its own small, labelled comparison card (Apple's own pattern
+ * for this: the Health app's Trends screen, a grid of small per-item charts
+ * that expand to a detailed view on tap, sharing style with it). Clicking a
+ * card, or a world's name in the Latest table, changes which world is
+ * focused. World identity is then carried by label and position, never by
+ * hue, so the chart stays legible with 2 worlds selected or with all of
+ * them.
  */
 import * as store from './store.js';
 import * as stats from './stats.js';
@@ -41,14 +50,22 @@ const MEASURE = {
 };
 const METRIC_LABEL = Object.fromEntries(SECONDARY_METRICS.map(m => [m.key, m.label]));
 
-/* Chart-series colour only - differentiates worlds, unrelated to the app's
-   own (neutral + one accent) chrome palette. Capped at a small, fixed,
-   ordered set rather than generated, so it stays legible and repeatable. */
-const PALETTE = ['#3b6ea5', '#2f9e58', '#c0392b', '#7c5cd6', '#1f8f8f',
-                 '#c2528a', '#d9502c', '#4a5fc9', '#2f8f6f', '#8a5fb0'];
+/*
+ * Exactly two chart colours exist in this app, ever - one per line in a
+ * chart that shows two (Sell/Buy), or one for a chart that shows a single
+ * metric. World identity is never colour-coded: a world is a labelled card
+ * or a named detail view, which is what actually scales past a handful of
+ * items (HIG: "avoid relying solely on colour to differentiate... include
+ * alternative ways to convey this information"). Read fresh per render
+ * rather than baked into CSS, because these paint raw SVG attributes, which
+ * cannot reference a CSS custom property.
+ */
+const prefersDark = () => matchMedia('(prefers-color-scheme: dark)').matches;
+const seriesColors = () => prefersDark() ? { a: '#7aa8db', b: '#b79cf0' } : { a: '#3b6ea5', b: '#7c5cd6' };
 
 let allWorlds = [];                 // eligible worlds - screenshot-derived, sorted
 let selectedWorlds = new Set();
+let focusedWorld = null;            // the one world shown in full chart detail
 let worldMeta = new Map();          // world -> { type, battleye } (from the latest screenshot row)
 let seriesByWorld = new Map();      // world -> merged points, oldest first
 let preset = 'ALL';
@@ -63,7 +80,6 @@ let pickerOpen = false;
 let pickerQuery = '';
 let pickerActiveIndex = 0;
 
-const colorFor = world => PALETTE[Math.max(0, allWorlds.indexOf(world)) % PALETTE.length];
 const groupBy = (rows, key) => {
   const m = {};
   for (const r of rows) (m[r[key]] ??= []).push(r);
@@ -117,15 +133,48 @@ async function loadData() {
   allWorlds = worlds;
 }
 
+const selectedInOrder = () => allWorlds.filter(w => selectedWorlds.has(w));
+
+/* The focused world always has to be one of the selected ones; falls back
+   to the first selected world whenever it isn't (nothing focused yet, or
+   the previously-focused world was just deselected). */
+function ensureFocus() {
+  const sel = selectedInOrder();
+  if (!sel.length) { focusedWorld = null; return; }
+  if (!focusedWorld || !selectedWorlds.has(focusedWorld)) focusedWorld = sel[0];
+}
+
+function latestObservedTime(worlds) {
+  const ts = worlds.flatMap(w => (seriesByWorld.get(w) ?? []).map(p => p.t));
+  return ts.length ? Math.max(...ts) : Date.now();
+}
+
+/*
+ * The domain is scoped to the FOCUSED world, not to every selected world
+ * combined. A world with a shorter history than the others sharing this
+ * comparison would otherwise have its own dense, meaningful data squeezed
+ * into a sliver of a domain stretched by someone else's longer history -
+ * exactly the "useful observations compressed into a tiny portion of the
+ * plot" failure a shared-across-everyone domain produces. "All" honestly
+ * spans everything the world being examined actually has, however far back
+ * that goes; a preset window (7D/30D/...) is anchored to that world's own
+ * most recent observation rather than to wall-clock now, so picking "7D"
+ * the day after your last screenshot of it still shows seven days of real
+ * data instead of mostly empty space up to today. The mini cards share this
+ * same domain so their shapes stay comparable to the detail chart and to
+ * each other; a world with less history than the focused one simply shows
+ * less filled-in width, which is honest rather than misleading.
+ */
 function computeDomain() {
   if (customRange) return [customRange.start, customRange.end];
+  const basis = focusedWorld ? [focusedWorld] : selectedInOrder();
   if (preset === 'ALL') {
-    const ts = [...selectedWorlds].flatMap(w => (seriesByWorld.get(w) ?? []).map(p => p.t));
+    const ts = basis.flatMap(w => (seriesByWorld.get(w) ?? []).map(p => p.t));
     if (!ts.length) return [Date.now() - 30 * DAY, Date.now()];
     return [Math.min(...ts), Math.max(...ts)];
   }
   const days = { '7D': 7, '30D': 30, '90D': 90, '1Y': 365 }[preset] ?? 30;
-  const end = Date.now();
+  const end = latestObservedTime(basis);
   return [end - days * DAY, end];
 }
 
@@ -138,23 +187,14 @@ function computeDomain() {
  * two hundred, since a long list scrolls rather than the control changing.
  * Because more than one choice is possible, the popover stays open across
  * clicks and closes only on outside click, Escape, or its own close button.
- *
- * The trigger's colour dots and the small legend above the Price chart are
- * both read-only identification, not selection surfaces - selecting only
- * ever happens inside the popover.
+ * This only ever controls the comparison SCOPE; which of the scoped worlds
+ * is drawn in full detail is a separate, chart-side choice (see focus).
  */
-const selectedInOrder = () => allWorlds.filter(w => selectedWorlds.has(w));
-
 function renderWorldPicker() {
   const sel = selectedInOrder();
-  $('pickerDots').innerHTML = sel.slice(0, 6)
-    .map(w => `<span class="swatch" style="background:${colorFor(w)}"></span>`).join('');
   $('worldPickerLabel').textContent = !sel.length ? 'Select worlds'
     : sel.length <= 2 ? sel.join(', ')
     : `${sel.length} worlds selected`;
-  $('worldLegend').innerHTML = sel.map(w =>
-    `<span class="legend-chip"><span class="swatch" style="background:${colorFor(w)}"></span>${esc(w)}</span>`
-  ).join('');
 }
 
 const filteredWorlds = () => {
@@ -172,7 +212,6 @@ function renderPickerOptions() {
       <li id="wopt-${i}" role="option" class="picker-option${i === pickerActiveIndex ? ' active' : ''}"
           data-world="${esc(w)}" aria-selected="${selectedWorlds.has(w)}">
         <span class="opt-check" aria-hidden="true">✓</span>
-        <span class="swatch" style="background:${colorFor(w)}"></span>
         <span class="opt-name">${esc(w)}</span>
       </li>`).join('')
     : '<li class="picker-empty">No worlds match</li>';
@@ -182,6 +221,12 @@ function toggleWorld(w) {
   if (selectedWorlds.has(w)) selectedWorlds.delete(w); else selectedWorlds.add(w);
   renderWorldPicker();
   renderPickerOptions();
+  renderAll();
+}
+
+function focusWorld(w) {
+  if (!selectedWorlds.has(w) || w === focusedWorld) return;
+  focusedWorld = w;
   renderAll();
 }
 
@@ -217,12 +262,15 @@ function renderMetricTabs() {
 }
 
 /* ------------------------------------------------------- chart rendering -
-   One renderer for both the primary (Sell + Buy, together) and secondary
-   (one metric at a time) charts: round, "nice" gridlines rather than the
-   raw min/max/midpoint, one line + markers per world per field, and a hover
-   crosshair with a readout panel for the exact value at a point in time -
-   the lines already carry the trend without it, this only adds precision.
-*/
+ * Two renderers share the same primitives (nice gridlines, gap-aware line
+ * splitting) but are deliberately different in what they show, per HIG's
+ * own small-chart-vs-detail-chart distinction: the detail chart carries
+ * gridlines, axis labels and hover-precision because it is the one place
+ * being read closely; a mini card strips all of that "descriptive content"
+ * and keeps only the line itself, high-contrast against nothing else, sized
+ * to show shape rather than exact values - a button that expands into the
+ * detail chart on activation, styled consistently with it.
+ */
 function niceStep(range, targetCount) {
   const raw = range / Math.max(1, targetCount);
   const mag = Math.pow(10, Math.floor(Math.log10(raw || 1)));
@@ -240,24 +288,59 @@ function niceTicks(min, max, targetCount = 4) {
   return ticks;
 }
 
-function drawTimeSeries(wrapEl, chartEl, { seriesPts, domain, height, fields, ariaLabel, emptyMsg }) {
-  const hasAny = seriesPts.some(s => s.pts.some(p => fields.some(f => Number.isFinite(p[f.key]))));
-  if (!seriesPts.length || !hasAny) {
-    chartEl.innerHTML = `<p class="chart-empty">${esc(emptyMsg)}</p>`;
-    const stale = wrapEl.querySelector('.chart-readout');
+/*
+ * Real gaps must look like gaps, not be smoothed over by a straight line
+ * from one side to the other. The "normal" cadence is inferred per series
+ * from its own median spacing, since a dense run of daily screenshots and a
+ * sparse run of monthly legacy points both need this line drawn honestly.
+ * Fewer than three points give no cadence to infer, so nothing is split.
+ */
+function timeGapThreshold(pts) {
+  if (pts.length < 3) return Infinity;
+  const gaps = pts.slice(1).map((p, i) => p.t - pts[i].t).sort((a, b) => a - b);
+  const median = gaps[Math.floor(gaps.length / 2)];
+  return Math.max(median * 4, DAY * 3);
+}
+
+/** Points for one field, split into runs wherever the field is missing or a
+    real time gap intervenes - each run is drawn as its own path segment. */
+function fieldRuns(pts, key, gapThreshold) {
+  const runs = [];
+  let cur = [];
+  for (let i = 0; i < pts.length; i++) {
+    const p = pts[i];
+    const brokeGap = i > 0 && (p.t - pts[i - 1].t) > gapThreshold;
+    if (brokeGap && cur.length) { runs.push(cur); cur = []; }
+    if (Number.isFinite(p[key])) cur.push(p);
+    else if (cur.length) { runs.push(cur); cur = []; }
+  }
+  if (cur.length) runs.push(cur);
+  return runs;
+}
+
+/** The one focused world, drawn large: real gridlines and axis labels, a
+    hover crosshair for exact values, point markers on screenshot rows. */
+function renderDetailChart(container, { pts, domain, height, fields, ariaLabel, emptyMsg }) {
+  const wrap = container.closest('.chart-wrap');
+  const hasAny = fields.some(f => pts.some(p => Number.isFinite(p[f.key])));
+  if (!pts.length || !hasAny) {
+    container.innerHTML = `<p class="chart-empty">${esc(emptyMsg)}</p>`;
+    const stale = wrap.querySelector('.chart-readout');
     if (stale) stale.hidden = true;
     return;
   }
 
+  const colors = seriesColors();
   const W = 1040, H = height, padL = 56, padR = 16, padT = 14, padB = 24;
   const innerW = W - padL - padR, innerH = H - padT - padB;
 
-  const values = seriesPts.flatMap(s => s.pts.flatMap(p => fields.map(f => p[f.key]))).filter(Number.isFinite);
+  const values = fields.flatMap(f => pts.map(p => p[f.key])).filter(Number.isFinite);
   const ticks = niceTicks(Math.min(...values), Math.max(...values), 4);
   const yMin = ticks[0], yMax = ticks[ticks.length - 1];
 
   const x = t => padL + (t - domain[0]) / ((domain[1] - domain[0]) || 1) * innerW;
   const y = v => padT + (1 - (v - yMin) / ((yMax - yMin) || 1)) * innerH;
+  const gapThreshold = timeGapThreshold(pts);
 
   const gridLines = ticks.map(v => {
     const yy = y(v);
@@ -269,64 +352,51 @@ function drawTimeSeries(wrapEl, chartEl, { seriesPts, domain, height, fields, ar
     <text x="${padL}" y="${H - 4}" class="axislabel" aria-hidden="true">${esc(shortDate(domain[0]))}</text>
     <text x="${W - padR}" y="${H - 4}" class="axislabel" text-anchor="end" aria-hidden="true">${esc(shortDate(domain[1]))}</text>`;
 
-  const lineFor = (world, pts, field, color) => {
-    const runs = [];
-    let cur = [];
-    for (const p of pts) {
-      if (Number.isFinite(p[field.key])) cur.push(p);
-      else { if (cur.length > 1) runs.push(cur); cur = []; }
-    }
-    if (cur.length > 1) runs.push(cur);
-    const d = runs.map(run => run.map((p, i) => `${i === 0 ? 'M' : 'L'}${x(p.t).toFixed(1)},${y(p[field.key]).toFixed(1)}`).join(' ')).join(' ');
-    const soloDots = runs.length ? '' : pts.filter(p => Number.isFinite(p[field.key]))
-      .map(p => `<circle cx="${x(p.t).toFixed(1)}" cy="${y(p[field.key]).toFixed(1)}" r="1.8" fill="${color}"/>`).join('');
-    const markers = pts.filter(p => p.source === 'screenshot' && Number.isFinite(p[field.key]))
-      .map(p => `<circle cx="${x(p.t).toFixed(1)}" cy="${y(p[field.key]).toFixed(1)}" r="2.2" fill="${color}">` +
-        `<title>${esc(world)} · ${esc(p.capturedAt)} · ${esc(field.label)} ${esc(fmt(p[field.key]))}</title></circle>`).join('');
-    const path = d ? `<path d="${d}" fill="none" stroke="${color}" stroke-width="1.6"${field.dashed ? ' stroke-dasharray="5 3"' : ''} opacity=".92"/>` : '';
+  const seriesFor = (f, color) => {
+    const runs = fieldRuns(pts, f.key, gapThreshold);
+    const d = runs.filter(r => r.length > 1)
+      .map(run => run.map((p, i) => `${i === 0 ? 'M' : 'L'}${x(p.t).toFixed(1)},${y(p[f.key]).toFixed(1)}`).join(' ')).join(' ');
+    const soloDots = runs.filter(r => r.length === 1)
+      .map(([p]) => `<circle cx="${x(p.t).toFixed(1)}" cy="${y(p[f.key]).toFixed(1)}" r="2" fill="${color}"/>`).join('');
+    const markers = pts.filter(p => p.source === 'screenshot' && Number.isFinite(p[f.key]))
+      .map(p => `<circle cx="${x(p.t).toFixed(1)}" cy="${y(p[f.key]).toFixed(1)}" r="2.4" fill="${color}">` +
+        `<title>${esc(p.capturedAt)} · ${esc(f.label)} ${esc(fmt(p[f.key]))}</title></circle>`).join('');
+    const path = d ? `<path d="${d}" fill="none" stroke="${color}" stroke-width="1.8"${f.dashed ? ' stroke-dasharray="5 3"' : ''} opacity=".95"/>` : '';
     return path + soloDots + markers;
   };
+  const layers = fields.map((f, i) => seriesFor(f, i === 0 ? colors.a : colors.b)).join('');
 
-  const layers = seriesPts.map(s => {
-    const color = colorFor(s.world);
-    return fields.map(f => lineFor(s.world, s.pts, f, color)).join('');
-  }).join('');
-
-  chartEl.innerHTML = `<svg viewBox="0 0 ${W} ${H}" class="chart-svg" role="img" aria-label="${esc(ariaLabel)}">
+  container.innerHTML = `<svg viewBox="0 0 ${W} ${H}" class="chart-svg" role="img" aria-label="${esc(ariaLabel)}">
     ${gridLines}${xLabels}${layers}
     <rect class="chart-hit" x="${padL.toFixed(1)}" y="${padT.toFixed(1)}" width="${innerW.toFixed(1)}" height="${innerH.toFixed(1)}"/>
     <line class="chart-cursor" x1="0" y1="${padT}" x2="0" y2="${(H - padB).toFixed(1)}" hidden/>
   </svg>`;
 
-  let readout = wrapEl.querySelector('.chart-readout');
+  let readout = wrap.querySelector('.chart-readout');
   if (!readout) {
     readout = document.createElement('div');
     readout.className = 'chart-readout';
-    wrapEl.appendChild(readout);
+    wrap.appendChild(readout);
   }
   readout.hidden = true;
 
-  const svg = chartEl.querySelector('svg');
+  const svg = container.querySelector('svg');
   const hit = svg.querySelector('.chart-hit');
   const cursor = svg.querySelector('.chart-cursor');
-  const allTimes = [...new Set(seriesPts.flatMap(s => s.pts.map(p => p.t)))].sort((a, b) => a - b);
+  const times = pts.map(p => p.t);
 
   function showAt(clientX) {
     const rect = svg.getBoundingClientRect();
     if (!rect.width) return;
     const frac = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
     const t = domain[0] + frac * (domain[1] - domain[0]);
-    let nearest = null, best = Infinity;
-    for (const tt of allTimes) { const d = Math.abs(tt - t); if (d < best) { best = d; nearest = tt; } }
+    let nearest = null, best = Infinity, idx = -1;
+    times.forEach((tt, i) => { const d = Math.abs(tt - t); if (d < best) { best = d; nearest = tt; idx = i; } });
     if (nearest === null) return;
-
-    const rows = seriesPts.map(s => {
-      const p = s.pts.find(pt => pt.t === nearest);
-      if (!p) return '';
-      return fields.filter(f => Number.isFinite(p[f.key])).map(f => `
-        <div class="rr"><span class="swatch" style="background:${colorFor(s.world)}"></span>${esc(s.world)}${fields.length > 1 ? ` · ${esc(f.label)}` : ''}<b>${esc(fmt(p[f.key]))}</b></div>`).join('');
-    }).join('');
-    if (!rows) { readout.hidden = true; cursor.hidden = true; return; }
+    const p = pts[idx];
+    const rows = fields.map((f, i) => Number.isFinite(p[f.key]) ? `
+      <div class="rr"><span class="swatch" style="background:${i === 0 ? colors.a : colors.b}"></span>${esc(f.label)}<b>${esc(fmt(p[f.key]))}</b></div>` : '').join('');
+    if (!rows.trim()) { readout.hidden = true; cursor.hidden = true; return; }
 
     cursor.setAttribute('x1', x(nearest).toFixed(1));
     cursor.setAttribute('x2', x(nearest).toFixed(1));
@@ -344,48 +414,92 @@ function drawTimeSeries(wrapEl, chartEl, { seriesPts, domain, height, fields, ar
   hit.addEventListener('pointerleave', () => { readout.hidden = true; cursor.hidden = true; });
 }
 
-function seriesPtsFor(worlds, domain) {
-  return worlds.map(w => ({
-    world: w,
-    pts: (seriesByWorld.get(w) ?? []).filter(p => p.t >= domain[0] && p.t <= domain[1])
-  }));
+/** One other selected world, drawn tiny: no axes, no gridlines, no hover -
+    just the line(s), a name, and the latest value(s) as plain text, so the
+    shape and one concrete number are both readable without interacting.
+    A button; activating it focuses that world in the detail chart above. */
+function renderMiniCard(world, pts, domain, fields) {
+  const colors = seriesColors();
+  const W = 220, H = 56, pad = 3;
+  const values = fields.flatMap(f => pts.map(p => p[f.key])).filter(Number.isFinite);
+  let svgInner = '';
+  if (values.length) {
+    const ticks = niceTicks(Math.min(...values), Math.max(...values), 2);
+    const yMin = ticks[0], yMax = ticks[ticks.length - 1];
+    const x = t => pad + (t - domain[0]) / ((domain[1] - domain[0]) || 1) * (W - pad * 2);
+    const y = v => pad + (1 - (v - yMin) / ((yMax - yMin) || 1)) * (H - pad * 2);
+    const gapThreshold = timeGapThreshold(pts);
+    svgInner = fields.map((f, i) => {
+      const color = i === 0 ? colors.a : colors.b;
+      const runs = fieldRuns(pts, f.key, gapThreshold);
+      const d = runs.filter(r => r.length > 1)
+        .map(run => run.map((p, j) => `${j === 0 ? 'M' : 'L'}${x(p.t).toFixed(1)},${y(p[f.key]).toFixed(1)}`).join(' ')).join(' ');
+      const dots = runs.filter(r => r.length === 1)
+        .map(([p]) => `<circle cx="${x(p.t).toFixed(1)}" cy="${y(p[f.key]).toFixed(1)}" r="1.6" fill="${color}"/>`).join('');
+      return (d ? `<path d="${d}" fill="none" stroke="${color}" stroke-width="2"${f.dashed ? ' stroke-dasharray="4 2.5"' : ''}/>` : '') + dots;
+    }).join('');
+  }
+
+  const latest = pts.at(-1);
+  const valuesLine = latest
+    ? fields.map(f => Number.isFinite(latest[f.key]) ? fmt(latest[f.key]) : '—').join(' / ')
+    : 'No data in this range';
+  const ariaLabel = `${world}. ${latest
+    ? fields.map(f => `${f.label} ${Number.isFinite(latest[f.key]) ? fmt(latest[f.key]) : 'not available'}`).join('. ')
+    : 'no data in this range'}. Activate to see the full chart.`;
+
+  return `
+    <button type="button" class="mini-card" data-world="${esc(world)}" aria-label="${esc(ariaLabel)}">
+      <span class="mini-name" aria-hidden="true">${esc(world)}</span>
+      <svg viewBox="0 0 ${W} ${H}" class="mini-svg" aria-hidden="true">${svgInner}</svg>
+      <span class="mini-values" aria-hidden="true">${esc(valuesLine)}</span>
+    </button>`;
 }
 
-function renderPriceChart(domain) {
-  const worlds = [...selectedWorlds].filter(w => seriesByWorld.has(w));
-  const wrap = $('priceChart').closest('.chart-wrap');
-  if (!worlds.length) {
+function pointsFor(world, domain) {
+  return (seriesByWorld.get(world) ?? []).filter(p => p.t >= domain[0] && p.t <= domain[1]);
+}
+
+function renderMiniGrid(gridEl, headEl, domain, fields) {
+  const others = selectedInOrder().filter(w => w !== focusedWorld);
+  headEl.hidden = gridEl.hidden = others.length === 0;
+  if (!others.length) { gridEl.innerHTML = ''; return; }
+  gridEl.innerHTML = others.map(w => renderMiniCard(w, pointsFor(w, domain), domain, fields)).join('');
+}
+
+function renderPriceSection(domain) {
+  const fields = [{ key: 'sell', label: 'Sell Price', dashed: false }, { key: 'buy', label: 'Buy Price', dashed: true }];
+  $('priceFocusName').textContent = focusedWorld ? `· ${focusedWorld}` : '';
+  if (!focusedWorld) {
     $('priceChart').innerHTML = '<p class="chart-empty">Select a world to see its price history.</p>';
-    const stale = wrap.querySelector('.chart-readout');
+    const stale = $('priceChart').closest('.chart-wrap').querySelector('.chart-readout');
     if (stale) stale.hidden = true;
-    return;
+  } else {
+    renderDetailChart($('priceChart'), {
+      pts: pointsFor(focusedWorld, domain), domain, height: 300, fields,
+      ariaLabel: `Sell and Buy price over time for ${focusedWorld}`,
+      emptyMsg: `No data for ${focusedWorld} in this range.`
+    });
   }
-  drawTimeSeries(wrap, $('priceChart'), {
-    seriesPts: seriesPtsFor(worlds, domain),
-    domain, height: 300,
-    fields: [{ key: 'sell', label: 'Sell Price', dashed: false }, { key: 'buy', label: 'Buy Price', dashed: true }],
-    ariaLabel: `Sell and Buy price over time for ${worlds.join(', ')}`,
-    emptyMsg: 'No data in this range.'
-  });
+  renderMiniGrid($('priceMiniGrid'), $('priceMiniHead'), domain, fields);
 }
 
-function renderSecondaryChart(metric, domain) {
-  const worlds = [...selectedWorlds].filter(w => seriesByWorld.has(w));
-  const label = METRIC_LABEL[metric];
-  const wrap = $('secondaryChart').closest('.chart-wrap');
-  if (!worlds.length) {
+function renderAnalysisSection(domain) {
+  const label = METRIC_LABEL[activeMetric];
+  const fields = [{ key: activeMetric, label, dashed: false }];
+  $('analysisFocusName').textContent = focusedWorld ? `· ${focusedWorld}` : '';
+  if (!focusedWorld) {
     $('secondaryChart').innerHTML = `<p class="chart-empty">Select a world to see ${esc(label)}.</p>`;
-    const stale = wrap.querySelector('.chart-readout');
+    const stale = $('secondaryChart').closest('.chart-wrap').querySelector('.chart-readout');
     if (stale) stale.hidden = true;
-    return;
+  } else {
+    renderDetailChart($('secondaryChart'), {
+      pts: pointsFor(focusedWorld, domain), domain, height: 220, fields,
+      ariaLabel: `${label} over time for ${focusedWorld}`,
+      emptyMsg: `No ${label} data for ${focusedWorld} in this range.`
+    });
   }
-  drawTimeSeries(wrap, $('secondaryChart'), {
-    seriesPts: seriesPtsFor(worlds, domain),
-    domain, height: 220,
-    fields: [{ key: metric, label, dashed: false }],
-    ariaLabel: `${label} over time for ${worlds.join(', ')}`,
-    emptyMsg: `No ${label} data in this range.`
-  });
+  renderMiniGrid($('analysisMiniGrid'), $('analysisMiniHead'), domain, fields);
 }
 
 /* ----------------------------------------------------------- latest table */
@@ -448,24 +562,30 @@ function renderSnapshot(domain) {
   $('snapTable').querySelector('thead tr').innerHTML =
     `<th>World</th>${cols.map(c => `<th class="num">${esc(c.label)}</th>`).join('')}<th>Updated</th>`;
 
-  $('snapTable').querySelector('tbody').innerHTML = rows.map(r => `<tr class="${r.stale ? 'stale' : ''}" ${r.stale ? 'title="latest observation is outside the selected range"' : ''}>
-      <td class="world">${esc(r.world)}</td>
+  $('snapTable').querySelector('tbody').innerHTML = rows.map(r => {
+    const rowCls = [r.stale ? 'stale' : '', r.world === focusedWorld ? 'focused' : ''].filter(Boolean).join(' ');
+    return `<tr class="${rowCls}" ${r.stale ? 'title="latest observation is outside the selected range"' : ''}>
+      <td class="world">
+        <button type="button" class="world-focus-btn" data-focus-world="${esc(r.world)}" aria-pressed="${r.world === focusedWorld}">${esc(r.world)}</button>
+      </td>
       ${cols.map(c => cellHtml(r, c)).join('')}
       <td class="hash">${esc(r.capturedAt.slice(0, 10))}</td>
-    </tr>`).join('');
+    </tr>`;
+  }).join('');
 }
 
 /* --------------------------------------------------------------- compose */
 function renderAll() {
+  ensureFocus();
   const domain = computeDomain();
   $('marketLoading').hidden = true;
   $('marketEmpty').hidden = allWorlds.length > 0;
   $('marketBody').hidden = allWorlds.length === 0;
   if (!allWorlds.length) return;
-  renderPriceChart(domain);
+  renderPriceSection(domain);
   renderSnapshot(domain);
   renderMetricTabs();
-  renderSecondaryChart(activeMetric, domain);
+  renderAnalysisSection(domain);
 }
 
 async function backfillLegacy() {
@@ -574,6 +694,22 @@ function wireControls() {
     if (!b) return;
     activeMetric = b.dataset.metric;
     renderAll();
+  });
+
+  // direct manipulation: a mini card or a world's own name in Latest
+  // focuses that world, tying selection/comparison and visualisation into
+  // one interaction instead of a separate control
+  $('priceMiniGrid').addEventListener('click', e => {
+    const b = e.target.closest('[data-world]');
+    if (b) focusWorld(b.dataset.world);
+  });
+  $('analysisMiniGrid').addEventListener('click', e => {
+    const b = e.target.closest('[data-world]');
+    if (b) focusWorld(b.dataset.world);
+  });
+  $('snapTable').addEventListener('click', e => {
+    const b = e.target.closest('[data-focus-world]');
+    if (b) focusWorld(b.dataset.focusWorld);
   });
 }
 

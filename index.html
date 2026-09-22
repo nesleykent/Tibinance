@@ -36,7 +36,6 @@
         <div class="picker">
           <button type="button" id="worldPickerBtn" class="picker-trigger"
                   aria-haspopup="true" aria-expanded="false" aria-controls="worldPickerPopover" aria-labelledby="worldsLabel worldPickerLabel">
-            <span class="picker-dots" id="pickerDots" aria-hidden="true"></span>
             <span class="picker-label" id="worldPickerLabel">Select worlds</span>
             <span class="picker-caret" aria-hidden="true">⌄</span>
           </button>
@@ -74,16 +73,17 @@
 
       <section class="price-section" aria-label="Price">
         <div class="section-head">
-          <h2>Price</h2>
+          <h2>Price <span class="count" id="priceFocusName"></span></h2>
         </div>
         <div class="legend-key">
           <span class="legend-line legend-line-sell"></span>Sell Price
           <span class="legend-line legend-line-buy"></span>Buy Price
         </div>
-        <div class="world-legend" id="worldLegend" aria-label="Worlds shown"></div>
         <div class="chart-wrap">
           <div id="priceChart" class="chart-primary"></div>
         </div>
+        <p class="mini-grid-head" id="priceMiniHead" hidden>Other selected worlds — choose one to see it in full</p>
+        <div class="mini-grid" id="priceMiniGrid" hidden></div>
       </section>
 
       <section class="latest-section" aria-label="Latest values">
@@ -101,12 +101,14 @@
 
       <section class="analysis-section" aria-label="Analysis">
         <div class="section-head">
-          <h2>Analysis</h2>
+          <h2>Analysis <span class="count" id="analysisFocusName"></span></h2>
           <div id="metricTabs" class="segmented" role="radiogroup" aria-label="Secondary metric"></div>
         </div>
         <div class="chart-wrap">
           <div id="secondaryChart" class="chart-secondary"></div>
         </div>
+        <p class="mini-grid-head" id="analysisMiniHead" hidden>Other selected worlds — choose one to see it in full</p>
+        <div class="mini-grid" id="analysisMiniGrid" hidden></div>
       </section>
 
     </div>
