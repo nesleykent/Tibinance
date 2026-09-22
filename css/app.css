@@ -388,25 +388,35 @@ td.num.neg{color:var(--bad);background:none}
 
 /* ============================================================================
    Market view
-   Hierarchy, top to bottom: query controls (which worlds, which range) that
-   govern everything below -> primary visualisation (Sell and Buy price
-   together) -> latest values (compact) -> secondary analysis (one metric at
-   a time). Chrome is minimal by design: a table and a segmented control are
-   the only bordered elements; everything else is spacing and typography.
+   One grid for the whole view. A toolbar owns the two controls that govern
+   every section below it (which worlds, which range); a two-column content
+   grid then gives the primary charts (Price, Analysis) their own aligned
+   column and gives Latest its own aligned companion column, rather than
+   stacking sections at three unrelated widths. Chrome is minimal by design:
+   the toolbar, the Latest panel, a table and a segmented control are the
+   only bordered elements; everything else is spacing and typography.
    ============================================================================ */
 
-.controls{
-  display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;
-  gap:var(--space-6) var(--space-9);margin:var(--space-8) 0 var(--space-10);
-  padding-bottom:var(--space-7);border-bottom:var(--border);
+/*
+ * The toolbar is a single bounded region so its scope reads as "governs the
+ * whole view below," not "belongs to whichever section happens to be
+ * closest." World selection (leading edge) and Range (trailing edge) are its
+ * only two occupants, bottom-aligned like a label+control pair.
+ */
+.market-toolbar{
+  display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;
+  gap:var(--space-6) var(--space-9);
+  background:var(--surface);border:var(--border);border-radius:var(--radius-lg);
+  padding:var(--space-6) var(--space-7);
+  margin:var(--space-8) 0 var(--space-10);
 }
-.controls-group{display:flex;flex-direction:column;gap:var(--space-3);min-width:0}
+.field-group{display:flex;flex-direction:column;gap:var(--space-3);min-width:0}
 .controls-label{
   font-size:var(--text-2xs);text-transform:uppercase;letter-spacing:.06em;
   color:var(--muted);font-weight:600;
 }
-.range-group{display:flex;flex-direction:column;align-items:flex-end;gap:var(--space-3)}
-@media(max-width:640px){.range-group{align-items:flex-start}}
+.range-field-group{align-items:flex-end}
+@media(max-width:640px){.range-field-group{align-items:flex-start}}
 
 .custom-range{display:flex;align-items:center;gap:var(--space-4);flex-wrap:wrap}
 .custom-range .field{font-variant-numeric:tabular-nums}
@@ -414,10 +424,54 @@ td.num.neg{color:var(--bad);background:none}
 
 .legacystatus{color:var(--muted);font-size:var(--text-sm);margin:0 0 var(--space-6)}
 
-.legend-key{display:flex;align-items:center;gap:var(--space-2);color:var(--muted);font-size:var(--text-xs);margin-bottom:var(--space-5)}
+/*
+ * The two-column content grid. Price and Analysis share one column (a
+ * "charts" column) so their widths and edges visibly relate; Latest spans
+ * both their rows in its own column, so it owns a real region instead of
+ * floating at a third, unrelated width. It stays in view (sticky) while the
+ * taller charts column scrolls past it, since it is the number you check
+ * the chart's trend against.
+ */
+.market-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(300px,360px);
+  grid-template-areas:"price latest" "analysis latest";
+  column-gap:var(--space-10);row-gap:var(--space-11);
+  align-items:start;
+}
+.price-section{grid-area:price}
+.analysis-section{grid-area:analysis}
+.latest-section{
+  grid-area:latest;
+  background:var(--surface);border:var(--border);border-radius:var(--radius-lg);
+  padding:var(--space-7);
+  position:sticky;top:var(--space-7);align-self:start;
+}
+.latest-section .table-wrap{background:none;border:none;border-radius:0;overflow-x:auto;max-width:100%}
+.latest-section table{font-size:var(--text-sm)}
+.latest-section th,.latest-section td{padding:var(--space-3) var(--space-4)}
+.latest-section th:first-child,.latest-section td:first-child{padding-left:0}
+.latest-section tbody tr:nth-child(even){background:none}
+.latest-section td.world{white-space:nowrap;font-weight:600}
+tr.stale{opacity:.55}
+
+@media(max-width:900px){
+  .market-grid{grid-template-columns:1fr;grid-template-areas:"price" "latest" "analysis"}
+  .latest-section{position:static;align-self:auto}
+}
+
+.legend-key{display:flex;align-items:center;gap:var(--space-2);color:var(--muted);font-size:var(--text-xs);margin-bottom:var(--space-3)}
 .legend-line{width:16px;height:0;border-top:2px solid var(--muted);display:inline-block;margin-left:var(--space-4)}
 .legend-key .legend-line:first-child{margin-left:0}
 .legend-line-buy{border-top-style:dashed}
+
+/* the passive, read-only colour key for whichever worlds are currently
+   selected - identification only; selecting/deselecting happens exclusively
+   in the picker popover above, never by interacting with this */
+.world-legend{display:flex;flex-wrap:wrap;gap:var(--space-2) var(--space-6);margin-bottom:var(--space-5);font-size:var(--text-sm)}
+.world-legend:empty{display:none}
+.legend-chip{display:inline-flex;align-items:center;gap:var(--space-3)}
+.swatch{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
 
 .chart-primary{width:100%}
 .chart-svg{width:100%;height:auto;display:block}
@@ -425,34 +479,62 @@ td.num.neg{color:var(--bad);background:none}
 .gridline{stroke:var(--line);stroke-width:1}
 .axislabel{fill:var(--muted);font-size:10px;font-family:var(--font-sans)}
 
-/*
- * A world IS a chart series: this list is at once the legend and the only
- * world selector in the app - a coloured dot and the world's own name,
- * clicked to show or hide it. No checkbox, no popover, no separate control.
- * A world with no data yet still has a series colour reserved for it, so
- * the same list works whether one world or many are being compared.
- */
-#worldFilter{width:14em}
-.serieslist{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2) var(--space-6)}
-.seriesitem{
+/* ---- world picker: a compact trigger that opens a popover ----------------
+   HIG's Search fields + Popovers pattern: a field-like button whose label
+   summarises the current selection without opening anything, a popover
+   (sized to its content, not the page) holding a live-filtering search field
+   over a checkable list, and - because more than one selection is possible -
+   the popover stays open across choices, closing only on outside click,
+   Escape, or its own close button. The same control regardless of how many
+   worlds exist; a long list simply scrolls. */
+.picker{position:relative}
+.picker-trigger{
   display:inline-flex;align-items:center;gap:var(--space-3);
-  background:none;border:none;color:var(--ink);cursor:pointer;
-  font:inherit;font-size:var(--text-sm);padding:var(--space-2) 0;min-height:28px;
+  background:var(--surface-inset);border:var(--border);color:var(--ink);
+  border-radius:var(--radius-sm);padding:var(--space-3) var(--space-5);
+  font:inherit;font-size:var(--text-sm);cursor:pointer;min-height:28px;max-width:22em;
 }
-.seriesitem:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:var(--radius-xs)}
-.seriesitem.off{color:var(--muted)}
-.seriesitem.off .swatch{opacity:.3}
-.swatch{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+.picker-trigger:hover{border-color:var(--accent)}
+.picker-trigger:focus-visible,.picker-trigger[aria-expanded="true"]{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.picker-dots{display:inline-flex;align-items:center;gap:2px;flex:0 0 auto}
+.picker-dots .swatch{width:7px;height:7px}
+.picker-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.picker-caret{color:var(--muted);font-size:.85em;flex:0 0 auto}
 
-/* ---- latest values: compact, not a wide dominant table ------------------- */
-.snapshot{max-width:var(--content-narrow)}
-.snapshot .table-wrap{background:none;border:none;border-radius:0}
-.snapshot table{font-size:var(--text-sm)}
-.snapshot th,.snapshot td{padding:var(--space-3) var(--space-4)}
-.snapshot th:first-child,.snapshot td:first-child{padding-left:0}
-.snapshot tbody tr:nth-child(even){background:none}
-.snapshot td.world{display:flex;align-items:center;gap:var(--space-3);white-space:nowrap;font-weight:600}
-tr.stale{opacity:.55}
+.picker-popover{
+  position:absolute;top:calc(100% + var(--space-3));left:0;z-index:20;
+  width:20em;max-width:min(90vw,20em);
+  background:var(--surface);border:var(--border);border-radius:var(--radius-lg);
+  box-shadow:0 8px 24px rgba(0,0,0,.16);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.picker-search-row{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-4);border-bottom:var(--border)}
+.picker-search{
+  flex:1 1 auto;min-width:0;background:var(--surface-inset);border:var(--border);color:var(--ink);
+  border-radius:var(--radius-sm);padding:var(--space-3) var(--space-4);font:inherit;font-size:var(--text-sm);min-height:28px;
+}
+.picker-search:focus-visible,.picker-search:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.picker-close{
+  flex:0 0 auto;background:none;border:none;color:var(--muted);cursor:pointer;
+  min-width:28px;min-height:28px;border-radius:var(--radius-sm);font-size:var(--text-sm);
+}
+.picker-close:hover{color:var(--ink);background:var(--surface-2)}
+.picker-close:focus-visible{outline:2px solid var(--accent)}
+
+.picker-list{list-style:none;margin:0;padding:var(--space-3);max-height:16em;overflow-y:auto}
+.picker-option{
+  display:flex;align-items:center;gap:var(--space-4);
+  padding:var(--space-3) var(--space-4);border-radius:var(--radius-sm);
+  cursor:pointer;font-size:var(--text-sm);
+}
+.picker-option:hover,.picker-option.active{background:var(--accent-wash)}
+.picker-option .opt-check{
+  flex:0 0 auto;width:1.1em;text-align:center;color:var(--accent);
+  visibility:hidden;font-weight:700;
+}
+.picker-option[aria-selected="true"] .opt-check{visibility:visible}
+.picker-option .opt-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.picker-empty{padding:var(--space-5) var(--space-4);color:var(--muted);font-size:var(--text-sm)}
 
 .chart-secondary{width:100%}
 
@@ -482,7 +564,7 @@ tr.stale{opacity:.55}
    ============================================================================ */
 @media(max-width:720px){
   body{padding:0 var(--space-5) var(--space-10)}
-  .controls{flex-direction:column;align-items:stretch}
-  .range-group{align-items:stretch}
+  .market-toolbar{flex-direction:column;align-items:stretch}
+  .range-field-group{align-items:stretch}
   .segmented{flex-wrap:wrap}
 }

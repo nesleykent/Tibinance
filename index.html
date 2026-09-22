@@ -30,14 +30,29 @@
 
   <div id="marketBody" hidden>
 
-    <div class="controls">
-      <div class="controls-group">
+    <div class="market-toolbar">
+      <div class="field-group">
         <span class="controls-label" id="worldsLabel">Worlds</span>
-        <input type="search" id="worldFilter" class="field" placeholder="Filter worlds" aria-label="Filter worlds" hidden>
-        <div id="worldList" class="serieslist" role="group" aria-labelledby="worldsLabel"></div>
+        <div class="picker">
+          <button type="button" id="worldPickerBtn" class="picker-trigger"
+                  aria-haspopup="true" aria-expanded="false" aria-controls="worldPickerPopover" aria-labelledby="worldsLabel worldPickerLabel">
+            <span class="picker-dots" id="pickerDots" aria-hidden="true"></span>
+            <span class="picker-label" id="worldPickerLabel">Select worlds</span>
+            <span class="picker-caret" aria-hidden="true">⌄</span>
+          </button>
+          <div id="worldPickerPopover" class="picker-popover" hidden role="dialog" aria-label="Select worlds to compare">
+            <div class="picker-search-row">
+              <input type="text" id="worldSearch" class="picker-search" role="combobox"
+                     placeholder="Search worlds…" aria-label="Search worlds"
+                     aria-expanded="true" aria-controls="worldOptions" aria-autocomplete="list" autocomplete="off">
+              <button type="button" id="worldPickerClose" class="picker-close" aria-label="Close">✕</button>
+            </div>
+            <ul id="worldOptions" class="picker-list" role="listbox" aria-multiselectable="true" aria-label="Worlds"></ul>
+          </div>
+        </div>
       </div>
 
-      <div class="controls-group range-group">
+      <div class="field-group range-field-group">
         <span class="controls-label" id="rangeLabel">Range</span>
         <div id="rangePresets" class="segmented" role="radiogroup" aria-labelledby="rangeLabel">
           <button type="button" data-range="7D" role="radio" aria-checked="false">7D</button>
@@ -55,42 +70,46 @@
       </div>
     </div>
 
-    <section class="section" aria-label="Price">
-      <div class="section-head">
-        <h2>Price</h2>
-      </div>
-      <div class="legend-key">
-        <span class="legend-line legend-line-sell"></span>Sell Price
-        <span class="legend-line legend-line-buy"></span>Buy Price
-      </div>
-      <div class="chart-wrap">
-        <div id="priceChart" class="chart-primary"></div>
-      </div>
-    </section>
+    <div class="market-grid">
 
-    <section class="section snapshot" aria-label="Latest values">
-      <div class="section-head">
-        <h2>Latest <span id="snapCount" class="count"></span></h2>
-      </div>
-      <div class="table-wrap">
-        <table id="snapTable">
-          <thead><tr></tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-      <p id="snapEmpty" class="empty" hidden>No selected worlds have data yet.</p>
-    </section>
+      <section class="price-section" aria-label="Price">
+        <div class="section-head">
+          <h2>Price</h2>
+        </div>
+        <div class="legend-key">
+          <span class="legend-line legend-line-sell"></span>Sell Price
+          <span class="legend-line legend-line-buy"></span>Buy Price
+        </div>
+        <div class="world-legend" id="worldLegend" aria-label="Worlds shown"></div>
+        <div class="chart-wrap">
+          <div id="priceChart" class="chart-primary"></div>
+        </div>
+      </section>
 
-    <section class="section" aria-label="Analysis">
-      <div class="section-head">
-        <h2>Analysis</h2>
-        <div id="metricTabs" class="segmented" role="radiogroup" aria-label="Secondary metric"></div>
-      </div>
-      <div class="chart-wrap">
-        <div id="secondaryChart" class="chart-secondary"></div>
-      </div>
-    </section>
+      <section class="latest-section" aria-label="Latest values">
+        <div class="section-head">
+          <h2>Latest <span id="snapCount" class="count"></span></h2>
+        </div>
+        <div class="table-wrap">
+          <table id="snapTable">
+            <thead><tr></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p id="snapEmpty" class="empty" hidden>No selected worlds have data yet.</p>
+      </section>
 
+      <section class="analysis-section" aria-label="Analysis">
+        <div class="section-head">
+          <h2>Analysis</h2>
+          <div id="metricTabs" class="segmented" role="radiogroup" aria-label="Secondary metric"></div>
+        </div>
+        <div class="chart-wrap">
+          <div id="secondaryChart" class="chart-secondary"></div>
+        </div>
+      </section>
+
+    </div>
   </div>
 </section>
 

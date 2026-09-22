@@ -47,10 +47,6 @@ const METRIC_LABEL = Object.fromEntries(SECONDARY_METRICS.map(m => [m.key, m.lab
 const PALETTE = ['#3b6ea5', '#2f9e58', '#c0392b', '#7c5cd6', '#1f8f8f',
                  '#c2528a', '#d9502c', '#4a5fc9', '#2f8f6f', '#8a5fb0'];
 
-/* Above this many worlds, a text filter earns its place in the world list;
-   below it, scanning the list is faster than typing into it. */
-const WORLD_FILTER_THRESHOLD = 10;
-
 let allWorlds = [];                 // eligible worlds - screenshot-derived, sorted
 let selectedWorlds = new Set();
 let worldMeta = new Map();          // world -> { type, battleye } (from the latest screenshot row)
@@ -60,6 +56,12 @@ let customRange = null;             // { start, end } in ms, overrides preset wh
 let activeMetric = 'spread';
 let backfilling = false;
 let wired = false;
+
+/* World-picker popover state - one control regardless of how many worlds
+   exist; a long list scrolls rather than the interaction changing shape. */
+let pickerOpen = false;
+let pickerQuery = '';
+let pickerActiveIndex = 0;
 
 const colorFor = world => PALETTE[Math.max(0, allWorlds.indexOf(world)) % PALETTE.length];
 const groupBy = (rows, key) => {
@@ -127,21 +129,79 @@ function computeDomain() {
   return [end - days * DAY, end];
 }
 
-/* -------------------------------------------------- world list / legend --
-   A world is a chart series: this single list is at once the legend and the
-   only way to show or hide one - a coloured dot and the world's own name,
-   toggled like any other pressed/unpressed button. Nothing else represents
-   world selection. */
-function renderWorldList() {
-  const showFilter = allWorlds.length > WORLD_FILTER_THRESHOLD;
-  $('worldFilter').hidden = !showFilter;
-  const q = showFilter ? ($('worldFilter').value || '').trim().toLowerCase() : '';
-  const list = q ? allWorlds.filter(w => w.toLowerCase().includes(q)) : allWorlds;
-  $('worldList').innerHTML = list.map(w => `
-    <button type="button" class="seriesitem${selectedWorlds.has(w) ? '' : ' off'}"
-            data-world="${esc(w)}" aria-pressed="${selectedWorlds.has(w)}">
-      <span class="swatch" style="background:${colorFor(w)}"></span>${esc(w)}
-    </button>`).join('') || '<p class="norows">No worlds match</p>';
+/* --------------------------------------------------------- world picker ---
+ * Selecting worlds is a search-and-choose interaction (HIG: Search fields,
+ * Popovers), not the chart's own legend. A compact trigger summarises the
+ * current choice without opening anything; the popover it opens holds a
+ * live-filtering search field over every world, each shown with a checkmark
+ * for its current state - the same control whether there are two worlds or
+ * two hundred, since a long list scrolls rather than the control changing.
+ * Because more than one choice is possible, the popover stays open across
+ * clicks and closes only on outside click, Escape, or its own close button.
+ *
+ * The trigger's colour dots and the small legend above the Price chart are
+ * both read-only identification, not selection surfaces - selecting only
+ * ever happens inside the popover.
+ */
+const selectedInOrder = () => allWorlds.filter(w => selectedWorlds.has(w));
+
+function renderWorldPicker() {
+  const sel = selectedInOrder();
+  $('pickerDots').innerHTML = sel.slice(0, 6)
+    .map(w => `<span class="swatch" style="background:${colorFor(w)}"></span>`).join('');
+  $('worldPickerLabel').textContent = !sel.length ? 'Select worlds'
+    : sel.length <= 2 ? sel.join(', ')
+    : `${sel.length} worlds selected`;
+  $('worldLegend').innerHTML = sel.map(w =>
+    `<span class="legend-chip"><span class="swatch" style="background:${colorFor(w)}"></span>${esc(w)}</span>`
+  ).join('');
+}
+
+const filteredWorlds = () => {
+  const q = pickerQuery.trim().toLowerCase();
+  return q ? allWorlds.filter(w => w.toLowerCase().includes(q)) : allWorlds;
+};
+
+function renderPickerOptions() {
+  const list = filteredWorlds();
+  if (pickerActiveIndex >= list.length) pickerActiveIndex = list.length - 1;
+  if (pickerActiveIndex < 0 && list.length) pickerActiveIndex = 0;
+  $('worldSearch').setAttribute('aria-activedescendant', list.length ? `wopt-${pickerActiveIndex}` : '');
+  $('worldOptions').innerHTML = list.length
+    ? list.map((w, i) => `
+      <li id="wopt-${i}" role="option" class="picker-option${i === pickerActiveIndex ? ' active' : ''}"
+          data-world="${esc(w)}" aria-selected="${selectedWorlds.has(w)}">
+        <span class="opt-check" aria-hidden="true">✓</span>
+        <span class="swatch" style="background:${colorFor(w)}"></span>
+        <span class="opt-name">${esc(w)}</span>
+      </li>`).join('')
+    : '<li class="picker-empty">No worlds match</li>';
+}
+
+function toggleWorld(w) {
+  if (selectedWorlds.has(w)) selectedWorlds.delete(w); else selectedWorlds.add(w);
+  renderWorldPicker();
+  renderPickerOptions();
+  renderAll();
+}
+
+function openPicker() {
+  if (pickerOpen) return;
+  pickerOpen = true;
+  $('worldPickerPopover').hidden = false;
+  $('worldPickerBtn').setAttribute('aria-expanded', 'true');
+  pickerQuery = '';
+  $('worldSearch').value = '';
+  pickerActiveIndex = 0;
+  renderPickerOptions();
+  $('worldSearch').focus();
+}
+
+function closePicker() {
+  if (!pickerOpen) return;
+  pickerOpen = false;
+  $('worldPickerPopover').hidden = true;
+  $('worldPickerBtn').setAttribute('aria-expanded', 'false');
 }
 
 /*
@@ -340,12 +400,14 @@ function renderSnapshot(domain) {
   }
   rows.sort((a, b) => a.world.localeCompare(b.world));
 
-  // World, Sell Price, Buy Price, Spread always; the active metric adds one
-  // more column unless it is Spread, which is already shown.
-  const extra = activeMetric === 'spread' ? [] : [{ key: activeMetric, label: METRIC_LABEL[activeMetric] }];
+  // A fixed, small set of columns - Sell Price, Buy Price, Spread - so this
+  // table's shape never depends on which control is set in a different
+  // section (the Analysis metric choice belongs to that chart alone; every
+  // secondary metric's own trend and exact values are already reachable
+  // there via its chart and hover readout).
   const cols = [
     { key: 'sell', label: 'Sell Price' }, { key: 'buy', label: 'Buy Price' },
-    { key: 'spread', label: 'Spread' }, ...extra
+    { key: 'spread', label: 'Spread' }
   ];
 
   const flags = new Map();
@@ -423,7 +485,7 @@ async function backfillLegacy() {
       await store.markLegacyFetched(w, false);   // retried again next visit, not looped now
     }
     await loadData();
-    renderWorldList();
+    renderWorldPicker();
     renderAll();
   }
   $('legacyStatus').hidden = true;
@@ -453,15 +515,46 @@ function wireControls() {
   if (wired) return;
   wired = true;
 
-  $('worldList').addEventListener('click', e => {
-    const b = e.target.closest('[data-world]');
-    if (!b) return;
-    const w = b.dataset.world;
-    if (selectedWorlds.has(w)) selectedWorlds.delete(w); else selectedWorlds.add(w);
-    renderWorldList();
-    renderAll();
+  $('worldPickerBtn').addEventListener('click', () => (pickerOpen ? closePicker() : openPicker()));
+  $('worldPickerClose').addEventListener('click', () => { closePicker(); $('worldPickerBtn').focus(); });
+  $('worldOptions').addEventListener('click', e => {
+    const li = e.target.closest('[data-world]');
+    if (li) toggleWorld(li.dataset.world);
   });
-  $('worldFilter').addEventListener('input', renderWorldList);
+  $('worldSearch').addEventListener('input', () => {
+    pickerQuery = $('worldSearch').value;
+    pickerActiveIndex = 0;
+    renderPickerOptions();
+  });
+  $('worldSearch').addEventListener('keydown', e => {
+    const list = filteredWorlds();
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      pickerActiveIndex = Math.min(list.length - 1, pickerActiveIndex + 1);
+      renderPickerOptions();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      pickerActiveIndex = Math.max(0, pickerActiveIndex - 1);
+      renderPickerOptions();
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      const w = list[pickerActiveIndex];
+      if (w) toggleWorld(w);
+    }
+  });
+  $('worldPickerPopover').addEventListener('keydown', e => {
+    if (e.key === 'Escape') { e.preventDefault(); closePicker(); $('worldPickerBtn').focus(); }
+  });
+  // a popover with more than one possible choice stays open across clicks -
+  // it only ever closes from outside, Escape, or its own close button.
+  // composedPath() (the propagation path captured at dispatch time) is used
+  // rather than e.target.closest(): toggling a world re-renders the option
+  // list synchronously, which detaches the clicked <li> before the event
+  // finishes bubbling, and closest() on a detached node finds nothing.
+  const pickerEl = $('worldPickerBtn').closest('.picker');
+  document.addEventListener('click', e => {
+    if (pickerOpen && !e.composedPath().includes(pickerEl)) closePicker();
+  });
 
   $('rangePresets').addEventListener('click', e => {
     const b = e.target.closest('button[data-range]');
@@ -489,7 +582,7 @@ function wireControls() {
 export async function refresh() {
   wireControls();
   await loadData();
-  renderWorldList();
+  renderWorldPicker();
   renderAll();
   backfillLegacy();   // fire and forget - fills in as it lands, world by world
 }
