@@ -472,13 +472,12 @@ tr.focused .world-focus-btn{color:var(--accent)}
 .world-focus-btn:hover{text-decoration:underline}
 .world-focus-btn:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
 
-/* ---- summary: every selected world consolidated into one row - the one
-   view in Market that is a table on purpose, not a chart trying to also be
-   one. Sits below the chart grid, full width. */
-.summary-section{margin-top:var(--space-9)}
-/* the lowest-highest a figure moved across, next to its average - smaller
-   and quieter than the average itself, which is the number that matters most */
-.range-hint{color:var(--muted);font-size:.85em;font-weight:400}
+/* ---- history: the complete record, its own top-level view - grouped by
+   world so a table covering many worlds still reads as each one's own
+   timeline rather than an interleaved shuffle. */
+.source-legacy{color:var(--muted)}
+tr.group-start td{border-top:2px solid var(--line)}
+tr.group-start:first-child td{border-top:none}
 
 @media(max-width:900px){
   .market-grid{grid-template-columns:1fr;grid-template-areas:"price" "latest" "analysis"}

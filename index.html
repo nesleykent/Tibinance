@@ -15,6 +15,7 @@
     <nav class="nav" role="tablist" aria-label="View">
       <button id="tab-market" class="navlink" type="button" role="tab" aria-selected="true" aria-controls="view-market">Market</button>
       <button id="tab-manage" class="navlink" type="button" role="tab" aria-selected="false" aria-controls="view-manage">Manage</button>
+      <button id="tab-history" class="navlink" type="button" role="tab" aria-selected="false" aria-controls="view-history">History</button>
     </nav>
   </div>
   <p class="sub">A private, local history of the Tibia Coin market — built from your own screenshots, kept in this browser.</p>
@@ -113,46 +114,6 @@
 
     </div>
 
-    <section class="section summary-section" aria-label="Summary">
-      <div class="results-head">
-        <div>
-          <h2>Summary <span class="count" id="summaryCount"></span></h2>
-          <p class="results-meta" id="summaryMeta">Every selected world's observations, consolidated into one row each — average, with the lowest–highest in parentheses.</p>
-        </div>
-        <div class="actions">
-          <input type="search" id="summaryFilter" class="filter" placeholder="filter world…" aria-label="Filter summary by world">
-        </div>
-      </div>
-      <div class="table-wrap">
-        <table id="summaryTable">
-          <thead>
-            <tr class="grp">
-              <th colspan="4"></th>
-              <th colspan="3" class="g-sell" title="Offers to sell coins: what sellers are asking, and the gold that would satisfy them">Sell side</th>
-              <th colspan="3" class="g-buy" title="Offers to buy coins: what buyers are bidding, and the gold they have committed">Buy side</th>
-              <th class="g-derived" title="Derived measure — computed, not stored directly">Derived</th>
-              <th colspan="2"></th>
-            </tr>
-            <tr>
-              <th data-sort="world">World</th><th data-sort="type">Type</th><th data-sort="battleye">BattlEye</th>
-              <th class="num" data-sort="count" title="How many observations (screenshot and legacy) this row consolidates">Observations</th>
-              <th class="num" data-sort="sellAvg" title="Average Sell Price over the selected range; lowest–highest in parentheses.">Sell Price</th>
-              <th class="num" data-sort="sellVolumeAvg" title="Average coins offered for sale across every visible offer.">Sell Volume</th>
-              <th class="num" data-sort="goldDemandAvg" title="Average gold sellers were asking for.">Gold Demand</th>
-              <th class="num" data-sort="buyAvg" title="Average Buy Price over the selected range; lowest–highest in parentheses.">Buy Price</th>
-              <th class="num" data-sort="buyVolumeAvg" title="Average coins wanted across every visible buy offer.">Buy Volume</th>
-              <th class="num" data-sort="goldSupplyAvg" title="Average gold escrowed in buy offers.">Gold Supply</th>
-              <th class="num" data-sort="spreadAvg" title="Average Sell Price − Buy Price. Tighter means a more liquid market.">Spread</th>
-              <th data-sort="firstSeen" title="How long ago the earliest observation in this range was captured">First</th>
-              <th data-sort="lastSeen" title="How long ago the most recent observation in this range was captured">Last</th>
-            </tr>
-          </thead>
-          <tbody id="summaryBody"></tbody>
-        </table>
-        <p id="summaryEmpty" class="empty" hidden>No observations for the selected worlds in this range.</p>
-      </div>
-    </section>
-
   </div>
 </section>
 
@@ -249,6 +210,50 @@
         <tbody id="tbody"></tbody>
       </table>
       <p id="empty" class="empty" hidden>Nothing stored yet — drop a screenshot above.</p>
+    </div>
+  </section>
+
+</section>
+
+<section id="view-history" class="view" role="tabpanel" aria-labelledby="tab-history" hidden>
+
+  <section class="section" aria-label="History">
+    <div class="results-head">
+      <div>
+        <h2>History <span class="count" id="historyCount"></span></h2>
+        <p class="results-meta">Every observation across every world you've captured — screenshot and legacy history alike — grouped by world, oldest to newest.</p>
+      </div>
+      <div class="actions">
+        <input type="search" id="historyFilter" class="filter" placeholder="filter world…" aria-label="Filter history by world">
+      </div>
+    </div>
+    <p id="historyLoading" class="loading">Loading…</p>
+    <div class="table-wrap">
+      <table id="historyTable">
+        <thead>
+          <tr class="grp">
+            <th colspan="3"></th>
+            <th colspan="3" class="g-sell" title="Offers to sell coins: what sellers are asking, and the gold that would satisfy them">Sell side</th>
+            <th colspan="3" class="g-buy" title="Offers to buy coins: what buyers are bidding, and the gold they have committed">Buy side</th>
+            <th class="g-derived" title="Derived measure — computed, not stored directly">Derived</th>
+            <th colspan="2"></th>
+          </tr>
+          <tr>
+            <th data-sort="world">World</th><th data-sort="type">Type</th><th data-sort="battleye">BattlEye</th>
+            <th class="num" data-sort="sell" title="Best (lowest) Sell price. Lower is cheaper to buy coins.">Sell Price</th>
+            <th class="num" data-sort="sellVolume" title="Coins offered for sale across every visible offer.">Sell Volume</th>
+            <th class="num" data-sort="goldDemand" title="Gold sellers were asking for: sum of amount × price over every visible sell offer.">Gold Demand</th>
+            <th class="num" data-sort="buy" title="Best (highest) Buy price. Higher pays more for your coins.">Buy Price</th>
+            <th class="num" data-sort="buyVolume" title="Coins wanted across every visible buy offer.">Buy Volume</th>
+            <th class="num" data-sort="goldSupply" title="Gold escrowed in buy offers: sum of amount × price over every visible buy offer.">Gold Supply</th>
+            <th class="num" data-sort="spread" title="Sell Price − Buy Price. Tighter means a more liquid market.">Spread</th>
+            <th data-sort="source" title="Your own screenshot, or backfilled TibiaMarket legacy history">Source</th>
+            <th data-sort="capturedAt">Capture</th>
+          </tr>
+        </thead>
+        <tbody id="historyBody"></tbody>
+      </table>
+      <p id="historyEmpty" class="empty" hidden></p>
     </div>
   </section>
 

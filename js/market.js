@@ -80,9 +80,6 @@ let pickerOpen = false;
 let pickerQuery = '';
 let pickerActiveIndex = 0;
 
-/* Summary table sort state - defaults to alphabetical by world. */
-let summarySortBy = { key: 'world', dir: 1 };
-
 const groupBy = (rows, key) => {
   const m = {};
   for (const r of rows) (m[r[key]] ??= []).push(r);
@@ -654,90 +651,6 @@ function renderSnapshot(domain) {
   }).join('');
 }
 
-/* ----------------------------------------------------------- summary table
- * A consolidated view: every selected world's many observations - screenshot
- * and legacy alike - rolled up into exactly one row per world, not a longer
- * list of individual rows (that would just be combining data, not
- * consolidating it). Each price/volume/gold figure becomes an average, with
- * the lowest-highest it moved across in this range alongside it, so the
- * table says both "what was typical" and "how much it varied" in one place -
- * the two things a raw row-by-row list makes you compute yourself.
- */
-function summarize(pts, key) {
-  const vals = pts.map(p => p[key]).filter(Number.isFinite);
-  if (!vals.length) return null;
-  return {
-    min: Math.min(...vals), max: Math.max(...vals),
-    avg: vals.reduce((a, b) => a + b, 0) / vals.length
-  };
-}
-
-/** "44,522" alone if it never moved, "44,522 (42,839–47,845)" if it did. */
-function summaryCellHtml(s, negClass) {
-  if (!s) return `<span class="dash" aria-label="not available">—</span>`;
-  const avgTxt = num(Math.round(s.avg));
-  const cls = negClass && s.avg < 0 ? ' neg' : '';
-  const range = s.min === s.max ? '' : ` <span class="range-hint">(${fmt(s.min)}–${fmt(s.max)})</span>`;
-  return `<span class="${cls.trim()}">${avgTxt}</span>${range}`;
-}
-
-const summaryValueOf = (r, k) => r[k];
-
-function renderSummaryTable(domain) {
-  let rows = selectedInOrder().map(w => {
-    const meta = worldMeta.get(w) ?? {};
-    const pts = (seriesByWorld.get(w) ?? []).filter(p => p.t >= domain[0] && p.t <= domain[1]);
-    const times = pts.map(p => p.t);
-    const sell = summarize(pts, 'sell'), buy = summarize(pts, 'buy'), spread = summarize(pts, 'spread');
-    const sellVolume = summarize(pts, 'sellVolume'), buyVolume = summarize(pts, 'buyVolume');
-    const goldDemand = summarize(pts, 'goldDemand'), goldSupply = summarize(pts, 'goldSupply');
-    return {
-      world: w, type: meta.type ?? '—', battleye: meta.battleye ?? '—', count: pts.length,
-      sellAvg: sell?.avg ?? null, buyAvg: buy?.avg ?? null, spreadAvg: spread?.avg ?? null,
-      sellVolumeAvg: sellVolume?.avg ?? null, buyVolumeAvg: buyVolume?.avg ?? null,
-      goldDemandAvg: goldDemand?.avg ?? null, goldSupplyAvg: goldSupply?.avg ?? null,
-      firstSeen: times.length ? Math.min(...times) : null, lastSeen: times.length ? Math.max(...times) : null,
-      raw: { sell, buy, spread, sellVolume, buyVolume, goldDemand, goldSupply }
-    };
-  }).filter(r => r.count > 0);
-
-  const q = $('summaryFilter').value.trim().toLowerCase();
-  if (q) rows = rows.filter(r => r.world.toLowerCase().includes(q));
-
-  rows.sort((a, b) => {
-    const av = summaryValueOf(a, summarySortBy.key), bv = summaryValueOf(b, summarySortBy.key);
-    const cmp = typeof av === 'string' ? av.localeCompare(bv) : (av ?? -Infinity) - (bv ?? -Infinity);
-    return cmp * summarySortBy.dir || a.world.localeCompare(b.world);
-  });
-
-  $('summaryCount').textContent = rows.length ? `${rows.length} world${rows.length === 1 ? '' : 's'}` : '0 worlds';
-  $('summaryEmpty').hidden = rows.length > 0;
-  $('summaryTable').closest('.table-wrap').hidden = rows.length === 0;
-
-  $('summaryBody').innerHTML = rows.map(r => `<tr>
-      <td class="world">
-        <button type="button" class="world-focus-btn" data-focus-world="${esc(r.world)}" aria-pressed="${r.world === focusedWorld}">${esc(r.world)}</button>
-      </td>
-      <td>${esc(r.type)}</td>
-      <td class="be be-${esc(r.battleye)}">${esc(r.battleye)}</td>
-      <td class="num">${fmt(r.count)}</td>
-      <td class="num">${summaryCellHtml(r.raw.sell)}</td>
-      <td class="num">${summaryCellHtml(r.raw.sellVolume)}</td>
-      <td class="num">${summaryCellHtml(r.raw.goldDemand)}</td>
-      <td class="num">${summaryCellHtml(r.raw.buy)}</td>
-      <td class="num">${summaryCellHtml(r.raw.buyVolume)}</td>
-      <td class="num">${summaryCellHtml(r.raw.goldSupply)}</td>
-      <td class="num">${summaryCellHtml(r.raw.spread, true)}</td>
-      <td class="hash" title="${r.firstSeen != null ? esc(new Date(r.firstSeen).toISOString().slice(0, 19)) : ''}">${r.firstSeen != null ? esc(relativeAge(r.firstSeen)) : '—'}</td>
-      <td class="hash" title="${r.lastSeen != null ? esc(new Date(r.lastSeen).toISOString().slice(0, 19)) : ''}">${r.lastSeen != null ? esc(relativeAge(r.lastSeen)) : '—'}</td>
-    </tr>`).join('');
-
-  for (const th of document.querySelectorAll('#summaryTable thead th[data-sort]')) {
-    th.classList.toggle('sorted', th.dataset.sort === summarySortBy.key);
-    th.dataset.dir = th.dataset.sort === summarySortBy.key ? (summarySortBy.dir < 0 ? 'desc' : 'asc') : '';
-  }
-}
-
 /* --------------------------------------------------------------- compose */
 function renderAll() {
   ensureFocus();
@@ -751,7 +664,6 @@ function renderAll() {
   renderSnapshot(listDomain);
   renderMetricTabs();
   renderAnalysisSection(chartDomain);
-  renderSummaryTable(listDomain);
 }
 
 async function backfillLegacy() {
@@ -876,20 +788,6 @@ function wireControls() {
   $('snapTable').addEventListener('click', e => {
     const b = e.target.closest('[data-focus-world]');
     if (b) focusWorld(b.dataset.focusWorld);
-  });
-
-  $('summaryTable').addEventListener('click', e => {
-    const b = e.target.closest('[data-focus-world]');
-    if (b) focusWorld(b.dataset.focusWorld);
-  });
-  $('summaryFilter').addEventListener('input', () => renderSummaryTable(tableDomain()));
-  document.querySelector('#summaryTable thead').addEventListener('click', e => {
-    const key = e.target.closest('th[data-sort]')?.dataset.sort;
-    if (!key) return;
-    summarySortBy = summarySortBy.key === key
-      ? { key, dir: -summarySortBy.dir }
-      : { key, dir: key === 'world' || key === 'type' || key === 'battleye' ? 1 : -1 };
-    renderSummaryTable(tableDomain());
   });
 }
 
