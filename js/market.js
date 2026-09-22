@@ -41,8 +41,14 @@ const MEASURE = {
 };
 const METRIC_LABEL = Object.fromEntries(SECONDARY_METRICS.map(m => [m.key, m.label]));
 
-const PALETTE = ['#d9a441', '#5fae62', '#5a9fd8', '#cf5a4e', '#b07ad8',
-                 '#4fb8a6', '#d8853a', '#9ab23c', '#c95f9a', '#6d8fce'];
+/* Chart-series colour only - differentiates worlds, unrelated to the app's
+   own (neutral + one accent) chrome palette. */
+const PALETTE = ['#3b6ea5', '#2f9e58', '#c0392b', '#7c5cd6', '#1f8f8f',
+                 '#c2528a', '#d9502c', '#4a5fc9', '#2f8f6f', '#8a5fb0'];
+
+/* Above this many worlds, a text filter earns its place in the world list;
+   below it, scanning the list is faster than typing into it. */
+const WORLD_FILTER_THRESHOLD = 10;
 
 let allWorlds = [];                 // eligible worlds - screenshot-derived, sorted
 let selectedWorlds = new Set();
@@ -120,39 +126,24 @@ function computeDomain() {
   return [end - days * DAY, end];
 }
 
-/* ------------------------------------------------------------- toolbar ui */
-function worldSummaryText() {
-  const n = selectedWorlds.size, total = allWorlds.length;
-  if (!total) return 'No worlds';
-  if (n === 0) return 'No worlds selected';
-  if (n === total) return total === 1 ? allWorlds[0] : 'All worlds';
-  if (n === 1) return [...selectedWorlds][0];
-  return `${n} of ${total} worlds`;
-}
-
+/* -------------------------------------------------- world list / legend --
+   A world is a chart series: this single list is at once the legend and the
+   only way to show or hide one - a coloured dot and the world's own name,
+   clicked to toggle. Nothing else represents world selection. */
 function renderWorldList() {
-  const q = ($('worldFilter').value || '').trim().toLowerCase();
-  const list = allWorlds.filter(w => w.toLowerCase().includes(q));
+  const showFilter = allWorlds.length > WORLD_FILTER_THRESHOLD;
+  $('worldFilter').hidden = !showFilter;
+  const q = showFilter ? ($('worldFilter').value || '').trim().toLowerCase() : '';
+  const list = q ? allWorlds.filter(w => w.toLowerCase().includes(q)) : allWorlds;
   $('worldList').innerHTML = list.map(w => `
-    <label class="worldrow">
-      <input type="checkbox" data-world="${esc(w)}" ${selectedWorlds.has(w) ? 'checked' : ''}>
-      <span class="swatch" style="background:${colorFor(w)}"></span>
-      <span class="wname">${esc(w)}</span>
-    </label>`).join('') || '<p class="norows">No worlds match</p>';
-  $('worldSummary').textContent = worldSummaryText();
-}
-
-function renderLegend() {
-  const worlds = [...selectedWorlds].filter(w => allWorlds.includes(w)).sort();
-  $('priceLegend').innerHTML = worlds.map(w => `
-    <button type="button" class="legend-chip" data-world="${esc(w)}" title="Click to hide ${esc(w)}">
+    <button type="button" class="seriesitem${selectedWorlds.has(w) ? '' : ' off'}" data-world="${esc(w)}">
       <span class="swatch" style="background:${colorFor(w)}"></span>${esc(w)}
-    </button>`).join('');
+    </button>`).join('') || '<p class="norows">No worlds match</p>';
 }
 
 function renderMetricTabs() {
   $('metricTabs').innerHTML = SECONDARY_METRICS.map(m => `
-    <button type="button" class="segmented-item${m.key === activeMetric ? ' active' : ''}"
+    <button type="button" class="texttab${m.key === activeMetric ? ' active' : ''}"
             data-metric="${m.key}" role="tab" aria-selected="${m.key === activeMetric}">${esc(m.label)}</button>`).join('');
 }
 
@@ -344,7 +335,6 @@ function renderAll() {
   $('marketEmpty').hidden = allWorlds.length > 0;
   $('marketBody').hidden = allWorlds.length === 0;
   if (!allWorlds.length) return;
-  renderLegend();
   $('priceChart').innerHTML = buildPriceChart(domain);
   renderSnapshot(domain);
   renderMetricTabs();
@@ -389,23 +379,15 @@ function wireControls() {
   if (wired) return;
   wired = true;
 
-  $('worldList').addEventListener('change', e => {
-    const w = e.target.dataset.world;
-    if (!w) return;
-    if (e.target.checked) selectedWorlds.add(w); else selectedWorlds.delete(w);
-    $('worldSummary').textContent = worldSummaryText();
-    renderAll();
-  });
-  $('worldFilter').addEventListener('input', renderWorldList);
-  $('worldsAll').addEventListener('click', () => { selectedWorlds = new Set(allWorlds); renderWorldList(); renderAll(); });
-  $('worldsNone').addEventListener('click', () => { selectedWorlds = new Set(); renderWorldList(); renderAll(); });
-  $('priceLegend').addEventListener('click', e => {
+  $('worldList').addEventListener('click', e => {
     const b = e.target.closest('[data-world]');
     if (!b) return;
-    selectedWorlds.delete(b.dataset.world);
+    const w = b.dataset.world;
+    if (selectedWorlds.has(w)) selectedWorlds.delete(w); else selectedWorlds.add(w);
     renderWorldList();
     renderAll();
   });
+  $('worldFilter').addEventListener('input', renderWorldList);
 
   $('rangePresets').addEventListener('click', e => {
     const b = e.target.closest('button[data-range]');

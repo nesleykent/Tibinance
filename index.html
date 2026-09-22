@@ -25,28 +25,16 @@
 <section id="view-market" class="view" role="tabpanel" aria-labelledby="tab-market">
 
   <div class="toolbar">
-    <details class="popover" id="worldPopover">
-      <summary class="btn toolbar-btn"><span id="worldSummary">All worlds</span></summary>
-      <div class="popover-panel">
-        <input type="search" id="worldFilter" class="field wide" placeholder="Filter worlds" aria-label="Filter worlds">
-        <div class="popover-row">
-          <button id="worldsAll" class="linkbtn">Select all</button>
-          <button id="worldsNone" class="linkbtn">Select none</button>
-        </div>
-        <div id="worldList" class="worldlist"></div>
-      </div>
-    </details>
-
-    <div id="rangePresets" class="segmented" role="group" aria-label="Range">
-      <button data-range="7D" class="segmented-item">7D</button>
-      <button data-range="30D" class="segmented-item">30D</button>
-      <button data-range="90D" class="segmented-item">90D</button>
-      <button data-range="1Y" class="segmented-item">1Y</button>
-      <button data-range="ALL" class="segmented-item active">All</button>
+    <div id="rangePresets" class="texttabs" role="group" aria-label="Range">
+      <button data-range="7D" class="texttab">7D</button>
+      <button data-range="30D" class="texttab">30D</button>
+      <button data-range="90D" class="texttab">90D</button>
+      <button data-range="1Y" class="texttab">1Y</button>
+      <button data-range="ALL" class="texttab active">All</button>
     </div>
 
     <details class="popover" id="customRangePopover">
-      <summary class="btn toolbar-btn">Custom range</summary>
+      <summary>Custom range</summary>
       <div class="popover-panel popover-panel-row">
         <input type="datetime-local" id="rangeStart" class="field" aria-label="Custom range start">
         <span class="toolbar-sep">–</span>
@@ -63,14 +51,13 @@
     <section class="primary-section">
       <div class="section-head">
         <h2>Price</h2>
-        <div class="legend">
-          <span id="priceLegend" class="legend-worlds"></span>
-          <span class="legend-key">
-            <span class="legend-line legend-line-sell"></span>Sell
-            <span class="legend-line legend-line-buy"></span>Buy
-          </span>
-        </div>
       </div>
+      <div class="legend-key">
+        <span class="legend-line legend-line-sell"></span>Sell
+        <span class="legend-line legend-line-buy"></span>Buy
+      </div>
+      <input type="search" id="worldFilter" class="field" placeholder="Filter worlds" aria-label="Filter worlds" hidden>
+      <div id="worldList" class="serieslist"></div>
       <div id="priceChart" class="chart-primary"></div>
     </section>
 
@@ -90,7 +77,7 @@
     <section class="secondary-section">
       <div class="section-head">
         <h2>Analysis</h2>
-        <div id="metricTabs" class="segmented" role="tablist" aria-label="Secondary metric"></div>
+        <div id="metricTabs" class="texttabs" role="tablist" aria-label="Secondary metric"></div>
       </div>
       <div id="secondaryChart" class="chart-secondary"></div>
     </section>

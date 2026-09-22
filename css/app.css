@@ -3,14 +3,22 @@
  * below comes from one of these scales rather than a one-off number tuned
  * to some particular element - so a control's rhythm stays consistent as
  * content, viewport and data change, instead of per-element magic numbers.
+ *
+ * Colour is neutral by default: a light canvas, white panels, near-black
+ * text, grey for structure and secondary information. --accent is the one
+ * colour the interface itself is allowed to wear, and only for an
+ * interaction or selection state. Semantic states (ok/warn/bad) are their
+ * own colours because they report something about the data, not the brand.
+ * Chart-series colour lives separately, in js/market.js's own palette - it
+ * differentiates worlds, which is a different job again.
  */
 :root{
   /* colour */
-  --bg:#12100d; --panel:#1b1814; --panel-2:#221e19; --line:#332c23;
-  --ink:#ece5d8; --muted:#9c9091; --gold:#d9a441; --gold-dim:#8a6a2a;
-  --ok:#5fae62; --warn:#d8a13a; --bad:#cf5a4e;
-  --surface-inset:#0d0b09;   /* recessed background - text inputs, code */
-  --on-gold:#1a1409;         /* text/ink colour on a gold-filled control */
+  --bg:#f6f6f7; --surface:#ffffff; --surface-2:#eeeeef; --line:#e0e0e3;
+  --ink:#18181b; --muted:#6b6b70;
+  --accent:#3b6ea5; --on-accent:#ffffff;
+  --ok:#1f8a4c; --warn:#a3690a; --bad:#c0392b;
+  --surface-inset:#f2f2f4;   /* recessed background - text inputs, code */
 
   /* spacing scale - 4px rhythm, use the nearest step rather than a raw px */
   --space-1:2px; --space-2:4px; --space-3:6px; --space-4:8px;
@@ -44,8 +52,8 @@ body{
   font:var(--text-base)/1.5 var(--font-sans);
   padding:0 var(--space-7) var(--space-12);
 }
-a{color:var(--gold)}
-code{background:var(--surface-inset);padding:var(--space-1) var(--space-4);border-radius:var(--radius-xs);font-size:.92em;color:var(--gold)}
+a{color:var(--accent)}
+code{background:var(--surface-inset);padding:var(--space-1) var(--space-4);border-radius:var(--radius-xs);font-size:.92em;color:var(--accent)}
 
 .top{max-width:var(--content-width);margin:0 auto;padding:var(--space-8) 0 var(--space-3)}
 main,footer,.top{max-width:var(--content-width);margin-left:auto;margin-right:auto}
@@ -71,24 +79,24 @@ main{padding:0}
 /* the indicator is sized to the label's own box only - never the gap around it */
 .navlink.active::after{
   content:'';position:absolute;left:0;right:0;bottom:0;height:2px;
-  background:var(--gold);border-radius:var(--radius-xs);
+  background:var(--accent);border-radius:var(--radius-xs);
 }
 .view[hidden]{display:none}
 
 .privacy{
-  margin:var(--space-5) 0;background:var(--panel);
+  margin:var(--space-5) 0;background:var(--surface);
   border:var(--border);border-radius:var(--radius-lg);
   padding:var(--space-4) var(--space-7);color:var(--muted);font-size:var(--text-sm);
 }
 .tick{color:var(--ok);font-weight:700;margin-right:var(--space-3)}
 
 .drop{
-  border:2px dashed var(--gold-dim); border-radius:var(--radius-lg);
-  background:var(--panel); padding:var(--space-9) var(--space-8); text-align:center; cursor:pointer;
+  border:2px dashed var(--line); border-radius:var(--radius-lg);
+  background:var(--surface); padding:var(--space-9) var(--space-8); text-align:center; cursor:pointer;
   transition:background .15s,border-color .15s;
 }
-.drop:hover,.drop:focus-visible{background:var(--panel-2);border-color:var(--gold);outline:none}
-.drop.over{background:#2a2419;border-color:var(--gold)}
+.drop:hover,.drop:focus-visible{background:var(--surface-2);border-color:var(--accent);outline:none}
+.drop.over{background:var(--surface-2);border-color:var(--accent)}
 .drop-inner strong{display:block;font-size:var(--text-lg)}
 .drop-inner span{display:block;color:var(--muted);margin:var(--space-3) 0 var(--space-5)}
 .drop-inner small{color:var(--muted);font-size:var(--text-sm)}
@@ -99,13 +107,12 @@ main{padding:0}
 
 /* ---- buttons, inputs: one shared control language ---------------------- */
 .btn{
-  background:var(--panel-2);border:var(--border);color:var(--ink);
+  background:var(--surface-2);border:var(--border);color:var(--ink);
   padding:var(--space-4) var(--space-6);border-radius:var(--radius-md);
   cursor:pointer;font:inherit;font-size:var(--text-sm);
 }
-.btn:hover{border-color:var(--gold)}
-.btn.primary{background:var(--gold);color:var(--on-gold);border-color:var(--gold);font-weight:600}
-.btn.active{background:var(--gold);color:var(--on-gold);border-color:var(--gold);font-weight:600}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--on-accent);border-color:var(--accent);font-weight:600}
 .btn.danger:hover{border-color:var(--bad);color:var(--bad)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
 .btn.mini-add{font-size:var(--text-xs);padding:var(--space-3) var(--space-4);margin-top:var(--space-1)}
@@ -115,7 +122,7 @@ main{padding:0}
   border-radius:var(--radius-sm);padding:var(--space-4) var(--space-5);
   font:inherit;font-size:var(--text-sm);
 }
-.field:focus{outline:1px solid var(--gold);border-color:var(--gold)}
+.field:focus{outline:1px solid var(--accent);border-color:var(--accent)}
 .filter{width:9.5em}
 .field.wide{width:100%}
 
@@ -124,7 +131,7 @@ main{padding:0}
    background/border/radius; grouped in one rule so it stays one visual
    decision instead of being redeclared per component. */
 .panel,.card,.table-wrap,.disclosure{
-  background:var(--panel);border:var(--border);border-radius:var(--radius-lg);
+  background:var(--surface);border:var(--border);border-radius:var(--radius-lg);
 }
 
 .queue{margin:var(--space-8) 0;display:grid;gap:var(--space-5)}
@@ -150,17 +157,16 @@ main{padding:0}
   font-size:var(--text-2xs);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);
   text-align:right;padding:0 var(--space-3) var(--space-1);border-bottom:var(--border);margin-bottom:var(--space-3);
 }
-.rowhead i{font-style:normal;opacity:.65;text-transform:none;letter-spacing:0}
 .rowline input{
   background:var(--surface-inset);border:var(--border);color:var(--ink);
   border-radius:var(--radius-sm);padding:var(--space-2) var(--space-3);font:12px var(--font-mono);
   text-align:right;width:100%;
 }
-.rowline input:focus{outline:1px solid var(--gold);border-color:var(--gold)}
+.rowline input:focus{outline:1px solid var(--accent);border-color:var(--accent)}
 .rowline.bad input{border-color:var(--bad)}
 .flag{font-size:var(--text-xs);width:1.2em;text-align:center}
 .flag.ok{color:var(--ok)} .flag.bad{color:var(--bad)}
-.rowdel{background:none;border:none;color:var(--line);cursor:pointer;font-size:var(--text-sm);padding:0}
+.rowdel{background:none;border:none;color:var(--muted);cursor:pointer;font-size:var(--text-sm);padding:0}
 .rowdel:hover{color:var(--bad)}
 .norows{color:var(--muted);font-size:var(--text-sm);margin:var(--space-2) 0}
 .card .btnrow{margin-top:var(--space-5);display:flex;gap:var(--space-4);flex-wrap:wrap}
@@ -180,7 +186,7 @@ table{width:100%;border-collapse:collapse;font-size:var(--text-base)}
 th,td{padding:var(--space-3) var(--space-5);text-align:left;border-bottom:var(--border);white-space:nowrap}
 th{color:var(--muted);font-weight:600;font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.05em}
 tbody tr:last-child td{border-bottom:none}
-tbody tr:hover{background:var(--panel-2)}
+tbody tr:hover{background:var(--surface-2)}
 .num{text-align:right;font-variant-numeric:tabular-nums}
 td.num{font-family:var(--font-mono)}
 .be{font-weight:600;font-size:var(--text-sm)}
@@ -205,7 +211,7 @@ footer{margin:var(--space-11) auto 0;color:var(--muted);font-size:var(--text-sm)
 .qbar{
   position:sticky; top:0; z-index:5;
   display:flex; flex-wrap:wrap; gap:var(--space-5); align-items:center; justify-content:space-between;
-  background:var(--panel-2); border:var(--border); border-radius:var(--radius-lg);
+  background:var(--surface-2); border:var(--border); border-radius:var(--radius-lg);
   padding:var(--space-4) var(--space-6); margin:var(--space-7) 0 var(--space-4);
 }
 .qstat{font-size:var(--text-sm);color:var(--muted)}
@@ -222,7 +228,7 @@ footer{margin:var(--space-11) auto 0;color:var(--muted);font-size:var(--text-sm)
 }
 .card summary{list-style:none;cursor:pointer}
 .card summary::-webkit-details-marker{display:none}
-.card summary:focus-visible{outline:1px solid var(--gold);outline-offset:-1px}
+.card summary:focus-visible{outline:1px solid var(--accent);outline-offset:-1px}
 .cflag{text-align:center;color:var(--muted)}
 .card.ok .cflag{color:var(--ok)}
 .card.warn .cflag{color:var(--warn)}
@@ -270,12 +276,12 @@ th[data-sort]:hover{color:var(--ink)}
 th[data-sort]::after{content:'';opacity:.35;margin-left:var(--space-2);font-size:.9em}
 th[data-sort][data-dir="asc"]::after{content:'▲';opacity:.9}
 th[data-sort][data-dir="desc"]::after{content:'▼';opacity:.9}
-th.sorted{color:var(--gold)}
+th.sorted{color:var(--accent)}
 
 /* ---- what is kept -------------------------------------------------------- */
 .privacy summary{cursor:pointer;list-style:none}
 .privacy summary::-webkit-details-marker{display:none}
-.privacy .what{color:var(--gold);text-decoration:underline dotted;margin-left:var(--space-1)}
+.privacy .what{color:var(--accent);text-decoration:underline dotted;margin-left:var(--space-1)}
 .privacy[open],.privacy details[open]{color:var(--muted)}
 .kept{
   display:grid;gap:var(--space-7);grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
@@ -305,73 +311,63 @@ td.money.neg{color:var(--bad)}
 .note li{margin:var(--space-1) 0}
 .note b{color:var(--ink);font-weight:600}
 
+/* column-group headers are set apart by weight, not colour */
 tr.grp th{
   border-bottom:var(--border);padding-bottom:var(--space-2);
   font-size:var(--text-2xs);letter-spacing:.08em;color:var(--muted);text-align:center;
 }
-tr.grp .g-sell,tr.grp .g-buy{border-bottom-color:var(--gold-dim)}
-tr.grp .g-derived{color:var(--gold);opacity:.8}
+tr.grp .g-sell,tr.grp .g-buy{border-bottom-width:2px;border-bottom-color:var(--muted)}
 
 /* ---- statistical outlier flag (Market's Latest table) --------------------- */
-td.opp,td.num.opp{color:var(--gold);position:relative}
+td.opp,td.num.opp{color:var(--accent);position:relative}
 td.opp.strong{font-weight:700}
 td.opp.strong::before{
   content:'';position:absolute;left:2px;top:50%;transform:translateY(-50%);
-  width:3px;height:3px;border-radius:50%;background:var(--gold);
+  width:3px;height:3px;border-radius:50%;background:var(--accent);
 }
 
 /* ============================================================================
    Market view
    Hierarchy, top to bottom: query controls -> primary visualisation (Sell and
-   Buy price together) -> latest values (compact) -> secondary analysis (one
-   metric at a time). Chrome is minimal by design: the toolbar and the tables
-   are the only bordered elements: the charts sit in open space, distinguished
-   by size and position rather than by another box around them.
+   Buy price together, with the world list as its own legend/selector) ->
+   latest values (compact) -> secondary analysis (one metric at a time).
+   Chrome is minimal by design: a table and a popover panel are the only
+   bordered elements; everything else is spacing and typography.
    ============================================================================ */
 
-/* ---- query toolbar: controls, not content ------------------------------- */
-.toolbar{display:flex;align-items:center;gap:var(--space-6);flex-wrap:wrap;margin:var(--space-8) 0 var(--space-9)}
-.toolbar-sep{color:var(--muted)}
+/* ---- a small set of plain text tabs, reused for the time range and the
+   secondary-metric choice - no pills, no segmented background */
+.texttabs{display:flex;align-items:baseline;gap:var(--space-6);flex-wrap:wrap}
+.texttab{
+  background:none;border:none;padding:0 0 var(--space-2);margin:0;
+  color:var(--muted);font:inherit;font-size:var(--text-sm);
+  cursor:pointer;position:relative;
+}
+.texttab:hover{color:var(--ink)}
+.texttab.active{color:var(--ink);font-weight:600}
+.texttab.active::after{
+  content:'';position:absolute;left:0;right:0;bottom:0;height:2px;
+  background:var(--accent);border-radius:var(--radius-xs);
+}
 
-/* a compact button that discloses a small panel - used for the world picker
-   and the custom date range, so neither permanently occupies page width */
+.toolbar{display:flex;align-items:baseline;gap:var(--space-7);flex-wrap:wrap;margin:var(--space-8) 0 var(--space-9)}
+
+/* the one remaining popover - a custom date range, triggered from plain
+   text rather than a button, since it is the secondary way to set a range */
 .popover{position:relative}
-.popover > summary{list-style:none}
+.popover > summary{list-style:none;color:var(--muted);font-size:var(--text-sm);cursor:pointer}
 .popover > summary::-webkit-details-marker{display:none}
-.toolbar-btn::after{content:'';display:inline-block;margin-left:var(--space-3);
-  border:4px solid transparent;border-top-color:var(--muted);border-bottom:0;translate:0 2px}
-.popover[open] .toolbar-btn{border-color:var(--gold);color:var(--ink)}
+.popover > summary:hover{color:var(--ink)}
+.popover[open] > summary{color:var(--ink)}
 .popover-panel{
   position:absolute;top:calc(100% + var(--space-3));left:0;z-index:10;
-  background:var(--panel);border:var(--border);border-radius:var(--radius-lg);
+  background:var(--surface);border:var(--border);border-radius:var(--radius-lg);
   padding:var(--space-5);width:max-content;max-width:min(90vw,20em);
-  box-shadow:0 8px 24px rgba(0,0,0,.4);
+  box-shadow:0 8px 24px rgba(0,0,0,.12);
 }
 .popover-panel-row{display:flex;align-items:center;gap:var(--space-4);max-width:none}
 .popover-panel-row .field{font-family:var(--font-mono)}
-.popover-row{display:flex;gap:var(--space-5);margin:var(--space-3) 0}
-.linkbtn{background:none;border:none;color:var(--gold);cursor:pointer;font:inherit;font-size:var(--text-xs);padding:0}
-.linkbtn:hover{text-decoration:underline}
-
-.worldlist{max-height:16em;overflow-y:auto;display:grid;gap:1px;margin-top:var(--space-3)}
-.worldrow{
-  display:flex;align-items:center;gap:var(--space-4);padding:var(--space-2);border-radius:var(--radius-sm);
-  font-size:var(--text-sm);cursor:pointer;
-}
-.worldrow:hover{background:var(--panel-2)}
-.worldrow input{accent-color:var(--gold)}
-.swatch{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
-.wname{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-
-/* a small button-row, reused for range presets and the secondary-metric tabs */
-.segmented{display:flex;gap:var(--space-2);flex-wrap:wrap}
-.segmented-item{
-  background:none;border:var(--border);color:var(--muted);
-  padding:var(--space-3) var(--space-5);border-radius:var(--radius-md);
-  cursor:pointer;font:inherit;font-size:var(--text-sm);
-}
-.segmented-item:hover{color:var(--ink)}
-.segmented-item.active{background:var(--gold);color:var(--on-gold);border-color:var(--gold);font-weight:600}
+.toolbar-sep{color:var(--muted)}
 
 .legacystatus{color:var(--muted);font-size:var(--text-sm);margin:0 0 var(--space-6)}
 
@@ -386,18 +382,27 @@ td.opp.strong::before{
 .gridline{stroke:var(--line);stroke-width:1}
 .axislabel{fill:var(--muted);font-size:9px;font-family:var(--font-mono)}
 
-/* per-world colour key (doubles as a quick way to hide a world) plus the
-   fixed Sell/Buy line-style key, which is the same for every world so it is
-   stated once rather than per chart */
-.legend{display:flex;align-items:center;gap:var(--space-6);flex-wrap:wrap}
-.legend-worlds{display:flex;flex-wrap:wrap;gap:var(--space-2)}
-.legend-chip{
+/*
+ * A world IS a chart series: this list is at once the legend and the only
+ * world selector in the app - a coloured dot and the world's own name,
+ * clicked to show or hide it. No checkbox, no popover, no separate control.
+ * A world with no data yet still has a series colour reserved for it, so
+ * the same list works whether one world or many are being compared.
+ */
+#worldFilter{width:14em;margin-bottom:var(--space-4)}
+.serieslist{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2) var(--space-6);margin-bottom:var(--space-3)}
+.seriesitem{
   display:inline-flex;align-items:center;gap:var(--space-3);
-  background:none;border:none;color:var(--muted);cursor:pointer;
-  font:inherit;font-size:var(--text-xs);padding:var(--space-1) 0;
+  background:none;border:none;color:var(--ink);cursor:pointer;
+  font:inherit;font-size:var(--text-sm);padding:var(--space-1) 0;
 }
-.legend-chip:hover{color:var(--bad)}
-.legend-key{display:flex;align-items:center;gap:var(--space-2);color:var(--muted);font-size:var(--text-xs)}
+.seriesitem.off{color:var(--muted)}
+.seriesitem.off .swatch{opacity:.35}
+.swatch{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
+
+/* the Sell/Buy line-style key is neutral (it encodes a dash pattern, not a
+   colour) and stated once for the whole chart rather than per world */
+.legend-key{display:flex;align-items:center;gap:var(--space-2);color:var(--muted);font-size:var(--text-xs);margin-bottom:var(--space-5)}
 .legend-line{width:16px;height:0;border-top:2px solid var(--muted);display:inline-block;margin-left:var(--space-4)}
 .legend-key .legend-line:first-child{margin-left:0}
 .legend-line-buy{border-top-style:dashed}
@@ -408,6 +413,7 @@ td.opp.strong::before{
 .snapshot table{font-size:var(--text-sm)}
 .snapshot th,.snapshot td{padding:var(--space-2) var(--space-4)}
 .snapshot th:first-child,.snapshot td:first-child{padding-left:0}
+.snapshot td.world{display:flex;align-items:center;gap:var(--space-3);white-space:nowrap}
 tr.stale{opacity:.55}
 
 .secondary-section{margin-bottom:var(--space-8)}

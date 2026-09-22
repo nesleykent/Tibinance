@@ -111,9 +111,9 @@ function rowsHtml(state, side) {
   return `<div class="side">
     <h4>${noun} offers <span class="n">${rows.length}</span></h4>
     <div class="rowhead">
-      <span>Amount <i>TC</i></span>
-      <span>Piece Price <i>gp/TC</i></span>
-      <span>Total Price <i>gp</i></span>
+      <span>Amount</span>
+      <span>Piece Price</span>
+      <span>Total Price</span>
       <span title="amount × price must equal the total">=</span>
       <span></span>
     </div>
