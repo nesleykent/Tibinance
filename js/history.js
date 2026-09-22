@@ -13,11 +13,15 @@
  * unifies every world into one structure, which is what "consolidated
  * history" actually means.
  *
- * Deliberately independent of Market: this is not "the selected worlds
- * scoped to the current chart range," it is the whole record, always. That
- * is a different task from analysing a comparison (Market's job), which is
- * why it is a separate top-level view rather than another section bolted
- * onto the charts.
+ * Deliberately independent of Market's world SELECTION - this shows every
+ * world, not just the ones focused in a chart. It is not independent of
+ * scope, though: unlike an SVG chart (a few line paths, however many points
+ * they carry), every row here is real DOM - a <tr> plus one <td> per world -
+ * so rendering "the whole record, always" is exactly the mistake that lets
+ * a long-lived tracker's own history grow into a table with thousands of
+ * live nodes. The fix is the same one Market already uses for its charts: a
+ * bounded default Range (7D/30D/90D/1Y/All), so "show me everything" is
+ * something you ask for, not the resting state of the page.
  */
 import * as store from './store.js';
 import { num, esc } from './format.js';
@@ -44,11 +48,19 @@ const METRICS = [
   { key: 'goldSupply', label: 'Gold Supply', note: 'Gold escrowed in buy offers: sum of amount × price over every visible buy offer.' },
 ];
 
+const RANGE_DAYS = { '7D': 7, '30D': 30, '90D': 90, '1Y': 365 };
+
 let rows = [];       // flat observations, screenshot + legacy
 let worldMeta = new Map(); // world -> { type, battleye }
 let metric = 'sell';
+let range = '90D';   // bounds how many day-rows ever get built into DOM at once; 'ALL' is opt-in
 let dateDir = -1;    // -1 = newest first (a ledger's own convention), 1 = oldest first
 let wired = false;
+
+function rangeCutoffMs() {
+  if (range === 'ALL') return -Infinity;
+  return Date.now() - (RANGE_DAYS[range] ?? 90) * 86400000;
+}
 
 async function loadRows() {
   const [screenshotRows, legacyRows] = await Promise.all([store.all(), store.allLegacy()]);
@@ -105,8 +117,11 @@ function render() {
   const allWorlds = [...worldMeta.keys()].sort((a, b) => a.localeCompare(b));
   const worlds = q ? allWorlds.filter(w => w.toLowerCase().includes(q)) : allWorlds;
 
+  const cutoff = rangeCutoffMs();
   const grid = buildGrid();
-  let days = [...grid.keys()].filter(day => worlds.some(w => grid.get(day).has(w)));
+  let days = [...grid.keys()]
+    .filter(day => Date.parse(day) >= cutoff)
+    .filter(day => worlds.some(w => grid.get(day).has(w)));
   days.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0) * dateDir);
 
   $('historyCount').textContent = days.length
@@ -114,7 +129,7 @@ function render() {
     : '0 days';
   $('historyEmpty').textContent = rows.length === 0
     ? 'No history yet — add a screenshot in Manage to start building one.'
-    : 'No worlds match this filter.';
+    : 'Nothing in this range matches the current filter.';
   const empty = days.length === 0;
   $('historyEmpty').hidden = !empty;
   $('historyTableWrap').hidden = empty;
@@ -165,6 +180,16 @@ function wire() {
     metric = btn.dataset.metric;
     for (const b of $('historyMetric').querySelectorAll('button')) {
       b.setAttribute('aria-checked', String(b.dataset.metric === metric));
+    }
+    render();
+  });
+
+  $('historyRange').addEventListener('click', e => {
+    const btn = e.target.closest('button[data-range]');
+    if (!btn) return;
+    range = btn.dataset.range;
+    for (const b of $('historyRange').querySelectorAll('button')) {
+      b.setAttribute('aria-checked', String(b.dataset.range === range));
     }
     render();
   });
