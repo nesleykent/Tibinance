@@ -472,11 +472,13 @@ tr.focused .world-focus-btn{color:var(--accent)}
 .world-focus-btn:hover{text-decoration:underline}
 .world-focus-btn:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
 
-/* ---- observations: every row, screenshot and legacy, for every selected
-   world - the one view in Market that is a table on purpose, not a chart
-   trying to also be one. Sits below the chart grid, full width. */
-.observations-section{margin-top:var(--space-9)}
-.source-legacy{color:var(--muted)}
+/* ---- summary: every selected world consolidated into one row - the one
+   view in Market that is a table on purpose, not a chart trying to also be
+   one. Sits below the chart grid, full width. */
+.summary-section{margin-top:var(--space-9)}
+/* the lowest-highest a figure moved across, next to its average - smaller
+   and quieter than the average itself, which is the number that matters most */
+.range-hint{color:var(--muted);font-size:.85em;font-weight:400}
 
 @media(max-width:900px){
   .market-grid{grid-template-columns:1fr;grid-template-areas:"price" "latest" "analysis"}

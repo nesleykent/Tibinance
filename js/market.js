@@ -80,9 +80,8 @@ let pickerOpen = false;
 let pickerQuery = '';
 let pickerActiveIndex = 0;
 
-/* Observations table sort state - defaults to newest first, same convention
-   as Manage's captures table. */
-let obsSortBy = { key: 'capturedAt', dir: -1 };
+/* Summary table sort state - defaults to alphabetical by world. */
+let summarySortBy = { key: 'world', dir: 1 };
 
 const groupBy = (rows, key) => {
   const m = {};
@@ -655,74 +654,87 @@ function renderSnapshot(domain) {
   }).join('');
 }
 
-/* ------------------------------------------------------- observations table
- * Every observation - screenshot and legacy alike - for every selected
- * world in one plain, sortable, filterable table. The charts above are
- * built to stay legible as the dataset grows, but a chart is still a chart:
- * when what's needed is just seeing the actual rows without decoding a
- * shape, a table is the more honest tool for the job (HIG's own "Charting
- * data" guidance: use a table over a chart when analysis, not a trend, is
- * the point). This is the one view in Market that is never chart-shaped.
+/* ----------------------------------------------------------- summary table
+ * A consolidated view: every selected world's many observations - screenshot
+ * and legacy alike - rolled up into exactly one row per world, not a longer
+ * list of individual rows (that would just be combining data, not
+ * consolidating it). Each price/volume/gold figure becomes an average, with
+ * the lowest-highest it moved across in this range alongside it, so the
+ * table says both "what was typical" and "how much it varied" in one place -
+ * the two things a raw row-by-row list makes you compute yourself.
  */
-const obsValueOf = (r, k) => r[k];
+function summarize(pts, key) {
+  const vals = pts.map(p => p[key]).filter(Number.isFinite);
+  if (!vals.length) return null;
+  return {
+    min: Math.min(...vals), max: Math.max(...vals),
+    avg: vals.reduce((a, b) => a + b, 0) / vals.length
+  };
+}
 
-function renderObservationsTable(domain) {
-  let rows = [];
-  for (const w of selectedInOrder()) {
+/** "44,522" alone if it never moved, "44,522 (42,839–47,845)" if it did. */
+function summaryCellHtml(s, negClass) {
+  if (!s) return `<span class="dash" aria-label="not available">—</span>`;
+  const avgTxt = num(Math.round(s.avg));
+  const cls = negClass && s.avg < 0 ? ' neg' : '';
+  const range = s.min === s.max ? '' : ` <span class="range-hint">(${fmt(s.min)}–${fmt(s.max)})</span>`;
+  return `<span class="${cls.trim()}">${avgTxt}</span>${range}`;
+}
+
+const summaryValueOf = (r, k) => r[k];
+
+function renderSummaryTable(domain) {
+  let rows = selectedInOrder().map(w => {
     const meta = worldMeta.get(w) ?? {};
     const pts = (seriesByWorld.get(w) ?? []).filter(p => p.t >= domain[0] && p.t <= domain[1]);
-    for (const p of pts) {
-      rows.push({
-        world: w, type: meta.type ?? '—', battleye: meta.battleye ?? '—',
-        sell: p.sell, buy: p.buy, spread: p.spread,
-        sellVolume: p.sellVolume, buyVolume: p.buyVolume,
-        goldDemand: p.goldDemand, goldSupply: p.goldSupply,
-        source: p.source, capturedAt: p.capturedAt
-      });
-    }
-  }
+    const times = pts.map(p => p.t);
+    const sell = summarize(pts, 'sell'), buy = summarize(pts, 'buy'), spread = summarize(pts, 'spread');
+    const sellVolume = summarize(pts, 'sellVolume'), buyVolume = summarize(pts, 'buyVolume');
+    const goldDemand = summarize(pts, 'goldDemand'), goldSupply = summarize(pts, 'goldSupply');
+    return {
+      world: w, type: meta.type ?? '—', battleye: meta.battleye ?? '—', count: pts.length,
+      sellAvg: sell?.avg ?? null, buyAvg: buy?.avg ?? null, spreadAvg: spread?.avg ?? null,
+      sellVolumeAvg: sellVolume?.avg ?? null, buyVolumeAvg: buyVolume?.avg ?? null,
+      goldDemandAvg: goldDemand?.avg ?? null, goldSupplyAvg: goldSupply?.avg ?? null,
+      firstSeen: times.length ? Math.min(...times) : null, lastSeen: times.length ? Math.max(...times) : null,
+      raw: { sell, buy, spread, sellVolume, buyVolume, goldDemand, goldSupply }
+    };
+  }).filter(r => r.count > 0);
 
-  const q = $('obsFilter').value.trim().toLowerCase();
+  const q = $('summaryFilter').value.trim().toLowerCase();
   if (q) rows = rows.filter(r => r.world.toLowerCase().includes(q));
 
   rows.sort((a, b) => {
-    const av = obsValueOf(a, obsSortBy.key), bv = obsValueOf(b, obsSortBy.key);
+    const av = summaryValueOf(a, summarySortBy.key), bv = summaryValueOf(b, summarySortBy.key);
     const cmp = typeof av === 'string' ? av.localeCompare(bv) : (av ?? -Infinity) - (bv ?? -Infinity);
-    return cmp * obsSortBy.dir || b.capturedAt.localeCompare(a.capturedAt);
+    return cmp * summarySortBy.dir || a.world.localeCompare(b.world);
   });
 
-  const worldCount = new Set(rows.map(r => r.world)).size;
-  $('obsCount').textContent = rows.length
-    ? `${rows.length} observation${rows.length === 1 ? '' : 's'} · ${worldCount} world${worldCount === 1 ? '' : 's'}`
-    : '0 observations';
-  $('obsEmpty').hidden = rows.length > 0;
-  $('obsTable').closest('.table-wrap').hidden = rows.length === 0;
+  $('summaryCount').textContent = rows.length ? `${rows.length} world${rows.length === 1 ? '' : 's'}` : '0 worlds';
+  $('summaryEmpty').hidden = rows.length > 0;
+  $('summaryTable').closest('.table-wrap').hidden = rows.length === 0;
 
-  const times = rows.map(r => r.capturedAt).sort();
-  $('obsMeta').textContent = times.length
-    ? (times[0] === times[times.length - 1] ? `As of ${times[0]}` : `${times[0]} – ${times[times.length - 1]}`)
-    : '';
-
-  $('obsBody').innerHTML = rows.map(r => `<tr>
+  $('summaryBody').innerHTML = rows.map(r => `<tr>
       <td class="world">
         <button type="button" class="world-focus-btn" data-focus-world="${esc(r.world)}" aria-pressed="${r.world === focusedWorld}">${esc(r.world)}</button>
       </td>
       <td>${esc(r.type)}</td>
       <td class="be be-${esc(r.battleye)}">${esc(r.battleye)}</td>
-      <td class="num">${num(r.sell)}</td>
-      <td class="num">${num(r.sellVolume)}</td>
-      <td class="num">${num(r.goldDemand)}</td>
-      <td class="num">${num(r.buy)}</td>
-      <td class="num">${num(r.buyVolume)}</td>
-      <td class="num">${num(r.goldSupply)}</td>
-      <td class="num${r.spread < 0 ? ' neg' : ''}"${r.spread < 0 ? ' title="crossed market — a price is almost certainly misread"' : ''}>${num(r.spread)}</td>
-      <td class="${r.source === 'legacy' ? 'source-legacy' : ''}">${r.source === 'legacy' ? 'Legacy' : 'Screenshot'}</td>
-      <td><time datetime="${esc(r.capturedAt)}">${esc(r.capturedAt)}</time></td>
+      <td class="num">${fmt(r.count)}</td>
+      <td class="num">${summaryCellHtml(r.raw.sell)}</td>
+      <td class="num">${summaryCellHtml(r.raw.sellVolume)}</td>
+      <td class="num">${summaryCellHtml(r.raw.goldDemand)}</td>
+      <td class="num">${summaryCellHtml(r.raw.buy)}</td>
+      <td class="num">${summaryCellHtml(r.raw.buyVolume)}</td>
+      <td class="num">${summaryCellHtml(r.raw.goldSupply)}</td>
+      <td class="num">${summaryCellHtml(r.raw.spread, true)}</td>
+      <td class="hash" title="${r.firstSeen != null ? esc(new Date(r.firstSeen).toISOString().slice(0, 19)) : ''}">${r.firstSeen != null ? esc(relativeAge(r.firstSeen)) : '—'}</td>
+      <td class="hash" title="${r.lastSeen != null ? esc(new Date(r.lastSeen).toISOString().slice(0, 19)) : ''}">${r.lastSeen != null ? esc(relativeAge(r.lastSeen)) : '—'}</td>
     </tr>`).join('');
 
-  for (const th of document.querySelectorAll('#obsTable thead th[data-sort]')) {
-    th.classList.toggle('sorted', th.dataset.sort === obsSortBy.key);
-    th.dataset.dir = th.dataset.sort === obsSortBy.key ? (obsSortBy.dir < 0 ? 'desc' : 'asc') : '';
+  for (const th of document.querySelectorAll('#summaryTable thead th[data-sort]')) {
+    th.classList.toggle('sorted', th.dataset.sort === summarySortBy.key);
+    th.dataset.dir = th.dataset.sort === summarySortBy.key ? (summarySortBy.dir < 0 ? 'desc' : 'asc') : '';
   }
 }
 
@@ -739,7 +751,7 @@ function renderAll() {
   renderSnapshot(listDomain);
   renderMetricTabs();
   renderAnalysisSection(chartDomain);
-  renderObservationsTable(listDomain);
+  renderSummaryTable(listDomain);
 }
 
 async function backfillLegacy() {
@@ -866,18 +878,18 @@ function wireControls() {
     if (b) focusWorld(b.dataset.focusWorld);
   });
 
-  $('obsTable').addEventListener('click', e => {
+  $('summaryTable').addEventListener('click', e => {
     const b = e.target.closest('[data-focus-world]');
     if (b) focusWorld(b.dataset.focusWorld);
   });
-  $('obsFilter').addEventListener('input', () => renderObservationsTable(tableDomain()));
-  document.querySelector('#obsTable thead').addEventListener('click', e => {
+  $('summaryFilter').addEventListener('input', () => renderSummaryTable(tableDomain()));
+  document.querySelector('#summaryTable thead').addEventListener('click', e => {
     const key = e.target.closest('th[data-sort]')?.dataset.sort;
     if (!key) return;
-    obsSortBy = obsSortBy.key === key
-      ? { key, dir: -obsSortBy.dir }
-      : { key, dir: key === 'world' || key === 'type' || key === 'battleye' || key === 'source' ? 1 : -1 };
-    renderObservationsTable(tableDomain());
+    summarySortBy = summarySortBy.key === key
+      ? { key, dir: -summarySortBy.dir }
+      : { key, dir: key === 'world' || key === 'type' || key === 'battleye' ? 1 : -1 };
+    renderSummaryTable(tableDomain());
   });
 }
 
