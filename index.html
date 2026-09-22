@@ -17,51 +17,58 @@
       <button id="tab-manage" class="navlink" type="button" role="tab" aria-selected="false" aria-controls="view-manage">Manage</button>
     </nav>
   </div>
-  <p class="sub">Tibia Coins market tracker. Drop your daily market screenshots in Manage — everything runs in your browser.</p>
+  <p class="sub">A private, local history of the Tibia Coin market — built from your own screenshots, kept in this browser.</p>
 </header>
 
 <main>
 
 <section id="view-market" class="view" role="tabpanel" aria-labelledby="tab-market">
 
-  <div class="toolbar">
-    <div id="rangePresets" class="texttabs" role="group" aria-label="Range">
-      <button data-range="7D" class="texttab">7D</button>
-      <button data-range="30D" class="texttab">30D</button>
-      <button data-range="90D" class="texttab">90D</button>
-      <button data-range="1Y" class="texttab">1Y</button>
-      <button data-range="ALL" class="texttab active">All</button>
-    </div>
-
-    <details class="popover" id="customRangePopover">
-      <summary>Custom range</summary>
-      <div class="popover-panel popover-panel-row">
-        <input type="datetime-local" id="rangeStart" class="field" aria-label="Custom range start">
-        <span class="toolbar-sep">–</span>
-        <input type="datetime-local" id="rangeEnd" class="field" aria-label="Custom range end">
-      </div>
-    </details>
-  </div>
-
-  <p id="marketEmpty" class="empty">No worlds yet — add a screenshot in <a href="#" data-goto="manage">Manage</a> to start tracking one.</p>
+  <p id="marketLoading" class="loading">Loading…</p>
+  <p id="marketEmpty" class="empty" hidden>No worlds yet — add a screenshot in <a href="#" data-goto="manage">Manage</a> to start tracking one.</p>
   <p id="legacyStatus" class="legacystatus" hidden></p>
 
   <div id="marketBody" hidden>
 
-    <section class="primary-section">
+    <div class="controls">
+      <div class="controls-group">
+        <span class="controls-label" id="worldsLabel">Worlds</span>
+        <input type="search" id="worldFilter" class="field" placeholder="Filter worlds" aria-label="Filter worlds" hidden>
+        <div id="worldList" class="serieslist" role="group" aria-labelledby="worldsLabel"></div>
+      </div>
+
+      <div class="controls-group range-group">
+        <span class="controls-label" id="rangeLabel">Range</span>
+        <div id="rangePresets" class="segmented" role="radiogroup" aria-labelledby="rangeLabel">
+          <button type="button" data-range="7D" role="radio" aria-checked="false">7D</button>
+          <button type="button" data-range="30D" role="radio" aria-checked="false">30D</button>
+          <button type="button" data-range="90D" role="radio" aria-checked="false">90D</button>
+          <button type="button" data-range="1Y" role="radio" aria-checked="false">1Y</button>
+          <button type="button" data-range="ALL" role="radio" aria-checked="true">All</button>
+          <button type="button" data-range="CUSTOM" role="radio" aria-checked="false">Custom</button>
+        </div>
+        <div id="customRangeFields" class="custom-range" hidden>
+          <input type="datetime-local" id="rangeStart" class="field" aria-label="Custom range start">
+          <span class="range-sep">–</span>
+          <input type="datetime-local" id="rangeEnd" class="field" aria-label="Custom range end">
+        </div>
+      </div>
+    </div>
+
+    <section class="section" aria-label="Price">
       <div class="section-head">
         <h2>Price</h2>
       </div>
       <div class="legend-key">
-        <span class="legend-line legend-line-sell"></span>Sell
-        <span class="legend-line legend-line-buy"></span>Buy
+        <span class="legend-line legend-line-sell"></span>Sell Price
+        <span class="legend-line legend-line-buy"></span>Buy Price
       </div>
-      <input type="search" id="worldFilter" class="field" placeholder="Filter worlds" aria-label="Filter worlds" hidden>
-      <div id="worldList" class="serieslist"></div>
-      <div id="priceChart" class="chart-primary"></div>
+      <div class="chart-wrap">
+        <div id="priceChart" class="chart-primary"></div>
+      </div>
     </section>
 
-    <section class="snapshot">
+    <section class="section snapshot" aria-label="Latest values">
       <div class="section-head">
         <h2>Latest <span id="snapCount" class="count"></span></h2>
       </div>
@@ -74,12 +81,14 @@
       <p id="snapEmpty" class="empty" hidden>No selected worlds have data yet.</p>
     </section>
 
-    <section class="secondary-section">
+    <section class="section" aria-label="Analysis">
       <div class="section-head">
         <h2>Analysis</h2>
-        <div id="metricTabs" class="texttabs" role="tablist" aria-label="Secondary metric"></div>
+        <div id="metricTabs" class="segmented" role="radiogroup" aria-label="Secondary metric"></div>
       </div>
-      <div id="secondaryChart" class="chart-secondary"></div>
+      <div class="chart-wrap">
+        <div id="secondaryChart" class="chart-secondary"></div>
+      </div>
     </section>
 
   </div>
@@ -87,53 +96,62 @@
 
 <section id="view-manage" class="view" role="tabpanel" aria-labelledby="tab-manage" hidden>
 
-  <section class="privacy" aria-label="What is kept">
-    <details>
-      <summary><span class="tick">✓</span> Screenshots and character names are never kept —
-        only anonymous market data. <span class="what">What exactly?</span></summary>
-      <div class="kept">
-        <div>
-          <h5>Written to the database</h5>
-          <p>World, Type, BattlEye, Sell, Sell&nbsp;Volume, Gold&nbsp;Demand, Buy,
-             Buy&nbsp;Volume, Gold&nbsp;Supply, Capture&nbsp;Date, Screenshot&nbsp;Hash.</p>
-          <p class="fine">Eleven fields. Nothing else can be written — the code builds each
-             record from that fixed list.</p>
+  <section class="section" aria-label="Add screenshots">
+    <div class="section-head">
+      <h2>Add screenshots</h2>
+    </div>
+
+    <section class="privacy" aria-label="What is kept">
+      <details>
+        <summary><span class="tick">✓</span> Screenshots and character names are never kept —
+          only anonymous market data. <span class="what">What exactly?</span></summary>
+        <div class="kept">
+          <div>
+            <h5>Written to the database</h5>
+            <p>World, Type, BattlEye, Sell Price, Sell&nbsp;Volume, Gold&nbsp;Demand, Buy&nbsp;Price,
+               Buy&nbsp;Volume, Gold&nbsp;Supply, Capture&nbsp;Date, Screenshot&nbsp;Hash.</p>
+            <p class="fine">Eleven fields. Nothing else can be written — the code builds each
+               record from that fixed list.</p>
+          </div>
+          <div>
+            <h5>Never written anywhere</h5>
+            <p>The screenshot itself, the filename, and the character name in it.</p>
+            <p class="fine">The image is decoded, read, then dropped; only the SHA-256 of its
+               bytes is kept, to spot a screenshot you already processed. The character name is
+               used for the TibiaData world lookup and discarded. Both appear on screen while you
+               review a card — that is the browser showing you the file you just dropped, not the
+               database.</p>
+          </div>
         </div>
-        <div>
-          <h5>Never written anywhere</h5>
-          <p>The screenshot itself, the filename, and the character name in it.</p>
-          <p class="fine">The image is decoded, read, then dropped; only the SHA-256 of its
-             bytes is kept, to spot a screenshot you already processed. The character name is
-             used for the TibiaData world lookup and discarded. Both appear on screen while you
-             review a card — that is the browser showing you the file you just dropped, not the
-             database.</p>
-        </div>
+      </details>
+    </section>
+
+    <div id="drop" class="drop" tabindex="0" role="button" aria-label="Drop screenshots here or press Enter to browse">
+      <div class="drop-inner">
+        <strong>Drop screenshots here</strong>
+        <span>or click to choose files</span>
+        <small>Filename format: <code>2026-09-21_124317718_Character Name_Hotkey.jpeg</code></small>
       </div>
-    </details>
+      <input type="file" id="file" multiple accept="image/*" hidden>
+    </div>
+
+    <div id="qbar" class="qbar" hidden>
+      <span id="qstat" class="qstat"></span>
+      <span class="qactions">
+        <button id="expandAll" class="btn">Expand all</button>
+        <button id="discardAll" class="btn">Discard all</button>
+        <button id="saveAll" class="btn primary">Save all</button>
+      </span>
+    </div>
+    <div id="queue" class="queue" hidden></div>
   </section>
 
-  <div id="drop" class="drop" tabindex="0" role="button" aria-label="Drop screenshots here or press Enter to browse">
-    <div class="drop-inner">
-      <strong>Drop screenshots here</strong>
-      <span>or click to choose files</span>
-      <small>Filename format: <code>2026-09-21_124317718_Character Name_Hotkey.jpeg</code></small>
-    </div>
-    <input type="file" id="file" multiple accept="image/*" hidden>
-  </div>
-
-  <div id="qbar" class="qbar" hidden>
-    <span id="qstat" class="qstat"></span>
-    <span class="qactions">
-      <button id="expandAll" class="btn">Expand all</button>
-      <button id="discardAll" class="btn">Discard all</button>
-      <button id="saveAll" class="btn primary">Save all</button>
-    </span>
-  </div>
-  <div id="queue" class="queue" hidden></div>
-
-  <section class="captures" aria-label="Stored captures">
+  <section class="section captures" aria-label="Stored captures">
     <div class="results-head">
-      <h2>Captures <span id="count" class="count">0</span></h2>
+      <div>
+        <h2>Captures <span id="count" class="count">0</span></h2>
+        <p id="resultsMeta" class="results-meta"></p>
+      </div>
       <div class="actions">
         <input type="search" id="filter" class="filter" placeholder="filter world…" aria-label="Filter by world">
         <button id="exportJson" class="btn">Export JSON</button>
@@ -143,10 +161,7 @@
         <input type="file" id="importFile" accept="application/json" hidden>
       </div>
     </div>
-    <details id="disclosure" class="disclosure" hidden>
-      <summary id="disclosureLine"></summary>
-      <div id="disclosureNote" class="note"></div>
-    </details>
+    <p id="capturesLoading" class="loading">Loading…</p>
     <div class="table-wrap">
       <table id="table">
         <thead>
@@ -165,13 +180,13 @@
             <th class="num" data-sort="buy" title="Best (highest) Buy price. Higher pays more for your coins.">Buy Price</th>
             <th class="num" data-sort="buyVolume" title="Coins wanted across every visible buy offer.">Buy Volume</th>
             <th class="num" data-sort="goldSupply" title="Gold escrowed in buy offers: sum of amount × price over every visible buy offer.">Gold Supply</th>
-            <th class="num" data-sort="spread" title="Sell − Buy. Tighter means a more liquid market.">Spread</th>
+            <th class="num" data-sort="spread" title="Sell Price − Buy Price. Tighter means a more liquid market.">Spread</th>
             <th data-sort="capturedAt">Capture</th><th>Hash</th><th></th>
           </tr>
         </thead>
         <tbody id="tbody"></tbody>
       </table>
-      <p id="empty" class="empty">Nothing stored yet — drop a screenshot above.</p>
+      <p id="empty" class="empty" hidden>Nothing stored yet — drop a screenshot above.</p>
     </div>
   </section>
 

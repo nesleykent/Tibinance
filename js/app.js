@@ -4,7 +4,7 @@ import { lookupWorld, worldInfo } from './tibiadata.js';
 import { readMarket, disposeOcr } from './ocr.js';
 import * as store from './store.js';
 import * as market from './market.js';
-import { fmt, esc, spread, goldOf, acct } from './format.js';
+import { fmt, esc, spread, goldOf, num } from './format.js';
 
 const $ = id => document.getElementById(id);
 
@@ -77,19 +77,6 @@ function cardEl(id) {
   return el;
 }
 
-function steps(state) {
-  const s = [];
-  s.push(`<div>hash <b>${state.hash ? state.hash.slice(0, 12) + '…' : '…'}</b></div>`);
-  if (state.world) {
-    s.push(`<div>world <b>${esc(state.world.world)}</b> · ${esc(state.world.type)} · ` +
-           `BattlEye <b>${state.world.battleye}</b></div>`);
-  } else if (state.worldNote) {
-    s.push(`<div>${esc(state.worldNote)}</div>`);
-  }
-  if (state.capturedAt) s.push(`<div>capture <b>${esc(state.capturedAt)}</b></div>`);
-  return s.join('');
-}
-
 function rowsHtml(state, side) {
   const rows = state.rows[side];
   const noun = side === 'sell' ? 'Sell' : 'Buy';
@@ -101,7 +88,7 @@ function rowsHtml(state, side) {
              aria-label="${noun} offer ${i + 1}, price per coin in gold">
       <input data-s="${side}" data-i="${i}" data-f="total"  value="${r.total ? fmt(r.total) : ''}"
              aria-label="${noun} offer ${i + 1}, total price in gold">
-      <span class="flag ${r.bad ? 'bad' : 'ok'}"
+      <span class="flag ${r.bad ? 'bad' : 'ok'}" aria-hidden="true"
             title="${r.bad ? 'amount × price does not equal the total' : 'amount × price matches the total'}"
             >${r.bad ? '✕' : '✓'}</span>
       <button class="rowdel" data-s="${side}" data-i="${i}"
@@ -130,7 +117,7 @@ function render(state) {
   // the filename moves to the tooltip and the world leads instead.
   const line = (cls, flag, mid, right) => {
     el.className = `card ${cls}`;
-    el.innerHTML = `<div class="cline"><span class="cflag">${flag}</span>${mid}
+    el.innerHTML = `<div class="cline"><span class="cflag" aria-hidden="true">${flag}</span>${mid}
       <span class="cnums">${right ?? ''}</span></div>`;
   };
 
@@ -159,22 +146,24 @@ function render(state) {
   const time = (state.capturedAt ?? '').slice(11);
   const head = w
     ? `<b class="cworld">${esc(w.world)}</b>
-       <span class="cbe be-${esc(w.battleye)}" title="${esc(w.type)} · BattlEye ${esc(w.battleye)}">●</span>
+       <span class="cbe be-${esc(w.battleye)}" aria-hidden="true" title="${esc(w.type)} · BattlEye ${esc(w.battleye)}">●</span>
+       <span class="sr-only">${esc(w.type)}, BattlEye ${esc(w.battleye)}</span>
        <span class="ctime">${esc(time)}</span>`
-    : `<b class="cworld">—</b><span class="cbe">○</span><span class="ctime"></span>
+    : `<b class="cworld">—</b><span class="cbe" aria-hidden="true">○</span><span class="ctime"></span>
        <span class="cmsg msg-warn">${esc(state.worldNote ?? 'world unresolved')}</span>`;
   // Each figure sits in its own fixed-width cell so the columns line up down
   // the whole list; ragged numbers are unreadable when scanning a batch.
   const nums = a.sell
     ? `<span class="cn price"><b>${fmt(a.sell)}</b>/<b>${fmt(a.buy)}</b></span>
-       <span class="cn spread">Δ${a.spread < 0 ? `(${fmt(Math.abs(a.spread))})` : fmt(a.spread)}</span>
+       <span class="cn spread${a.spread < 0 ? ' neg' : ''}">Δ${fmt(a.spread)}</span>
        <span class="cn vol">${fmt(a.sellVolume)}/${fmt(a.buyVolume)}</span>
        <span class="cn gold">${fmt(a.goldDemand)}/${fmt(a.goldSupply)}</span>`
     : '';
 
   el.innerHTML = `<details ${state.open ? 'open' : ''}>
     <summary><span class="cline">
-      <span class="cflag">${a.ok ? '✓' : '⚠'}</span>${head}
+      <span class="cflag" aria-hidden="true">${a.ok ? '✓' : '⚠'}</span>
+      <span class="sr-only">${a.ok ? 'Ready to save' : 'Needs attention'}</span>${head}
       <span class="cnums">${nums}</span>
     </span></summary>
     <div class="cbody">
@@ -315,71 +304,9 @@ let sortBy = { key: 'capturedAt', dir: -1 };
 
 const valueOf = (r, k) => (k === 'spread' ? spread(r) : r[k]);
 
-/*
- * IFRS 18 "Presentation and Disclosure in Financial Statements" replaces IAS 1
- * for periods beginning on or after 1 January 2027, early application allowed.
- * What it asks of a set of figures like this one:
- *
- *   - state the presentation currency, the level of rounding and the period
- *     covered, so a reader knows what the numbers are and when they are from
- *   - present items in defined categories, keeping a derived subtotal visibly
- *     apart from the figures it is computed from
- *   - do not offset items that are separate
- *   - label items meaningfully; never park something under "other"
- *   - where a measure is not defined by any standard, say so and reconcile it
- *     to the underlying figures (the treatment IFRS 18 requires of
- *     management-defined performance measures)
- */
-function disclosure(rows) {
-  const el = $('disclosure');
-  if (!rows.length) { el.hidden = true; return; }
-  el.hidden = false;
-  const times = rows.map(r => r.capturedAt).sort();
-  const period = times[0] === times[times.length - 1]
-    ? `as at ${times[0]}`
-    : `${times[0]} to ${times[times.length - 1]}`;
-
-  $('disclosureLine').innerHTML =
-    `Unrounded · ${esc(period)} <span class="what">Basis of preparation</span>`;
-
-  $('disclosureNote').innerHTML = `
-    <dl>
-      <dt>Rounding</dt>
-      <dd>No rounding is applied to what is stored or shown — every figure is the
-          exact value read or computed, grouped in threes for legibility only.</dd>
-
-      <dt>Period covered</dt>
-      <dd>${esc(period)}, in local client time as recorded by the screenshot, written
-          to ISO 8601.</dd>
-
-      <dt>Categories</dt>
-      <dd>Figures are grouped by the side of the market they come from. Sell side and
-          buy side are presented <b>gross and are never offset</b> against one another:
-          a single net figure would conceal how thin or deep either side is.</dd>
-
-      <dt>Derived measures</dt>
-      <dd>These are not read from the screenshot and are defined by nobody but this
-          project, so each is reconciled to the figures it comes from:
-          <ul>
-            <li><b>Spread</b> = best Sell − best Buy</li>
-            <li><b>Gold Demand</b> = Σ (sell amount × sell price) over every visible sell offer</li>
-            <li><b>Gold Supply</b> = Σ (buy amount × buy price) over every visible buy offer</li>
-          </ul>
-          Spread is computed when the table is drawn. The two gold sums are stored,
-          because they are sums over individual offers and cannot be rebuilt once the
-          offers themselves are gone.</dd>
-
-      <dt>Basis of the underlying figures</dt>
-      <dd>Read from the market window by OCR in the browser. Each offer is checked
-          against the screenshot's own Total Price column — amount × price must equal
-          the total — and a row failing that check cannot be saved without being
-          corrected first. Every column is labelled for what it holds; nothing is
-          aggregated into an "other" line.</dd>
-    </dl>`;
-}
-
 async function renderTable() {
   rowsCache = await store.all();
+  $('capturesLoading').hidden = true;
   let rows = [...rowsCache];
 
   const q = $('filter').value.trim().toLowerCase();
@@ -397,22 +324,29 @@ async function renderTable() {
     : '0 rows';
   $('empty').hidden = rows.length > 0;
 
+  // A plain, factual line - the period the rows on screen actually span -
+  // replaces what used to be a separate accounting-style disclosure panel;
+  // what each derived figure means already lives in that column's own tooltip.
+  const times = rows.map(r => r.capturedAt).sort();
+  $('resultsMeta').textContent = times.length
+    ? (times[0] === times[times.length - 1] ? `As of ${times[0]}` : `${times[0]} – ${times[times.length - 1]}`)
+    : '';
+
   $('tbody').innerHTML = rows.map(r => `<tr>
       <td>${esc(r.world)}</td><td>${esc(r.type)}</td>
       <td class="be be-${esc(r.battleye)}">${esc(r.battleye)}</td>
-      <td class="num money">${acct(r.sell)}</td>
-      <td class="num money">${acct(r.sellVolume)}</td>
-      <td class="num money">${acct(r.goldDemand)}</td>
-      <td class="num money">${acct(r.buy)}</td>
-      <td class="num money">${acct(r.buyVolume)}</td>
-      <td class="num money">${acct(r.goldSupply)}</td>
-      <td class="num money${spread(r) < 0 ? ' neg' : ''}"
-          title="${spread(r) < 0 ? 'crossed market — a price is almost certainly misread' : ''}">${acct(spread(r))}</td>
+      <td class="num">${num(r.sell)}</td>
+      <td class="num">${num(r.sellVolume)}</td>
+      <td class="num">${num(r.goldDemand)}</td>
+      <td class="num">${num(r.buy)}</td>
+      <td class="num">${num(r.buyVolume)}</td>
+      <td class="num">${num(r.goldSupply)}</td>
+      <td class="num${spread(r) < 0 ? ' neg' : ''}"
+          title="${spread(r) < 0 ? 'crossed market — a price is almost certainly misread' : ''}">${num(spread(r))}</td>
       <td><time datetime="${esc(r.capturedAt)}">${esc(r.capturedAt)}</time></td>
       <td class="hash" title="${esc(r.hash)}">${esc(r.hash.slice(0, 10))}</td>
-      <td><button class="del" data-del="${esc(r.hash)}" title="Remove">✕</button></td>
+      <td><button class="del" data-del="${esc(r.hash)}" title="Remove" aria-label="Remove this observation">✕</button></td>
     </tr>`).join('');
-  disclosure(rows);
 
   for (const th of document.querySelectorAll('#table thead th[data-sort]')) {
     th.classList.toggle('sorted', th.dataset.sort === sortBy.key);

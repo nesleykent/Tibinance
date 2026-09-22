@@ -17,11 +17,11 @@ export const spread = r => r.sell - r.buy;
 export const goldOf = rows => rows.reduce((t, r) => t + r.amount * r.price, 0);
 
 /*
- * Accounting presentation: negatives in parentheses, zero/missing as a dash,
- * tabular figures so a column of these lines up. No unit is ever attached -
- * callers label the column or metric once, not every value in it.
+ * A quantity that may not exist yet (an optional field on an older row, a
+ * legacy point with no volume data). Tabular figures line a column up;
+ * nothing here changes how a real number - including zero or a negative one -
+ * actually reads, since a value that exists should look like an ordinary
+ * number, not an accounting convention. A dash stands only for absence.
  */
-export const acct = n => {
-  if (!Number.isFinite(n) || n === 0) return '<span class="dash">—</span>';
-  return n < 0 ? `(${fmt(Math.abs(n))})` : fmt(n);
-};
+export const num = n =>
+  Number.isFinite(n) ? fmt(n) : '<span class="dash" aria-label="not available">—</span>';

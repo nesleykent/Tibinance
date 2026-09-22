@@ -45,9 +45,9 @@ Two aggregates over every visible offer, not just the best one:
 Unlike the spread these are sums over rows, so they cannot be rebuilt from the
 best price and the volume once the rows are gone — which is why they are stored.
 
-They run to billions, so tables show them with SI prefixes (`10 G`,
-`1.93 G`) and keep the exact figure in the cell's tooltip. The CSV carries the
-full integer.
+They run to billions; tables show the full, fully-grouped figure rather than
+an abbreviated one, so nothing is ever rounded away on screen. The CSV carries
+the same integer with no separators.
 
 Both are optional fields: rows exported before they existed still import.
 
@@ -293,70 +293,43 @@ round-trips through Export/Import/the committed baseline.
 
 ## Numbers
 
-Quantities follow **ISO 80000-1 (SI)**: a unit follows its value, separated by
-one narrow no-break space —
+Every value in this app is a Tibia Coin market figure, so the unit is implicit
+in the app's single purpose: nothing in the interface prints `gp`, `TC` or
+`gp/TC`, and a figure is never abbreviated with an SI prefix (`1.93 G`). A
+quantity is shown exactly as it is — a plain, fully-grouped number:
 
 ```
-4 084 gp/TC        39 600 TC
+4 084        39 600
 ```
 
-Digit grouping itself just uses the browser's own locale (`Intl.NumberFormat`
-with no locale override), so a figure reads the way everything else on your
-system already does. There is no separator to pick and nothing to remember —
-this is presentation, not a setting.
+Digit grouping uses the browser's own locale (`Intl.NumberFormat` with no
+locale override), so a figure reads the way everything else on your system
+already does. There is no separator to pick and nothing to remember — this is
+presentation, not a setting.
 
-### Units and prefixes
+A negative Spread means a crossed market (see below) and is shown as an
+ordinary signed number in the semantic "bad" colour, paired with a tooltip —
+never with an accounting convention like parentheses. A dash stands only for
+a value that does not exist yet (an optional field on an older row, or a
+legacy point TibiaMarket has no analogue for) — a real zero is shown as `0`.
 
-Gold sums reach billions, so they take an SI prefix. **A prefix is bound to the
-unit symbol with no space between them** — the two form a single inseparable
-symbol:
+Column headers name each figure once (`Sell Price`, `Gold Demand`, …); the
+figure itself is never re-labelled or re-formatted to say so again.
 
-```
-1.93 Ggp        89.3 Mgp        10 Ggp
-```
+### Where a unit does matter
 
-Not `1.93 G gp`, and never a bare `1.93 G`: a prefix on its own is not a
-quantity. Hover any of these for the exact figure.
+`observations.json` and the CSV carry plain integers with no separators or
+symbols at all, because they are read by machines. The CSV states each unit
+in its column heading instead: `Sell (gp/TC)`, `Gold Demand (gp)`.
 
-Prefix symbols are case-sensitive — `k` for 10³, `M` for 10⁶, `G` for 10⁹ — and
-are never compounded.
+## Presentation of the captures table
 
-## Presentation — IFRS 18 (Manage's captures table)
-
-The captures table follows **IFRS 18 *Presentation and Disclosure in Financial
-Statements***, which supersedes IAS 1 for periods beginning on or after
-1 January 2027 and may be applied early.
-
-| IFRS 18 asks for | Here |
-|---|---|
-| Presentation currency, level of rounding, period covered | Stated above the table |
-| Items presented in defined categories | Columns are grouped **Sell side** / **Buy side**, with the derived subtotal held apart under **Derived** |
-| No offsetting of separate items | Gold demand and gold supply are shown gross. A single net figure would hide how thin or deep either side is |
-| Meaningful labels, nothing dumped in "other" | Every column names exactly what it holds; there is no residual category |
-| Measures not defined by a standard disclosed and reconciled | *Basis of preparation* names Spread, Gold Demand and Gold Supply as this project's own measures and gives the formula behind each |
-
-Open **Basis of preparation** above the table for the full note.
-
-### Accounting presentation
-
-Within that structure the figures are set the way a ledger is:
-
-| | |
-|---|---|
-| Symbol placement | the unit sits at the left edge of the cell, digits at the right, so a column reads as one block |
-| Negative values | in parentheses — `(1 000)` — not with a minus sign |
-| Zero and missing | an em dash, so neither is mistaken for a small value |
-| Alignment | tabular lining figures, so digits line up down the column |
-
-A symbol is factored out to the cell edge **only when it is the same on every
-row**. The gold columns carry a different prefix per row — `Mgp` on one,
-`Ggp` on the next — so there the full symbol stays with its value instead.
-
-### Where none of this applies
-
-`observations.json` and the CSV carry plain integers with no separators,
-prefixes or symbols at all, because they are read by machines. The CSV states
-each unit in its column heading instead: `Sell (gp/TC)`, `Gold Demand (gp)`.
+Manage's captures table groups its columns **Sell side** / **Buy side**, with
+the derived measures — **Spread**, **Gold Demand**, **Gold Supply** — held
+apart under **Derived**, gross and never offset against one another: a single
+net figure would hide how thin or deep either side of the market is. Every
+column is labelled for exactly what it holds, and what a derived measure
+means and how it is computed is one hover away, on that column's own header.
 
 ## Dates and times
 
