@@ -610,52 +610,11 @@ async function renderTable() {
       <td><button class="del" data-del="${esc(r.hash)}" title="Remove">✕</button></td>
     </tr>${priorRow(r)}`).join('');
   disclosure(rows, [...priors.values()]);
-  renderRoutes(rows);
 
   for (const th of document.querySelectorAll('#table thead th[data-sort]')) {
     th.classList.toggle('sorted', th.dataset.sort === sortBy.key);
     th.dataset.dir = th.dataset.sort === sortBy.key ? (sortBy.dir < 0 ? 'desc' : 'asc') : '';
   }
-}
-
-/*
- * Cross-world routes. Only the newest observation per world is used: two
- * captures of the same world minutes apart are not two venues, and pairing them
- * would invent a route out of nothing but the passage of time.
- */
-function renderRoutes(rows) {
-  const latest = new Map();
-  for (const r of [...rows].sort((a, b) => a.capturedAt.localeCompare(b.capturedAt))) {
-    latest.set(r.world, r);          // later captures overwrite earlier ones
-  }
-  const list = stats.routes([...latest.values()]);
-  const net = $('arbFees').checked;
-
-  $('arb').hidden = latest.size < 2;
-  $('arbCount').textContent = list.length
-    ? `${list.length} open across ${latest.size} worlds`
-    : `none across ${latest.size} worlds`;
-  $('arbEmpty').hidden = list.length > 0;
-
-  $('arbBody').innerHTML = list.slice(0, 12).map(r => {
-    const profitable = !net || r.netTotal === null || r.netTotal > 0;
-    const sizeCell = r.coins === null
-      ? '<span class="dash" title="the amount available at the best price was not recorded for one of these worlds">—</span>'
-      : fmt(r.coins) + (r.coins === stats.OFFER_MAX ? '<span class="cap" title="a single offer is capped at 64,000 items">*</span>' : '');
-    return `<tr class="${profitable ? '' : 'unprofitable'}">
-      <td>${esc(r.from)}</td>
-      <td class="num money">${acct(r.ask, 'gp/TC')}</td>
-      <td>${esc(r.to)}</td>
-      <td class="num money">${acct(r.bid, 'gp/TC')}</td>
-      <td class="num money opp">${acct(r.grossPerCoin, 'gp/TC')}</td>
-      <td class="num">${r.returnPct.toFixed(2)}%</td>
-      <td class="num">${sizeCell}</td>
-      <td class="num qty">${r.fees === null ? '<span class="dash">—</span>' : acctSI(r.fees, 'gp')}</td>
-      <td class="num qty ${r.netTotal !== null && r.netTotal <= 0 ? 'neg' : 'opp'}"
-          title="${r.netTotal === null ? 'size unknown, so the fee cannot be worked out' : fmt(Math.round(r.netTotal)) + ' gp on ' + esc(r.to)}">
-        ${r.netTotal === null ? '<span class="dash">—</span>' : acctSI(Math.round(r.netTotal), 'gp')}</td>
-    </tr>`;
-  }).join('');
 }
 
 function download(name, text, type) {
@@ -761,7 +720,6 @@ $('tbody').addEventListener('click', async e => {
 $('latestOnly').addEventListener('change', renderTable);
 $('compare').addEventListener('change', renderTable);
 $('comparatives').addEventListener('change', renderTable);
-$('arbFees').addEventListener('change', renderTable);
 $('sep').addEventListener('change', e => {
   groupSep = e.target.value;
   try { localStorage.setItem(SEP_KEY, groupSep); } catch { /* not persisted */ }
