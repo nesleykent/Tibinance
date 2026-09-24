@@ -1,0 +1,1322 @@
+[
+ {
+  "event": "The First Dragon",
+  "start": "2023-01-30",
+  "end": "2023-02-12",
+  "days": 14
+ },
+ {
+  "event": "Rapid Respawn",
+  "start": "2023-02-03",
+  "end": "2023-02-06",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2023-02-12",
+  "end": "2023-02-15",
+  "days": 4
+ },
+ {
+  "event": "Valentine's Day",
+  "start": "2023-02-14",
+  "end": "2023-02-15",
+  "days": 2
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2023-02-20",
+  "end": "2023-02-25",
+  "days": 6
+ },
+ {
+  "event": "A Piece of Cake",
+  "start": "2023-02-21",
+  "end": "2023-02-26",
+  "days": 6
+ },
+ {
+  "event": "XP/Skill Event",
+  "start": "2023-03-03",
+  "end": "2023-03-06",
+  "days": 4
+ },
+ {
+  "event": "Orcsoberfest",
+  "start": "2023-03-10",
+  "end": "2023-03-17",
+  "days": 8
+ },
+ {
+  "event": "Full Moon",
+  "start": "2023-03-12",
+  "end": "2023-03-15",
+  "days": 4
+ },
+ {
+  "event": "Colours of Magic",
+  "start": "2023-03-15",
+  "end": "2023-03-23",
+  "days": 9
+ },
+ {
+  "event": "Loot Event",
+  "start": "2023-04-06",
+  "end": "2023-04-10",
+  "days": 5
+ },
+ {
+  "event": "Full Moon",
+  "start": "2023-04-12",
+  "end": "2023-04-15",
+  "days": 4
+ },
+ {
+  "event": "Spring into Life",
+  "start": "2023-04-16",
+  "end": "2023-04-23",
+  "days": 8
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2023-04-20",
+  "end": "2023-04-25",
+  "days": 6
+ },
+ {
+  "event": "XP/Skill Event",
+  "start": "2023-05-05",
+  "end": "2023-05-08",
+  "days": 4
+ },
+ {
+  "event": "Demon's Lullaby",
+  "start": "2023-05-07",
+  "end": "2023-05-14",
+  "days": 8
+ },
+ {
+  "event": "Full Moon",
+  "start": "2023-05-12",
+  "end": "2023-05-15",
+  "days": 4
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2023-05-20",
+  "end": "2023-05-25",
+  "days": 6
+ },
+ {
+  "event": "Loot Event",
+  "start": "2023-06-02",
+  "end": "2023-06-05",
+  "days": 4
+ },
+ {
+  "event": "XP/Skill Event",
+  "start": "2023-06-02",
+  "end": "2023-06-05",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2023-06-12",
+  "end": "2023-06-15",
+  "days": 4
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2023-06-20",
+  "end": "2023-06-25",
+  "days": 6
+ },
+ {
+  "event": "Bewitched",
+  "start": "2023-06-21",
+  "end": "2023-06-25",
+  "days": 5
+ },
+ {
+  "event": "XP/Skill Event",
+  "start": "2023-07-07",
+  "end": "2023-07-10",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2023-07-12",
+  "end": "2023-07-15",
+  "days": 4
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2023-07-20",
+  "end": "2023-07-25",
+  "days": 6
+ },
+ {
+  "event": "Rise of Devovorga",
+  "start": "2023-08-01",
+  "end": "2023-08-01",
+  "days": 1
+ },
+ {
+  "event": "Rapid Respawn",
+  "start": "2023-08-04",
+  "end": "2023-08-07",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2023-08-12",
+  "end": "2023-08-15",
+  "days": 4
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2023-08-20",
+  "end": "2023-08-25",
+  "days": 6
+ },
+ {
+  "event": "Annual Autumn Vintage",
+  "start": "2023-09-01",
+  "end": "2023-09-01",
+  "days": 1
+ },
+ {
+  "event": "Rise of Devovorga",
+  "start": "2023-09-02",
+  "end": "2023-09-07",
+  "days": 6
+ },
+ {
+  "event": "XP/Skill Event",
+  "start": "2023-09-08",
+  "end": "2023-09-11",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2023-09-12",
+  "end": "2023-09-15",
+  "days": 4
+ },
+ {
+  "event": "Colours of Magic",
+  "start": "2023-09-15",
+  "end": "2023-09-23",
+  "days": 9
+ },
+ {
+  "event": "Annual Autumn Vintage",
+  "start": "2023-10-01",
+  "end": "2023-10-08",
+  "days": 8
+ },
+ {
+  "event": "Loot Event",
+  "start": "2023-10-06",
+  "end": "2023-10-09",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2023-10-12",
+  "end": "2023-10-15",
+  "days": 4
+ },
+ {
+  "event": "Orcsoberfest",
+  "start": "2023-10-13",
+  "end": "2023-10-20",
+  "days": 8
+ },
+ {
+  "event": "Annual Autumn Vintage",
+  "start": "2023-10-17",
+  "end": "2023-10-24",
+  "days": 8
+ },
+ {
+  "event": "Halloween Event",
+  "start": "2023-10-31",
+  "end": "2023-11-03",
+  "days": 4
+ },
+ {
+  "event": "XP/Skill Event",
+  "start": "2023-11-03",
+  "end": "2023-11-06",
+  "days": 4
+ },
+ {
+  "event": "Lightbearer",
+  "start": "2023-11-11",
+  "end": "2023-11-15",
+  "days": 5
+ },
+ {
+  "event": "Full Moon",
+  "start": "2023-11-12",
+  "end": "2023-11-15",
+  "days": 4
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2023-11-20",
+  "end": "2023-11-25",
+  "days": 6
+ },
+ {
+  "event": "New Year",
+  "start": "2023-12-01",
+  "end": "2023-12-01",
+  "days": 1
+ },
+ {
+  "event": "Winterlight Solstice",
+  "start": "2023-12-01",
+  "end": "2023-12-01",
+  "days": 1
+ },
+ {
+  "event": "Rapid Respawn",
+  "start": "2023-12-02",
+  "end": "2023-12-04",
+  "days": 3
+ },
+ {
+  "event": "Christmas",
+  "start": "2023-12-12",
+  "end": "2023-12-31",
+  "days": 20
+ },
+ {
+  "event": "Full Moon",
+  "start": "2023-12-12",
+  "end": "2023-12-15",
+  "days": 4
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2023-12-20",
+  "end": "2023-12-24",
+  "days": 5
+ },
+ {
+  "event": "Winterlight Solstice",
+  "start": "2023-12-22",
+  "end": "2024-01-10",
+  "days": 20
+ },
+ {
+  "event": "XP/Skill Event",
+  "start": "2023-12-22",
+  "end": "2023-12-27",
+  "days": 6
+ },
+ {
+  "event": "New Year",
+  "start": "2023-12-27",
+  "end": "2024-01-03",
+  "days": 8
+ },
+ {
+  "event": "Tibia Anniversary",
+  "start": "2024-01-07",
+  "end": "2024-01-10",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2024-01-12",
+  "end": "2024-01-15",
+  "days": 4
+ },
+ {
+  "event": "The First Dragon",
+  "start": "2024-01-14",
+  "end": "2024-02-12",
+  "days": 30
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2024-01-20",
+  "end": "2024-01-25",
+  "days": 6
+ },
+ {
+  "event": "Carnival Month",
+  "start": "2024-02-01",
+  "end": "2024-03-01",
+  "days": 30
+ },
+ {
+  "event": "Rapid Respawn",
+  "start": "2024-02-02",
+  "end": "2024-02-05",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2024-02-12",
+  "end": "2024-02-15",
+  "days": 4
+ },
+ {
+  "event": "Valentine's Day",
+  "start": "2024-02-14",
+  "end": "2024-02-15",
+  "days": 2
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2024-02-20",
+  "end": "2024-02-25",
+  "days": 6
+ },
+ {
+  "event": "A Piece of Cake",
+  "start": "2024-02-21",
+  "end": "2024-02-26",
+  "days": 6
+ },
+ {
+  "event": "Double Daily Reward Month",
+  "start": "2024-03-01",
+  "end": "2024-03-31",
+  "days": 31
+ },
+ {
+  "event": "XP/Skill Event",
+  "start": "2024-03-01",
+  "end": "2024-03-04",
+  "days": 4
+ },
+ {
+  "event": "Orcsoberfest",
+  "start": "2024-03-08",
+  "end": "2024-03-15",
+  "days": 8
+ },
+ {
+  "event": "XP/Skill Event",
+  "start": "2024-03-08",
+  "end": "2024-03-11",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2024-03-12",
+  "end": "2024-03-15",
+  "days": 4
+ },
+ {
+  "event": "Colours of Magic",
+  "start": "2024-03-15",
+  "end": "2024-03-23",
+  "days": 9
+ },
+ {
+  "event": "Chyllfroest",
+  "start": "2024-04-01",
+  "end": "2024-05-01",
+  "days": 31
+ },
+ {
+  "event": "Prank Month",
+  "start": "2024-04-01",
+  "end": "2024-05-01",
+  "days": 31
+ },
+ {
+  "event": "Rapid Respawn",
+  "start": "2024-04-05",
+  "end": "2024-04-08",
+  "days": 4
+ },
+ {
+  "event": "Exaltation Overload",
+  "start": "2024-04-12",
+  "end": "2024-04-15",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2024-04-12",
+  "end": "2024-04-15",
+  "days": 4
+ },
+ {
+  "event": "Spring into Life",
+  "start": "2024-04-16",
+  "end": "2024-04-23",
+  "days": 8
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2024-04-20",
+  "end": "2024-04-25",
+  "days": 6
+ },
+ {
+  "event": "XP/Skill Event",
+  "start": "2024-05-03",
+  "end": "2024-05-06",
+  "days": 4
+ },
+ {
+  "event": "Demon's Lullaby",
+  "start": "2024-05-07",
+  "end": "2024-05-14",
+  "days": 8
+ },
+ {
+  "event": "Full Moon",
+  "start": "2024-05-12",
+  "end": "2024-05-15",
+  "days": 4
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2024-05-20",
+  "end": "2024-05-25",
+  "days": 6
+ },
+ {
+  "event": "Flower Month",
+  "start": "2024-06-01",
+  "end": "2024-07-01",
+  "days": 31
+ },
+ {
+  "event": "Rapid Respawn",
+  "start": "2024-06-07",
+  "end": "2024-06-10",
+  "days": 4
+ },
+ {
+  "event": "Skill Event",
+  "start": "2024-06-07",
+  "end": "2024-06-10",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2024-06-12",
+  "end": "2024-06-15",
+  "days": 4
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2024-06-20",
+  "end": "2024-06-25",
+  "days": 6
+ },
+ {
+  "event": "Bewitched",
+  "start": "2024-06-21",
+  "end": "2024-06-25",
+  "days": 5
+ },
+ {
+  "event": "Full Moon",
+  "start": "2024-07-12",
+  "end": "2024-07-15",
+  "days": 4
+ },
+ {
+  "event": "XP/Skill Event",
+  "start": "2024-07-12",
+  "end": "2024-07-15",
+  "days": 4
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2024-07-20",
+  "end": "2024-07-25",
+  "days": 6
+ },
+ {
+  "event": "Hot Cuisine Month",
+  "start": "2024-08-01",
+  "end": "2024-09-01",
+  "days": 32
+ },
+ {
+  "event": "Rapid Respawn",
+  "start": "2024-08-02",
+  "end": "2024-08-05",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2024-08-12",
+  "end": "2024-08-15",
+  "days": 4
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2024-08-21",
+  "end": "2024-08-25",
+  "days": 5
+ },
+ {
+  "event": "Rise of Devovorga",
+  "start": "2024-09-01",
+  "end": "2024-09-07",
+  "days": 7
+ },
+ {
+  "event": "XP/Skill Event",
+  "start": "2024-09-06",
+  "end": "2024-09-09",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2024-09-12",
+  "end": "2024-09-15",
+  "days": 4
+ },
+ {
+  "event": "Colours of Magic",
+  "start": "2024-09-15",
+  "end": "2024-09-23",
+  "days": 9
+ },
+ {
+  "event": "Annual Autumn Vintage",
+  "start": "2024-10-01",
+  "end": "2024-10-08",
+  "days": 8
+ },
+ {
+  "event": "Loot Event",
+  "start": "2024-10-04",
+  "end": "2024-10-07",
+  "days": 4
+ },
+ {
+  "event": "Orcsoberfest",
+  "start": "2024-10-11",
+  "end": "2024-10-18",
+  "days": 8
+ },
+ {
+  "event": "Full Moon",
+  "start": "2024-10-12",
+  "end": "2024-10-15",
+  "days": 4
+ },
+ {
+  "event": "Annual Autumn Vintage",
+  "start": "2024-10-17",
+  "end": "2024-10-24",
+  "days": 8
+ },
+ {
+  "event": "XP/Skill Event",
+  "start": "2024-10-25",
+  "end": "2024-10-28",
+  "days": 4
+ },
+ {
+  "event": "Halloween Event",
+  "start": "2024-10-31",
+  "end": "2024-11-03",
+  "days": 4
+ },
+ {
+  "event": "Exaltation Overload",
+  "start": "2024-11-01",
+  "end": "2024-11-04",
+  "days": 4
+ },
+ {
+  "event": "Lightbearer",
+  "start": "2024-11-11",
+  "end": "2024-11-15",
+  "days": 5
+ },
+ {
+  "event": "Full Moon",
+  "start": "2024-11-12",
+  "end": "2024-11-15",
+  "days": 4
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2024-11-20",
+  "end": "2024-11-25",
+  "days": 6
+ },
+ {
+  "event": "Rapid Respawn",
+  "start": "2024-12-06",
+  "end": "2024-12-09",
+  "days": 4
+ },
+ {
+  "event": "Christmas",
+  "start": "2024-12-12",
+  "end": "2024-12-31",
+  "days": 20
+ },
+ {
+  "event": "Full Moon",
+  "start": "2024-12-12",
+  "end": "2024-12-15",
+  "days": 4
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2024-12-20",
+  "end": "2024-12-25",
+  "days": 6
+ },
+ {
+  "event": "Winterlight Solstice",
+  "start": "2024-12-22",
+  "end": "2025-01-10",
+  "days": 20
+ },
+ {
+  "event": "XP/Skill Event",
+  "start": "2024-12-23",
+  "end": "2024-12-27",
+  "days": 5
+ },
+ {
+  "event": "New Year",
+  "start": "2024-12-27",
+  "end": "2025-01-03",
+  "days": 8
+ },
+ {
+  "event": "Tibia Anniversary",
+  "start": "2025-01-07",
+  "end": "2025-01-10",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2025-01-12",
+  "end": "2025-01-15",
+  "days": 4
+ },
+ {
+  "event": "The First Dragon",
+  "start": "2025-01-14",
+  "end": "2025-02-12",
+  "days": 30
+ },
+ {
+  "event": "Exaltation Overload",
+  "start": "2025-01-17",
+  "end": "2025-01-20",
+  "days": 4
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2025-01-20",
+  "end": "2025-01-25",
+  "days": 6
+ },
+ {
+  "event": "Carnival Month",
+  "start": "2025-02-01",
+  "end": "2025-03-01",
+  "days": 29
+ },
+ {
+  "event": "Rapid Respawn",
+  "start": "2025-02-07",
+  "end": "2025-02-10",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2025-02-12",
+  "end": "2025-02-15",
+  "days": 4
+ },
+ {
+  "event": "Valentine's Day",
+  "start": "2025-02-14",
+  "end": "2025-02-15",
+  "days": 2
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2025-02-20",
+  "end": "2025-02-25",
+  "days": 6
+ },
+ {
+  "event": "A Piece of Cake",
+  "start": "2025-02-21",
+  "end": "2025-02-26",
+  "days": 6
+ },
+ {
+  "event": "Double Daily Reward Month",
+  "start": "2025-03-01",
+  "end": "2025-03-31",
+  "days": 31
+ },
+ {
+  "event": "XP/Skill Event",
+  "start": "2025-03-07",
+  "end": "2025-03-10",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2025-03-12",
+  "end": "2025-03-15",
+  "days": 4
+ },
+ {
+  "event": "Orcsoberfest",
+  "start": "2025-03-14",
+  "end": "2025-03-21",
+  "days": 8
+ },
+ {
+  "event": "Colours of Magic",
+  "start": "2025-03-15",
+  "end": "2025-03-23",
+  "days": 9
+ },
+ {
+  "event": "Chyllfroest",
+  "start": "2025-04-01",
+  "end": "2025-05-01",
+  "days": 31
+ },
+ {
+  "event": "Prank Month",
+  "start": "2025-04-01",
+  "end": "2025-05-01",
+  "days": 31
+ },
+ {
+  "event": "Exaltation Overload",
+  "start": "2025-04-04",
+  "end": "2025-04-07",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2025-04-12",
+  "end": "2025-04-15",
+  "days": 4
+ },
+ {
+  "event": "Spring into Life",
+  "start": "2025-04-16",
+  "end": "2025-04-23",
+  "days": 8
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2025-04-20",
+  "end": "2025-04-25",
+  "days": 6
+ },
+ {
+  "event": "XP/Skill Event",
+  "start": "2025-05-02",
+  "end": "2025-05-05",
+  "days": 4
+ },
+ {
+  "event": "Demon's Lullaby",
+  "start": "2025-05-07",
+  "end": "2025-05-14",
+  "days": 8
+ },
+ {
+  "event": "Full Moon",
+  "start": "2025-05-12",
+  "end": "2025-05-15",
+  "days": 4
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2025-05-20",
+  "end": "2025-05-25",
+  "days": 6
+ },
+ {
+  "event": "Flower Month",
+  "start": "2025-06-01",
+  "end": "2025-07-01",
+  "days": 31
+ },
+ {
+  "event": "Rapid Respawn",
+  "start": "2025-06-06",
+  "end": "2025-06-09",
+  "days": 4
+ },
+ {
+  "event": "Skill Event",
+  "start": "2025-06-06",
+  "end": "2025-06-09",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2025-06-12",
+  "end": "2025-06-15",
+  "days": 4
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2025-06-20",
+  "end": "2025-06-22",
+  "days": 3
+ },
+ {
+  "event": "Bewitched",
+  "start": "2025-06-21",
+  "end": "2025-06-22",
+  "days": 2
+ },
+ {
+  "event": "XP/Skill Event",
+  "start": "2025-07-04",
+  "end": "2025-07-07",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2025-07-12",
+  "end": "2025-07-15",
+  "days": 4
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2025-07-20",
+  "end": "2025-07-25",
+  "days": 6
+ },
+ {
+  "event": "Hot Cuisine Month",
+  "start": "2025-08-01",
+  "end": "2025-09-01",
+  "days": 32
+ },
+ {
+  "event": "Rapid Respawn",
+  "start": "2025-08-01",
+  "end": "2025-08-04",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2025-08-12",
+  "end": "2025-08-15",
+  "days": 4
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2025-08-20",
+  "end": "2025-08-25",
+  "days": 6
+ },
+ {
+  "event": "Rise of Devovorga",
+  "start": "2025-09-01",
+  "end": "2025-09-07",
+  "days": 7
+ },
+ {
+  "event": "XP/Skill Event",
+  "start": "2025-09-05",
+  "end": "2025-09-08",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2025-09-12",
+  "end": "2025-09-15",
+  "days": 4
+ },
+ {
+  "event": "Colours of Magic",
+  "start": "2025-09-15",
+  "end": "2025-09-23",
+  "days": 9
+ },
+ {
+  "event": "Annual Autumn Vintage",
+  "start": "2025-10-01",
+  "end": "2025-10-08",
+  "days": 8
+ },
+ {
+  "event": "Exaltation Overload",
+  "start": "2025-10-03",
+  "end": "2025-10-06",
+  "days": 4
+ },
+ {
+  "event": "Orcsoberfest",
+  "start": "2025-10-10",
+  "end": "2025-10-17",
+  "days": 8
+ },
+ {
+  "event": "Full Moon",
+  "start": "2025-10-12",
+  "end": "2025-10-15",
+  "days": 4
+ },
+ {
+  "event": "Annual Autumn Vintage",
+  "start": "2025-10-17",
+  "end": "2025-10-24",
+  "days": 8
+ },
+ {
+  "event": "Halloween Event",
+  "start": "2025-10-31",
+  "end": "2025-11-03",
+  "days": 4
+ },
+ {
+  "event": "XP/Skill Event",
+  "start": "2025-11-07",
+  "end": "2025-11-10",
+  "days": 4
+ },
+ {
+  "event": "Lightbearer",
+  "start": "2025-11-11",
+  "end": "2025-11-15",
+  "days": 5
+ },
+ {
+  "event": "Full Moon",
+  "start": "2025-11-12",
+  "end": "2025-11-15",
+  "days": 4
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2025-11-20",
+  "end": "2025-11-25",
+  "days": 6
+ },
+ {
+  "event": "Rapid Respawn",
+  "start": "2025-12-05",
+  "end": "2025-12-08",
+  "days": 4
+ },
+ {
+  "event": "Christmas",
+  "start": "2025-12-12",
+  "end": "2025-12-31",
+  "days": 20
+ },
+ {
+  "event": "Full Moon",
+  "start": "2025-12-12",
+  "end": "2025-12-15",
+  "days": 4
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2025-12-20",
+  "end": "2025-12-25",
+  "days": 6
+ },
+ {
+  "event": "Winterlight Solstice",
+  "start": "2025-12-22",
+  "end": "2026-01-10",
+  "days": 20
+ },
+ {
+  "event": "XP/Skill Event",
+  "start": "2025-12-23",
+  "end": "2025-12-29",
+  "days": 7
+ },
+ {
+  "event": "New Year",
+  "start": "2025-12-27",
+  "end": "2026-01-03",
+  "days": 8
+ },
+ {
+  "event": "Tibia Anniversary",
+  "start": "2026-01-07",
+  "end": "2026-01-10",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2026-01-12",
+  "end": "2026-01-15",
+  "days": 4
+ },
+ {
+  "event": "The First Dragon",
+  "start": "2026-01-14",
+  "end": "2026-02-12",
+  "days": 30
+ },
+ {
+  "event": "Exaltation Overload",
+  "start": "2026-01-16",
+  "end": "2026-01-19",
+  "days": 4
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2026-01-20",
+  "end": "2026-01-25",
+  "days": 6
+ },
+ {
+  "event": "Carnival Month",
+  "start": "2026-02-01",
+  "end": "2026-03-01",
+  "days": 29
+ },
+ {
+  "event": "Rapid Respawn",
+  "start": "2026-02-06",
+  "end": "2026-02-09",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2026-02-12",
+  "end": "2026-02-15",
+  "days": 4
+ },
+ {
+  "event": "Valentine's Day",
+  "start": "2026-02-14",
+  "end": "2026-02-15",
+  "days": 2
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2026-02-20",
+  "end": "2026-02-25",
+  "days": 6
+ },
+ {
+  "event": "A Piece of Cake",
+  "start": "2026-02-21",
+  "end": "2026-02-26",
+  "days": 6
+ },
+ {
+  "event": "Double Daily Reward Month",
+  "start": "2026-03-01",
+  "end": "2026-03-31",
+  "days": 31
+ },
+ {
+  "event": "XP/Skill Event",
+  "start": "2026-03-06",
+  "end": "2026-03-09",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2026-03-12",
+  "end": "2026-03-15",
+  "days": 4
+ },
+ {
+  "event": "Orcsoberfest",
+  "start": "2026-03-13",
+  "end": "2026-03-20",
+  "days": 8
+ },
+ {
+  "event": "Colours of Magic",
+  "start": "2026-03-15",
+  "end": "2026-03-23",
+  "days": 9
+ },
+ {
+  "event": "Chyllfroest",
+  "start": "2026-04-01",
+  "end": "2026-05-01",
+  "days": 31
+ },
+ {
+  "event": "Prank Month",
+  "start": "2026-04-01",
+  "end": "2026-05-01",
+  "days": 31
+ },
+ {
+  "event": "Exaltation Overload",
+  "start": "2026-04-03",
+  "end": "2026-04-06",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2026-04-12",
+  "end": "2026-04-15",
+  "days": 4
+ },
+ {
+  "event": "Spring into Life",
+  "start": "2026-04-16",
+  "end": "2026-04-23",
+  "days": 8
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2026-04-20",
+  "end": "2026-04-25",
+  "days": 6
+ },
+ {
+  "event": "XP/Skill Event",
+  "start": "2026-05-01",
+  "end": "2026-05-04",
+  "days": 4
+ },
+ {
+  "event": "Demon's Lullaby",
+  "start": "2026-05-07",
+  "end": "2026-05-14",
+  "days": 8
+ },
+ {
+  "event": "Full Moon",
+  "start": "2026-05-12",
+  "end": "2026-05-15",
+  "days": 4
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2026-05-20",
+  "end": "2026-05-25",
+  "days": 6
+ },
+ {
+  "event": "Flower Month",
+  "start": "2026-06-01",
+  "end": "2026-07-01",
+  "days": 31
+ },
+ {
+  "event": "Rapid Respawn",
+  "start": "2026-06-05",
+  "end": "2026-06-08",
+  "days": 4
+ },
+ {
+  "event": "Skill Event",
+  "start": "2026-06-05",
+  "end": "2026-06-08",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2026-06-12",
+  "end": "2026-06-15",
+  "days": 4
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2026-06-20",
+  "end": "2026-06-25",
+  "days": 6
+ },
+ {
+  "event": "Bewitched",
+  "start": "2026-06-21",
+  "end": "2026-06-25",
+  "days": 5
+ },
+ {
+  "event": "XP/Skill Event",
+  "start": "2026-07-03",
+  "end": "2026-07-06",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2026-07-12",
+  "end": "2026-07-15",
+  "days": 4
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2026-07-20",
+  "end": "2026-07-25",
+  "days": 6
+ },
+ {
+  "event": "Hot Cuisine Month",
+  "start": "2026-08-01",
+  "end": "2026-09-01",
+  "days": 32
+ },
+ {
+  "event": "The Great Expedition",
+  "start": "2026-08-06",
+  "end": "2026-08-12",
+  "days": 7
+ },
+ {
+  "event": "Rapid Respawn",
+  "start": "2026-08-07",
+  "end": "2026-08-10",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2026-08-12",
+  "end": "2026-08-15",
+  "days": 4
+ },
+ {
+  "event": "Last Creep Standing",
+  "start": "2026-08-20",
+  "end": "2026-08-25",
+  "days": 6
+ },
+ {
+  "event": "Rise of Devovorga",
+  "start": "2026-09-01",
+  "end": "2026-09-07",
+  "days": 7
+ },
+ {
+  "event": "XP/Skill Event",
+  "start": "2026-09-04",
+  "end": "2026-09-07",
+  "days": 4
+ },
+ {
+  "event": "Full Moon",
+  "start": "2026-09-12",
+  "end": "2026-09-15",
+  "days": 4
+ },
+ {
+  "event": "Colours of Magic",
+  "start": "2026-09-15",
+  "end": "2026-09-15",
+  "days": 1
+ }
+]
