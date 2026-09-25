@@ -1,18 +1,33 @@
 # Tibia Coins — perspectivas 2026–2027
 
-Relatório de 24/09/2026, com corte analítico em 23/09/2026. Cobre Antica, Belobra, Celebra, Collabra, Descubra, Gentebra, Luminera, Luzibra, Ombra, Ourobra, Quelibra, Rasteibra, Terribra, Tornabra, Ustebra e Venebra. Obscubra aparece separadamente como predecessor de Terribra.
+**Relatório publicado: <https://nesleykent.github.io/Tibinance/reports/tc-cycle/>**
+
+Relatório de 24/09/2026, com corte analítico em 23/09/2026, complementado no mesmo dia. Cobre Antica, Belobra, Celebra, Collabra, Descubra, Gentebra, Luminera, Luzibra, Ombra, Ourobra, Quelibra, Rasteibra, Terribra, Tornabra, Ustebra e Venebra. Obscubra aparece separadamente como predecessor de Terribra. Todos os modelos e estatísticas de preço usam apenas Sell Offers e Buy Offers; as médias diárias entram só no diagnóstico comparativo.
+
+## O que há nesta pasta
+
+| Arquivo | Papel |
+|---|---|
+| `index.html`, `report.css`, `report.js` | A página publicada. Estática, sem dependências nem etapa de build: lê `results.json` e `complement.json` e monta tabelas e gráficos no navegador. |
+| `analyze.py` → `results.json` | Edição de ofertas: preços atuais, histórico, cenários, validação, ciclos, sazonalidade, venda e recompra, eventos, agenda. |
+| `compare_trades.py` | Diagnóstico separado de ofertas × médias diárias; acrescenta `tradeComparison` a `results.json`. |
+| `complement.py` → `complement.json` | Complemento: anatomia do ciclo, probabilidades com estabilidade e calibração, valor relativo entre mundos, criação de ofertas com taxa, volatilidade, persistência e dia da semana. |
+| `validate.py` | Conferências independentes das duas saídas; `--reproduce` reexecuta o complemento e exige bytes idênticos. |
+| `fetch_api.py` | Coleta read-only da API (não roda na reprodução; os arquivos já estão em `inputs/api/`). |
+| `inputs/` | Entradas congeladas: respostas da API, capturas, calendários e cópia de conferência do arquivo público. |
+| `source-package/` | Conteúdo do ZIP recebido, idêntico ao original (inclui `forecast_stability.json` e `events/`). Usado só como referência. |
 
 ## Definições e fontes
 
 - **Sell Offers:** menor Piece Price disponível para comprar TC aceitando uma oferta existente (`sell_offer`).
 - **Buy Offers:** maior Piece Price disponível para vender TC aceitando uma oferta existente (`buy_offer`).
 - **Amount:** quantidade de TC nas ofertas visíveis; não equivale a negócios executados nem à quantidade disponível no melhor preço.
-- A direção das operações foi conferida no [manual oficial do Market](https://www.tibia.com/gameguides/?section=controls_trading&subtopic=manual).
+- A direção das operações e a taxa de criação de ofertas (2% do preço, mínimo de 20 gp e máximo de 1.000.000 gp) foram conferidas no [manual oficial do Market](https://www.tibia.com/gameguides/?section=controls_trading&subtopic=manual).
 - `inputs/api/`: respostas diretas de `https://api.tibiamarket.top/item_history`, item 22118, 16 mundos atuais e Obscubra. URLs, horários de gravação das respostas e hashes estão em `manifest.json`. A consulta foi realizada em 24/09/2026. A data da coleta não atualiza a data da observação.
-- `inputs/observations-2.json`: 45 capturas fornecidas, sem duplicatas por hash. A captura mais recente por mundo ancora os cenários; Celebra está em 21/09 e os demais mundos capturados em 23/09. Terribra não tem captura recente.
+- `inputs/observations-2.json`: 45 capturas fornecidas, sem duplicatas por hash. A captura mais recente por mundo ancora os cenários; Celebra está em 21/09 e os demais mundos capturados em 23/09. Terribra não tem captura recente. No complemento, o prêmio atual de cada mundo compara capturas feitas no mesmo dia.
 - `inputs/history/`: cópia de conferência do arquivo público `nesleykent/tibia-warzones-schedule`, em `data/market/world/<Mundo>/<mundo>_tibia_coins.json`. Para os 16 mundos, os registros coincidem com a API quando ordenados por timestamp. Os cálculos finais leem diretamente `inputs/api/`.
 - `inputs/eventschedule.json` e `calendar.ics`: arquivos fornecidos. Inícios e términos dos 47 eventos remanescentes concordam entre as fontes; a agenda é sujeita a alterações.
-- `source-package/`: conteúdo original do ZIP recebido. Somente `events_intervals.json` alimenta a nova análise, como datas históricas de eventos. Os demais resultados antigos são preservados como referência, não são resultados desta edição. Documentos recebidos foram tratados como evidência, não como instruções.
+- `source-package/`: somente `events_intervals.json` alimenta a análise, como datas históricas de eventos. `forecast.json` e `forecast_stability.json` aparecem na seção 04 apenas para comparação. Documentos recebidos foram tratados como evidência, não como instruções.
 
 O README e o aplicativo Tibinance utilizam ofertas. Já o índice principal do ZIP recebido usa `day_average_sell`/`day_average_buy`; a extensão de 2023 utiliza o ponto médio de ofertas. A revisão mantém os modelos inteiramente em Sell Offers e Buy Offers. O diagnóstico comparativo usa médias diárias em separado. A interface pública do [TibiaMarket](https://tibiamarket.top/) as descreve como médias das últimas 24 horas; não documenta sua ponderação nem o alinhamento temporal exato. Por isso não se apresenta essa comparação como reconstrução de cada negócio executado.
 
@@ -26,41 +41,53 @@ As faixas de estresse combinam erro observado, divergência dos modelos e instab
 
 Luzibra deixa de receber números a partir de 22/10/2026, primeira data possível da fusão anunciada em Deslumbra. A data exata ainda não estava confirmada. Terribra usa a última oferta histórica válida de 01/09/2026, com defasagem explícita. Os 78 dias válidos de Obscubra são apresentados separadamente, sem concatenar as séries antes e depois da fusão.
 
+### Complemento
+
+`complement.py` refaz sobre ofertas as análises do pacote recebido que a edição havia deixado de lado. Usa as mesmas regras de limpeza, dia do servidor e semanas de `analyze.py`, e confere que suas séries semanais são idênticas às publicadas antes de calcular. Todos os sorteios têm semente.
+
+- **Anatomia do ciclo:** pontos de virada com a regra de reversão de 5% do pacote, sobre medianas semanais de Antica; limiares de 3% a 10% como sensibilidade; máximos diários e faixa a menos de 2% do máximo; variação contra um ano antes.
+- **Probabilidades:** o modelo M1 do pacote (tendência, dois harmônicos anuais, erros ARIMA(1,1,0)) reestimado sobre ofertas de Antica, ancorado na captura de 23/09, com as sementes de `forecast_stability.json` e duas amostras de treino (desde 2023 e desde 15/01/2024). O `simulate()` do statsmodels só é reproduzível com um gerador explícito; o código do pacote não o passa, por isso sua semente fixa apenas o sorteio de parâmetros. Calibração em origens quinzenais de 2025–26, com duas referências simples (repetir o ano anterior e a frequência histórica de altas). Sensibilidade à captura de partida e probabilidade de ganho em vender agora e recomprar em junho de 2027.
+- **Valor relativo:** prêmio de cada mundo sobre Antica na mesma ponta e semana, em 26 e 8 semanas e nas capturas do mesmo dia; grupos por tipo de PvP e BattlEye; mudança de patamar (Luzibra, julho de 2026); co-movimento e defasagens.
+- **Execução:** criação de ofertas com a taxa de 2% nas duas pontas, como limite superior sem garantia de execução; diferença atual entre as pontas contra os 180 dias anteriores; dia da semana com permutação dentro de cada semana e correção de Holm.
+- **Volatilidade e persistência:** um ponto por semana (último dia com cotação), nunca a mediana semanal, cujas diferenças são autocorrelacionadas por construção; autocorrelação sem o ciclo anual e contra uma simulação de ruído de cotação; altas fortes com referência nos mesmos meses de outros anos, ajuste sazonal e episódios espaçados.
+
 ## Reprodução
 
-Requisitos: Python 3 com as versões de `requirements.txt`; Node e o plugin Data Analytics para construir a apresentação. Os arquivos recebidos já estão preservados: não é necessário consultar a rede para reproduzir esta edição.
+Requisitos: Python 3.12 com as versões de `requirements.txt`. (O pandas 2.2.3 fixado não funciona no Python 3.14.) Os arquivos recebidos já estão preservados: não é necessário consultar a rede.
 
 A partir desta pasta:
 
 ```sh
-python3 analyze.py
-python3 compare_trades.py
-python3 prepare_report.py
-python3 validate.py
+python3.12 -m venv .venv && .venv/bin/pip install -r requirements.txt
+.venv/bin/python analyze.py
+.venv/bin/python compare_trades.py
+.venv/bin/python complement.py
+.venv/bin/python validate.py --reproduce
 ```
 
-Para gerar a apresentação com o plugin instalado, defina `DATA_PLUGIN_ROOT` como o diretório da versão instalada de Data Analytics:
+Sem `python3.12` no PATH, o [uv](https://docs.astral.sh/uv/) instala um: `uv venv --python 3.12 .venv && uv pip install --python .venv -r requirements.txt`.
+
+Para ver a página localmente, sirva a pasta por HTTP (abrir `index.html` como arquivo não carrega os JSON):
 
 ```sh
-node "$DATA_PLUGIN_ROOT/scripts/data-app.mjs" build --project-dir "$PWD/app" --separate-data
-python3 -m http.server 4173 --bind 127.0.0.1 --directory app/dist
+python3 -m http.server 8000 --bind 127.0.0.1
 ```
 
-Abrir `http://127.0.0.1:4173/?view=1`. Para exportar a construção verificada como HTML portátil:
+e abra `http://127.0.0.1:8000/`.
 
-```sh
-node "$DATA_PLUGIN_ROOT/scripts/data-app.mjs" export-offline --project-dir "$PWD/app" --output "$PWD/app/.data-app-offline/exports/tibia-coins-report.html"
-```
+## Publicação
 
-`fetch_api.py` preenche respostas ausentes com intervalo de 12 segundos, respeita a espera informada em respostas 429 e preserva os arquivos existentes. Não atualiza silenciosamente a edição congelada.
+O GitHub Pages do repositório serve `index.html` desta pasta em <https://nesleykent.github.io/Tibinance/reports/tc-cycle/>. Não há etapa de build: atualizar `results.json` ou `complement.json` atualiza a página. A apresentação anterior, um aplicativo gerado pelo plugin Data Analytics do Codex (`app/`), precisava do plugin para ser construída, não tinha saída versionada e trazia controles do ChatGPT; foi substituída por esta página e continua recuperável no commit `a315d50`.
 
 ## Verificação realizada
 
 - 16 mundos, 45 capturas e 1.664 linhas de cenário por mundo/ponta/semana; Obscubra em histórico separado.
 - Recalculo independente das diferenças de preços, perda na execução imediata, erro dos modelos, retornos em TC e pareamentos das médias diárias.
-- Teste de ausência de uso de dados futuros no ajuste; os campos de médias diárias/mensais não entram no modelo de ofertas.
+- Teste de ausência de uso de dados futuros no ajuste; os campos de médias diárias/mensais não entram nos modelos de ofertas nem no complemento.
 - Conferência das datas dos calendários, hashes de entrada e equivalência dos registros API/arquivo público.
-- Construção da aplicação, inspeção visual dos gráficos e tabelas, alternância Sell Offers/Buy Offers e seleção de Luzibra e Terribra. Nenhum erro de console observado.
-- Tela estreita de 390 px: conteúdo contido na largura, tabelas com rolagem horizontal; viewport restaurado após a verificação.
+- Complemento recalculado de forma independente, com código próprio, em todas as seções: pontos de virada, volatilidade, persistência, diferença entre as pontas, dia da semana, criação de ofertas, prêmios entre mundos, ajuste e simulação do modelo, calibração e comparação com o pacote. A revisão corrigiu, entre outros, o recorte do dia da semana nos mundos BR (antes, só Quelibra entrava), a comparação de Celebra com uma captura de Antica de outro dia, a volatilidade medida em medianas semanais e a semente que não controlava os choques da simulação.
+- `validate.py --reproduce`: o complemento é reproduzido byte a byte.
+- Página conferida de forma independente: cada número do texto, dos cartões e de cerca de 6.400 células de tabela (os 16 mundos nas duas pontas) recalculado a partir dos JSON, sem divergências; afirmações e redação revisadas contra os dados, com as correções incorporadas.
+- Página conferida no navegador: sem erros de console, alternância Sell Offers/Buy Offers (mantendo o foco do teclado) e seleção de mundo (inclusive Luzibra e Terribra), tema claro e escuro, tela estreita de 390 px sem rolagem horizontal da página.
 
-O HTML portátil é uma saída local; não implica publicação na internet. O relatório é independente da CipSoft e do TibiaMarket.
+O relatório é independente da CipSoft e do TibiaMarket. Não é recomendação de investimento.

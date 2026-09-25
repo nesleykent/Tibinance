@@ -1,5 +1,0 @@
-# Construções e entregas locais; reproduzíveis a partir da fonte.
-app/dist/
-app/.data-app-offline/
-exports/
-snapshot.json

@@ -9,6 +9,14 @@ a timeline instead of starting one.
 
 No backend, no build step, no API key, no cost.
 
+## Reports
+
+- [**Tibia Coins: cenários do próximo ciclo e execução por mundo**](https://nesleykent.github.io/Tibinance/reports/tc-cycle/)
+  — a research report (in Portuguese) on 16 worlds, September 2026: scenarios and
+  probabilities for the 2026–27 cycle, the anatomy of past cycles, relative value
+  between worlds and execution costs, computed only from Sell Offers and Buy
+  Offers. Source, data and reproduction steps are in [`reports/tc-cycle/`](reports/tc-cycle/).
+
 ## Two views
 
 **Market** is the analysis view: every world is a time series, not a table of
@@ -389,6 +397,7 @@ js/filename.js              filename parsing
 js/hash.js                  SHA-256
 data/observations.json    committed baseline (starts empty)
 tools/tcmarket.py         optional CLI for the same pipeline (see tools/README.cli.md)
+reports/tc-cycle/         Tibia Coins cycle report: static page + Python analysis
 ```
 
 `tools/` is independent of the site: a Python CLI that runs the identical
