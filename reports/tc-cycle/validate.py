@@ -56,3 +56,60 @@ for w in expected:
 assert r['predecessor'][0]['days']==78
 assert {x['world'] for x in r['quality']}==expected|{'Obscubra'}
 print('PASS: input hashes, direct API provenance, archive reconciliation and separate Obscubra history.')
+
+# ---------------------------------------------------------------- complement.py / complement.json
+import sys, shutil, subprocess, tempfile
+c = json.load(open(P/'complement.json'))
+for source in c['sources']:
+ assert hashlib.sha256((P/source['file']).read_bytes()).hexdigest()==source['sha256'],source['file']
+ctree = ast.parse((P/'complement.py').read_text())
+for node in ast.walk(ctree):
+ if isinstance(node,ast.Constant) and isinstance(node.value,str):assert not node.value.startswith(('day_average_','month_average_')),node.value
+# Swings: consecutive legs, arithmetic, cycle declines follow complete rises.
+for side,sw in c['swings']['sides'].items():
+ legs=sw['legs']
+ for a,b in zip(legs[:-1],legs[1:]):assert a['end']==b['start'] and math.isclose(a['endLevel'],b['startLevel'])
+ for l in legs:assert math.isclose(l['changePct'],100*(l['endLevel']/l['startLevel']-1))
+ cur=sw['current'];assert math.isclose(cur['changePct'],100*(cur['endLevel']/cur['startLevel']-1)) and cur['start']==legs[-1]['end']
+ assert all(not d['short'] and d['direction']=='queda' for d in sw['declines'])
+# Round trips with Create Offer: accept column is the edition's, maker arithmetic uses the 2% fee on both placements.
+acc={(x['world'],x['cycle'],x['sellMonth']):x['tcGainPct'] for x in r['roundtrips']}
+for x in c['roundtripMaker']:
+ assert math.isclose(x['acceptPct'],acc[(x['world'],x['cycle'],x['sellMonth'])])
+ assert math.isclose(x['makerNetPct'],100*(x['sellAskMedian']*.98/(x['rebuyBidMedian']*1.02)-1))
+ assert math.isclose(x['makerGrossPct'],100*(x['sellAskMedian']/x['rebuyBidMedian']-1))
+# Relative value: the current premium is the median of same-day capture pairs.
+for x in c['crossWorld']['worlds']:
+ if x['currentPairs']:assert math.isclose(x['currentPremiumPct'],float(np.median([p['premiumPct'] for p in x['currentPairs']])))
+ for p_ in x['currentPairs']:assert p_['date'][:8]=='2026-09-'
+tests=c['weekday']['tests'];assert all(0<t['pIid']<=1 and 0<t['pBlock']<=1 and t['pBlock']<=t['pHolm']<=1 for t in tests)
+# Probabilities: bounds, ordered quantiles, four seeds, seed ranges drawn from the runs, package block untouched.
+pr=c['probabilistic'];pkg=json.load(open(P/'source-package/forecast.json'))['M1_2024']
+for side,samples in pr['sides'].items():
+ for label,block in samples.items():
+  assert [x['seed'] for x in block['runs']]==[11,99,123,2026]
+  for x in block['runs']:
+   assert all(0<=v<=1 for v in x['prob'].values())
+   for k in ['peakLevel','troughLevel',*[f'levels.{d}' for d in x['levels']]]:
+    q=x['levels'][k[7:]] if k.startswith('levels.') else x[k];assert q[0]<=q[1]<=q[2],k
+  for k,(lo,hi) in block['seedRange'].items():assert lo==min(x['prob'][k] for x in block['runs']) and hi==max(x['prob'][k] for x in block['runs'])
+for f in pr['fan']:assert f['p10']<=f['p25']<=f['p50']<=f['p75']<=f['p90']
+assert pr['package']['prob']==pkg['prob'] and pr['package']['peak']==pkg['peak']
+# Calibration: every origin precedes its target and the last observed week; cells recomputed from the detail.
+detail=pd.DataFrame(pr['calibrationDetail'])
+last_week=max(x['date'] for x in r['history'] if x['world']=='Antica' and x['ask'] is not None)
+assert ((pd.to_datetime(detail.origin)+pd.to_timedelta(detail.horizon*7,unit='D')).dt.strftime('%Y-%m-%d')<=last_week).all()
+for row in pr['calibration']:
+ g=detail[(detail.side==row['side'])&(detail.horizon==row['horizon'])]
+ assert len(g)==row['n'] and math.isclose(row['cov80'],((g.pit>=.1)&(g.pit<=.9)).mean()) and math.isclose(row['cov50'],((g.pit>=.25)&(g.pit<=.75)).mean())
+ assert math.isclose(row['brier'],((g.pUp-g.up)**2).mean())
+print('PASS: complement sources and hashes, offer-only fields, swing arithmetic, Create Offer fee arithmetic, same-day capture premiums, Holm order, probability bounds and seeds, package block, calibration chronology.')
+
+# Optional: rerun complement.py on a copy and require byte-identical output (all draws are seeded; ~2 min).
+if '--reproduce' in sys.argv:
+ with tempfile.TemporaryDirectory() as tmp:
+  for name in ['complement.py','results.json','inputs','source-package']:
+   (shutil.copytree if (P/name).is_dir() else shutil.copy)(P/name,Path(tmp)/name)
+  subprocess.run([sys.executable,'complement.py'],cwd=tmp,check=True,stdout=subprocess.DEVNULL)
+  assert (Path(tmp)/'complement.json').read_bytes()==(P/'complement.json').read_bytes()
+ print('PASS: complement.py reproduces complement.json byte for byte.')

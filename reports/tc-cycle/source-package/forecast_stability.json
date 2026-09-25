@@ -1,0 +1,40 @@
+{
+ "seeds": [
+  {
+   "seed": 11,
+   "peak_p50": 46710,
+   "trough_p50": 41227,
+   "p_peak_gt3": 0.87,
+   "p_peak_after_oct31": 0.791,
+   "p_jun27_below": 0.654,
+   "p_trough_above_2026": 0.829
+  },
+  {
+   "seed": 99,
+   "peak_p50": 46672,
+   "trough_p50": 41112,
+   "p_peak_gt3": 0.865,
+   "p_peak_after_oct31": 0.783,
+   "p_jun27_below": 0.667,
+   "p_trough_above_2026": 0.82
+  },
+  {
+   "seed": 123,
+   "peak_p50": 46724,
+   "trough_p50": 41114,
+   "p_peak_gt3": 0.875,
+   "p_peak_after_oct31": 0.799,
+   "p_jun27_below": 0.674,
+   "p_trough_above_2026": 0.835
+  },
+  {
+   "seed": 2026,
+   "peak_p50": 46681,
+   "trough_p50": 41404,
+   "p_peak_gt3": 0.864,
+   "p_peak_after_oct31": 0.801,
+   "p_jun27_below": 0.639,
+   "p_trough_above_2026": 0.853
+  }
+ ]
+}
