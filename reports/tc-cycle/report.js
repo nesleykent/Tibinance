@@ -432,7 +432,7 @@ async function main() {
     <div id="card-groups-quarter"></div>
     <h3>Análises individuais</h3>
     <div class="dossiers" id="dossiers"></div>
-    <div class="prose" style="margin-top:16px"><p><strong>Obscubra antes da fusão.</strong> A API trouxe ${pred.days} dias com ofertas válidas, de ${br(pred.first)} a ${br(pred.last)}. Na primeira observação, Sell Offers estavam em ${fmt(pred.firstAsk)} e Buy Offers em ${fmt(pred.firstBid)} gp/TC; na última, em ${fmt(pred.ask)} e ${fmt(pred.bid)}, respectivamente. São pontos observados de um mundo anterior à fusão, sem ajuste de composição. O cenário de Terribra parte somente de Terribra; não usamos a sucessão de nomes como continuidade automática de preços. Selecione Terribra acima para ver também o gráfico de Obscubra, logo abaixo.</p></div>
+    <div class="prose prose--spaced"><p><strong>Obscubra antes da fusão.</strong> A API trouxe ${pred.days} dias com ofertas válidas, de ${br(pred.first)} a ${br(pred.last)}. Na primeira observação, Sell Offers estavam em ${fmt(pred.firstAsk)} e Buy Offers em ${fmt(pred.firstBid)} gp/TC; na última, em ${fmt(pred.ask)} e ${fmt(pred.bid)}, respectivamente. São pontos observados de um mundo anterior à fusão, sem ajuste de composição. O cenário de Terribra parte somente de Terribra; não usamos a sucessão de nomes como continuidade automática de preços. Selecione Terribra acima para ver também o gráfico de Obscubra, logo abaixo.</p></div>
     <div id="card-predecessor"></div>
   </section>`;
 
