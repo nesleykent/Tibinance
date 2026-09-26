@@ -1,0 +1,4 @@
+# Local preview and legacy Data App artifacts; the published report uses the files in this directory.
+app/
+exports/
+snapshot.json

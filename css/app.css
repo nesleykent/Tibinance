@@ -97,6 +97,7 @@ main{padding:0}
    once, in the chrome, rather than repeating a task instruction that only
    applies to one of the two views. */
 .topbar{display:flex;align-items:center;justify-content:space-between;gap:var(--space-9);flex-wrap:wrap}
+.top-actions{display:flex;align-items:center;gap:var(--space-7)}
 .wordmark{margin:0;font-size:var(--text-xl);font-weight:700;letter-spacing:-.015em}
 .sub{margin:var(--space-3) 0 0;color:var(--muted);font-size:var(--text-sm);max-width:60ch}
 
@@ -113,6 +114,7 @@ main{padding:0}
   cursor:pointer;position:relative;line-height:1.2;
 }
 .navlink:hover{color:var(--ink)}
+.research-link{text-decoration:none}
 .navlink.active{color:var(--ink);font-weight:700}
 /* the indicator is sized to the label's own box only - never the gap around it */
 .navlink.active::after{

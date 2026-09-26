@@ -1,8 +1,10 @@
-# Tibia Coins — perspectivas 2026–2027
+# Tibia Coins | 2026–27 cycle outlook
 
 **Relatório publicado: <https://nesleykent.github.io/Tibinance/reports/tc-cycle/>**
 
-Relatório de 24/09/2026, com corte analítico em 23/09/2026, complementado no mesmo dia. Cobre Antica, Belobra, Celebra, Collabra, Descubra, Gentebra, Luminera, Luzibra, Ombra, Ourobra, Quelibra, Rasteibra, Terribra, Tornabra, Ustebra e Venebra. Obscubra aparece separadamente como predecessor de Terribra. Todos os modelos e estatísticas de preço usam apenas Sell Offers e Buy Offers; as médias diárias entram só no diagnóstico comparativo.
+Revisão editorial de 25/09/2026; **market data as of 23/09/2026**. A pesquisa cobre Antica, Belobra, Celebra, Collabra, Descubra, Gentebra, Luminera, Luzibra, Ombra, Ourobra, Quelibra, Rasteibra, Terribra, Tornabra, Ustebra e Venebra. Obscubra aparece separadamente como predecessor de Terribra. Os modelos usam exclusivamente os melhores Piece Prices de Sell Offers e Buy Offers. As médias diárias entram apenas em uma comparação diagnóstica; sua ponderação não foi confirmada e elas não são tratadas como transaction prices.
+
+O relatório distingue o **base case** das faixas de **downside/upside stress** e das **model-implied probabilities**. Estas últimas são sensíveis à amostra de treino e à captura inicial; o out-of-sample backtest é limitado. Para cada mundo, o leitor pode comparar quoted spread, market depth, relative premium e round-trip execution cost, com os limites de execução documentados. A publicação é uma análise independente, sem afiliação à CipSoft ou ao TibiaMarket.
 
 ## O que há nesta pasta
 

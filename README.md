@@ -9,13 +9,11 @@ a timeline instead of starting one.
 
 No backend, no build step, no API key, no cost.
 
-## Reports
+## Research
 
-- [**Tibia Coins: cenários do próximo ciclo e execução por mundo**](https://nesleykent.github.io/Tibinance/reports/tc-cycle/)
-  — a research report (in Portuguese) on 16 worlds, September 2026: scenarios and
-  probabilities for the 2026–27 cycle, the anatomy of past cycles, relative value
-  between worlds and execution costs, computed only from Sell Offers and Buy
-  Offers. Source, data and reproduction steps are in [`reports/tc-cycle/`](reports/tc-cycle/).
+[**Tibia Coins | 2026–27 cycle outlook**](https://nesleykent.github.io/Tibinance/reports/tc-cycle/) is an interactive research report covering 16 worlds. It examines Sell Offers and Buy Offers separately, with conditional forecasts, model-implied probabilities, historical cycle behavior, relative premiums and round-trip execution costs. The report is written in Portuguese and uses the Tibia Market’s English offer terminology.
+
+**Market data as of 23 September 2026.** The analysis uses [TibiaMarket’s public API](https://api.tibiamarket.top/docs) and 45 supplied Market captures. Daily averages are compared separately; they are not substituted for Sell Offers, Buy Offers or verified transaction prices. Forecast ranges and simulated probabilities are conditional on the model and historical sample, with backtest limits stated in the report. [Read the methodology, source data and reproduction guide](reports/tc-cycle/README.md).
 
 ## Two views
 
