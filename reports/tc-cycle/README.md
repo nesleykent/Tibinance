@@ -2,7 +2,7 @@
 
 **Relatório publicado: <https://nesleykent.github.io/Tibinance/reports/tc-cycle/>**
 
-Revisão editorial de 25/09/2026; **market data as of 23/09/2026**. A pesquisa cobre Antica, Belobra, Celebra, Collabra, Descubra, Gentebra, Luminera, Luzibra, Ombra, Ourobra, Quelibra, Rasteibra, Terribra, Tornabra, Ustebra e Venebra. Obscubra aparece separadamente como predecessor de Terribra. Os modelos usam exclusivamente os melhores Piece Prices de Sell Offers e Buy Offers. As médias diárias entram apenas em uma comparação diagnóstica; sua ponderação não foi confirmada e elas não são tratadas como transaction prices.
+Revisão de 25/09/2026; **Market monitor com capturas até 25/09/2026; pesquisa, backtests e cenários com corte em 23/09/2026**. A pesquisa cobre Antica, Belobra, Celebra, Collabra, Descubra, Gentebra, Luminera, Luzibra, Ombra, Ourobra, Quelibra, Rasteibra, Terribra, Tornabra, Ustebra e Venebra. Obscubra aparece separadamente como predecessor de Terribra. Os modelos usam exclusivamente os melhores Piece Prices de Sell Offers e Buy Offers. As médias diárias entram apenas em uma comparação diagnóstica; sua ponderação não foi confirmada e elas não são tratadas como transaction prices.
 
 O relatório distingue o **base case** das faixas de **downside/upside stress** e das **model-implied probabilities**. Estas últimas são sensíveis à amostra de treino e à captura inicial; o out-of-sample backtest é limitado. Para cada mundo, o leitor pode comparar quoted spread, market depth, relative premium e round-trip execution cost, com os limites de execução documentados. A publicação é uma análise independente, sem afiliação à CipSoft ou ao TibiaMarket.
 
@@ -10,7 +10,8 @@ O relatório distingue o **base case** das faixas de **downside/upside stress** 
 
 | Arquivo | Papel |
 |---|---|
-| `index.html`, `report.css`, `report.js` | A página publicada. Estática, sem dependências nem etapa de build: lê `results.json` e `complement.json` e monta tabelas e gráficos no navegador. |
+| `index.html`, `report.css`, `report.js` | A página publicada. Estática, sem dependências nem etapa de build: lê `market-update.json`, `results.json` e `complement.json` e monta tabelas e gráficos no navegador. |
+| `market_update.py` → `market-update.json` | Market monitor: última captura, comparação com a captura anterior do mesmo mundo, Amount no melhor Piece Price, market depth e fallback histórico explícito para Terribra. |
 | `analyze.py` → `results.json` | Edição de ofertas: preços atuais, histórico, cenários, validação, ciclos, sazonalidade, venda e recompra, eventos, agenda. |
 | `compare_trades.py` | Diagnóstico separado de ofertas × médias diárias; acrescenta `tradeComparison` a `results.json`. |
 | `complement.py` → `complement.json` | Complemento: anatomia do ciclo, probabilidades com estabilidade e calibração, valor relativo entre mundos, criação de ofertas com taxa, volatilidade, persistência e dia da semana. |
@@ -26,7 +27,8 @@ O relatório distingue o **base case** das faixas de **downside/upside stress** 
 - **Amount:** quantidade de TC nas ofertas visíveis; não equivale a negócios executados nem à quantidade disponível no melhor preço.
 - A direção das operações e a taxa de criação de ofertas (2% do preço, mínimo de 20 gp e máximo de 1.000.000 gp) foram conferidas no [manual oficial do Market](https://www.tibia.com/gameguides/?section=controls_trading&subtopic=manual).
 - `inputs/api/`: respostas diretas de `https://api.tibiamarket.top/item_history`, item 22118, 16 mundos atuais e Obscubra. URLs, horários de gravação das respostas e hashes estão em `manifest.json`. A consulta foi realizada em 24/09/2026. A data da coleta não atualiza a data da observação.
-- `inputs/observations-2.json`: 45 capturas fornecidas, sem duplicatas por hash. A captura mais recente por mundo ancora os cenários; Celebra está em 21/09 e os demais mundos capturados em 23/09. Terribra não tem captura recente. No complemento, o prêmio atual de cada mundo compara capturas feitas no mesmo dia.
+- `inputs/observations-2.json`: 45 capturas fornecidas, sem duplicatas por hash. A captura mais recente por mundo ancora os cenários; Celebra está em 21/09 e os demais mundos capturados em 23/09. Terribra não tem captura recente. No complemento, o prêmio no corte da pesquisa compara capturas feitas no mesmo dia.
+- `inputs/observations-3.json` e `inputs/observations-2.csv`: 50 capturas em 15 mundos, fornecidas depois. O JSON contém todas as 45 capturas anteriores, sem alterações, mais cinco leituras de 25/09 para Descubra, Gentebra, Luminera, Luzibra e Ourobra. O CSV concorda campo a campo com o JSON nos campos compartilhados; o JSON preserva adicionalmente o Amount no melhor Piece Price de cada ponta. Esses novos arquivos alimentam somente `market-update.json`, sem recalibrar o modelo da pesquisa. Celebra continua com uma única captura (21/09); Terribra, sem captura, mostra a última oferta disponível na API (01/09).
 - `inputs/history/`: cópia de conferência do arquivo público `nesleykent/tibia-warzones-schedule`, em `data/market/world/<Mundo>/<mundo>_tibia_coins.json`. Para os 16 mundos, os registros coincidem com a API quando ordenados por timestamp. Os cálculos finais leem diretamente `inputs/api/`.
 - `inputs/eventschedule.json` e `calendar.ics`: arquivos fornecidos. Inícios e términos dos 47 eventos remanescentes concordam entre as fontes; a agenda é sujeita a alterações.
 - `source-package/`: somente `events_intervals.json` alimenta a análise, como datas históricas de eventos. `forecast.json` e `forecast_stability.json` aparecem na seção 04 apenas para comparação. Documentos recebidos foram tratados como evidência, não como instruções.
@@ -38,6 +40,8 @@ O README e o aplicativo Tibinance utilizam ofertas. Já o índice principal do Z
 Medianas diárias e semanais das ofertas, com dia do servidor iniciado às 10h de Europe/Berlin. Valores ausentes/não positivos, ofertas cruzadas e Buy Offers abaixo de 80% de Sell Offers são excluídos. Esse último critério pode excluir diferenças reais; as entradas brutas permanecem disponíveis. Não há interpolação nem substituição por médias de negócios.
 
 O cenário combina preço constante, repetição da variação de 52 semanas atrás e regressão em log-preço com tendência e dois harmônicos anuais. Pesos iguais em log-preço. Validação com origens trimestrais, somente dados disponíveis até cada origem. A transferência por mundo usa a última oferta local e o movimento relativo da mesma ponta em Antica; não é um modelo sazonal independente por mundo.
+
+O Market monitor usa a última captura de cada mundo e mede `(Piece Price atual / Piece Price da captura anterior − 1) × 100` separadamente em Sell Offers e Buy Offers. A comparação anterior é a última **data de captura diferente**, não uma série diária contínua. Os horários não têm fuso declarado; a página os mostra sem conversão. O painel exibe a data da comparação e a defasagem das leituras; não chama um preço de 01/09 de cotação atual. Quoted spread e round-trip execution cost do monitor são recalculados sobre os novos melhores preços. A tabela histórica de execution cost, os prêmios entre mundos e os cenários permanecem identificados com o corte de 23/09; nenhuma inferência de 25/09 foi incorporada a eles.
 
 As faixas de estresse combinam erro observado, divergência dos modelos e instabilidade relativa de cada mundo. **Não são probabilidades, quantis futuros calibrados nem garantias de execução.** Há somente duas origens de teste no horizonte anual; períodos se sobrepõem. Diversos mundos não superam o preço constante nos testes, fato indicado em cada análise.
 
@@ -65,6 +69,7 @@ python3.12 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python compare_trades.py
 .venv/bin/python complement.py
 .venv/bin/python validate.py --reproduce
+python3 market_update.py --check
 ```
 
 Sem `python3.12` no PATH, o [uv](https://docs.astral.sh/uv/) instala um: `uv venv --python 3.12 .venv && uv pip install --python .venv -r requirements.txt`.
@@ -79,11 +84,12 @@ e abra `http://127.0.0.1:8000/`.
 
 ## Publicação
 
-O GitHub Pages do repositório serve `index.html` desta pasta em <https://nesleykent.github.io/Tibinance/reports/tc-cycle/>. Não há etapa de build: atualizar `results.json` ou `complement.json` atualiza a página. A apresentação anterior, um aplicativo gerado pelo plugin Data Analytics do Codex (`app/`), precisava do plugin para ser construída, não tinha saída versionada e trazia controles do ChatGPT; foi substituída por esta página e continua recuperável no commit `a315d50`.
+O GitHub Pages do repositório serve `index.html` desta pasta em <https://nesleykent.github.io/Tibinance/reports/tc-cycle/>. Não há etapa de build: a página lê os três JSON publicados. A interface usa a [referência visual indicada pelo usuário](https://nesleykent.github.io/instagram-design-system/) para superfícies quase monocromáticas, escala tipográfica e uso contido de cores. A publicação é independente e não reproduz marcas ou fontes proprietárias. A apresentação anterior, um aplicativo gerado pelo plugin Data Analytics do Codex (`app/`), precisava do plugin para ser construída, não tinha saída versionada e trazia controles do ChatGPT; foi substituída por esta página e continua recuperável no commit `a315d50`.
 
 ## Verificação realizada
 
-- 16 mundos, 45 capturas e 1.664 linhas de cenário por mundo/ponta/semana; Obscubra em histórico separado.
+- 16 mundos, 50 capturas no Market monitor (15 mundos com captura) e 1.664 linhas de cenário da pesquisa de 23/09 por mundo/ponta/semana; Obscubra em histórico separado.
+- CSV e JSON novos conferidos campo a campo; 45 capturas da pesquisa preservadas sem alteração; monitor reproduzido byte a byte por `market_update.py --check`.
 - Recalculo independente das diferenças de preços, perda na execução imediata, erro dos modelos, retornos em TC e pareamentos das médias diárias.
 - Teste de ausência de uso de dados futuros no ajuste; os campos de médias diárias/mensais não entram nos modelos de ofertas nem no complemento.
 - Conferência das datas dos calendários, hashes de entrada e equivalência dos registros API/arquivo público.
