@@ -120,6 +120,21 @@
     "buyTopAmount": 850
   },
   {
+    "world": "Celebra",
+    "type": "Optional PvP",
+    "battleye": "Yellow",
+    "sell": 48200,
+    "sellVolume": 47325,
+    "buy": 46001,
+    "buyVolume": 64825,
+    "capturedAt": "2026-09-26T03:08:16",
+    "hash": "1360560dcf0164ac2df545f8c8243d764f15e1d6c7d8d77917b0d9070ee09345",
+    "goldSupply": 2963193100,
+    "goldDemand": 2316083975,
+    "sellTopAmount": 250,
+    "buyTopAmount": 1000
+  },
+  {
     "world": "Luzibra",
     "type": "Optional PvP",
     "battleye": "Green",
@@ -270,6 +285,21 @@
     "buyTopAmount": 25
   },
   {
+    "world": "Floribra",
+    "type": "Optional PvP",
+    "battleye": "Green",
+    "sell": 27850,
+    "sellVolume": 1650,
+    "buy": 24750,
+    "buyVolume": 775,
+    "capturedAt": "2026-09-26T03:49:48",
+    "hash": "3ea0de515ced6aedcd2a05973e76e7b531ce1b55a95c993b4c92c467404fd421",
+    "goldSupply": 19141300,
+    "goldDemand": 46146325,
+    "sellTopAmount": 75,
+    "buyTopAmount": 125
+  },
+  {
     "world": "Tornabra",
     "type": "Open PvP",
     "battleye": "Green",
@@ -357,6 +387,36 @@
     "goldSupply": 1832995500,
     "goldDemand": 2101931200,
     "sellTopAmount": 39950,
+    "buyTopAmount": 75
+  },
+  {
+    "world": "Etebra",
+    "type": "Optional PvP",
+    "battleye": "Green",
+    "sell": 46344,
+    "sellVolume": 29800,
+    "buy": 43000,
+    "buyVolume": 174775,
+    "capturedAt": "2026-09-26T03:19:46",
+    "hash": "57bc5f23b08266b02e70ebf36106f49d8c5d9d86678590476519d1d987e03966",
+    "goldSupply": 7473039725,
+    "goldDemand": 1382917275,
+    "sellTopAmount": 6475,
+    "buyTopAmount": 25
+  },
+  {
+    "world": "Inabra",
+    "type": "Open PvP",
+    "battleye": "Yellow",
+    "sell": 44200,
+    "sellVolume": 62025,
+    "buy": 43432,
+    "buyVolume": 156675,
+    "capturedAt": "2026-09-26T04:46:52",
+    "hash": "5cc2ee38ff89c59311b64d57445800b93473be15c8d1e19980640461c8f1b320",
+    "goldSupply": 6802950025,
+    "goldDemand": 2819019300,
+    "sellTopAmount": 17275,
     "buyTopAmount": 75
   },
   {
@@ -450,6 +510,21 @@
     "buyTopAmount": 250
   },
   {
+    "world": "Serdebra",
+    "type": "Open PvP",
+    "battleye": "Yellow",
+    "sell": 45968,
+    "sellVolume": 22050,
+    "buy": 43617,
+    "buyVolume": 86525,
+    "capturedAt": "2026-09-26T02:35:01",
+    "hash": "6edf3886fc79f9da8ab33237b7047bfe59b7b2782d1ff8ca841803aebb6aedf6",
+    "goldSupply": 3772401750,
+    "goldDemand": 1013835750,
+    "sellTopAmount": 7850,
+    "buyTopAmount": 225
+  },
+  {
     "world": "Luminera",
     "type": "Optional PvP",
     "battleye": "Yellow",
@@ -463,6 +538,21 @@
     "goldDemand": 2055795400,
     "sellTopAmount": 25,
     "buyTopAmount": 725
+  },
+  {
+    "world": "Ferobra",
+    "type": "Open PvP",
+    "battleye": "Yellow",
+    "sell": 44000,
+    "sellVolume": 74350,
+    "buy": 43051,
+    "buyVolume": 204800,
+    "capturedAt": "2026-09-26T04:34:17",
+    "hash": "71ce8f2eab045fbe320eb0eeda64f6c01b352bdea68fe3b8b3bcbdb5820c7f5e",
+    "goldSupply": 8799302000,
+    "goldDemand": 3375299300,
+    "sellTopAmount": 25,
+    "buyTopAmount": 60425
   },
   {
     "world": "Rasteibra",
@@ -523,6 +613,21 @@
     "goldDemand": 2135181800,
     "sellTopAmount": 28875,
     "buyTopAmount": 25
+  },
+  {
+    "world": "Ustebra",
+    "type": "Optional PvP",
+    "battleye": "Green",
+    "sell": 45587,
+    "sellVolume": 77825,
+    "buy": 44262,
+    "buyVolume": 213425,
+    "capturedAt": "2026-09-26T02:20:16",
+    "hash": "8cf30e20fa35ac0d516cf839c4867fec00527ed945268ad45239c2fe5044dc44",
+    "goldSupply": 9428281750,
+    "goldDemand": 3564835825,
+    "sellTopAmount": 75,
+    "buyTopAmount": 725
   },
   {
     "world": "Belobra",
@@ -645,6 +750,21 @@
     "buyTopAmount": 325
   },
   {
+    "world": "Terribra",
+    "type": "Retro Hardcore PvP",
+    "battleye": "Green",
+    "sell": 41100,
+    "sellVolume": 62300,
+    "buy": 40400,
+    "buyVolume": 43600,
+    "capturedAt": "2026-09-26T02:04:10",
+    "hash": "abf224bb1bb907032c486c0a476a6c4f7031be8f5928668a36cc6d05c49d0304",
+    "goldSupply": 1751511150,
+    "goldDemand": 2578723925,
+    "sellTopAmount": 4700,
+    "buyTopAmount": 7425
+  },
+  {
     "world": "Luzibra",
     "type": "Optional PvP",
     "battleye": "Green",
@@ -763,6 +883,21 @@
     "goldDemand": 2304041525,
     "sellTopAmount": 24300,
     "buyTopAmount": 59925
+  },
+  {
+    "world": "Yonabra",
+    "type": "Optional PvP",
+    "battleye": "Yellow",
+    "sell": 47390,
+    "sellVolume": 95300,
+    "buy": 45911,
+    "buyVolume": 165825,
+    "capturedAt": "2026-09-26T03:35:44",
+    "hash": "bd80fd3d41cdfcd5b4f5b19b1eb5a588b38a29f6fcc20fd0710bc8dc9468c66d",
+    "goldSupply": 7605262775,
+    "goldDemand": 4521967825,
+    "sellTopAmount": 21050,
+    "buyTopAmount": 25
   },
   {
     "world": "Ustebra",
@@ -913,6 +1048,21 @@
     "goldDemand": 3979761150,
     "sellTopAmount": 22525,
     "buyTopAmount": 75
+  },
+  {
+    "world": "Secura",
+    "type": "Optional PvP",
+    "battleye": "Yellow",
+    "sell": 45890,
+    "sellVolume": 67175,
+    "buy": 45220,
+    "buyVolume": 211050,
+    "capturedAt": "2026-09-26T02:48:54",
+    "hash": "e03741f552baa4e4e87ff1d714b3367ac3b0f527d6b224b6897e3d4b53336e6a",
+    "goldSupply": 9504067925,
+    "goldDemand": 3084478425,
+    "sellTopAmount": 23625,
+    "buyTopAmount": 31800
   },
   {
     "world": "Ourobra",
