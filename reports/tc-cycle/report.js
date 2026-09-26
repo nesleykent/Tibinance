@@ -49,7 +49,7 @@ function table({columns, rows, caption, empty = 'Sem observações suficientes p
     const k = [c.num ? 'n' : '', c.wrap ? 'wrap' : '', c.cls ? c.cls(r[c.key], r) : ''].filter(Boolean).join(' ');
     return `<td${k ? ` class="${k}"` : ''}>${v}</td>`;
   }).join('')}</tr>`).join('') : `<tr><td colspan="${columns.length}">${empty}</td></tr>`;
-  return `<div class="scroll"><table class="data">${caption ? `<caption>${caption}</caption>` : ''}<thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
+  return `<div class="scroll" tabindex="0" role="region" aria-label="Tabela de dados"><table class="data">${caption ? `<caption>${caption}</caption>` : ''}<thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
 }
 const num = (key, label, d = 0, extra = {}) => ({key, label, num: true, render: v => fmt(v, d), ...extra});
 const signed = (key, label, d = 1) => ({key, label, num: true, render: v => sgn(v, d), cls: v => cls(v)});
@@ -286,10 +286,12 @@ async function main() {
   const anchorLo = Math.min(...P.anchorSensitivity.map(a => pc(a.pPeakAbove3OfReference))), anchorHi = Math.max(...P.anchorSensitivity.map(a => pc(a.pPeakAbove3OfReference)));
   const luzLast = C.crossWorld.worlds.find(x => x.world === 'Belobra' && x.side === 'ask').last;
 
+  const sections = [['sumario', 'Sumário'], ['s01', 'Ofertas atuais'], ['s02', 'Próximo ciclo'], ['s03', 'Anatomia do ciclo'], ['s04', 'Probabilidades'], ['s05', 'Por mundo'], ['s06', 'Validação'], ['s07', 'Ciclos e sazonalidade'], ['s08', 'Execução'], ['s09', 'Volatilidade'], ['s10', 'Ofertas × médias'], ['s11', 'Eventos'], ['s12', 'Agenda'], ['s13', 'Método']];
+
   // ---- hero, key figures, executive summary
   let html = `
   <header class="hero">
-    <p class="eyebrow">Tibinance Research <span class="eyebrow-sep">/</span> Market intelligence <span class="eyebrow-sep">/</span> 25 September 2026</p>
+    <p class="eyebrow">Tibinance Research <span class="eyebrow-sep">/</span> Market intelligence <span class="eyebrow-sep">/</span> <time datetime="2026-09-25">25 September 2026</time></p>
     <h1>Tibia Coins: cenários de mercado e execução por mundo</h1>
     <p class="deck">O estudo acompanha Sell Offers e Buy Offers em 16 mundos e estima cenários condicionais, enquanto distingue probabilidades do modelo de preços observados e de custos de execução. Piece Price em gp/TC.</p>
     <p class="meta">Market snapshot até ${br(U.asOf)} · Pesquisa e projeções: corte em ${br(R.asOf)} · Fontes: <a href="https://api.tibiamarket.top/docs">API pública do TibiaMarket</a> e ${U.captureCount} capturas do Market · <a href="https://github.com/nesleykent/Tibinance/tree/main/reports/tc-cycle">método, dados e reprodução</a></p>
@@ -301,24 +303,18 @@ async function main() {
     <div class="kpi" role="listitem"><div class="label">Peak ≥ +3% · by Feb. 2027</div><div class="value">${prob(m23.prob.peakAbove3)}–${prob(m24.prob.peakAbove3)}</div><div class="note">Model-implied · two training windows</div></div>
     <div class="kpi" role="listitem"><div class="label">Sell 23/09 / buy back Jun. 2027</div><div class="value">${prob(rt('main', 'aceitando').pGain)}–${prob(rt('since2024', 'aceitando').pGain)}</div><div class="note">Model-implied TC gain · Accept offers</div></div>
   </div>
-  <section class="market-panel" aria-labelledby="market-title">
-    <div class="market-heading"><div><p class="section-kicker">Market monitor <span>16 worlds / ${U.captureCount} captures</span></p><h2 id="market-title">Preços observados por mundo</h2></div><p>Última leitura disponível, em gp/TC.<br>Variação calculada frente à captura anterior do mesmo mundo.</p></div>
-    ${table({columns: [
-      {key: 'world', label: 'Mundo', render: (v, r) => `<a href="#dossier-${v.toLowerCase()}">${esc(v)}</a><small class="market-mobile-date">${brShort(r.date)}${r.priorDate ? ` · vs ${brShort(r.priorDate)}` : ` · ${r.ageDays}d old`}</small>`},
-      num('sell', 'Sell Offers'), {key: 'sell', label: 'Variação', num: true, render: (v, r) => change(r.deltaPct.sell)},
-      num('buy', 'Buy Offers'), {key: 'buy', label: 'Variação', num: true, render: (v, r) => change(r.deltaPct.buy)},
-      {key: 'date', label: 'Última leitura', render: (v, r) => `${brShort(v)}${r.ageDays > 2 ? `<span class="stale">${r.ageDays}d</span>` : ''}`},
-      {key: 'priorDate', label: 'Comparação', render: v => v ? brShort(v) : '—'},
-      num('spreadPct', 'Quoted spread', 2, {render: v => `${fmt(v, 2)}%`})
-    ], rows: marketRows, caption: 'Capturas de 21–25/09/2026; variação entre observações, não retorno diário contínuo. Celebra tem uma captura. Terribra: última oferta da API em 01/09, sem captura recente. Horários de captura sem fuso informado.'})}
-  </section>
-  <nav class="toc" aria-label="Seções"><ol>
-    ${[['sumario', 'Sumário'], ['s01', 'Ofertas atuais'], ['s02', 'Próximo ciclo'], ['s03', 'Anatomia do ciclo'], ['s04', 'Probabilidades'], ['s05', 'Por mundo'], ['s06', 'Validação'], ['s07', 'Ciclos e sazonalidade'], ['s08', 'Execução'], ['s09', 'Volatilidade'], ['s10', 'Ofertas × médias'], ['s11', 'Eventos'], ['s12', 'Agenda'], ['s13', 'Método']].map(([id, l]) => `<li><a href="#${id}">${l}</a></li>`).join('')}
-  </ol></nav>
+  <div class="report-layout">
+  <nav class="toc" aria-label="Seções">
+    <p class="toc-title">Neste relatório</p>
+    <label class="toc-mobile" for="section-select">Seções <select id="section-select">${sections.map(([id, label], i) => `<option value="${id}">${i ? String(i).padStart(2, '0') + ' · ' : ''}${label}</option>`).join('')}</select></label>
+    <ol>${sections.map(([id, label], i) => `<li><a href="#${id}"><span class="toc-num" aria-hidden="true">${i ? String(i).padStart(2, '0') : '—'}</span>${label}</a></li>`).join('')}</ol>
+    <a class="toc-top" href="#report">Voltar ao início <span aria-hidden="true">↑</span></a>
+  </nav>
+  <div class="report-body">
 
   <section class="block" id="sumario">
     <h2>Sumário executivo <span class="asof">Research baseline · ${br(R.asOf)}</span></h2>
-    <div class="prose">
+    <div class="prose narrative-grid">
       <p><strong>O base case aponta valorização das Sell Offers de Antica até novembro de 2026, seguida de acomodação até junho de 2027.</strong> Partindo de ${price(antica.ask)} gp/TC na captura de 23/09, o cenário central alcança ${price(nov.base)} em novembro e ${price(june.base)} em junho. Essa trajetória é condicional: embora os três ciclos completos anteriores tenham registrado picos entre o fim de outubro e novembro e fundos entre junho e julho, suas quedas diminuíram de ${sgn(declines[0].changePct)} para ${sgn(declines.at(-1).changePct)} à medida que os fundos subiram de ${price(declines[0].endLevel)} para ${price(declines.at(-1).endLevel)}. Como a última mediana semanal já superava o pico anterior em ${sgn(lastVsPeak)} e a captura isolada de 23/09 o excedia em ${sgn(cur.aboveAllPreviousPeaksPct)}, o histórico não identifica antecipadamente uma data de reversão.</p>
       <p><strong>As probabilidades do modelo dependem mais da amostra e do preço de partida do que da semente de simulação.</strong> Para a probabilidade de o máximo superar a captura em pelo menos 3% até 28/02/2027, a estimativa varia de ${prob(m23.prob.peakAbove3)} com treino desde 2023 a ${prob(m24.prob.peakAbove3)} com treino desde 2024. Enquanto trocar a semente altera a estimativa em até ${seedSpread} p.p., trocar a amostra pode movê-la em até ${sampleGap} p.p. e usar outra captura entre 21 e 23/09, em até ${anchorGap} p.p. Somente o modelo probabilístico treinado desde 2023 teve out-of-sample backtest, no qual sua previsão de direção em 13 semanas perdeu para a seasonal baseline. Separadamente, o ensemble de cenários registrou erro de ${fmt(summaries[0].ensemble, 1)}% em Sell Offers no mesmo horizonte, frente a ${fmt(summaries[0].constant, 1)}% da constant-price baseline; como há apenas ${summaries.find(x => x.horizon === 52)?.n} origens anuais por lado do Market, o desempenho em 52 semanas permanece pouco identificado.</p>
       <p><strong>A diferença entre Sell Offers e Buy Offers condiciona qualquer estratégia de execução.</strong> Na pesquisa, Luminera registrava ${price(W.Luminera.ask)} em Sell Offers e ${price(W.Luminera.bid)} em Buy Offers, de modo que comprar e revender imediatamente implicava perda aproximada de ${fmt(W.Luminera.costPct, 1)}%; em Antica, onde as pontas eram ${price(antica.ask)} e ${price(antica.bid)}, a perda era de ${fmt(antica.costPct, 1)}%. Caso o jogador vendesse TC aceitando Buy Offers na âncora de 23/09 e as recomprasse aceitando Sell Offers na semana de 28/06/2027, haveria ganho em TC em ${prob(rt('main', 'aceitando').pGain)} das trajetórias com treino desde 2023 e ${prob(rt('since2024', 'aceitando').pGain)} daquelas com treino desde 2024. Essas proporções são resultados simulados, sujeitos ao Amount disponível e ao cenário de preço, e não taxas de sucesso observadas. Criar ofertas exige taxa de 2% por operação e execução de ambas as pontas; sob essa hipótese, superou aceitar ofertas em ${makerBRWins} de ${makerBR.length} combinações dos mundos BR, embora em Antica a diferença tenha ficado entre ${pp(Math.min(...makerDiffAntica))} e ${pp(Math.max(...makerDiffAntica))} em relação à aceitação de ofertas.</p>
@@ -329,7 +325,18 @@ async function main() {
   // ---- 01 observed prices
   html += `
   <section class="block" id="s01">
-    <h2><span class="num">01</span>Sell Offers, Buy Offers e condições de execução</h2>
+    <h2><span class="num">01</span><span class="section-title">Sell Offers, Buy Offers e condições de execução</span></h2>
+  <section class="market-panel" aria-labelledby="market-title">
+    <div class="market-heading"><div><p class="section-kicker">Market monitor <span>16 worlds / ${U.captureCount} captures</span></p><h3 id="market-title">Preços observados por mundo</h3></div><p>Última leitura disponível, em gp/TC.<br>Variação calculada frente à captura anterior do mesmo mundo.</p></div>
+    ${table({columns: [
+      {key: 'world', label: 'Mundo', render: (v, r) => `<a href="#dossier-${v.toLowerCase()}">${esc(v)}</a><small class="market-mobile-date">${brShort(r.date)}${r.priorDate ? ` · vs ${brShort(r.priorDate)}` : ` · ${r.ageDays}d old`}</small>`},
+      num('sell', 'Sell Offers'), {key: 'sell', label: 'Variação', num: true, render: (v, r) => change(r.deltaPct.sell)},
+      num('buy', 'Buy Offers'), {key: 'buy', label: 'Variação', num: true, render: (v, r) => change(r.deltaPct.buy)},
+      {key: 'date', label: 'Última leitura', render: (v, r) => `${brShort(v)}${r.ageDays > 2 ? `<span class="stale">${r.ageDays}d</span>` : ''}`},
+      {key: 'priorDate', label: 'Comparação', render: v => v ? brShort(v) : '—'},
+      num('spreadPct', 'Quoted spread', 2, {render: v => `${fmt(v, 2)}%`})
+    ], rows: marketRows, caption: 'Capturas de 21–25/09/2026; variação entre observações, não retorno diário contínuo. Celebra tem uma captura. Terribra: última oferta da API em 01/09, sem captura recente. Horários de captura sem fuso informado.'})}
+  </section>
     ${card({title: 'Market depth e capacidade no melhor Piece Price', sub: `Última leitura por mundo até ${br(U.asOf)} · Amount em TC`, body: table({columns: [
       {key: 'world', label: 'Mundo'}, {key: 'date', label: 'Leitura', render: br},
       {key: 'buyTopAmount', label: 'Buy Offers · melhor preço', num: true, render: (v, r) => fmt(r.latest.buyTopAmount)},
@@ -338,8 +345,8 @@ async function main() {
       {key: 'sellVolume', label: 'Sell Offers · Amount total', num: true, render: (v, r) => fmt(r.latest.sellVolume)},
       {key: 'executionCostPct', label: 'Round-trip execution cost', num: true, render: v => `${fmt(v, 2)}%`}
     ], rows: marketRows})})}
-    <div class="prose">
-      <h3>Como ler Sell Offers e Buy Offers</h3>
+    <h3>Como ler Sell Offers e Buy Offers</h3>
+    <div class="prose glossary-grid">
       <p>Conforme o <a href="https://www.tibia.com/gameguides/?section=controls_trading&amp;subtopic=manual">manual oficial do Market de Tibia</a>, <strong>Sell Offers</strong> são ofertas de jogadores que vendem TC: ao aceitar o menor Piece Price disponível, o comprador adquire TC. <strong>Buy Offers</strong> são ofertas de jogadores que compram TC: ao aceitar o maior Piece Price disponível, o vendedor entrega TC.</p>
       <p><strong>Piece Price</strong> é o preço por TC; <strong>Amount</strong>, a quantidade ofertada. <strong>Market depth</strong> é o Amount total visível em cada lado do Market; não equivale ao Amount disponível no melhor Piece Price, nem a TC efetivamente negociadas. As capturas não são simultâneas: cinco mundos têm leitura em 25/09, a maioria em 23/09, Celebra em 21/09 e Terribra usa a última oferta da API, de 01/09. A idade é medida em relação a ${br(U.asOf)}.</p>
       <p><strong>Quoted spread</strong> = (menor Piece Price em Sell Offers − maior Piece Price em Buy Offers) / ponto médio dos dois preços. <strong>Round-trip execution cost</strong> para comprar e vender TC imediatamente = 1 − Buy Offers / Sell Offers. São métricas com denominadores diferentes, calculadas com os melhores preços; a execução integral só é possível até o Amount disponível nesses preços, que em alguns mundos é de 25 TC.</p>
@@ -349,12 +356,14 @@ async function main() {
   // ---- 02 scenarios (edition ensemble)
   html += `
   <section class="block" id="s02">
-    <h2><span class="num">02</span>Cycle outlook: cenários condicionais para cada lado do Market</h2>
-    <div class="prose">
-      <p>O ensemble combina uma constant-price baseline, a repetição sazonal de 52 semanas e uma regressão com tendência e harmônicos anuais. Como o treinamento usa <strong>ofertas históricas de Antica</strong> ancoradas na captura de 23/09, o estudo modela Sell Offers e Buy Offers separadamente e transfere os movimentos para os demais mundos sob hipóteses explícitas de valor relativo.</p>
-      <p>Para Sell Offers de Antica, o base case alcança <strong>${price(nov.base)} gp/TC</strong> em novembro e <strong>${price(june.base)}</strong> em junho. As respectivas faixas de downside/upside stress são <strong>${price(nov.low)} a ${price(nov.high)}</strong> e <strong>${price(june.low)} a ${price(june.high)}</strong>. Como combinam erro histórico e divergência entre modelos, <strong>essas faixas não são P10/P90 nem confidence intervals calibrados</strong>; a distribuição simulada e seu backtest aparecem separadamente na seção 04.</p>
-    </div>
-    <div id="card-model"></div>
+    <h2><span class="num">02</span><span class="section-title">Cycle outlook: cenários condicionais para cada lado do Market</span></h2>
+    <div class="analysis-row">
+<div class="prose">
+<p>O ensemble combina uma constant-price baseline, a repetição sazonal de 52 semanas e uma regressão com tendência e harmônicos anuais. Como o treinamento usa <strong>ofertas históricas de Antica</strong> ancoradas na captura de 23/09, o estudo modela Sell Offers e Buy Offers separadamente e transfere os movimentos para os demais mundos sob hipóteses explícitas de valor relativo.</p>
+<p>Para Sell Offers de Antica, o base case alcança <strong>${price(nov.base)} gp/TC</strong> em novembro e <strong>${price(june.base)}</strong> em junho. As respectivas faixas de downside/upside stress são <strong>${price(nov.low)} a ${price(nov.high)}</strong> e <strong>${price(june.low)} a ${price(june.high)}</strong>. Como combinam erro histórico e divergência entre modelos, <strong>essas faixas não são P10/P90 nem confidence intervals calibrados</strong>; a distribuição simulada e seu backtest aparecem separadamente na seção 04.</p>
+</div>
+<div class="evidence-stack"><div id="card-model"></div></div>
+</div>
   </section>`;
 
   // ---- 03 anatomy
@@ -366,8 +375,8 @@ async function main() {
   const implied = cmp.map(c => c.impliedEnd).sort();
   html += `
   <section class="block" id="s03">
-    <h2><span class="num">03</span>Anatomia do ciclo: três reversões históricas, recuos menores</h2>
-    <div class="prose">
+    <h2><span class="num">03</span><span class="section-title">Anatomia do ciclo: três reversões históricas, recuos menores</span></h2>
+    <div class="prose narrative-grid">
       <p>Para identificar reversões nas medianas semanais das Sell Offers de Antica, o estudo aplica a regra do pacote recebido, segundo a qual um pico ou fundo só é confirmado após movimento contrário de 5%. Como a série começa em ${br(SW.ask.pivots[0].date)}, a primeira alta, encerrada em maio de 2023, é censurada; a perna mais recente permanece provisória. Os três ciclos completos entre esses extremos constituem uma descrição histórica, não uma periodicidade estimada.</p>
       <p>Embora os picos confirmados se concentrem entre o fim de outubro e novembro e os fundos entre junho e julho, a identificação dos movimentos iniciais depende do limiar de reversão. As datas dos três ciclos posteriores persistem quando esse limiar varia de ${fmt(Math.min(...stable))}% a ${fmt(Math.max(...stable))}%; acima de 5%, porém, desaparecem o pico de maio e o fundo de julho de 2023. Nesse caso, a alta de ${sgn(ups[0].changePct)} de 2023, a devolução de ${fmt(retr[0].retracePct / 100, 1)} vezes na queda seguinte e a primeira linha da régua abaixo deixam de ser comparáveis da mesma forma. A tabela preserva as datas, amplitudes e durações de cada perna.</p>
       <p>Enquanto os picos completos permaneceram entre ${price(Math.min(...ups.map(u => u.endLevel)))} e ${price(Math.max(...ups.map(u => u.endLevel)))} gp/TC, os fundos avançaram de ${price(declines[0].endLevel)} para ${price(declines.at(-1).endLevel)}; por isso, as quedas de pico a fundo diminuíram de ${sgn(declines[0].changePct)} para ${sgn(declines.at(-1).changePct)}. Se esse amortecimento persistir, um modelo que pressupõe amplitude sazonal constante poderá exagerar a próxima queda, embora três ciclos não permitam quantificar esse risco com precisão.</p>
@@ -395,65 +404,81 @@ async function main() {
   const ed = P.spec.editionWeeks, f23n = fanAt('ask', 'main', ed['2026-11-25']), f23j = fanAt('ask', 'main', ed['2027-06-30']), f24j = fanAt('ask', 'since2024', ed['2027-06-30']);
   html += `
   <section class="block" id="s04">
-    <h2><span class="num">04</span>Model-implied probabilities: estabilidade numérica e risco de modelo</h2>
-    <div class="prose">
-      <p>O pacote recebido estimava probabilidades com tendência linear, dois harmônicos anuais e erros ARIMA(1,1,0), simulando ${fmt(PK.model.n_paths)} trajetórias com incerteza de parâmetros sobre um índice de <em>médias diárias</em> de 71 mundos. A documentação disponível não permite identificar essas médias como transaction prices. O arquivo <code>forecast_stability.json</code>, incluído no ZIP, repete a simulação com quatro sementes (${PK.stability.map(s => s.seed).join(', ')}): as quatro estimativas variam no máximo ${fmt(pkgSeedSpread * 100, 1)} p.p. e o pico mediano, ${fmt(PK.stabilityRange.peak_p50[1] - PK.stabilityRange.peak_p50[0])} gp. Isso indica baixo Monte Carlo noise nessa comparação; <strong>não valida a especificação nem a calibração do modelo</strong>. No código do pacote, a semente fixa apenas o sorteio de parâmetros: os choques de cada trajetória vêm de um gerador sem semente. Assim, o <code>forecast.json</code> não é reproduzido byte a byte — a semente 11 dá pico mediano de ${fmt(PK.seed11VsPublished.peakP50[0])}, contra ${fmt(PK.seed11VsPublished.peakP50[1])} no arquivo publicado, com probabilidades iguais em duas casas.</p>
-      <p>Nesta edição, o mesmo modelo foi reestimado sobre as <strong>ofertas semanais de Antica</strong>, ancorado na captura de 23/09, com as mesmas quatro sementes — agora controlando também os choques, de modo que o resultado é reproduzível — e duas amostras de treino: desde a primeira semana válida (janeiro de 2023) e desde 15/01/2024, a escolha do pacote. Os eventos usam as mesmas semanas do pacote (30/11 a 06/12/2026 e 28/06 a 04/07/2027; pico depois de 31/10 = a partir da semana de 02/11).</p>
-      <p><strong>A escolha da amostra domina o ruído de simulação.</strong> Embora as estimativas variem no máximo ${seedSpread} p.p. entre sementes, começar o treino em 2024 eleva a chance de a semana de 28/06/2027 ficar abaixo da partida de ${prob(m23.prob.jun28BelowStart)} para ${prob(m24.prob.jun28BelowStart)}. Como essa amostra exclui o primeiro semestre de 2023, quando Sell Offers subiram ${sgn(legsAsk[0].changePct, 0)} durante a temporada usual de queda, o ciclo ajustado fica mais amplo e a tendência, menor (${sgn(fit24.driftPerYear * 100)} contra ${sgn(fitAsk.driftPerYear * 100)} ao ano). Dado que os recuos observados vêm diminuindo, esse ajuste pode exagerar a próxima queda. A captura de partida também altera o resultado: se fosse usada a de 21/09 (${fmt(anchorRows[0].anchor)}) em vez da de 23/09, a probabilidade de superar ${fmt(Math.round(antica.ask * 1.03))} cairia para ${prob(anchorRows[0].pPeakAbove3OfReference)}.</p>
-      <p>O “pico” corresponde ao máximo de cada trajetória até 28/02/2027, ainda que não haja um ponto de virada dentro da janela. Com treino desde 2023, ele ocorre em semanas iniciadas até outubro em ${prob(1 - m23.peakMonthShare.novDez - m23.peakMonthShare.janFev)} dos casos, em novembro–dezembro em ${prob(m23.peakMonthShare.novDez)} e em janeiro–fevereiro em ${prob(m23.peakMonthShare.janFev)}. Como ${prob(m23.peakOnEdge)} das trajetórias têm máximo na primeira ou na última semana, a distribuição não deve ser lida como uma previsão pontual da data de reversão.</p>
-      <p>Na calibração com origens quinzenais de ${yy(c13.firstOrigin)} a ${yy(cal('ask', 4).lastOrigin)}, o modelo foi reestimado em cada origem usando apenas dados então disponíveis. O intervalo central de 80% conteve entre ${pctU(Math.min(...c80) * 100, 0)} e ${pctU(Math.max(...c80) * 100, 0)} dos valores observados, enquanto o de 50% conteve entre ${pctU(Math.min(...c50) * 100, 0)} e ${pctU(Math.max(...c50) * 100, 0)}. Embora isso não indique subcobertura, as origens sobrepostas limitam a interpretação: no horizonte de 52 semanas, ${c52.n} origens cobrem uma única temporada. Para direção em 13 semanas, o Brier do modelo foi ${fmt(c13.brier, 2)} em Sell Offers e ${fmt(c13b.brier, 2)} em Buy Offers, acima dos ${fmt(c13.brierSeasonal, 2)} e ${fmt(c13b.brierSeasonal, 2)} da regra que repete a direção do mesmo período do ano anterior. Como a probabilidade média de alta em Sell Offers foi ${prob(c13.meanPUp)} frente a ${prob(c13.freqUp)} de altas observadas, e somente a amostra desde 2023 dispõe desse backtest, as probabilidades devem ordenar cenários, não ser tomadas como frequências de sucesso demonstradas.</p>
-      <p>Embora a mediana simulada com treino desde 2023 fique próxima do base case — ${price(f23n.p50)} frente a ${price(nov.base)} em novembro e ${price(f23j.p50)} frente a ${price(june.base)} em junho —, a amostra desde 2024 leva a mediana de junho a ${price(f24j.p50)}, abaixo do limite inferior de estresse da seção 02 (${price(june.low)}). Além disso, a faixa de estresse de junho, de ${price(june.low)} a ${price(june.high)}, é mais estreita que o intervalo P10–P90 simulado, de ${price(f23j.p10)} a ${price(f23j.p90)}; portanto, os dois objetos não devem ser interpretados como medidas equivalentes de incerteza.</p>
-      <p><strong>Vender na referência de 23/09, recomprar em junho.</strong> Nas mesmas trajetórias, vender aceitando Buy Offers da âncora de 23/09 (${fmt(antica.bid)}) e recomprar aceitando Sell Offers na semana de 28/06/2027 termina com mais TC em ${prob(rt('main', 'aceitando').pGain)} dos casos (treino desde 2023; mediana ${sgn(rt('main', 'aceitando').gainPct[1])}) e em ${prob(rt('since2024', 'aceitando').pGain)} (desde 2024; mediana ${sgn(rt('since2024', 'aceitando').gainPct[1])}). Criando ofertas nas duas pontas, com 2% de taxa em cada e supondo execução, ${prob(rt('main', 'criando ofertas').pGain)} e ${prob(rt('since2024', 'criando ofertas').pGain)}. O pacote ilustrava a falha com um cenário fixo em Gentebra (preço +10% até a recompra, com 4,47% de diferença entre as pontas): ${sgn(P.roundtripPackageFail.fail_case_accept_pct)} em TC, aceitando ofertas. Não é um percentil nem se refere a Antica; aqui, em Antica, 10% das trajetórias perdem mais de ${fmt(Math.abs(rt('main', 'aceitando').gainPct[0]), 1)}% das TC (treino desde 2023).</p>
-    </div>
-    <div id="card-fan"></div>
-    <div id="card-prob"></div>
-    <div class="grid2"><div id="card-roundtrip-sim"></div><div id="card-anchor"></div></div>
-    <div id="card-seeds"></div>
-    <div id="card-calib"></div>
+    <h2><span class="num">04</span><span class="section-title">Model-implied probabilities: estabilidade numérica e risco de modelo</span></h2>
+    <div class="narrative-grid"><div class="prose">
+<p>O pacote recebido estimava probabilidades com tendência linear, dois harmônicos anuais e erros ARIMA(1,1,0), simulando ${fmt(PK.model.n_paths)} trajetórias com incerteza de parâmetros sobre um índice de <em>médias diárias</em> de 71 mundos. A documentação disponível não permite identificar essas médias como transaction prices. O arquivo <code>forecast_stability.json</code>, incluído no ZIP, repete a simulação com quatro sementes (${PK.stability.map(s => s.seed).join(', ')}): as quatro estimativas variam no máximo ${fmt(pkgSeedSpread * 100, 1)} p.p. e o pico mediano, ${fmt(PK.stabilityRange.peak_p50[1] - PK.stabilityRange.peak_p50[0])} gp. Isso indica baixo Monte Carlo noise nessa comparação; <strong>não valida a especificação nem a calibração do modelo</strong>. No código do pacote, a semente fixa apenas o sorteio de parâmetros: os choques de cada trajetória vêm de um gerador sem semente. Assim, o <code>forecast.json</code> não é reproduzido byte a byte — a semente 11 dá pico mediano de ${fmt(PK.seed11VsPublished.peakP50[0])}, contra ${fmt(PK.seed11VsPublished.peakP50[1])} no arquivo publicado, com probabilidades iguais em duas casas.</p>
+</div><div class="prose">
+<p>Nesta edição, o mesmo modelo foi reestimado sobre as <strong>ofertas semanais de Antica</strong>, ancorado na captura de 23/09, com as mesmas quatro sementes — agora controlando também os choques, de modo que o resultado é reproduzível — e duas amostras de treino: desde a primeira semana válida (janeiro de 2023) e desde 15/01/2024, a escolha do pacote. Os eventos usam as mesmas semanas do pacote (30/11 a 06/12/2026 e 28/06 a 04/07/2027; pico depois de 31/10 = a partir da semana de 02/11).</p>
+</div></div>
+<div class="analysis-row">
+<div class="prose">
+<p><strong>A escolha da amostra domina o ruído de simulação.</strong> Embora as estimativas variem no máximo ${seedSpread} p.p. entre sementes, começar o treino em 2024 eleva a chance de a semana de 28/06/2027 ficar abaixo da partida de ${prob(m23.prob.jun28BelowStart)} para ${prob(m24.prob.jun28BelowStart)}. Como essa amostra exclui o primeiro semestre de 2023, quando Sell Offers subiram ${sgn(legsAsk[0].changePct, 0)} durante a temporada usual de queda, o ciclo ajustado fica mais amplo e a tendência, menor (${sgn(fit24.driftPerYear * 100)} contra ${sgn(fitAsk.driftPerYear * 100)} ao ano). Dado que os recuos observados vêm diminuindo, esse ajuste pode exagerar a próxima queda. A captura de partida também altera o resultado: se fosse usada a de 21/09 (${fmt(anchorRows[0].anchor)}) em vez da de 23/09, a probabilidade de superar ${fmt(Math.round(antica.ask * 1.03))} cairia para ${prob(anchorRows[0].pPeakAbove3OfReference)}.</p>
+<p>O “pico” corresponde ao máximo de cada trajetória até 28/02/2027, ainda que não haja um ponto de virada dentro da janela. Com treino desde 2023, ele ocorre em semanas iniciadas até outubro em ${prob(1 - m23.peakMonthShare.novDez - m23.peakMonthShare.janFev)} dos casos, em novembro–dezembro em ${prob(m23.peakMonthShare.novDez)} e em janeiro–fevereiro em ${prob(m23.peakMonthShare.janFev)}. Como ${prob(m23.peakOnEdge)} das trajetórias têm máximo na primeira ou na última semana, a distribuição não deve ser lida como uma previsão pontual da data de reversão.</p>
+</div>
+<div class="evidence-stack"><div id="card-fan"></div></div>
+</div>
+<div class="analysis-row">
+<div class="prose">
+<p>Embora a mediana simulada com treino desde 2023 fique próxima do base case — ${price(f23n.p50)} frente a ${price(nov.base)} em novembro e ${price(f23j.p50)} frente a ${price(june.base)} em junho —, a amostra desde 2024 leva a mediana de junho a ${price(f24j.p50)}, abaixo do limite inferior de estresse da seção 02 (${price(june.low)}). Além disso, a faixa de estresse de junho, de ${price(june.low)} a ${price(june.high)}, é mais estreita que o intervalo P10–P90 simulado, de ${price(f23j.p10)} a ${price(f23j.p90)}; portanto, os dois objetos não devem ser interpretados como medidas equivalentes de incerteza.</p>
+</div>
+<div class="evidence-stack"><div id="card-prob"></div></div>
+</div>
+<div class="analysis-row">
+<div class="prose">
+<p><strong>Vender na referência de 23/09, recomprar em junho.</strong> Nas mesmas trajetórias, vender aceitando Buy Offers da âncora de 23/09 (${fmt(antica.bid)}) e recomprar aceitando Sell Offers na semana de 28/06/2027 termina com mais TC em ${prob(rt('main', 'aceitando').pGain)} dos casos (treino desde 2023; mediana ${sgn(rt('main', 'aceitando').gainPct[1])}) e em ${prob(rt('since2024', 'aceitando').pGain)} (desde 2024; mediana ${sgn(rt('since2024', 'aceitando').gainPct[1])}). Criando ofertas nas duas pontas, com 2% de taxa em cada e supondo execução, ${prob(rt('main', 'criando ofertas').pGain)} e ${prob(rt('since2024', 'criando ofertas').pGain)}. O pacote ilustrava a falha com um cenário fixo em Gentebra (preço +10% até a recompra, com 4,47% de diferença entre as pontas): ${sgn(P.roundtripPackageFail.fail_case_accept_pct)} em TC, aceitando ofertas. Não é um percentil nem se refere a Antica; aqui, em Antica, 10% das trajetórias perdem mais de ${fmt(Math.abs(rt('main', 'aceitando').gainPct[0]), 1)}% das TC (treino desde 2023).</p>
+</div>
+<div class="evidence-stack"><div id="card-roundtrip-sim"></div><div id="card-anchor"></div></div>
+</div>
+<div id="card-seeds"></div>
+<div class="prose prose-columns"><p>Na calibração com origens quinzenais de ${yy(c13.firstOrigin)} a ${yy(cal('ask', 4).lastOrigin)}, o modelo foi reestimado em cada origem usando apenas dados então disponíveis. O intervalo central de 80% conteve entre ${pctU(Math.min(...c80) * 100, 0)} e ${pctU(Math.max(...c80) * 100, 0)} dos valores observados, enquanto o de 50% conteve entre ${pctU(Math.min(...c50) * 100, 0)} e ${pctU(Math.max(...c50) * 100, 0)}. Embora isso não indique subcobertura, as origens sobrepostas limitam a interpretação: no horizonte de 52 semanas, ${c52.n} origens cobrem uma única temporada. Para direção em 13 semanas, o Brier do modelo foi ${fmt(c13.brier, 2)} em Sell Offers e ${fmt(c13b.brier, 2)} em Buy Offers, acima dos ${fmt(c13.brierSeasonal, 2)} e ${fmt(c13b.brierSeasonal, 2)} da regra que repete a direção do mesmo período do ano anterior. Como a probabilidade média de alta em Sell Offers foi ${prob(c13.meanPUp)} frente a ${prob(c13.freqUp)} de altas observadas, e somente a amostra desde 2023 dispõe desse backtest, as probabilidades devem ordenar cenários, não ser tomadas como frequências de sucesso demonstradas.</p></div>
+<div id="card-calib"></div>
   </section>`;
 
   // ---- 05 per world
   html += `
   <section class="block" id="s05">
-    <h2><span class="num">05</span>Análise por mundo</h2>
+    <h2><span class="num">05</span><span class="section-title">Análise por mundo</span></h2>
+    <div class="section-intro">
     <div class="prose"><p>Selecione um mundo para comparar as capturas recentes com ofertas históricas, cenários e limites de execução. As projeções preservam as âncoras de 23/09: transferem o movimento percentual da mesma ponta de Antica para a oferta local daquela edição e não foram recalibradas com as capturas de 25/09. Não estimam um ciclo independente para cada mundo. As análises individuais abaixo permanecem disponíveis para os 16 mercados.</p></div>
     <div class="controls">
       <label class="control">Mundo <select id="world-select">${worlds.map(w => `<option${w.world === state.world ? ' selected' : ''}>${w.world}</option>`).join('')}</select></label>
       <span class="control">Market side ${sideControl()}</span>
     </div>
+    </div>
     <div id="card-world-daily"></div>
     <div class="grid2"><div id="card-world-history"></div><div id="card-world-projection"></div></div>
-    <div id="card-scenario-table"></div>
-    <div class="prose" id="selected-context"></div>
+    <div class="analysis-row analysis-row--evidence-first"><div id="card-scenario-table"></div><div class="prose" id="selected-context"></div></div>
     <h3>Relative premium entre mundos</h3>
-    <div class="prose" id="relative-prose"></div>
-    <div class="grid2"><div id="card-premium-chart"></div><div id="card-groups"></div></div>
+    <div class="analysis-row analysis-row--balanced"><div class="prose" id="relative-prose"></div><div class="evidence-stack"><div id="card-premium-chart"></div><div id="card-groups"></div></div></div>
     <div id="card-premium-table"></div>
     <div id="card-groups-quarter"></div>
     <h3>Análises individuais</h3>
     <div class="dossiers" id="dossiers"></div>
-    <div class="prose prose--spaced"><p><strong>Obscubra antes da fusão.</strong> A API trouxe ${pred.days} dias com ofertas válidas, de ${br(pred.first)} a ${br(pred.last)}. Na primeira observação, Sell Offers estavam em ${fmt(pred.firstAsk)} e Buy Offers em ${fmt(pred.firstBid)} gp/TC; na última, em ${fmt(pred.ask)} e ${fmt(pred.bid)}, respectivamente. São pontos observados de um mundo anterior à fusão, sem ajuste de composição. O cenário de Terribra parte somente de Terribra; não usamos a sucessão de nomes como continuidade automática de preços. Selecione Terribra acima para ver também o gráfico de Obscubra, logo abaixo.</p></div>
-    <div id="card-predecessor"></div>
+    <div class="predecessor-note"><div class="prose prose--spaced"><p><strong>Obscubra antes da fusão.</strong> A API trouxe ${pred.days} dias com ofertas válidas, de ${br(pred.first)} a ${br(pred.last)}. Na primeira observação, Sell Offers estavam em ${fmt(pred.firstAsk)} e Buy Offers em ${fmt(pred.firstBid)} gp/TC; na última, em ${fmt(pred.ask)} e ${fmt(pred.bid)}, respectivamente. São pontos observados de um mundo anterior à fusão, sem ajuste de composição. O cenário de Terribra parte somente de Terribra; não usamos a sucessão de nomes como continuidade automática de preços. Selecione Terribra acima para ver também o gráfico de Obscubra, logo abaixo.</p></div>
+    <div id="card-predecessor"></div></div>
   </section>`;
 
   // ---- 06 validation
   html += `
   <section class="block" id="s06">
-    <h2><span class="num">06</span>Os testes favorecem a combinação no curto prazo; o ciclo anual continua incerto</h2>
-    <div class="prose">
-      <p>As origens avançam trimestralmente, sem usar observações futuras no ajuste. O quadro apresenta o erro percentual absoluto médio nas ofertas de Antica, para os mesmos alvos de cada ponta e horizonte. Os pesos do conjunto são iguais em log-preços; não foram otimizados para maximizar o resultado do teste.</p>
-      <p>A contagem de origens é pequena e os períodos se sobrepõem. Esses números comparam modelos nesta amostra; não demonstram desempenho estável no próximo ciclo. As faixas de estresse foram construídas com esses erros, portanto não constituem validação independente de cobertura. A calibração probabilística da seção 04 usa origens quinzenais e outro modelo.</p>
-    </div>
-    ${card({title: 'Erro médio fora do ajuste · Antica · %', sub: 'Erro percentual absoluto médio (MAPE)', body: table({columns: [num('horizon', 'Semanas'), {key: 'side', label: 'Market side', render: v => SIDES[v]}, num('n', 'Origens'), num('constant', 'Constante', 2), num('seasonal', 'Sazonal', 2), num('harmonic', 'Harmônico', 2), num('ensemble', 'Conjunto', 2)], rows: summaries})})}
+    <h2><span class="num">06</span><span class="section-title">Os testes favorecem a combinação no curto prazo; o ciclo anual continua incerto</span></h2>
+    <div class="analysis-row">
+<div class="prose">
+<p>As origens avançam trimestralmente, sem usar observações futuras no ajuste. O quadro apresenta o erro percentual absoluto médio nas ofertas de Antica, para os mesmos alvos de cada ponta e horizonte. Os pesos do conjunto são iguais em log-preços; não foram otimizados para maximizar o resultado do teste.</p>
+<p>A contagem de origens é pequena e os períodos se sobrepõem. Esses números comparam modelos nesta amostra; não demonstram desempenho estável no próximo ciclo. As faixas de estresse foram construídas com esses erros, portanto não constituem validação independente de cobertura. A calibração probabilística da seção 04 usa origens quinzenais e outro modelo.</p>
+</div>
+<div class="evidence-stack">${card({title: 'Erro médio fora do ajuste · Antica · %', sub: 'Erro percentual absoluto médio (MAPE)', body: table({columns: [num('horizon', 'Semanas'), {key: 'side', label: 'Market side', render: v => SIDES[v]}, num('n', 'Origens'), num('constant', 'Constante', 2), num('seasonal', 'Sazonal', 2), num('harmonic', 'Harmônico', 2), num('ensemble', 'Conjunto', 2)], rows: summaries})})}</div>
+</div>
   </section>`;
 
   // ---- 07 cycles & seasonality
   html += `
   <section class="block" id="s07">
-    <h2><span class="num">07</span>O histórico sugere sazonalidade, sem determinar a data de reversão</h2>
-    <div class="prose"><p>O quadro usa extremos de <strong>medianas semanais de ofertas de Antica</strong> por ano civil. Uma máxima anual observada retrospectivamente não é um ponto de venda identificável em tempo real. O ano de 2026 está incompleto; não deve ser comparado a um ciclo encerrado como se ambos tivessem o mesmo horizonte. A seção 03 mede os mesmos ciclos sem o corte do ano civil, de pico a fundo e de fundo a pico.</p></div>
-    ${card({title: 'Antica · extremos semanais observados', sub: 'gp/TC', body: table({columns: [{key: 'year', label: 'Ano', render: v => String(v)}, {key: 'side', label: 'Market side', render: v => SIDES[v]}, {key: 'lowDate', label: 'Semana mínima', render: br}, num('low', 'Mínima'), {key: 'highDate', label: 'Semana máxima', render: br}, num('high', 'Máxima'), {key: 'complete', label: 'Período', render: v => v ? 'Ano completo' : 'Parcial'}], rows: R.cycles})})}
+    <h2><span class="num">07</span><span class="section-title">O histórico sugere sazonalidade, sem determinar a data de reversão</span></h2>
+    <div class="prose section-note"><p>O quadro usa extremos de <strong>medianas semanais de ofertas de Antica</strong> por ano civil. Uma máxima anual observada retrospectivamente não é um ponto de venda identificável em tempo real. O ano de 2026 está incompleto; não deve ser comparado a um ciclo encerrado como se ambos tivessem o mesmo horizonte. A seção 03 mede os mesmos ciclos sem o corte do ano civil, de pico a fundo e de fundo a pico.</p></div>
+<div class="grid2">    ${card({title: 'Antica · extremos semanais observados', sub: 'gp/TC', body: table({columns: [{key: 'year', label: 'Ano', render: v => String(v)}, {key: 'side', label: 'Market side', render: v => SIDES[v]}, {key: 'lowDate', label: 'Semana mínima', render: br}, num('low', 'Mínima'), {key: 'highDate', label: 'Semana máxima', render: br}, num('high', 'Máxima'), {key: 'complete', label: 'Período', render: v => v ? 'Ano completo' : 'Parcial'}], rows: R.cycles})})}
     <div id="card-season"></div>
+</div>
   </section>`;
 
   // ---- 08 execution
@@ -467,24 +492,32 @@ async function main() {
   const wA = wd('Antica', 'ask'), wAb = wd('Antica', 'bid'), wB = wd('Mundos BR', 'ask'), wBb = wd('Mundos BR', 'bid');
   html += `
   <section class="block" id="s08">
-    <h2><span class="num">08</span>A diferença entre as pontas reduz o resultado da venda e recompra</h2>
-    <div class="prose">
+    <h2><span class="num">08</span><span class="section-title">A diferença entre as pontas reduz o resultado da venda e recompra</span></h2>
+    <div class="analysis-row">
+<div class="prose">
       <p>Para quem já possui TC, o exercício vende aceitando <strong>Buy Offers</strong> e recompra aceitando <strong>Sell Offers</strong>. O ganho teórico em quantidade de TC é preço recebido na venda / preço pago na recompra − 1. A comparação usa a mediana do mês de venda e a mediana de maio a julho do ano seguinte, sem escolher o melhor dia retrospectivamente.</p>
       <p>O resultado é uma comparação de níveis observados, sem impacto de mercado ou garantia de Amount disponível. Criar uma Sell Offer acima das Buy Offers existentes exige que alguém a aceite; por isso não apresentamos a diferença entre preços como lucro assegurado de uma estratégia passiva. Os ciclos passados tiveram quedas; a seção 04 estima com que frequência a operação para junho de 2027 dá ganho.</p>
     </div>
-    <div id="card-roundtrip"></div>
+<div class="evidence-stack"><div id="card-roundtrip"></div></div>
+</div>
     <h3>Create Offer: taxa e execution risk</h3>
-    <div class="prose">
+    <div class="analysis-row">
+<div class="prose">
       <p>O <a href="https://www.tibia.com/gameguides/?section=controls_trading&amp;subtopic=manual">manual oficial</a> informa que criar uma oferta custa <strong>2% do seu preço, com mínimo de 20 gp e máximo de 1.000.000 gp</strong>, e que ofertas valem por 30 dias. O teto só alivia ofertas acima de 50 milhões de gp, cerca de ${fmt(C.fee.capBindsAboveTc)} TC a ${price(antica.ask)}; os números abaixo valem para ofertas menores. Aceitar uma oferta existente não paga essa taxa.</p>
       <p>A variante abaixo cria uma Sell Offer ao nível mediano de Sell Offers do mês de venda e uma Buy Offer ao nível mediano de Buy Offers de maio a julho, pagando 2% em cada criação: ganho em TC = (Sell Offers × 0,98) / (Buy Offers × 1,02) − 1. Em Antica, onde a diferença entre as pontas é pequena, as taxas consomem a vantagem: nas ${makerDiffAntica.length} combinações de ciclo e mês, criar ofertas ficou entre ${pp(Math.min(...makerDiffAntica))} e ${pp(Math.max(...makerDiffAntica))} em relação a aceitar (2025–26, venda em novembro: ${sgn(makerAntica.makerNetPct)} contra ${sgn(makerAntica.acceptPct)}). Nos mundos brasileiros, com diferenças maiores entre as pontas, criar ofertas superou aceitar em ${makerBRWins} de ${makerBR.length} combinações (mediana de ${pp(median(makerBR.map(x => x.makerNetPct - x.acceptPct)))}). É um limite superior: supõe que as duas ofertas sejam executadas integralmente, e as medianas mensais dos mundos BR vêm de poucas leituras.</p>
     </div>
-    <div class="grid2"><div id="card-maker"></div><div id="card-maker-all"></div></div>
+<div class="evidence-stack"><div id="card-maker"></div><div id="card-maker-all"></div></div>
+</div>
     <h3>Round-trip execution cost: referência de 23/09 e histórico</h3>
-    <div class="prose"><p>Para avaliar o round-trip execution cost, definido como 1 − Buy Offers / Sell Offers, o estudo compara a última captura disponível no corte de 21–23/09 com as ofertas registradas pela API nos 180 dias anteriores. ${wideNow.length ? `Em ${wideNow.length} mundos capturados, o custo implícito superou em mais de 50% a respectiva mediana histórica, como detalha a tabela;` : 'Nenhum mundo capturado superou em mais de 50% sua mediana histórica;'} em Antica, porém, ficou em ${pctU(antica.costPct, 2)}, abaixo da mediana de ${pctU(C.spread.worlds.find(w => w.world === 'Antica').recentMedianPct, 2)}. ${terWide ? `Terribra também excede sua referência histórica, mas o preço de ${br(terWide.nowDate)} provém da API, pois não há captura recente.` : ''} Como capturas e leituras da API não são simultâneas, essa diferença descreve condições observadas, sem estabelecer sua duração.</p></div>
-    <div id="card-spread"></div>
+    <div class="analysis-row">
+<div class="prose"><p>Para avaliar o round-trip execution cost, definido como 1 − Buy Offers / Sell Offers, o estudo compara a última captura disponível no corte de 21–23/09 com as ofertas registradas pela API nos 180 dias anteriores. ${wideNow.length ? `Em ${wideNow.length} mundos capturados, o custo implícito superou em mais de 50% a respectiva mediana histórica, como detalha a tabela;` : 'Nenhum mundo capturado superou em mais de 50% sua mediana histórica;'} em Antica, porém, ficou em ${pctU(antica.costPct, 2)}, abaixo da mediana de ${pctU(C.spread.worlds.find(w => w.world === 'Antica').recentMedianPct, 2)}. ${terWide ? `Terribra também excede sua referência histórica, mas o preço de ${br(terWide.nowDate)} provém da API, pois não há captura recente.` : ''} Como capturas e leituras da API não são simultâneas, essa diferença descreve condições observadas, sem estabelecer sua duração.</p></div>
+<div class="evidence-stack"><div id="card-spread"></div></div>
+</div>
     <h3>Weekday effect: sem sinal robusto nas ofertas</h3>
-    <div class="prose"><p>Embora o pacote recebido tenha apontado diferenças por dia da semana em médias diárias de ponderação não documentada, esta edição mede apenas Sell Offers e Buy Offers, como desvio em relação à mediana dos sete dias ao redor. Em Antica, a amplitude é de ${pctU(wA.rangePct, 2)} em Sell Offers e ${pctU(wAb.rangePct, 2)} em Buy Offers; depois da correção conjunta dos quatro testes, nenhum p fica abaixo de ${fmt(Math.min(...C.weekday.tests.map(t => t.pHolm)), 2)}. Mesmo a maior amplitude equivale a ${fmt(wAb.rangePct / 100 * antica.bid)} gp/TC, menos que o quoted spread e que a taxa de 2% de Create Offer. Como ${sparse.length} dos ${cov.length} mundos BR têm mediana de apenas um ou dois dias com ofertas por semana, sua evidência é ainda mais limitada; mesmo com a janela ampliada para três de sete dias, os testes em ${Object.keys(wB.contributors).length} mundos produzem p = ${fmt(wB.pBlock, 2)} em Sell Offers e ${fmt(wBb.pBlock, 2)} em Buy Offers, sem sustentar a escolha do dia de execução pelo calendário semanal.</p></div>
-    <div id="card-weekday"></div>
+    <div class="analysis-row">
+<div class="prose"><p>Embora o pacote recebido tenha apontado diferenças por dia da semana em médias diárias de ponderação não documentada, esta edição mede apenas Sell Offers e Buy Offers, como desvio em relação à mediana dos sete dias ao redor. Em Antica, a amplitude é de ${pctU(wA.rangePct, 2)} em Sell Offers e ${pctU(wAb.rangePct, 2)} em Buy Offers; depois da correção conjunta dos quatro testes, nenhum p fica abaixo de ${fmt(Math.min(...C.weekday.tests.map(t => t.pHolm)), 2)}. Mesmo a maior amplitude equivale a ${fmt(wAb.rangePct / 100 * antica.bid)} gp/TC, menos que o quoted spread e que a taxa de 2% de Create Offer. Como ${sparse.length} dos ${cov.length} mundos BR têm mediana de apenas um ou dois dias com ofertas por semana, sua evidência é ainda mais limitada; mesmo com a janela ampliada para três de sete dias, os testes em ${Object.keys(wB.contributors).length} mundos produzem p = ${fmt(wB.pBlock, 2)} em Sell Offers e ${fmt(wBb.pBlock, 2)} em Buy Offers, sem sustentar a escolha do dia de execução pelo calendário semanal.</p></div>
+<div class="evidence-stack"><div id="card-weekday"></div></div>
+</div>
   </section>`;
 
   // ---- 09 volatility & persistence
@@ -495,75 +528,98 @@ async function main() {
   const epi = strongUpRanges => { const season = strongUpRanges.filter(([a]) => +a.slice(5, 7) >= 7 && +a.slice(5, 7) <= 10).length; return [season, strongUpRanges.length - season]; };
   html += `
   <section class="block" id="s09">
-    <h2><span class="num">09</span>Volatilidade e persistência: o papel da seasonality</h2>
-    <div class="prose">
-      <p>Quando se usa apenas a última cotação de cada semana, o desvio-padrão da variação das Sell Offers de Antica cai para ${pctU(v26.weeklyStdPct, 2)} em 2026, após ${pctU(v25.weeklyStdPct, 2)} em 2025. Embora 2026 seja o ano menos volátil da série até setembro, a diferença ainda é moderada. Nos mundos BR, medidos nas mesmas semanas que Antica, a volatilidade fica entre ${fmt(Math.min(...ratios), 1)} e ${fmt(Math.max(...ratios), 1)} vezes a de Antica em Sell Offers. Parte dessa diferença decorre de haver apenas um ou dois dias com cotação por semana na maioria desses mundos, em comparação com a frequência diária de Antica; mesmo assim, ${topRatio.world}, com ${fmt(topRatio.medianDaysPerWeek)} dias por semana, registra a maior razão (${fmt(topRatio.ratio, 1)}×). Luzibra é excluída dessa faixa porque sofreu mudança de patamar em julho.</p>
-      <p>Embora as medianas semanais exibam autocorrelação de uma semana de ${fmt(acf[0].rWeeklyMedian, 2)} em Sell Offers e ${fmt(mob.acf[0].rWeeklyMedian, 2)} em Buy Offers, a suavização da própria mediana e o ciclo anual explicam boa parte do sinal. Quando se usa um único ponto por semana e se remove o ciclo anual, nenhuma das quatro primeiras defasagens em Sell Offers ultrapassa a faixa de ruído de ±${fmt(mo.band, 2)}. Após as ${fmt(strongUp.n)} semanas com as altas mais fortes em quatro semanas, a mediana das quatro seguintes foi ${sgn(strongUp.medianFwdPct)}, frente a ${sgn(allW.medianFwdPct)} no conjunto das semanas. Como ${epi(strongUp.episodeRanges)[0]} dos ${strongUp.episodes} episódios começaram entre julho e outubro, quando a alta sazonal já é frequente, essa diferença perde força após ajuste de calendário: a mediana residual é ${sgn(strongUp.seasonAdjMedianFwdPct)}. Com episódios separados por pelo menos 21 dias, o teste produz p = ${fmt(strongUp.declusteredP, 2)} em Sell Offers e ${fmt(mob.conditional[0].declusteredP, 2)} em Buy Offers, evidência limitada de persistência além da sazonalidade.</p>
-      <p>No corte da pesquisa, as Sell Offers de Antica haviam subido ${sgn(mo.anchorPast4Pct)} entre a semana de 30/08 e a captura isolada de 23/09, pouco acima do limiar das 20% maiores altas de quatro semanas (${sgn(mo.thresholdUpPct)}). Se a comparação terminasse na última cotação disponível da API, em ${br(mo.historicalWeek)}, a alta seria ${sgn(mo.historicalPast4Pct)} e ficaria abaixo desse limiar.</p>
-    </div>
-    <div class="grid2"><div id="card-vol-year"></div><div id="card-acf"></div></div>
-    <div class="grid2"><div id="card-vol-world"></div><div id="card-cond"></div></div>
+    <h2><span class="num">09</span><span class="section-title">Volatilidade e persistência: o papel da seasonality</span></h2>
+    <div class="analysis-row">
+<div class="prose">
+<p>Quando se usa apenas a última cotação de cada semana, o desvio-padrão da variação das Sell Offers de Antica cai para ${pctU(v26.weeklyStdPct, 2)} em 2026, após ${pctU(v25.weeklyStdPct, 2)} em 2025. Embora 2026 seja o ano menos volátil da série até setembro, a diferença ainda é moderada. Nos mundos BR, medidos nas mesmas semanas que Antica, a volatilidade fica entre ${fmt(Math.min(...ratios), 1)} e ${fmt(Math.max(...ratios), 1)} vezes a de Antica em Sell Offers. Parte dessa diferença decorre de haver apenas um ou dois dias com cotação por semana na maioria desses mundos, em comparação com a frequência diária de Antica; mesmo assim, ${topRatio.world}, com ${fmt(topRatio.medianDaysPerWeek)} dias por semana, registra a maior razão (${fmt(topRatio.ratio, 1)}×). Luzibra é excluída dessa faixa porque sofreu mudança de patamar em julho.</p>
+</div>
+<div class="evidence-stack"><div id="card-vol-year"></div></div>
+</div>
+<div class="analysis-row">
+<div class="prose">
+<p>Embora as medianas semanais exibam autocorrelação de uma semana de ${fmt(acf[0].rWeeklyMedian, 2)} em Sell Offers e ${fmt(mob.acf[0].rWeeklyMedian, 2)} em Buy Offers, a suavização da própria mediana e o ciclo anual explicam boa parte do sinal. Quando se usa um único ponto por semana e se remove o ciclo anual, nenhuma das quatro primeiras defasagens em Sell Offers ultrapassa a faixa de ruído de ±${fmt(mo.band, 2)}. Após as ${fmt(strongUp.n)} semanas com as altas mais fortes em quatro semanas, a mediana das quatro seguintes foi ${sgn(strongUp.medianFwdPct)}, frente a ${sgn(allW.medianFwdPct)} no conjunto das semanas. Como ${epi(strongUp.episodeRanges)[0]} dos ${strongUp.episodes} episódios começaram entre julho e outubro, quando a alta sazonal já é frequente, essa diferença perde força após ajuste de calendário: a mediana residual é ${sgn(strongUp.seasonAdjMedianFwdPct)}. Com episódios separados por pelo menos 21 dias, o teste produz p = ${fmt(strongUp.declusteredP, 2)} em Sell Offers e ${fmt(mob.conditional[0].declusteredP, 2)} em Buy Offers, evidência limitada de persistência além da sazonalidade.</p>
+<p>No corte da pesquisa, as Sell Offers de Antica haviam subido ${sgn(mo.anchorPast4Pct)} entre a semana de 30/08 e a captura isolada de 23/09, pouco acima do limiar das 20% maiores altas de quatro semanas (${sgn(mo.thresholdUpPct)}). Se a comparação terminasse na última cotação disponível da API, em ${br(mo.historicalWeek)}, a alta seria ${sgn(mo.historicalPast4Pct)} e ficaria abaixo desse limiar.</p>
+</div>
+<div class="evidence-stack"><div id="card-acf"></div></div>
+</div>
+<div id="card-vol-world"></div>
+<div id="card-cond"></div>
   </section>`;
 
   // ---- 10 offers vs daily averages
   html += `
   <section class="block" id="s10">
-    <h2><span class="num">10</span>Melhores ofertas e médias diárias não são a mesma série</h2>
-    <div class="prose">
-      <p>A diferença relativa abaixo mede <strong>média diária do histórico / Piece Price da oferta − 1</strong>, separadamente em cada ponta, nos dias em que ambos estão disponíveis. Valores negativos indicam médias abaixo da oferta diária comparável; positivos, acima. O <a href="https://tibiamarket.top/">TibiaMarket</a> identifica day_average_sell e day_average_buy como médias das últimas 24 horas. Essas estatísticas complementam os dados de ofertas; sem documentação da ponderação e dos registros subjacentes, não podem ser tratadas como transaction prices nem usadas para reconstruir negócios executados. As médias são atribuídas ao dia do servidor anterior à coleta, conforme a convenção do pacote recebido. Essa hipótese de data precisa ser confirmada com o provedor; ela não foi usada para deslocar as ofertas.</p>
-      <p>O pareamento cobre até 12 meses, terminando em 23/09, com disponibilidade própria por mundo. A cotação é uma mediana de instantâneos e a média diária cobre um período: diferenças não provam erro, lucro capturável ou execução no melhor preço. <strong>As médias diárias não alimentam os modelos de ofertas.</strong> A coluna adicional de pareamento no dia da coleta permite avaliar a sensibilidade à hipótese de deslocamento temporal.</p>
-    </div>
-    ${card({title: 'Comparação entre mundos · diferença mediana das médias diárias para ofertas', sub: '%', body: table({columns: [{key: 'world', label: 'Mundo'}, num('askN', 'Dias · Sell Offers'), num('askGap', 'Sell Offers %', 2), num('bidN', 'Dias · Buy Offers'), num('bidGap', 'Buy Offers %', 2)],
+    <h2><span class="num">10</span><span class="section-title">Melhores ofertas e médias diárias não são a mesma série</span></h2>
+    <div class="analysis-row">
+<div class="prose">
+<p>A diferença relativa abaixo mede <strong>média diária do histórico / Piece Price da oferta − 1</strong>, separadamente em cada ponta, nos dias em que ambos estão disponíveis. Valores negativos indicam médias abaixo da oferta diária comparável; positivos, acima. O <a href="https://tibiamarket.top/">TibiaMarket</a> identifica day_average_sell e day_average_buy como médias das últimas 24 horas. Essas estatísticas complementam os dados de ofertas; sem documentação da ponderação e dos registros subjacentes, não podem ser tratadas como transaction prices nem usadas para reconstruir negócios executados. As médias são atribuídas ao dia do servidor anterior à coleta, conforme a convenção do pacote recebido. Essa hipótese de data precisa ser confirmada com o provedor; ela não foi usada para deslocar as ofertas.</p>
+<p>O pareamento cobre até 12 meses, terminando em 23/09, com disponibilidade própria por mundo. A cotação é uma mediana de instantâneos e a média diária cobre um período: diferenças não provam erro, lucro capturável ou execução no melhor preço. <strong>As médias diárias não alimentam os modelos de ofertas.</strong> A coluna adicional de pareamento no dia da coleta permite avaliar a sensibilidade à hipótese de deslocamento temporal.</p>
+</div>
+<div class="evidence-stack">${card({title: 'Comparação entre mundos · diferença mediana das médias diárias para ofertas', sub: '%', body: table({columns: [{key: 'world', label: 'Mundo'}, num('askN', 'Dias · Sell Offers'), num('askGap', 'Sell Offers %', 2), num('bidN', 'Dias · Buy Offers'), num('bidGap', 'Buy Offers %', 2)],
       rows: worlds.map(w => { const a = R.tradeComparison.find(x => x.world === w.world && x.side === 'ask'), b = R.tradeComparison.find(x => x.world === w.world && x.side === 'bid'); return {world: w.world, askN: a?.n, askGap: a?.medianGapPct, bidN: b?.n, bidGap: b?.medianGapPct}; })})})}
+</div>
+</div>
     <div id="card-trade"></div>
   </section>`;
 
   // ---- 11 events
   html += `
   <section class="block" id="s11">
-    <h2><span class="num">11</span>Eventos oferecem contexto; associações históricas não são efeitos causais</h2>
-    <div class="prose">
-      <p>O estudo foi refeito sobre ofertas de Antica. Compara a mediana dos sete dias após o início à dos sete dias anteriores (ao menos 3 observações em cada janela) e confronta a mudança com 2.000 sorteios de datas placebo do mesmo mês e ano. As datas históricas dos eventos vêm do pacote recebido. A correção de múltiplos testes inclui conjuntamente Buy Offers e Sell Offers.</p>
-      <p>${strongest.length ? `Há ${strongest.length} resultados com q inferior a 5%, concentrados em ${[...new Set(strongest.map(x => x.event))].join(', ')}. O número reduzido de ocorrências e a sobreposição de janelas impedem transformar essa associação em regra de execução.` : 'Nenhum teste permanece abaixo de q = 5% após a correção conjunta.'} O preço futuro não recebe um ajuste arbitrário por evento. Os resultados servem para definir períodos de observação, não para atribuir uma causa exclusiva ao movimento.</p>
-    </div>
-    <div id="card-events"></div>
+    <h2><span class="num">11</span><span class="section-title">Eventos oferecem contexto; associações históricas não são efeitos causais</span></h2>
+    <div class="analysis-row">
+<div class="prose">
+<p>O estudo foi refeito sobre ofertas de Antica. Compara a mediana dos sete dias após o início à dos sete dias anteriores (ao menos 3 observações em cada janela) e confronta a mudança com 2.000 sorteios de datas placebo do mesmo mês e ano. As datas históricas dos eventos vêm do pacote recebido. A correção de múltiplos testes inclui conjuntamente Buy Offers e Sell Offers.</p>
+<p>${strongest.length ? `Há ${strongest.length} resultados com q inferior a 5%, concentrados em ${[...new Set(strongest.map(x => x.event))].join(', ')}. O número reduzido de ocorrências e a sobreposição de janelas impedem transformar essa associação em regra de execução.` : 'Nenhum teste permanece abaixo de q = 5% após a correção conjunta.'} O preço futuro não recebe um ajuste arbitrário por evento. Os resultados servem para definir períodos de observação, não para atribuir uma causa exclusiva ao movimento.</p>
+</div>
+<div class="evidence-stack"><div id="card-events"></div></div>
+</div>
   </section>`;
 
   // ---- 12 calendar
   html += `
   <section class="block" id="s12">
-    <h2><span class="num">12</span>Agenda de acompanhamento do próximo ciclo</h2>
-    <div class="prose">
-      <p>Os dois calendários fornecidos concordam nas datas dos eventos remanescentes. A base foi atualizada em ${br(R.calendarUpdated.slice(0, 10))}; a agenda futura permanece sujeita a alteração. A data final é exclusiva. O ICS posiciona os eventos às 08:00 ou 09:00 UTC, conforme o período do ano; o JSON usa marcadores de data.</p>
-      <p>A seleção abaixo mantém eventos de maior duração ou interesse para o ciclo. Não foram inventadas datas para futuros eventos de XP, loot ou updates ausentes dos arquivos.</p>
-    </div>
-    ${card({title: 'Calendário fornecido · setembro de 2026 a setembro de 2027', body: table({columns: [{key: 'start', label: 'Início', render: br}, {key: 'endExclusive', label: 'Fim exclusivo', render: br}, {key: 'event', label: 'Evento'}], rows: R.calendar.filter(x => !['Full Moon', 'Last Creep Standing', "Valentine's Day"].includes(x.event))})})}
+    <h2><span class="num">12</span><span class="section-title">Agenda de acompanhamento do próximo ciclo</span></h2>
+    <div class="analysis-row">
+<div class="prose">
+<p>Os dois calendários fornecidos concordam nas datas dos eventos remanescentes. A base foi atualizada em ${br(R.calendarUpdated.slice(0, 10))}; a agenda futura permanece sujeita a alteração. A data final é exclusiva. O ICS posiciona os eventos às 08:00 ou 09:00 UTC, conforme o período do ano; o JSON usa marcadores de data.</p>
+<p>A seleção abaixo mantém eventos de maior duração ou interesse para o ciclo. Não foram inventadas datas para futuros eventos de XP, loot ou updates ausentes dos arquivos.</p>
+</div>
+<div class="evidence-stack">${card({title: 'Calendário fornecido · setembro de 2026 a setembro de 2027', body: table({columns: [{key: 'start', label: 'Início', render: br}, {key: 'endExclusive', label: 'Fim exclusivo', render: br}, {key: 'event', label: 'Evento'}], rows: R.calendar.filter(x => !['Full Moon', 'Last Creep Standing', "Valentine's Day"].includes(x.event))})})}</div>
+</div>
   </section>`;
 
   // ---- 13 method
   html += `
   <section class="block" id="s13">
-    <h2><span class="num">13</span>Método, qualidade dos dados e limites de uso</h2>
-    <div class="prose">
-      <p>O painel cobre os 16 mundos solicitados. Enquanto o histórico utiliza os campos <code>sell_offer</code> e <code>buy_offer</code> da API, com o dia do servidor iniciado às 10h em Europe/Berlin, as capturas preservam os horários fornecidos sem pressupor um fuso que não consta dos arquivos. O Market monitor inclui observações até 25/09, ao passo que pesquisa, backtests e cenários permanecem ancorados em 23/09; a data da coleta da API não substitui a da oferta. As medianas semanais são rotuladas pelo domingo que encerra cada semana, e os cenários avançam a partir da captura de 23/09 em intervalos de sete dias.</p>
-      <p>Antes da modelagem, foram excluídos quadros sem ofertas, preços não positivos, ofertas cruzadas e observações nas quais Buy Offers ficavam abaixo de 80% de Sell Offers. Embora esse último filtro elimine preços extremos, inclusive Buy Offers de 1 gp, ele também pode retirar quadros reais com quoted spread muito amplo; por isso, os dados brutos permanecem preservados. Lacunas não foram preenchidas com médias diárias, e nenhum filtro centrado que consulte observações futuras foi usado no ajuste.</p>
-      <p>A regressão utiliza log-preço, tendência linear e dois pares de harmônicos anuais em até 130 semanas anteriores, enquanto o componente sazonal repete a variação entre datas separadas por 52 semanas. Quando não existe observação exatamente na data sazonal, aceita-se a mais próxima em até dez dias, desde que pertença ao período de treinamento. A média geométrica dos modelos disponíveis forma o cenário central, que é ancorado na oferta do corte da pesquisa; para cada outro mundo, preserva-se a relação inicial de preço da mesma ponta com Antica e acrescenta-se um estresse associado à instabilidade do prêmio local.</p>
-      <p>Para definir cada faixa de estresse, utiliza-se o maior valor entre o percentil 80 do erro absoluto em log no horizonte histórico mais próximo e a divergência entre os modelos. Soma-se, no mundo local, o percentil 80 da variação absoluta do prêmio em 13 semanas; se houver menos de cinco pares, usa-se a dispersão do prêmio em níveis. Como esse procedimento é uma regra de construção de cenários, as faixas não estimam quantis futuros calibrados nem capturam adequadamente a incerteza criada por uma fusão.</p>
-      <p>O complemento reproduz as mesmas regras de limpeza, o relógio do servidor e as séries semanais da análise principal; como verifica a identidade dessas séries e fixa todos os sorteios, uma nova execução reproduz <code>complement.json</code> byte a byte. A análise de reversões aplica o recuo mínimo de 5% do pacote recebido às medianas semanais, tratando pernas com menos de ${C.swings.minLegWeeks} semanas como oscilações dentro da fase. Já as probabilidades são estimadas em log-preço semanal com tendência, dois harmônicos anuais e erros ARIMA(1,1,0), a partir de 300 sorteios de parâmetros e 20 trajetórias por sorteio. A calibração reestima o modelo em origens quinzenais e o confronta com duas regras simples.</p>
-      <p>Para avaliar volatilidade, persistência e co-movimento entre mundos, utiliza-se um ponto por semana em vez da mediana semanal, que induziria dependência por suavização. O efeito do dia da semana é medido como desvio de uma mediana centrada de sete dias, com permutação dentro de cada semana e correção de Holm; como a janela usa dias anteriores e posteriores, essa medida é descritiva, não um sinal disponível em tempo real. O relative premium é calculado entre preços da mesma ponta e semana e exibido como Piece Price do mundo dividido pelo de Antica, menos um; nas capturas do corte da pesquisa, usa-se a mediana dos pares do mesmo dia. Uma mudança de patamar de pelo menos 15% separa a série de Luzibra. Nas simulações de Create Offer, cobra-se a taxa de 2% por criação prevista no manual oficial, embora a execução não seja garantida.</p>
-      <p>Como <a href="https://www.tibia.com/news/?id=8513&amp;subtopic=newsarchive">Obscubra e Jacabra precederam Terribra</a>, o histórico de Obscubra recuperado diretamente da API é apresentado separadamente, sem concatenar preços de mundos distintos. O <a href="https://www.tibia.com/news/?subtopic=latestnews">anúncio de fusão de 21/09/2026</a> inclui Luzibra na futura Deslumbra e informa 22/10 como primeira data possível; embora a mesma fonte registre ajustes na geração de gold em setembro, a amostra não identifica isoladamente seu efeito sobre TC.</p>
-      <p>Embora o pacote de análise recebido combine um índice baseado em <code>day_average_sell</code>/<code>day_average_buy</code> com uma extensão de 2023 baseada no ponto médio das ofertas, os modelos, cenários e probabilidades desta edição usam exclusivamente os melhores Piece Prices de Sell Offers e Buy Offers. Os resultados do pacote aparecem na seção 04 apenas como referência comparativa, enquanto suas conclusões sobre ciclos, persistência, dia da semana e eventos foram refeitas sobre ofertas. Reaproveitaram-se dele somente as datas históricas dos eventos. Como a ponderação e o alinhamento temporal das médias diárias não foram confirmados pelo provedor, elas aparecem apenas no diagnóstico separado da seção 10, sem serem tratadas como negócios executados.</p>
-      <p>As fontes compreendem as capturas fornecidas, a <a href="https://api.tibiamarket.top/docs">API pública do TibiaMarket</a>, os calendários JSON/ICS e os anúncios e o manual da CipSoft. O <a href="https://github.com/nesleykent/Tibinance/tree/main/reports/tc-cycle">pacote de reprodução</a> preserva entradas, hashes, transformações e resultados. Esta é uma pesquisa independente da Tibinance, sem afiliação à CipSoft ou ao TibiaMarket.</p>
-    </div>
+    <h2><span class="num">13</span><span class="section-title">Método, qualidade dos dados e limites de uso</span></h2>
+    <div class="narrative-grid"><div class="prose">
+<p>O painel cobre os 16 mundos solicitados. Enquanto o histórico utiliza os campos <code>sell_offer</code> e <code>buy_offer</code> da API, com o dia do servidor iniciado às 10h em Europe/Berlin, as capturas preservam os horários fornecidos sem pressupor um fuso que não consta dos arquivos. O Market monitor inclui observações até 25/09, ao passo que pesquisa, backtests e cenários permanecem ancorados em 23/09; a data da coleta da API não substitui a da oferta. As medianas semanais são rotuladas pelo domingo que encerra cada semana, e os cenários avançam a partir da captura de 23/09 em intervalos de sete dias.</p>
+<p>Antes da modelagem, foram excluídos quadros sem ofertas, preços não positivos, ofertas cruzadas e observações nas quais Buy Offers ficavam abaixo de 80% de Sell Offers. Embora esse último filtro elimine preços extremos, inclusive Buy Offers de 1 gp, ele também pode retirar quadros reais com quoted spread muito amplo; por isso, os dados brutos permanecem preservados. Lacunas não foram preenchidas com médias diárias, e nenhum filtro centrado que consulte observações futuras foi usado no ajuste.</p>
+</div><div class="prose">
+<p>A regressão utiliza log-preço, tendência linear e dois pares de harmônicos anuais em até 130 semanas anteriores, enquanto o componente sazonal repete a variação entre datas separadas por 52 semanas. Quando não existe observação exatamente na data sazonal, aceita-se a mais próxima em até dez dias, desde que pertença ao período de treinamento. A média geométrica dos modelos disponíveis forma o cenário central, que é ancorado na oferta do corte da pesquisa; para cada outro mundo, preserva-se a relação inicial de preço da mesma ponta com Antica e acrescenta-se um estresse associado à instabilidade do prêmio local.</p>
+<p>Para definir cada faixa de estresse, utiliza-se o maior valor entre o percentil 80 do erro absoluto em log no horizonte histórico mais próximo e a divergência entre os modelos. Soma-se, no mundo local, o percentil 80 da variação absoluta do prêmio em 13 semanas; se houver menos de cinco pares, usa-se a dispersão do prêmio em níveis. Como esse procedimento é uma regra de construção de cenários, as faixas não estimam quantis futuros calibrados nem capturam adequadamente a incerteza criada por uma fusão.</p>
+</div><div class="prose">
+<p>O complemento reproduz as mesmas regras de limpeza, o relógio do servidor e as séries semanais da análise principal; como verifica a identidade dessas séries e fixa todos os sorteios, uma nova execução reproduz <code>complement.json</code> byte a byte. A análise de reversões aplica o recuo mínimo de 5% do pacote recebido às medianas semanais, tratando pernas com menos de ${C.swings.minLegWeeks} semanas como oscilações dentro da fase. Já as probabilidades são estimadas em log-preço semanal com tendência, dois harmônicos anuais e erros ARIMA(1,1,0), a partir de 300 sorteios de parâmetros e 20 trajetórias por sorteio. A calibração reestima o modelo em origens quinzenais e o confronta com duas regras simples.</p>
+<p>Para avaliar volatilidade, persistência e co-movimento entre mundos, utiliza-se um ponto por semana em vez da mediana semanal, que induziria dependência por suavização. O efeito do dia da semana é medido como desvio de uma mediana centrada de sete dias, com permutação dentro de cada semana e correção de Holm; como a janela usa dias anteriores e posteriores, essa medida é descritiva, não um sinal disponível em tempo real. O relative premium é calculado entre preços da mesma ponta e semana e exibido como Piece Price do mundo dividido pelo de Antica, menos um; nas capturas do corte da pesquisa, usa-se a mediana dos pares do mesmo dia. Uma mudança de patamar de pelo menos 15% separa a série de Luzibra. Nas simulações de Create Offer, cobra-se a taxa de 2% por criação prevista no manual oficial, embora a execução não seja garantida.</p>
+</div><div class="prose">
+<p>Como <a href="https://www.tibia.com/news/?id=8513&amp;subtopic=newsarchive">Obscubra e Jacabra precederam Terribra</a>, o histórico de Obscubra recuperado diretamente da API é apresentado separadamente, sem concatenar preços de mundos distintos. O <a href="https://www.tibia.com/news/?subtopic=latestnews">anúncio de fusão de 21/09/2026</a> inclui Luzibra na futura Deslumbra e informa 22/10 como primeira data possível; embora a mesma fonte registre ajustes na geração de gold em setembro, a amostra não identifica isoladamente seu efeito sobre TC.</p>
+<p>Embora o pacote de análise recebido combine um índice baseado em <code>day_average_sell</code>/<code>day_average_buy</code> com uma extensão de 2023 baseada no ponto médio das ofertas, os modelos, cenários e probabilidades desta edição usam exclusivamente os melhores Piece Prices de Sell Offers e Buy Offers. Os resultados do pacote aparecem na seção 04 apenas como referência comparativa, enquanto suas conclusões sobre ciclos, persistência, dia da semana e eventos foram refeitas sobre ofertas. Reaproveitaram-se dele somente as datas históricas dos eventos. Como a ponderação e o alinhamento temporal das médias diárias não foram confirmados pelo provedor, elas aparecem apenas no diagnóstico separado da seção 10, sem serem tratadas como negócios executados.</p>
+<p>As fontes compreendem as capturas fornecidas, a <a href="https://api.tibiamarket.top/docs">API pública do TibiaMarket</a>, os calendários JSON/ICS e os anúncios e o manual da CipSoft. O <a href="https://github.com/nesleykent/Tibinance/tree/main/reports/tc-cycle">pacote de reprodução</a> preserva entradas, hashes, transformações e resultados. Esta é uma pesquisa independente da Tibinance, sem afiliação à CipSoft ou ao TibiaMarket.</p>
+</div></div>
     ${card({title: 'Cobertura e exclusões da modelagem', body: table({columns: [{key: 'world', label: 'Mundo'}, num('days', 'Dias de ofertas'), num('missingBook', 'Sem quadro de ofertas'), num('crossed', 'Cruzados'), num('wideSpread', 'Wide spread >20%'), {key: 'first', label: 'Primeira oferta', render: br}, {key: 'last', label: 'Última oferta', render: br}], rows: R.quality})})}
   </section>
   <footer>
     <p>Market monitor: <a href="market-update.json">market-update.json</a> (<code>market_update.py</code>); pesquisa com corte em 23/09: <a href="results.json">results.json</a> e <a href="complement.json">complement.json</a>. Hashes de entrada estão nos arquivos; <code>market_update.py --check</code> confere as novas capturas e <code>validate.py</code> reconfere a pesquisa.</p>
     <p>Não é recomendação de investimento. Tibia e Tibia Coins são marcas da CipSoft GmbH.</p>
-  </footer>`;
+  </footer>
+  </div>
+  </div>`;
 
   root.innerHTML = html;
   root.setAttribute('aria-busy', 'false');
+  document.getElementById('section-select').addEventListener('change', e => {
+    window.location.hash = e.target.value;
+  });
 
   // ---------------------------------------------------------------- dynamic blocks
   const hist = world => R.history.filter(x => x.world === world);
@@ -834,14 +890,22 @@ async function main() {
   const links = [...document.querySelectorAll('.toc a')];
   const io = new IntersectionObserver(entries => entries.forEach(en => {
     if (!en.isIntersecting) return;
-    links.forEach(a => a.classList.toggle('on', a.getAttribute('href') === `#${en.target.id}`));
-    // Keep the active entry visible in the horizontally scrolling index on narrow screens.
-    const a = links.find(l => l.classList.contains('on')), ol = a?.closest('ol');
-    if (ol) ol.scrollLeft = a.offsetLeft - ol.clientWidth / 2 + a.offsetWidth / 2;
+    links.forEach(a => {
+      const active = a.getAttribute('href') === `#${en.target.id}`;
+      a.classList.toggle('on', active);
+      if (active) a.setAttribute('aria-current', 'location');
+      else a.removeAttribute('aria-current');
+    });
+    document.getElementById('section-select').value = en.target.id;
   }), {rootMargin: '-45% 0px -50% 0px'});
   document.querySelectorAll('section.block').forEach(s => io.observe(s));
   ro.observe(root);
   document.getElementById('loading')?.remove();
+  // Resolve shared chapter/dossier links after the asynchronous report has rendered.
+  const destination = document.getElementById(window.location.hash.slice(1));
+  if (destination && root.contains(destination)) {
+    requestAnimationFrame(() => destination.scrollIntoView());
+  }
 }
 
 main().catch(err => {
