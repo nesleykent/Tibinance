@@ -1,0 +1,18 @@
+{
+  "luzibra": {
+    "id": 8475,
+    "date": "2025-07-30",
+    "category": "development",
+    "type": "ticker",
+    "url": "https://www.tibia.com/news/?subtopic=newsarchive&id=8475",
+    "content": "With yesterday's server save, we have removed the Premium restriction for the game worlds Kalimera, Luzibra, Sonera. They are now open for free account players. We have also removed the transfer block of the following game worlds: Ambra, Flamera and Wadira. Please note that you can only move to a game world initially protected by BattlEye if your character also comes from a world which has been protected right from its release. ",
+    "content_html": "With yesterday&#39;s server save, we have removed the Premium restriction for the game worlds Kalimera, Luzibra, Sonera. They are now open for free account players. We have also removed the transfer block of the following game worlds: Ambra, Flamera and Wadira. Please note that you can only move to a game world initially protected by BattlEye if your character also comes from a world which has been protected right from its release. "
+  },
+  "apiDocumentation": {
+    "url": "https://api.tibiamarket.top/openapi.json",
+    "info": {
+      "title": "FastAPI",
+      "version": "0.1.0"
+    }
+  }
+}

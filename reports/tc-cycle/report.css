@@ -1,0 +1,540 @@
+/*
+ * Tibinance Research: the shared editorial system for every chapter, exhibit and note of both editions.
+ *
+ * Nothing here is sized by hand. Two inputs generate everything:
+ *
+ *   --type-base and --type-ratio  every font size is base × ratio^n, a
+ *                                 seven-step modular scale (--step-n2 … --step-5)
+ *   --unit                        every margin, padding, gap and control size
+ *                                 is a whole multiple of it (--space-0 … --space-8)
+ *
+ * Lines are one of two weights, --rule and --rule-strong.
+ *
+ * Text uses three leadings (tight for headings and figures, text for data and
+ * chrome, body for long editorial copy), two weights (regular, strong), two families (editorial serif for the
+ * reading hierarchy, UI sans for exhibits, data and chrome) and two trackings
+ * (tight on serif headings, open on capital labels). Breakpoints and print
+ * change the inputs, not the components.
+ */
+:root {
+  --canvas:#fff; --surface:#fff; --surface-soft:#f5f5f7; --surface-hover:#f2f2f4;
+  --line:#e2e2e7; --line-strong:#b7b7c1; --line-faint:#ededf0; --ink:#24232a; --muted:#62616d;
+  --accent:#7539a6; --accent-soft:#f0e9f6;
+  /* control materials: a translucent track and a raised thumb, as in platform segmented controls */
+  --control-track:rgb(118 118 128 / .12); --control-track-hover:rgb(118 118 128 / .18);
+  --control-thumb-shadow:0 1px 3px rgb(0 0 0 / .12), 0 0 0 var(--rule) rgb(0 0 0 / .04);
+  --positive:#246644; --negative:#a42f45; --caution:#805909;
+  --chart-a:#1f77b4; --chart-b:#e0700c;
+
+  --font-ui:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --font-editorial:Georgia,"Times New Roman",serif;
+  --font-code:ui-monospace,SFMono-Regular,Menlo,monospace;
+
+  /* type: one base, one ratio */
+  --type-base:1rem;
+  --type-ratio:1.2;
+  --step-0:var(--type-base);
+  --step-1:calc(var(--step-0) * var(--type-ratio));
+  --step-2:calc(var(--step-1) * var(--type-ratio));
+  --step-3:calc(var(--step-2) * var(--type-ratio));
+  --step-4:calc(var(--step-3) * var(--type-ratio));
+  --step-5:calc(var(--step-4) * var(--type-ratio));
+  --step-n1:calc(var(--step-0) / var(--type-ratio));
+  --step-n2:calc(var(--step-n1) / var(--type-ratio));
+  --leading-tight:1.2; --leading-text:1.5; --leading-body:1.7;
+  /* body copy: long editorial text sits half a step above the base, on the open leading,
+     with one em of its own size between paragraphs */
+  --step-body:calc(var(--step-0) * sqrt(var(--type-ratio)));
+  --paragraph-gap:var(--step-body);
+  /* chart legends: half a step between a chart's annotations (step -2) and supporting text (step -1) */
+  --step-legend:calc(var(--step-n1) / sqrt(var(--type-ratio)));
+  --weight-regular:400; --weight-strong:600;
+  --tracking-tight:-.02em; --tracking-caps:.06em;
+
+  /* space: one unit */
+  --unit:4px;
+  --space-0:calc(var(--unit) / 2);
+  --space-1:var(--unit);
+  --space-2:calc(var(--unit) * 2);
+  --space-3:calc(var(--unit) * 3);
+  --space-4:calc(var(--unit) * 4);
+  --space-5:calc(var(--unit) * 6);
+  --space-6:calc(var(--unit) * 8);
+  --space-7:calc(var(--unit) * 12);
+  --space-8:calc(var(--unit) * 16);
+
+  /* controls: one definition for every segmented control and select (type, height, padding, radius) */
+  --control-type:var(--step-n2);
+  --control-height:calc(var(--unit) * 6);
+  --control-pad:var(--space-2);
+  --control-inset:var(--space-0);
+  --control-radius:var(--radius);
+
+  /* dimensions, all in units */
+  /* every control row and control stack sits at the end of its exhibit */
+  --control-align:end;
+  --header-height:calc(var(--unit) * 14);
+  --rule:1px; --rule-strong:2px;
+  --radius:calc(var(--unit) * 2);
+  --radius-sm:var(--unit);
+  --rail-width:calc(var(--unit) * 40);
+  --page-width:calc(var(--unit) * 360);
+  --page-gutter:calc(clamp(var(--space-6), 10vw, calc(var(--unit) * 40)) + var(--space-2));
+  --layout-gap:var(--space-7);
+  --anchor-offset:calc(var(--header-height) + var(--space-5));
+  --picker-min:calc(var(--unit) * 32);
+  --picker-max:calc(var(--unit) * 60);
+  --toc-picker-max:calc(var(--unit) * 110);
+  --drawer-max:calc(var(--unit) * 80);
+  --print-chart-max:calc(var(--unit) * 65);
+  --export-min-width:calc(var(--unit) * 150);
+
+  /* charts: one plot frame, one mark size and one set of label offsets for every chart.
+     report.js reads these, so a chart and its legend always share geometry. */
+  --chart-height:calc(var(--unit) * 60);
+  --chart-min-width:calc(var(--unit) * 75);
+  /* below this plot width, point labels shorten to month/year */
+  --chart-compact:calc(var(--unit) * 140);
+  --plot-top:var(--space-3);
+  --plot-right:var(--space-4);
+  --plot-bottom:calc(var(--unit) * 7);
+  --plot-left:calc(var(--unit) * 14);
+  --plot-left-category:calc(var(--unit) * 23);
+  --chart-row:var(--space-5);
+  --bar-max:var(--space-5);
+  --mark-size:var(--space-2);
+  --point-size:var(--space-1);
+  --label-offset:var(--space-1);
+  --tick-gap:var(--space-2);
+  --tick-spacing:calc(var(--unit) * 22);
+  --edge-clearance:var(--space-6);
+  --label-clearance:calc(var(--unit) * 16);
+  --tip-offset:var(--space-3);
+
+  /* table columns are sized in characters of their own text */
+  --col-wrap-min:14ch; --col-wrap-max:36ch; --col-head-max:16ch;
+
+  /* stacking order, lowest first */
+  --layer-tip:1; --layer-toc:2; --layer-header:3; --layer-skip:4; --layer-status:5;
+
+  /* chart marks share the line weights; dashes are in spacing steps */
+  --stroke-data:var(--rule-strong);
+  --stroke-thin:var(--rule);
+  --stroke-halo:calc(var(--rule-strong) + var(--rule));
+  --dash-series-step:var(--space-1);
+  --dash-series:var(--dash-series-step) var(--dash-series-step);
+  --dash-guide-step:var(--space-0);
+  --dash-guide:var(--dash-guide-step) var(--dash-guide-step);
+  /* round dots, one mark apart: the bridge across a stretch without observations */
+  --dash-gap-step:var(--space-1);
+  --dash-gap:0 var(--dash-gap-step);
+
+  /* translucency */
+  --opacity-band-outer:.12; --opacity-band-inner:.22; --opacity-axis:.5; --opacity-disabled:.45; --opacity-recede:.35;
+  --opacity-reference:.30;
+  --shadow-popover:0 var(--space-1) var(--space-4) rgb(0 0 0 / .12);
+  color-scheme:light;
+}
+
+/* ---- base ---------------------------------------------------------------- */
+* { box-sizing:border-box; }
+html { -webkit-text-size-adjust:100%; }
+body { margin:0; background:var(--canvas); color:var(--ink); font:var(--weight-regular) var(--step-0)/var(--leading-text) var(--font-ui); }
+a { color:var(--accent); text-underline-offset:var(--space-1); }
+a:hover { text-decoration-thickness:var(--rule-strong); }
+strong,b { font-weight:var(--weight-strong); }
+code { padding:var(--space-0) var(--space-1); background:var(--surface-soft); font-family:var(--font-code); font-size:var(--step-n1); overflow-wrap:anywhere; }
+[hidden] { display:none!important; }
+.wrap { max-width:var(--page-width); margin-inline:auto; padding-inline:var(--page-gutter); }
+:focus-visible { outline:var(--rule-strong) solid var(--accent); outline-offset:var(--space-1); }
+#report:focus { outline:none; }
+.skip-link { position:fixed; top:var(--space-2); left:var(--space-4); transform:translateY(calc(-100% - var(--space-4))); z-index:var(--layer-skip); padding:var(--space-2) var(--space-4); background:var(--canvas); border:var(--rule) solid var(--accent); }
+.skip-link:focus { transform:none; }
+
+/* ---- type ------------------------------------------------------------------
+   Every text element maps to one step of the scale here, and nowhere else. */
+h1,h2,h3,.dossier h3 {
+  font-family:var(--font-editorial); font-weight:var(--weight-regular);
+  line-height:var(--leading-tight); letter-spacing:var(--tracking-tight);
+}
+h1 { font-size:var(--step-5); }
+h2 { font-size:var(--step-4); }
+.kpi .value { font-size:var(--step-2); font-weight:var(--weight-strong); line-height:var(--leading-tight); letter-spacing:var(--tracking-tight); }
+h3 { font-size:var(--step-2); }
+.dossier h3,.deck,.card-title,.site .wordmark { font-size:var(--step-1); }
+.card-title { font-family:var(--font-ui); font-weight:var(--weight-strong); line-height:var(--leading-tight); letter-spacing:normal; }
+
+/* step -1: supporting text, captions, data and controls (captions are told apart by colour, not size) */
+.card-sub,table.data,.toc a,.toc-mobile,.evidence-key,
+.meta,.kpi .note,.card-note,.dossier-kind,table.data caption,
+.scroll[data-overflow="true"]::after,.toc .toc-top,.world-reading time,footer,.endnotes,.export-status {
+  font-family:var(--font-ui); font-size:var(--step-n1); font-weight:var(--weight-regular); letter-spacing:normal;
+}
+
+/* step -2: capital labels (including disclosure toggles), and a chart's own annotations: axis and
+   annotation text and its tooltip */
+.eyebrow,.toc-title,details.drawer summary,table.data thead th,.kpi .label,.evidence,
+.sort-button .sort-arrow,.toc-num,.stale,.chart text,.tip {
+  font-family:var(--font-ui); font-size:var(--step-n2); font-weight:var(--weight-regular); letter-spacing:normal;
+}
+.legend { font-family:var(--font-ui); font-size:var(--step-legend); font-weight:var(--weight-regular); letter-spacing:normal; }
+
+/* control text: selects and segments share the control's type step */
+select,.seg button {
+  font-family:var(--font-ui); font-size:var(--control-type); font-weight:var(--weight-regular); letter-spacing:normal; line-height:var(--leading-tight);
+}
+
+/* capital labels: step -2, strong, open tracking */
+/* every table header, simple or grouped, is a capital label */
+.eyebrow,.toc-title,details.drawer summary,table.data thead th,.kpi .label,.evidence {
+  font-weight:var(--weight-strong); letter-spacing:var(--tracking-caps); text-transform:uppercase;
+}
+.sort-button .sort-arrow { text-transform:none; letter-spacing:normal; font-weight:var(--weight-regular); }
+
+.site .wordmark { font-weight:var(--weight-strong); letter-spacing:var(--tracking-tight); }
+.wordmark span { font-family:var(--font-editorial); font-weight:var(--weight-regular); }
+
+table.data,.kpi .value,.tip,.toc-num,h2 .num { font-variant-numeric:lining-nums tabular-nums; }
+
+/* ---- header ---------------------------------------------------------------- */
+.site { position:sticky; top:0; z-index:var(--layer-header); background:var(--canvas); }
+.site .wrap { min-height:var(--header-height); display:flex; align-items:center; justify-content:space-between; gap:var(--space-4); position:relative; }
+.site .wrap::after { content:""; position:absolute; bottom:0; left:var(--page-gutter); right:var(--page-gutter); height:var(--rule-strong); background:var(--ink); }
+.site a { text-decoration:none; }
+.site .wordmark { color:var(--ink); white-space:nowrap; }
+.wordmark span { color:var(--muted); }
+.site nav { display:flex; align-items:center; justify-content:flex-end; gap:var(--space-4); }
+select.picker { min-width:var(--picker-min); }
+
+/* ---- hero ------------------------------------------------------------------ */
+.hero { padding:var(--space-5) 0 var(--space-4); }
+.eyebrow { margin:0 0 var(--space-2); color:var(--muted); }
+.eyebrow time { white-space:nowrap; }
+.eyebrow-sep { margin-inline:var(--space-3); color:var(--line-strong); }
+h1 { margin:0; text-wrap:balance; }
+.deck { margin:var(--space-3) 0 0; color:var(--muted); }
+.meta { margin:var(--space-2) 0 0; color:var(--muted); }
+.meta a { color:inherit; }
+/* A compact editorial strip: shared rows align labels, figures and their context. */
+.kpis { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:var(--space-0) var(--space-5); margin-top:var(--space-3); padding-block:var(--space-2); border-block:var(--rule) solid var(--line); }
+.kpi { display:grid; grid-template-rows:subgrid; grid-row:span 3; min-width:0; }
+.kpi .label { color:var(--muted); line-height:var(--leading-tight); align-self:end; }
+.kpi .value { margin:0; white-space:nowrap; }
+.kpi .note { color:var(--muted); font-size:var(--step-n2); line-height:var(--leading-text); text-wrap:pretty; }
+
+/* ---- layout and contents rail ---------------------------------------------- */
+.report-layout { display:grid; grid-template-columns:var(--rail-width) minmax(0,1fr); gap:var(--layout-gap); align-items:start; padding-top:var(--space-5); }
+.report-body { min-width:0; }
+.toc { position:sticky; top:calc(var(--header-height) + var(--space-4)); max-height:calc(100dvh - var(--header-height) - var(--space-6)); overflow-y:auto; scrollbar-width:thin; }
+.toc-title { margin:0 0 var(--space-3); color:var(--muted); }
+.toc ol { list-style:none; padding:0; margin:0; }
+.toc a { display:grid; grid-template-columns:var(--space-5) minmax(0,1fr); align-items:baseline; gap:var(--space-3); padding:var(--space-2) 0; color:var(--muted); text-decoration:none; }
+.toc-num { color:var(--muted); }
+.toc a:hover,.toc a.on { color:var(--accent); }
+.toc a.on { font-weight:var(--weight-strong); }
+.toc a.on .toc-num { color:var(--accent); }
+.toc .toc-top { display:flex; justify-content:space-between; margin-top:var(--space-3); padding-top:var(--space-3); border-top:var(--rule) solid var(--line); }
+.toc-mobile { display:none; }
+
+/* ---- sections ---------------------------------------------------------------
+   Space above a heading is always larger than the space below it, so every
+   heading reads as belonging to what follows. */
+/* the report shows one page at a time, and every page opens the body as the executive summary always has */
+section.block { scroll-margin-top:var(--anchor-offset); }
+/* the executive summary: each question sits beside its answer, which opens with the status of its evidence */
+.answers { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,3fr); gap:var(--space-3) var(--space-5); margin:0; font-size:var(--step-body); line-height:var(--leading-body); }
+.answers dt { font-family:var(--font-editorial); font-weight:var(--weight-strong); }
+.answers dd { margin:0; }
+.evidence-key { display:flex; flex-wrap:wrap; gap:var(--space-2) var(--space-5); margin:0; padding:0; list-style:none; color:var(--muted); }
+h2 { margin:0 0 var(--space-4); }
+/* A chapter heading is one composition: the number, a hairline and the title share the heading's
+   size and first baseline; a title that wraps stays in its own column, clear of the number. */
+.section-heading { display:grid; grid-template-columns:max-content minmax(0,1fr); align-items:baseline; column-gap:var(--space-4); }
+.section-heading .num { font-family:var(--font-ui); color:var(--accent); }
+.section-heading .section-title { padding-left:var(--space-4); border-left:var(--rule) solid var(--line-strong); }
+h3 { margin:var(--space-6) 0 var(--space-3); }
+/* a heading owns the space beneath it: what follows never adds its own top margin */
+:is(h2,h3):not(.card-title) + *,:is(h2,h3):not(.card-title) + * > :first-child { margin-top:0; }
+/* ---- body copy: every paragraph of running text in the report ---- */
+.prose,.dossier { font-size:var(--step-body); line-height:var(--leading-body); }
+.prose p,.dossier p { margin:0 0 var(--paragraph-gap); }
+.prose p:last-child { margin-bottom:0; }
+.prose--spaced { margin-top:var(--space-3); }
+/* prose precedes its evidence; charts and wide tables receive the full column */
+.analysis-row,.section-intro,.narrative-grid { display:grid; grid-template-columns:minmax(0,1fr); gap:var(--space-4); min-width:0; }
+/* paragraphs are one em apart wherever they stack, as in .prose */
+.narrative-grid { gap:var(--paragraph-gap); }
+.analysis-row { align-items:start; gap:var(--space-6); margin-block:var(--space-6); }
+.analysis-row>*,.evidence-stack,.section-intro>* { min-width:0; }
+.evidence-stack { display:grid; grid-template-columns:minmax(0,1fr); align-content:start; gap:var(--space-6); }
+.evidence-stack>* { min-width:0; }
+.evidence-stack>.card,.evidence-stack>div>.card,.analysis-row>div>.card { margin:0; }
+.narrative-grid { margin-bottom:var(--space-6); }
+.narrative-grid>p { margin:0; }
+.section-intro { gap:var(--space-5); margin-bottom:var(--space-6); }
+.section-intro .controls { margin:0; }
+.predecessor-note { display:grid; gap:var(--space-4); }
+/* formulas (LaTeX, typeset by KaTeX): one type step above the text they sit in; a display formula is a
+   paragraph of the grid, so the grid's paragraph gap spaces it and a long one scrolls within the column */
+.katex { font-size:calc(1em * var(--type-ratio)); }
+.math { max-width:100%; overflow-x:auto; overflow-y:hidden; scrollbar-width:thin; }
+.math .katex-display { margin:0; }
+/* citations: a superscript note number at step -2, the size of the capital labels, after the punctuation it follows; it never
+   opens the line spacing. The endnotes are numbered in reading order; long URLs may break anywhere. */
+sup.note { font-size:var(--step-n2); line-height:0; vertical-align:super; }
+sup.note a { text-decoration:none; scroll-margin-top:var(--anchor-offset); }
+#sources h2 { margin:0 0 var(--space-4); }
+.endnotes { margin:0; padding-left:var(--space-6); display:grid; gap:var(--space-3); line-height:var(--leading-text); }
+.endnotes li { padding-left:var(--space-1); overflow-wrap:anywhere; scroll-margin-top:var(--anchor-offset); }
+.endnotes li:target { background:var(--accent-soft); }
+
+/* ---- market monitor -------------------------------------------------------- */
+.market-panel { margin-bottom:var(--space-6); }
+.market-panel table.data a { color:var(--ink); text-decoration:none; font-weight:var(--weight-strong); }
+.market-panel table.data a:hover { color:var(--accent); text-decoration:underline; }
+.market-mobile-date { display:none; }
+/* an age tag sits inside its row's line: tight leading, so a tagged row is as tall as any other */
+.stale { display:inline-block; margin-left:var(--space-2); padding:0 var(--space-1); border:var(--rule) solid currentColor; border-radius:var(--radius-sm); color:var(--caution); line-height:var(--leading-tight); white-space:nowrap; }
+.world-reading { display:flex; align-items:baseline; gap:var(--space-2); }
+/* two areas: the name reserves the widest name's width (set by report.js), so every date starts at one x */
+.world-name { flex:none; min-width:var(--world-name,auto); }
+
+[data-report-anchor] { scroll-margin-top:var(--anchor-offset); }
+
+/* ---- evidential status ---------------------------------------------------------
+   One capital label opens the context line of every exhibit and headline figure. Its rule weakens with the
+   evidence, in the report's own mark language: a solid fill for what was recorded, a solid rule for what was
+   scored out of sample, a dashed rule (the scenario line) for a model's output and a dotted rule for exploration. */
+.evidence { display:inline-block; margin-right:var(--space-1); padding:0 var(--space-1); border:var(--rule) solid var(--ink); border-radius:var(--radius-sm); color:var(--ink); line-height:var(--leading-text); white-space:nowrap; }
+.evidence-observed { background:var(--ink); color:var(--surface); }
+.evidence-model { border-style:dashed; }
+.evidence-exploratory { border-style:dotted; border-color:var(--muted); color:var(--muted); }
+/* in the headline strip the label takes its own line between the figure and its context */
+.kpi .evidence { display:table; margin:var(--space-1) 0; }
+
+/* ---- exhibits ----------------------------------------------------------------
+   One anatomy for every chart and table, as in a Tableau sheet: title and subtitle (scope,
+   unit) on the left; every control that acts on the exhibit stacked on the right, one step
+   apart; the plot or table; its legend; its note. Nothing else sits between them. */
+.card { min-width:0; margin:var(--space-6) 0; background:var(--surface); }
+.card-head { display:grid; grid-template-columns:minmax(0,1fr) auto; grid-template-areas:"title controls" "sub controls"; align-items:start; column-gap:var(--space-4); }
+.card-lead { display:contents; }
+.card-head .card-title { grid-area:title; }
+.card-title { margin:0; }
+.card-sub { grid-area:sub; margin:var(--space-2) 0 0; color:var(--muted); }
+.card-controls { grid-area:controls; display:grid; justify-items:var(--control-align); gap:var(--space-2); }
+.card-controls:empty { display:none; }
+/* A single control belongs to the context line: the title stands alone, and the control sits at
+   the end of the subtitle, on its last baseline, directly above the data it changes. A stack of
+   controls keeps the column beside the whole header. */
+.card-head:has(> .card-lead > .card-sub):has(> .card-controls > :only-child) { grid-template-areas:"title title" "sub controls"; }
+.card-head:has(> .card-lead > .card-sub):has(> .card-controls > :only-child) :is(.card-sub,.card-controls) { align-self:last baseline; }
+.card-body { padding:var(--space-4) 0 0; }
+/* a chart's note reads as a table's caption: under the exhibit, one step below its legend */
+.card-note { margin:0; padding-top:var(--space-3); color:var(--muted); }
+.grid2 { display:grid; grid-template-columns:minmax(0,1fr); align-items:start; gap:var(--space-6); margin-block:var(--space-6); }
+.grid2>.card,.grid2>div>.card { margin:0; }
+.grid2>div { min-width:0; }
+
+/* ---- controls ---------------------------------------------------------------- */
+/* Icon buttons (the language switch, a chapter's link, a figure's export): one glyph, one unit clear of the
+   edge of its box, so beside a title the glyph sits one unit after the text, raised by half its size like a note. */
+.icon-button { --icon-size:var(--space-4); display:inline-flex; align-items:center; justify-content:center; width:calc(var(--icon-size) + var(--space-2)); height:calc(var(--icon-size) + var(--space-2)); padding:0; border:0; border-radius:var(--radius-sm); color:var(--muted); background:transparent; cursor:pointer; }
+.icon-button svg { width:var(--icon-size); height:var(--icon-size); fill:none; stroke:currentColor; stroke-width:var(--rule); stroke-linecap:round; stroke-linejoin:round; }
+/* a glyph is drawn in the report's hairline at every icon size */
+.icon-button svg * { vector-effect:non-scaling-stroke; }
+.icon-button:hover,.icon-button[data-copied] { color:var(--accent); }
+.icon-button:hover { background:var(--surface-hover); }
+.icon-button:disabled { opacity:var(--opacity-disabled); cursor:wait; }
+:is(h2,h3) .icon-button { position:relative; top:calc(var(--icon-size) / -2); vertical-align:baseline; }
+.card-title .icon-button { --icon-size:var(--space-3); }
+.drawer > .icon-button { float:right; }
+.controls,.table-tools { display:flex; align-items:center; justify-content:var(--control-align); flex-wrap:wrap; gap:var(--space-2); margin:var(--space-2) 0; }
+/* One control language: a recessed track; the current choice is a raised white thumb in ink,
+   never a colour change. Equal-width segments, hairline dividers between unselected ones. */
+select,.seg { border:0; border-radius:var(--control-radius); background-color:var(--control-track); color:var(--ink); }
+/* the chevron sits one pad from the edge, and the text keeps one pad clear of it */
+select { appearance:none; min-height:var(--control-height); padding:0 calc(var(--control-pad) * 3) 0 var(--control-pad); max-width:100%; background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%); background-size:var(--space-1) var(--space-1); background-repeat:no-repeat; background-position:calc(100% - var(--control-pad) - var(--space-1)) 50%,calc(100% - var(--control-pad)) 50%; cursor:pointer; }
+select:hover { background-color:var(--control-track-hover); }
+.seg { display:inline-grid; grid-auto-flow:column; grid-auto-columns:1fr; width:fit-content; max-width:100%; padding:var(--control-inset); min-height:var(--control-height); }
+.seg button { padding:0 var(--control-pad); border:0; border-radius:calc(var(--control-radius) - var(--control-inset)); background:transparent; color:var(--ink); cursor:pointer; white-space:normal; text-wrap:balance; }
+.seg button:not([aria-pressed="true"]) + button:not([aria-pressed="true"]) { background:linear-gradient(var(--line-strong),var(--line-strong)) left center / var(--rule) 50% no-repeat; }
+.seg button[aria-pressed="true"] { background:var(--surface); box-shadow:var(--control-thumb-shadow); font-weight:var(--weight-strong); }
+/* each segment reserves the width of its strong-weight label, so selection never resizes the control */
+.seg button { display:inline-flex; flex-direction:column; justify-content:center; align-items:center; }
+.seg button::after { content:attr(data-label); height:0; overflow:hidden; visibility:hidden; font-weight:var(--weight-strong); pointer-events:none; user-select:none; }
+.seg:hover button:not([aria-pressed="true"]):hover { color:var(--muted); }
+.seg button:focus-visible { outline-offset:0; }
+select:disabled,.seg button:disabled { opacity:var(--opacity-disabled); cursor:not-allowed; }
+
+/* ---- tables ------------------------------------------------------------------ */
+.scroll { max-width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent; padding-bottom:var(--space-1); }
+.scroll[data-overflow="true"]::after { content:'Scroll to see every column →'; display:block; position:sticky; left:0; width:100%; padding-top:var(--space-3); color:var(--muted); }
+:root:lang(pt) .scroll[data-overflow="true"]::after { content:'Role para ver todas as colunas →'; }
+.scroll:focus-visible { outline-offset:var(--space-0); }
+table.data { width:100%; border-collapse:collapse; }
+table.data caption { caption-side:bottom; padding:var(--space-3) 0 0; color:var(--muted); text-align:left; white-space:normal; }
+table.data thead th { padding:var(--space-1) var(--space-2); border-bottom:var(--rule) solid var(--line-strong); color:var(--ink); font-weight:var(--weight-strong); line-height:var(--leading-tight); text-align:left; white-space:normal; vertical-align:bottom; }
+table.data td,table.data tbody th { padding:var(--space-1) var(--space-2); border-bottom:var(--rule) solid var(--line-faint); white-space:nowrap; vertical-align:top; }
+table.data tbody th { text-align:left; font-weight:var(--weight-strong); }
+table.data tr>:first-child { padding-left:0; }
+table.data tr>:last-child { padding-right:0; }
+table.data .n { text-align:right; }
+table.data .wrap { min-width:var(--col-wrap-min); max-width:var(--col-wrap-max); white-space:normal; }
+table.data tbody tr:hover { background:var(--surface-hover); }
+table.data .group-start { padding-left:var(--space-4); }
+table.data .group-title { text-align:center; padding:0 var(--space-2) var(--space-1); border-bottom:var(--rule) solid var(--line); color:var(--ink); font-weight:var(--weight-strong); }
+table.data .group-title.group-start { padding-left:var(--space-4); }
+.depth-table { min-width:0; }
+.sort-button { position:relative; display:inline-flex; align-items:center; justify-content:inherit; max-width:var(--col-head-max); border:0; padding:var(--space-0) 0; min-height:var(--space-5); background:transparent; color:inherit; font:inherit; text-transform:inherit; letter-spacing:inherit; line-height:inherit; text-align:inherit; cursor:pointer; }
+.col-head { display:inline-block; max-width:var(--col-head-max); padding:var(--space-0) 0; }
+.sort-button:hover { color:var(--accent); }
+/* the arrow sits outside the label, so a header lines up with its column's values */
+.sort-button .sort-arrow { position:absolute; left:100%; margin-left:var(--space-1); color:var(--muted); visibility:hidden; }
+table.data th.n .sort-arrow { left:auto; right:100%; margin:0 var(--space-1) 0 0; }
+.sort-button:hover .sort-arrow,.sort-button:focus-visible .sort-arrow,[aria-sort="ascending"] .sort-arrow,[aria-sort="descending"] .sort-arrow { visibility:visible; }
+[aria-sort="ascending"] .sort-button,[aria-sort="descending"] .sort-button,[aria-sort="ascending"] .sort-arrow,[aria-sort="descending"] .sort-arrow { color:var(--accent); }
+table.data th.n .sort-button { justify-content:flex-end; }
+.pos { color:var(--positive); } .neg { color:var(--negative); } .dim { color:var(--muted); } .flag { font-weight:var(--weight-strong); }
+
+/* ---- charts and data drawers ------------------------------------------------- */
+.chart { position:relative; min-width:0; }
+.chart svg { display:block; width:100%; height:auto; overflow:visible; }
+.chart text { fill:var(--muted); }
+.chart .mk text { fill:var(--muted); paint-order:stroke; stroke:var(--surface); stroke-width:var(--stroke-halo); stroke-linejoin:round; }
+.chart .grid line { stroke:var(--line-faint); }
+.chart .baseline { stroke:var(--line-strong); stroke-width:var(--stroke-thin); }
+.chart .axis line,.chart .zero { stroke:var(--muted); stroke-opacity:var(--opacity-axis); }
+.chart text.cat { fill:var(--ink); }
+.chart .connector { stroke-width:var(--stroke-data); stroke-opacity:var(--opacity-axis); }
+.chart .whisker { stroke-width:var(--stroke-thin); }
+.chart .hit { fill:transparent; }
+.chart .mark { cursor:default; }
+.chart svg:has(.mark:hover) .mark:not(:hover) { opacity:var(--opacity-recede); }
+.chart .line { fill:none; stroke-width:var(--stroke-data); stroke-linejoin:round; stroke-linecap:round; }
+.chart .thin { stroke-width:var(--stroke-thin); }
+.chart .dash { stroke-dasharray:var(--dash-series); }
+.chart .gap { stroke-dasharray:var(--dash-gap); }
+.c-ask { stroke:var(--chart-a); fill:var(--chart-a); }
+.c-bid { stroke:var(--chart-b); fill:var(--chart-b); }
+.c-ink { stroke:var(--ink); fill:var(--ink); }
+.c-muted { stroke:var(--muted); fill:var(--muted); }
+.line.c-ask,.line.c-bid,.line.c-ink,.line.c-muted { fill:none; }
+.band { stroke:none; }
+.band.o1 { fill-opacity:var(--opacity-band-outer); } .band.o2 { fill-opacity:var(--opacity-band-inner); }
+.chart .pt { stroke:var(--surface); stroke-width:var(--stroke-thin); }
+/* Shared fixed opacity for the historical endpoint and its legend at every horizon. */
+.chart .historical { --reference-opacity:var(--opacity-reference); }
+.chart circle.historical,.chart .sw.historical { opacity:var(--reference-opacity); }
+.chart .premium-gradient .c-ask { stop-color:var(--chart-a); }
+.chart .premium-gradient .c-bid { stop-color:var(--chart-b); }
+.chart .premium-gradient .historical { stop-opacity:var(--reference-opacity); }
+.chart .premium-shape { stroke:none; fill-rule:nonzero; }
+.chart .hollow { fill:var(--surface); stroke-width:var(--stroke-data); }
+.chart .rule { stroke:var(--muted); stroke-dasharray:var(--dash-guide); }
+.chart .hover { fill:transparent; cursor:crosshair; }
+.tip { position:absolute; z-index:var(--layer-tip); padding:var(--space-1) var(--space-2); border:var(--rule) solid var(--line-strong); border-radius:var(--radius-sm); background:var(--surface); box-shadow:var(--shadow-popover); pointer-events:none; white-space:nowrap; }
+/* a tooltip is a small report: the entity or date, then one aligned row per measure */
+.tip-head { margin-bottom:var(--space-0); padding-bottom:var(--space-0); border-bottom:var(--rule) solid var(--line); color:var(--ink); font-weight:var(--weight-strong); }
+.tip-rows { display:grid; grid-template-columns:auto auto; gap:0 var(--space-3); line-height:var(--leading-text); }
+.tip-rows>span { display:flex; align-items:center; gap:var(--space-1); color:var(--muted); }
+.tip-rows>.tip-v { justify-content:flex-end; color:var(--ink); font-weight:var(--weight-strong); }
+/* legends sit under the plot, centred on the plot area: the same margins as the plot, wider on the left where rows carry names */
+.legend { display:flex; flex-wrap:wrap; justify-content:center; gap:var(--space-0) var(--space-3); margin:var(--space-2) 0 0; padding-inline:var(--plot-left) var(--plot-right); color:var(--muted); }
+.legend.category { padding-left:var(--plot-left-category); }
+.legend span { display:inline-flex; align-items:center; gap:var(--space-1); }
+/* legend keys draw the chart's own marks, so they take the chart's geometry */
+.sw { display:inline-block; width:var(--space-3); height:var(--stroke-data); border-radius:var(--space-0); color:var(--muted); background:currentColor; }
+.sw.ask { color:var(--chart-a); } .sw.bid { color:var(--chart-b); } .sw.ink { color:var(--ink); } .sw.muted { color:var(--muted); }
+.sw.band-ask { height:var(--space-2); background:color-mix(in srgb,var(--chart-a) calc(var(--opacity-band-inner) * 100%),transparent); }
+.sw.band-bid { height:var(--space-2); background:color-mix(in srgb,var(--chart-b) calc(var(--opacity-band-inner) * 100%),transparent); }
+.sw.thin { height:var(--stroke-thin); }
+.sw.whisker { width:var(--stroke-thin); height:var(--space-3); border-radius:0; color:var(--ink); }
+.sw.dotted { background:radial-gradient(circle closest-side,currentColor 100%,transparent) left center / var(--dash-gap-step) var(--stroke-data) repeat-x; }
+.sw.dashed { background:repeating-linear-gradient(90deg,currentColor 0 var(--dash-series-step),transparent var(--dash-series-step) calc(2 * var(--dash-series-step))); }
+/* a guide (a reference level or date) is a thin muted rule */
+.sw.guide { height:var(--stroke-thin); color:var(--muted); background:repeating-linear-gradient(90deg,currentColor 0 var(--dash-guide-step),transparent var(--dash-guide-step) calc(2 * var(--dash-guide-step))); }
+.sw.dot,.sw.ring { width:var(--mark-size); height:var(--mark-size); border-radius:50%; }
+.sw.ring { border:var(--stroke-data) solid currentColor; background:transparent; }
+/* in a legend, a key's length and a band's height follow the label beside it (2em long, one cap high);
+   stroke weights, dot sizes and the whisker stay the chart's */
+.legend .sw:not(.dot,.ring,.whisker) { width:2em; }
+.legend .sw:is(.band-ask,.band-bid) { height:1cap; }
+details.drawer { padding:0; margin-top:var(--space-5); border-top:var(--rule) solid var(--line); }
+details.drawer summary { padding:var(--space-2) 0; min-height:var(--control-height); color:var(--muted); cursor:pointer; list-style-position:inside; }
+details.drawer[open] { padding-bottom:var(--space-3); }
+details.drawer .scroll { max-height:var(--drawer-max); overflow:auto; }
+
+/* ---- world dossiers: one reading axis, clearly dated observations ------------ */
+.dossiers { display:grid; grid-template-columns:minmax(0,1fr); gap:var(--space-5); margin-top:var(--space-4); }
+.dossier { min-width:0; padding-top:var(--space-5); border-top:var(--rule) solid var(--line); scroll-margin-top:var(--anchor-offset); }
+.dossier-head { margin-bottom:var(--space-4); }
+.dossier h3 { margin:0; }
+.dossier-kind { margin:var(--space-0) 0 0; color:var(--muted); }
+.dossier.on h3 { color:var(--accent); }
+
+/* ---- footer and states --------------------------------------------------------- */
+footer { margin-top:var(--space-6); padding:var(--space-5) 0; border-top:var(--rule) solid var(--line-strong); color:var(--muted); }
+footer p { margin:0 0 var(--space-3); }
+.loading,.failed { padding:var(--space-7) 0; color:var(--muted); }
+.failed { color:var(--negative); }
+
+/* ---- breakpoints: change the inputs, not the components ------------------------ */
+@media (max-width:1200px) {
+  :root { --layout-gap:var(--space-6); }
+}
+@media (max-width:1050px) {
+  :root { --anchor-offset:calc(var(--header-height) + var(--space-7)); }
+  .report-layout { display:block; padding-top:0; }
+  .toc { top:var(--header-height); z-index:var(--layer-toc); max-height:none; overflow:visible; padding:var(--space-2) 0; margin-bottom:var(--space-4); border-bottom:var(--rule) solid var(--line); background:var(--canvas); }
+  .toc ol,.toc-title,.toc .toc-top { display:none; }
+  .toc-mobile { display:flex; align-items:center; gap:var(--space-4); color:var(--muted); }
+  .toc-mobile select { flex:1; max-width:var(--toc-picker-max); min-width:0; }
+}
+@media (max-width:760px) {
+  /* a flatter ratio keeps headings proportionate on a narrow column */
+  :root { --type-ratio:1.125; --page-gutter:var(--space-5); }
+  .toc { position:relative; top:auto; }
+  .hero { padding:var(--space-4) 0; }
+  .eyebrow-sep { margin-inline:var(--space-1); }
+  .kpis { grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--space-3) var(--space-4); }
+  .kpi { display:flex; flex-direction:column; gap:var(--space-0); grid-row:auto; }
+  .kpi:last-child { grid-column:1 / -1; display:grid; grid-template-columns:1fr auto; grid-template-rows:auto auto; column-gap:var(--space-4); padding-top:var(--space-2); border-top:var(--rule) solid var(--line); }
+  .kpi:last-child .value { grid-column:2; grid-row:1 / 3; align-self:center; }
+  .kpi:last-child .note { grid-column:1; }
+  .card-head,.card-head:has(> .card-lead > .card-sub):has(> .card-controls > :only-child) { grid-template-columns:minmax(0,1fr); grid-template-areas:"title" "sub" "controls"; }
+  .card-controls { margin-top:var(--space-2); }
+  .answers { grid-template-columns:minmax(0,1fr); gap:var(--space-1); }
+  .answers dd { margin-bottom:var(--space-3); }
+  .controls select { flex:1; max-width:var(--picker-max); }
+  .site nav { flex:1 1 auto; min-width:0; gap:var(--space-3); }
+  .site nav select.picker { flex:1 1 auto; min-width:0; }
+  .toc-mobile select { max-width:none; }
+  .tip { max-width:100%; white-space:normal; }
+}
+@media (max-width:360px) { :root { --page-gutter:var(--space-4); } }
+@media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+@media print {
+  :root { --type-base:11px; --page-gutter:0; }
+  .toc,.controls,.card-controls,.site nav,.skip-link,.seg,.icon-button,.export-status { display:none; }
+  .site { position:static; }
+  .report-layout { display:block; }
+  .card,.kpi,.dossier { break-inside:avoid; }
+  .analysis-row,.section-intro,.predecessor-note { display:block; }
+  .scroll { overflow:visible; }
+  table.data { min-width:0!important; }
+  table.data td,table.data tbody th { white-space:normal; }
+  .chart svg { max-height:var(--print-chart-max); }
+}
+
+/* ---- figure export ---------------------------------------------------------------
+   A figure is exported at its natural width, never narrower than the export minimum, inside a margin of its own. */
+.export-status { position:fixed; bottom:var(--space-4); right:var(--space-4); z-index:var(--layer-status); background:var(--surface); color:var(--ink); box-shadow:var(--shadow-popover); border-radius:var(--radius); }
+.export-status:not(:empty) { padding:var(--space-3) var(--space-4); }
+.export-figure { box-sizing:content-box; min-width:var(--export-min-width); max-width:none; margin:0 !important; padding:var(--space-5); background:var(--surface); }
+.export-figure .card-head { display:block; padding:0; }
+.export-figure .scroll { max-height:none; max-width:none; overflow:visible; }
+.export-figure .scroll::after { display:none; }
+.export-figure table { width:100%; }
+.export-figure .chart { overflow:visible; }
+.export-figure [aria-sort] { color:var(--ink); }

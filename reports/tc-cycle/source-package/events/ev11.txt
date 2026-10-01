@@ -1,0 +1,55 @@
+2026-07-03: XP/Skill Event
+2026-07-04: XP/Skill Event
+2026-07-05: XP/Skill Event
+2026-07-06: XP/Skill Event
+2026-07-12: Full Moon
+2026-07-13: Full Moon
+2026-07-14: Full Moon
+2026-07-15: Full Moon
+2026-07-20: Last Creep Standing
+2026-07-21: Last Creep Standing
+2026-07-22: Last Creep Standing
+2026-07-23: Last Creep Standing
+2026-07-24: Last Creep Standing
+2026-07-25: Last Creep Standing
+2026-08-01: Hot Cuisine Month
+2026-08-02: Hot Cuisine Month
+2026-08-03: Hot Cuisine Month
+2026-08-04: Hot Cuisine Month
+2026-08-06: Hot Cuisine Month | The Great Expedition
+2026-08-07: Hot Cuisine Month | The Great Expedition | Rapid Respawn
+2026-08-08: Hot Cuisine Month | The Great Expedition | Rapid Respawn
+2026-08-09: Hot Cuisine Month | The Great Expedition | Rapid Respawn
+2026-08-10: Hot Cuisine Month | The Great Expedition | Rapid Respawn
+2026-08-11: Hot Cuisine Month | The Great Expedition
+2026-08-12: Hot Cuisine Month | The Great Expedition | Full Moon
+2026-08-13: Hot Cuisine Month | Full Moon
+2026-08-14: Hot Cuisine Month | Full Moon
+2026-08-15: Hot Cuisine Month | Full Moon
+2026-08-16: Hot Cuisine Month
+2026-08-17: Hot Cuisine Month
+2026-08-18: Hot Cuisine Month
+2026-08-19: Hot Cuisine Month
+2026-08-20: Hot Cuisine Month | Last Creep Standing
+2026-08-21: Hot Cuisine Month | Last Creep Standing
+2026-08-22: Hot Cuisine Month | Last Creep Standing
+2026-08-23: Hot Cuisine Month | Last Creep Standing
+2026-08-24: Hot Cuisine Month | Last Creep Standing
+2026-08-25: Hot Cuisine Month | Last Creep Standing
+2026-08-26: Hot Cuisine Month
+2026-08-27: Hot Cuisine Month
+2026-08-28: Hot Cuisine Month
+2026-08-29: Hot Cuisine Month
+2026-08-30: Hot Cuisine Month
+2026-08-31: Hot Cuisine Month
+2026-09-01: Hot Cuisine Month | Rise of Devovorga
+2026-09-02: Rise of Devovorga
+2026-09-03: Rise of Devovorga
+2026-09-04: Rise of Devovorga | XP/Skill Event
+2026-09-05: Rise of Devovorga | XP/Skill Event
+2026-09-06: Rise of Devovorga | XP/Skill Event
+2026-09-07: Rise of Devovorga | XP/Skill Event
+2026-09-12: Full Moon
+2026-09-13: Full Moon
+2026-09-14: Full Moon
+2026-09-15: Full Moon | Colours of Magic

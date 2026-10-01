@@ -1,0 +1,209 @@
+{
+ "table": [
+  {
+   "world": "Luminera",
+   "captured": "2026-09-23T22:22:25",
+   "bid": 45000,
+   "ask": 48000,
+   "spread": 6.45,
+   "bid_units": 41675,
+   "ask_units": 42700,
+   "depth_ratio": 0.98,
+   "prem_hist": 10.0,
+   "core": true
+  },
+  {
+   "world": "Gentebra",
+   "captured": "2026-09-23T22:21:12",
+   "bid": 44950,
+   "ask": 46993,
+   "spread": 4.44,
+   "bid_units": 241625,
+   "ask_units": 20675,
+   "depth_ratio": 11.69,
+   "prem_hist": 10.1,
+   "core": true
+  },
+  {
+   "world": "Belobra",
+   "captured": "2026-09-23T22:25:40",
+   "bid": 45217,
+   "ask": 46368,
+   "spread": 2.51,
+   "bid_units": 330075,
+   "ask_units": 24025,
+   "depth_ratio": 13.74,
+   "prem_hist": 10.9,
+   "core": true
+  },
+  {
+   "world": "Celebra",
+   "captured": "2026-09-21T15:04:20",
+   "bid": 44921,
+   "ask": 45974,
+   "spread": 2.32,
+   "bid_units": 85150,
+   "ask_units": 46375,
+   "depth_ratio": 1.84,
+   "prem_hist": 10.4,
+   "core": true
+  },
+  {
+   "world": "Descubra",
+   "captured": "2026-09-23T22:27:55",
+   "bid": 42312,
+   "ask": 45000,
+   "spread": 6.16,
+   "bid_units": 155350,
+   "ask_units": 86750,
+   "depth_ratio": 1.79,
+   "prem_hist": 5.2,
+   "core": true
+  },
+  {
+   "world": "Rasteibra",
+   "captured": "2026-09-23T22:23:53",
+   "bid": 43200,
+   "ask": 44700,
+   "spread": 3.41,
+   "bid_units": 160325,
+   "ask_units": 44125,
+   "depth_ratio": 3.63,
+   "prem_hist": -0.2,
+   "core": true
+  },
+  {
+   "world": "Collabra",
+   "captured": "2026-09-23T22:35:20",
+   "bid": 43407,
+   "ask": 44440,
+   "spread": 2.35,
+   "bid_units": 107125,
+   "ask_units": 98600,
+   "depth_ratio": 1.09,
+   "prem_hist": 2.4,
+   "core": true
+  },
+  {
+   "world": "Quelibra",
+   "captured": "2026-09-23T22:24:27",
+   "bid": 43153,
+   "ask": 44382,
+   "spread": 2.81,
+   "bid_units": 40200,
+   "ask_units": 100825,
+   "depth_ratio": 0.4,
+   "prem_hist": 0.1,
+   "core": true
+  },
+  {
+   "world": "Ustebra",
+   "captured": "2026-09-23T22:23:27",
+   "bid": 43407,
+   "ask": 44305,
+   "spread": 2.05,
+   "bid_units": 230050,
+   "ask_units": 26900,
+   "depth_ratio": 8.55,
+   "prem_hist": 4.9,
+   "core": true
+  },
+  {
+   "world": "Tornabra",
+   "captured": "2026-09-23T22:30:12",
+   "bid": 42653,
+   "ask": 44000,
+   "spread": 3.11,
+   "bid_units": 81275,
+   "ask_units": 52250,
+   "depth_ratio": 1.56,
+   "prem_hist": 0.8,
+   "core": true
+  },
+  {
+   "world": "Ombra",
+   "captured": "2026-09-23T22:27:32",
+   "bid": 42540,
+   "ask": 43998,
+   "spread": 3.37,
+   "bid_units": 206850,
+   "ask_units": 54475,
+   "depth_ratio": 3.8,
+   "prem_hist": 0.4,
+   "core": true
+  },
+  {
+   "world": "Venebra",
+   "captured": "2026-09-23T22:32:36",
+   "bid": 41571,
+   "ask": 43923,
+   "spread": 5.5,
+   "bid_units": 281550,
+   "ask_units": 15850,
+   "depth_ratio": 17.76,
+   "prem_hist": 2.4,
+   "core": true
+  },
+  {
+   "world": "Ourobra",
+   "captured": "2026-09-23T22:25:04",
+   "bid": 43002,
+   "ask": 43875,
+   "spread": 2.01,
+   "bid_units": 199500,
+   "ask_units": 157550,
+   "depth_ratio": 1.27,
+   "prem_hist": 0.0,
+   "core": true
+  },
+  {
+   "world": "Antica",
+   "captured": "2026-09-23T22:29:24",
+   "bid": 43201,
+   "ask": 43599,
+   "spread": 0.92,
+   "bid_units": 197200,
+   "ask_units": 152750,
+   "depth_ratio": 1.29,
+   "prem_hist": -2.0,
+   "core": true
+  },
+  {
+   "world": "Luzibra",
+   "captured": "2026-09-23T22:26:22",
+   "bid": 41326,
+   "ask": 43500,
+   "spread": 5.13,
+   "bid_units": 7475,
+   "ask_units": 38850,
+   "depth_ratio": 0.19,
+   "prem_hist": -35.4,
+   "core": false
+  }
+ ],
+ "depth_ratio_by_day": {
+  "2026-09-21": 1.82,
+  "2026-09-22": 2.47,
+  "2026-09-23": 1.67
+ },
+ "index_days": {
+  "2026-09-21": {
+   "n": 14,
+   "I_ask": 42974.0,
+   "I_mid": 43097.0,
+   "I_blend": 43035.0
+  },
+  "2026-09-22": {
+   "n": 13,
+   "I_ask": 43991.0,
+   "I_mid": 43874.0,
+   "I_blend": 43932.0
+  },
+  "2026-09-23": {
+   "n": 13,
+   "I_ask": 43992.0,
+   "I_mid": 43915.0,
+   "I_blend": 43953.0
+  }
+ }
+}

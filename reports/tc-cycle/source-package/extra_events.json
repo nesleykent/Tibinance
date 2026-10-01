@@ -1,0 +1,12 @@
+[
+ {"event":"Summer Update", "start":"2023-07-10", "end":"2023-07-10", "source":"tibiamaps.io blog post date (Tibia Summer Update 2023)", "confidence":"medium"},
+ {"event":"Winter Update", "start":"2023-12-04", "end":"2023-12-04", "source":"tibiamaps.io blog post date (Tibia Winter Update 2023)", "confidence":"medium"},
+ {"event":"Summer Update", "start":"2024-07-01", "end":"2024-07-01", "source":"tibiamaps.io blog post date (Tibia Summer Update 2024)", "confidence":"medium"},
+ {"event":"Winter Update", "start":"2024-11-25", "end":"2024-11-25", "source":"tibiamaps.io blog post date (Tibia Winter Update 2024)", "confidence":"medium"},
+ {"event":"Tibia Token launch", "start":"2025-01-14", "end":"2025-01-14", "source":"tibia.com news id 8205 (via research report)", "confidence":"high"},
+ {"event":"Monk release", "start":"2025-04-08", "end":"2025-04-08", "source":"cipsoft.com press: Tibia New Vocation Monk Now Playable (April 8, 2025)", "confidence":"high"},
+ {"event":"Tibia Token fee 6%->8%", "start":"2025-04-15", "end":"2025-04-15", "source":"tibia.com news id 8205 (via research report)", "confidence":"high"},
+ {"event":"Summer Update", "start":"2025-07-21", "end":"2025-07-21", "source":"cipsoft.com: Tibia Summer Update 2025 Now Available (July 21, 2025)", "confidence":"high"},
+ {"event":"Winter Update", "start":"2025-11-24", "end":"2025-11-24", "source":"cipsoft.com: Tibia Winter Update 2025 Now Available (November 24, 2025)", "confidence":"high"},
+ {"event":"Summer Update", "start":"2026-07-13", "end":"2026-07-13", "source":"cipsoft.com: Tibia Summer Update 2026 Now Available (13 July 2026)", "confidence":"high"}
+]

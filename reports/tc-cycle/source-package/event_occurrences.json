@@ -1,0 +1,2559 @@
+{
+ "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)": [
+  {
+   "start": "2024-04-01",
+   "end": "2024-05-01",
+   "pre": 0.66,
+   "during": 4.08,
+   "post7": -0.75,
+   "post30": 3.11,
+   "raw_during": 1.83,
+   "activity": -16.78,
+   "overlaps": [
+    "Demon's Lullaby",
+    "Double Daily Reward Month",
+    "Exaltation Overload",
+    "Full Moon",
+    "Last Creep Standing",
+    "Rapid Respawn",
+    "Spring into Life",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2024-04-01",
+   "end": "2024-05-01",
+   "pre": 0.66,
+   "during": 4.08,
+   "post7": -0.75,
+   "post30": 3.11,
+   "raw_during": 1.83,
+   "activity": -16.78,
+   "overlaps": [
+    "Demon's Lullaby",
+    "Double Daily Reward Month",
+    "Exaltation Overload",
+    "Full Moon",
+    "Last Creep Standing",
+    "Rapid Respawn",
+    "Spring into Life",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2024-06-01",
+   "end": "2024-07-01",
+   "pre": 0.61,
+   "during": -7.51,
+   "post7": 0.18,
+   "post30": 4.51,
+   "raw_during": -9.05,
+   "activity": 6.09,
+   "overlaps": [
+    "Bewitched",
+    "Full Moon",
+    "Last Creep Standing",
+    "Rapid Respawn",
+    "Skill Event (junho)",
+    "Summer Update"
+   ]
+  },
+  {
+   "start": "2024-08-01",
+   "end": "2024-09-01",
+   "pre": 2.5,
+   "during": 11.65,
+   "post7": 1.77,
+   "post30": 14.54,
+   "raw_during": 6.15,
+   "activity": -3.19,
+   "overlaps": [
+    "Full Moon",
+    "Last Creep Standing",
+    "Rapid Respawn",
+    "Rise of Devovorga",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2025-02-01",
+   "end": "2025-03-01",
+   "pre": 0.82,
+   "during": 1.55,
+   "post7": -1.45,
+   "post30": -0.52,
+   "raw_during": -0.71,
+   "activity": 7.42,
+   "overlaps": [
+    "A Piece of Cake",
+    "Double Daily Reward Month",
+    "Full Moon",
+    "Last Creep Standing",
+    "Rapid Respawn",
+    "The First Dragon",
+    "Valentine's Day",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2025-04-01",
+   "end": "2025-05-01",
+   "pre": -0.41,
+   "during": -2.44,
+   "post7": 0.41,
+   "post30": -0.54,
+   "raw_during": -3.49,
+   "activity": 3.31,
+   "overlaps": [
+    "Demon's Lullaby",
+    "Double Daily Reward Month",
+    "Exaltation Overload",
+    "Full Moon",
+    "Last Creep Standing",
+    "Monk release",
+    "Spring into Life",
+    "Tibia Token fee",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2025-04-01",
+   "end": "2025-05-01",
+   "pre": -0.41,
+   "during": -2.44,
+   "post7": 0.41,
+   "post30": -0.54,
+   "raw_during": -3.49,
+   "activity": 3.31,
+   "overlaps": [
+    "Demon's Lullaby",
+    "Double Daily Reward Month",
+    "Exaltation Overload",
+    "Full Moon",
+    "Last Creep Standing",
+    "Monk release",
+    "Spring into Life",
+    "Tibia Token fee",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2025-06-01",
+   "end": "2025-07-01",
+   "pre": 0.02,
+   "during": 0.97,
+   "post7": 1.22,
+   "post30": 4.35,
+   "raw_during": -1.46,
+   "activity": -5.62,
+   "overlaps": [
+    "Bewitched",
+    "Full Moon",
+    "Last Creep Standing",
+    "Rapid Respawn",
+    "Skill Event (junho)",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2025-08-01",
+   "end": "2025-09-01",
+   "pre": 0.28,
+   "during": 3.47,
+   "post7": 0.27,
+   "post30": 5.53,
+   "raw_during": 3.44,
+   "activity": -3.08,
+   "overlaps": [
+    "Full Moon",
+    "Last Creep Standing",
+    "Rapid Respawn",
+    "Rise of Devovorga",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2026-02-01",
+   "end": "2026-03-01",
+   "pre": 0.05,
+   "during": 0.43,
+   "post7": -0.75,
+   "post30": 1.99,
+   "raw_during": -1.42,
+   "activity": 2.0,
+   "overlaps": [
+    "A Piece of Cake",
+    "Double Daily Reward Month",
+    "Full Moon",
+    "Last Creep Standing",
+    "Rapid Respawn",
+    "The First Dragon",
+    "Valentine's Day",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2026-04-01",
+   "end": "2026-05-01",
+   "pre": 0.66,
+   "during": -1.1,
+   "post7": 0.85,
+   "post30": 2.39,
+   "raw_during": -2.43,
+   "activity": -3.85,
+   "overlaps": [
+    "Demon's Lullaby",
+    "Double Daily Reward Month",
+    "Exaltation Overload",
+    "Full Moon",
+    "Last Creep Standing",
+    "Spring into Life",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2026-04-01",
+   "end": "2026-05-01",
+   "pre": 0.66,
+   "during": -1.1,
+   "post7": 0.85,
+   "post30": 2.39,
+   "raw_during": -2.43,
+   "activity": -3.85,
+   "overlaps": [
+    "Demon's Lullaby",
+    "Double Daily Reward Month",
+    "Exaltation Overload",
+    "Full Moon",
+    "Last Creep Standing",
+    "Spring into Life",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2026-06-01",
+   "end": "2026-07-01",
+   "pre": 0.43,
+   "during": 0.98,
+   "post7": 1.41,
+   "post30": 7.81,
+   "raw_during": 0.04,
+   "activity": 6.25,
+   "overlaps": [
+    "Bewitched",
+    "Full Moon",
+    "Last Creep Standing",
+    "Rapid Respawn",
+    "Skill Event (junho)",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2026-08-01",
+   "end": "2026-09-01",
+   "pre": 2.53,
+   "during": 3.74,
+   "post7": -1.27,
+   "post30": null,
+   "raw_during": 4.11,
+   "activity": 0.77,
+   "overlaps": [
+    "Full Moon",
+    "Last Creep Standing",
+    "Rapid Respawn",
+    "Rise of Devovorga",
+    "The Great Expedition",
+    "XP/Skill Event"
+   ]
+  }
+ ],
+ "Rapid Respawn": [
+  {
+   "start": "2024-04-05",
+   "end": "2024-04-08",
+   "pre": 1.91,
+   "during": 0.41,
+   "post7": -0.34,
+   "post30": 2.81,
+   "raw_during": -0.03,
+   "activity": -11.86,
+   "overlaps": [
+    "Double Daily Reward Month",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Exaltation Overload",
+    "Full Moon"
+   ]
+  },
+  {
+   "start": "2024-06-07",
+   "end": "2024-06-10",
+   "pre": -3.16,
+   "during": -2.84,
+   "post7": -0.58,
+   "post30": -6.52,
+   "raw_during": -2.61,
+   "activity": 30.55,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Skill Event (junho)"
+   ]
+  },
+  {
+   "start": "2024-08-02",
+   "end": "2024-08-05",
+   "pre": 3.49,
+   "during": 1.14,
+   "post7": 4.99,
+   "post30": 13.42,
+   "raw_during": 0.16,
+   "activity": -1.88,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon"
+   ]
+  },
+  {
+   "start": "2024-12-06",
+   "end": "2024-12-09",
+   "pre": 0.59,
+   "during": -1.0,
+   "post7": 0.14,
+   "post30": -1.16,
+   "raw_during": -0.85,
+   "activity": -0.34,
+   "overlaps": [
+    "Christmas",
+    "Full Moon"
+   ]
+  },
+  {
+   "start": "2025-02-07",
+   "end": "2025-02-10",
+   "pre": 0.89,
+   "during": 0.51,
+   "post7": -0.48,
+   "post30": -1.67,
+   "raw_during": 0.27,
+   "activity": 2.12,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "The First Dragon",
+    "Valentine's Day"
+   ]
+  },
+  {
+   "start": "2025-06-06",
+   "end": "2025-06-09",
+   "pre": -0.85,
+   "during": 0.2,
+   "post7": 0.06,
+   "post30": 2.4,
+   "raw_during": -0.08,
+   "activity": 24.29,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Skill Event (junho)"
+   ]
+  },
+  {
+   "start": "2025-08-01",
+   "end": "2025-08-04",
+   "pre": 0.28,
+   "during": 1.19,
+   "post7": 0.47,
+   "post30": 1.5,
+   "raw_during": 1.18,
+   "activity": -1.74,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Last Creep Standing"
+   ]
+  },
+  {
+   "start": "2025-12-05",
+   "end": "2025-12-08",
+   "pre": -0.47,
+   "during": -1.08,
+   "post7": -1.17,
+   "post30": -6.39,
+   "raw_during": -0.87,
+   "activity": -4.77,
+   "overlaps": [
+    "Christmas",
+    "Full Moon"
+   ]
+  },
+  {
+   "start": "2026-02-06",
+   "end": "2026-02-09",
+   "pre": 0.41,
+   "during": 1.12,
+   "post7": -0.13,
+   "post30": -1.03,
+   "raw_during": 0.79,
+   "activity": 0.64,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "The First Dragon",
+    "Valentine's Day"
+   ]
+  },
+  {
+   "start": "2026-06-05",
+   "end": "2026-06-08",
+   "pre": -0.65,
+   "during": -1.07,
+   "post7": -0.08,
+   "post30": 3.91,
+   "raw_during": -1.19,
+   "activity": 24.1,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Skill Event (junho)"
+   ]
+  },
+  {
+   "start": "2026-08-07",
+   "end": "2026-08-10",
+   "pre": 1.02,
+   "during": 0.44,
+   "post7": -0.51,
+   "post30": 0.74,
+   "raw_during": 0.63,
+   "activity": 3.78,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "The Great Expedition"
+   ]
+  }
+ ],
+ "Exaltation Overload": [
+  {
+   "start": "2024-04-12",
+   "end": "2024-04-15",
+   "pre": 2.11,
+   "during": -2.33,
+   "post7": 3.91,
+   "post30": 2.35,
+   "raw_during": -2.66,
+   "activity": -7.73,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Last Creep Standing",
+    "Rapid Respawn",
+    "Spring into Life"
+   ]
+  },
+  {
+   "start": "2024-11-01",
+   "end": "2024-11-04",
+   "pre": -0.16,
+   "during": -0.79,
+   "post7": -2.6,
+   "post30": -4.86,
+   "raw_during": -0.22,
+   "activity": 0.35,
+   "overlaps": [
+    "Halloween Event",
+    "Lightbearer",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2025-01-17",
+   "end": "2025-01-20",
+   "pre": 0.61,
+   "during": 1.21,
+   "post7": 0.5,
+   "post30": 3.23,
+   "raw_during": 0.79,
+   "activity": 6.93,
+   "overlaps": [
+    "Full Moon",
+    "Last Creep Standing",
+    "The First Dragon",
+    "Tibia Anniversary",
+    "Tibia Token launch",
+    "Winterlight Solstice"
+   ]
+  },
+  {
+   "start": "2025-04-04",
+   "end": "2025-04-07",
+   "pre": 0.14,
+   "during": 0.44,
+   "post7": -0.48,
+   "post30": -2.31,
+   "raw_during": 0.25,
+   "activity": -2.56,
+   "overlaps": [
+    "Double Daily Reward Month",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Monk release"
+   ]
+  },
+  {
+   "start": "2025-10-03",
+   "end": "2025-10-06",
+   "pre": 2.47,
+   "during": 0.32,
+   "post7": 1.02,
+   "post30": -0.24,
+   "raw_during": 0.63,
+   "activity": 0.71,
+   "overlaps": [
+    "Annual Autumn Vintage",
+    "Full Moon",
+    "Orcsoberfest"
+   ]
+  },
+  {
+   "start": "2026-01-16",
+   "end": "2026-01-19",
+   "pre": 0.0,
+   "during": 0.67,
+   "post7": 0.15,
+   "post30": 1.5,
+   "raw_during": 0.38,
+   "activity": 4.78,
+   "overlaps": [
+    "Full Moon",
+    "Last Creep Standing",
+    "The First Dragon",
+    "Tibia Anniversary",
+    "Winterlight Solstice"
+   ]
+  },
+  {
+   "start": "2026-04-03",
+   "end": "2026-04-06",
+   "pre": 0.49,
+   "during": 0.63,
+   "post7": 0.15,
+   "post30": -0.91,
+   "raw_during": 0.45,
+   "activity": 1.17,
+   "overlaps": [
+    "Double Daily Reward Month",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon"
+   ]
+  }
+ ],
+ "Full Moon": [
+  {
+   "start": "2024-04-12",
+   "end": "2024-04-15",
+   "pre": 2.11,
+   "during": -2.33,
+   "post7": 3.91,
+   "post30": 2.35,
+   "raw_during": -2.66,
+   "activity": -7.73,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Exaltation Overload",
+    "Last Creep Standing",
+    "Rapid Respawn",
+    "Spring into Life"
+   ]
+  },
+  {
+   "start": "2024-05-12",
+   "end": "2024-05-15",
+   "pre": -1.55,
+   "during": 0.36,
+   "post7": 0.76,
+   "post30": -0.8,
+   "raw_during": 0.37,
+   "activity": -10.01,
+   "overlaps": [
+    "Demon's Lullaby",
+    "Last Creep Standing",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2024-06-12",
+   "end": "2024-06-15",
+   "pre": -2.89,
+   "during": 1.19,
+   "post7": -4.01,
+   "post30": -5.86,
+   "raw_during": 1.21,
+   "activity": -6.52,
+   "overlaps": [
+    "Bewitched",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Last Creep Standing",
+    "Rapid Respawn",
+    "Skill Event (junho)"
+   ]
+  },
+  {
+   "start": "2024-07-12",
+   "end": "2024-07-15",
+   "pre": -1.9,
+   "during": 1.87,
+   "post7": 2.76,
+   "post30": 10.04,
+   "raw_during": 1.61,
+   "activity": 27.14,
+   "overlaps": [
+    "Last Creep Standing",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2024-08-12",
+   "end": "2024-08-15",
+   "pre": 2.66,
+   "during": 1.92,
+   "post7": 0.85,
+   "post30": 4.04,
+   "raw_during": 1.87,
+   "activity": -5.42,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Last Creep Standing",
+    "Rapid Respawn"
+   ]
+  },
+  {
+   "start": "2024-09-12",
+   "end": "2024-09-15",
+   "pre": 1.96,
+   "during": 0.06,
+   "post7": 3.77,
+   "post30": 8.36,
+   "raw_during": 0.13,
+   "activity": -3.32,
+   "overlaps": [
+    "Colours of Magic",
+    "Rise of Devovorga",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2024-10-12",
+   "end": "2024-10-15",
+   "pre": 1.2,
+   "during": -1.91,
+   "post7": -2.44,
+   "post30": -7.31,
+   "raw_during": -1.0,
+   "activity": 0.29,
+   "overlaps": [
+    "Annual Autumn Vintage",
+    "Loot Event",
+    "Orcsoberfest"
+   ]
+  },
+  {
+   "start": "2024-11-12",
+   "end": "2024-11-15",
+   "pre": -2.69,
+   "during": 0.48,
+   "post7": 0.71,
+   "post30": -3.76,
+   "raw_during": 1.1,
+   "activity": 3.01,
+   "overlaps": [
+    "Last Creep Standing",
+    "Lightbearer"
+   ]
+  },
+  {
+   "start": "2024-12-12",
+   "end": "2024-12-15",
+   "pre": 0.32,
+   "during": 1.0,
+   "post7": -1.56,
+   "post30": -0.66,
+   "raw_during": 0.88,
+   "activity": 4.28,
+   "overlaps": [
+    "Christmas",
+    "Last Creep Standing",
+    "Rapid Respawn",
+    "Winterlight Solstice"
+   ]
+  },
+  {
+   "start": "2025-01-12",
+   "end": "2025-01-15",
+   "pre": 1.77,
+   "during": 0.44,
+   "post7": 0.95,
+   "post30": 5.3,
+   "raw_during": -0.1,
+   "activity": 10.07,
+   "overlaps": [
+    "Exaltation Overload",
+    "Last Creep Standing",
+    "The First Dragon",
+    "Tibia Anniversary",
+    "Tibia Token launch",
+    "Winterlight Solstice"
+   ]
+  },
+  {
+   "start": "2025-02-12",
+   "end": "2025-02-15",
+   "pre": 1.25,
+   "during": -0.07,
+   "post7": -0.2,
+   "post30": -1.87,
+   "raw_during": -0.34,
+   "activity": 2.32,
+   "overlaps": [
+    "A Piece of Cake",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Last Creep Standing",
+    "Rapid Respawn",
+    "The First Dragon",
+    "Valentine's Day"
+   ]
+  },
+  {
+   "start": "2025-03-12",
+   "end": "2025-03-15",
+   "pre": -1.02,
+   "during": -0.3,
+   "post7": -0.32,
+   "post30": -1.3,
+   "raw_during": -0.28,
+   "activity": -1.65,
+   "overlaps": [
+    "Colours of Magic",
+    "Double Daily Reward Month",
+    "Orcsoberfest",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2025-04-12",
+   "end": "2025-04-15",
+   "pre": 0.68,
+   "during": -0.35,
+   "post7": -1.19,
+   "post30": -0.73,
+   "raw_during": -0.66,
+   "activity": 14.77,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Exaltation Overload",
+    "Last Creep Standing",
+    "Monk release",
+    "Spring into Life",
+    "Tibia Token fee"
+   ]
+  },
+  {
+   "start": "2025-05-12",
+   "end": "2025-05-15",
+   "pre": 0.48,
+   "during": 0.7,
+   "post7": -0.11,
+   "post30": 0.17,
+   "raw_during": 0.38,
+   "activity": -6.9,
+   "overlaps": [
+    "Demon's Lullaby",
+    "Last Creep Standing",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2025-06-12",
+   "end": "2025-06-15",
+   "pre": -0.57,
+   "during": -1.1,
+   "post7": 1.27,
+   "post30": 3.9,
+   "raw_during": -1.34,
+   "activity": -10.83,
+   "overlaps": [
+    "Bewitched",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Last Creep Standing",
+    "Rapid Respawn",
+    "Skill Event (junho)"
+   ]
+  },
+  {
+   "start": "2025-07-12",
+   "end": "2025-07-15",
+   "pre": 2.78,
+   "during": 0.46,
+   "post7": -0.21,
+   "post30": 5.68,
+   "raw_during": 0.12,
+   "activity": -6.98,
+   "overlaps": [
+    "Last Creep Standing",
+    "Summer Update",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2025-08-12",
+   "end": "2025-08-15",
+   "pre": 0.03,
+   "during": 0.7,
+   "post7": 0.45,
+   "post30": -0.11,
+   "raw_during": 0.95,
+   "activity": -3.18,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Last Creep Standing"
+   ]
+  },
+  {
+   "start": "2025-09-12",
+   "end": "2025-09-15",
+   "pre": 1.26,
+   "during": -0.05,
+   "post7": 0.15,
+   "post30": 4.68,
+   "raw_during": 0.27,
+   "activity": -4.23,
+   "overlaps": [
+    "Colours of Magic",
+    "Rise of Devovorga",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2025-10-12",
+   "end": "2025-10-15",
+   "pre": 0.73,
+   "during": 0.07,
+   "post7": 0.6,
+   "post30": -3.44,
+   "raw_during": 0.51,
+   "activity": -2.73,
+   "overlaps": [
+    "Annual Autumn Vintage",
+    "Exaltation Overload",
+    "Orcsoberfest"
+   ]
+  },
+  {
+   "start": "2025-11-12",
+   "end": "2025-11-15",
+   "pre": -0.91,
+   "during": -1.22,
+   "post7": 0.46,
+   "post30": -3.67,
+   "raw_during": -0.71,
+   "activity": 10.31,
+   "overlaps": [
+    "Last Creep Standing",
+    "Lightbearer",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2025-12-12",
+   "end": "2025-12-15",
+   "pre": -1.03,
+   "during": -1.04,
+   "post7": -2.48,
+   "post30": -5.97,
+   "raw_during": -0.89,
+   "activity": 0.1,
+   "overlaps": [
+    "Christmas",
+    "Last Creep Standing",
+    "Rapid Respawn",
+    "Winterlight Solstice"
+   ]
+  },
+  {
+   "start": "2026-01-12",
+   "end": "2026-01-15",
+   "pre": -0.69,
+   "during": 0.6,
+   "post7": 0.85,
+   "post30": 3.0,
+   "raw_during": 0.28,
+   "activity": 2.47,
+   "overlaps": [
+    "Exaltation Overload",
+    "Last Creep Standing",
+    "The First Dragon",
+    "Tibia Anniversary",
+    "Winterlight Solstice"
+   ]
+  },
+  {
+   "start": "2026-02-12",
+   "end": "2026-02-15",
+   "pre": 0.73,
+   "during": 0.26,
+   "post7": -0.24,
+   "post30": -0.75,
+   "raw_during": 0.01,
+   "activity": -7.47,
+   "overlaps": [
+    "A Piece of Cake",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Last Creep Standing",
+    "Rapid Respawn",
+    "The First Dragon",
+    "Valentine's Day"
+   ]
+  },
+  {
+   "start": "2026-03-12",
+   "end": "2026-03-15",
+   "pre": -0.81,
+   "during": 0.07,
+   "post7": 1.03,
+   "post30": 2.56,
+   "raw_during": -0.1,
+   "activity": -3.71,
+   "overlaps": [
+    "Colours of Magic",
+    "Double Daily Reward Month",
+    "Orcsoberfest",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2026-04-12",
+   "end": "2026-04-15",
+   "pre": 0.76,
+   "during": -0.58,
+   "post7": -0.27,
+   "post30": 0.2,
+   "raw_during": -0.77,
+   "activity": 4.88,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Exaltation Overload",
+    "Last Creep Standing",
+    "Spring into Life"
+   ]
+  },
+  {
+   "start": "2026-05-12",
+   "end": "2026-05-15",
+   "pre": 0.13,
+   "during": 0.19,
+   "post7": 0.48,
+   "post30": -0.04,
+   "raw_during": -0.01,
+   "activity": -5.06,
+   "overlaps": [
+    "Demon's Lullaby",
+    "Last Creep Standing"
+   ]
+  },
+  {
+   "start": "2026-06-12",
+   "end": "2026-06-15",
+   "pre": -0.82,
+   "during": -0.23,
+   "post7": 3.25,
+   "post30": 5.74,
+   "raw_during": -0.39,
+   "activity": 0.7,
+   "overlaps": [
+    "Bewitched",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Last Creep Standing",
+    "Rapid Respawn",
+    "Skill Event (junho)"
+   ]
+  },
+  {
+   "start": "2026-07-12",
+   "end": "2026-07-15",
+   "pre": 2.31,
+   "during": 0.8,
+   "post7": 1.52,
+   "post30": 6.42,
+   "raw_during": 0.7,
+   "activity": -7.47,
+   "overlaps": [
+    "Last Creep Standing",
+    "Summer Update",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2026-08-12",
+   "end": "2026-08-15",
+   "pre": -1.09,
+   "during": -0.59,
+   "post7": -0.83,
+   "post30": -3.71,
+   "raw_during": 0.14,
+   "activity": 5.82,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Last Creep Standing",
+    "Rapid Respawn",
+    "The Great Expedition"
+   ]
+  }
+ ],
+ "Spring into Life": [
+  {
+   "start": "2024-04-16",
+   "end": "2024-04-23",
+   "pre": -0.37,
+   "during": 0.93,
+   "post7": 2.54,
+   "post30": 6.04,
+   "raw_during": 0.11,
+   "activity": -7.31,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Exaltation Overload",
+    "Full Moon",
+    "Last Creep Standing"
+   ]
+  },
+  {
+   "start": "2025-04-16",
+   "end": "2025-04-23",
+   "pre": -0.39,
+   "during": -1.29,
+   "post7": -0.3,
+   "post30": 0.85,
+   "raw_during": -1.91,
+   "activity": 12.41,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Last Creep Standing",
+    "Tibia Token fee"
+   ]
+  },
+  {
+   "start": "2026-04-16",
+   "end": "2026-04-23",
+   "pre": -0.49,
+   "during": -0.4,
+   "post7": -0.48,
+   "post30": 1.2,
+   "raw_during": -0.76,
+   "activity": -0.68,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Last Creep Standing"
+   ]
+  }
+ ],
+ "Last Creep Standing": [
+  {
+   "start": "2024-04-20",
+   "end": "2024-04-25",
+   "pre": 3.31,
+   "during": -0.87,
+   "post7": 0.66,
+   "post30": 3.52,
+   "raw_during": -1.49,
+   "activity": -6.91,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Exaltation Overload",
+    "Full Moon",
+    "Spring into Life"
+   ]
+  },
+  {
+   "start": "2024-05-20",
+   "end": "2024-05-25",
+   "pre": 0.84,
+   "during": 3.21,
+   "post7": -0.12,
+   "post30": -4.1,
+   "raw_during": 2.92,
+   "activity": -9.5,
+   "overlaps": [
+    "Demon's Lullaby",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon"
+   ]
+  },
+  {
+   "start": "2024-06-20",
+   "end": "2024-06-25",
+   "pre": -1.9,
+   "during": -0.08,
+   "post7": -4.44,
+   "post30": -4.3,
+   "raw_during": 0.25,
+   "activity": -4.87,
+   "overlaps": [
+    "Bewitched",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Summer Update"
+   ]
+  },
+  {
+   "start": "2024-07-20",
+   "end": "2024-07-25",
+   "pre": -0.52,
+   "during": 0.51,
+   "post7": 1.62,
+   "post30": 8.26,
+   "raw_during": 0.62,
+   "activity": -3.07,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2024-08-21",
+   "end": "2024-08-25",
+   "pre": 1.68,
+   "during": 1.96,
+   "post7": 0.06,
+   "post30": 9.12,
+   "raw_during": 1.73,
+   "activity": -0.66,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Rise of Devovorga"
+   ]
+  },
+  {
+   "start": "2024-11-20",
+   "end": "2024-11-25",
+   "pre": 0.48,
+   "during": -0.68,
+   "post7": -1.71,
+   "post30": -7.58,
+   "raw_during": -0.11,
+   "activity": -0.46,
+   "overlaps": [
+    "Full Moon",
+    "Lightbearer",
+    "Winter Update"
+   ]
+  },
+  {
+   "start": "2024-12-20",
+   "end": "2024-12-25",
+   "pre": -0.02,
+   "during": -3.08,
+   "post7": 3.84,
+   "post30": 4.78,
+   "raw_during": -3.41,
+   "activity": 37.41,
+   "overlaps": [
+    "Christmas",
+    "Full Moon",
+    "New Year",
+    "Winterlight Solstice",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2025-01-20",
+   "end": "2025-01-25",
+   "pre": 1.39,
+   "during": 1.17,
+   "post7": 0.83,
+   "post30": 3.18,
+   "raw_during": 0.41,
+   "activity": -3.54,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Exaltation Overload",
+    "Full Moon",
+    "The First Dragon",
+    "Tibia Token launch"
+   ]
+  },
+  {
+   "start": "2025-02-20",
+   "end": "2025-02-25",
+   "pre": -0.3,
+   "during": -0.15,
+   "post7": -1.26,
+   "post30": -2.3,
+   "raw_during": -0.33,
+   "activity": 13.05,
+   "overlaps": [
+    "A Piece of Cake",
+    "Double Daily Reward Month",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Valentine's Day"
+   ]
+  },
+  {
+   "start": "2025-04-20",
+   "end": "2025-04-25",
+   "pre": -1.6,
+   "during": 0.23,
+   "post7": -1.81,
+   "post30": 0.33,
+   "raw_during": -0.25,
+   "activity": 8.32,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Spring into Life",
+    "Tibia Token fee",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2025-05-20",
+   "end": "2025-05-25",
+   "pre": 0.42,
+   "during": 0.05,
+   "post7": -0.11,
+   "post30": -0.56,
+   "raw_during": -0.3,
+   "activity": -6.33,
+   "overlaps": [
+    "Demon's Lullaby",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon"
+   ]
+  },
+  {
+   "start": "2025-06-20",
+   "end": "2025-06-22",
+   "pre": 0.86,
+   "during": -0.37,
+   "post7": 0.42,
+   "post30": 2.82,
+   "raw_during": -0.6,
+   "activity": -10.27,
+   "overlaps": [
+    "Bewitched",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon"
+   ]
+  },
+  {
+   "start": "2025-07-20",
+   "end": "2025-07-25",
+   "pre": -0.77,
+   "during": 2.04,
+   "post7": 1.21,
+   "post30": 5.72,
+   "raw_during": 1.57,
+   "activity": -6.14,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Rapid Respawn",
+    "Summer Update"
+   ]
+  },
+  {
+   "start": "2025-08-20",
+   "end": "2025-08-25",
+   "pre": 0.93,
+   "during": -0.89,
+   "post7": -0.0,
+   "post30": 0.67,
+   "raw_during": -0.49,
+   "activity": -2.02,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Rise of Devovorga"
+   ]
+  },
+  {
+   "start": "2025-11-20",
+   "end": "2025-11-25",
+   "pre": -0.49,
+   "during": 0.04,
+   "post7": 0.0,
+   "post30": -8.86,
+   "raw_during": 0.74,
+   "activity": -0.6,
+   "overlaps": [
+    "Full Moon",
+    "Lightbearer",
+    "Winter Update"
+   ]
+  },
+  {
+   "start": "2025-12-20",
+   "end": "2025-12-25",
+   "pre": -1.82,
+   "during": -2.45,
+   "post7": 1.55,
+   "post30": 0.16,
+   "raw_during": -2.57,
+   "activity": 28.58,
+   "overlaps": [
+    "Christmas",
+    "Full Moon",
+    "New Year",
+    "Winterlight Solstice",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2026-01-20",
+   "end": "2026-01-25",
+   "pre": 1.4,
+   "during": 0.21,
+   "post7": 0.63,
+   "post30": 2.12,
+   "raw_during": -0.37,
+   "activity": -4.25,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Exaltation Overload",
+    "Full Moon",
+    "The First Dragon"
+   ]
+  },
+  {
+   "start": "2026-02-20",
+   "end": "2026-02-25",
+   "pre": -0.37,
+   "during": -0.35,
+   "post7": -0.19,
+   "post30": 1.05,
+   "raw_during": -0.71,
+   "activity": 6.12,
+   "overlaps": [
+    "A Piece of Cake",
+    "Double Daily Reward Month",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Valentine's Day"
+   ]
+  },
+  {
+   "start": "2026-04-20",
+   "end": "2026-04-25",
+   "pre": -0.66,
+   "during": -0.56,
+   "post7": 0.03,
+   "post30": 1.79,
+   "raw_during": -0.82,
+   "activity": -3.94,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Spring into Life",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2026-05-20",
+   "end": "2026-05-25",
+   "pre": 1.05,
+   "during": 0.08,
+   "post7": 0.4,
+   "post30": 2.15,
+   "raw_during": -0.2,
+   "activity": -1.15,
+   "overlaps": [
+    "Demon's Lullaby",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon"
+   ]
+  },
+  {
+   "start": "2026-06-20",
+   "end": "2026-06-25",
+   "pre": 3.94,
+   "during": -0.97,
+   "post7": -0.19,
+   "post30": 6.08,
+   "raw_during": -1.29,
+   "activity": 4.62,
+   "overlaps": [
+    "Bewitched",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon"
+   ]
+  },
+  {
+   "start": "2026-07-20",
+   "end": "2026-07-25",
+   "pre": 2.06,
+   "during": 1.5,
+   "post7": 2.36,
+   "post30": 4.18,
+   "raw_during": 1.44,
+   "activity": -8.74,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Summer Update"
+   ]
+  },
+  {
+   "start": "2026-08-20",
+   "end": "2026-08-25",
+   "pre": -1.29,
+   "during": -0.13,
+   "post7": 0.61,
+   "post30": null,
+   "raw_during": 1.0,
+   "activity": 0.73,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Rise of Devovorga"
+   ]
+  }
+ ],
+ "XP/Skill Event": [
+  {
+   "start": "2024-05-03",
+   "end": "2024-05-06",
+   "pre": 0.3,
+   "during": 0.89,
+   "post7": -2.8,
+   "post30": -1.0,
+   "raw_during": 0.68,
+   "activity": 46.96,
+   "overlaps": [
+    "Demon's Lullaby",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon"
+   ]
+  },
+  {
+   "start": "2024-07-12",
+   "end": "2024-07-15",
+   "pre": -1.9,
+   "during": 1.87,
+   "post7": 2.76,
+   "post30": 10.04,
+   "raw_during": 1.61,
+   "activity": 27.14,
+   "overlaps": [
+    "Full Moon",
+    "Last Creep Standing"
+   ]
+  },
+  {
+   "start": "2024-09-06",
+   "end": "2024-09-09",
+   "pre": -0.93,
+   "during": 0.74,
+   "post7": 1.37,
+   "post30": 9.05,
+   "raw_during": 0.9,
+   "activity": 42.52,
+   "overlaps": [
+    "Colours of Magic",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Rise of Devovorga"
+   ]
+  },
+  {
+   "start": "2024-10-25",
+   "end": "2024-10-28",
+   "pre": -2.98,
+   "during": -0.08,
+   "post7": -1.02,
+   "post30": -4.41,
+   "raw_during": 0.55,
+   "activity": 36.97,
+   "overlaps": [
+    "Annual Autumn Vintage",
+    "Exaltation Overload",
+    "Halloween Event",
+    "Orcsoberfest"
+   ]
+  },
+  {
+   "start": "2024-12-23",
+   "end": "2024-12-27",
+   "pre": -1.24,
+   "during": -1.72,
+   "post7": 2.7,
+   "post30": 5.07,
+   "raw_during": -2.11,
+   "activity": 45.08,
+   "overlaps": [
+    "Christmas",
+    "Last Creep Standing",
+    "New Year",
+    "Winterlight Solstice"
+   ]
+  },
+  {
+   "start": "2025-03-07",
+   "end": "2025-03-10",
+   "pre": -1.11,
+   "during": -0.77,
+   "post7": -1.28,
+   "post30": -1.06,
+   "raw_during": -0.75,
+   "activity": 43.96,
+   "overlaps": [
+    "Colours of Magic",
+    "Double Daily Reward Month",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Orcsoberfest"
+   ]
+  },
+  {
+   "start": "2025-05-02",
+   "end": "2025-05-05",
+   "pre": -0.52,
+   "during": 0.68,
+   "post7": -0.43,
+   "post30": 0.82,
+   "raw_during": 0.35,
+   "activity": 51.45,
+   "overlaps": [
+    "Demon's Lullaby",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Last Creep Standing"
+   ]
+  },
+  {
+   "start": "2025-07-04",
+   "end": "2025-07-07",
+   "pre": 0.75,
+   "during": 1.38,
+   "post7": 1.55,
+   "post30": 5.2,
+   "raw_during": 1.07,
+   "activity": 40.9,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon"
+   ]
+  },
+  {
+   "start": "2025-09-05",
+   "end": "2025-09-08",
+   "pre": -0.98,
+   "during": 1.0,
+   "post7": 0.22,
+   "post30": 4.08,
+   "raw_during": 1.31,
+   "activity": 47.22,
+   "overlaps": [
+    "Colours of Magic",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Rise of Devovorga"
+   ]
+  },
+  {
+   "start": "2025-11-07",
+   "end": "2025-11-10",
+   "pre": -2.22,
+   "during": -0.41,
+   "post7": -1.27,
+   "post30": -3.45,
+   "raw_during": 0.1,
+   "activity": 45.83,
+   "overlaps": [
+    "Full Moon",
+    "Halloween Event",
+    "Lightbearer"
+   ]
+  },
+  {
+   "start": "2025-12-23",
+   "end": "2025-12-29",
+   "pre": -1.98,
+   "during": 0.4,
+   "post7": -1.45,
+   "post30": -1.37,
+   "raw_during": 0.16,
+   "activity": 44.38,
+   "overlaps": [
+    "Christmas",
+    "Last Creep Standing",
+    "New Year",
+    "Winterlight Solstice"
+   ]
+  },
+  {
+   "start": "2026-03-06",
+   "end": "2026-03-09",
+   "pre": -0.32,
+   "during": -0.01,
+   "post7": 0.02,
+   "post30": 2.56,
+   "raw_during": -0.22,
+   "activity": 45.83,
+   "overlaps": [
+    "Colours of Magic",
+    "Double Daily Reward Month",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Orcsoberfest"
+   ]
+  },
+  {
+   "start": "2026-05-01",
+   "end": "2026-05-04",
+   "pre": -0.3,
+   "during": 0.89,
+   "post7": 0.26,
+   "post30": 2.07,
+   "raw_during": 0.61,
+   "activity": 41.28,
+   "overlaps": [
+    "Demon's Lullaby",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Last Creep Standing"
+   ]
+  },
+  {
+   "start": "2026-07-03",
+   "end": "2026-07-06",
+   "pre": -0.38,
+   "during": 1.01,
+   "post7": 1.3,
+   "post30": 7.72,
+   "raw_during": 0.91,
+   "activity": 40.18,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Summer Update"
+   ]
+  }
+ ],
+ "Demon's Lullaby": [
+  {
+   "start": "2024-05-07",
+   "end": "2024-05-14",
+   "pre": 2.08,
+   "during": -3.21,
+   "post7": 2.46,
+   "post30": 0.7,
+   "raw_during": -3.52,
+   "activity": -10.2,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Last Creep Standing",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2025-05-07",
+   "end": "2025-05-14",
+   "pre": 1.07,
+   "during": -0.44,
+   "post7": 0.69,
+   "post30": 0.82,
+   "raw_during": -1.1,
+   "activity": -2.04,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Last Creep Standing",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2026-05-07",
+   "end": "2026-05-14",
+   "pre": 0.43,
+   "during": 0.61,
+   "post7": 0.78,
+   "post30": -0.06,
+   "raw_during": 0.21,
+   "activity": -0.95,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Last Creep Standing",
+    "XP/Skill Event"
+   ]
+  }
+ ],
+ "Skill Event (junho)": [
+  {
+   "start": "2024-06-07",
+   "end": "2024-06-10",
+   "pre": -3.16,
+   "during": -2.84,
+   "post7": -0.58,
+   "post30": -6.52,
+   "raw_during": -2.61,
+   "activity": 30.55,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Rapid Respawn"
+   ]
+  },
+  {
+   "start": "2025-06-06",
+   "end": "2025-06-09",
+   "pre": -0.85,
+   "during": 0.2,
+   "post7": 0.06,
+   "post30": 2.4,
+   "raw_during": -0.08,
+   "activity": 24.29,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Rapid Respawn"
+   ]
+  },
+  {
+   "start": "2026-06-05",
+   "end": "2026-06-08",
+   "pre": -0.65,
+   "during": -1.07,
+   "post7": -0.08,
+   "post30": 3.91,
+   "raw_during": -1.19,
+   "activity": 24.1,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Rapid Respawn"
+   ]
+  }
+ ],
+ "Bewitched": [
+  {
+   "start": "2024-06-21",
+   "end": "2024-06-25",
+   "pre": -3.66,
+   "during": 0.88,
+   "post7": -4.73,
+   "post30": -5.55,
+   "raw_during": 1.37,
+   "activity": -2.78,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Last Creep Standing",
+    "Summer Update"
+   ]
+  },
+  {
+   "start": "2025-06-21",
+   "end": "2025-06-22",
+   "pre": 1.18,
+   "during": -0.94,
+   "post7": 0.42,
+   "post30": 2.81,
+   "raw_during": -1.1,
+   "activity": -6.99,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Last Creep Standing"
+   ]
+  },
+  {
+   "start": "2026-06-21",
+   "end": "2026-06-25",
+   "pre": 3.81,
+   "during": -0.56,
+   "post7": -0.19,
+   "post30": 6.08,
+   "raw_during": -0.82,
+   "activity": 5.71,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Last Creep Standing"
+   ]
+  }
+ ],
+ "Rise of Devovorga": [
+  {
+   "start": "2024-09-01",
+   "end": "2024-09-07",
+   "pre": -0.99,
+   "during": 0.66,
+   "post7": 2.08,
+   "post30": 10.51,
+   "raw_during": 0.6,
+   "activity": 26.79,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Last Creep Standing",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2025-09-01",
+   "end": "2025-09-07",
+   "pre": -0.59,
+   "during": -0.89,
+   "post7": 0.29,
+   "post30": 3.07,
+   "raw_during": -0.1,
+   "activity": 35.24,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Last Creep Standing",
+    "XP/Skill Event"
+   ]
+  }
+ ],
+ "Colours of Magic": [
+  {
+   "start": "2024-09-15",
+   "end": "2024-09-23",
+   "pre": 2.08,
+   "during": 4.64,
+   "post7": 2.31,
+   "post30": 3.73,
+   "raw_during": 4.56,
+   "activity": -2.36,
+   "overlaps": [
+    "Full Moon",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2025-03-15",
+   "end": "2025-03-23",
+   "pre": -0.28,
+   "during": -0.43,
+   "post7": -0.28,
+   "post30": -2.65,
+   "raw_during": -0.46,
+   "activity": -4.37,
+   "overlaps": [
+    "Double Daily Reward Month",
+    "Full Moon",
+    "Orcsoberfest",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2025-09-15",
+   "end": "2025-09-23",
+   "pre": 0.59,
+   "during": 0.31,
+   "post7": 2.78,
+   "post30": 5.49,
+   "raw_during": 0.93,
+   "activity": -8.36,
+   "overlaps": [
+    "Full Moon",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2026-03-15",
+   "end": "2026-03-23",
+   "pre": 0.43,
+   "during": 1.16,
+   "post7": 0.85,
+   "post30": 0.52,
+   "raw_during": 0.77,
+   "activity": -7.09,
+   "overlaps": [
+    "Double Daily Reward Month",
+    "Full Moon",
+    "Orcsoberfest",
+    "XP/Skill Event"
+   ]
+  }
+ ],
+ "Annual Autumn Vintage": [
+  {
+   "start": "2024-10-01",
+   "end": "2024-10-08",
+   "pre": 0.87,
+   "during": -0.28,
+   "post7": -0.92,
+   "post30": -6.61,
+   "raw_during": 1.3,
+   "activity": 1.19,
+   "overlaps": [
+    "Full Moon",
+    "Loot Event",
+    "Orcsoberfest"
+   ]
+  },
+  {
+   "start": "2024-10-17",
+   "end": "2024-10-24",
+   "pre": -0.3,
+   "during": -3.09,
+   "post7": -0.35,
+   "post30": -3.25,
+   "raw_during": -1.72,
+   "activity": 6.55,
+   "overlaps": [
+    "Full Moon",
+    "Halloween Event",
+    "Orcsoberfest",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2025-10-01",
+   "end": "2025-10-08",
+   "pre": 2.76,
+   "during": 1.04,
+   "post7": 0.86,
+   "post30": -0.86,
+   "raw_during": 1.63,
+   "activity": -1.89,
+   "overlaps": [
+    "Exaltation Overload",
+    "Full Moon",
+    "Orcsoberfest"
+   ]
+  },
+  {
+   "start": "2025-10-17",
+   "end": "2025-10-24",
+   "pre": 0.36,
+   "during": 0.36,
+   "post7": -0.85,
+   "post30": -3.89,
+   "raw_during": 1.3,
+   "activity": -4.52,
+   "overlaps": [
+    "Full Moon",
+    "Halloween Event",
+    "Orcsoberfest"
+   ]
+  }
+ ],
+ "Loot Event": [
+  {
+   "start": "2024-10-04",
+   "end": "2024-10-07",
+   "pre": -1.39,
+   "during": 0.83,
+   "post7": -0.97,
+   "post30": -6.6,
+   "raw_during": 1.68,
+   "activity": 4.99,
+   "overlaps": [
+    "Annual Autumn Vintage",
+    "Full Moon",
+    "Orcsoberfest"
+   ]
+  }
+ ],
+ "Orcsoberfest": [
+  {
+   "start": "2024-10-11",
+   "end": "2024-10-18",
+   "pre": 1.1,
+   "during": -2.01,
+   "post7": -2.61,
+   "post30": -7.9,
+   "raw_during": -0.31,
+   "activity": -0.64,
+   "overlaps": [
+    "Annual Autumn Vintage",
+    "Full Moon",
+    "Loot Event",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2025-03-14",
+   "end": "2025-03-21",
+   "pre": -1.4,
+   "during": -0.12,
+   "post7": -0.03,
+   "post30": -2.76,
+   "raw_during": -0.09,
+   "activity": -4.2,
+   "overlaps": [
+    "Colours of Magic",
+    "Double Daily Reward Month",
+    "Full Moon",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2025-10-10",
+   "end": "2025-10-17",
+   "pre": 0.45,
+   "during": 0.3,
+   "post7": 0.52,
+   "post30": -3.81,
+   "raw_during": 1.18,
+   "activity": -3.52,
+   "overlaps": [
+    "Annual Autumn Vintage",
+    "Exaltation Overload",
+    "Full Moon"
+   ]
+  },
+  {
+   "start": "2026-03-13",
+   "end": "2026-03-20",
+   "pre": -0.67,
+   "during": 1.38,
+   "post7": 0.43,
+   "post30": 0.8,
+   "raw_during": 1.04,
+   "activity": -5.15,
+   "overlaps": [
+    "Colours of Magic",
+    "Double Daily Reward Month",
+    "Full Moon",
+    "XP/Skill Event"
+   ]
+  }
+ ],
+ "Halloween Event": [
+  {
+   "start": "2024-10-31",
+   "end": "2024-11-03",
+   "pre": -1.07,
+   "during": -0.54,
+   "post7": -2.55,
+   "post30": -4.22,
+   "raw_during": 0.04,
+   "activity": 1.07,
+   "overlaps": [
+    "Annual Autumn Vintage",
+    "Exaltation Overload",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2025-10-31",
+   "end": "2025-11-03",
+   "pre": -0.42,
+   "during": -1.19,
+   "post7": -1.25,
+   "post30": -2.35,
+   "raw_during": -0.75,
+   "activity": 7.1,
+   "overlaps": [
+    "Annual Autumn Vintage",
+    "XP/Skill Event"
+   ]
+  }
+ ],
+ "Lightbearer": [
+  {
+   "start": "2024-11-11",
+   "end": "2024-11-15",
+   "pre": -2.64,
+   "during": 0.35,
+   "post7": 0.71,
+   "post30": -3.76,
+   "raw_during": 1.13,
+   "activity": 2.96,
+   "overlaps": [
+    "Exaltation Overload",
+    "Full Moon",
+    "Last Creep Standing"
+   ]
+  },
+  {
+   "start": "2025-11-11",
+   "end": "2025-11-15",
+   "pre": -1.37,
+   "during": -1.27,
+   "post7": 0.46,
+   "post30": -3.67,
+   "raw_during": -0.64,
+   "activity": 8.7,
+   "overlaps": [
+    "Full Moon",
+    "Last Creep Standing",
+    "XP/Skill Event"
+   ]
+  }
+ ],
+ "Christmas": [
+  {
+   "start": "2024-12-12",
+   "end": "2024-12-31",
+   "pre": 0.32,
+   "during": 0.75,
+   "post7": 0.13,
+   "post30": 0.61,
+   "raw_during": 0.13,
+   "activity": 13.33,
+   "overlaps": [
+    "Full Moon",
+    "Last Creep Standing",
+    "New Year",
+    "Rapid Respawn",
+    "Tibia Anniversary",
+    "Winterlight Solstice",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2025-12-12",
+   "end": "2025-12-31",
+   "pre": -1.03,
+   "during": -4.18,
+   "post7": -1.7,
+   "post30": -3.26,
+   "raw_during": -3.44,
+   "activity": 13.85,
+   "overlaps": [
+    "Full Moon",
+    "Last Creep Standing",
+    "New Year",
+    "Rapid Respawn",
+    "Tibia Anniversary",
+    "Winterlight Solstice",
+    "XP/Skill Event"
+   ]
+  }
+ ],
+ "Winterlight Solstice": [
+  {
+   "start": "2024-12-22",
+   "end": "2025-01-10",
+   "pre": -1.11,
+   "during": 0.92,
+   "post7": 0.15,
+   "post30": 2.82,
+   "raw_during": -0.16,
+   "activity": 12.74,
+   "overlaps": [
+    "Christmas",
+    "Exaltation Overload",
+    "Full Moon",
+    "Last Creep Standing",
+    "New Year",
+    "The First Dragon",
+    "Tibia Anniversary",
+    "Tibia Token launch",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2025-12-22",
+   "end": "2026-01-10",
+   "pre": -1.46,
+   "during": -2.53,
+   "post7": 0.28,
+   "post30": 1.47,
+   "raw_during": -3.07,
+   "activity": 19.62,
+   "overlaps": [
+    "Christmas",
+    "Exaltation Overload",
+    "Full Moon",
+    "Last Creep Standing",
+    "New Year",
+    "The First Dragon",
+    "Tibia Anniversary",
+    "XP/Skill Event"
+   ]
+  }
+ ],
+ "New Year": [
+  {
+   "start": "2024-12-27",
+   "end": "2025-01-03",
+   "pre": -2.11,
+   "during": 2.96,
+   "post7": 0.93,
+   "post30": 3.94,
+   "raw_during": 2.11,
+   "activity": -0.4,
+   "overlaps": [
+    "Christmas",
+    "Last Creep Standing",
+    "Tibia Anniversary",
+    "Winterlight Solstice",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2025-12-27",
+   "end": "2026-01-03",
+   "pre": -2.48,
+   "during": 1.16,
+   "post7": -0.86,
+   "post30": 0.45,
+   "raw_during": 0.74,
+   "activity": 11.16,
+   "overlaps": [
+    "Christmas",
+    "Last Creep Standing",
+    "Tibia Anniversary",
+    "Winterlight Solstice",
+    "XP/Skill Event"
+   ]
+  }
+ ],
+ "Tibia Anniversary": [
+  {
+   "start": "2025-01-07",
+   "end": "2025-01-10",
+   "pre": 0.89,
+   "during": 0.34,
+   "post7": 0.59,
+   "post30": 4.72,
+   "raw_during": -0.13,
+   "activity": -1.43,
+   "overlaps": [
+    "Christmas",
+    "Exaltation Overload",
+    "Full Moon",
+    "New Year",
+    "The First Dragon",
+    "Tibia Token launch",
+    "Winterlight Solstice"
+   ]
+  },
+  {
+   "start": "2026-01-07",
+   "end": "2026-01-10",
+   "pre": -1.24,
+   "during": -0.41,
+   "post7": 0.56,
+   "post30": 2.65,
+   "raw_during": -0.67,
+   "activity": 3.52,
+   "overlaps": [
+    "Christmas",
+    "Exaltation Overload",
+    "Full Moon",
+    "New Year",
+    "The First Dragon",
+    "Winterlight Solstice"
+   ]
+  }
+ ],
+ "The First Dragon": [
+  {
+   "start": "2025-01-14",
+   "end": "2025-02-12",
+   "pre": 0.3,
+   "during": 5.1,
+   "post7": 0.32,
+   "post30": 0.19,
+   "raw_during": 1.57,
+   "activity": 3.33,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Exaltation Overload",
+    "Full Moon",
+    "Last Creep Standing",
+    "Rapid Respawn",
+    "Tibia Anniversary",
+    "Tibia Token launch",
+    "Valentine's Day",
+    "Winterlight Solstice"
+   ]
+  },
+  {
+   "start": "2026-01-14",
+   "end": "2026-02-12",
+   "pre": -0.54,
+   "during": 3.02,
+   "post7": -0.27,
+   "post30": -0.86,
+   "raw_during": 0.78,
+   "activity": 2.21,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Exaltation Overload",
+    "Full Moon",
+    "Last Creep Standing",
+    "Rapid Respawn",
+    "Tibia Anniversary",
+    "Valentine's Day",
+    "Winterlight Solstice"
+   ]
+  }
+ ],
+ "Valentine's Day": [
+  {
+   "start": "2025-02-14",
+   "end": "2025-02-15",
+   "pre": 0.61,
+   "during": -0.28,
+   "post7": -0.33,
+   "post30": -2.42,
+   "raw_during": -0.38,
+   "activity": 7.64,
+   "overlaps": [
+    "A Piece of Cake",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Last Creep Standing",
+    "Rapid Respawn",
+    "The First Dragon"
+   ]
+  },
+  {
+   "start": "2026-02-14",
+   "end": "2026-02-15",
+   "pre": 0.43,
+   "during": 0.0,
+   "post7": -0.25,
+   "post30": -0.78,
+   "raw_during": -0.12,
+   "activity": -4.54,
+   "overlaps": [
+    "A Piece of Cake",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Last Creep Standing",
+    "Rapid Respawn",
+    "The First Dragon"
+   ]
+  }
+ ],
+ "A Piece of Cake": [
+  {
+   "start": "2025-02-21",
+   "end": "2025-02-26",
+   "pre": -0.15,
+   "during": -0.8,
+   "post7": -1.15,
+   "post30": -2.6,
+   "raw_during": -0.83,
+   "activity": 14.07,
+   "overlaps": [
+    "Double Daily Reward Month",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Last Creep Standing",
+    "Valentine's Day"
+   ]
+  },
+  {
+   "start": "2026-02-21",
+   "end": "2026-02-26",
+   "pre": -0.34,
+   "during": -0.62,
+   "post7": -0.27,
+   "post30": 1.37,
+   "raw_during": -0.98,
+   "activity": 10.53,
+   "overlaps": [
+    "Double Daily Reward Month",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Last Creep Standing",
+    "Valentine's Day"
+   ]
+  }
+ ],
+ "Double Daily Reward Month": [
+  {
+   "start": "2025-03-01",
+   "end": "2025-03-31",
+   "pre": -0.63,
+   "during": -3.28,
+   "post7": 0.19,
+   "post30": -3.63,
+   "raw_during": -3.06,
+   "activity": 10.38,
+   "overlaps": [
+    "A Piece of Cake",
+    "Colours of Magic",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Exaltation Overload",
+    "Full Moon",
+    "Last Creep Standing",
+    "Orcsoberfest",
+    "XP/Skill Event"
+   ]
+  },
+  {
+   "start": "2026-03-01",
+   "end": "2026-03-31",
+   "pre": -0.7,
+   "during": 1.49,
+   "post7": 0.66,
+   "post30": -0.89,
+   "raw_during": 0.1,
+   "activity": 6.06,
+   "overlaps": [
+    "A Piece of Cake",
+    "Colours of Magic",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Exaltation Overload",
+    "Full Moon",
+    "Last Creep Standing",
+    "Orcsoberfest",
+    "XP/Skill Event"
+   ]
+  }
+ ],
+ "The Great Expedition": [
+  {
+   "start": "2026-08-06",
+   "end": "2026-08-12",
+   "pre": 1.61,
+   "during": 0.06,
+   "post7": -0.19,
+   "post30": 1.83,
+   "raw_during": 0.28,
+   "activity": 4.25,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Rapid Respawn"
+   ]
+  }
+ ],
+ "Summer Update": [
+  {
+   "start": "2024-07-01",
+   "end": "2024-07-01",
+   "pre": -1.14,
+   "during": -0.29,
+   "post7": -0.3,
+   "post30": 2.44,
+   "raw_during": -0.27,
+   "activity": -0.0,
+   "overlaps": [
+    "Bewitched",
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Last Creep Standing"
+   ]
+  },
+  {
+   "start": "2025-07-21",
+   "end": "2025-07-21",
+   "pre": 0.08,
+   "during": 0.5,
+   "post7": 1.58,
+   "post30": 6.93,
+   "raw_during": 0.42,
+   "activity": -7.88,
+   "overlaps": [
+    "Full Moon",
+    "Last Creep Standing"
+   ]
+  },
+  {
+   "start": "2026-07-13",
+   "end": "2026-07-13",
+   "pre": 1.47,
+   "during": 0.44,
+   "post7": 1.95,
+   "post30": 6.77,
+   "raw_during": 0.42,
+   "activity": 3.13,
+   "overlaps": [
+    "Full Moon",
+    "Last Creep Standing",
+    "XP/Skill Event"
+   ]
+  }
+ ],
+ "Winter Update": [
+  {
+   "start": "2024-11-25",
+   "end": "2024-11-25",
+   "pre": 1.14,
+   "during": -0.33,
+   "post7": -1.68,
+   "post30": -7.43,
+   "raw_during": -0.24,
+   "activity": 1.12,
+   "overlaps": [
+    "Last Creep Standing"
+   ]
+  },
+  {
+   "start": "2025-11-24",
+   "end": "2025-11-24",
+   "pre": 0.98,
+   "during": 0.18,
+   "post7": 0.51,
+   "post30": -6.7,
+   "raw_during": 0.24,
+   "activity": 1.08,
+   "overlaps": [
+    "Last Creep Standing"
+   ]
+  }
+ ],
+ "Tibia Token launch": [
+  {
+   "start": "2025-01-14",
+   "end": "2025-01-14",
+   "pre": 0.3,
+   "during": 0.45,
+   "post7": 1.41,
+   "post30": 4.78,
+   "raw_during": 0.33,
+   "activity": 4.41,
+   "overlaps": [
+    "Exaltation Overload",
+    "Full Moon",
+    "Last Creep Standing",
+    "The First Dragon",
+    "Tibia Anniversary",
+    "Winterlight Solstice"
+   ]
+  }
+ ],
+ "Monk release": [
+  {
+   "start": "2025-04-08",
+   "end": "2025-04-08",
+   "pre": 0.7,
+   "during": 0.1,
+   "post7": -0.47,
+   "post30": -1.62,
+   "raw_during": 0.03,
+   "activity": 25.85,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Exaltation Overload",
+    "Full Moon",
+    "Tibia Token fee"
+   ]
+  }
+ ],
+ "Tibia Token fee": [
+  {
+   "start": "2025-04-15",
+   "end": "2025-04-15",
+   "pre": -0.26,
+   "during": -0.0,
+   "post7": -1.17,
+   "post30": -0.66,
+   "raw_during": -0.08,
+   "activity": 9.03,
+   "overlaps": [
+    "Evento do m\u00eas (Carnival/Prank/Flower/Hot Cuisine/Double Daily Reward/Chyllfroest)",
+    "Full Moon",
+    "Last Creep Standing",
+    "Monk release",
+    "Spring into Life"
+   ]
+  }
+ ]
+}

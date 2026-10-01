@@ -1,0 +1,5171 @@
+{
+  "asOf": "2026-09-28",
+  "methodology": {
+    "status": "Exploratory; fixed candidate rules, not a validated replacement for the main forecast.",
+    "premium": "log(world same-side offer / Antica same-day same-side offer)",
+    "benchmark": "Median observed h-week Antica log return over the preceding 104 weeks; at least 10 returns.",
+    "training": "Origin-time only; endpoint lookup backwards <=3 days (donor age <=7 days), no interpolation. Weekly Sunday origins; scenarios at cutoff.",
+    "evaluation": "MAPE and MAE on identical observed origins per side/horizon/regime. Weekly overlapping targets: n is not independent sample size. No tuning, selection-adjusted claim, calibrated interval or causal age effect.",
+    "limits": [
+      "One successor and one donor pair; age, launch cohort, calendar, transfers and premium restrictions are confounded.",
+      "Offer endpoints are indicative, not traded prices or fill guarantees. Bid/ask are modeled independently; scenarios are not an executable book.",
+      "These exploratory models use a simple historical benchmark-return rule, distinct from the main report ensemble.",
+      "Donor missing ages remain unsupported. Merger prices are not carried across world identities."
+    ]
+  },
+  "coverage": [
+    {
+      "world": "Antica",
+      "first": "2023-01-10",
+      "last": "2026-09-28",
+      "days": 1202,
+      "birth": null,
+      "firstAgeDays": null,
+      "lastAgeDays": null
+    },
+    {
+      "world": "Terribra",
+      "first": "2025-11-21",
+      "last": "2026-09-28",
+      "days": 58,
+      "birth": "2025-11-06",
+      "firstAgeDays": 15,
+      "lastAgeDays": 326
+    },
+    {
+      "world": "Jacabra",
+      "first": "2025-10-03",
+      "last": "2025-10-30",
+      "days": 5,
+      "birth": null,
+      "firstAgeDays": null,
+      "lastAgeDays": null
+    },
+    {
+      "world": "Obscubra",
+      "first": "2025-06-04",
+      "last": "2025-11-03",
+      "days": 78,
+      "birth": null,
+      "firstAgeDays": null,
+      "lastAgeDays": null
+    },
+    {
+      "world": "Luzibra",
+      "first": "2025-09-26",
+      "last": "2026-09-28",
+      "days": 61,
+      "birth": "2025-05-21",
+      "firstAgeDays": 128,
+      "lastAgeDays": 495
+    },
+    {
+      "world": "Floribra",
+      "first": "2026-06-05",
+      "last": "2026-09-28",
+      "days": 29,
+      "birth": "2026-05-20",
+      "firstAgeDays": 16,
+      "lastAgeDays": 131
+    }
+  ],
+  "sources": [
+    {
+      "label": "Luzibra: lançamento em 21/05/2025",
+      "url": "https://www.tibia.com/news/?id=8385&subtopic=newsarchive"
+    },
+    {
+      "label": "Floribra: lançamento em 20/05/2026",
+      "url": "https://www.tibia.com/news/?id=8767&subtopic=newsarchive"
+    },
+    {
+      "label": "Formação de Terribra por Jacabra e Obscubra: merger em 06/11/2025",
+      "url": "https://www.tibia.com/news/?id=8514&subtopic=newsarchive"
+    },
+    {
+      "label": "Terribra: composição do merger Jacabra/Obscubra",
+      "url": "https://www.tibia.com/news/?id=8513&subtopic=newsarchive"
+    },
+    {
+      "label": "Terribra: confirmação da conclusão do merger",
+      "url": "https://www.tibia.com/news/?id=8515&subtopic=newsarchive"
+    },
+    {
+      "label": "Luzibra: abertura de transfers em 30/06/2026",
+      "url": "https://www.tibia.com/news/?id=8866&subtopic=newsarchive"
+    },
+    {
+      "label": "Luzibra: retirada da restrição premium em 29/07/2025",
+      "url": "https://www.tibia.com/news/?id=8475&subtopic=newsarchive"
+    }
+  ],
+  "inputHashes": {
+    "market-update.json": "2d2c2ed0825a3296786e0dc0300d66cf5e04d42f3ef8d5f9c84de02595bd8b15",
+    "mergers.json": "16d366cd52d5e10ad81f83c60300e9dc45d9c0f7b1accb37bb477686b08941c6",
+    "universe.py": "c9cf855847bcf9f4734b13b8ffbf18b851d628536aeaff53a78ed75b6efcba73",
+    "research_data.py": "53d72e1002a1ccdf9c6d7ccb7d5e17d50a0fedd5bdc46dc73a5c0d4e4a30c0e1",
+    "lifecycle.py": "376c26168cf1ce930adf8ee854861467cfef2ffc0c25e4ffe8ba93680be63cd8",
+    "inputs/api/antica.json": "c2638fefb58a5e385a3be242b1d126c73aa61a0163b00499e5a5df42e2de1def",
+    "inputs/api/terribra.json": "ab1e117a78df95814a004515f57f3d565da210470047c97ac2d1d17cf8d2bc16",
+    "inputs/api/jacabra.json": "751be7077206b6f628a753fa3f40a5ce72868014d5afae824ee1ed4196b75b0e",
+    "inputs/api/obscubra.json": "023ffbcaff27e64f1da17e169f186f9337ebe648ef6745c1acfad4bf4facd35c",
+    "inputs/api/luzibra.json": "048282746c20c9de0677878f134e4e4a244effb3176622dbfe6b7c9e60ef92a1",
+    "inputs/api/floribra.json": "a0a4ea528f37259b2df791268f1e52f2b41cbd5c8166abae1efbc7277efed4fa"
+  },
+  "terribra": {
+    "world": "Terribra",
+    "predecessors": [
+      "Jacabra",
+      "Obscubra"
+    ],
+    "mergeDate": "2025-11-06",
+    "methods": {
+      "Constant": "Última oferta; retorno zero.",
+      "Benchmark": "Última oferta × exp(retorno Antica).",
+      "Local": "Benchmark × exp(mediana dos retornos do premium de Terribra).",
+      "Precursor": "Benchmark × exp(0.5 × mediana local + 0.5 × média das medianas dos precursores elegíveis antes do merger). Jacabra/Obscubra fornecem apenas mudanças próprias, com mínimo de 3 retornos por donor; activeDonors identifica quem contribui em cada horizonte."
+    },
+    "backtest": [
+      {
+        "side": "ask",
+        "horizon": 8,
+        "model": "Constant",
+        "n": 5,
+        "mape": 2.9059994588705718,
+        "mae": 1136.8,
+        "gainVsConstantPct": 0.0,
+        "gainVsBenchmarkPct": -28.6069584196041,
+        "gainVsLocalPct": -26.90169115220926
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "model": "Benchmark",
+        "n": 5,
+        "mape": 2.2595973768302713,
+        "mae": 899.4479965405815,
+        "gainVsConstantPct": 22.24370964926219,
+        "gainVsBenchmarkPct": 0.0,
+        "gainVsLocalPct": 1.325952567691624
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "model": "Local",
+        "n": 5,
+        "mape": 2.289961175840469,
+        "mae": 909.241875604284,
+        "gainVsConstantPct": 21.19884369385011,
+        "gainVsBenchmarkPct": -1.343770324817406,
+        "gainVsLocalPct": 0.0
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "model": "Precursor",
+        "n": 5,
+        "mape": 2.2752983385026027,
+        "mae": 905.7974279527509,
+        "gainVsConstantPct": 21.703414928132624,
+        "gainVsBenchmarkPct": -0.6948566073464058,
+        "gainVsLocalPct": 0.6403094293720879
+      },
+      {
+        "side": "ask",
+        "horizon": 13,
+        "model": "Constant",
+        "n": 1,
+        "mape": 8.558503484533563,
+        "mae": 3500.0,
+        "gainVsConstantPct": 0.0,
+        "gainVsBenchmarkPct": 20.318128274752812,
+        "gainVsLocalPct": 25.120696794192664
+      },
+      {
+        "side": "ask",
+        "horizon": 13,
+        "model": "Benchmark",
+        "n": 1,
+        "mape": 10.740841422556347,
+        "mae": 4392.467099754416,
+        "gainVsConstantPct": -25.49905999298334,
+        "gainVsBenchmarkPct": 0.0,
+        "gainVsLocalPct": 6.027178347415951
+      },
+      {
+        "side": "ask",
+        "horizon": 13,
+        "model": "Local",
+        "n": 1,
+        "mape": 11.42973173910331,
+        "mae": 4674.1887947063005,
+        "gainVsConstantPct": -33.54825127732279,
+        "gainVsBenchmarkPct": -6.413746274107135,
+        "gainVsLocalPct": 0.0
+      },
+      {
+        "side": "ask",
+        "horizon": 13,
+        "model": "Precursor",
+        "n": 1,
+        "mape": 10.787515441578233,
+        "mae": 4411.554439833417,
+        "gainVsConstantPct": -26.044412566669074,
+        "gainVsBenchmarkPct": -0.43454713821458046,
+        "gainVsLocalPct": 5.618822140225155
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "model": "Constant",
+        "n": 5,
+        "mape": 3.1935961624752514,
+        "mae": 1205.0,
+        "gainVsConstantPct": 0.0,
+        "gainVsBenchmarkPct": -2.9077652105190532,
+        "gainVsLocalPct": -10.701569896940534
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "model": "Benchmark",
+        "n": 5,
+        "mape": 3.1033578038956455,
+        "mae": 1183.515894931824,
+        "gainVsConstantPct": 2.8256033007524994,
+        "gainVsBenchmarkPct": 0.0,
+        "gainVsLocalPct": -7.573582683947744
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "model": "Local",
+        "n": 5,
+        "mape": 2.884869803967896,
+        "mae": 1103.169161767757,
+        "gainVsConstantPct": 9.66704438510071,
+        "gainVsBenchmarkPct": 7.040374128097038,
+        "gainVsLocalPct": 0.0
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "model": "Precursor",
+        "n": 5,
+        "mape": 3.087709571646151,
+        "mae": 1182.811343592503,
+        "gainVsConstantPct": 3.3155911217976564,
+        "gainVsBenchmarkPct": 0.5042355164412982,
+        "gainVsLocalPct": -7.031158473746935
+      },
+      {
+        "side": "bid",
+        "horizon": 13,
+        "model": "Constant",
+        "n": 1,
+        "mape": 9.651515151515156,
+        "mae": 3822.0,
+        "gainVsConstantPct": 0.0,
+        "gainVsBenchmarkPct": 16.906127413029402,
+        "gainVsLocalPct": 10.19554485628813
+      },
+      {
+        "side": "bid",
+        "horizon": 13,
+        "model": "Benchmark",
+        "n": 1,
+        "mape": 11.61519478035321,
+        "mae": 4599.61713301987,
+        "gainVsConstantPct": -20.345817190472772,
+        "gainVsBenchmarkPct": 0.0,
+        "gainVsLocalPct": -8.075905416151619
+      },
+      {
+        "side": "bid",
+        "horizon": 13,
+        "model": "Local",
+        "n": 1,
+        "mape": 10.74725650979127,
+        "mae": 4255.913577877342,
+        "gainVsConstantPct": -11.353050179940904,
+        "gainVsBenchmarkPct": 7.472438361774469,
+        "gainVsLocalPct": 0.0
+      },
+      {
+        "side": "bid",
+        "horizon": 13,
+        "model": "Precursor",
+        "n": 1,
+        "mape": 11.74601092858305,
+        "mae": 4651.420327718886,
+        "gainVsConstantPct": -21.701212132885562,
+        "gainVsBenchmarkPct": -1.1262501464987196,
+        "gainVsLocalPct": -9.293110459230846
+      }
+    ],
+    "backtestDetail": [
+      {
+        "side": "ask",
+        "horizon": 8,
+        "origin": "2026-02-22",
+        "target": "2026-04-19",
+        "anchorDate": "2026-02-21",
+        "actualDate": "2026-04-17",
+        "localReturnSample": 3,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Constant",
+        "actual": 37999.0,
+        "predicted": 38700.0,
+        "ape": 1.8447853890891874,
+        "ae": 701.0
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "origin": "2026-02-22",
+        "target": "2026-04-19",
+        "anchorDate": "2026-02-21",
+        "actualDate": "2026-04-17",
+        "localReturnSample": 3,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Benchmark",
+        "actual": 37999.0,
+        "predicted": 37959.18537200506,
+        "ape": 0.10477809414706218,
+        "ae": 39.814627994943294
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "origin": "2026-02-22",
+        "target": "2026-04-19",
+        "anchorDate": "2026-02-21",
+        "actualDate": "2026-04-17",
+        "localReturnSample": 3,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Local",
+        "actual": 37999.0,
+        "predicted": 38056.385410508025,
+        "ape": 0.1510182123424908,
+        "ae": 57.385410508024506
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "origin": "2026-02-22",
+        "target": "2026-04-19",
+        "anchorDate": "2026-02-21",
+        "actualDate": "2026-04-17",
+        "localReturnSample": 3,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Precursor",
+        "actual": 37999.0,
+        "predicted": 37941.99831240044,
+        "ape": 0.15000838864064336,
+        "ae": 57.001687599557044
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "origin": "2026-04-05",
+        "target": "2026-05-31",
+        "anchorDate": "2026-04-05",
+        "actualDate": "2026-05-29",
+        "localReturnSample": 4,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Constant",
+        "actual": 37777.0,
+        "predicted": 38699.0,
+        "ape": 2.4406384837334816,
+        "ae": 922.0
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "origin": "2026-04-05",
+        "target": "2026-05-31",
+        "anchorDate": "2026-04-05",
+        "actualDate": "2026-05-29",
+        "localReturnSample": 4,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Benchmark",
+        "actual": 37777.0,
+        "predicted": 38064.16202045368,
+        "ape": 0.7601504101799605,
+        "ae": 287.1620204536812
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "origin": "2026-04-05",
+        "target": "2026-05-31",
+        "anchorDate": "2026-04-05",
+        "actualDate": "2026-05-29",
+        "localReturnSample": 4,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Local",
+        "actual": 37777.0,
+        "predicted": 38169.70274678777,
+        "ape": 1.039528672969725,
+        "ae": 392.7027467877706
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "origin": "2026-04-05",
+        "target": "2026-05-31",
+        "anchorDate": "2026-04-05",
+        "actualDate": "2026-05-29",
+        "localReturnSample": 4,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Precursor",
+        "actual": 37777.0,
+        "predicted": 38050.951026007104,
+        "ape": 0.7251794107713705,
+        "ae": 273.9510260071038
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "origin": "2026-04-12",
+        "target": "2026-06-07",
+        "anchorDate": "2026-04-11",
+        "actualDate": "2026-06-06",
+        "localReturnSample": 4,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Constant",
+        "actual": 37987.0,
+        "predicted": 39140.0,
+        "ape": 3.035248900939802,
+        "ae": 1153.0
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "origin": "2026-04-12",
+        "target": "2026-06-07",
+        "anchorDate": "2026-04-11",
+        "actualDate": "2026-06-06",
+        "localReturnSample": 4,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Benchmark",
+        "actual": 37987.0,
+        "predicted": 38497.92763328658,
+        "ape": 1.3450065372010878,
+        "ae": 510.9276332865775
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "origin": "2026-04-12",
+        "target": "2026-06-07",
+        "anchorDate": "2026-04-11",
+        "actualDate": "2026-06-06",
+        "localReturnSample": 4,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Local",
+        "actual": 37987.0,
+        "predicted": 38604.6710640914,
+        "ape": 1.6260064340205993,
+        "ae": 617.6710640914025
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "origin": "2026-04-12",
+        "target": "2026-06-07",
+        "anchorDate": "2026-04-11",
+        "actualDate": "2026-06-06",
+        "localReturnSample": 4,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Precursor",
+        "actual": 37987.0,
+        "predicted": 38484.56609105966,
+        "ape": 1.3098325507664876,
+        "ae": 497.56609105966345
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "origin": "2026-06-07",
+        "target": "2026-08-02",
+        "anchorDate": "2026-06-06",
+        "actualDate": "2026-08-02",
+        "localReturnSample": 6,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Constant",
+        "actual": 38695.0,
+        "predicted": 37987.0,
+        "ape": 1.829693758883577,
+        "ae": 708.0
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "origin": "2026-06-07",
+        "target": "2026-08-02",
+        "anchorDate": "2026-06-06",
+        "actualDate": "2026-08-02",
+        "localReturnSample": 6,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Benchmark",
+        "actual": 38695.0,
+        "predicted": 37688.52370121479,
+        "ape": 2.6010500033213813,
+        "ae": 1006.4762987852082
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "origin": "2026-06-07",
+        "target": "2026-08-02",
+        "anchorDate": "2026-06-06",
+        "actualDate": "2026-08-02",
+        "localReturnSample": 6,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Local",
+        "actual": 38695.0,
+        "predicted": 37778.30704747885,
+        "ape": 2.3690217147464887,
+        "ae": 916.6929525211526
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "origin": "2026-06-07",
+        "target": "2026-08-02",
+        "anchorDate": "2026-06-06",
+        "actualDate": "2026-08-02",
+        "localReturnSample": 6,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Precursor",
+        "actual": 38695.0,
+        "predicted": 37668.107334907414,
+        "ape": 2.653812288648627,
+        "ae": 1026.892665092586
+      },
+      {
+        "side": "ask",
+        "horizon": 13,
+        "origin": "2026-06-28",
+        "target": "2026-09-27",
+        "anchorDate": "2026-06-28",
+        "actualDate": "2026-09-27",
+        "localReturnSample": 3,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 7
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Constant",
+        "actual": 40895.0,
+        "predicted": 37395.0,
+        "ape": 8.558503484533563,
+        "ae": 3500.0
+      },
+      {
+        "side": "ask",
+        "horizon": 13,
+        "origin": "2026-06-28",
+        "target": "2026-09-27",
+        "anchorDate": "2026-06-28",
+        "actualDate": "2026-09-27",
+        "localReturnSample": 3,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 7
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Benchmark",
+        "actual": 40895.0,
+        "predicted": 36502.532900245584,
+        "ape": 10.740841422556347,
+        "ae": 4392.467099754416
+      },
+      {
+        "side": "ask",
+        "horizon": 13,
+        "origin": "2026-06-28",
+        "target": "2026-09-27",
+        "anchorDate": "2026-06-28",
+        "actualDate": "2026-09-27",
+        "localReturnSample": 3,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 7
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Local",
+        "actual": 40895.0,
+        "predicted": 36220.8112052937,
+        "ape": 11.42973173910331,
+        "ae": 4674.1887947063005
+      },
+      {
+        "side": "ask",
+        "horizon": 13,
+        "origin": "2026-06-28",
+        "target": "2026-09-27",
+        "anchorDate": "2026-06-28",
+        "actualDate": "2026-09-27",
+        "localReturnSample": 3,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 7
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Precursor",
+        "actual": 40895.0,
+        "predicted": 36483.44556016658,
+        "ape": 10.787515441578233,
+        "ae": 4411.554439833417
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "origin": "2026-08-02",
+        "target": "2026-09-27",
+        "anchorDate": "2026-08-02",
+        "actualDate": "2026-09-27",
+        "localReturnSample": 8,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Constant",
+        "actual": 40895.0,
+        "predicted": 38695.0,
+        "ape": 5.37963076170681,
+        "ae": 2200.0
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "origin": "2026-08-02",
+        "target": "2026-09-27",
+        "anchorDate": "2026-08-02",
+        "actualDate": "2026-09-27",
+        "localReturnSample": 8,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Benchmark",
+        "actual": 40895.0,
+        "predicted": 38242.1405978175,
+        "ape": 6.487001839301865,
+        "ae": 2652.8594021824974
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "origin": "2026-08-02",
+        "target": "2026-09-27",
+        "anchorDate": "2026-08-02",
+        "actualDate": "2026-09-27",
+        "localReturnSample": 8,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Local",
+        "actual": 40895.0,
+        "predicted": 38333.24279588693,
+        "ape": 6.264230845123042,
+        "ae": 2561.7572041130697
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "origin": "2026-08-02",
+        "target": "2026-09-27",
+        "anchorDate": "2026-08-02",
+        "actualDate": "2026-09-27",
+        "localReturnSample": 8,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Precursor",
+        "actual": 40895.0,
+        "predicted": 38221.424329995156,
+        "ape": 6.537659053685885,
+        "ae": 2673.575670004844
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "origin": "2026-02-22",
+        "target": "2026-04-19",
+        "anchorDate": "2026-02-21",
+        "actualDate": "2026-04-17",
+        "localReturnSample": 3,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Constant",
+        "actual": 37358.0,
+        "predicted": 37638.0,
+        "ape": 0.7495047914770625,
+        "ae": 280.0
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "origin": "2026-02-22",
+        "target": "2026-04-19",
+        "anchorDate": "2026-02-21",
+        "actualDate": "2026-04-17",
+        "localReturnSample": 3,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Benchmark",
+        "actual": 37358.0,
+        "predicted": 36902.13896727937,
+        "ape": 1.220250100970699,
+        "ae": 455.8610327206334
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "origin": "2026-02-22",
+        "target": "2026-04-19",
+        "anchorDate": "2026-02-21",
+        "actualDate": "2026-04-17",
+        "localReturnSample": 3,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Local",
+        "actual": 37358.0,
+        "predicted": 37022.09427968474,
+        "ape": 0.8991533816458674,
+        "ae": 335.90572031526244
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "origin": "2026-02-22",
+        "target": "2026-04-19",
+        "anchorDate": "2026-02-21",
+        "actualDate": "2026-04-17",
+        "localReturnSample": 3,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Precursor",
+        "actual": 37358.0,
+        "predicted": 36758.60295515875,
+        "ape": 1.604467703948953,
+        "ae": 599.397044841251
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "origin": "2026-04-05",
+        "target": "2026-05-31",
+        "anchorDate": "2026-04-05",
+        "actualDate": "2026-05-29",
+        "localReturnSample": 4,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Constant",
+        "actual": 36510.0,
+        "predicted": 37551.0,
+        "ape": 2.851273623664752,
+        "ae": 1041.0
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "origin": "2026-04-05",
+        "target": "2026-05-31",
+        "anchorDate": "2026-04-05",
+        "actualDate": "2026-05-29",
+        "localReturnSample": 4,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Benchmark",
+        "actual": 36510.0,
+        "predicted": 36928.57544551372,
+        "ape": 1.1464679416973933,
+        "ae": 418.5754455137212
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "origin": "2026-04-05",
+        "target": "2026-05-31",
+        "anchorDate": "2026-04-05",
+        "actualDate": "2026-05-29",
+        "localReturnSample": 4,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Local",
+        "actual": 36510.0,
+        "predicted": 36813.308997359214,
+        "ape": 0.8307559500389416,
+        "ae": 303.3089973592141
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "origin": "2026-04-05",
+        "target": "2026-05-31",
+        "anchorDate": "2026-04-05",
+        "actualDate": "2026-05-29",
+        "localReturnSample": 4,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Precursor",
+        "actual": 36510.0,
+        "predicted": 36667.93403950877,
+        "ape": 0.4325774842749208,
+        "ae": 157.9340395087711
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "origin": "2026-04-12",
+        "target": "2026-06-07",
+        "anchorDate": "2026-04-11",
+        "actualDate": "2026-06-06",
+        "localReturnSample": 4,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Constant",
+        "actual": 36326.0,
+        "predicted": 37756.0,
+        "ape": 3.9365743544568677,
+        "ae": 1430.0
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "origin": "2026-04-12",
+        "target": "2026-06-07",
+        "anchorDate": "2026-04-11",
+        "actualDate": "2026-06-06",
+        "localReturnSample": 4,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Benchmark",
+        "actual": 36326.0,
+        "predicted": 37130.17747918341,
+        "ape": 2.213779329360266,
+        "ae": 804.1774791834105
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "origin": "2026-04-12",
+        "target": "2026-06-07",
+        "anchorDate": "2026-04-11",
+        "actualDate": "2026-06-06",
+        "localReturnSample": 4,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Local",
+        "actual": 36326.0,
+        "predicted": 37014.281763582716,
+        "ape": 1.8947359015105247,
+        "ae": 688.2817635827159
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "origin": "2026-04-12",
+        "target": "2026-06-07",
+        "anchorDate": "2026-04-11",
+        "actualDate": "2026-06-06",
+        "localReturnSample": 4,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Precursor",
+        "actual": 36326.0,
+        "predicted": 36868.11316864246,
+        "ape": 1.492355802021872,
+        "ae": 542.1131686424633
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "origin": "2026-06-07",
+        "target": "2026-08-02",
+        "anchorDate": "2026-06-06",
+        "actualDate": "2026-08-02",
+        "localReturnSample": 6,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Constant",
+        "actual": 37450.0,
+        "predicted": 36326.0,
+        "ape": 3.001335113484649,
+        "ae": 1124.0
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "origin": "2026-06-07",
+        "target": "2026-08-02",
+        "anchorDate": "2026-06-06",
+        "actualDate": "2026-08-02",
+        "localReturnSample": 6,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Benchmark",
+        "actual": 37450.0,
+        "predicted": 35850.86801426874,
+        "ape": 4.270045355757713,
+        "ae": 1599.1319857312628
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "origin": "2026-06-07",
+        "target": "2026-08-02",
+        "anchorDate": "2026-06-06",
+        "actualDate": "2026-08-02",
+        "localReturnSample": 6,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Local",
+        "actual": 37450.0,
+        "predicted": 35911.355916856126,
+        "ape": 4.108528926952937,
+        "ae": 1538.644083143874
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "origin": "2026-06-07",
+        "target": "2026-08-02",
+        "anchorDate": "2026-06-06",
+        "actualDate": "2026-08-02",
+        "localReturnSample": 6,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Precursor",
+        "actual": 37450.0,
+        "predicted": 35683.58461931917,
+        "ape": 4.716729988466839,
+        "ae": 1766.4153806808317
+      },
+      {
+        "side": "bid",
+        "horizon": 13,
+        "origin": "2026-06-28",
+        "target": "2026-09-27",
+        "anchorDate": "2026-06-28",
+        "actualDate": "2026-09-27",
+        "localReturnSample": 3,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 7
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Constant",
+        "actual": 39600.0,
+        "predicted": 35778.0,
+        "ape": 9.651515151515156,
+        "ae": 3822.0
+      },
+      {
+        "side": "bid",
+        "horizon": 13,
+        "origin": "2026-06-28",
+        "target": "2026-09-27",
+        "anchorDate": "2026-06-28",
+        "actualDate": "2026-09-27",
+        "localReturnSample": 3,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 7
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Benchmark",
+        "actual": 39600.0,
+        "predicted": 35000.38286698013,
+        "ape": 11.61519478035321,
+        "ae": 4599.61713301987
+      },
+      {
+        "side": "bid",
+        "horizon": 13,
+        "origin": "2026-06-28",
+        "target": "2026-09-27",
+        "anchorDate": "2026-06-28",
+        "actualDate": "2026-09-27",
+        "localReturnSample": 3,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 7
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Local",
+        "actual": 39600.0,
+        "predicted": 35344.08642212266,
+        "ape": 10.74725650979127,
+        "ae": 4255.913577877342
+      },
+      {
+        "side": "bid",
+        "horizon": 13,
+        "origin": "2026-06-28",
+        "target": "2026-09-27",
+        "anchorDate": "2026-06-28",
+        "actualDate": "2026-09-27",
+        "localReturnSample": 3,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 7
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Precursor",
+        "actual": 39600.0,
+        "predicted": 34948.579672281114,
+        "ape": 11.74601092858305,
+        "ae": 4651.420327718886
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "origin": "2026-08-02",
+        "target": "2026-09-27",
+        "anchorDate": "2026-08-02",
+        "actualDate": "2026-09-27",
+        "localReturnSample": 8,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Constant",
+        "actual": 39600.0,
+        "predicted": 37450.0,
+        "ape": 5.429292929292928,
+        "ae": 2150.0
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "origin": "2026-08-02",
+        "target": "2026-09-27",
+        "anchorDate": "2026-08-02",
+        "actualDate": "2026-09-27",
+        "localReturnSample": 8,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Benchmark",
+        "actual": 39600.0,
+        "predicted": 36960.16646848991,
+        "ape": 6.666246291692158,
+        "ae": 2639.833531510092
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "origin": "2026-08-02",
+        "target": "2026-09-27",
+        "anchorDate": "2026-08-02",
+        "actualDate": "2026-09-27",
+        "localReturnSample": 8,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Local",
+        "actual": 39600.0,
+        "predicted": 36950.29475556228,
+        "ape": 6.691174859691207,
+        "ae": 2649.7052444377186
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "origin": "2026-08-02",
+        "target": "2026-09-27",
+        "anchorDate": "2026-08-02",
+        "actualDate": "2026-09-27",
+        "localReturnSample": 8,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "model": "Precursor",
+        "actual": 39600.0,
+        "predicted": 36751.8029157108,
+        "ape": 7.192416879518171,
+        "ae": 2848.197084289197
+      }
+    ],
+    "scenarios": [
+      {
+        "side": "ask",
+        "horizon": 4,
+        "target": "2026-10-26",
+        "model": "Constant",
+        "value": 40950.0,
+        "status": "exploratory",
+        "anchorDate": "2026-09-28",
+        "localReturnSample": 4,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 16
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 4,
+        "target": "2026-10-26",
+        "model": "Benchmark",
+        "value": 40828.997860812655,
+        "status": "exploratory",
+        "anchorDate": "2026-09-28",
+        "localReturnSample": 4,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 16
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 4,
+        "target": "2026-10-26",
+        "model": "Local",
+        "value": 39999.61099623505,
+        "status": "exploratory",
+        "anchorDate": "2026-09-28",
+        "localReturnSample": 4,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 16
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 4,
+        "target": "2026-10-26",
+        "model": "Precursor",
+        "value": 40669.49582943182,
+        "status": "exploratory",
+        "anchorDate": "2026-09-28",
+        "localReturnSample": 4,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 16
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "target": "2026-11-23",
+        "model": "Constant",
+        "value": 40950.0,
+        "status": "exploratory",
+        "anchorDate": "2026-09-28",
+        "localReturnSample": 9,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "target": "2026-11-23",
+        "model": "Benchmark",
+        "value": 40321.17265153939,
+        "status": "exploratory",
+        "anchorDate": "2026-09-28",
+        "localReturnSample": 9,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "target": "2026-11-23",
+        "model": "Local",
+        "value": 40410.03560860367,
+        "status": "exploratory",
+        "anchorDate": "2026-09-28",
+        "localReturnSample": 9,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "target": "2026-11-23",
+        "model": "Precursor",
+        "value": 40295.7444712027,
+        "status": "exploratory",
+        "anchorDate": "2026-09-28",
+        "localReturnSample": 9,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 13,
+        "target": "2026-12-28",
+        "model": "Constant",
+        "value": 40950.0,
+        "status": "exploratory",
+        "anchorDate": "2026-09-28",
+        "localReturnSample": 5,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 7
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 13,
+        "target": "2026-12-28",
+        "model": "Benchmark",
+        "value": 39945.7094137118,
+        "status": "exploratory",
+        "anchorDate": "2026-09-28",
+        "localReturnSample": 5,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 7
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 13,
+        "target": "2026-12-28",
+        "model": "Local",
+        "value": 39388.73957339953,
+        "status": "exploratory",
+        "anchorDate": "2026-09-28",
+        "localReturnSample": 5,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 7
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 13,
+        "target": "2026-12-28",
+        "model": "Precursor",
+        "value": 39799.38593206194,
+        "status": "exploratory",
+        "anchorDate": "2026-09-28",
+        "localReturnSample": 5,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 7
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 26,
+        "target": "2027-03-29",
+        "status": "unsupported",
+        "localReturnSample": 4,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 0
+        },
+        "activeDonors": []
+      },
+      {
+        "side": "bid",
+        "horizon": 4,
+        "target": "2026-10-26",
+        "model": "Constant",
+        "value": 39800.0,
+        "status": "exploratory",
+        "anchorDate": "2026-09-28",
+        "localReturnSample": 4,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 16
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 4,
+        "target": "2026-10-26",
+        "model": "Benchmark",
+        "value": 39886.85025582864,
+        "status": "exploratory",
+        "anchorDate": "2026-09-28",
+        "localReturnSample": 4,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 16
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 4,
+        "target": "2026-10-26",
+        "model": "Local",
+        "value": 39211.71485298362,
+        "status": "exploratory",
+        "anchorDate": "2026-09-28",
+        "localReturnSample": 4,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 16
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 4,
+        "target": "2026-10-26",
+        "model": "Precursor",
+        "value": 39490.473373110886,
+        "status": "exploratory",
+        "anchorDate": "2026-09-28",
+        "localReturnSample": 4,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 16
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "target": "2026-11-23",
+        "model": "Constant",
+        "value": 39800.0,
+        "status": "exploratory",
+        "anchorDate": "2026-09-28",
+        "localReturnSample": 9,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "target": "2026-11-23",
+        "model": "Benchmark",
+        "value": 39223.4639071585,
+        "status": "exploratory",
+        "anchorDate": "2026-09-28",
+        "localReturnSample": 9,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "target": "2026-11-23",
+        "model": "Local",
+        "value": 39197.56670953063,
+        "status": "exploratory",
+        "anchorDate": "2026-09-28",
+        "localReturnSample": 9,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "target": "2026-11-23",
+        "model": "Precursor",
+        "value": 38994.671153372794,
+        "status": "exploratory",
+        "anchorDate": "2026-09-28",
+        "localReturnSample": 9,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 12
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 13,
+        "target": "2026-12-28",
+        "model": "Constant",
+        "value": 39800.0,
+        "status": "exploratory",
+        "anchorDate": "2026-09-28",
+        "localReturnSample": 5,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 7
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 13,
+        "target": "2026-12-28",
+        "model": "Benchmark",
+        "value": 38855.79825871928,
+        "status": "exploratory",
+        "anchorDate": "2026-09-28",
+        "localReturnSample": 5,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 7
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 13,
+        "target": "2026-12-28",
+        "model": "Local",
+        "value": 38500.966754263805,
+        "status": "exploratory",
+        "anchorDate": "2026-09-28",
+        "localReturnSample": 5,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 7
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 13,
+        "target": "2026-12-28",
+        "model": "Precursor",
+        "value": 38432.486905221536,
+        "status": "exploratory",
+        "anchorDate": "2026-09-28",
+        "localReturnSample": 5,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 7
+        },
+        "activeDonors": [
+          "Obscubra"
+        ],
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 26,
+        "target": "2027-03-29",
+        "status": "unsupported",
+        "localReturnSample": 4,
+        "donorReturnSample": {
+          "Jacabra": 0,
+          "Obscubra": 0
+        },
+        "activeDonors": []
+      }
+    ],
+    "conclusion": "Comparar Precursor com Local altera o prior e reduz à metade o termo local, sem isolar a contribuição incremental dos precursores; Constant e Benchmark são controles. O histórico de Terribra começa após o merger e permanece separado."
+  },
+  "ageAnalogy": {
+    "target": "Floribra",
+    "donor": "Luzibra",
+    "birthDates": {
+      "Floribra": "2026-05-20",
+      "Luzibra": "2025-05-21"
+    },
+    "transferOpened": "2026-06-30",
+    "mergerNotBefore": "2026-10-22",
+    "methods": {
+      "AgeRelative": "Benchmark × exp(mudança do log-premium de Luzibra entre a idade atual de Floribra e essa idade + horizonte).",
+      "AgeRaw": "Última oferta de Floribra × razão de preços de Luzibra nas mesmas idades; sensibilidade sem ajuste por Antica.",
+      "preTransfer": "Donor estritamente anterior a 30/06/2026; análise principal evita a abertura de transfers.",
+      "preMerger": "Sensibilidade com todo donor disponível antes do merger e já conhecido na origem; pode incluir transfers abertos."
+    },
+    "curves": [
+      {
+        "world": "Luzibra",
+        "date": "2025-09-26",
+        "ageDays": 128,
+        "side": "ask",
+        "price": 23333.0,
+        "premiumPct": null,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-09-29",
+        "ageDays": 131,
+        "side": "ask",
+        "price": 24494.0,
+        "premiumPct": null,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-10-04",
+        "ageDays": 136,
+        "side": "ask",
+        "price": 27223.0,
+        "premiumPct": -30.00449958218166,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-10-09",
+        "ageDays": 141,
+        "side": "ask",
+        "price": 27493.0,
+        "premiumPct": -30.746366407214175,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-10-12",
+        "ageDays": 144,
+        "side": "ask",
+        "price": 26998.0,
+        "premiumPct": -31.650632911392417,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-10-19",
+        "ageDays": 151,
+        "side": "ask",
+        "price": 27000.0,
+        "premiumPct": -32.29349516023872,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-10-26",
+        "ageDays": 158,
+        "side": "ask",
+        "price": 25993.0,
+        "premiumPct": -35.81658353498929,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-11-02",
+        "ageDays": 165,
+        "side": "ask",
+        "price": 23938.0,
+        "premiumPct": -40.275941219031495,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-11-12",
+        "ageDays": 175,
+        "side": "ask",
+        "price": 19997.0,
+        "premiumPct": null,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-11-16",
+        "ageDays": 179,
+        "side": "ask",
+        "price": 23387.0,
+        "premiumPct": -41.59966039055077,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-11-20",
+        "ageDays": 183,
+        "side": "ask",
+        "price": 22495.0,
+        "premiumPct": -44.797546012269926,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-11-27",
+        "ageDays": 190,
+        "side": "ask",
+        "price": 24900.0,
+        "premiumPct": -39.3762325615368,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-12-01",
+        "ageDays": 194,
+        "side": "ask",
+        "price": 26500.0,
+        "premiumPct": null,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-12-08",
+        "ageDays": 201,
+        "side": "ask",
+        "price": 21929.0,
+        "premiumPct": -45.8141833456881,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-12-12",
+        "ageDays": 205,
+        "side": "ask",
+        "price": 19788.0,
+        "premiumPct": -50.89826302729521,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-12-16",
+        "ageDays": 209,
+        "side": "ask",
+        "price": 20000.0,
+        "premiumPct": -50.183077191321956,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-12-20",
+        "ageDays": 213,
+        "side": "ask",
+        "price": 17700.0,
+        "premiumPct": -55.63242592871113,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-12-24",
+        "ageDays": 217,
+        "side": "ask",
+        "price": 17399.0,
+        "premiumPct": null,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-12-28",
+        "ageDays": 221,
+        "side": "ask",
+        "price": 18398.0,
+        "premiumPct": null,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-01-07",
+        "ageDays": 231,
+        "side": "ask",
+        "price": 21389.0,
+        "premiumPct": -44.29657794676805,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-01-11",
+        "ageDays": 235,
+        "side": "ask",
+        "price": 24886.0,
+        "premiumPct": null,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-01-15",
+        "ageDays": 239,
+        "side": "ask",
+        "price": 24818.0,
+        "premiumPct": null,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-01-19",
+        "ageDays": 243,
+        "side": "ask",
+        "price": 24899.0,
+        "premiumPct": -36.540422061372226,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-01-23",
+        "ageDays": 247,
+        "side": "ask",
+        "price": 25580.0,
+        "premiumPct": -33.91376236856383,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-01-27",
+        "ageDays": 251,
+        "side": "ask",
+        "price": 24895.0,
+        "premiumPct": -34.742719337335224,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-01-31",
+        "ageDays": 255,
+        "side": "ask",
+        "price": 26898.0,
+        "premiumPct": -29.858141232919678,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-02-04",
+        "ageDays": 259,
+        "side": "ask",
+        "price": 25000.0,
+        "premiumPct": null,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-02-08",
+        "ageDays": 263,
+        "side": "ask",
+        "price": 26092.0,
+        "premiumPct": -32.27430825935729,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-02-16",
+        "ageDays": 271,
+        "side": "ask",
+        "price": 23500.0,
+        "premiumPct": -38.94042144100605,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-02-20",
+        "ageDays": 275,
+        "side": "ask",
+        "price": 22588.0,
+        "premiumPct": -41.63005840095087,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-02-24",
+        "ageDays": 279,
+        "side": "ask",
+        "price": 23498.0,
+        "premiumPct": -39.10857735164548,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-03-05",
+        "ageDays": 288,
+        "side": "ask",
+        "price": 20000.0,
+        "premiumPct": -47.633012149141216,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-03-10",
+        "ageDays": 293,
+        "side": "ask",
+        "price": 20680.0,
+        "premiumPct": -44.77970627503331,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-03-29",
+        "ageDays": 312,
+        "side": "ask",
+        "price": 25699.0,
+        "premiumPct": -32.477666841828736,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-04-05",
+        "ageDays": 319,
+        "side": "ask",
+        "price": 25500.0,
+        "premiumPct": -32.70702485881665,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-04-12",
+        "ageDays": 326,
+        "side": "ask",
+        "price": 22998.0,
+        "premiumPct": -39.39920948616598,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-04-19",
+        "ageDays": 333,
+        "side": "ask",
+        "price": 20968.0,
+        "premiumPct": -44.498266232563,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-04-26",
+        "ageDays": 340,
+        "side": "ask",
+        "price": 20998.0,
+        "premiumPct": -44.65180030576204,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-05-03",
+        "ageDays": 347,
+        "side": "ask",
+        "price": 22499.0,
+        "premiumPct": -39.760100672039385,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-05-10",
+        "ageDays": 354,
+        "side": "ask",
+        "price": 24883.0,
+        "premiumPct": -32.839406207827174,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-05-17",
+        "ageDays": 361,
+        "side": "ask",
+        "price": 27178.0,
+        "premiumPct": -26.643094280547285,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-05-24",
+        "ageDays": 368,
+        "side": "ask",
+        "price": 27450.0,
+        "premiumPct": -25.688296921952414,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-05-31",
+        "ageDays": 375,
+        "side": "ask",
+        "price": 24489.0,
+        "premiumPct": -34.254188144329866,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-06-08",
+        "ageDays": 383,
+        "side": "ask",
+        "price": 23899.0,
+        "premiumPct": -35.329454742254015,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-06-16",
+        "ageDays": 391,
+        "side": "ask",
+        "price": 28200.0,
+        "premiumPct": -23.668254655695037,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-06-24",
+        "ageDays": 399,
+        "side": "ask",
+        "price": 28491.0,
+        "premiumPct": -23.918500320444316,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-07-02",
+        "ageDays": 407,
+        "side": "ask",
+        "price": 37179.0,
+        "premiumPct": -0.4525008032558709,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-07-10",
+        "ageDays": 415,
+        "side": "ask",
+        "price": 38798.0,
+        "premiumPct": null,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-07-18",
+        "ageDays": 423,
+        "side": "ask",
+        "price": 38747.0,
+        "premiumPct": -0.3779503265286035,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-07-26",
+        "ageDays": 431,
+        "side": "ask",
+        "price": 41989.0,
+        "premiumPct": 6.847676726550819,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-08-03",
+        "ageDays": 439,
+        "side": "ask",
+        "price": 42996.0,
+        "premiumPct": 6.957884524490747,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-08-11",
+        "ageDays": 447,
+        "side": "ask",
+        "price": 42495.0,
+        "premiumPct": 3.3991921748016574,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-08-19",
+        "ageDays": 455,
+        "side": "ask",
+        "price": 42900.0,
+        "premiumPct": 3.256552819698074,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-08-27",
+        "ageDays": 463,
+        "side": "ask",
+        "price": 42599.0,
+        "premiumPct": 1.5495005840424483,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-09-21",
+        "ageDays": 488,
+        "side": "ask",
+        "price": 43701.0,
+        "premiumPct": 2.1075258767728493,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-09-22",
+        "ageDays": 489,
+        "side": "ask",
+        "price": 45971.0,
+        "premiumPct": 4.71753986332572,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-09-23",
+        "ageDays": 490,
+        "side": "ask",
+        "price": 43500.0,
+        "premiumPct": -0.22706942819788684,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-09-25",
+        "ageDays": 492,
+        "side": "ask",
+        "price": 43750.0,
+        "premiumPct": null,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-09-26",
+        "ageDays": 493,
+        "side": "ask",
+        "price": 43999.0,
+        "premiumPct": 0.0022728305832910587,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-09-27",
+        "ageDays": 494,
+        "side": "ask",
+        "price": 45027.0,
+        "premiumPct": 1.3550928531232413,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-09-28",
+        "ageDays": 495,
+        "side": "ask",
+        "price": 44899.0,
+        "premiumPct": 0.6704035874438439,
+        "preTransfer": false
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-06-05",
+        "ageDays": 16,
+        "side": "ask",
+        "price": 6470.0,
+        "premiumPct": null,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-06-10",
+        "ageDays": 21,
+        "side": "ask",
+        "price": 8500.0,
+        "premiumPct": -76.83734365206965,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-06-13",
+        "ageDays": 24,
+        "side": "ask",
+        "price": 9900.0,
+        "premiumPct": -72.80145058930194,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-06-16",
+        "ageDays": 27,
+        "side": "ask",
+        "price": 10199.0,
+        "premiumPct": -72.39335210047639,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-06-19",
+        "ageDays": 30,
+        "side": "ask",
+        "price": 10566.0,
+        "premiumPct": -72.26626069609954,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-07-04",
+        "ageDays": 45,
+        "side": "ask",
+        "price": 11000.0,
+        "premiumPct": -70.92639090788953,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-07-07",
+        "ageDays": 48,
+        "side": "ask",
+        "price": 12687.0,
+        "premiumPct": -66.1201164312228,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-07-10",
+        "ageDays": 51,
+        "side": "ask",
+        "price": 12900.0,
+        "premiumPct": null,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-07-13",
+        "ageDays": 54,
+        "side": "ask",
+        "price": 12899.0,
+        "premiumPct": -65.7851458885942,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-07-16",
+        "ageDays": 57,
+        "side": "ask",
+        "price": 12800.0,
+        "premiumPct": -67.01030927835056,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-07-19",
+        "ageDays": 60,
+        "side": "ask",
+        "price": 13997.0,
+        "premiumPct": -64.06326221469102,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-07-22",
+        "ageDays": 63,
+        "side": "ask",
+        "price": 13795.0,
+        "premiumPct": -63.978901741650795,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-07-25",
+        "ageDays": 66,
+        "side": "ask",
+        "price": 13500.0,
+        "premiumPct": -65.82105423059394,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-07-28",
+        "ageDays": 69,
+        "side": "ask",
+        "price": 17988.0,
+        "premiumPct": -54.74147691533523,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-07-31",
+        "ageDays": 72,
+        "side": "ask",
+        "price": 16594.0,
+        "premiumPct": null,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-08-03",
+        "ageDays": 75,
+        "side": "ask",
+        "price": 17880.0,
+        "premiumPct": -55.521281623920956,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-08-06",
+        "ageDays": 78,
+        "side": "ask",
+        "price": 18199.0,
+        "premiumPct": -54.950740135650314,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-08-09",
+        "ageDays": 81,
+        "side": "ask",
+        "price": 17648.0,
+        "premiumPct": -56.68033088686515,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-08-12",
+        "ageDays": 84,
+        "side": "ask",
+        "price": 18278.0,
+        "premiumPct": -55.63376862954505,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-08-15",
+        "ageDays": 87,
+        "side": "ask",
+        "price": 17000.0,
+        "premiumPct": -58.383314157017274,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-08-18",
+        "ageDays": 90,
+        "side": "ask",
+        "price": 18496.0,
+        "premiumPct": -55.1612121212121,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-08-21",
+        "ageDays": 93,
+        "side": "ask",
+        "price": 17999.0,
+        "premiumPct": -56.565071550954485,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-08-24",
+        "ageDays": 96,
+        "side": "ask",
+        "price": 17986.0,
+        "premiumPct": -57.172111629679044,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-08-27",
+        "ageDays": 99,
+        "side": "ask",
+        "price": 16800.0,
+        "premiumPct": -59.951369520131614,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-08-30",
+        "ageDays": 102,
+        "side": "ask",
+        "price": 16600.0,
+        "premiumPct": null,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-09-03",
+        "ageDays": 106,
+        "side": "ask",
+        "price": 15200.0,
+        "premiumPct": -63.3629001156961,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-09-26",
+        "ageDays": 129,
+        "side": "ask",
+        "price": 27850.0,
+        "premiumPct": -36.70166825764804,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-09-27",
+        "ageDays": 130,
+        "side": "ask",
+        "price": 27997.5,
+        "premiumPct": -36.97805289814296,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-09-28",
+        "ageDays": 131,
+        "side": "ask",
+        "price": 29749.0,
+        "premiumPct": -33.29820627802697,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-09-26",
+        "ageDays": 128,
+        "side": "bid",
+        "price": 20254.0,
+        "premiumPct": null,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-09-29",
+        "ageDays": 131,
+        "side": "bid",
+        "price": 21344.0,
+        "premiumPct": null,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-10-04",
+        "ageDays": 136,
+        "side": "bid",
+        "price": 24152.0,
+        "premiumPct": -36.778179152923954,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-10-09",
+        "ageDays": 141,
+        "side": "bid",
+        "price": 24826.0,
+        "premiumPct": -35.68560399989643,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-10-12",
+        "ageDays": 144,
+        "side": "bid",
+        "price": 24505.0,
+        "premiumPct": -36.53363031260515,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-10-19",
+        "ageDays": 151,
+        "side": "bid",
+        "price": 24952.0,
+        "premiumPct": -36.751920103419444,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-10-26",
+        "ageDays": 158,
+        "side": "bid",
+        "price": 22027.0,
+        "premiumPct": -44.671070809575205,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-11-02",
+        "ageDays": 165,
+        "side": "bid",
+        "price": 21335.0,
+        "premiumPct": -45.717993079584765,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-11-12",
+        "ageDays": 175,
+        "side": "bid",
+        "price": 16204.0,
+        "premiumPct": null,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-11-16",
+        "ageDays": 179,
+        "side": "bid",
+        "price": 20023.0,
+        "premiumPct": -49.20985211678457,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-11-20",
+        "ageDays": 183,
+        "side": "bid",
+        "price": 22239.0,
+        "premiumPct": -44.40944881889761,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-11-27",
+        "ageDays": 190,
+        "side": "bid",
+        "price": 21903.0,
+        "premiumPct": -45.6109855727446,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-12-01",
+        "ageDays": 194,
+        "side": "bid",
+        "price": 23000.0,
+        "premiumPct": null,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-12-08",
+        "ageDays": 201,
+        "side": "bid",
+        "price": 18000.0,
+        "premiumPct": -54.78409404908433,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-12-12",
+        "ageDays": 205,
+        "side": "bid",
+        "price": 17148.0,
+        "premiumPct": -57.023633492894874,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-12-16",
+        "ageDays": 209,
+        "side": "bid",
+        "price": 18014.0,
+        "premiumPct": -53.94723386849375,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-12-20",
+        "ageDays": 213,
+        "side": "bid",
+        "price": 16604.0,
+        "premiumPct": -57.55949185900877,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-12-24",
+        "ageDays": 217,
+        "side": "bid",
+        "price": 16200.0,
+        "premiumPct": null,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2025-12-28",
+        "ageDays": 221,
+        "side": "bid",
+        "price": 17017.0,
+        "premiumPct": null,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-01-07",
+        "ageDays": 231,
+        "side": "bid",
+        "price": 18514.0,
+        "premiumPct": -51.15168465212001,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-01-11",
+        "ageDays": 235,
+        "side": "bid",
+        "price": 20540.0,
+        "premiumPct": null,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-01-15",
+        "ageDays": 239,
+        "side": "bid",
+        "price": 21779.0,
+        "premiumPct": null,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-01-19",
+        "ageDays": 243,
+        "side": "bid",
+        "price": 22000.0,
+        "premiumPct": -42.453570494376144,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-01-23",
+        "ageDays": 247,
+        "side": "bid",
+        "price": 22000.0,
+        "premiumPct": -42.25721784776902,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-01-27",
+        "ageDays": 251,
+        "side": "bid",
+        "price": 22355.0,
+        "premiumPct": -40.30707610146861,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-01-31",
+        "ageDays": 255,
+        "side": "bid",
+        "price": 23002.0,
+        "premiumPct": -39.16102412187893,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-02-04",
+        "ageDays": 259,
+        "side": "bid",
+        "price": 23555.0,
+        "premiumPct": null,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-02-08",
+        "ageDays": 263,
+        "side": "bid",
+        "price": 22459.0,
+        "premiumPct": -41.05249343832017,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-02-16",
+        "ageDays": 271,
+        "side": "bid",
+        "price": 21827.0,
+        "premiumPct": -41.9494680851064,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-02-20",
+        "ageDays": 275,
+        "side": "bid",
+        "price": 20810.0,
+        "premiumPct": -45.25124967113919,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-02-24",
+        "ageDays": 279,
+        "side": "bid",
+        "price": 21500.0,
+        "premiumPct": -42.67431009198778,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-03-05",
+        "ageDays": 288,
+        "side": "bid",
+        "price": 19451.0,
+        "premiumPct": -48.29886768380206,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-03-10",
+        "ageDays": 293,
+        "side": "bid",
+        "price": 18200.0,
+        "premiumPct": -49.80279670132665,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-03-29",
+        "ageDays": 312,
+        "side": "bid",
+        "price": 24208.0,
+        "premiumPct": -35.642695733085205,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-04-05",
+        "ageDays": 319,
+        "side": "bid",
+        "price": 23041.0,
+        "premiumPct": -38.722374404936055,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-04-12",
+        "ageDays": 326,
+        "side": "bid",
+        "price": 20477.0,
+        "premiumPct": -44.88169901213968,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-04-19",
+        "ageDays": 333,
+        "side": "bid",
+        "price": 19500.0,
+        "premiumPct": -47.791164658634486,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-04-26",
+        "ageDays": 340,
+        "side": "bid",
+        "price": 19924.0,
+        "premiumPct": -46.4422999381737,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-05-03",
+        "ageDays": 347,
+        "side": "bid",
+        "price": 19822.0,
+        "premiumPct": -46.213334056928886,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-05-10",
+        "ageDays": 354,
+        "side": "bid",
+        "price": 22641.0,
+        "premiumPct": -38.25069546719029,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-05-17",
+        "ageDays": 361,
+        "side": "bid",
+        "price": 24633.0,
+        "premiumPct": -32.69856014862986,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-05-24",
+        "ageDays": 368,
+        "side": "bid",
+        "price": 25616.0,
+        "premiumPct": -29.926687821424768,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-05-31",
+        "ageDays": 375,
+        "side": "bid",
+        "price": 22860.0,
+        "premiumPct": -38.14935064935061,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-06-08",
+        "ageDays": 383,
+        "side": "bid",
+        "price": 20650.0,
+        "premiumPct": -42.18439398605703,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-06-16",
+        "ageDays": 391,
+        "side": "bid",
+        "price": 22719.0,
+        "premiumPct": -38.01429662774199,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-06-24",
+        "ageDays": 399,
+        "side": "bid",
+        "price": 26060.0,
+        "premiumPct": -29.0227693648546,
+        "preTransfer": true
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-07-02",
+        "ageDays": 407,
+        "side": "bid",
+        "price": 34008.0,
+        "premiumPct": -7.639662149316817,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-07-10",
+        "ageDays": 415,
+        "side": "bid",
+        "price": 37000.0,
+        "premiumPct": null,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-07-18",
+        "ageDays": 423,
+        "side": "bid",
+        "price": 37002.0,
+        "premiumPct": -3.8934053660943047,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-07-26",
+        "ageDays": 431,
+        "side": "bid",
+        "price": 38702.0,
+        "premiumPct": -1.1569403652151249,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-08-03",
+        "ageDays": 439,
+        "side": "bid",
+        "price": 40155.0,
+        "premiumPct": 0.6340534309056702,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-08-11",
+        "ageDays": 447,
+        "side": "bid",
+        "price": 40112.0,
+        "premiumPct": -1.688684100879949,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-08-19",
+        "ageDays": 455,
+        "side": "bid",
+        "price": 40254.0,
+        "premiumPct": -2.113172677090599,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-08-27",
+        "ageDays": 463,
+        "side": "bid",
+        "price": 40600.0,
+        "premiumPct": -1.8683682594930189,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-09-21",
+        "ageDays": 488,
+        "side": "bid",
+        "price": 43003.0,
+        "premiumPct": 1.2931643661374461,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-09-22",
+        "ageDays": 489,
+        "side": "bid",
+        "price": 43222.0,
+        "premiumPct": 1.634255884496793,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-09-23",
+        "ageDays": 490,
+        "side": "bid",
+        "price": 41326.0,
+        "premiumPct": -4.340177310710422,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-09-25",
+        "ageDays": 492,
+        "side": "bid",
+        "price": 41505.0,
+        "premiumPct": null,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-09-26",
+        "ageDays": 493,
+        "side": "bid",
+        "price": 42002.0,
+        "premiumPct": -2.9999307175354577,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-09-27",
+        "ageDays": 494,
+        "side": "bid",
+        "price": 41829.5,
+        "premiumPct": -4.305503128467435,
+        "preTransfer": false
+      },
+      {
+        "world": "Luzibra",
+        "date": "2026-09-28",
+        "ageDays": 495,
+        "side": "bid",
+        "price": 42300.0,
+        "premiumPct": -3.6446469248292126,
+        "preTransfer": false
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-06-05",
+        "ageDays": 16,
+        "side": "bid",
+        "price": 5807.0,
+        "premiumPct": null,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-06-10",
+        "ageDays": 21,
+        "side": "bid",
+        "price": 8100.0,
+        "premiumPct": -77.44737721349817,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-06-13",
+        "ageDays": 24,
+        "side": "bid",
+        "price": 8706.0,
+        "premiumPct": -75.85154776434038,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-06-16",
+        "ageDays": 27,
+        "side": "bid",
+        "price": 9250.0,
+        "premiumPct": -74.7626323256575,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-06-19",
+        "ageDays": 30,
+        "side": "bid",
+        "price": 9600.0,
+        "premiumPct": -74.15951118408657,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-07-04",
+        "ageDays": 45,
+        "side": "bid",
+        "price": 9727.0,
+        "premiumPct": -74.02254032688815,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-07-07",
+        "ageDays": 48,
+        "side": "bid",
+        "price": 10855.0,
+        "premiumPct": -70.67484331100067,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-07-10",
+        "ageDays": 51,
+        "side": "bid",
+        "price": 11050.0,
+        "premiumPct": null,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-07-13",
+        "ageDays": 54,
+        "side": "bid",
+        "price": 11503.0,
+        "premiumPct": -69.24413785727656,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-07-16",
+        "ageDays": 57,
+        "side": "bid",
+        "price": 11312.0,
+        "premiumPct": -70.1923583662714,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-07-19",
+        "ageDays": 60,
+        "side": "bid",
+        "price": 12058.0,
+        "premiumPct": -68.39732669374912,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-07-22",
+        "ageDays": 63,
+        "side": "bid",
+        "price": 12560.0,
+        "premiumPct": -67.0902659504782,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-07-25",
+        "ageDays": 66,
+        "side": "bid",
+        "price": 12155.0,
+        "premiumPct": -68.8732394366197,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-07-28",
+        "ageDays": 69,
+        "side": "bid",
+        "price": 16200.0,
+        "premiumPct": -59.00498519624466,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-07-31",
+        "ageDays": 72,
+        "side": "bid",
+        "price": 14005.0,
+        "premiumPct": null,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-08-03",
+        "ageDays": 75,
+        "side": "bid",
+        "price": 16200.0,
+        "premiumPct": -59.40053130168916,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-08-06",
+        "ageDays": 78,
+        "side": "bid",
+        "price": 18198.0,
+        "premiumPct": -54.73359534351524,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-08-09",
+        "ageDays": 81,
+        "side": "bid",
+        "price": 15800.0,
+        "premiumPct": -60.69749508718687,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-08-12",
+        "ageDays": 84,
+        "side": "bid",
+        "price": 16810.0,
+        "premiumPct": -59.00199990244379,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-08-15",
+        "ageDays": 87,
+        "side": "bid",
+        "price": 16266.0,
+        "premiumPct": -59.94188051026944,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-08-18",
+        "ageDays": 90,
+        "side": "bid",
+        "price": 16755.0,
+        "premiumPct": -58.895539963691625,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-08-21",
+        "ageDays": 93,
+        "side": "bid",
+        "price": 16901.0,
+        "premiumPct": -58.878345498783446,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-08-24",
+        "ageDays": 96,
+        "side": "bid",
+        "price": 16659.0,
+        "premiumPct": -59.74239385225108,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-08-27",
+        "ageDays": 99,
+        "side": "bid",
+        "price": 15700.0,
+        "premiumPct": -62.05254634665122,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-08-30",
+        "ageDays": 102,
+        "side": "bid",
+        "price": 15999.0,
+        "premiumPct": null,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-09-03",
+        "ageDays": 106,
+        "side": "bid",
+        "price": 14500.0,
+        "premiumPct": -64.33929318019723,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-09-26",
+        "ageDays": 129,
+        "side": "bid",
+        "price": 24750.0,
+        "premiumPct": -42.84196669822865,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-09-27",
+        "ageDays": 130,
+        "side": "bid",
+        "price": 25829.5,
+        "premiumPct": -40.90914290289741,
+        "preTransfer": true
+      },
+      {
+        "world": "Floribra",
+        "date": "2026-09-28",
+        "ageDays": 131,
+        "side": "bid",
+        "price": 26408.0,
+        "premiumPct": -39.84510250569481,
+        "preTransfer": true
+      }
+    ],
+    "backtest": [],
+    "backtestDetail": [],
+    "scenarios": [
+      {
+        "side": "ask",
+        "horizon": 1,
+        "target": "2026-10-05",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 138,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 29749.0,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 1,
+        "target": "2026-10-05",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 138,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 29770.6129950953,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 1,
+        "target": "2026-10-05",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 138,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "ask",
+        "horizon": 1,
+        "target": "2026-10-05",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 138,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 33063.48603739692,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2025-10-04",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 136,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 2,
+        "target": "2026-10-12",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 145,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 29749.0,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 2,
+        "target": "2026-10-12",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 145,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 29860.566953452446,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 2,
+        "target": "2026-10-12",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 145,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "ask",
+        "horizon": 2,
+        "target": "2026-10-12",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 145,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 32790.214011594704,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2025-10-12",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 144,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 4,
+        "target": "2026-10-26",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 159,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 29749.0,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 4,
+        "target": "2026-10-26",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 159,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 29661.095417858745,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 4,
+        "target": "2026-10-26",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 159,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "ask",
+        "horizon": 4,
+        "target": "2026-10-26",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 159,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 31569.598963011395,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2025-10-26",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 158,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "target": "2026-11-23",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 187,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 29749.0,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "target": "2026-11-23",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 187,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 29292.17497461893,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "target": "2026-11-23",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 187,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "target": "2026-11-23",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 187,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 27321.129868539265,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2025-11-20",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 183,
+        "crossedBook": true
+      },
+      {
+        "side": "ask",
+        "horizon": 13,
+        "target": "2026-12-28",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 222,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 29749.0,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 13,
+        "target": "2026-12-28",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 222,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 29019.411705702376,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 13,
+        "target": "2026-12-28",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 222,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "ask",
+        "horizon": 13,
+        "target": "2026-12-28",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 222,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 22345.14991426472,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2025-12-28",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 221,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 26,
+        "target": "2027-03-29",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 313,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 29749.0,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 26,
+        "target": "2027-03-29",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 313,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 29391.262416675512,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 26,
+        "target": "2027-03-29",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 313,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "ask",
+        "horizon": 26,
+        "target": "2027-03-29",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 313,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 31212.523515963116,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2026-03-29",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 312,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 39,
+        "target": "2027-06-28",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 404,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 29749.0,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 39,
+        "target": "2027-06-28",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 404,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 30469.31653705568,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 39,
+        "target": "2027-06-28",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 404,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "ask",
+        "horizon": 39,
+        "target": "2027-06-28",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 404,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 34603.52572058468,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2026-06-24",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 399,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 52,
+        "target": "2027-09-27",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 495,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 29749.0,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 52,
+        "target": "2027-09-27",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 495,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 30464.507521115436,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 52,
+        "target": "2027-09-27",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 495,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "ask",
+        "horizon": 52,
+        "target": "2027-09-27",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 495,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "unsupported",
+        "reason": "Sem endpoints observados da mesma idade dentro do regime e conhecidos no corte."
+      },
+      {
+        "side": "ask",
+        "horizon": 1,
+        "target": "2026-10-05",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 138,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 29749.0,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 1,
+        "target": "2026-10-05",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 138,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 29770.6129950953,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 1,
+        "target": "2026-10-05",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 138,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "ask",
+        "horizon": 1,
+        "target": "2026-10-05",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 138,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 33063.48603739692,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2025-10-04",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 136,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 2,
+        "target": "2026-10-12",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 145,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 29749.0,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 2,
+        "target": "2026-10-12",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 145,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 29860.566953452446,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 2,
+        "target": "2026-10-12",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 145,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "ask",
+        "horizon": 2,
+        "target": "2026-10-12",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 145,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 32790.214011594704,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2025-10-12",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 144,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 4,
+        "target": "2026-10-26",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 159,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 29749.0,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 4,
+        "target": "2026-10-26",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 159,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 29661.095417858745,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 4,
+        "target": "2026-10-26",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 159,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "ask",
+        "horizon": 4,
+        "target": "2026-10-26",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 159,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 31569.598963011395,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2025-10-26",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 158,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "target": "2026-11-23",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 187,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 29749.0,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "target": "2026-11-23",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 187,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 29292.17497461893,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "target": "2026-11-23",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 187,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "ask",
+        "horizon": 8,
+        "target": "2026-11-23",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 187,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 27321.129868539265,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2025-11-20",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 183,
+        "crossedBook": true
+      },
+      {
+        "side": "ask",
+        "horizon": 13,
+        "target": "2026-12-28",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 222,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 29749.0,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 13,
+        "target": "2026-12-28",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 222,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 29019.411705702376,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 13,
+        "target": "2026-12-28",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 222,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "ask",
+        "horizon": 13,
+        "target": "2026-12-28",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 222,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 22345.14991426472,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2025-12-28",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 221,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 26,
+        "target": "2027-03-29",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 313,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 29749.0,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 26,
+        "target": "2027-03-29",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 313,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 29391.262416675512,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 26,
+        "target": "2027-03-29",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 313,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "ask",
+        "horizon": 26,
+        "target": "2027-03-29",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 313,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 31212.523515963116,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2026-03-29",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 312,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 39,
+        "target": "2027-06-28",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 404,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 29749.0,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 39,
+        "target": "2027-06-28",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 404,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 30469.31653705568,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 39,
+        "target": "2027-06-28",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 404,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "ask",
+        "horizon": 39,
+        "target": "2027-06-28",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 404,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 34603.52572058468,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2026-06-24",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 399,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 52,
+        "target": "2027-09-27",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 495,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 29749.0,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 52,
+        "target": "2027-09-27",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 495,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 30464.507521115436,
+        "crossedBook": false
+      },
+      {
+        "side": "ask",
+        "horizon": 52,
+        "target": "2027-09-27",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 495,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "ask",
+        "horizon": 52,
+        "target": "2027-09-27",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 495,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 54531.73638442068,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2026-09-28",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 495,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 1,
+        "target": "2026-10-05",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 138,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 26408.0,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 1,
+        "target": "2026-10-05",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 138,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 26420.350430160248,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 1,
+        "target": "2026-10-05",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 138,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "bid",
+        "horizon": 1,
+        "target": "2026-10-05",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 138,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 29882.215892054013,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2025-10-04",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 136,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 2,
+        "target": "2026-10-12",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 145,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 26408.0,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 2,
+        "target": "2026-10-12",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 145,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 26415.66438880238,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 2,
+        "target": "2026-10-12",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 145,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "bid",
+        "horizon": 2,
+        "target": "2026-10-12",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 145,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 30318.967391304395,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2025-10-12",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 144,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 4,
+        "target": "2026-10-26",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 159,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 26408.0,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 4,
+        "target": "2026-10-26",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 159,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 26465.626672259365,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 4,
+        "target": "2026-10-26",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 159,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "bid",
+        "horizon": 4,
+        "target": "2026-10-26",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 159,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 27253.046101949058,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2025-10-26",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 158,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "target": "2026-11-23",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 187,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 26408.0,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "target": "2026-11-23",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 187,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 26025.458162317627,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "target": "2026-11-23",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 187,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "target": "2026-11-23",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 187,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 27515.344452773646,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2025-11-20",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 183,
+        "crossedBook": true
+      },
+      {
+        "side": "bid",
+        "horizon": 13,
+        "target": "2026-12-28",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 222,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 26408.0,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 13,
+        "target": "2026-12-28",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 222,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 25781.505538096957,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 13,
+        "target": "2026-12-28",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 222,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "bid",
+        "horizon": 13,
+        "target": "2026-12-28",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 222,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 21054.391679160453,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2025-12-28",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 221,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 26,
+        "target": "2027-03-29",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 313,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 26408.0,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 26,
+        "target": "2027-03-29",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 313,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 26388.848447499066,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 26,
+        "target": "2027-03-29",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 313,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "bid",
+        "horizon": 26,
+        "target": "2027-03-29",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 313,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 29951.502248875568,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2026-03-29",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 312,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 39,
+        "target": "2027-06-28",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 404,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 26408.0,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 39,
+        "target": "2027-06-28",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 404,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 27198.05094197439,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 39,
+        "target": "2027-06-28",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 404,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "bid",
+        "horizon": 39,
+        "target": "2027-06-28",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 404,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 32242.90104947527,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2026-06-24",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 399,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 52,
+        "target": "2027-09-27",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 495,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 26408.0,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 52,
+        "target": "2027-09-27",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 495,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 27728.36332324103,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 52,
+        "target": "2027-09-27",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 495,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "bid",
+        "horizon": 52,
+        "target": "2027-09-27",
+        "regime": "preTransfer",
+        "ageDays": 131,
+        "targetAgeDays": 495,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "unsupported",
+        "reason": "Sem endpoints observados da mesma idade dentro do regime e conhecidos no corte."
+      },
+      {
+        "side": "bid",
+        "horizon": 1,
+        "target": "2026-10-05",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 138,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 26408.0,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 1,
+        "target": "2026-10-05",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 138,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 26420.350430160248,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 1,
+        "target": "2026-10-05",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 138,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "bid",
+        "horizon": 1,
+        "target": "2026-10-05",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 138,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 29882.215892054013,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2025-10-04",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 136,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 2,
+        "target": "2026-10-12",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 145,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 26408.0,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 2,
+        "target": "2026-10-12",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 145,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 26415.66438880238,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 2,
+        "target": "2026-10-12",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 145,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "bid",
+        "horizon": 2,
+        "target": "2026-10-12",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 145,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 30318.967391304395,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2025-10-12",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 144,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 4,
+        "target": "2026-10-26",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 159,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 26408.0,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 4,
+        "target": "2026-10-26",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 159,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 26465.626672259365,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 4,
+        "target": "2026-10-26",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 159,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "bid",
+        "horizon": 4,
+        "target": "2026-10-26",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 159,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 27253.046101949058,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2025-10-26",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 158,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "target": "2026-11-23",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 187,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 26408.0,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "target": "2026-11-23",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 187,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 26025.458162317627,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "target": "2026-11-23",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 187,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "bid",
+        "horizon": 8,
+        "target": "2026-11-23",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 187,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 27515.344452773646,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2025-11-20",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 183,
+        "crossedBook": true
+      },
+      {
+        "side": "bid",
+        "horizon": 13,
+        "target": "2026-12-28",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 222,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 26408.0,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 13,
+        "target": "2026-12-28",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 222,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 25781.505538096957,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 13,
+        "target": "2026-12-28",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 222,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "bid",
+        "horizon": 13,
+        "target": "2026-12-28",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 222,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 21054.391679160453,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2025-12-28",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 221,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 26,
+        "target": "2027-03-29",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 313,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 26408.0,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 26,
+        "target": "2027-03-29",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 313,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 26388.848447499066,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 26,
+        "target": "2027-03-29",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 313,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "bid",
+        "horizon": 26,
+        "target": "2027-03-29",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 313,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 29951.502248875568,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2026-03-29",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 312,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 39,
+        "target": "2027-06-28",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 404,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 26408.0,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 39,
+        "target": "2027-06-28",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 404,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 27198.05094197439,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 39,
+        "target": "2027-06-28",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 404,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "bid",
+        "horizon": 39,
+        "target": "2027-06-28",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 404,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 32242.90104947527,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2026-06-24",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 399,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 52,
+        "target": "2027-09-27",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 495,
+        "anchorDate": "2026-09-28",
+        "model": "Constant",
+        "status": "exploratory",
+        "value": 26408.0,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 52,
+        "target": "2027-09-27",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 495,
+        "anchorDate": "2026-09-28",
+        "model": "Benchmark",
+        "status": "exploratory",
+        "value": 27728.36332324103,
+        "crossedBook": false
+      },
+      {
+        "side": "bid",
+        "horizon": 52,
+        "target": "2027-09-27",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 495,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRelative",
+        "status": "unsupported",
+        "reason": "Sem endpoints de premium same-day com Antica na mesma idade e dentro do regime."
+      },
+      {
+        "side": "bid",
+        "horizon": 52,
+        "target": "2027-09-27",
+        "regime": "preMerger",
+        "ageDays": 131,
+        "targetAgeDays": 495,
+        "anchorDate": "2026-09-28",
+        "model": "AgeRaw",
+        "status": "exploratory",
+        "value": 52335.944527736174,
+        "donorStart": "2025-09-29",
+        "donorEnd": "2026-09-28",
+        "donorStartAgeDays": 131,
+        "donorEndAgeDays": 495,
+        "crossedBook": false
+      }
+    ],
+    "currentAgeDays": 131,
+    "firstDonorAgeDays": 128,
+    "conclusion": "Luzibra na mesma idade é um cenário comparativo, não o futuro identificado de Floribra. Cenários raw com suporte são exibidos separadamente; premium exige Antica no mesmo dia. Backtest vazio significa ausência de targets elegíveis, nunca erro zero."
+  }
+}

@@ -1,0 +1,289 @@
+[
+  {
+    "world": "Antica",
+    "url": "https://api.tibiamarket.top/item_history?server=Antica&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 1643,
+    "retrievedAt": "2026-09-24T10:07:33.340753+00:00",
+    "sha256": "c2638fefb58a5e385a3be242b1d126c73aa61a0163b00499e5a5df42e2de1def"
+  },
+  {
+    "world": "Belobra",
+    "url": "https://api.tibiamarket.top/item_history?server=Belobra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 899,
+    "retrievedAt": "2026-09-24T10:08:05.121883+00:00",
+    "sha256": "84dd02e40483007762b35f77b0c063418941ad127d509eec6218538ee0a5ab8d"
+  },
+  {
+    "world": "Celebra",
+    "url": "https://api.tibiamarket.top/item_history?server=Celebra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 367,
+    "retrievedAt": "2026-09-24T10:08:11.676908+00:00",
+    "sha256": "dac0263a7574ebf7a0f73467932c10983fb7eacaf6c1c6a6eb056a1664bf044e"
+  },
+  {
+    "world": "Collabra",
+    "url": "https://api.tibiamarket.top/item_history?server=Collabra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 373,
+    "retrievedAt": "2026-09-24T10:08:18.164354+00:00",
+    "sha256": "2aa5a2ec03bddf2833d439f065afd7b60367bdc22e83896517cac7b4a0cf3d01"
+  },
+  {
+    "world": "Descubra",
+    "url": "https://api.tibiamarket.top/item_history?server=Descubra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 631,
+    "retrievedAt": "2026-09-24T10:08:24.919319+00:00",
+    "sha256": "f0cea4edabd0aca8e9f7c37a09b6696b8a189f47d264898e36a20502c357e72e"
+  },
+  {
+    "world": "Gentebra",
+    "url": "https://api.tibiamarket.top/item_history?server=Gentebra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 621,
+    "retrievedAt": "2026-09-24T10:09:34.317942+00:00",
+    "sha256": "c9859eb6d6464f798fc28af392417c7645a2d6a42990ffe936cb9619eece7e76"
+  },
+  {
+    "world": "Luminera",
+    "url": "https://api.tibiamarket.top/item_history?server=Luminera&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 364,
+    "retrievedAt": "2026-09-24T10:09:47.605020+00:00",
+    "sha256": "39a134d0ef2f496fcfad93fa3e629b682b02047e0428c7138df0859dee5f21ad"
+  },
+  {
+    "world": "Luzibra",
+    "url": "https://api.tibiamarket.top/item_history?server=Luzibra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 365,
+    "retrievedAt": "2026-09-24T10:10:01.380230+00:00",
+    "sha256": "048282746c20c9de0677878f134e4e4a244effb3176622dbfe6b7c9e60ef92a1"
+  },
+  {
+    "world": "Ombra",
+    "url": "https://api.tibiamarket.top/item_history?server=Ombra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 363,
+    "retrievedAt": "2026-09-24T10:10:14.641153+00:00",
+    "sha256": "22d20796749e412ae7322cf73fd4c3e9df652a0f277f073f130e431d96ff4665"
+  },
+  {
+    "world": "Ourobra",
+    "url": "https://api.tibiamarket.top/item_history?server=Ourobra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 607,
+    "retrievedAt": "2026-09-24T10:10:28.360041+00:00",
+    "sha256": "8fccabbe3629e97a87a413df4f8b68fa929e51b25e7371b1bcc2eb3d33ecc302"
+  },
+  {
+    "world": "Quelibra",
+    "url": "https://api.tibiamarket.top/item_history?server=Quelibra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 529,
+    "retrievedAt": "2026-09-24T10:10:42.077778+00:00",
+    "sha256": "015026b4ff99e96c9dece22b8d04e0e43059f22837166b3c601a63910178ccbc"
+  },
+  {
+    "world": "Rasteibra",
+    "url": "https://api.tibiamarket.top/item_history?server=Rasteibra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 623,
+    "retrievedAt": "2026-09-24T10:10:55.783579+00:00",
+    "sha256": "cc005f82867cb28729681d3174610408730458e59ae013b0b10db7d5736589f2"
+  },
+  {
+    "world": "Terribra",
+    "url": "https://api.tibiamarket.top/item_history?server=Terribra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 299,
+    "retrievedAt": "2026-09-24T10:11:09.042161+00:00",
+    "sha256": "ab1e117a78df95814a004515f57f3d565da210470047c97ac2d1d17cf8d2bc16"
+  },
+  {
+    "world": "Tornabra",
+    "url": "https://api.tibiamarket.top/item_history?server=Tornabra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 364,
+    "retrievedAt": "2026-09-24T10:11:22.545744+00:00",
+    "sha256": "8e5aba08faebb9c6891413bc05374eab7c372533f3ee0f58b0939e2dc1a1c4c7"
+  },
+  {
+    "world": "Ustebra",
+    "url": "https://api.tibiamarket.top/item_history?server=Ustebra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 600,
+    "retrievedAt": "2026-09-24T10:11:36.297189+00:00",
+    "sha256": "8a291bd7594a0768ecd1063b9e119f8f9931149e91fc29c0daad591bd79c98a0"
+  },
+  {
+    "world": "Venebra",
+    "url": "https://api.tibiamarket.top/item_history?server=Venebra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 375,
+    "retrievedAt": "2026-09-24T10:11:49.868115+00:00",
+    "sha256": "853e27b68239cd9ede6068277a9f30e7a10967db0aaa790626d72af8ee8da028"
+  },
+  {
+    "world": "Obscubra",
+    "url": "https://api.tibiamarket.top/item_history?server=Obscubra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 182,
+    "retrievedAt": "2026-09-24T10:12:03.100775+00:00",
+    "sha256": "023ffbcaff27e64f1da17e169f186f9337ebe648ef6745c1acfad4bf4facd35c"
+  },
+  {
+    "world": "Etebra",
+    "url": "https://api.tibiamarket.top/item_history?server=Etebra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 370,
+    "retrievedAt": "2026-09-27T02:10:26.780297+00:00",
+    "sha256": "832d6510aafe93839591941ebcbb3bd433c98fa29db0dfaebbce6e905476c61f"
+  },
+  {
+    "world": "Ferobra",
+    "url": "https://api.tibiamarket.top/item_history?server=Ferobra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 382,
+    "retrievedAt": "2026-09-27T02:10:52.541266+00:00",
+    "sha256": "fec18f14d6b09e87fdd33ba543ea1b000af3a0c6d0e574d6c85f08e15825823e"
+  },
+  {
+    "world": "Floribra",
+    "url": "https://api.tibiamarket.top/item_history?server=Floribra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 106,
+    "retrievedAt": "2026-09-27T02:11:18.019265+00:00",
+    "sha256": "a0a4ea528f37259b2df791268f1e52f2b41cbd5c8166abae1efbc7277efed4fa"
+  },
+  {
+    "world": "Inabra",
+    "url": "https://api.tibiamarket.top/item_history?server=Inabra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 1013,
+    "retrievedAt": "2026-09-27T02:11:44.251506+00:00",
+    "sha256": "d2a687d338719ffc3b046b037e988d43ba192738e236beb551383a2aa2f078ab"
+  },
+  {
+    "world": "Secura",
+    "url": "https://api.tibiamarket.top/item_history?server=Secura&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 1071,
+    "retrievedAt": "2026-09-27T02:12:10.583937+00:00",
+    "sha256": "3bb777f8d154d6be005e11c36a5ee40e52c37a83cb8325f33ef12b83cab7f316"
+  },
+  {
+    "world": "Serdebra",
+    "url": "https://api.tibiamarket.top/item_history?server=Serdebra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 622,
+    "retrievedAt": "2026-09-27T02:12:36.994208+00:00",
+    "sha256": "a3bb8d36a53d48e594ae0310ea5a79a34ebdd41a141f58a8991e3079d54822be"
+  },
+  {
+    "world": "Yonabra",
+    "url": "https://api.tibiamarket.top/item_history?server=Yonabra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 361,
+    "retrievedAt": "2026-09-27T02:13:02.878940+00:00",
+    "sha256": "a3d60d62f3725ca6ce441e4aef25172a5c39bfd41558af7cdbf5a85614f0c1a7"
+  },
+  {
+    "world": "Astera",
+    "url": "https://api.tibiamarket.top/item_history?server=Astera&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 827,
+    "retrievedAt": "2026-09-27T09:03:22.487751+00:00",
+    "sha256": "0c77f34d685dfaa4c314d2e5862cf84c21fbe18287cc7d4454e342c94dccb506"
+  },
+  {
+    "world": "Jacabra",
+    "url": "https://api.tibiamarket.top/item_history?server=Jacabra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 57,
+    "retrievedAt": "2026-09-27T09:03:47.854571+00:00",
+    "sha256": "751be7077206b6f628a753fa3f40a5ce72868014d5afae824ee1ed4196b75b0e"
+  },
+  {
+    "world": "Dracobra",
+    "url": "https://api.tibiamarket.top/item_history?server=Dracobra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 212,
+    "retrievedAt": "2026-09-27T09:41:55.373219+00:00",
+    "sha256": "b04e1ecbadf67d2c83e27cf10f248236d36e8017f1d6c5da49112f157a3c7058"
+  },
+  {
+    "world": "Honbra",
+    "url": "https://api.tibiamarket.top/item_history?server=Honbra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 623,
+    "retrievedAt": "2026-09-27T09:42:21.470169+00:00",
+    "sha256": "3c07be6c6d534376fe65d6d71f4c5e617265a643c589b720c40c500ae49cf803"
+  },
+  {
+    "world": "Issobra",
+    "url": "https://api.tibiamarket.top/item_history?server=Issobra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 374,
+    "retrievedAt": "2026-09-27T09:42:47.148986+00:00",
+    "sha256": "ee3bd39e2b7605ff80d64681caeb9c3d58398041d40d2d63b06883a1caaff2e9"
+  },
+  {
+    "world": "Kalanta",
+    "url": "https://api.tibiamarket.top/item_history?server=Kalanta&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 299,
+    "retrievedAt": "2026-09-27T09:43:12.817205+00:00",
+    "sha256": "23548207db6d2db437d671afb98792ed041cd700f0e965025ab786166b17bf84"
+  },
+  {
+    "world": "Kalibra",
+    "url": "https://api.tibiamarket.top/item_history?server=Kalibra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 367,
+    "retrievedAt": "2026-09-27T14:30:23.596307+00:00",
+    "sha256": "927aa0d8c364bcfad6f2678ce0a9c4db2fe6dadb72095b734a7afee7d0a10c50"
+  },
+  {
+    "world": "Lobera",
+    "url": "https://api.tibiamarket.top/item_history?server=Lobera&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 940,
+    "retrievedAt": "2026-09-27T14:30:49.681684+00:00",
+    "sha256": "dbd5535a3242a0d2967e3bc32a636943b7ffa05b827f34bbaa228756ccf08818"
+  },
+  {
+    "world": "Nefera",
+    "url": "https://api.tibiamarket.top/item_history?server=Nefera&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 970,
+    "retrievedAt": "2026-09-27T14:31:15.908121+00:00",
+    "sha256": "61af213483d73bc637f3367ab8cc6b723ade78ebceda04ada20f7fe58f90d72e"
+  },
+  {
+    "world": "Nevia",
+    "url": "https://api.tibiamarket.top/item_history?server=Nevia&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 716,
+    "retrievedAt": "2026-09-27T19:30:21.539073+00:00",
+    "sha256": "567c7e40392f11802aaf7efb89e569679245387e4bf5806d567613ead9b94ba2"
+  },
+  {
+    "world": "Pacera",
+    "url": "https://api.tibiamarket.top/item_history?server=Pacera&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 622,
+    "retrievedAt": "2026-09-27T19:30:47.365111+00:00",
+    "sha256": "da3cc19cef23eab8f5946d5a1009c0ad1a09c8ad603e9532cbbf8046d53f9bbc"
+  },
+  {
+    "world": "Peloria",
+    "url": "https://api.tibiamarket.top/item_history?server=Peloria&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 911,
+    "retrievedAt": "2026-09-27T19:31:13.516854+00:00",
+    "sha256": "efe6345ff21fbe1b4db557c55325ba1e7617ee37de198b53cd1cf832cc44d030"
+  },
+  {
+    "world": "Refugia",
+    "url": "https://api.tibiamarket.top/item_history?server=Refugia&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 627,
+    "retrievedAt": "2026-09-27T19:31:39.346486+00:00",
+    "sha256": "7d868119721ffaffe9dfc6fb9e314f10cf46ea4016c48901a986f3e133438cb5"
+  },
+  {
+    "world": "Talera",
+    "url": "https://api.tibiamarket.top/item_history?server=Talera&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 623,
+    "retrievedAt": "2026-09-27T19:32:05.227657+00:00",
+    "sha256": "2677911092aeef5800d3220853c390e4507a325ddabbf1774972487cfb13774e"
+  },
+  {
+    "world": "Unebra",
+    "url": "https://api.tibiamarket.top/item_history?server=Unebra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 367,
+    "retrievedAt": "2026-09-27T19:32:30.809401+00:00",
+    "sha256": "4583182e6665ca8e673665e70b9a49e8a22294afcaa0ce800a58ea82459163f1"
+  },
+  {
+    "world": "Vunira",
+    "url": "https://api.tibiamarket.top/item_history?server=Vunira&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 1055,
+    "retrievedAt": "2026-09-27T19:32:56.899068+00:00",
+    "sha256": "edb6d87f2b4e614dc4f46b027d6fc7605413010fe9c53b43857930af1e01019b"
+  },
+  {
+    "world": "Xybra",
+    "url": "https://api.tibiamarket.top/item_history?server=Xybra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 364,
+    "retrievedAt": "2026-09-27T19:33:22.577889+00:00",
+    "sha256": "c3f0b2ce1eda99b7f48b1c9a802fd3108556f3379d4b1ba56806f1f680df991d"
+  }
+]

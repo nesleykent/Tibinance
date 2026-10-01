@@ -1,0 +1,255 @@
+{
+ "spread_index_monthly_median_pct": 4.22,
+ "spread_gentebra_monthly_median_pct": 3.28,
+ "table": [
+  {
+   "cycle": "2024\u201325",
+   "sell": "2024-09",
+   "rebuy": "2025-05",
+   "index_accept": -4.7,
+   "index_maker": 1.2,
+   "gentebra_accept": null,
+   "gentebra_maker": null
+  },
+  {
+   "cycle": "2024\u201325",
+   "sell": "2024-09",
+   "rebuy": "2025-06",
+   "index_accept": -2.9,
+   "index_maker": 3.5,
+   "gentebra_accept": null,
+   "gentebra_maker": null
+  },
+  {
+   "cycle": "2024\u201325",
+   "sell": "2024-09",
+   "rebuy": "2025-07",
+   "index_accept": -3.7,
+   "index_maker": 2.0,
+   "gentebra_accept": null,
+   "gentebra_maker": null
+  },
+  {
+   "cycle": "2024\u201325",
+   "sell": "2024-10",
+   "rebuy": "2025-05",
+   "index_accept": 2.8,
+   "index_maker": 10.0,
+   "gentebra_accept": null,
+   "gentebra_maker": null
+  },
+  {
+   "cycle": "2024\u201325",
+   "sell": "2024-10",
+   "rebuy": "2025-06",
+   "index_accept": 4.7,
+   "index_maker": 12.5,
+   "gentebra_accept": null,
+   "gentebra_maker": null
+  },
+  {
+   "cycle": "2024\u201325",
+   "sell": "2024-10",
+   "rebuy": "2025-07",
+   "index_accept": 3.9,
+   "index_maker": 10.9,
+   "gentebra_accept": null,
+   "gentebra_maker": null
+  },
+  {
+   "cycle": "2024\u201325",
+   "sell": "2024-11",
+   "rebuy": "2025-05",
+   "index_accept": 3.3,
+   "index_maker": 10.0,
+   "gentebra_accept": null,
+   "gentebra_maker": null
+  },
+  {
+   "cycle": "2024\u201325",
+   "sell": "2024-11",
+   "rebuy": "2025-06",
+   "index_accept": 5.2,
+   "index_maker": 12.4,
+   "gentebra_accept": null,
+   "gentebra_maker": null
+  },
+  {
+   "cycle": "2024\u201325",
+   "sell": "2024-11",
+   "rebuy": "2025-07",
+   "index_accept": 4.3,
+   "index_maker": 10.9,
+   "gentebra_accept": null,
+   "gentebra_maker": null
+  },
+  {
+   "cycle": "2024\u201325",
+   "sell": "2024-12",
+   "rebuy": "2025-05",
+   "index_accept": 4.1,
+   "index_maker": 9.7,
+   "gentebra_accept": 0.9,
+   "gentebra_maker": 4.0
+  },
+  {
+   "cycle": "2024\u201325",
+   "sell": "2024-12",
+   "rebuy": "2025-06",
+   "index_accept": 6.0,
+   "index_maker": 12.1,
+   "gentebra_accept": 2.2,
+   "gentebra_maker": 4.2
+  },
+  {
+   "cycle": "2024\u201325",
+   "sell": "2024-12",
+   "rebuy": "2025-07",
+   "index_accept": 5.2,
+   "index_maker": 10.6,
+   "gentebra_accept": 1.9,
+   "gentebra_maker": 4.2
+  },
+  {
+   "cycle": "2025\u201326",
+   "sell": "2025-09",
+   "rebuy": "2026-05",
+   "index_accept": -2.8,
+   "index_maker": 1.1,
+   "gentebra_accept": -1.6,
+   "gentebra_maker": 1.6
+  },
+  {
+   "cycle": "2025\u201326",
+   "sell": "2025-09",
+   "rebuy": "2026-06",
+   "index_accept": -3.0,
+   "index_maker": 0.8,
+   "gentebra_accept": -3.1,
+   "gentebra_maker": 0.0
+  },
+  {
+   "cycle": "2025\u201326",
+   "sell": "2025-09",
+   "rebuy": "2026-07",
+   "index_accept": -6.0,
+   "index_maker": -1.9,
+   "gentebra_accept": -5.0,
+   "gentebra_maker": -2.9
+  },
+  {
+   "cycle": "2025\u201326",
+   "sell": "2025-10",
+   "rebuy": "2026-05",
+   "index_accept": 3.9,
+   "index_maker": 8.5,
+   "gentebra_accept": 2.5,
+   "gentebra_maker": 5.6
+  },
+  {
+   "cycle": "2025\u201326",
+   "sell": "2025-10",
+   "rebuy": "2026-06",
+   "index_accept": 3.6,
+   "index_maker": 8.1,
+   "gentebra_accept": 1.0,
+   "gentebra_maker": 3.9
+  },
+  {
+   "cycle": "2025\u201326",
+   "sell": "2025-10",
+   "rebuy": "2026-07",
+   "index_accept": 0.5,
+   "index_maker": 5.2,
+   "gentebra_accept": -1.0,
+   "gentebra_maker": 0.9
+  },
+  {
+   "cycle": "2025\u201326",
+   "sell": "2025-11",
+   "rebuy": "2026-05",
+   "index_accept": 4.7,
+   "index_maker": 9.1,
+   "gentebra_accept": 4.4,
+   "gentebra_maker": 6.5
+  },
+  {
+   "cycle": "2025\u201326",
+   "sell": "2025-11",
+   "rebuy": "2026-06",
+   "index_accept": 4.5,
+   "index_maker": 8.7,
+   "gentebra_accept": 2.8,
+   "gentebra_maker": 4.8
+  },
+  {
+   "cycle": "2025\u201326",
+   "sell": "2025-11",
+   "rebuy": "2026-07",
+   "index_accept": 1.3,
+   "index_maker": 5.8,
+   "gentebra_accept": 0.8,
+   "gentebra_maker": 1.8
+  },
+  {
+   "cycle": "2025\u201326",
+   "sell": "2025-12",
+   "rebuy": "2026-05",
+   "index_accept": 3.3,
+   "index_maker": 7.8,
+   "gentebra_accept": 4.8,
+   "gentebra_maker": 7.9
+  },
+  {
+   "cycle": "2025\u201326",
+   "sell": "2025-12",
+   "rebuy": "2026-06",
+   "index_accept": 3.1,
+   "index_maker": 7.4,
+   "gentebra_accept": 3.3,
+   "gentebra_maker": 6.2
+  },
+  {
+   "cycle": "2025\u201326",
+   "sell": "2025-12",
+   "rebuy": "2026-07",
+   "index_accept": -0.1,
+   "index_maker": 4.5,
+   "gentebra_accept": 1.2,
+   "gentebra_maker": 3.1
+  }
+ ],
+ "by_sell_month": [
+  {
+   "sell": "09",
+   "index_accept": -3.8,
+   "index_maker": 1.1,
+   "gentebra_accept": -3.2,
+   "gentebra_maker": -0.4
+  },
+  {
+   "sell": "10",
+   "index_accept": 3.2,
+   "index_maker": 9.2,
+   "gentebra_accept": 0.8,
+   "gentebra_maker": 3.5
+  },
+  {
+   "sell": "11",
+   "index_accept": 3.9,
+   "index_maker": 9.5,
+   "gentebra_accept": 2.7,
+   "gentebra_maker": 4.4
+  },
+  {
+   "sell": "12",
+   "index_accept": 3.6,
+   "index_maker": 8.7,
+   "gentebra_accept": 2.4,
+   "gentebra_maker": 4.9
+  }
+ ],
+ "fail_case_accept_pct": -13.1,
+ "fail_case_maker_pct": -8.7,
+ "lot_value_at_ask": 1174775
+}
