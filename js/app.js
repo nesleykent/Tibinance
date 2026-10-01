@@ -7,8 +7,8 @@ import { fmt, esc, spread, goldOf, num } from './format.js';
 import { normalizeEndsAt, PROCESSING_VERSION, offerObservations } from './offers.js';
 
 const $ = id => document.getElementById(id);
-// Ends At is stored as YYYY-MM-DDTHH:MM:SS; review shows it the way the Market does.
-const showEndsAt = v => normalizeEndsAt(v)?.replace('T', ', ') ?? v ?? '';
+// Timestamps are stored as YYYY-MM-DDTHH:MM:SS; the UI shows them the way the Market does.
+const showTimestamp = v => normalizeEndsAt(v)?.replace('T', ', ') ?? v ?? '';
 
 /* ---------------------------------------------------------------- analysis */
 function analyse(state) {
@@ -93,7 +93,7 @@ function rowsHtml(state, side) {
              aria-label="${noun} offer ${i + 1}, price per coin in gold">
       <input data-s="${side}" data-i="${i}" data-f="total"  value="${r.total ? fmt(r.total) : ''}"
              aria-label="${noun} offer ${i + 1}, total price in gold">
-      <input data-s="${side}" data-i="${i}" data-f="endsAt" value="${esc(showEndsAt(r.endsAt))}"
+      <input data-s="${side}" data-i="${i}" data-f="endsAt" value="${esc(showTimestamp(r.endsAt))}"
              placeholder="YYYY-MM-DD, HH:MM:SS" aria-label="${noun} offer ${i + 1}, Ends At">
       <span class="flag ${r.bad ? 'bad' : 'ok'}" aria-hidden="true"
             title="${r.bad ? 'amount × price does not equal the total' : 'amount × price matches the total'}"
@@ -376,7 +376,7 @@ async function renderTable() {
       <td class="num">${num(r.goldSupply)}</td>
       <td class="num${spread(r) < 0 ? ' neg' : ''}"
           title="${spread(r) < 0 ? 'crossed market; a price is almost certainly misread' : ''}">${num(spread(r))}</td>
-      <td><time datetime="${esc(r.capturedAt)}">${esc(r.capturedAt)}</time></td>
+      <td><time datetime="${esc(r.capturedAt)}">${esc(showTimestamp(r.capturedAt))}</time></td>
       <td class="hash" title="${esc(r.hash)}">${esc(r.hash.slice(0, 10))}</td>
       <td><button class="del" data-del="${esc(r.hash)}" title="Remove" aria-label="Remove this observation">✕</button></td>
     </tr>`;
