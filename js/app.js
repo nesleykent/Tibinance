@@ -7,6 +7,8 @@ import { fmt, esc, spread, goldOf, num } from './format.js';
 import { normalizeEndsAt, PROCESSING_VERSION, offerObservations } from './offers.js';
 
 const $ = id => document.getElementById(id);
+// Ends At is stored as YYYY-MM-DDTHH:MM:SS; review shows it the way the Market does.
+const showEndsAt = v => normalizeEndsAt(v)?.replace('T', ', ') ?? v ?? '';
 
 /* ---------------------------------------------------------------- analysis */
 function analyse(state) {
@@ -23,7 +25,7 @@ function analyse(state) {
   for (const [side, rows] of [['Sell', sell], ['Buy', buy]]) {
     rows.forEach((r, i) => {
       if (r.amount > 0 && r.price > 0 && !normalizeEndsAt(r.endsAt)) {
-        warn.push(`${side} row ${i + 1}: correct Ends At (YYYY-MM-DDTHH:MM:SS) to track this offer`);
+        warn.push(`${side} row ${i + 1}: correct Ends At (YYYY-MM-DD, HH:MM:SS) to track this offer`);
       }
       if (r.total > 0 && r.amount * r.price !== r.total) {
         r.bad = true;
@@ -91,8 +93,8 @@ function rowsHtml(state, side) {
              aria-label="${noun} offer ${i + 1}, price per coin in gold">
       <input data-s="${side}" data-i="${i}" data-f="total"  value="${r.total ? fmt(r.total) : ''}"
              aria-label="${noun} offer ${i + 1}, total price in gold">
-      <input data-s="${side}" data-i="${i}" data-f="endsAt" value="${esc(r.endsAt ?? '')}"
-             placeholder="YYYY-MM-DDTHH:MM:SS" aria-label="${noun} offer ${i + 1}, Ends At">
+      <input data-s="${side}" data-i="${i}" data-f="endsAt" value="${esc(showEndsAt(r.endsAt))}"
+             placeholder="YYYY-MM-DD, HH:MM:SS" aria-label="${noun} offer ${i + 1}, Ends At">
       <span class="flag ${r.bad ? 'bad' : 'ok'}" aria-hidden="true"
             title="${r.bad ? 'amount × price does not equal the total' : 'amount × price matches the total'}"
             >${r.bad ? '✕' : '✓'}</span>
@@ -505,7 +507,7 @@ $('queue').addEventListener('input', e => {
   state.saveError = null;
   const n = parseInt(i.value.replace(/[^\d]/g, ''), 10);
   state.rows[i.dataset.s][+i.dataset.i][i.dataset.f] = i.dataset.f === 'endsAt'
-    ? i.value : (Number.isFinite(n) ? n : 0);
+    ? (normalizeEndsAt(i.value) ?? i.value) : (Number.isFinite(n) ? n : 0);
   const pos = i.selectionStart, key = `${i.dataset.s}-${i.dataset.i}-${i.dataset.f}`;
   render(state);
   const again = document.querySelector(
