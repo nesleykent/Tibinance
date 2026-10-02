@@ -177,7 +177,7 @@ async function handleFile(file) {
   cards.set(id, state);
   render(state);
   const result = await ingestScreenshot(file, {
-    reprocess: $('reprocess').checked,
+    reprocess: $('reprocess').getAttribute('aria-checked') === 'true',
     getExisting: hash => store.get(hash),
     onHash: hash => { state.hash = hash; },
     isQueued: hash => [...cards.values()].some(c => c !== state && c.hash === hash),
@@ -401,6 +401,11 @@ document.addEventListener('keydown', e => {
 applyColumns();
 
 /* ------------------------------------------------------------------ wiring */
+$('reprocess').addEventListener('click', e => {
+  const control = e.currentTarget;
+  control.setAttribute('aria-checked', String(control.getAttribute('aria-checked') !== 'true'));
+});
+
 const drop = $('drop');
 drop.addEventListener('click', () => $('file').click());
 drop.addEventListener('keydown', e => {

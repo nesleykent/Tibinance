@@ -26,9 +26,12 @@
 <section id="view-manage">
 
   <section class="block" aria-label="Add Screenshots">
-    <div class="section-head">
+    <div class="section-head screenshots-head">
       <h2>Add Screenshots</h2>
-      <label class="reprocess-option"><input id="reprocess" type="checkbox"> Reprocess saved screenshots</label>
+      <button id="reprocess" class="reprocess-option" type="button" role="switch" aria-checked="false">
+        <span class="reprocess-track" aria-hidden="true"></span>
+        <span>Reprocess saved</span>
+      </button>
     </div>
 
     <section class="privacy" aria-label="What is kept">

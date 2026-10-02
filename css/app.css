@@ -213,7 +213,15 @@ h2 { margin:0; }
 .side h4 .n { color:var(--ink); }
 .rowhead,.rowline { display:grid; grid-template-columns:1fr 1fr 1.35fr 2.2fr 1.2em var(--control-height); min-width:34rem; align-items:center; gap:var(--space-2); margin-bottom:var(--space-1); }
 .side { min-width:0; overflow-x:auto; }
-.reprocess-option { display:flex; align-items:center; gap:var(--space-2); font-size:var(--step-n1); }
+.screenshots-head { flex-wrap:nowrap; }
+.screenshots-head h2 { min-width:0; }
+.reprocess-option { display:flex; flex-direction:column; align-items:center; flex-shrink:0; gap:var(--space-1); margin-left:auto; padding:0; border:0; background:transparent; color:var(--muted); font:var(--weight-regular) var(--step-n2)/var(--leading-text) var(--font-ui); cursor:pointer; white-space:nowrap; }
+.reprocess-track { position:relative; width:calc(var(--unit) * 10); height:var(--control-height); border-radius:var(--control-height); background:var(--control-track); transition:background .15s ease; }
+.reprocess-track::after { content:""; position:absolute; top:var(--control-inset); left:var(--control-inset); width:calc(var(--control-height) - var(--control-inset) * 2); height:calc(var(--control-height) - var(--control-inset) * 2); border-radius:50%; background:var(--surface); box-shadow:var(--control-thumb-shadow); transition:transform .15s ease; }
+.reprocess-option:hover .reprocess-track { background:var(--control-track-hover); }
+.reprocess-option[aria-checked="true"] .reprocess-track { background:var(--accent); }
+.reprocess-option[aria-checked="true"] .reprocess-track::after { transform:translateX(calc(var(--unit) * 4)); }
+@media (prefers-reduced-motion:reduce) { .reprocess-track,.reprocess-track::after { transition:none; } }
 .rowhead { padding-bottom:var(--space-1); border-bottom:var(--rule) solid var(--line-strong); color:var(--ink); text-align:right; }
 .rowline input,.statistics-sides input { width:100%; min-height:var(--control-height); padding:0 var(--space-2); border:var(--rule) solid var(--line); border-radius:var(--radius-sm); background:var(--surface); color:var(--ink); text-align:right; }
 .rowline input:focus,.statistics-sides input:focus { border-color:var(--accent); }

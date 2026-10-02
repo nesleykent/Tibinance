@@ -305,7 +305,7 @@ cancelled or expired.
 To backfill screenshots already saved in this browser:
 
 1. Export JSON as a backup.
-2. Enable **Reprocess saved screenshots**, then drop the original files again.
+2. Enable **Reprocess saved**, then drop the original files again.
 3. Review the individual offers and correct any unread **Ends At** values.
 4. Save. The existing capture gains offer observations; its original world,
    capture date remain intact. Canonical ingestion recomputes snapshot totals from

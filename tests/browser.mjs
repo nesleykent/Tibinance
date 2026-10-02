@@ -16,6 +16,17 @@ try {
   await page.route('**/data/observations.json', r => r.fulfill({ json: [] }));
   await page.goto(process.env.TIBINANCE_TEST_URL ?? 'http://127.0.0.1:8765');
   await page.waitForFunction(() => document.getElementById('capturesLoading').hidden);
+  const reprocess = page.getByRole('switch', { name: 'Reprocess saved', exact: true });
+  assert.equal(await reprocess.getAttribute('aria-checked'), 'false');
+  assert.equal(await page.locator('#reprocess input[type="checkbox"]').count(), 0);
+  await reprocess.click();
+  assert.equal(await reprocess.getAttribute('aria-checked'), 'true');
+  await reprocess.press('Space');
+  assert.equal(await reprocess.getAttribute('aria-checked'), 'false');
+  await reprocess.press('Enter');
+  assert.equal(await reprocess.getAttribute('aria-checked'), 'true');
+  await reprocess.click();
+  assert.equal(await reprocess.getAttribute('aria-checked'), 'false');
   const outcome = await page.evaluate(async () => {
     const store = await import('/js/store.js');
     const { offerObservations } = await import('/js/offers.js');
@@ -110,7 +121,7 @@ try {
   console.log('Filename, duplicate, Market rejection and UI privacy integration passed');
   for (const width of [320, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 });
-    assert.ok(await page.getByLabel('Reprocess saved screenshots').isVisible());
+    assert.ok(await page.getByRole('switch', { name: 'Reprocess saved', exact: true }).isVisible());
     assert.ok(await page.getByRole('button', { name: 'Export Offers', exact: true }).isVisible());
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `Page overflow at ${width}`);
   }
@@ -159,7 +170,7 @@ try {
     page.once('dialog', d => d.accept());
     await page.getByRole('button', { name: 'Discard All', exact: true }).click();
     // Native confirmation is accepted by the handler before another action.
-    await page.getByLabel('Reprocess saved screenshots').check();
+    await page.getByRole('switch', { name: 'Reprocess saved', exact: true }).click();
     await page.locator('#file').setInputFiles(file);
     await page.waitForFunction(() => document.querySelector('[data-save]')?.disabled === false, { timeout: 120000 });
     const note = await page.locator('#queue').textContent();
