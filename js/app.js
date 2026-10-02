@@ -63,8 +63,7 @@ function render(state) {
   const el = cardEl(state.id);
   const label = state.uiFilename ?? 'Filename unavailable';
   el.title = label;
-  const identity = `<span class="cfile">${esc(label)}</span>
-    <span class="ccharacter">Character: ${esc(state.uiCharacter || 'unavailable')}</span>`;
+  const identity = `<span class="cfile">${esc(label)}</span>`;
   // Review identifiers live only in this local queue, never in a capture record.
   const line = (cls, flag, message, tone = '') => {
     el.className = `card ${cls}`;
@@ -161,11 +160,10 @@ let seq = 0;
 
 async function handleFile(file) {
   const id = `f${++seq}`;
-  // Presentation only: basename and character stay in queue memory. Eligibility
+  // Presentation only: the basename stays in queue memory. Eligibility
   // and world resolution still belong exclusively to canonical ingestion.
   const uiFilename = file.name.split(/[\\/]/).pop();
-  const uiCharacter = /^\d{4}-\d{2}-\d{2}_\d{6}\d*_([^_]+)_[^_]+(?:\.[^.]+)$/.exec(uiFilename)?.[1].trim();
-  const state = { id, uiFilename, uiCharacter, status: 'work', stage: 'checking eligibility…', rows: { sell: [], buy: [] } };
+  const state = { id, uiFilename, status: 'work', stage: 'checking eligibility…', rows: { sell: [], buy: [] } };
   cards.set(id, state);
   render(state);
   const result = await ingestScreenshot(file, {

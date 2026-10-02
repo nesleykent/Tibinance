@@ -195,9 +195,8 @@ h2 { margin:0; }
 .cbe { text-align:center; cursor:help; }
 .ctime { color:var(--muted); }
 .cfeedback { grid-column:2 / -1; min-width:0; white-space:normal; }
-.cfeedback .cmsg,.cfeedback .cfile,.cfeedback .ccharacter { display:block; overflow-wrap:anywhere; }
-.cfeedback .cfile,.cfeedback .ccharacter { color:var(--muted); font-family:var(--font-code); }
-.cfeedback .ccharacter { font-size:var(--step-n1); }
+.cfeedback .cmsg,.cfeedback .cfile { display:block; overflow-wrap:anywhere; }
+.cfeedback .cfile { color:var(--muted); font-family:var(--font-code); }
 /* one fixed-width cell per figure, sized to that unit's widest value, so every card lines up */
 .cnums { grid-column:5; justify-self:end; display:grid; grid-auto-flow:column; grid-template-columns:16ch 10ch 15ch 15ch; align-items:center; gap:0 var(--space-5); color:var(--muted); }
 .cnums .cn { text-align:right; overflow:hidden; text-overflow:ellipsis; }

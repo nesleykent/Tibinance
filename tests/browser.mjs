@@ -99,14 +99,13 @@ try {
   assert.equal(apiCalls, 0, 'Rejected images never reach character API');
   assert.equal(await page.locator('#queue .cfile').nth(1).textContent(), testFile('Hotkey').name,
     'Full filename remains local feedback after rejection');
-  assert.ok(await page.locator('#queue .ccharacter').evaluateAll(labels =>
-    labels.every(label => label.textContent === 'Character: Synthetic Private')),
-    'Character feedback remains available in skipped and error states');
+  assert.equal(await page.locator('#queue .ccharacter').count(), 0,
+    'No separate character line duplicates the filename');
   assert.ok(await page.locator('#queue .cfeedback').evaluateAll(blocks => blocks.every(block => {
-    const labels = [...block.querySelectorAll('.cmsg,.cfile,.ccharacter')];
+    const labels = [...block.querySelectorAll('.cmsg,.cfile')];
     const left = labels[0].getBoundingClientRect().left;
     return labels.every(label => Math.abs(label.getBoundingClientRect().left - left) < 1);
-  })), 'Status, filename and character share the same left alignment');
+  })), 'Status and filename share the same left alignment');
   assert.equal(await page.locator('[data-force]').count(), 0, 'Validation override removed');
   console.log('Filename, duplicate, Market rejection and UI privacy integration passed');
   for (const width of [320, 768, 1024, 1440]) {
