@@ -512,5 +512,8 @@ node tests/statistics-browser.mjs
 `TIBINANCE_STATISTICS_SAMPLE` enables real Details OCR/interaction checks;
 `TIBINANCE_OFFERS_SAMPLE` enables the paired real Offers regression. These checks
 use isolated browser storage and API fixtures. No test state is imported into
-canonical data. **The full historical rebuild has not started.** The progress
-ledger is in `PROGRESS.md`; a rebuild must be a separate step after validation.
+canonical data. The historical rebuild and subsequent Apple Vision review are
+complete: 390 accepted captures across 40 worlds, with no unresolved review cases.
+The anonymous [review audit](data/rebuild-vision-review.json) records recoveries and
+per-world coverage; [validation](data/rebuild-validation.json) reconciles the archive.
+The progress ledger is in `PROGRESS.md`.

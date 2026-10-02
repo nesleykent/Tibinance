@@ -108,6 +108,21 @@ test('invalid observations cannot produce a persistable canonical capture', asyn
   assert.equal(corrected.offers[0].total, 5000000);
 });
 
+test('complete visible books with more than ten rows retain every validated offer', async () => {
+  const book = rows();
+  book.buy = Array.from({length: 11}, (_, i) => ({amount:25, price:40000-i,
+    total:25*(40000-i), endsAt:`2026-10-31T12:00:${String(i).padStart(2,'0')}`}));
+  const h = harness({extractMarketOffers: async () => book});
+  const result = await ingestScreenshot(source('Hotkey'), {captureTimeZone:'America/Sao_Paulo'}, h.services);
+  assert.equal(result.status, 'ready');
+  assert.equal(result.capture.offers.filter(r=>r.side==='buy').length, 11);
+  assert.equal(toRecord(result.capture).offers.length, 12);
+  book.buy[10].total++;
+  const invalid = await ingestScreenshot(source('Hotkey'), {}, h.services);
+  assert.equal(invalid.status, 'needs_review');
+  assert.equal(invalid.capture, undefined);
+});
+
 test('invalid calendar metadata and manual corrections cannot bypass gates', async () => {
   const h = harness();
   const invalid = source('Hotkey'); invalid.name = invalid.name.replace('2026-10-01', '2026-02-31');

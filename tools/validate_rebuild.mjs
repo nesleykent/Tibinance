@@ -10,8 +10,8 @@ import {offerKey,normalizeEndsAt} from '../js/offers.js';
 import {analyse} from '../js/validation.js';
 import {cleanStatistics,captureInstant,statisticsReferenceDate,normalizeCapturedAt} from '../js/statistics.js';
 
-const [directory,archive]=process.argv.slice(2);
-assert.ok(directory && archive,'Usage: node tools/validate_rebuild.mjs <rebuild-directory> <raw-archive>');
+const [directory,archive,previousDataset,reviewDecisions]=process.argv.slice(2);
+assert.ok(directory && archive,'Usage: node tools/validate_rebuild.mjs <rebuild-directory> <raw-archive> [previous-dataset] [review-decisions]');
 const load=async name=>JSON.parse(await readFile(join(directory,name),'utf8'));
 const walk=async p=>(await Promise.all((await readdir(p,{withFileTypes:true})).map(e=>e.isDirectory()?walk(join(p,e.name)):[join(p,e.name)]))).flat();
 const files=await walk(archive), extensions=new Set(['.png','.jpg','.jpeg','.webp','.heic','.tif','.tiff']);
@@ -88,6 +88,19 @@ for(const c of captures){
 }
 for(const [key,group]of keyIDs)assert.ok(group.size===1 || collisionKeys.has(key),'Noncolliding offer received multiple UUIDs');
 for(const {key,row}of rows)if(collisionKeys.has(key)||keyIDs.get(key).size>1)assert.equal(row.matchAmbiguous,true,'Historical ambiguity was not propagated');
+// A targeted review must add verified history without dropping already accepted
+// captures or rewriting their quotes, clocks or offer identities. Newly exposed
+// simultaneous collisions may only promote the historical ambiguity flag.
+if(previousDataset){
+ for(const prior of JSON.parse(await readFile(previousDataset,'utf8'))){
+  const current=captures.find(c=>c.hash===prior.hash);
+  assert.ok(current,'Review removed an already accepted capture');
+  const strip=c=>({...c,offers:c.offers?.map(({matchAmbiguous,...r})=>r)});
+  assert.deepEqual(strip(current),strip(prior),'Review rewrote an already accepted capture');
+  for(let i=0;i<(prior.offers?.length??0);i++)
+   if(prior.offers[i].matchAmbiguous)assert.equal(current.offers[i].matchAmbiguous,true,'Review lost historical ambiguity');
+ }
+}
 const auditKeys=new Set(['hash','world','capturedAt','status','processingVersion','viewType','stages','attemptedStages','statistics30d','offers','itemVerification','issues','runtimeFault','capture','context']);
 for(const r of audit){
  assert.ok(unique.has(r.hash));assert.ok(Object.keys(r).every(k=>auditKeys.has(k)),'Private audit metadata');
@@ -109,7 +122,22 @@ for(const r of audit){
   if(r.capture.offers)assert.deepEqual(r.capture.offers,r.offers);
  }
 }
+const reasonCodes={
+ combat_no_market:'Visual review: combat screenshot without a Market view',
+ task_board_no_market:'Visual review: Task Board screenshot without a Market view',
+ offer_history:'Visual review: mixed-item Offer History, outside the supported Offers and Details/Statistics views',
+ cursed_coin:'Visual review: selected Market item is cursed coin, not Tibia Coins'
+};
+const decisions=new Map();
+if(reviewDecisions)for(const decision of JSON.parse(await readFile(reviewDecisions,'utf8'))){
+ assert.deepEqual(Object.keys(decision).sort(),['hash','reasonCode'],'Private manual review metadata');
+ assert.ok(unique.has(decision.hash) && !decisions.has(decision.hash));
+ assert.ok(Object.hasOwn(reasonCodes,decision.reasonCode),'Unknown manual review reason');
+ assert.equal(audit.find(r=>r.hash===decision.hash)?.status,'excluded_manual','Manual review cannot override acceptance');
+ decisions.set(decision.hash,reasonCodes[decision.reasonCode]);
+}
 const failureReason=r=>{
+ if(r.status==='excluded_manual')return [decisions.get(r.hash)??'Capture explicitly excluded after local screenshot review'];
  if(r.runtimeFault)return [`Runtime ${r.runtimeFault}; extraction incomplete at ${r.attemptedStages.at(-1)??'unknown'} stage`];
  if(r.status==='excluded_market')return ['Market Offers/Details layout could not be verified'];
  if(r.status==='excluded_other_item')return ['Highlighted Market item is not Tibia Coins'];

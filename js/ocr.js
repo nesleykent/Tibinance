@@ -186,13 +186,14 @@ function clusterRows(ws) {
   return rows;
 }
 
-function cropCanvas(src, x0, y0, x1, y1, scale) {
+function cropCanvas(src, x0, y0, x1, y1, scale, adjustContrast = true) {
   const w = Math.max(1, Math.round(x1 - x0)), h = Math.max(1, Math.round(y1 - y0));
   const c = document.createElement('canvas');
   c.width = w * scale; c.height = h * scale;
   const ctx = c.getContext('2d', { willReadFrequently: true });
   ctx.imageSmoothingQuality = 'high';
   ctx.drawImage(src, x0, y0, w, h, 0, 0, c.width, c.height);
+  if (!adjustContrast) return c;
   // grayscale + mild contrast: keeps coloured (red/orange) offer rows readable
   const img = ctx.getImageData(0, 0, c.width, c.height);
   const d = img.data;
@@ -300,16 +301,31 @@ export async function verifyTibiaCoins(context, onStep = () => {}) {
   onStep('checking the selected Market item');
   let region = itemRegion(anchors, tables);
   if (!region) {
-    const broad = itemRegion(anchors, tables, { allowMissingSearch: true, height: full.height });
+    // If the whole-screen pass lost Items itself, still read the sidebar beside
+    // the verified Market table. This is only an OCR aid: itemRegion below must
+    // recover the actual Items/Search labels before selection can be proved.
+    const glyphs = tables.map(t => t.glyph).filter(g => Number.isFinite(g) && g > 0);
+    const g = glyphs.length ? Math.max(...glyphs) : null;
+    const right = Math.min(...tables.map(t => t.x));
+    const section = tables.find(t => t.side === 'buy') ?? tables[0];
+    const broad = itemRegion(anchors, tables, { allowMissingSearch: true, height: full.height })
+      ?? (g ? {x:Math.max(0,right-g*30), r:right-g*2.5,
+        y:Math.max(0,section.y-g*8), b:full.height, glyph:g} : null);
     if (broad) {
       const scale = scaleFor(broad.glyph);
-      const sidebar = cropCanvas(full, broad.x, broad.y, broad.r, broad.b, scale);
+      // Include the Items heading itself and omit the unrelated chat below the
+      // sidebar. A headerless tall crop can lose Search in sparse segmentation.
+      const y = Math.max(0,broad.y-broad.glyph*3);
+      const bottom = Math.min(broad.b,broad.y+broad.glyph*35);
+      // Preserve original sidebar colors: contrast preprocessing can erase the
+      // faint Search heading even while the item name survives.
+      const sidebar = cropCanvas(full, broad.x, y, broad.r, bottom, scale, false);
       await worker.setParameters({ tessedit_pageseg_mode: Tesseract.PSM.SPARSE_TEXT,
         tessedit_char_whitelist: '' });
       const recovered = words(await worker.recognize(sidebar), 0).map(w => ({ ...w,
         x: broad.x + w.x / scale, r: broad.x + w.r / scale,
-        y: broad.y + w.y / scale, b: broad.y + w.b / scale,
-        h: w.h / scale, cy: broad.y + w.cy / scale, cx: broad.x + w.cx / scale }));
+        y: y + w.y / scale, b: y + w.b / scale,
+        h: w.h / scale, cy: y + w.cy / scale, cx: broad.x + w.cx / scale }));
       anchors = [...anchors, ...recovered.filter(w => !anchors.some(p => norm(p.t) === norm(w.t)
         && Math.abs(p.cx - w.cx) <= Math.max(p.h, w.h) * 1.5
         && Math.abs(p.cy - w.cy) <= Math.max(p.h, w.h) * 1.5))];
@@ -323,7 +339,10 @@ export async function verifyTibiaCoins(context, onStep = () => {}) {
   };
   let item = selectedItem(anchors, region, luminance);
   const band = selectionBand(region, luminance);
-  if (item.status === 'unconfirmed' && band) {
+  // Whole-screen OCR can confidently read only "Cains"/"coms" from the
+  // faint Tibia Coins row. Confirm any nonmatching label in its selected-row
+  // crop before rejecting it as another item; exact selection proof remains.
+  if (item.status !== 'tibia_coins' && band) {
     const scale = scaleFor(region.glyph);
     const left = region.x + (band.bottom - band.top) * 1.05;
     const top = band.top + 1;

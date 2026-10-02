@@ -19,7 +19,8 @@ export function analyse(state) {
   const S = live(sell), B = live(buy);
 
   for (const [side, rows] of [['Sell', sell], ['Buy', buy]]) {
-    if (rows.length > 10) warn.push(`${side}: more than ten visible offers`);
+    // Client window height determines how many rows are visible. Real layouts
+    // can show eleven or more; OCR coverage and field validation prove the book.
     rows.forEach((r, i) => {
       if (![r.amount, r.price, r.total].every(v => Number.isSafeInteger(v) && v > 0)) {
         warn.push(`${side} row ${i + 1}: amount, price and total must be positive integers`);

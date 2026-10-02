@@ -250,7 +250,32 @@ does not replace IANA rules. Reprocessing retains saved world/clock/timezone con
 Generated JSON and `observations.csv` contain the mixed capture schema and
 Statistics values, while `offer-observations.csv` retains only real offers.
 Version 6 invalidates earlier extraction checkpoints. Browser testing state is
-isolated from batch output. Do not run the full archive yet: first confirm this
-implementation and validation, then rebuild separately into a fresh directory.
+isolated from batch output. The historical rebuild and Apple Vision review are
+complete; future rebuilds must validate separately before replacing canonical data.
 The standalone manual-row `tcmarket.py` CLI is separate from this screenshot
 pipeline and retains its existing behavior.
+
+### Local Apple Vision review
+
+`review_market_vision.py` diagnoses nonaccepted checkpointed screenshots using
+Apple Vision and Tesseract. It preserves per-hash readings/crops in an ignored
+local directory and resumes without repeating completed cases. `--retry-incomplete`
+limits retries to unresolved readings. Complete readings emit explicit anonymous
+row corrections; every correction must return through `reprocess_market.py --resume --rebuild --corrections` and all shared website gates. Missing world
+context is resolved separately, never inferred from the numeric OCR.
+
+```bash
+swiftc tools/vision_ocr.swift -o /tmp/tibinance-vision-ocr
+python3 tools/review_market_vision.py /path/to/private-archive \
+  /path/to/backfill/backfill-results.json --output /path/to/local-review \
+  --vision-binary /tmp/tibinance-vision-ocr --resume
+node tools/validate_rebuild.mjs /path/to/backfill /path/to/private-archive \
+  data/observations.json /path/to/anonymous-review-decisions.json
+```
+
+The optional previous-dataset argument blocks removal or modification of accepted
+captures, quotes, clocks and offer identities; newly exposed matching ambiguity
+may only be promoted. Review decisions contain only a hash and a recognized reason
+code, never source filenames, character names or arbitrary OCR text. Real client
+window heights may show more than ten offers; full row coverage and the normal
+field/checksum/time validation remain required.

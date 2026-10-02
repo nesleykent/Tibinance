@@ -317,7 +317,7 @@ def recover_stripes(image, table, rows, workdir, vision_binary, anchors=()):
     return rows
 
 
-def read_market(path, workdir, vision_binary=None):
+def read_market(path, workdir, vision_binary=None, verify_vision=False):
     im = Image.open(path).convert('RGB')
     issues, engines, tables, rows = [], ['tesseract'], None, {}
     primary_error = None
@@ -354,7 +354,7 @@ def read_market(path, workdir, vision_binary=None):
             rows[table['side']]=sorted(combined,key=lambda r:r['_cy'])
     except (ValueError, RuntimeError, subprocess.TimeoutExpired) as exc:
         primary_error=str(exc)
-    fallback_needed = primary_error or any(not rows.get(side) or any(needs_fallback(r) for r in rows[side]) for side in ('sell','buy'))
+    fallback_needed = verify_vision or primary_error or any(not rows.get(side) or any(needs_fallback(r) for r in rows[side]) for side in ('sell','buy'))
     # Vision also checks row completeness when primary rows leave visible gaps.
     for side in ('sell','buy'):
         rs=rows.get(side,[])

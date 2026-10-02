@@ -67,6 +67,37 @@ test('raw reconciliation accepts interleaved views, full fractions, duplicates a
  }finally{await rm(f.root,{recursive:true,force:true});}
 });
 
+test('manual exclusions require anonymous recognized review decisions',async()=>{
+ const f=await fixture();try{
+  const audit=JSON.parse(await readFile(join(f.output,'backfill-results.json')));
+  audit[2].status='excluded_manual';
+  await json(join(f.output,'backfill-results.json'),audit);
+  const decisions=join(f.output,'decisions.json');
+  const run=()=>spawnSync(process.execPath,[script,f.output,f.archive,'',decisions],{encoding:'utf8'});
+  await json(decisions,[{hash:audit[2].hash,reasonCode:'offer_history'}]);
+  assert.equal(run().status,0);
+  const review=JSON.parse(await readFile(join(f.output,'review-and-rejections.json')));
+  assert.match(review[0].reasons[0],/Offer History/);
+  await json(decisions,[{hash:audit[2].hash,reasonCode:'unknown'}]);assert.notEqual(run().status,0);
+  await json(decisions,[{hash:audit[2].hash,reasonCode:'offer_history',filename:'private.png'}]);assert.notEqual(run().status,0);
+  await json(decisions,[{hash:audit[0].hash,reasonCode:'offer_history'}]);assert.notEqual(run().status,0);
+ }finally{await rm(f.root,{recursive:true,force:true});}
+});
+
+test('review cannot remove or rewrite previously accepted captures',async()=>{
+ const f=await fixture();try{
+  const previous=join(f.output,'previous.json');
+  const captures=JSON.parse(await readFile(join(f.output,'observations-enriched.json')));
+  await json(previous,captures);
+  const run=()=>spawnSync(process.execPath,[script,f.output,f.archive,previous],{encoding:'utf8'});
+  assert.equal(run().status,0);
+  const altered=structuredClone(captures);altered[0].buy=1;
+  await json(previous,altered);assert.notEqual(run().status,0);
+  const extra=structuredClone(captures[0]);extra.hash='f'.repeat(64);
+  await json(previous,[...captures,extra]);assert.notEqual(run().status,0);
+ }finally{await rm(f.root,{recursive:true,force:true});}
+});
+
 test('validation blocks order loss, missing raw files, private metadata, volume tampering and expiry drift',async()=>{
  for(const change of [
   {file:'processing-order.json',mutate:a=>[a[1],a[0],...a.slice(2)]},
