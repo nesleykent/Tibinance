@@ -70,7 +70,11 @@ def safe_result(entry):
     result['itemVerification'] = {'status': item if item in ('tibia_coins', 'other_item') else 'unconfirmed'}
     allowed_fields = {*FIELDS, *STAGE_FIELDS, 'row', 'selectedItem', 'capturedAt', 'statistics30d.buy', 'statistics30d.sell'}
     result['issues'] = [{'field': i.get('field') if i.get('field') in allowed_fields else 'row',
-                         'reason': 'World resolution failed' if i.get('field') == 'world' else 'Validation requires review'}
+                         'reason': ('World resolution failed' if i.get('field') == 'world' else
+                                    'Statistics extraction incomplete; check the screenshot and complete missing fields'
+                                    if i.get('field') in ('statistics30d.buy', 'statistics30d.sell')
+                                    and entry.get('stages', {}).get('statistics') is False else
+                                    'Validation requires review')}
                         for i in entry.get('issues', [])]
     if entry.get('runtimeFault') in ('browser_closed', 'browser_crash'):
         result['runtimeFault'] = entry['runtimeFault']

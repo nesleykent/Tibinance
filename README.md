@@ -480,6 +480,11 @@ summary for zero transactions, and safe consistent lot volume. Historical side
 averages may cross; live-book spread checks do not apply to Statistics. Missing,
 unreadable, incomplete, low-confidence or conflicting OCR fields require review.
 All eight fields are editable before saving; saving cannot override validation.
+The image reader uses the already verified Statistics pane even when the cropped
+heading is misread by WebKit. Side/field labels, numeric confidence and agreement
+between OCR passes remain required. Missing OCR values stay blank and produce
+extraction-specific review feedback before value validation. TC Volume is shown
+only after a valid transaction count is available.
 
 JSON and snapshot CSV include both capture types, all Statistics fields and both
 lot volumes. Offer-observation exports continue to contain only actual offers.

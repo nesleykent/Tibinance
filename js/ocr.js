@@ -580,7 +580,7 @@ export async function extractMarketOffers(context, onStep = () => {}) {
 export async function extractMarketStatistics(context, onStep = () => {}) {
   const { full, worker, anchors } = context;
   onStep('reading 30-day Statistics');
-  const titles = anchors.filter(w => /^statistics:?$/i.test(w.t));
+  const titles = anchors.filter(w => norm(w.t) === 'statistics');
   if (titles.length !== 1) return null;
   const title = titles[0], scale = scaleFor(title.h);
   const x0 = Math.floor(title.x), y0 = Math.floor(title.y);
@@ -597,7 +597,11 @@ export async function extractMarketStatistics(context, onStep = () => {}) {
     // line into separate text paragraphs.
     const tokens = words(read, 0).map(w => /^\d[\d,]*$/.test(w.t) && w.conf < 70 ? {...w,t:'unreadable'} : w);
     const lines = clusterRows(tokens).map(line => line.sort((a,b) => a.x-b.x).map(w => w.t).join(' '));
-    readings.push(parseStatisticsText(lines.join('\n')));
+    // The full-image pass already identified this Statistics pane. Requiring
+    // its title again discards all eight readable values when WebKit's crop
+    // resampling damages that heading. Field/side labels and numbers remain
+    // mandatory; this does not accept unlabelled values or guessed digits.
+    readings.push(parseStatisticsText(lines.join('\n'), {verifiedBlock:true}));
   }
   // No arithmetic checksum exists here. Conflicting passes require review;
   // one readable pass can fill an unread field, never overrule a disagreement.

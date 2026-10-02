@@ -4,16 +4,21 @@ import {createRequire} from 'node:module';
 import {readFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 const require=createRequire(import.meta.url);
-const {chromium}=require(process.env.TIBINANCE_NODE_MODULES ? `${process.env.TIBINANCE_NODE_MODULES}/playwright` : 'playwright');
-const launch=()=>chromium.launch({headless:true,...(process.env.TIBINANCE_CHROME?{executablePath:process.env.TIBINANCE_CHROME}:{channel:'chrome'})});
+const {chromium,webkit}=require(process.env.TIBINANCE_NODE_MODULES ? `${process.env.TIBINANCE_NODE_MODULES}/playwright` : 'playwright');
+const useWebKit=process.env.TIBINANCE_BROWSER === 'webkit';
+const launch=()=>useWebKit ? webkit.launch({headless:true}) : chromium.launch({headless:true,...(process.env.TIBINANCE_CHROME?{executablePath:process.env.TIBINANCE_CHROME}:{channel:'chrome'})});
 let browser=await launch();
 const root=process.env.TIBINANCE_TEST_URL ?? 'http://127.0.0.1:8765';
 const sample=process.env.TIBINANCE_STATISTICS_SAMPLE;
 try {
  const errors=[];
- const openSite=async()=>{
+ const openSite=async({statisticsFailure=false}={})=>{
    const context=await browser.newContext({timezoneId:'America/Sao_Paulo',viewport:{width:1440,height:1000}});
    const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
+   if(statisticsFailure)await page.route('**/js/ocr.js',async r=>r.fulfill({contentType:'text/javascript',
+     body:(await readFile(new URL('../js/ocr.js',import.meta.url),'utf8')).replace(
+       'export async function extractMarketStatistics(context, onStep = () => {}) {',
+       'export async function extractMarketStatistics(context, onStep = () => {}) { throw Error("private OCR failure");')}));
    await page.route('**/data/observations.json',r=>r.fulfill({json:[]}));
    await page.route('**/api.tibiadata.com/v4/character/**',r=>r.fulfill({json:{character:{character:{world:'Antica'}}}}));
    await page.route('**/api.tibiadata.com/v4/worlds',r=>r.fulfill({json:{worlds:{regular_worlds:[{name:'Antica',pvp_type:'Open PvP',battleye_protected:true,battleye_date:'2017-01-01'}]}}}));
@@ -37,6 +42,11 @@ try {
    const count=page.locator('[data-stat-side="buy"][data-stat-field="transactions"]');
    await count.fill('4');
    assert.ok(await page.locator('.statistics-sides fieldset').first().innerText().then(t => t.includes('TC Volume: 100')), await page.locator('.statistics-sides fieldset').first().innerText());
+   await count.fill('');
+   assert.ok(await page.locator('.statistics-sides fieldset').first().innerText().then(t=>t.includes('TC Volume: —')));
+   assert.equal(await page.locator('[data-save]').isDisabled(),true);
+   assert.match(await page.locator('#queue').innerText(),/extraction incomplete.*Number of Transactions/);
+   assert.equal((await page.locator('#queue').innerText()).includes('all four values'),false);
    await count.fill('3396');
    await page.locator('[data-stat-side="buy"][data-stat-field="averagePrice"]').fill('90000');
    assert.equal(await page.locator('[data-save]').isDisabled(),true);
@@ -95,6 +105,25 @@ try {
  await page.locator('#exportOffers').click();
  const offerCsv=await readFile(await (await offerDownload).path(),'utf8');
  assert.ok(offerCsv.includes('endsAtUtc') && offerCsv.includes('captureTimeZone'));
+ if(sample){
+   await browser.close();browser=await launch();page=await openSite({statisticsFailure:true});
+   await page.locator('#file').setInputFiles({name:'2026-10-02_003637332_Synthetic Name_Hotkey.png',mimeType:'image/png',buffer:await readFile(sample)});
+   await page.waitForSelector('[data-save]',{state:'attached',timeout:120000});
+   // Failed reads open their review automatically; do not collapse it.
+   assert.equal(await page.locator('#queue > article > details').evaluate(el=>el.open),true);
+   assert.deepEqual(await page.locator('[data-stat-field]').evaluateAll(a=>a.map(i=>i.value)),Array(8).fill(''));
+   assert.equal(await page.locator('[data-save]').isDisabled(),true);
+   const feedback=await page.locator('#queue').innerText();
+   assert.match(feedback,/Statistics extraction incomplete/);
+   assert.equal(/all four values|private OCR failure/.test(feedback),false);
+   assert.deepEqual(await page.locator('.statistics-sides fieldset > p').allTextContents(),['TC Volume: —','TC Volume: —']);
+   for(const side of ['buy','sell'])for(const field of ['transactions','highestPrice','averagePrice','lowestPrice'])
+     await page.locator(`[data-stat-side="${side}"][data-stat-field="${field}"]`).fill(String(capture.statistics30d[side][field]));
+   assert.equal(await page.locator('[data-save]').isEnabled(),true);
+   await page.locator('[data-save]').click();
+   await page.waitForFunction(()=>document.getElementById('queue').children.length===0);
+   console.log('PASS failed OCR keeps empty fields/volumes, extraction-specific review, disabled save and manual correction recovery');
+ }
  // Keep the two controlled Statistics fixtures independent of canonical raw
  // records, including the real sample hash now present after the rebuild.
  const baseline=JSON.parse(await readFile(new URL('../reports/tc-cycle/market-update.json',import.meta.url),'utf8'))

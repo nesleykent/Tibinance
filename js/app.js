@@ -64,7 +64,7 @@ function statisticsHtml(state) {
   const labels = {transactions:'Number of Transactions', highestPrice:'Highest Price', averagePrice:'Average Price', lowestPrice:'Lowest Price'};
   return `<section class="statistics-review"><h4>30-day Statistics</h4>
     <div class="statistics-sides">${STATISTICS_SIDES.map(side => `<fieldset><legend>${side === 'buy' ? 'Buy' : 'Sell'} Offers</legend>
-      <p class="fine">TC Volume: ${Number.isSafeInteger(state.statistics30d?.[side]?.transactions) ? fmt(state.statistics30d[side].transactions * 25) : '—'}</p>${STATISTICS_FIELDS.map(key => `<label>${labels[key]}<input data-stat-side="${side}" data-stat-field="${key}" inputmode="numeric"
+      <p class="fine">TC Volume: ${Number.isSafeInteger(state.statistics30d?.[side]?.transactions) && state.statistics30d[side].transactions >= 0 && Number.isSafeInteger(state.statistics30d[side].transactions * 25) ? fmt(state.statistics30d[side].transactions * 25) : '—'}</p>${STATISTICS_FIELDS.map(key => `<label>${labels[key]}<input data-stat-side="${side}" data-stat-field="${key}" inputmode="numeric"
         aria-label="${side === 'buy' ? 'Buy' : 'Sell'} Statistics, ${labels[key]}" value="${esc(state.statisticsInputs?.[side]?.[key] ?? state.statistics30d?.[side]?.[key] ?? '')}"></label>`).join('')}</fieldset>`).join('')}</div>
   </section>`;
 }

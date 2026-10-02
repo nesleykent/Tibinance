@@ -1,10 +1,22 @@
 // One Statistics contract for ingestion, persistence, exports and report consumers.
 export const STATISTICS_FIELDS = ['transactions', 'highestPrice', 'averagePrice', 'lowestPrice'];
 export const STATISTICS_SIDES = ['buy', 'sell'];
+const FIELD_LABELS = {transactions:'Number of Transactions', highestPrice:'Highest Price', averagePrice:'Average Price', lowestPrice:'Lowest Price'};
+
+// Missing OCR evidence is an extraction failure, not an invalid integer. Keep
+// readable fields available for correction without pretending the read passed.
+export function statisticsExtractionIssues(value) {
+  return STATISTICS_SIDES.flatMap(side => {
+    const missing = STATISTICS_FIELDS.filter(k => value?.[side]?.[k] == null || value[side][k] === '');
+    return missing.length ? [{field:`statistics30d.${side}`,
+      reason:`${side === 'buy' ? 'Buy' : 'Sell'} Statistics extraction incomplete: could not read ${missing.map(k => FIELD_LABELS[k]).join(', ')}. Check the screenshot and complete these fields.`}] : [];
+  });
+}
 
 export function statisticsIssues(value) {
-  const issues = [];
+  const issues = statisticsExtractionIssues(value);
   for (const side of STATISTICS_SIDES) {
+    if (issues.some(i => i.field === `statistics30d.${side}`)) continue;
     const row = value?.[side];
     const name = side === 'buy' ? 'Buy' : 'Sell';
     if (!row || STATISTICS_FIELDS.some(k => !Number.isSafeInteger(row[k]) || row[k] < 0)) {
@@ -41,9 +53,11 @@ export function validatedStatistics(value) {
 
 // Labelled rows only. No digit repair or unlabelled-number inference. Duplicate
 // fields invalidate that field even if the two OCR readings happen to agree.
-export function parseStatisticsText(text) {
+export function parseStatisticsText(text, {verifiedBlock = false} = {}) {
   const result = { buy: {}, sell: {} }, seen = new Set();
-  let side = null, inBlock = false;
+  // Only the image extractor may supply verifiedBlock after locating the
+  // Statistics title in the Market pane. Standalone text still needs its title.
+  let side = null, inBlock = verifiedBlock;
   for (const raw of String(text).split(/\r?\n/)) {
     const line = raw.trim();
     if (/^Statistics\s*:?$/i.test(line)) { inBlock = true; side = null; continue; }

@@ -32,6 +32,17 @@ test('eight labelled fields retain Buy/Sell values and derive distinct 25-TC lot
   const low=structuredClone(s); low.buy.averagePrice=low.sell.averagePrice+100;
   assert.deepEqual(statisticsIssues(low),[],'Historical side averages can cross');
 });
+test('verified Statistics panes retain labelled values when the cropped title is misread',()=>{
+  const damaged = text.replace('Statistics:', 'SLatIstICcS:');
+  assert.ok(statisticsIssues(parseStatisticsText(damaged)).length, 'Unverified text still requires its title');
+  assert.deepEqual(validatedStatistics(parseStatisticsText(damaged,{verifiedBlock:true})),stats());
+  assert.deepEqual(validatedStatistics(parseStatisticsText(text.split('\n').slice(1).join('\n'),{verifiedBlock:true})),stats());
+  const unread=damaged.replace('3396','3O96');
+  const partial=parseStatisticsText(unread,{verifiedBlock:true});
+  assert.equal(partial.buy.transactions,null);
+  assert.equal(partial.sell.transactions,6082);
+  assert.match(statisticsIssues(partial)[0].reason,/extraction incomplete.*Number of Transactions/);
+});
 test('missing, partial, malformed, duplicate, inconsistent and unsafe readings require review',()=>{
   for(const t of ['',text.replace('Statistics:','Details:'),text.replace('Lowest Price: 1 gold',''),
     text.replace('49,985','49,98'),text.replace('3396','3O96'),text.replace('44,155','50,000'),
@@ -117,10 +128,21 @@ test('Details ingestion skips offer gates and persists a private-data-free Stati
   assert.equal(JSON.stringify(saved).includes('private'),false);
 });
 test('missing and unreadable Details data stays editable review evidence, without fabricated statistics',async()=>{
-  for(const value of [null,{buy:stats().buy}]){
-    const r=await ingestScreenshot(source,{},services({extractMarketStatistics:async()=>value}));
+  for(const value of [null,{buy:stats().buy},'throw']){
+    const r=await ingestScreenshot(source,{},services({extractMarketStatistics:async()=>{if(value==='throw')throw Error('private OCR error');return value;}}));
     assert.equal(r.status,'needs_review'); assert.equal(r.capture,undefined);assert.equal(r.stages.statistics,false);
+    assert.equal(r.attemptedStages.includes('validation'),false);
+    assert.ok(r.issues.every(i=>/Statistics extraction incomplete/.test(i.reason)));
+    assert.equal(r.analysis.warn.some(w=>/all four values|private OCR error/.test(w)),false);
+    if(value?.buy)assert.equal(r.statistics30d.buy.transactions,3396);
   }
+});
+test('fully extracted but inconsistent Statistics reach value validation',async()=>{
+  const value=stats();value.buy.averagePrice=value.buy.highestPrice+1;
+  const r=await ingestScreenshot(source,{},services({extractMarketStatistics:async()=>value}));
+  assert.equal(r.status,'needs_review');assert.equal(r.stages.statistics,true);
+  assert.equal(r.stages.validation,false);
+  assert.equal(r.issues.length,1);assert.match(r.issues[0].reason,/inconsistent/);
 });
 test('browser environment timezone is the default and existing context survives reprocessing',async()=>{
   const r=await ingestScreenshot(source,{},services());

@@ -15,3 +15,13 @@ VERIFICATION COMPLETE: 47 JS tests, all58 tools tests including real Details web
 REGENERATED: results, complement, inflation JSON/monthly/annualCSV, lifecycle, robustness and dist site package. Forecast ledger remains unchanged (2 frozen forecasts,0 scored weeks). Canonical processing-order unchanged. Anonymous107-case recovery audit contains final world coverage and every rejection reason; no names/images/raw OCR published.
 
 DELIVERY: intended code/data/docs only; tools/validate_archive.py remains unrelated and untracked. Publish this final verified revision directly to main and verify the remote hash. The final task response records that commit. No extraction, review, report calculations or validation need to be repeated; all work is complete.
+
+## Details review follow-up
+
+Root cause reproduced on real capture in WebKit: all eight numbers were correctly read, but crop resampling read the title as SLatIstICcS; requiring that title a second time discarded all fields. Chrome previously passed. Fixed shared reader to trust its verified Statistics pane while requiring exact side/field labels, numeric confidence and agreeing OCR values.
+
+Missing fields now carry extraction-specific review reasons; incomplete reads do not enter the value-validation stage. Readable partial fields remain editable. TC Volume stays unavailable until transactions and their25-TC product are safe nonnegative integers. Schema, layout, clocks, confidence rules and canonical data unchanged; no historical processing repeated. Python sanitized review feedback preserves extraction-specific failure categories without raw OCR/private errors.
+
+Verified49JS tests,59Python tools tests including real Details parity,5 downstream schema tests and market-update390/40 compatibility. Real WebKit/Chrome Details populate all8 values; real20-row Offers regression, forced OCR failure, manual recovery, JSON/CSV persistence and responsive EN/PT report fixtures passed. Site package refreshed with shared runtime. Final WebKit reprocess with existing Gentebra context passed: all8 fields,84900/152050TC,enabled save; screenshot inspected and original layout retained.
+
+Complete: final diff/syntax checks passed. Publish this verified follow-up directly to main; final task response records the commit. Canonical data and generated numerical reports remain unchanged. Preserve unrelated tools/validate_archive.py.

@@ -20,6 +20,15 @@ Lowest Price: 44,000 gold'''
 
 
 class StatisticsParityTests(unittest.TestCase):
+    def test_batch_preserves_extraction_specific_reason_without_private_ocr_errors(self):
+        entry = {'status':'needs_review', 'viewType':'statistics', 'stages':{'statistics':False},
+                 'issues':[{'field':'statistics30d.buy','reason':'private OCR exception'}]}
+        safe = safe_result(entry)
+        self.assertIn('Statistics extraction incomplete', safe['issues'][0]['reason'])
+        self.assertNotIn('private OCR exception', json.dumps(safe))
+        entry['stages']['statistics'] = True
+        self.assertEqual(safe_result(entry)['issues'][0]['reason'], 'Validation requires review')
+
     def test_python_transport_executes_shared_statistics_and_dst_rules(self):
         with WebsitePipeline() as pipeline:
             self.assertIn('view', pipeline.stages)

@@ -1,4 +1,4 @@
-import { cleanStatistics, validatedStatistics, statisticsIssues, statisticsReferenceDate, validTimeZone, captureInstant } from './statistics.js';
+import { cleanStatistics, validatedStatistics, statisticsIssues, statisticsExtractionIssues, statisticsReferenceDate, validTimeZone, captureInstant } from './statistics.js';
 import { acceptsScreenshotName, parseFilename } from './filename.js';
 import { verifyMarket, verifyTibiaCoins, extractMarketOffers, extractMarketStatistics } from './ocr.js';
 import { lookupWorld, worldInfo } from './tibiadata.js';
@@ -149,7 +149,14 @@ export async function ingestScreenshot(file, options = {}, services = {}) {
       if (options.correction?.statistics30d !== undefined) {
         result.statistics30d = cleanStatistics(options.correction.statistics30d);
       }
-      result.stages.statistics = statisticsIssues(result.statistics30d).length === 0;
+      const extractionIssues = statisticsExtractionIssues(result.statistics30d);
+      result.stages.statistics = extractionIssues.length === 0;
+      if (extractionIssues.length) {
+        result.status = 'needs_review';
+        result.issues = extractionIssues;
+        result.analysis = analyse(result);
+        return result;
+      }
     }
     enter('validation');
     result.analysis = analyse(result);
