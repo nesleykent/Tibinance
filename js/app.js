@@ -61,29 +61,27 @@ function rowsHtml(state, side) {
 
 function render(state) {
   const el = cardEl(state.id);
-  const label = `Capture ${state.id.slice(1)}`;
+  const label = state.uiFilename ?? 'Filename unavailable';
   el.title = label;
-
-  // Anonymous queue labels keep the cards scannable without exposing metadata.
-  const line = (cls, flag, mid, right) => {
+  const identity = `<span class="cfile">${esc(label)}</span>
+    <span class="ccharacter">Character: ${esc(state.uiCharacter || 'unavailable')}</span>`;
+  // Review identifiers live only in this local queue, never in a capture record.
+  const line = (cls, flag, message, tone = '') => {
     el.className = `card ${cls}`;
-    el.innerHTML = `<div class="cline"><span class="cflag" aria-hidden="true">${flag}</span>${mid}
-      <span class="cnums">${right ?? ''}</span></div>`;
+    el.innerHTML = `<div class="cline"><span class="cflag" aria-hidden="true">${flag}</span>
+      <span class="cfeedback"><span class="cmsg ${tone}">${esc(message)}</span>${identity}</span></div>`;
   };
 
   if (state.status === 'error') {
-    line('bad', '✕', `<span class="cmsg msg-bad">${esc(state.error)}</span>`,
-         `<span class="cfile">${esc(label)}</span>`);
+    line('bad', '✕', state.error, 'msg-bad');
     updateQueueBar(); return;
   }
   if (state.status === 'dup') {
-    line('warn', '⇄', `<span class="cmsg msg-warn">${esc(state.dupNote ?? 'Already in the database')}</span>`,
-         `<span class="cfile">${esc(label)}</span>`);
+    line('warn', '⇄', state.dupNote ?? 'Already in the database', 'msg-warn');
     updateQueueBar(); return;
   }
   if (state.status !== 'review') {
-    line('', '…', `<span class="cmsg">${esc(state.stage ?? 'working…')}</span>`,
-         `<span class="cfile">${esc(label)}</span>`);
+    line('', '…', state.stage ?? 'working…');
     updateQueueBar(); return;
   }
 
@@ -99,8 +97,7 @@ function render(state) {
        <span class="cbe be-${esc(w.battleye)}" aria-hidden="true" title="${esc(w.type)}, BattlEye ${esc(w.battleye)}">●</span>
        <span class="sr-only">${esc(w.type)}, BattlEye ${esc(w.battleye)}</span>
        <span class="ctime">${esc(time)}</span>`
-    : `<b class="cworld">N/A</b><span class="cbe" aria-hidden="true">○</span><span class="ctime"></span>
-       <span class="cmsg msg-warn">${esc(state.worldNote ?? 'world unresolved')}</span>`;
+    : `<b class="cworld">N/A</b><span class="cbe" aria-hidden="true">○</span><span class="ctime"></span>`;
   // Each figure sits in its own fixed-width cell so the columns line up down
   // the whole list; ragged numbers are unreadable when scanning a batch.
   const nums = a.sell
@@ -113,11 +110,14 @@ function render(state) {
   el.innerHTML = `<details ${state.open ? 'open' : ''}>
     <summary><span class="cline">
       <span class="cflag" aria-hidden="true">${a.ok ? '✓' : '⚠'}</span>
-      <span class="sr-only">${a.ok ? 'Ready to save' : 'Needs attention'}</span>${head}
+      ${head}
       <span class="cnums">${nums}</span>
+      <span class="cfeedback">
+        <span class="cmsg ${a.ok ? '' : 'msg-warn'}">${state.reprocess ? 'Reprocessing: ' : ''}${esc(state.saveError ?? (a.ok ? 'Ready to save' : a.warn[0] ?? 'Needs attention'))}</span>
+        ${identity}
+      </span>
     </span></summary>
     <div class="cbody">
-      <div class="cfile" title="${state.reprocess ? 'Updates validated offers and totals while preserving the original world and capture date' : ''}">${state.reprocess ? 'Reprocessing: ' : ''}${esc(label)}</div>
       <div class="rows">${rowsHtml(state, 'sell')}${rowsHtml(state, 'buy')}</div>
       ${a.warn.length ? `<div class="steps msg-warn">${a.warn.map(x => `<div>⚠ ${esc(x)}</div>`).join('')}</div>` : ''}
       ${state.saveError ? `<div class="steps msg-warn" role="alert">${esc(state.saveError)}</div>` : ''}
@@ -161,7 +161,11 @@ let seq = 0;
 
 async function handleFile(file) {
   const id = `f${++seq}`;
-  const state = { id, status: 'work', stage: 'checking eligibility…', rows: { sell: [], buy: [] } };
+  // Presentation only: basename and character stay in queue memory. Eligibility
+  // and world resolution still belong exclusively to canonical ingestion.
+  const uiFilename = file.name.split(/[\\/]/).pop();
+  const uiCharacter = /^\d{4}-\d{2}-\d{2}_\d{6}\d*_([^_]+)_[^_]+(?:\.[^.]+)$/.exec(uiFilename)?.[1].trim();
+  const state = { id, uiFilename, uiCharacter, status: 'work', stage: 'checking eligibility…', rows: { sell: [], buy: [] } };
   cards.set(id, state);
   render(state);
   const result = await ingestScreenshot(file, {
@@ -171,7 +175,7 @@ async function handleFile(file) {
     isQueued: hash => [...cards.values()].some(c => c !== state && c.hash === hash),
     onStep: stage => { state.stage = stage; render(state); }
   });
-  // Only anonymous capture data enters UI state; private metadata stays in ingestion.
+  // Copy only anonymous ingestion results; the display label is queue-local.
   for (const key of ['hash', 'capturedAt', 'world', 'rows', 'ocrWarnings', 'ocrNotices', 'reprocess']) {
     if (result[key] !== undefined) state[key] = result[key];
   }

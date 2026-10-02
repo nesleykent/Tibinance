@@ -187,22 +187,24 @@ h2 { margin:0; }
 .card summary:hover { background:var(--surface-hover); }
 
 .cline { display:grid; grid-template-columns:1.2em 8.5em 1em 6.2em 1fr; align-items:center; gap:0 var(--space-3); min-height:var(--control-height); padding:var(--space-2) var(--space-3); white-space:nowrap; overflow:hidden; }
-.cflag { text-align:center; color:var(--muted); }
+.cflag { text-align:center; color:var(--muted); align-self:start; }
 .card.ok .cflag { color:var(--positive); }
 .card.warn .cflag { color:var(--caution); }
 .card.bad .cflag { color:var(--negative); }
 .cworld { overflow:hidden; text-overflow:ellipsis; font-weight:var(--weight-strong); }
 .cbe { text-align:center; cursor:help; }
 .ctime { color:var(--muted); }
-.cmsg { grid-column:5; overflow:hidden; text-overflow:ellipsis; }
+.cfeedback { grid-column:2 / -1; min-width:0; white-space:normal; }
+.cfeedback .cmsg,.cfeedback .cfile,.cfeedback .ccharacter { display:block; overflow-wrap:anywhere; }
+.cfeedback .cfile,.cfeedback .ccharacter { color:var(--muted); font-family:var(--font-code); }
+.cfeedback .ccharacter { font-size:var(--step-n1); }
 /* one fixed-width cell per figure, sized to that unit's widest value, so every card lines up */
 .cnums { grid-column:5; justify-self:end; display:grid; grid-auto-flow:column; grid-template-columns:16ch 10ch 15ch 15ch; align-items:center; gap:0 var(--space-5); color:var(--muted); }
 .cnums .cn { text-align:right; overflow:hidden; text-overflow:ellipsis; }
 .cnums b { color:var(--ink); font-weight:var(--weight-strong); }
 .cbody { margin-top:var(--space-1); padding:0 var(--space-3) var(--space-4); border-top:var(--rule) solid var(--line-faint); }
-.cbody .cfile { padding:var(--space-2) 0; color:var(--muted); font-family:var(--font-code); word-break:break-all; }
 
-.card .steps { display:grid; gap:var(--space-1); margin:var(--space-3) 0 0; }
+.card .steps { display:grid; gap:var(--space-1); margin:var(--space-3) 0 0 calc(1.2em + var(--space-3)); }
 .msg-bad { color:var(--negative); }
 .msg-warn { color:var(--caution); }
 .msg-note { color:var(--muted); }
@@ -299,6 +301,6 @@ footer p { margin:0; }
 }
 @media (max-width:620px) {
   .cline { grid-template-columns:1.2em 1fr 1em 6.2em; }
-  .cnums { grid-column:1 / -1; justify-self:start; padding-left:2.2em; }
+  .cnums { grid-column:2 / -1; justify-self:start; }
 }
 @media (max-width:360px) { :root { --page-gutter:var(--space-4); } }

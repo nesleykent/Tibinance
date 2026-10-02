@@ -97,8 +97,16 @@ try {
   await page.waitForFunction(() => document.querySelector('#queue .msg-warn'));
   assert.equal(await page.evaluate(() => window.__ocrCalls), ocrCalls, 'SHA duplicate stops before OCR');
   assert.equal(apiCalls, 0, 'Rejected images never reach character API');
-  assert.ok(!await page.locator('#queue').innerHTML().then(s => s.includes('Synthetic Private')),
-    'Private filenames absent from visible text, tooltips and attributes');
+  assert.equal(await page.locator('#queue .cfile').nth(1).textContent(), testFile('Hotkey').name,
+    'Full filename remains local feedback after rejection');
+  assert.ok(await page.locator('#queue .ccharacter').evaluateAll(labels =>
+    labels.every(label => label.textContent === 'Character: Synthetic Private')),
+    'Character feedback remains available in skipped and error states');
+  assert.ok(await page.locator('#queue .cfeedback').evaluateAll(blocks => blocks.every(block => {
+    const labels = [...block.querySelectorAll('.cmsg,.cfile,.ccharacter')];
+    const left = labels[0].getBoundingClientRect().left;
+    return labels.every(label => Math.abs(label.getBoundingClientRect().left - left) < 1);
+  })), 'Status, filename and character share the same left alignment');
   assert.equal(await page.locator('[data-force]').count(), 0, 'Validation override removed');
   console.log('Filename, duplicate, Market rejection and UI privacy integration passed');
   for (const width of [320, 768, 1024, 1440]) {

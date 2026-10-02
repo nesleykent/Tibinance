@@ -81,7 +81,7 @@ file ──► original Hotkey filename filter ──► SHA-256 duplicate check
      ──► individual offers ──► shared validation ──► persistence
 ```
 
-Screenshot ingestion is shared with the Python batch. The original filename filter runs first, followed by hash deduplication, Market verification, Tibia Coins verification, metadata parsing, world resolution, offer extraction and validation. World resolution completes before individual offers are extracted. Filenames are never displayed in the queue.
+Screenshot ingestion is shared with the Python batch. The original filename filter runs first, followed by hash deduplication, Market verification, Tibia Coins verification, metadata parsing, world resolution, offer extraction and validation. World resolution completes before individual offers are extracted. Full filenames and character names are transient feedback local to the processing/review queue, including skipped and error states; they never enter storage or exports.
 
 ### Reading the market table
 
