@@ -182,10 +182,10 @@ The shared order is:
 2. SHA-256 duplicate check (explicit reprocessing permits saved captures).
 3. Original website Market-label and column-heading verification.
 4. New highlighted-item verification requiring Tibia Coins.
-5. Filename metadata parsing.
+5. Identify Offers or Details / Statistics, then parse filename local datetime (fractional seconds preserved).
 6. Existing website character/world API workflow, awaited before extraction.
-7. Individual-offer extraction.
-8. Shared validation and anonymous persistence/offer matching.
+7. View-specific extraction: individual offers for Offers; all eight historical Statistics fields for Details.
+8. Independent Statistics-side or existing offer validation and anonymous persistence/offer matching.
 
 The source filename and image bytes travel only through local memory/IPC. The
 character name is transient input to the existing TibiaData lookup. No source
@@ -223,3 +223,34 @@ public world/time context, numeric rows and fixed diagnostics.
 The old `legacy_archive.mjs` command delegates to this runner. Git-ref readers and
 native fallback are retired. Native OCR utilities remain diagnostic tools and do
 not determine canonical screenshot eligibility or extraction.
+
+### Details / Statistics in the canonical Python batch
+
+The website bridge accepts Details captures independently of Offers tables. It
+uses the same view detection, OCR, side validation, 25-TC lot conversion and
+privacy-whitelisted schema as the website. `transactions` counts 25-TC lots;
+`tcVolume` is persisted separately for Buy and Sell as `transactions * 25`.
+Prices are gold per TC. Invalid or missing fields stay in `needs_review`, with
+anonymous `statistics30d` values in the correction template. Correct both sides
+completely; corrections cannot bypass filename, Market, selected-item or world
+verification. Offers continue through their existing offer validation.
+
+Capture context stores the filename local `capturedAt`, `captureDate`, automatically
+detected system IANA `captureTimeZone`, and resolved `capturedAtUtc`. The bridge
+obtains the system timezone from Node's local environment; no manual timezone
+input is needed. Individual offers preserve local `endsAt` and resolve `endsAtUtc`
+in this same timezone using the expiry date's DST rules.
+
+Only Statistics captures add `statisticsReferenceDate`: the previous local calendar
+date before that date's locally converted 10:00 Europe/Berlin server save, or the
+current local date at/after it. It anchors Statistics history, not ordinary Offers.
+The old `--utc-offset` flag remains metadata compatibility only; a fixed offset
+does not replace IANA rules. Reprocessing retains saved world/clock/timezone context.
+
+Generated JSON and `observations.csv` contain the mixed capture schema and
+Statistics values, while `offer-observations.csv` retains only real offers.
+Version 6 invalidates earlier extraction checkpoints. Browser testing state is
+isolated from batch output. Do not run the full archive yet: first confirm this
+implementation and validation, then rebuild separately into a fresh directory.
+The standalone manual-row `tcmarket.py` CLI is separate from this screenshot
+pipeline and retains its existing behavior.

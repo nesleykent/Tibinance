@@ -12,11 +12,11 @@ import sys
 from website_pipeline import WebsitePipeline
 
 IMAGE_TYPES = {'.png', '.jpg', '.jpeg', '.webp', '.heic', '.tif', '.tiff'}
-FIELDS = ('amount', 'price', 'total', 'endsAt')
+FIELDS = ('amount', 'price', 'total', 'endsAt', 'endsAtUtc')
 CAPTURE_FIELDS = ('hash', 'world', 'capturedAt', 'type', 'battleye', 'sell', 'sellVolume',
                   'buy', 'buyVolume', 'goldDemand', 'goldSupply', 'sellTopAmount', 'buyTopAmount',
-                  'processingVersion')
-STAGE_FIELDS = ('filename', 'deduplication', 'market', 'item', 'metadata', 'world', 'extraction', 'validation')
+                  'processingVersion', 'statistics30d', 'captureDate', 'captureTimeZone', 'statisticsReferenceDate', 'capturedAtUtc', 'viewType')
+STAGE_FIELDS = ('filename', 'deduplication', 'market', 'item', 'view', 'metadata', 'world', 'extraction', 'statistics', 'validation')
 STATUSES = ('ready', 'needs_review', 'excluded_automatic', 'excluded_manual', 'excluded_market',
             'excluded_other_item', 'unclassifiable', 'duplicate')
 
@@ -29,8 +29,19 @@ class PrivateArgumentParser(argparse.ArgumentParser):
         self.exit(2, 'Invalid arguments or configuration; use --help. Private diagnostics suppressed.\n')
 
 
+def safe_statistics(value):
+    if not isinstance(value, dict):
+        return None
+    return {side: {key: v if type(v := (value.get(side) or {}).get(key)) is int else None
+                   for key in ('transactions', 'highestPrice', 'averagePrice', 'lowestPrice', 'tcVolume')}
+            for side in ('buy', 'sell') if isinstance(value.get(side), dict)}
+
+
 def safe_capture(capture):
-    return {k: capture[k] for k in CAPTURE_FIELDS if k in capture}
+    result = {k: capture[k] for k in CAPTURE_FIELDS if k in capture}
+    if 'statistics30d' in result:
+        result['statistics30d'] = safe_statistics(result['statistics30d'])
+    return result
 
 
 def safe_result(entry):
@@ -41,18 +52,21 @@ def safe_result(entry):
     result['stages'] = {k: v for k, v in entry.get('stages', {}).items()
                         if k in STAGE_FIELDS and isinstance(v, bool)}
     result['attemptedStages'] = [s for s in entry.get('attemptedStages', []) if s in STAGE_FIELDS]
+    result['statistics30d'] = safe_statistics(entry.get('statistics30d'))
     result['offers'] = [{k: row.get(k) for k in (*FIELDS, 'side', 'rowIndex')}
                         for row in entry.get('offers', [])]
     item = entry.get('itemVerification', {}).get('status')
     result['itemVerification'] = {'status': item if item in ('tibia_coins', 'other_item') else 'unconfirmed'}
-    allowed_fields = {*FIELDS, *STAGE_FIELDS, 'row', 'selectedItem', 'capturedAt'}
+    allowed_fields = {*FIELDS, *STAGE_FIELDS, 'row', 'selectedItem', 'capturedAt', 'statistics30d.buy', 'statistics30d.sell'}
     result['issues'] = [{'field': i.get('field') if i.get('field') in allowed_fields else 'row',
                          'reason': 'World resolution failed' if i.get('field') == 'world' else 'Validation requires review'}
                         for i in entry.get('issues', [])]
     if entry.get('runtimeFault') in ('browser_closed', 'browser_crash'):
         result['runtimeFault'] = entry['runtimeFault']
     if entry.get('capture') and result['status'] == 'ready' and result['stages'].get('validation'):
-        result['capture'] = safe_capture(entry['capture']) | {'offers': result['offers']}
+        result['capture'] = safe_capture(entry['capture'])
+        if entry['capture'].get('viewType') != 'statistics':
+            result['capture']['offers'] = result['offers']
     if entry.get('context') and result['stages'].get('world'):
         result['context'] = safe_capture(entry['context'])
     return result
@@ -70,6 +84,7 @@ def scan_file(file, contexts, pipeline, corrections):
     if (reading.get('stages', {}).get('world') and reading.get('capturedAt')
             and all(world.get(k) for k in ('world', 'type', 'battleye'))):
         entry['context'] = {'hash': hash_value, 'capturedAt': reading['capturedAt'],
+                            'captureTimeZone': reading.get('captureTimeZone'),
                             'world': world['world'], 'type': world['type'], 'battleye': world['battleye']}
     return safe_result(entry)
 
@@ -92,7 +107,7 @@ def write_outputs(output, baseline, results, rebuild=False, inventory=None):
         if any(r['hash'] == c['hash'] and r['status'].startswith('excluded_') for r in results)])
     review = [r for r in results if r['status'] == 'needs_review']
     atomic_json(output / 'review-corrections.json', [
-        {'hash': r['hash'], 'world': r['world'], 'capturedAt': r['capturedAt'], 'offers': r['offers']} for r in review])
+        {'hash': r['hash'], 'world': r['world'], 'capturedAt': r['capturedAt'], 'offers': r['offers'], 'statistics30d': r['statistics30d']} for r in review])
     with (output / 'review-report.csv').open('w', newline='') as stream:
         writer = csv.DictWriter(stream, fieldnames=['hash', 'world', 'capturedAt', 'status', 'field', 'reason'])
         writer.writeheader()
@@ -102,7 +117,7 @@ def write_outputs(output, baseline, results, rebuild=False, inventory=None):
     summary = {status: sum(r['status'] == status for r in results) for status in STATUSES}
     summary.update(processed=len(results), baselineCaptures=len(baseline),
                    exportedCaptures=len(captures), worlds=len({c['world'] for c in captures}),
-                   offerObservations=sum(len(c['offers']) for c in captures),
+                   offerObservations=sum(len(c.get('offers', [])) for c in captures),
                    validTibiaCoinsCaptures=sum(r['itemVerification']['status'] == 'tibia_coins' for r in results),
                    runtimeFailures=sum(bool(r.get('runtimeFault')) for r in results),
                    pipeline='website JavaScript implementation')

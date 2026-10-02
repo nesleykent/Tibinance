@@ -1,3 +1,4 @@
+import { validatedStatistics, statisticsReferenceDate, validTimeZone, captureInstant, normalizeCapturedAt } from './statistics.js';
 import { matchOffers, normalizeEndsAt, PROCESSING_VERSION } from './offers.js';
 import { analyse } from './validation.js';
 import { INGESTION_VERSION } from './ingestion.js';
@@ -19,26 +20,50 @@ export const REQUIRED = ['world', 'type', 'battleye', 'sell', 'sellVolume',
  * before they existed still import cleanly.
  */
 export const OPTIONAL = ['goldSupply', 'goldDemand', 'sellTopAmount', 'buyTopAmount'];
-export const ALLOWED = [...REQUIRED, ...OPTIONAL, 'offers', 'processingVersion'];
+export const ALLOWED = [...REQUIRED, ...OPTIONAL, 'offers', 'processingVersion', 'statistics30d', 'captureDate', 'captureTimeZone', 'statisticsReferenceDate', 'capturedAtUtc', 'viewType'];
 
 export function toRecord(input) {
   const rec = {};
-  for (const k of REQUIRED) {
+  const statsOnly = input.viewType === 'statistics';
+  if (input.viewType != null && !['offers','statistics'].includes(input.viewType)) throw new Error('Invalid Market view type');
+  const required = statsOnly ? ['world','type','battleye','capturedAt','hash'] : REQUIRED;
+  for (const k of required) {
     if (input[k] === undefined || input[k] === null || input[k] === '') {
       throw new Error(`Refusing to store an incomplete record: "${k}" is missing`);
     }
     rec[k] = input[k];
   }
-  for (const k of OPTIONAL) {
+  if (input.viewType != null) rec.viewType = input.viewType;
+  if (Number.isSafeInteger(input.processingVersion) && input.processingVersion > 0) rec.processingVersion = input.processingVersion;
+  for (const k of statsOnly ? [] : OPTIONAL) {
     rec[k] = Number.isFinite(input[k]) ? input[k] : null;
   }
-  if (input.offers !== undefined) {
+  if (input.statistics30d != null) rec.statistics30d = validatedStatistics(input.statistics30d);
+  const canonical = input.processingVersion >= INGESTION_VERSION;
+  if (statsOnly && !rec.statistics30d) throw new Error('Canonical capture requires 30-day Statistics');
+  if (!normalizeCapturedAt(rec.capturedAt)) throw new Error('Canonical capture timestamp is invalid');
+  if (statsOnly || canonical || input.captureDate !== undefined || input.captureTimeZone != null) {
+    rec.captureDate = rec.capturedAt.slice(0,10);
+    if (input.captureTimeZone != null && !validTimeZone(input.captureTimeZone)) throw new Error('Invalid capture timezone');
+    rec.captureTimeZone = input.captureTimeZone ?? null;
+    const instant = captureInstant(rec.capturedAt,rec.captureTimeZone);
+    rec.capturedAtUtc = instant === null ? null : new Date(instant).toISOString();
+    if (statsOnly) rec.statisticsReferenceDate = statisticsReferenceDate(rec.capturedAt, rec.captureTimeZone);
+  }
+  if (canonical && !statsOnly && !Array.isArray(input.offers)) throw new Error('Canonical Offers capture requires offers');
+  if (input.offers !== undefined && !statsOnly) {
     if (!Array.isArray(input.offers)) throw new Error('Invalid offer observations');
-    rec.offers = matchOffers(rec.world, input.offers);
+    const offers = input.offers.map(r => {
+      if (rec.captureTimeZone === undefined) return r; // Preserve legacy clock-only observations.
+      const instant = captureInstant(normalizeEndsAt(r.endsAt),rec.captureTimeZone);
+      return {...r, endsAtUtc:instant === null ? null : new Date(instant).toISOString()};
+    });
+    rec.offers = matchOffers(rec.world, offers);
     rec.processingVersion = Number.isSafeInteger(input.processingVersion) && input.processingVersion > 0
       ? input.processingVersion : PROCESSING_VERSION;
-    if (rec.processingVersion >= INGESTION_VERSION) {
-      const checked = analyse({ capturedAt: rec.capturedAt,
+    if (rec.processingVersion >= 5) {
+      const checked = analyse({ capturedAt: rec.capturedAt, statistics30d: rec.statistics30d,
+        viewType:rec.viewType, captureTimeZone:rec.captureTimeZone,
         world: { world: rec.world }, rows: Object.fromEntries(['sell', 'buy'].map(side =>
           [side, rec.offers.filter(row => row.side === side)])) });
       if (!checked.ok) throw new Error('Canonical capture validation failed');
@@ -127,13 +152,14 @@ export async function put(input, { reprocess = false, enrich = false } = {}) {
         if (existing && enrich && !canEnrich(existing, input)) { rec = existing; return; }
         // Preserve historical world/time. Canonical reprocessing recomputes
         // validated totals; older enrichment retains its original snapshots.
-        const canonical = input.processingVersion >= INGESTION_VERSION;
+        const canonical = input.processingVersion >= 5;
         rec = toRecord(existing ? canonical
           ? { ...input, world: existing.world, type: existing.type, battleye: existing.battleye,
-              capturedAt: existing.capturedAt, hash: existing.hash }
-          : { ...existing, offers: input.offers, processingVersion: input.processingVersion }
+              capturedAt: existing.capturedAt, captureTimeZone: existing.captureTimeZone ?? input.captureTimeZone, hash: existing.hash }
+          : { ...existing, ...(input.statistics30d ? {statistics30d:input.statistics30d} : {}), offers: input.offers, processingVersion: input.processingVersion }
           : input);
-        if (existing && !input.offers) throw new Error('Reprocessing requires offer data');
+        if (existing && existing.viewType !== rec.viewType && (existing.viewType ?? 'offers') !== (rec.viewType ?? 'offers')) throw new Error('Reprocessing cannot change the Market view');
+        if (existing && rec.viewType !== 'statistics' && !input.offers) throw new Error('Reprocessing requires offer data');
         if (rec.offers) {
           for (const side of ['sell', 'buy']) {
             const tracked = (existing?.offers ?? []).filter(r => r.side === side && r.offerId).length;
@@ -141,7 +167,7 @@ export async function put(input, { reprocess = false, enrich = false } = {}) {
               throw new Error('Reprocessing omitted tracked offers; restore the missing rows before saving');
             }
           }
-          rec.offers = matchOffers(rec.world, input.offers, captures, existing?.offers ?? []);
+          rec.offers = matchOffers(rec.world, rec.offers, captures, existing?.offers ?? []);
           if (existing?.offers?.some(r => r.offerId) && rec.offers.some(r => !r.offerId)) {
             throw new Error('Correct all Ends At fields before replacing tracked observations');
           }
@@ -158,8 +184,9 @@ export async function put(input, { reprocess = false, enrich = false } = {}) {
 function canEnrich(existing, incoming) {
   const version = Number.isSafeInteger(incoming.processingVersion) && incoming.processingVersion > 0
     ? incoming.processingVersion : PROCESSING_VERSION;
-  return Array.isArray(incoming.offers) && (!existing.offers ||
+  return (incoming.viewType === 'statistics' && (!existing.statistics30d || version > (existing.processingVersion ?? 0))) || Array.isArray(incoming.offers) && (!existing.offers ||
     version > (existing.processingVersion ?? 0) ||
+    (incoming.statistics30d && !existing.statistics30d) ||
     (incoming.offers.every(r => normalizeEndsAt(r.endsAt)) && existing.offers.some(r => !r.offerId)));
 }
 

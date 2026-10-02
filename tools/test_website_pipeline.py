@@ -66,7 +66,7 @@ class WebsitePipelineTests(unittest.TestCase):
             p = folder / ('_'.join(['2026-10-01', '120000123', 'Synthetic Character', 'Hotkey']) + '.webp')
             p.write_bytes(b'not an image')
             h = hashlib.sha256(b'not an image').hexdigest()
-            checkpoint = {'hash': h, 'status': 'excluded_market', 'processingVersion': 5,
+            checkpoint = {'hash': h, 'status': 'excluded_market', 'processingVersion': 6,
                           'stages': {'filename': True, 'deduplication': True, 'market': False},
                           'attemptedStages': ['filename', 'deduplication', 'market'], 'offers': [], 'issues': []}
             (output / 'backfill-results.json').write_text(json.dumps([checkpoint]))
@@ -96,6 +96,7 @@ class WebsitePipelineTests(unittest.TestCase):
                 def __init__(self):
                     self.bridge = WebsitePipeline()
                     self.version, self.stages = self.bridge.version, self.bridge.stages
+                    self.capture_time_zone = self.bridge.capture_time_zone
                 def __enter__(self): return self
                 def __exit__(self, *_): self.bridge.close()
                 def eligible(self, files): return self.bridge.eligible(files)

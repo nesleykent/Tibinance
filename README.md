@@ -3,7 +3,7 @@
 **Tibia Coins market tracker.**
 A static site for GitHub Pages. Drag in your daily Tibia market screenshots; the
 browser hashes them, reads the Sell/Buy tables, resolves the world through
-TibiaData, and stores **only anonymous market data**. Existing worlds also get
+TibiaData, and stores **only anonymous market data**. It also accepts Tibia Coins Details / Statistics screenshots as a separate capture type. Existing worlds also get
 their price history backfilled from TibiaMarket, so a new screenshot continues
 a timeline instead of starting one.
 
@@ -77,11 +77,12 @@ character name or a filename into the database even by mistake.
 ```
 file ──► original Hotkey filename filter ──► SHA-256 duplicate check
      ──► original Market verification ──► Tibia Coins verification
-     ──► filename metadata ──► existing TibiaData world workflow
-     ──► individual offers ──► shared validation ──► persistence
+     ──► Market view type ──► filename metadata ──► TibiaData world workflow
+     ──► Offers: individual offers → existing validation → persistence
+     ──► Details: 30-day Statistics → independent side validation → persistence
 ```
 
-Screenshot ingestion is shared with the Python batch. The original filename filter runs first, followed by hash deduplication, Market verification, Tibia Coins verification, metadata parsing, world resolution, offer extraction and validation. World resolution completes before individual offers are extracted. Full filenames, including their embedded character names, are transient feedback local to the processing/review queue, including skipped and error states; they never enter storage or exports.
+Screenshot ingestion is shared with the Python batch. The original filename filter runs first, followed by hash deduplication, Market verification, Tibia Coins verification, view identification, metadata parsing, world resolution, view-specific extraction and validation. World resolution completes before either view is extracted. Full filenames, including their embedded character names, are transient feedback local to the processing/review queue, including skipped and error states; they never enter storage or exports.
 
 ### Reading the market table
 
@@ -318,7 +319,7 @@ expiration, ambiguity and processing version. Prices and totals are in gold;
 amounts are Tibia Coins. The export includes all captures for the matching worlds,
 independent of the table's date-range selection.
 
-Timestamps preserve the client's displayed clock without inventing a timezone.
+Offer expiration timestamps preserve the client's displayed local clock and resolve `endsAtUtc` using the same browser/system IANA timezone as the filename capture clock. Legacy records retain their existing context.
 The processing version is independent of screenshot identity. An older snapshot
 has version 0 implicitly; version 1 supports individual offer tracking. A missing
 expiration can be saved using **Save Anyway** for a new capture, but that row has
@@ -357,7 +358,7 @@ same CDN access as the application.
 ```
 2026-09-21_124317718_Character Name_Hotkey.jpeg
 └── date ──┘└─ time ┘└── character ──┘└ ignored ┘
-                 ↑ trailing digits = fractions of a second, dropped
+                 ↑ trailing digits = fractional seconds, preserved
 ```
 
 Character names may contain spaces but not underscores.
@@ -396,3 +397,120 @@ The browser and offline reader require **Tibia Coins in the highlighted Items
 row** before accepting coin offers. Other selected items are explicitly excluded;
 an unread selection requires review. Search text and unselected items do not
 qualify.
+
+## 30-day Statistics capture schema (processing version 6)
+
+The Market has two separate supported views: `viewType: "offers"` retains the
+existing live order-book fields and offer observations; `viewType: "statistics"`
+contains the eight historical Details values plus the derived TC volumes, with
+no fabricated live quotes or offer rows. Records without `viewType` are legacy
+Offers captures. Both types share the existing world/API flow, hash deduplication,
+privacy boundary and storage. Details screenshots do not need offer-table headers.
+
+A Statistics capture uses this additive schema (world/Type/BattlEye resolved through
+the existing API flow; the numbers below illustrate the reference layout):
+
+```json
+{
+  "world": "Antica",
+  "type": "Open PvP",
+  "battleye": "Yellow",
+  "hash": "<SHA-256>",
+  "viewType": "statistics",
+  "processingVersion": 6,
+  "capturedAt": "2026-10-02T00:36:37.332",
+  "captureDate": "2026-10-02",
+  "captureTimeZone": "America/Sao_Paulo",
+  "capturedAtUtc": "2026-10-02T03:36:37.332Z",
+  "statisticsReferenceDate": "2026-10-01",
+  "statistics30d": {
+    "buy": {
+      "transactions": 3396,
+      "highestPrice": 49985,
+      "averagePrice": 44155,
+      "lowestPrice": 1,
+      "tcVolume": 84900
+    },
+    "sell": {
+      "transactions": 6082,
+      "highestPrice": 49998,
+      "averagePrice": 45942,
+      "lowestPrice": 44000,
+      "tcVolume": 152050
+    }
+  }
+}
+```
+
+`capturedAt` remains the original local filename datetime, including fractional
+seconds, for compatibility. `capturedAtUtc` is the resolved instant used for
+conversion and chronological Statistics comparisons. The website automatically detects the
+browser's IANA timezone; the Python bridge detects its system IANA timezone.
+There are no manual timezone controls.
+Reprocessing preserves a saved capture's world, local clock and known timezone.
+Unavailable timezones, nonexistent DST clocks and repeated DST clocks remain
+unresolved (`capturedAtUtc` and `statisticsReferenceDate` are null), without inventing an
+instant. The original local clock and timezone are retained for review.
+
+The Statistics values describe the displayed trailing 30-day Market summary **at
+that capture instant**. No current, processing, import or rebuild date changes the
+anchor. No exact window endpoints or assumption of 30 server-save intervals are
+stored. Only Statistics snapshots have `statisticsReferenceDate`: find the
+**10:00 Europe/Berlin (CET/CEST)** server save that falls on the capture's local
+calendar date. Before that local boundary, use the previous local calendar date;
+at or after it, use the current local date. This reference anchors the 30-day
+historical/regression analysis; it never replaces the actual observation instant.
+For `2026-10-02T04:50:00 America/Sao_Paulo`, the local save is 05:00, so the
+reference is `2026-10-01`. At 05:00 it becomes `2026-10-02`. IANA rules handle
+CET/CEST and local DST, including local dates different from Berlin dates.
+
+Normal Offers snapshots have no Statistics reference date. Their `endsAt` values
+retain the client-displayed local clock and additive `endsAtUtc` resolves each
+expiry with the same IANA timezone as the capture, using the expiry's own date
+and DST rules. An ambiguous or nonexistent local expiry retains its displayed
+clock with null UTC; it is never interpreted as CET/CEST. Existing offer UUID
+matching remains compatible with legacy displayed-clock identities.
+
+`transactions` preserves the Number of Transactions exactly as displayed: for
+Tibia Coins, it counts **25-TC lots**. Each side's `tcVolume = transactions × 25`.
+The three prices remain gold per TC and are never multiplied by 25. Both sides
+validate independently: complete nonnegative safe integers, positive ordered
+prices when transactions exist (`lowest ≤ average ≤ highest`), explicit zero
+summary for zero transactions, and safe consistent lot volume. Historical side
+averages may cross; live-book spread checks do not apply to Statistics. Missing,
+unreadable, incomplete, low-confidence or conflicting OCR fields require review.
+All eight fields are editable before saving; saving cannot override validation.
+
+JSON and snapshot CSV include both capture types, all Statistics fields and both
+lot volumes. Offer-observation exports continue to contain only actual offers.
+Nested Statistics values are explicitly whitelisted; filenames, characters,
+paths, raw OCR and image data remain transient. Old exports without Statistics
+still import and retain their existing report behavior.
+
+The English and Portuguese research pages accept mixed `market-update.json`
+exports. Existing live-offer charts/models continue to use Offers captures.
+The separate Statistics exhibit provides compact world, date and metric selectors,
+historical charts and a source table. History defaults to Statistics reference dates;
+local capture dates remain an optional observation view. It shows the transaction counts,
+TC volumes, each price, high/low range, average-price changes and a best-quote
+comparison when an earlier resolved quote is available. Rolling windows overlap:
+counts/volumes are never summed across captures or differenced into daily flows.
+The latest snapshot per world/side/date bucket is selected without interpolating
+missing observations. Legacy unresolved captures remain in the local view and
+are excluded only when a Statistics reference-date view needs a resolved instant.
+
+Additional checks:
+
+```bash
+node --test tests/statistics.test.mjs
+python3 -m unittest discover -s tools -p 'test_statistics.py' -v
+python3 -m unittest discover -s reports/tc-cycle -p 'test_statistics_schema.py' -v
+# Against the local static server, with optional real screenshot paths in env:
+node tests/statistics-browser.mjs
+```
+
+`TIBINANCE_STATISTICS_SAMPLE` enables real Details OCR/interaction checks;
+`TIBINANCE_OFFERS_SAMPLE` enables the paired real Offers regression. These checks
+use isolated browser storage and API fixtures. No test state is imported into
+canonical data. **The full historical rebuild has not started.** The progress
+ledger is in `PROGRESS.md`; a rebuild must be a separate step after validation.

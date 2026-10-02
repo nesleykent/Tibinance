@@ -2,6 +2,7 @@
 import { createInterface } from 'node:readline';
 import { readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
+import { cleanStatistics, parseStatisticsText, statisticsIssues, statisticsReferenceDate, validTimeZone } from '../js/statistics.js';
 import { acceptsScreenshotName } from '../js/filename.js';
 import { INGESTION_VERSION, STAGES, preflightScreenshot } from '../js/ingestion.js';
 
@@ -33,10 +34,13 @@ async function start() {
 }
 
 async function dispatch(request) {
-  if (request.op === 'contract') return { version: INGESTION_VERSION, stages: STAGES };
+  if (request.op === 'statistics-contract') return { statistics30d: cleanStatistics(parseStatisticsText(request.text)),
+    issues: statisticsIssues(parseStatisticsText(request.text)), statisticsReferenceDate: statisticsReferenceDate(request.capturedAt, request.captureTimeZone) };
+  if (request.op === 'contract') return { version: INGESTION_VERSION, stages: STAGES, localTimeZone: Intl.DateTimeFormat().resolvedOptions().timeZone ?? null };
   if (request.op === 'eligibility') return { eligible: request.names.map(acceptsScreenshotName) };
   if (request.op === 'close') return { closed: true };
   if (request.op !== 'ingest') throw new Error();
+  if (request.captureTimeZone != null && !validTimeZone(request.captureTimeZone)) throw new Error('Invalid capture timezone');
   activeStage = 'filename'; activeHash = undefined; browserEvent = 'none';
   const source = { name: request.name, arrayBuffer: async () => {
     const bytes = Buffer.from(request.bytes, 'base64');
@@ -61,6 +65,7 @@ async function dispatch(request) {
       reprocess: input.reprocess ?? true,
       getExisting: async () => input.context ?? null,
       correction: input.correction,
+      captureTimeZone: input.captureTimeZone,
       isQueued: hash => input.queuedHashes.includes(hash),
       onHash: hash => { window.__ingestionHash(hash).catch(() => {}); },
       onStage: stage => { window.__ingestionStage(stage).catch(() => {}); }

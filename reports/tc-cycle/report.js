@@ -897,11 +897,13 @@ const ro = new ResizeObserver(entries => {
 // Δ between two readings of a world, per side, in %; null without an earlier reading.
 const readingDelta = (now, prior) => ({sell: prior ? (now.sell / prior.sell - 1) * 100 : null, buy: prior ? (now.buy / prior.buy - 1) * 100 : null});
 function marketMonitor(captures, research) {
+  captures = captures.filter(c => c.viewType !== 'statistics');
   const day = iso => iso.slice(0, 10);
   const pick = c => ({capturedAt: c.capturedAt, sell: c.sell, buy: c.buy, sellTopAmount: c.sellTopAmount, buyTopAmount: c.buyTopAmount,
-    sellVolume: c.sellVolume, buyVolume: c.buyVolume, goldDemand: c.goldDemand, goldSupply: c.goldSupply, hash: c.hash});
+    sellVolume: c.sellVolume, buyVolume: c.buyVolume, goldDemand: c.goldDemand, goldSupply: c.goldSupply, hash: c.hash, statistics30d: c.statistics30d ?? null, captureTimeZone: c.captureTimeZone ?? null, statisticsReferenceDate: c.statisticsReferenceDate ?? null});
   const seen = new Set(), byWorld = new Map();
   for (const c of captures) {
+    if (c.viewType === 'statistics') continue; // distinct rolling summaries cannot become live quotes
     if (seen.has(c.hash)) continue; // repeated export rows
     seen.add(c.hash);
     if (!byWorld.has(c.world)) byWorld.set(c.world, []);
@@ -975,6 +977,7 @@ async function main() {
 
   // ---- shorthand over the data files
   const worlds = R.worlds, W = Object.fromEntries(worlds.map(w => [w.world, w]));
+  const {statisticsObservations} = await import('../../js/statistics.js');
   const M = marketMonitor(U, worlds), updates = M.worlds, UW = Object.fromEntries(updates.map(w => [w.world, w]));
   // Type and BattlEye are properties of the world, not of the research cutoff: a world with no capture
   // by the cutoff still has them from any later Market capture, so every label reads from here.
@@ -1653,6 +1656,7 @@ async function main() {
     ${para(`With the measurement fixed, the first empirical task is to describe the market as it stood at the cutoff, before any claim about its dynamics is made. Price levels, spreads and depth are read from the latest capture of each world; because these captures are snapshots taken at different moments, each reading keeps its own date.`,
       `Com a mensuração definida, a primeira tarefa empírica é descrever o Market como estava no cutoff, antes de qualquer afirmação sobre sua dinâmica. Price levels, spreads e depth são lidos da captura mais recente de cada world; como essas capturas são snapshots feitos em momentos distintos, cada leitura mantém sua própria data.`)}
     </div>
+  <div id="market-statistics"></div>
   <section class="market-panel" aria-label="${t('Market Monitor', 'Monitor do Market')}">
     ${card({id: 'market-prices', evidence: 'observed', title: 'Observed Prices by World', sub: t(`${updates.length} worlds, ${M.captureCount} captures to ${cellDate(M.asOf)}. ${priceUnit}.`, `${updates.length} worlds, ${M.captureCount} capturas até ${cellDate(M.asOf)}. ${priceUnit}.`),
       controls: stateControl({label: 'Δ Comparison', key: 'comparison', options: COMPARISONS.map(([text]) => [text, text])}),
@@ -2398,6 +2402,48 @@ async function main() {
     });
     redrawTable(table);
   }, ['comparison'], ['market-prices']);
+
+  // Statistics stays an observed rolling series, independent of quote models.
+  let statsWorld = 'all', statsBucket = 'reference', statsMetric = 'averagePrice';
+  const drawStatistics = () => {
+    const statsHost = document.getElementById('market-statistics');
+    if (!statsHost) return;
+    const all = statisticsObservations(U, {bucket:statsBucket});
+    const rows = all.filter(r => statsWorld === 'all' || r.world === statsWorld);
+    const statsWorlds = [...new Set(statisticsObservations(U,{bucket:'capture'}).map(r => r.world))].sort();
+    const metrics = {tcVolume:'TC Volume (TC)', averagePrice:'Average Price (gp/TC)', highestPrice:'Highest Price (gp/TC)', lowestPrice:'Lowest Price (gp/TC)', transactions:'Transactions (25-TC lots)', rangePct:'Price range (%)', quoteVsAveragePct:'Quote vs Average (%)', averageChangePct:'Average change (%)'};
+    const select = (label, key, choices, active) => `<select aria-label="${esc(label)}" data-stats-control="${key}">${choices.map(([value,text]) => `<option value="${esc(value)}" ${value === active ? 'selected' : ''}>${esc(text)}</option>`).join('')}</select>`;
+    statsHost.innerHTML = card({id:'statistics-30d', evidence:'observed', title:t('30-day Market Statistics', 'Statistics de 30 dias do Market'),
+      sub:t('Rolling summaries observed at capture time, with history anchored to their Statistics reference date.', 'Summaries móveis observados na captura, com histórico ancorado na data de referência de Statistics.'),
+      controls:select('World','world',[['all',t('All worlds','Todos os worlds')],...statsWorlds.map(w => [w,w])],statsWorld) +
+        select(t('Date bucket','Data de agrupamento'),'bucket',[['reference',t('Statistics reference date','Data de referência de Statistics')],['capture',t('Local capture date','Data local da captura')]],statsBucket) +
+        select('Metric','metric',Object.entries(metrics),statsMetric),
+      body:'<div id="statistics-chart" class="chart"></div>',
+      drawer:table({columns:[{key:'world',label:'World'},{key:'side',label:'Side'},
+        {key:'capturedAt',label:'Capture',render:v => esc(v.replace('T',', '))},
+        {key:'capturedAtUtc',label:'Capture UTC',render:v => v ? esc(v) : MISSING},
+        {key:'quoteCapturedAt',label:'Quote capture',render:v => v ? esc(v.replace('T',', ')) : MISSING},
+        {key:'statisticsReferenceDate',label:'Statistics reference date',render:v => v ? cellDate(v) : MISSING},
+        num('transactions','Transactions (25-TC lots)'), num('tcVolume','TC Volume'), num('highestPrice','Highest Price'), num('averagePrice','Average Price'), num('lowestPrice','Lowest Price'),
+        percent('rangePct','Price range'),percent('quoteVsAveragePct','Quote vs Average'),percent('averageChangePct','Average change')], rows,
+        empty:t('No validated Statistics for this selection.', 'Sem Statistics validadas para esta seleção.')}),
+      note:t('Counts are 25-TC lots; TC Volume = transactions × 25. Prices remain gp/TC. Rolling windows overlap: do not sum counts or infer daily flows from differences. Last capture per world, side and date bucket; historical changes compare consecutive available buckets. Range = (highest / lowest − 1) × 100; Quote vs Average = (latest available best quote at or before the Statistics capture / average − 1) × 100; unavailable without resolved quote context. Statistics reference dates use the local date before/after its 10:00 CET/CEST server save; this anchors historical comparisons by default and requires the original capture timezone. Unknown or ambiguous clocks are excluded only from that view. The displayed 30-day window is not assumed to be exactly 30 server-save intervals. Older records without Statistics remain available in every existing report.',
+        'Counts são lots de 25 TC; TC Volume = transactions × 25. Prices permanecem gp/TC. As windows móveis se sobrepõem: não some counts nem derive flows diários das diferenças. Última captura por world, lado e data; historical changes comparam datas disponíveis consecutivas. Range = (highest / lowest − 1) × 100; Quote vs Average = (última best quote disponível até a captura de Statistics / average − 1) × 100; indisponível sem contexto resolvido da quote. As datas de referência de Statistics usam a data local antes/depois do server save de 10:00 CET/CEST e ancoram as comparações históricas por padrão. Exigem o timezone original; clocks desconhecidos ou ambíguos são excluídos apenas dessa visão. Não se presume uma window de exatamente 30 intervalos de server save. Registros antigos sem Statistics continuam disponíveis em todos os relatórios existentes.')});
+    const names = [...new Set(rows.map(r => r.world))];
+    chart('statistics-chart', host => lineChart(host, {aria:t('30-day Statistics by world and side','Statistics de 30 dias por world e lado'), series:names.flatMap(world => ['buy','sell'].map(side => ({label:`${world} ${side === 'buy' ? 'Buy' : 'Sell'} Offers`, cls:side === 'buy' ? 'c-bid' : 'c-ask', dots:true,
+      points:rows.filter(r => r.world === world && r.side === side).map(r => [r.date,r[statsMetric]])}))), yFmt:v => fmt(v, statsMetric.endsWith('Pct') ? 2 : 0)}));
+    normalizeReport(statsHost);
+  };
+  on(drawStatistics, [], ['market-statistics']);
+  document.addEventListener('change', e => {
+    const key = e.target.dataset.statsControl;
+    if (key === 'world') statsWorld = e.target.value;
+    else if (key === 'bucket') statsBucket = e.target.value;
+    else if (key === 'metric') statsMetric = e.target.value;
+    else return;
+    drawStatistics();
+  });
+
 
   document.getElementById('section-select').addEventListener('change', e => {
     window.location.hash = e.target.value;

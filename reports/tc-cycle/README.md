@@ -144,3 +144,36 @@ Teste de navegador (Playwright e Chrome disponíveis; servidor estático local),
 ```sh
 REPORT_URL=http://localhost:8765/reports/tc-cycle/ node reports/tc-cycle/test_export.cjs
 ```
+
+
+## Market Details / Statistics compatibility
+
+`market-update.json` accepts legacy Offers records and version-6 capture records
+with `viewType: "offers"` or `"statistics"`. The latter has no live quote/depth
+fields: it carries `statistics30d.buy` and `.sell`, each containing
+`transactions`, `highestPrice`, `averagePrice`, `lowestPrice`, and derived
+`tcVolume`. Transaction counts are 25-TC lots; `tcVolume = transactions * 25`;
+prices remain gp/TC. `market_update.py` validates the Statistics and temporal
+fields through `js/statistics.js`, the exact website/batch contract.
+
+The report's Statistics exhibit uses the shared reader for tables, charts,
+world-level comparisons and derived metrics. Every snapshot preserves its
+filename local `capturedAt`, IANA `captureTimeZone`, resolved `capturedAtUtc`,
+local `captureDate`. Statistics alone add `statisticsReferenceDate`, the default
+anchor for their 30-day historical/regression comparisons. Automatically detected
+browser/system IANA time resolves capture instants. Find the 10:00 Europe/Berlin
+save on the local capture date: before its local time use the previous local date;
+at/after it use the current local date. CET/CEST and local DST are handled by
+IANA conversion, without changing actual captures or offer expiries. Unavailable
+or ambiguous instants are excluded only from this reference-date view.
+Statistics values describe what was displayed at capture time, not the analysis
+or rebuild date. Local capture-date grouping remains an optional observation view.
+No exact 30-server-save window is assumed. Rolling lots and TC volumes overlap
+and must not be summed across snapshots or differenced as daily traded flows.
+
+The live Market monitor and all existing quote metrics exclude Statistics-only
+records. The research offer loader also excludes them through its valid-book
+rule. Ordinary Offers captures preserve their supplied local calendar dates and
+actual timestamps; their expiries resolve in the same local timezone, never CET/CEST. The frozen research outputs
+and current `market-update.json` have not been rebuilt or replaced by browser
+fixtures. See the root README for the complete schema and verification commands.

@@ -1,3 +1,4 @@
+import { STATISTICS_FIELDS, STATISTICS_SIDES, STATISTICS_CSV_HEADERS, statisticsCSVValues } from './statistics.js';
 import { disposeOcr } from './ocr.js';
 import { ingestScreenshot, prepareCapture } from './ingestion.js';
 import { analyse } from './validation.js';
@@ -7,7 +8,7 @@ import { normalizeEndsAt, offerObservations } from './offers.js';
 
 const $ = id => document.getElementById(id);
 // Timestamps are stored as YYYY-MM-DDTHH:MM:SS; the UI shows them the way the Market does.
-const showTimestamp = v => normalizeEndsAt(v)?.replace('T', ', ') ?? v ?? '';
+const showTimestamp = v => typeof v === 'string' ? v.replace('T', ', ') : '';
 
 /* ------------------------------------------------------------------ cards */
 const cards = new Map();
@@ -59,6 +60,15 @@ function rowsHtml(state, side) {
   </div>`;
 }
 
+function statisticsHtml(state) {
+  const labels = {transactions:'Number of Transactions', highestPrice:'Highest Price', averagePrice:'Average Price', lowestPrice:'Lowest Price'};
+  return `<section class="statistics-review"><h4>30-day Statistics</h4>
+    <div class="statistics-sides">${STATISTICS_SIDES.map(side => `<fieldset><legend>${side === 'buy' ? 'Buy' : 'Sell'} Offers</legend>
+      <p class="fine">TC Volume: ${Number.isSafeInteger(state.statistics30d?.[side]?.transactions) ? fmt(state.statistics30d[side].transactions * 25) : '—'}</p>${STATISTICS_FIELDS.map(key => `<label>${labels[key]}<input data-stat-side="${side}" data-stat-field="${key}" inputmode="numeric"
+        aria-label="${side === 'buy' ? 'Buy' : 'Sell'} Statistics, ${labels[key]}" value="${esc(state.statisticsInputs?.[side]?.[key] ?? state.statistics30d?.[side]?.[key] ?? '')}"></label>`).join('')}</fieldset>`).join('')}</div>
+  </section>`;
+}
+
 function render(state) {
   const el = cardEl(state.id);
   const label = state.uiFilename ?? 'Filename unavailable';
@@ -99,7 +109,7 @@ function render(state) {
     : `<b class="cworld">N/A</b><span class="cbe" aria-hidden="true">○</span><span class="ctime"></span>`;
   // Each figure sits in its own fixed-width cell so the columns line up down
   // the whole list; ragged numbers are unreadable when scanning a batch.
-  const nums = a.sell
+  const nums = state.viewType === 'statistics' ? `<span class="cn">30-day Statistics</span>` : a.sell
     ? `<span class="cn price"><b>${fmt(a.sell)}</b>/<b>${fmt(a.buy)}</b></span>
        <span class="cn spread${a.spread < 0 ? ' neg' : ''}">Δ${fmt(a.spread)}</span>
        <span class="cn vol">${fmt(a.sellVolume)}/${fmt(a.buyVolume)}</span>
@@ -117,7 +127,7 @@ function render(state) {
       </span>
     </span></summary>
     <div class="cbody">
-      <div class="rows">${rowsHtml(state, 'sell')}${rowsHtml(state, 'buy')}</div>
+      ${state.viewType === 'statistics' ? statisticsHtml(state) : `<div class="rows">${rowsHtml(state, 'sell')}${rowsHtml(state, 'buy')}</div>`}
       ${a.warn.length ? `<div class="steps msg-warn">${a.warn.map(x => `<div>⚠ ${esc(x)}</div>`).join('')}</div>` : ''}
       ${state.saveError ? `<div class="steps msg-warn" role="alert">${esc(state.saveError)}</div>` : ''}
       ${(state.ocrNotices ?? []).length ? `<div class="steps msg-note">${state.ocrNotices.map(x => `<div>ⓘ ${esc(x)}</div>`).join('')}</div>` : ''}
@@ -128,7 +138,7 @@ function render(state) {
       </div>
     </div>
   </details>`;
-  el.querySelector('details').addEventListener('toggle', e => { state.open = e.target.open; });
+  el.querySelector('details').addEventListener('toggle', e => { if (e.target.isConnected) state.open = e.target.open; });
   updateQueueBar();
 }
 
@@ -174,7 +184,7 @@ async function handleFile(file) {
     onStep: stage => { state.stage = stage; render(state); }
   });
   // Copy only anonymous ingestion results; the display label is queue-local.
-  for (const key of ['hash', 'capturedAt', 'world', 'rows', 'ocrWarnings', 'ocrNotices', 'reprocess']) {
+  for (const key of ['hash', 'capturedAt', 'world', 'rows', 'ocrWarnings', 'ocrNotices', 'reprocess', 'statistics30d', 'captureTimeZone', 'viewType']) {
     if (result[key] !== undefined) state[key] = result[key];
   }
   if (result.status === 'duplicate') {
@@ -220,15 +230,24 @@ const valueOf = (r, k) => (k === 'spread' ? spread(r) : r[k]);
 async function renderTable() {
   rowsCache = await store.all();
   $('capturesLoading').hidden = true;
-  let rows = [...rowsCache];
+  let rows = rowsCache.filter(r => r.viewType !== 'statistics');
+  let statCaptures = rowsCache.filter(r => r.viewType === 'statistics').sort((a,b) => (b.capturedAtUtc ?? b.capturedAt).localeCompare(a.capturedAtUtc ?? a.capturedAt));
 
   const q = $('filter').value.trim().toLowerCase();
-  if (q) rows = rows.filter(r => r.world.toLowerCase().includes(q));
+  if (q) { rows = rows.filter(r => r.world.toLowerCase().includes(q)); statCaptures = statCaptures.filter(r => r.world.toLowerCase().includes(q)); }
 
   if (captureDays && rows.length) {
     const end = Math.max(...rows.map(r => Date.parse(`${r.capturedAt}Z`)));
     rows = rows.filter(r => Date.parse(`${r.capturedAt}Z`) >= end - captureDays * 86400000);
   }
+
+  if (captureDays && statCaptures.length) {
+    const time = r => Date.parse(r.capturedAtUtc ?? `${r.capturedAt}Z`);
+    const end = Math.max(...statCaptures.map(time));
+    statCaptures = statCaptures.filter(r => time(r) >= end - captureDays * 86400000);
+  }
+
+  $('statisticsSaved').innerHTML = statCaptures.length ? `<h3>Saved 30-day Statistics</h3><div class="statistics-saved">${statCaptures.map(c => `<details><summary>${esc(c.world)} · ${esc(showTimestamp(c.capturedAt))}</summary><table><thead><tr><th>Side</th><th>Transactions (25-TC lots)</th><th>TC Volume</th><th>Highest Price</th><th>Average Price</th><th>Lowest Price</th></tr></thead><tbody>${STATISTICS_SIDES.map(side => `<tr><th>${side === 'buy' ? 'Buy' : 'Sell'}</th>${['transactions','tcVolume','highestPrice','averagePrice','lowestPrice'].map(k => `<td>${num(c.statistics30d[side][k])}</td>`).join('')}</tr>`).join('')}</tbody></table><p class="fine">${esc(c.captureTimeZone ?? '')} · UTC ${esc(c.capturedAtUtc ?? 'unresolved')}</p><button class="del" data-del="${esc(c.hash)}" aria-label="Remove Statistics snapshot">Remove</button></details>`).join('')}</div>` : '';
 
   // One group per world: its latest capture leads, older ones follow newest first.
   // Groups are ordered by their latest row under the current sort.
@@ -247,7 +266,8 @@ async function renderTable() {
   $('count').textContent = rows.length
     ? `${rows.length} row${rows.length === 1 ? '' : 's'}, ${worlds} world${worlds === 1 ? '' : 's'}`
     : '0 rows';
-  $('empty').hidden = rows.length > 0;
+  if (statCaptures.length) $('count').textContent += `, ${statCaptures.length} Statistics snapshot${statCaptures.length === 1 ? '' : 's'}`;
+  $('empty').hidden = rows.length > 0 || statCaptures.length > 0;
 
   // A plain, factual line - the period the rows on screen actually span -
   // replaces what used to be a separate accounting-style disclosure panel;
@@ -394,9 +414,28 @@ $('queue').addEventListener('click', e => {
 });
 $('queue').addEventListener('input', e => {
   const i = e.target;
+  if (i.dataset.statField) {
+    const state = cards.get(i.closest('.card').id.slice(5));
+    state.saveError = null;
+    state.open = i.closest('details').open;
+    state.statisticsInputs ??= {buy:{},sell:{}};
+    state.statisticsInputs[i.dataset.statSide][i.dataset.statField] = i.value;
+    state.statistics30d ??= {buy:{},sell:{}};
+    state.statistics30d[i.dataset.statSide] ??= {};
+    state.statistics30d[i.dataset.statSide][i.dataset.statField] = /^\d+$/.test(i.value) ? Number(i.value) : null;
+    // Preserve raw local input/caret while refreshing volumes, warnings and
+    // readiness. No blur-time DOM replacement can swallow the Save click.
+    const pos = i.selectionStart;
+    const selector = `[data-stat-side="${i.dataset.statSide}"][data-stat-field="${i.dataset.statField}"]`;
+    render(state);
+    const again = document.querySelector(`#card-${state.id} input${selector}`);
+    again?.focus(); again?.setSelectionRange(pos,pos);
+    return;
+  }
   if (!i.dataset.f) return;
   const state = cards.get(i.closest('.card').id.slice(5));
   state.saveError = null;
+  state.open = i.closest('details').open;
   const n = parseInt(i.value.replace(/[^\d]/g, ''), 10);
   state.rows[i.dataset.s][+i.dataset.i][i.dataset.f] = i.dataset.f === 'endsAt'
     ? (normalizeEndsAt(i.value) ?? i.value) : (Number.isFinite(n) ? n : 0);
@@ -476,21 +515,23 @@ document.querySelector('#table thead').addEventListener('click', e => {
   renderTable();
 });
 
+$('statisticsSaved').addEventListener('click', async e => { const hash=e.target.closest('[data-del]')?.dataset.del; if (hash) { await store.remove(hash); await renderTable(); } });
+
 $('exportJson').addEventListener('click', () =>
   download('observations.json', JSON.stringify(rowsCache, null, 2), 'application/json'));
 $('exportCsv').addEventListener('click', () => {
   // Units belong in the header of a data file; the values stay plain integers.
   const head = 'World,Type,BattlEye,Sell (gp/TC),Sell Volume (TC),Gold Demand (gp),' +
-               'Buy (gp/TC),Buy Volume (TC),Gold Supply (gp),Spread (gp/TC),Capture,Hash';
+               'Buy (gp/TC),Buy Volume (TC),Gold Supply (gp),Spread (gp/TC),Capture,Hash,View Type,Capture UTC,Capture Date,Capture Timezone,Statistics Reference Date,' + STATISTICS_CSV_HEADERS.join(',');
   const body = rowsCache.map(r => [r.world, r.type, r.battleye, r.sell, r.sellVolume,
-    r.goldDemand ?? '', r.buy, r.buyVolume, r.goldSupply ?? '', spread(r), r.capturedAt, r.hash]
-    .map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+    r.goldDemand ?? '', r.buy, r.buyVolume, r.goldSupply ?? '', r.viewType === 'statistics' ? '' : spread(r), r.capturedAt, r.hash, r.viewType ?? 'offers', r.capturedAtUtc ?? '', r.capturedAt.slice(0,10), r.captureTimeZone ?? '', r.statisticsReferenceDate ?? '', ...statisticsCSVValues(r)]
+    .map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',')).join('\n');
   download('observations.csv', `${head}\n${body}`, 'text/csv');
 });
 $('exportOffers').addEventListener('click', () => {
   const q = $('filter').value.trim().toLowerCase();
   const observations = offerObservations(rowsCache.filter(r => !q || r.world.toLowerCase().includes(q)));
-  const keys = ['world', 'side', 'offerId', 'capturedAt', 'hash', 'rowIndex', 'amount', 'price', 'total', 'endsAt', 'matchAmbiguous', 'processingVersion'];
+  const keys = ['world', 'side', 'offerId', 'capturedAt', 'capturedAtUtc', 'captureTimeZone', 'hash', 'rowIndex', 'amount', 'price', 'total', 'endsAt', 'endsAtUtc', 'matchAmbiguous', 'processingVersion'];
   const csv = [keys.join(','), ...observations.map(r => keys.map(k => `"${String(r[k] ?? '').replace(/"/g, '""')}"`).join(','))].join('\n');
   download('offer-observations.csv', csv, 'text/csv');
 });

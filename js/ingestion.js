@@ -1,24 +1,25 @@
+import { cleanStatistics, validatedStatistics, statisticsIssues, statisticsReferenceDate, validTimeZone, captureInstant } from './statistics.js';
 import { acceptsScreenshotName, parseFilename } from './filename.js';
-import { verifyMarket, verifyTibiaCoins, extractMarketOffers } from './ocr.js';
+import { verifyMarket, verifyTibiaCoins, extractMarketOffers, extractMarketStatistics } from './ocr.js';
 import { lookupWorld, worldInfo } from './tibiadata.js';
 import { sha256 } from './hash.js';
 import { analyse } from './validation.js';
 
 // Changing the ordered ingestion contract invalidates old batch checkpoints.
-export const INGESTION_VERSION = 5;
-export const STAGES = ['filename', 'deduplication', 'market', 'item', 'metadata', 'world', 'extraction', 'validation'];
+export const INGESTION_VERSION = 6;
+export const STAGES = ['filename', 'deduplication', 'market', 'item', 'view', 'metadata', 'world', 'extraction', 'statistics', 'validation'];
 const messages = {
   filename: 'Checking capture eligibility', market: 'Locating the Market interface',
-  item: 'Checking the selected Market item', metadata: 'Reading capture time',
+  item: 'Checking the selected Market item', view:'Identifying the Market view', metadata: 'Reading capture time',
   world: 'Resolving the world', extraction: 'Reading individual offers',
-  validation: 'Validating offers', deduplication: 'Checking for duplicates'
+  statistics: 'Reading 30-day Statistics', validation: 'Validating offers and Statistics', deduplication: 'Checking for duplicates'
 };
 const failures = {
   filename: 'Only screenshots taken with the Tibia screenshot hotkey are accepted.',
-  market: 'Could not verify both Market tables and their column headings.',
+  market: 'Could not verify a Market Offers or Details view.',
   item: 'Could not confirm Tibia Coins in the highlighted Items row.',
-  metadata: 'Capture metadata is invalid.', world: 'World resolution failed.',
-  extraction: 'Offer extraction failed.', validation: 'Offers require correction.',
+  view:'Market view could not be identified.', metadata: 'Capture metadata is invalid.', world: 'World resolution failed.',
+  statistics: '30-day Statistics require review.', extraction: 'Offer extraction failed.', validation: 'Capture values require correction.',
   deduplication: 'Duplicate verification failed.'
 };
 let readerQueue = Promise.resolve();
@@ -37,12 +38,22 @@ function publicRows(rows) {
 export function prepareCapture(state) {
   const analysis = analyse(state);
   if (!analysis.ok) throw new Error('Correct the validation issues before saving.');
-  return {
-    world: state.world.world, type: state.world.type, battleye: state.world.battleye,
-    hash: state.hash, capturedAt: state.capturedAt, processingVersion: INGESTION_VERSION,
-    ...Object.fromEntries(['sell', 'buy', 'sellVolume', 'buyVolume', 'goldSupply', 'goldDemand',
-      'sellTopAmount', 'buyTopAmount'].map(k => [k, analysis[k]])),
-    offers: ['sell', 'buy'].flatMap(side => publicRows(state.rows[side]).map((r, rowIndex) => ({ ...r, side, rowIndex })))
+  const viewType = state.viewType ?? 'offers';
+  const timeZone = validTimeZone(state.captureTimeZone) ? state.captureTimeZone : null;
+  const instant = captureInstant(state.capturedAt, timeZone);
+  const common = {
+    world:state.world.world, type:state.world.type, battleye:state.world.battleye,
+    hash:state.hash, capturedAt:state.capturedAt, captureDate:state.capturedAt.slice(0,10),
+    captureTimeZone:timeZone, capturedAtUtc:instant === null ? null : new Date(instant).toISOString(),
+    viewType, processingVersion:INGESTION_VERSION
+  };
+  if (viewType === 'statistics') return {...common, statisticsReferenceDate:statisticsReferenceDate(state.capturedAt,timeZone), statistics30d:validatedStatistics(state.statistics30d)};
+  return {...common,
+    ...Object.fromEntries(['sell','buy','sellVolume','buyVolume','goldSupply','goldDemand','sellTopAmount','buyTopAmount'].map(k => [k,analysis[k]])),
+    offers:['sell','buy'].flatMap(side => publicRows(state.rows[side]).map((r,rowIndex) => {
+      const end = captureInstant(r.endsAt,timeZone);
+      return {...r,side,rowIndex,endsAtUtc:end === null ? null : new Date(end).toISOString()};
+    }))
   };
 }
 
@@ -78,7 +89,7 @@ export async function preflightScreenshot(file, options = {}, services = {}) {
 
 // Transport/storage injection never supplies another filtering policy.
 export async function ingestScreenshot(file, options = {}, services = {}) {
-  const api = { parseFilename, verifyMarket, verifyTibiaCoins, extractMarketOffers,
+  const api = { parseFilename, verifyMarket, verifyTibiaCoins, extractMarketOffers, extractMarketStatistics,
     lookupWorld, worldInfo, createBitmap: f => createImageBitmap(f), ...services };
   const { result, existing, blocked } = await preflightScreenshot(file, options, services);
   if (blocked) return result;
@@ -98,6 +109,10 @@ export async function ingestScreenshot(file, options = {}, services = {}) {
     await api.verifyTibiaCoins(context, options.onStep);
     result.itemVerification.status = 'tibia_coins';
     pass();
+    enter('view');
+    result.viewType = context.viewType ?? 'offers';
+    if (!['offers','statistics'].includes(result.viewType)) throw new Error();
+    pass();
     enter('metadata');
     let { character, capturedAt } = api.parseFilename(file.name);
     result.capturedAt = capturedAt;
@@ -110,28 +125,42 @@ export async function ingestScreenshot(file, options = {}, services = {}) {
     if (!world?.world || !world.type || !world.battleye) throw new Error();
     result.world = { world: world.world, type: world.type, battleye: world.battleye };
     result.capturedAt = existing?.capturedAt ?? capturedAt;
+    result.captureTimeZone = existing?.captureTimeZone ?? options.captureTimeZone ?? Intl.DateTimeFormat().resolvedOptions().timeZone ?? null;
     pass();
-    enter('extraction');
-    const reading = await api.extractMarketOffers(context, options.onStep);
-    result.rows = { sell: publicRows(reading.sell ?? []), buy: publicRows(reading.buy ?? []) };
-    result.ocrWarnings = [...(reading.warnings ?? [])];
-    result.ocrNotices = [...(reading.notices ?? [])];
-    // Complete explicit corrections cannot override filename, Market or item gates.
-    if (options.correction?.offers) {
-      result.rows = Object.fromEntries(['sell', 'buy'].map(side => [side,
-        publicRows(options.correction.offers.filter(r => r.side === side))]));
-      result.ocrWarnings = [];
+    if (result.viewType === 'offers') {
+      enter('extraction');
+      const reading = await api.extractMarketOffers(context, options.onStep);
+      result.rows = { sell: publicRows(reading.sell ?? []), buy: publicRows(reading.buy ?? []) };
+      result.ocrWarnings = [...(reading.warnings ?? [])];
+      result.ocrNotices = [...(reading.notices ?? [])];
+      // Complete explicit corrections cannot override filename, Market or item gates.
+      if (options.correction?.offers) {
+        result.rows = Object.fromEntries(['sell', 'buy'].map(side => [side,
+          publicRows(options.correction.offers.filter(r => r.side === side))]));
+        result.ocrWarnings = [];
+      }
+      pass();
+    } else {
+      result.rows = {sell:[],buy:[]};
+      enter('statistics');
+      // A failed Statistics read leaves the Statistics editor available for review.
+      try { result.statistics30d = cleanStatistics(await api.extractMarketStatistics(context, options.onStep)); }
+      catch { result.statistics30d = null; }
+      if (options.correction?.statistics30d !== undefined) {
+        result.statistics30d = cleanStatistics(options.correction.statistics30d);
+      }
+      result.stages.statistics = statisticsIssues(result.statistics30d).length === 0;
     }
-    pass();
     enter('validation');
     result.analysis = analyse(result);
     if (!result.analysis.ok) {
       result.status = 'needs_review'; result.stages.validation = false;
-      result.issues = [{ field: 'row', reason: failures.validation }];
+      result.issues = [...(result.viewType === 'statistics' ? statisticsIssues(result.statistics30d) : []), ...(result.analysis.offerOk ? [] : [{ field: 'row', reason: failures.validation }])];
+      if (!result.issues.length) result.issues = [{field:'validation',reason:failures.validation}];
       return result;
     }
     result.capture = prepareCapture(result);
-    result.offers = result.capture.offers;
+    result.offers = result.capture.offers ?? [];
     pass();
     result.status = 'ready'; result.reprocess = Boolean(existing);
     return result;

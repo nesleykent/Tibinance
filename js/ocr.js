@@ -1,3 +1,4 @@
+import { parseStatisticsText } from './statistics.js';
 import { extractEndsAt } from './offers.js';
 import { itemRegion, selectedItem, selectionBand } from './market-item.js';
 /*
@@ -239,7 +240,7 @@ export async function verifyMarket(bitmap, onStep = () => {}) {
   };
 
   const complete = h => h && h.pieceR != null && h.totalR != null;
-  let anchors = [], tables = [], stops = [], heads = [];
+  let anchors = [], tables = [], stops = [], heads = [], details = null;
   // One retry, at 2x. A third pass costs as much again and has never yet
   // rescued a screenshot that 2x could not: below roughly 1100px wide the
   // glyphs are a handful of pixels tall and the information is simply gone.
@@ -247,6 +248,15 @@ export async function verifyMarket(bitmap, onStep = () => {}) {
     if (k > 1 && full.width * k > 4200) break;
     anchors = await readAnchors(k);
     tables = locateTables(anchors);
+    const title = anchors.find(w => norm(w.t) === 'statistics');
+    const detail = anchors.find(w => norm(w.t) === 'details' &&
+      (!title || (w.x >= title.x-title.h*2 && w.y < title.y)) &&
+      anchors.some(p => ['description','weight'].includes(norm(p.t)) && p.y>w.y && p.x>=w.x-w.h*2 && p.y<w.y+w.h*12));
+    const market = anchors.find(w => norm(w.t) === 'market' && detail && w.y < detail.y && Math.abs(w.x-detail.x)<full.width/2);
+    if (detail && market) {
+      details = {title,detail};
+      break;
+    }
     if (tables.length !== 2 || new Set(tables.map(t => t.side)).size !== 2) continue;
     const creates = anchors.filter(w => /^create/i.test(w.t)).sort((a, b) => a.y - b.y);
     stops = [...tables.slice(1).map(t => t.y), creates.length ? creates[0].y : bitmap.height];
@@ -254,6 +264,11 @@ export async function verifyMarket(bitmap, onStep = () => {}) {
     if (heads.some(complete)) break;
   }
 
+  if (details) {
+    // Sidebar geometry shares the Details/Statistics pane's left edge. Item
+    // selection still requires highlighted pixels and the exact coin label.
+    return {full,worker,anchors,viewType:'statistics', tables:[{x:(details.title ?? details.detail).x,y:details.detail.y,glyph:details.detail.h}]};
+  }
   if (tables.length !== 2 || new Set(tables.map(t => t.side)).size !== 2) {
     throw new Error(full.width < 1100
       ? `This screenshot is only ${full.width}px wide; the market text is too small ` +
@@ -276,7 +291,7 @@ export async function verifyMarket(bitmap, onStep = () => {}) {
     }
   }
 
-  return { full, worker, anchors, tables, stops, heads };
+  return { full, worker, anchors, tables, stops, heads, viewType:'offers' };
 }
 
 export async function verifyTibiaCoins(context, onStep = () => {}) {
@@ -538,6 +553,41 @@ export async function extractMarketOffers(context, onStep = () => {}) {
   result.warnings = warnings;
   result.notices = notices;
   return result;
+}
+
+// Restrict OCR to the Statistics panel located by its visible heading. This
+// Details flow supplies the same verified Market/item context as Offers;
+// individual-offer tables are never required for this view.
+export async function extractMarketStatistics(context, onStep = () => {}) {
+  const { full, worker, anchors } = context;
+  onStep('reading 30-day Statistics');
+  const titles = anchors.filter(w => /^statistics:?$/i.test(w.t));
+  if (titles.length !== 1) return null;
+  const title = titles[0], scale = scaleFor(title.h);
+  const x0 = Math.floor(title.x), y0 = Math.floor(title.y);
+  // The two stacked groups each have a heading and four fixed text rows.
+  // Bounds scale with the measured font, never screenshot resolution.
+  const x1 = Math.min(full.width, Math.ceil(x0 + title.h * 48));
+  const y1 = Math.min(full.height, Math.ceil(y0 + title.h * 22));
+  const panel = cropCanvas(full, x0, y0, x1, y1, scale);
+  const readings = [];
+  for (const psm of [Tesseract.PSM.SINGLE_BLOCK, Tesseract.PSM.SPARSE_TEXT]) {
+    await worker.setParameters({ tessedit_pageseg_mode: psm, tessedit_char_whitelist: '' });
+    const read = await worker.recognize(panel);
+    // Geometry reconstructs labelled lines even when SPARSE_TEXT splits each
+    // line into separate text paragraphs.
+    const tokens = words(read, 0).map(w => /^\d[\d,]*$/.test(w.t) && w.conf < 70 ? {...w,t:'unreadable'} : w);
+    const lines = clusterRows(tokens).map(line => line.sort((a,b) => a.x-b.x).map(w => w.t).join(' '));
+    readings.push(parseStatisticsText(lines.join('\n')));
+  }
+  // No arithmetic checksum exists here. Conflicting passes require review;
+  // one readable pass can fill an unread field, never overrule a disagreement.
+  const value = {buy:{}, sell:{}};
+  for (const side of ['buy','sell']) for (const key of ['transactions','highestPrice','averagePrice','lowestPrice']) {
+    const candidates = readings.map(r => r?.[side]?.[key]).filter(v => Number.isSafeInteger(v));
+    value[side][key] = candidates.length && new Set(candidates).size === 1 ? candidates[0] : null;
+  }
+  return value;
 }
 
 export async function disposeOcr() {

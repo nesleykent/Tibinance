@@ -6,13 +6,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 OUTPUT = ROOT / "dist"
 REPORT = OUTPUT / "reports" / "tc-cycle"
-PUBLIC_FILES = ("index.html", "pt-br.html", "report.css", "report.js", "results.json", "complement.json", "market-update.json", "inflation.json", "inflation-monthly.csv", "inflation-annual.csv", "lifecycle.json", "mergers.json", "robustness.json", "forecast-ledger.jsonl")
+PUBLIC_FILES = ("index.html", "pt-br.html", "report.css", "report.js", "export.js", "results.json", "complement.json", "market-update.json", "inflation.json", "inflation-monthly.csv", "inflation-annual.csv", "lifecycle.json", "mergers.json", "robustness.json", "forecast-ledger.jsonl")
 
 
 def main():
     REPORT.mkdir(parents=True, exist_ok=True)
     for filename in PUBLIC_FILES:
         shutil.copyfile(ROOT / filename, REPORT / filename)
+    (OUTPUT / 'js').mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(ROOT.parents[1] / 'js' / 'statistics.js', OUTPUT / 'js' / 'statistics.js')
     # The source report and the Sites publication share the same route and assets.
     (OUTPUT / "index.html").write_text('''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">

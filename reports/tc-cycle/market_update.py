@@ -12,6 +12,8 @@ The research inputs (inputs/observations-*.json) stay frozen and are not read he
 """
 
 import argparse
+import subprocess
+import os
 import shutil
 import sys
 from datetime import datetime
@@ -34,16 +36,54 @@ def validate(captures):
         assert isinstance(capture, dict), f"Capture is not an object: {ref}"
         for key in STR_FIELDS:
             assert isinstance(capture.get(key), str) and capture[key], f"Missing {key}: {ref}"
-        for key in INT_FIELDS:
+        for key in (() if capture.get('viewType') == 'statistics' else INT_FIELDS):
+            if key not in ('sell', 'buy', 'sellVolume', 'buyVolume') and capture.get(key) is None:
+                continue  # optional fields on older capture records
             assert type(capture.get(key)) is int, f"Noninteger market value: {ref} {key}"
         assert capture["hash"] not in hashes, f"JSON duplicate hashes: {ref}"
         hashes.add(capture["hash"])
-        assert capture["sell"] > capture["buy"] > 0, f"Invalid offer prices: {ref}"
-        for side in ("sell", "buy"):
+        if capture.get("viewType") != "statistics":
+            assert capture["sell"] > capture["buy"] > 0, f"Invalid offer prices: {ref}"
+        for side in (() if capture.get("viewType") == "statistics" else ("sell", "buy")):
+            if capture.get(f"{side}TopAmount") is None:
+                continue
             assert 0 < capture[f"{side}TopAmount"] <= capture[f"{side}Volume"], (
                 f"Invalid Amount at best Piece Price: {ref}"
             )
         datetime.fromisoformat(capture["capturedAt"])
+    # Validate the additive schema with the actual website contract, not a
+    # separately maintained interpretation of rolling statistics or DST.
+    contract = ROOT.parents[1] / 'js' / 'statistics.js'
+    script = """
+      const {validatedStatistics,statisticsReferenceDate,validTimeZone,captureInstant,normalizeCapturedAt} = await import(process.argv[1]);
+      let raw=''; for await (const part of process.stdin) raw+=part;
+      for (const c of JSON.parse(raw)) {
+        if (c.viewType === 'statistics' || c.statistics30d != null) {
+          const normalized=validatedStatistics(c.statistics30d);
+          for (const side of ['buy','sell']) if (c.statistics30d[side].tcVolume !== normalized[side].tcVolume) throw Error();
+        }
+        if (c.processingVersion >= 6) {
+          for (const key of ['viewType','captureDate','captureTimeZone','capturedAtUtc']) if (!(key in c)) throw Error();
+          if (c.viewType === 'statistics' && !('statisticsReferenceDate' in c)) throw Error();
+          if (!normalizeCapturedAt(c.capturedAt)) throw Error();
+        }
+        if (c.viewType != null && !['offers','statistics'].includes(c.viewType)) throw Error();
+        const instant=captureInstant(c.capturedAt,c.captureTimeZone);
+        if ('capturedAtUtc' in c && c.capturedAtUtc !== (instant === null ? null : new Date(instant).toISOString())) throw Error();
+        if ('captureDate' in c && c.captureDate !== c.capturedAt.slice(0,10)) throw Error();
+        if (c.captureTimeZone != null && !validTimeZone(c.captureTimeZone)) throw Error();
+        if ('statisticsReferenceDate' in c && c.statisticsReferenceDate !== statisticsReferenceDate(c.capturedAt,c.captureTimeZone)) throw Error();
+        if (c.viewType === 'offers' && 'statisticsReferenceDate' in c) throw Error();
+        for (const offer of c.offers ?? []) {
+          if ((c.processingVersion ?? 0) < 6 && !('endsAtUtc' in offer)) continue;
+          const end=captureInstant(offer.endsAt,c.captureTimeZone);
+          if (offer.endsAtUtc !== (end === null ? null : new Date(end).toISOString())) throw Error();
+        }
+      }
+    """
+    checked = subprocess.run([os.environ.get('TIBINANCE_NODE', 'node'), '--input-type=module', '-e', script, contract.as_uri()],
+                             input=json.dumps(captures), text=True, capture_output=True)
+    assert checked.returncode == 0, 'Invalid 30-day Statistics or capture temporal context'
     return sorted({c["world"] for c in captures})
 
 

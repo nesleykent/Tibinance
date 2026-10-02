@@ -20,6 +20,7 @@ function harness(overrides = {}) {
     verifyTibiaCoins: wrap('item', () => ({ status: 'tibia_coins' })),
     lookupWorld: wrap('characterAPI', () => 'Antica'),
     worldInfo: wrap('worldAPI', () => ({ world: 'Antica', type: 'Open PvP', battleye: 'Yellow' })),
+    extractMarketStatistics: wrap('statistics', () => ({buy:{transactions:10,highestPrice:45000,averagePrice:42000,lowestPrice:40000},sell:{transactions:20,highestPrice:55000,averagePrice:52000,lowestPrice:50000}})),
     extractMarketOffers: wrap('extract', rows), ...overrides
   } };
 }
@@ -70,7 +71,7 @@ test('world resolution finishes before offer extraction and a failed lookup stop
   release('Antica');
   const r = await work;
   assert.equal(r.status, 'ready');
-  assert.deepEqual(r.attemptedStages, STAGES);
+  assert.deepEqual(r.attemptedStages, STAGES.filter(s => s !== 'statistics'));
   assert.deepEqual(h.calls, ['hash', 'decode', 'market', 'item', 'characterAPI', 'worldAPI', 'extract', 'close']);
   assert.ok(!JSON.stringify(r).includes('Synthetic Character'));
   assert.ok(!JSON.stringify(r).includes(source('Hotkey').name));

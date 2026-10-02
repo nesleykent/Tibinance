@@ -39,9 +39,10 @@ export function matchOffers(world, input, captures = [], previous = []) {
     slots.add(slot);
     if (![r.amount, r.price].every(v => Number.isSafeInteger(v) && v > 0)) throw new Error('Invalid offer amount or price');
     if (r.total != null && (!Number.isSafeInteger(r.total) || r.total < 0)) throw new Error('Invalid offer total');
+    if (r.endsAtUtc != null && (typeof r.endsAtUtc !== 'string' || !Number.isFinite(Date.parse(r.endsAtUtc)) || new Date(r.endsAtUtc).toISOString() !== r.endsAtUtc)) throw new Error('Invalid resolved offer expiry');
     return { side: r.side, rowIndex: r.rowIndex, amount: r.amount, price: r.price,
       total: r.total ?? null, endsAt: normalizeEndsAt(r.endsAt), offerId: null,
-      matchAmbiguous: false };
+      matchAmbiguous: false, ...(r.endsAtUtc !== undefined ? {endsAtUtc:r.endsAtUtc} : {}) };
   });
   const used = new Set();
   // Reserve explicit import IDs and previous same-capture assignments first.
@@ -92,6 +93,7 @@ export function offerObservations(captures) {
     if (r.offerId) identities.get(key).add(r.offerId);
   }
   return captures.flatMap(c => (c.offers ?? []).map(r => ({ world: c.world,
-    capturedAt: c.capturedAt, hash: c.hash, processingVersion: c.processingVersion ?? 0,
+    capturedAt: c.capturedAt, capturedAtUtc:c.capturedAtUtc ?? null, captureTimeZone:c.captureTimeZone ?? null,
+    hash: c.hash, processingVersion: c.processingVersion ?? 0,
     ...r, matchAmbiguous: r.matchAmbiguous || identities.get(offerKey(c.world, r)).size > 1 })));
 }

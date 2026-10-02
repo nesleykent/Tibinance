@@ -1,16 +1,20 @@
+import { statisticsIssues, validTimeZone, normalizeCapturedAt } from './statistics.js';
 import { fmt, spread, goldOf } from './format.js';
 import { normalizeEndsAt } from './offers.js';
 
 export function analyse(state) {
-  const { sell, buy } = state.rows;
-  const warn = [...(state.ocrWarnings ?? [])];
-  const capturedAt = normalizeEndsAt(state.capturedAt);
+  const { sell, buy } = state.rows ?? {sell:[],buy:[]};
+  const statisticsWarnings = state.viewType !== 'statistics' ? [] : statisticsIssues(state.statistics30d).map(i => i.reason);
+  const warn = [...(state.ocrWarnings ?? []), ...statisticsWarnings];
+  const capturedAt = normalizeCapturedAt(state.capturedAt);
+  if (state.captureTimeZone != null && !validTimeZone(state.captureTimeZone)) warn.push('Capture timezone must be a valid IANA timezone');
   if (!capturedAt) warn.push('Capture timestamp is invalid');
   // Without a world there is nothing to file the observation under. Flagging it
   // here is what keeps it out of the "ready" count and out of Save all.
   if (!state.world) {
     warn.push(state.worldNote ?? 'the world could not be resolved from the filename');
   }
+  if (state.viewType === 'statistics') return {warn, ok:warn.length === 0, offerOk:true};
   const live = s => s.filter(r => r.amount > 0 && r.price > 0);
   const S = live(sell), B = live(buy);
 
@@ -61,6 +65,6 @@ export function analyse(state) {
     buyTopAmount: B.filter(r => r.price === bestBuy).reduce((a, r) => a + r.amount, 0),
     sellRows: S.length, buyRows: B.length,
     spread: spread({ sell: bestSell, buy: bestBuy }),
-    warn, ok: warn.length === 0
+    warn, offerOk: warn.length === statisticsWarnings.length, ok: warn.length === 0
   };
 }

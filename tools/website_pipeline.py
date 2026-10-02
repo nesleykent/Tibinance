@@ -16,6 +16,7 @@ class WebsitePipeline:
         contract = self.call({'op': 'contract'})
         self.version = contract['version']
         self.stages = contract['stages']
+        self.capture_time_zone = contract.get('localTimeZone')
 
     def call(self, request):
         try:
@@ -50,7 +51,8 @@ class WebsitePipeline:
         return self.call({'op': 'ingest', 'name': file.name,
                           'bytes': base64.b64encode(file.read_bytes()).decode('ascii'),
                           'mimeType': mimetypes.guess_type(file.name)[0] or 'application/octet-stream',
-                          'context': context, 'correction': correction, 'reprocess': reprocess})['result']
+                          'context': context, 'correction': correction, 'reprocess': reprocess,
+                          'captureTimeZone': getattr(self, 'capture_time_zone', None)})['result']
 
     def close(self):
         try:
