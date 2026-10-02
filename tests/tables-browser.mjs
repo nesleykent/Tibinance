@@ -1,0 +1,111 @@
+// Presentation regressions using real saved captures in isolated browser storage.
+// Run with the same local server / Playwright environment as statistics-browser.mjs.
+import {createRequire} from 'node:module';
+import {readFile} from 'node:fs/promises';
+import assert from 'node:assert/strict';
+const require=createRequire(import.meta.url);
+const {chromium,webkit}=require(process.env.TIBINANCE_NODE_MODULES ? `${process.env.TIBINANCE_NODE_MODULES}/playwright` : 'playwright');
+const engine=process.env.TIBINANCE_BROWSER ?? 'chrome';
+const browser=await (engine==='webkit' ? webkit.launch({headless:true}) : chromium.launch({headless:true,...(process.env.TIBINANCE_CHROME ? {executablePath:process.env.TIBINANCE_CHROME} : {channel:'chrome'})}));
+try {
+  const canonical=JSON.parse(await readFile(new URL('../data/observations.json',import.meta.url),'utf8'));
+  const statistics=canonical.filter(c=>c.viewType==='statistics');
+  assert.ok(statistics.length>=2,'Real Statistics snapshots available');
+  const world=statistics[0].world;
+  const offers=canonical.filter(c=>c.viewType!=='statistics');
+  const sameWorld=offers.filter(c=>c.world===world).sort((a,b)=>b.capturedAt.localeCompare(a.capturedAt)).slice(0,2);
+  const fixture=[...statistics,...sameWorld,offers.find(c=>c.world!==world)];
+  const context=await browser.newContext({timezoneId:'America/Sao_Paulo',viewport:{width:1440,height:1000}});
+  const page=await context.newPage();
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  page.on('console',m=>{if(m.type()==='error') errors.push(m.text());});
+  await page.route('**/data/observations.json',r=>r.fulfill({json:fixture}));
+  const root=process.env.TIBINANCE_TEST_URL ?? 'http://127.0.0.1:8765';
+  await page.goto(root);await page.waitForFunction(()=>document.getElementById('capturesLoading').hidden);
+  assert.equal(await page.title(),'Tibinance');
+  assert.equal(new URL(page.url()).origin,new URL(root).origin);
+  const stored=()=>page.evaluate(async()=> (await (await import('/js/store.js')).all()));
+  const original=await stored();
+  assert.equal(original.length,fixture.length);
+  const metricOrder=['transactions','tcVolume','highestPrice','averagePrice','lowestPrice'];
+  const expectedHead=['World','Tx','Volume','High','Avg','Low','Tx','Volume','High','Avg','Low','Capture','Hash','×'];
+  const statTable=page.locator('#statisticsSaved table');
+  assert.equal(await page.locator('#statisticsSaved details').count(),0);
+  assert.equal(await statTable.locator('tbody tr').count(),statistics.length);
+  assert.deepEqual(await statTable.locator('thead tr:last-child th').allTextContents(),expectedHead);
+  assert.deepEqual(await statTable.locator('.grp th').evaluateAll(a=>a.map(t=>[t.textContent,t.colSpan])),[['',1],['Sell Side',5],['Buy Side',5],['Data',3]]);
+  for(const snapshot of statistics){
+    const row=statTable.locator('tbody tr').filter({has:page.locator(`[data-del="${snapshot.hash}"]`)});
+    const values=await row.locator('td').allTextContents();
+    const metrics=values.slice(1,11).map(v=>Number(v.replace(/[^\d]/g,'')));
+    assert.deepEqual(metrics,['sell','buy'].flatMap(side=>metricOrder.map(k=>snapshot.statistics30d[side][k])));
+    assert.equal(values[0],snapshot.world);assert.equal(values[11],snapshot.capturedAt.replace('T',', '));
+    assert.equal(await row.locator('time').getAttribute('datetime'),snapshot.capturedAt);
+    assert.ok((await row.locator('time').getAttribute('title')).includes(snapshot.captureTimeZone));
+    assert.ok((await row.locator('time').getAttribute('title')).includes(snapshot.capturedAtUtc));
+    assert.equal(values[12],snapshot.hash.slice(0,10));assert.equal(await row.locator('.hash').getAttribute('title'),snapshot.hash);
+  }
+  assert.match(await statTable.locator('thead th').nth(5).getAttribute('title'),/25-TC lots/);
+  const visibleHeaders=()=>page.locator('#table thead tr:last-child th:visible').allTextContents();
+  assert.deepEqual(await visibleHeaders(),['World','Sell Price','Sell Volume','Gold Demand','Buy Price','Buy Volume','Gold Supply','Spread','Capture','Hash','']);
+  await page.locator('#columnPicker summary').click();
+  await page.locator('#columnList input[value="type"]').check();
+  await page.locator('#columnList input[value="battleye"]').check();
+  assert.deepEqual(await visibleHeaders(),['World','Sell Price','Sell Volume','Gold Demand','Buy Price','Buy Volume','Gold Supply','Spread','Type','BattlEye','Capture','Hash','']);
+  assert.equal(await page.locator('#table .g-data').getAttribute('colspan'),'5');
+  // Hiding a side removes its group label without hiding Statistics columns.
+  for(const key of ['sell','sellVolume','goldDemand']) await page.locator(`#columnList input[value="${key}"]`).uncheck();
+  assert.equal(await page.locator('#table .g-sell').isVisible(),false);
+  assert.equal(await statTable.locator('thead tr:last-child th:visible').count(),14);
+  await page.reload();await page.waitForFunction(()=>document.getElementById('capturesLoading').hidden);
+  assert.equal(await page.locator('#table .g-sell').isVisible(),false,'Column preference persists after reload');
+  await page.locator('#columnPicker summary').click();
+  for(const key of ['sell','sellVolume','goldDemand']) await page.locator(`#columnList input[value="${key}"]`).check();
+  await page.locator('#columnPicker summary').click();
+  const latest=sameWorld[0];
+  const offerRow=page.locator('#tbody tr').filter({has:page.locator(`[data-del="${latest.hash}"]`)});
+  assert.deepEqual((await offerRow.locator('td').allTextContents()).slice(1,8).map(v=>Number(v.replace(/[^\d-]/g,''))),[latest.sell,latest.sellVolume,latest.goldDemand,latest.buy,latest.buyVolume,latest.goldSupply,latest.sell-latest.buy]);
+  assert.equal(await offerRow.locator('td').nth(8).textContent(),latest.type);
+  assert.equal(await offerRow.locator('td').nth(9).textContent(),latest.battleye);
+  await page.locator('#table th[data-sort="sell"] button').click();
+  await page.waitForFunction(()=>document.querySelector('#table th[data-sort="sell"]').getAttribute('aria-sort')==='descending');
+  assert.equal(await page.locator('#table th[data-sort="sell"]').getAttribute('aria-sort'),'descending');
+  const sorted=await page.locator('#tbody tr td:nth-child(2)').allTextContents();
+  assert.deepEqual(sorted.map(v=>Number(v.replace(/[^\d]/g,''))),[...sorted.map(v=>Number(v.replace(/[^\d]/g,'')))].sort((a,b)=>b-a));
+  await page.locator(`#tbody [data-world="${world}"]`).click();
+  await page.waitForSelector('#tbody .older-row');
+  assert.equal(await page.locator('#tbody .older-row').count(),1,'Older offers remain expandable');
+  await page.locator('#filter').fill(world);await page.waitForFunction(w=>[...document.querySelectorAll('#tbody .world')].every(t=>t.textContent.includes(w)),world);
+  assert.equal(await statTable.locator('tbody tr').count(),statistics.filter(c=>c.world===world).length);
+  await page.locator('#captureRange [data-days="7"]').click();
+  await page.waitForFunction(()=>document.querySelectorAll('#statisticsSaved tbody tr').length===1);
+  await page.locator('#captureRange [data-days="0"]').click();
+  await page.locator('#filter').fill('no-such-world');
+  await page.waitForFunction(()=>document.querySelector('#statisticsSaved').textContent==='');
+  assert.equal(await page.locator('#empty').isVisible(),true);
+  await page.locator('#filter').fill('');await page.waitForFunction(n=>document.querySelectorAll('#statisticsSaved tbody tr').length===n,statistics.length);
+  assert.deepEqual(await stored(),original,'Rendering, sorting and filtering do not mutate records');
+  const download=page.waitForEvent('download');await page.locator('#exportJson').click();
+  assert.deepEqual(JSON.parse(await readFile(await (await download).path(),'utf8')),original,'JSON export remains identical');
+  for(const width of [1440,768,390]){
+    await page.setViewportSize({width,height:1000});
+    assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`No page overflow at ${width}`);
+    await page.locator('.captures .table-wrap').evaluateAll(wrappers=>wrappers.forEach(w=>w.scrollLeft=0));
+    await page.locator('.captures').screenshot({path:`/private/tmp/tibinance-tables-${engine}-${width}.png`});
+    // Horizontal scrolling exposes the far-right metadata/removal on mobile.
+    await statTable.locator('button.del').first().scrollIntoViewIfNeeded();
+    assert.equal(await statTable.locator('button.del').first().isVisible(),true);
+  }
+  const removed=await statTable.locator('button.del').first().getAttribute('data-del');
+  await statTable.locator('button.del').first().click();
+  await page.waitForFunction(n=>document.querySelectorAll('#statisticsSaved tbody tr').length===n,statistics.length-1);
+  assert.deepEqual(await stored(),original.filter(c=>c.hash!==removed),'Removal deletes only the selected snapshot');
+  for(const button of await statTable.locator('button.del').all()) await button.click();
+  await page.waitForFunction(()=>document.querySelector('#statisticsSaved').textContent==='');
+  const deletedOffer=await page.locator('#tbody button.del').first().getAttribute('data-del');
+  page.once('dialog',d=>d.accept());await page.locator('#tbody button.del').first().click();
+  await page.waitForFunction(h=>!document.querySelector(`[data-del="${h}"]`),deletedOffer);
+  assert.equal((await stored()).some(c=>c.hash===deletedOffer),false,'Offers removal retains its existing confirmation behavior');
+  assert.deepEqual(errors,[]);
+  console.log(`PASS ${engine}: real snapshots, compact Sell/Buy/Data rows, tooltips, offer ordering/grouping, column preferences, sorting, filters, exports, exact removal, responsive layout and clean runtime`);
+} finally {await browser.close();}

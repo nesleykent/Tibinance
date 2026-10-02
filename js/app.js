@@ -247,7 +247,34 @@ async function renderTable() {
     statCaptures = statCaptures.filter(r => time(r) >= end - captureDays * 86400000);
   }
 
-  $('statisticsSaved').innerHTML = statCaptures.length ? `<h3>Saved 30-day Statistics</h3><div class="statistics-saved">${statCaptures.map(c => `<details><summary>${esc(c.world)} · ${esc(showTimestamp(c.capturedAt))}</summary><table><thead><tr><th>Side</th><th>Transactions (25-TC lots)</th><th>TC Volume</th><th>Highest Price</th><th>Average Price</th><th>Lowest Price</th></tr></thead><tbody>${STATISTICS_SIDES.map(side => `<tr><th>${side === 'buy' ? 'Buy' : 'Sell'}</th>${['transactions','tcVolume','highestPrice','averagePrice','lowestPrice'].map(k => `<td>${num(c.statistics30d[side][k])}</td>`).join('')}</tr>`).join('')}</tbody></table><p class="fine">${esc(c.captureTimeZone ?? '')} · UTC ${esc(c.capturedAtUtc ?? 'unresolved')}</p><button class="del" data-del="${esc(c.hash)}" aria-label="Remove Statistics snapshot">Remove</button></details>`).join('')}</div>` : '';
+  $('statisticsSaved').innerHTML = statCaptures.length ? `<h3>Saved 30-day Statistics</h3>
+    <div class="table-wrap"><table class="data" aria-label="Saved 30-day Statistics">
+      <thead>
+        <tr class="grp">
+          <th></th><th colspan="5" scope="colgroup" class="g-sell">Sell Side</th>
+          <th colspan="5" scope="colgroup" class="g-buy">Buy Side</th>
+          <th colspan="3" scope="colgroup" class="g-data">Data</th>
+        </tr>
+        <tr>
+          <th scope="col">World</th>
+          ${['sell','buy'].map(() => `
+            <th scope="col" class="num" title="Number of Transactions (25-TC lots)">Tx</th>
+            <th scope="col" class="num" title="TC Volume">Volume</th>
+            <th scope="col" class="num" title="Highest Price (gp/TC)">High</th>
+            <th scope="col" class="num" title="Average Price (gp/TC)">Avg</th>
+            <th scope="col" class="num" title="Lowest Price (gp/TC)">Low</th>`).join('')}
+          <th scope="col">Capture</th><th scope="col">Hash</th><th scope="col" title="Remove">×</th>
+        </tr>
+      </thead>
+      <tbody>${statCaptures.map(c => `<tr>
+        <td class="world">${esc(c.world)}</td>
+        ${['sell','buy'].map(side => ['transactions','tcVolume','highestPrice','averagePrice','lowestPrice']
+          .map(k => `<td class="num">${num(c.statistics30d[side][k])}</td>`).join('')).join('')}
+        <td><time datetime="${esc(c.capturedAt)}" title="${esc(c.captureTimeZone ?? '')} · UTC ${esc(c.capturedAtUtc ?? 'unresolved')}">${esc(showTimestamp(c.capturedAt))}</time></td>
+        <td class="hash" title="${esc(c.hash)}">${esc(c.hash.slice(0, 10))}</td>
+        <td><button class="del" data-del="${esc(c.hash)}" title="Remove" aria-label="Remove Statistics snapshot">×</button></td>
+      </tr>`).join('')}</tbody>
+    </table></div>` : '';
 
   // One group per world: its latest capture leads, older ones follow newest first.
   // Groups are ordered by their latest row under the current sort.
@@ -278,8 +305,7 @@ async function renderTable() {
     : '';
 
   const rowHtml = (r, cls, first) => `<tr class="${cls}">
-      ${first}<td>${esc(r.type)}</td>
-      <td class="be be-${esc(r.battleye)}">${esc(r.battleye)}</td>
+      ${first}
       <td class="num">${num(r.sell)}</td>
       <td class="num">${num(r.sellVolume)}</td>
       <td class="num">${num(r.goldDemand)}</td>
@@ -288,6 +314,8 @@ async function renderTable() {
       <td class="num">${num(r.goldSupply)}</td>
       <td class="num${spread(r) < 0 ? ' neg' : ''}"
           title="${spread(r) < 0 ? 'crossed market; a price is almost certainly misread' : ''}">${num(spread(r))}</td>
+      <td>${esc(r.type)}</td>
+      <td class="be be-${esc(r.battleye)}">${esc(r.battleye)}</td>
       <td><time datetime="${esc(r.capturedAt)}">${esc(showTimestamp(r.capturedAt))}</time></td>
       <td class="hash" title="${esc(r.hash)}">${esc(r.hash.slice(0, 10))}</td>
       <td><button class="del" data-del="${esc(r.hash)}" title="Remove" aria-label="Remove this observation">✕</button></td>
@@ -323,15 +351,15 @@ function download(name, text, type) {
 /* --------------------------------------------------------- column chooser */
 // Every column but World can be hidden. Positions are 1-based within a row.
 const COLUMNS = [
-  { key: 'type', label: 'Type', pos: 2, group: 0 },
-  { key: 'battleye', label: 'BattlEye', pos: 3, group: 0 },
-  { key: 'sell', label: 'Sell Price', pos: 4, group: 1 },
-  { key: 'sellVolume', label: 'Sell Volume', pos: 5, group: 1 },
-  { key: 'goldDemand', label: 'Gold Demand', pos: 6, group: 1 },
-  { key: 'buy', label: 'Buy Price', pos: 7, group: 2 },
-  { key: 'buyVolume', label: 'Buy Volume', pos: 8, group: 2 },
-  { key: 'goldSupply', label: 'Gold Supply', pos: 9, group: 2 },
-  { key: 'spread', label: 'Spread', pos: 10, group: 3 },
+  { key: 'sell', label: 'Sell Price', pos: 2, group: 1 },
+  { key: 'sellVolume', label: 'Sell Volume', pos: 3, group: 1 },
+  { key: 'goldDemand', label: 'Gold Demand', pos: 4, group: 1 },
+  { key: 'buy', label: 'Buy Price', pos: 5, group: 2 },
+  { key: 'buyVolume', label: 'Buy Volume', pos: 6, group: 2 },
+  { key: 'goldSupply', label: 'Gold Supply', pos: 7, group: 2 },
+  { key: 'spread', label: 'Spread', pos: 8, group: 3 },
+  { key: 'type', label: 'Type', pos: 9, group: 4 },
+  { key: 'battleye', label: 'BattlEye', pos: 10, group: 4 },
   { key: 'capturedAt', label: 'Capture', pos: 11, group: 4 },
   { key: 'hash', label: 'Hash', pos: 12, group: 4 }
 ];

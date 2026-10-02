@@ -25,3 +25,11 @@ Missing fields now carry extraction-specific review reasons; incomplete reads do
 Verified49JS tests,59Python tools tests including real Details parity,5 downstream schema tests and market-update390/40 compatibility. Real WebKit/Chrome Details populate all8 values; real20-row Offers regression, forced OCR failure, manual recovery, JSON/CSV persistence and responsive EN/PT report fixtures passed. Site package refreshed with shared runtime. Final WebKit reprocess with existing Gentebra context passed: all8 fields,84900/152050TC,enabled save; screenshot inspected and original layout retained.
 
 Complete: final diff/syntax checks passed. Publish this verified follow-up directly to main; final task response records the commit. Canonical data and generated numerical reports remain unchanged. Preserve unrelated tools/validate_archive.py.
+
+## Compact saved Statistics table (presentation only)
+
+COMPLETE: saved Statistics now occupy one row per capture with grouped Sell Side / Buy Side / Data headers, five compact metrics per side, full-name/unit tooltips, capture/hash/removal at the right. Database columns now place Type/BattlEye under Data after Spread; existing visibility keys, filters, sorting, expansion and deletion handlers retained. Shared table styles and separate horizontal scroll containers reused; no data/schema/calculation/timezone/export changes or reprocessing.
+
+VERIFIED: 49 JavaScript tests passed. Permanent real-record browser regression passes Chrome and WebKit: distinct Sell/Buy values, timestamp precision/context, hashes, column preferences across reload, group spans, sorting, expansion, world/range filtering, unchanged storage/JSON exports, exact-hash removal and 1440/768/390 responsive layouts. Screenshots inspected outside repository. Browser plugin not available; existing Playwright workflow used. Files: index.html, js/app.js, css/app.css, tests/tables-browser.mjs, README.md, this ledger. Preserve unrelated tools/validate_archive.py.
+
+COMPLETE: existing Chrome ingestion/storage/responsive browser suite and WebKit Statistics CSV/EN-PT report regressions also passed. Final diff reviewed; canonical datasets and report numerical outputs remain untouched. Next step: commit/push only the six intended presentation/test/documentation files to main; report the resulting commit hash.

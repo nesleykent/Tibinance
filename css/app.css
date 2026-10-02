@@ -310,5 +310,3 @@ footer p { margin:0; }
 .statistics-sides label { display:flex; align-items:center; justify-content:space-between; gap:var(--space-2); margin-block:var(--space-2); }
 .statistics-sides input { width:calc(var(--unit) * 32); max-width:45%; }
 @media (max-width: 650px) { .statistics-sides { grid-template-columns: 1fr; } }
-
-.statistics-saved { max-width: 100%; overflow-x: auto; }

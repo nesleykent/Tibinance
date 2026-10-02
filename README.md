@@ -241,12 +241,19 @@ in its column heading instead: `Sell (gp/TC)`, `Gold Demand (gp)`.
 
 ## Presentation of the captures table
 
-Manage's captures table groups its columns **Sell side** / **Buy side**, with
-the derived measures — **Spread**, **Gold Demand**, **Gold Supply** — held
-apart under **Derived**, gross and never offset against one another: a single
-net figure would hide how thin or deep either side of the market is. Every
-column is labelled for exactly what it holds, and what a derived measure
-means and how it is computed is one hover away, on that column's own header.
+The Database table orders its groups **Sell side** / **Buy side** / **Derived** /
+**Data**, after World. Sell price, volume and Gold Demand stay together; Buy price,
+volume and Gold Supply stay together. Spread sits under Derived. Type, BattlEye,
+Capture, Hash and removal sit under Data. Existing column visibility preferences
+remain in effect. Gold Demand and Gold Supply remain gross, never offset against
+one another. Column tooltips explain the measures and calculations.
+
+Saved 30-day Statistics use the same compact table styling, with exactly one row
+per snapshot: World, five Sell metrics, five Buy metrics, then Capture, Hash and
+removal under Data. Each side has **Tx / Volume / High / Avg / Low**; tooltips expand
+these to transactions (25-TC lots), TC volume and the three prices. The capture
+keeps its local fractional seconds; its tooltip retains the timezone and resolved
+UTC timestamp. This presentation does not change records or exported data.
 
 ## Dates and times
 
@@ -512,6 +519,7 @@ python3 -m unittest discover -s tools -p 'test_statistics.py' -v
 python3 -m unittest discover -s reports/tc-cycle -p 'test_statistics_schema.py' -v
 # Against the local static server, with optional real screenshot paths in env:
 node tests/statistics-browser.mjs
+node tests/tables-browser.mjs
 ```
 
 `TIBINANCE_STATISTICS_SAMPLE` enables real Details OCR/interaction checks;

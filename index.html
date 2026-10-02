@@ -112,14 +112,14 @@
       <table id="table" class="data">
         <thead>
           <tr class="grp">
-            <th colspan="3"></th>
+            <th></th>
             <th colspan="3" class="g-sell" title="Offers to sell coins: what sellers are asking, and the gold that would satisfy them">Sell Side</th>
             <th colspan="3" class="g-buy" title="Offers to buy coins: what buyers are bidding, and the gold they have committed">Buy Side</th>
             <th class="g-derived" title="Derived measure; not read from the screenshot">Derived</th>
-            <th colspan="3" class="g-data">Data</th>
+            <th colspan="5" class="g-data">Data</th>
           </tr>
           <tr>
-            <th data-sort="world">World</th><th data-sort="type">Type</th><th data-sort="battleye">BattlEye</th>
+            <th data-sort="world">World</th>
             <th class="num" data-sort="sell" title="Best (lowest) Sell price. Lower is cheaper to buy coins.">Sell Price</th>
             <th class="num" data-sort="sellVolume" title="Coins offered for sale across every visible offer.">Sell Volume</th>
             <th class="num" data-sort="goldDemand" title="Gold sellers are asking for: sum of amount × price over every visible sell offer.">Gold Demand</th>
@@ -127,14 +127,15 @@
             <th class="num" data-sort="buyVolume" title="Coins wanted across every visible buy offer.">Buy Volume</th>
             <th class="num" data-sort="goldSupply" title="Gold escrowed in buy offers: sum of amount × price over every visible buy offer.">Gold Supply</th>
             <th class="num" data-sort="spread" title="Sell Price − Buy Price. Tighter means a more liquid market.">Spread</th>
+            <th data-sort="type">Type</th><th data-sort="battleye">BattlEye</th>
             <th data-sort="capturedAt">Capture</th><th>Hash</th><th></th>
           </tr>
         </thead>
         <tbody id="tbody"></tbody>
       </table>
-      <section id="statisticsSaved" aria-label="Saved 30-day Statistics"></section>
-      <p id="empty" class="empty" hidden>Nothing stored yet. Drop a screenshot above.</p>
     </div>
+    <section id="statisticsSaved" aria-label="Saved 30-day Statistics"></section>
+    <p id="empty" class="empty" hidden>Nothing stored yet. Drop a screenshot above.</p>
   </section>
 
 </section>
