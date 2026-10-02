@@ -21,7 +21,7 @@ export function analyse(state) {
         warn.push(`${side} row ${i + 1}: amount, price and total must be positive integers`);
       }
       if (r.amount > 0 && r.price > 0 && !normalizeEndsAt(r.endsAt)) {
-        warn.push(`${side} row ${i + 1}: correct Ends At (YYYY-MM-DDTHH:MM:SS) to track this offer`);
+        warn.push(`${side} row ${i + 1}: correct Ends At (YYYY-MM-DD, HH:MM:SS) to track this offer`);
       }
       if (r.total > 0 && r.amount * r.price !== r.total) {
         r.bad = true;

@@ -3,11 +3,11 @@ import { ingestScreenshot, prepareCapture } from './ingestion.js';
 import { analyse } from './validation.js';
 import * as store from './store.js';
 import { fmt, esc, spread, num } from './format.js';
-import { offerObservations } from './offers.js';
+import { normalizeEndsAt, offerObservations } from './offers.js';
 
 const $ = id => document.getElementById(id);
-
-/* ---------------------------------------------------------------- analysis */
+// Timestamps are stored as YYYY-MM-DDTHH:MM:SS; the UI shows them the way the Market does.
+const showTimestamp = v => normalizeEndsAt(v)?.replace('T', ', ') ?? v ?? '';
 
 /* ------------------------------------------------------------------ cards */
 const cards = new Map();
@@ -35,8 +35,8 @@ function rowsHtml(state, side) {
              aria-label="${noun} offer ${i + 1}, price per coin in gold">
       <input data-s="${side}" data-i="${i}" data-f="total"  value="${r.total ? fmt(r.total) : ''}"
              aria-label="${noun} offer ${i + 1}, total price in gold">
-      <input data-s="${side}" data-i="${i}" data-f="endsAt" value="${esc(r.endsAt ?? '')}"
-             placeholder="YYYY-MM-DDTHH:MM:SS" aria-label="${noun} offer ${i + 1}, Ends At">
+      <input data-s="${side}" data-i="${i}" data-f="endsAt" value="${esc(showTimestamp(r.endsAt))}"
+             placeholder="YYYY-MM-DD, HH:MM:SS" aria-label="${noun} offer ${i + 1}, Ends At">
       <span class="flag ${r.bad ? 'bad' : 'ok'}" aria-hidden="true"
             title="${r.bad ? 'amount × price does not equal the total' : 'amount × price matches the total'}"
             >${r.bad ? '✕' : '✓'}</span>
@@ -266,7 +266,7 @@ async function renderTable() {
       <td class="num">${num(r.goldSupply)}</td>
       <td class="num${spread(r) < 0 ? ' neg' : ''}"
           title="${spread(r) < 0 ? 'crossed market; a price is almost certainly misread' : ''}">${num(spread(r))}</td>
-      <td><time datetime="${esc(r.capturedAt)}">${esc(r.capturedAt)}</time></td>
+      <td><time datetime="${esc(r.capturedAt)}">${esc(showTimestamp(r.capturedAt))}</time></td>
       <td class="hash" title="${esc(r.hash)}">${esc(r.hash.slice(0, 10))}</td>
       <td><button class="del" data-del="${esc(r.hash)}" title="Remove" aria-label="Remove this observation">✕</button></td>
     </tr>`;
@@ -397,7 +397,7 @@ $('queue').addEventListener('input', e => {
   state.saveError = null;
   const n = parseInt(i.value.replace(/[^\d]/g, ''), 10);
   state.rows[i.dataset.s][+i.dataset.i][i.dataset.f] = i.dataset.f === 'endsAt'
-    ? i.value : (Number.isFinite(n) ? n : 0);
+    ? (normalizeEndsAt(i.value) ?? i.value) : (Number.isFinite(n) ? n : 0);
   const pos = i.selectionStart, key = `${i.dataset.s}-${i.dataset.i}-${i.dataset.f}`;
   render(state);
   const again = document.querySelector(
