@@ -95,7 +95,10 @@ try {
  await page.locator('#exportOffers').click();
  const offerCsv=await readFile(await (await offerDownload).path(),'utf8');
  assert.ok(offerCsv.includes('endsAtUtc') && offerCsv.includes('captureTimeZone'));
- const baseline=JSON.parse(await readFile(new URL('../reports/tc-cycle/market-update.json',import.meta.url),'utf8'));
+ // Keep the two controlled Statistics fixtures independent of canonical raw
+ // records, including the real sample hash now present after the rebuild.
+ const baseline=JSON.parse(await readFile(new URL('../reports/tc-cycle/market-update.json',import.meta.url),'utf8'))
+   .filter(c=>c.viewType!=='statistics');
  const later=structuredClone(capture);later.hash='later-stats';later.capturedAt='2026-10-03T00:36:37.332';later.capturedAtUtc='2026-10-03T03:36:37.332Z';later.captureDate='2026-10-03';later.statisticsReferenceDate='2026-10-02';later.statistics30d.buy.averagePrice=45000;
  await page.route('**/market-update.json',r=>r.fulfill({json:[...baseline,capture,later]}));
  for(const lang of ['index.html','pt-br.html']){

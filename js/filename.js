@@ -21,8 +21,8 @@ export function parseFilename(name) {
   const [, Y, Mo, D, h, mi, s, fraction, rest] = m;
   const character = rest.trim();
   if (!character) throw new Error('No character name found in the filename');
-  // ISO 8601 extended format. Sorts correctly as a plain string, and carries
-  // no locale ambiguity about which field is the day and which is the month.
+  // ISO 8601 extended format has no locale ambiguity. Archive ordering uses
+  // compareCaptureTimes below to compare the full fractional precision.
   const capturedAt = `${Y}-${Mo}-${D}T${h}:${mi}:${s}${fraction ? `.${fraction}` : ''}`;
   const date = new Date(`${capturedAt}Z`);
   if (!Number.isFinite(date.getTime()) || date.toISOString().slice(0, 19) !== capturedAt.slice(0,19)) {
@@ -36,4 +36,15 @@ export function parseFilename(name) {
 export function acceptsScreenshotName(name) {
   const match = RE.exec(name.replace(/\.[^.]+$/, ''));
   return Boolean(match && match[8].trim());
+}
+
+// Parsed filename clocks, including arbitrary fractional precision. Date.parse
+// truncates to milliseconds and must not decide archive processing/identity order.
+export function compareCaptureTimes(a, b) {
+  const components = value => value.slice(0,19).split(/[-T:]/).map(Number);
+  const A = components(a), B = components(b);
+  for (let i = 0; i < A.length; i++) if (A[i] !== B[i]) return A[i] - B[i];
+  const af = a.split('.')[1] ?? '', bf = b.split('.')[1] ?? '';
+  const width = Math.max(af.length,bf.length), x = af.padEnd(width,'0'), y = bf.padEnd(width,'0');
+  return x < y ? -1 : x > y ? 1 : 0;
 }

@@ -8,6 +8,7 @@ import re
 from pathlib import Path
 import subprocess
 import sys
+from decimal import Decimal
 
 from website_pipeline import WebsitePipeline
 
@@ -19,6 +20,14 @@ CAPTURE_FIELDS = ('hash', 'world', 'capturedAt', 'type', 'battleye', 'sell', 'se
 STAGE_FIELDS = ('filename', 'deduplication', 'market', 'item', 'view', 'metadata', 'world', 'extraction', 'statistics', 'validation')
 STATUSES = ('ready', 'needs_review', 'excluded_automatic', 'excluded_manual', 'excluded_market',
             'excluded_other_item', 'unclassifiable', 'duplicate')
+
+
+def capture_order(value):
+    """Compare the complete parsed filename clock, without float/microsecond truncation."""
+    if value is None:
+        return (9999, 99, 99, 99, 99, 99, Decimal(0))
+    whole, _, fraction = value.partition('.')
+    return (*map(int, re.split(r'[-T:]', whole)), Decimal('0.' + (fraction or '0')))
 
 
 class PrivateArgumentParser(argparse.ArgumentParser):
@@ -49,6 +58,8 @@ def safe_result(entry):
     result = {k: entry.get(k) for k in ('hash', 'world', 'capturedAt')}
     result['status'] = entry.get('status') if entry.get('status') in STATUSES else 'needs_review'
     result['processingVersion'] = entry.get('processingVersion', 0)
+    if entry.get('viewType') in ('offers','statistics'):
+        result['viewType'] = entry['viewType']
     result['stages'] = {k: v for k, v in entry.get('stages', {}).items()
                         if k in STAGE_FIELDS and isinstance(v, bool)}
     result['attemptedStages'] = [s for s in entry.get('attemptedStages', []) if s in STAGE_FIELDS]
@@ -99,7 +110,7 @@ def write_outputs(output, baseline, results, rebuild=False, inventory=None):
     results = [safe_result(r) for r in results]
     atomic_json(output / 'backfill-results.json', results)
     captures = [r['capture'] for r in results if r['status'] == 'ready' and r.get('capture')]
-    captures.sort(key=lambda c: (c['capturedAt'], c['world'].casefold(), c['hash']))
+    captures.sort(key=lambda c: (capture_order(c['capturedAt']), c['hash']))
     if len({c['hash'] for c in captures}) != len(captures):
         raise ValueError('Duplicate canonical capture hash')
     atomic_json(output / 'captures-extracted.json', captures)
@@ -135,6 +146,7 @@ def main():
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--resume', action='store_true')
     parser.add_argument('--retry-review', action='store_true')
+    parser.add_argument('--retry-runtime', action='store_true', help='Retry only checkpointed browser execution failures')
     parser.add_argument('--corrections', type=Path)
     parser.add_argument('--exclude-hash', action='append', default=[])
     parser.add_argument('--utc-offset')
@@ -142,6 +154,7 @@ def main():
     parser.add_argument('--rebuild', action='store_true')
     parser.add_argument('--resolve-worlds', action='store_true', help='World resolution is always part of canonical ingestion')
     parser.add_argument('--workers', type=int, default=1, help='The shared website OCR worker processes captures sequentially')
+    parser.add_argument('--isolate-browser', action='store_true', help='Use a fresh shared-pipeline browser per screenshot')
     parser.add_argument('--vision-binary', help=argparse.SUPPRESS)
     args = parser.parse_args()
     if not args.folder.is_dir():
@@ -151,38 +164,63 @@ def main():
     if args.utc_offset and not re.fullmatch(r'[+-](?:0\d|1[0-3]):[0-5]\d|[+-]14:00', args.utc_offset):
         parser.error('UTC offset must be a valid signed HH:MM offset')
     baseline = [safe_capture(c) for c in json.loads(args.baseline.read_text())] if args.baseline else []
-    contexts = {c['hash']: c for c in baseline}
+    # A raw rebuild may retain trusted historical world identity, never old
+    # extraction values or the old capture clock (which may omit fractions).
+    contexts = {c['hash']: {k:c[k] for k in ('hash','world','type','battleye') if k in c}
+                if args.rebuild else c for c in baseline}
     if len(contexts) != len(baseline):
         parser.error('Historical context contains duplicate capture hashes')
     corrections = {c['hash']: c for c in json.loads(args.corrections.read_text())} if args.corrections else {}
     all_files = [p for p in args.folder.rglob('*') if p.is_file()]
-    images = sorted((p for p in all_files if p.suffix.lower() in IMAGE_TYPES), key=lambda p: p.name)
+    images = [p for p in all_files if p.suffix.lower() in IMAGE_TYPES]
     args.output.mkdir(parents=True, exist_ok=True)
     prior_path = args.output / 'backfill-results.json'
     prior = json.loads(prior_path.read_text()) if args.resume and prior_path.exists() else []
     with WebsitePipeline() as pipeline:
         eligibility = pipeline.eligible(images)
         eligible = [p for p, keep in zip(images, eligibility) if keep]
+        clocks = dict(zip(eligible, pipeline.capture_times(eligible)))
+        eligible.sort(key=lambda p: capture_order(clocks[p]))
         # Invalidating old-version results also removes automatic captures from resumes.
         previous = {r['hash']: safe_result(r) for r in prior if r.get('processingVersion') == pipeline.version}
-        results = {}; hashes = set(); resumed = 0
+        results = {}; hashes = set(); resumed = 0; processing_order = []
         counts = {s: {'entered': 0, 'passed': 0} for s in pipeline.stages}
         counts['filename'] = {'entered': len(images), 'passed': len(eligible)}
         for file in eligible:
             h = hashlib.sha256(file.read_bytes()).hexdigest()
+            processing_order.append({'hash':h,'capturedAt':clocks[file]})
+            atomic_json(args.output / 'processing-order.json', processing_order)
+            repeated = h in hashes
             hashes.add(h)
             old = previous.get(h)
             checked = None
-            if h in args.exclude_hash:
+            if repeated:
+                entry = pipeline.ingest(file, results.get(h, {}).get('capture') or {'hash':h}, reprocess=False)
+                if entry['status'] != 'duplicate': raise RuntimeError('Duplicate must stop at canonical preflight')
+            elif h in args.exclude_hash:
                 entry = {'hash': h, 'status': 'excluded_manual', 'processingVersion': pipeline.version,
                          'stages': {'filename': True}, 'attemptedStages': ['filename'], 'issues': [], 'offers': []}
-            elif old and h not in corrections and not (args.retry_review and old['status'] == 'needs_review'):
+            elif old and h not in corrections and not ((args.retry_review and old['status'] == 'needs_review')
+                    or (args.retry_runtime and old.get('runtimeFault'))):
                 checked = pipeline.ingest(file, old.get('capture') or old.get('context') or {'hash': h}, reprocess=False)
                 if checked['status'] != 'duplicate':
                     raise RuntimeError('Checkpoint must pass canonical duplicate preflight')
                 entry = old; resumed += 1
             else:
-                entry = scan_file(file, contexts, pipeline, corrections)
+                if args.isolate_browser:
+                    with WebsitePipeline() as reader:
+                        try:
+                            entry = scan_file(file, contexts, reader, corrections)
+                        except RuntimeError as error:
+                            phase = getattr(error,'phase',None)
+                            entry = {'hash':h,'capturedAt':clocks[file],'status':'needs_review',
+                                     'processingVersion':pipeline.version,'offers':[],
+                                     'stages':{'filename':True},'attemptedStages':['filename'],
+                                     'issues':[{'field':phase or 'validation','reason':'Validation requires review'}]}
+                            if getattr(error,'fault',None) in ('browser_closed','browser_crash'):
+                                entry['runtimeFault'] = error.fault
+                else:
+                    entry = scan_file(file, contexts, pipeline, corrections)
             executed = checked if checked is not None else entry
             for s in pipeline.stages[1:]:
                 counts[s]['entered'] += s in executed.get('attemptedStages', [])
@@ -192,6 +230,8 @@ def main():
             if entry['status'] != 'duplicate' or h not in results:
                 results[h] = safe_result(entry)
             atomic_json(prior_path, list(results.values()))
+            print(json.dumps({'completed':len(processing_order),'eligible':len(eligible),
+                              'capturedAt':clocks[file],'status':entry['status']}), flush=True)
         initial_hashes = {c['hash'] for c in baseline}
         original_source = args.output / 'source-baseline.json'
         if original_source.exists(): initial_hashes = {c['hash'] for c in json.loads(original_source.read_text())}
@@ -200,6 +240,10 @@ def main():
                      'filenameEligible': len(eligible), 'filenameRejected': len(images) - len(eligible),
                      'duplicateScreenshots': len(eligible) - len(hashes), 'reusedCheckpoints': resumed,
                      'processingVersion': pipeline.version, 'stageCounts': counts}
+        inventory['chronologicalRange'] = {'oldest':next((clocks[p] for p in eligible if clocks[p]),None),
+                                          'newest':next((clocks[p] for p in reversed(eligible) if clocks[p]),None)}
+        inventory['unresolvedFilenameTimes'] = sum(clocks[p] is None for p in eligible)
+        inventory['captureTimeZone'] = pipeline.capture_time_zone
         atomic_json(args.output / 'inventory.json', inventory)
         atomic_json(args.output / 'capture-contexts.json', list(contexts.values()))
         source = args.output / 'source-baseline.json'

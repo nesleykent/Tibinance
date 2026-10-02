@@ -43,6 +43,9 @@ class WebsitePipeline:
         response = self.call({'op': 'eligibility', 'names': [p.name for p in files]})
         return response['eligible']
 
+    def capture_times(self, files):
+        return self.call({'op': 'capture-times', 'names': [p.name for p in files]})['capturedAt']
+
     def ingest(self, file, context=None, correction=None, reprocess=True):
         if not self.eligible([file])[0]:
             return {'status': 'excluded_automatic', 'processingVersion': self.version,

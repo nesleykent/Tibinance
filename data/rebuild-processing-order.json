@@ -1,0 +1,1706 @@
+[
+  {
+    "hash": "15bb23cbd31b6013694cd32897ec1189a6d230b807888266489c88c0849c65cd",
+    "capturedAt": "2024-10-10T21:23:56.092"
+  },
+  {
+    "hash": "f25f311400106cf1bc5215370a7445e227a85ab822c4959b1040e1be01590bc7",
+    "capturedAt": "2024-10-12T04:20:34.749"
+  },
+  {
+    "hash": "629f8159c95592bb338c2f957024b79f5db9b401759a99f49a63c1663bdcc0d0",
+    "capturedAt": "2024-11-20T11:54:35.023"
+  },
+  {
+    "hash": "4f269f2f64348a8f573d5cfc226f9a0f4c4007da18f8df7c1cbbbfa85884f649",
+    "capturedAt": "2024-11-29T10:44:26.518"
+  },
+  {
+    "hash": "3abc62b6b66b61ffc0daa3c7b1327aa07e1ee4f8a46242b159db38b4c5505967",
+    "capturedAt": "2024-12-08T05:36:11.558"
+  },
+  {
+    "hash": "dc639b7830fe8027b5d14eea96e575f50704b74fee9ce58dfa06a2baeaae43ca",
+    "capturedAt": "2024-12-10T02:59:11.409"
+  },
+  {
+    "hash": "d3cbda2da868761177b696a4f449d723c8c05a83a05552c0a109e77ef7e69ae5",
+    "capturedAt": "2024-12-12T17:37:06.398"
+  },
+  {
+    "hash": "e39010b10d106459c9bfb1bfc6d6df08a827a668190031eed1f85b26e3e7fc5f",
+    "capturedAt": "2025-01-14T02:50:29.470"
+  },
+  {
+    "hash": "27b223e43026f471f5553fa9483e51960ca7a7fe14a9706d0eec245c48efd7f9",
+    "capturedAt": "2025-01-31T16:26:37.552"
+  },
+  {
+    "hash": "6f4e6ece159fe91780d3c97addaba599afe287fbe5e8c0ff1bdbf978fec036d8",
+    "capturedAt": "2025-02-10T05:36:04.987"
+  },
+  {
+    "hash": "fbe44d4e3bceea85eb8988b594bb58e5023811508401fe8ca3191e18d88d4d33",
+    "capturedAt": "2026-01-04T16:14:52.073"
+  },
+  {
+    "hash": "08463419cc37efba9a166d68ec4b77093e602cdc0d65533a91ebd0a763d72a78",
+    "capturedAt": "2026-01-18T21:59:34.342"
+  },
+  {
+    "hash": "ee79d0f181b3d212d344c002cbdbf26b0e988d68b6ee083b0b96ed51e4a03820",
+    "capturedAt": "2026-04-18T10:57:08.152"
+  },
+  {
+    "hash": "eb92bfdb8714727f17f2d1ae207b63cc09e4fa4b189ce7a9b0f402e0d562484f",
+    "capturedAt": "2026-04-18T10:57:11.301"
+  },
+  {
+    "hash": "3fc6482478482f278c0a46cdfae60d0c91749f1c100ea2e69740eb0836638d77",
+    "capturedAt": "2026-04-21T02:47:05.841"
+  },
+  {
+    "hash": "108f012b2092d8d167131938f76d46989fed5f78ec574c808dd19af90019071a",
+    "capturedAt": "2026-04-22T04:00:00.034"
+  },
+  {
+    "hash": "961bf5dc4d1c0724a7e2f15a060b2084db0eb238d2f4536648649a5c9edb5ef3",
+    "capturedAt": "2026-04-29T19:20:01.129"
+  },
+  {
+    "hash": "bf239559b37bba28aaa66dc64793b84182624e2a5ae716a63278e83d1230a25d",
+    "capturedAt": "2026-05-13T21:51:42.855"
+  },
+  {
+    "hash": "cdf310bc2261bf5279eabcf89461416d3de84b0351d5fc6aae1db671d473abb1",
+    "capturedAt": "2026-05-13T21:51:45.921"
+  },
+  {
+    "hash": "095e9683298187d65fd820629e069ba482788e570179219c4efcaabe9f132326",
+    "capturedAt": "2026-05-13T21:52:35.427"
+  },
+  {
+    "hash": "07d22f01654a16ece6ca6cb6a64ccb91be7c0c0a089ceb1ac07dc6c01f295e5d",
+    "capturedAt": "2026-06-16T18:34:44.773"
+  },
+  {
+    "hash": "fba09eb70d16c89dbac96b220474b7282300e550596aaf628983f443ad586ddd",
+    "capturedAt": "2026-06-16T19:51:57.867"
+  },
+  {
+    "hash": "70b499633bf1b3c3053c2035a0564c93292db441d52d852ab68e6f4f2414873d",
+    "capturedAt": "2026-07-27T20:52:37.113"
+  },
+  {
+    "hash": "8814317f79f207eea1c13c3bbdaa8ef654704845f7919a69f5c366987198bfc0",
+    "capturedAt": "2026-08-02T22:19:01.839"
+  },
+  {
+    "hash": "185af09643d76b50ab5ebd328841e34b33b35b16ef4bc958ff55d9e5c1210fdd",
+    "capturedAt": "2026-08-03T04:34:32.796"
+  },
+  {
+    "hash": "7f2966de188d429866e5e969b92260ff6ec417e8b3ea590bf4fb7c344d2f86f0",
+    "capturedAt": "2026-08-03T14:24:17.630"
+  },
+  {
+    "hash": "d47d74c3dbcb2833c678c0c8ad908c443d9a52023dae61f9ca4a3d04b279e8f4",
+    "capturedAt": "2026-08-03T14:29:21.361"
+  },
+  {
+    "hash": "c3d2cd3d1b648e5285a746f33e8ab8bf3f2c9e443cae8981b01d00136c418200",
+    "capturedAt": "2026-08-03T14:31:37.710"
+  },
+  {
+    "hash": "5d10e5460d4506a8993bd1c688694fb09bcb49a0fb9a8c41654b34cda1340541",
+    "capturedAt": "2026-08-11T10:03:10.679"
+  },
+  {
+    "hash": "97f129a6bd677397afd8b7906ebeb69c397259293385b50d3f2d22166de1a76e",
+    "capturedAt": "2026-08-11T10:03:46.596"
+  },
+  {
+    "hash": "eeefef07fe760d3d212f0a6039efd3d9e186060480ae2816f5c44141456dc11b",
+    "capturedAt": "2026-08-17T04:57:49.390"
+  },
+  {
+    "hash": "a067cc1d6db70aa3eacf9fe99434d79b033c5de33d0271e6eea3989a61abee6f",
+    "capturedAt": "2026-09-21T12:43:17.718"
+  },
+  {
+    "hash": "03eaff65dff96f400bceb9c74fc046730f2ee110038693555c81894f2acde654",
+    "capturedAt": "2026-09-21T12:54:06.057"
+  },
+  {
+    "hash": "b50cf2924f73ecd82689986e8913460c933324722e1c7889ece1049b214a12a8",
+    "capturedAt": "2026-09-21T12:54:47.094"
+  },
+  {
+    "hash": "61e7e81452c3b0564d1a43fab10a4be1c230d89f9cecc55bd80b025419e646f3",
+    "capturedAt": "2026-09-21T12:55:34.463"
+  },
+  {
+    "hash": "4a9399ad543067735a713b987292b208cc8365c39b5d0d597515c5d74dee92b2",
+    "capturedAt": "2026-09-21T12:56:46.315"
+  },
+  {
+    "hash": "e33eb000d4b0b1d7b04188865fb1247d933c557a19b80dfc2800d02e531fb8e9",
+    "capturedAt": "2026-09-21T12:58:52.013"
+  },
+  {
+    "hash": "049b5087d5d4fc8cfa4a51ef316391bec242397c90c248829b0ec5e2232fb68b",
+    "capturedAt": "2026-09-21T13:00:32.146"
+  },
+  {
+    "hash": "0545ba729e8ae40472870bacf48451a36534ec21d33070b9d5331d995c0503d6",
+    "capturedAt": "2026-09-21T13:01:03.379"
+  },
+  {
+    "hash": "472737ea282b4808672397bb99a400125ed122f2b771adac172ba429e66cc21f",
+    "capturedAt": "2026-09-21T13:02:16.744"
+  },
+  {
+    "hash": "affd6ca1fb67546a12f0abda938659a43d8209d53e56c10417db3756a1da28d9",
+    "capturedAt": "2026-09-21T13:03:52.158"
+  },
+  {
+    "hash": "ddaf450c15ea068d37cda0b9201c4960ef23545f270a426f7410d9091699b92b",
+    "capturedAt": "2026-09-21T13:05:52.743"
+  },
+  {
+    "hash": "a1458e0c8586293a603022bed1079573604ddb51b50ef660ebf7b5f018bf3046",
+    "capturedAt": "2026-09-21T13:06:34.843"
+  },
+  {
+    "hash": "c8dbcdb66f4724662a4c78a5d3c80c5280c0cc25f1da8fdcc2e63d3ba002b58e",
+    "capturedAt": "2026-09-21T13:07:29.575"
+  },
+  {
+    "hash": "5d9a4dc7088b85f9e4e83b9e2f8e56f63f6ea80e88f0a2508688856d2b89cb1d",
+    "capturedAt": "2026-09-21T13:08:57.059"
+  },
+  {
+    "hash": "2b89b687d9ca0dc8885801bfb608b12310ec221ffc574bb399a1e52bf58dcc4a",
+    "capturedAt": "2026-09-21T14:19:35.404"
+  },
+  {
+    "hash": "804a301d57614faab10fb25c61914b2970a3257bb712bf972c4ac7bf71c994b2",
+    "capturedAt": "2026-09-21T15:04:20.891"
+  },
+  {
+    "hash": "ee868760d7f85dcd268255a61fd0e9ecff0868b94a6f333bd5ad6971e346b5a8",
+    "capturedAt": "2026-09-21T17:57:44.848"
+  },
+  {
+    "hash": "bfbe2f90401f8e4c920de15c37d7843375e04c031baeba10a60b62061836c54f",
+    "capturedAt": "2026-09-21T20:38:57.950"
+  },
+  {
+    "hash": "b0d308df0bacea5b0f51a13fa1ebc4db226b346efc108fe0cc77ee41daa3e2df",
+    "capturedAt": "2026-09-22T05:32:30.710"
+  },
+  {
+    "hash": "17291f5306b84a0f1f1c6279b0f8b18a07ecf6186d4cf211662594a4d6c35134",
+    "capturedAt": "2026-09-22T05:36:49.706"
+  },
+  {
+    "hash": "73870369fa0b95642a3a4a8e240e1b2cc86d502fb615192fe61320c20b05d24a",
+    "capturedAt": "2026-09-22T05:37:43.936"
+  },
+  {
+    "hash": "9ecaaaca086d72c085b9633ca02f98abd4b499239f99436c3133fac1caaffc5e",
+    "capturedAt": "2026-09-22T05:42:06.251"
+  },
+  {
+    "hash": "47f818a1d80c33e15b0a41d05b7a80ef1d0e68891208046a4bc50c7c593b4e5c",
+    "capturedAt": "2026-09-22T05:51:17.343"
+  },
+  {
+    "hash": "08b9474f708862a21b5dce0ac0580241e8f816ec6e55301193b06f3ea2b8436d",
+    "capturedAt": "2026-09-22T06:10:11.679"
+  },
+  {
+    "hash": "f61f089337d9a8d3eea4233fdeadb0a4bad36907b74cb5865faf6b02f1db0cd2",
+    "capturedAt": "2026-09-22T06:10:50.073"
+  },
+  {
+    "hash": "03ef5cb9100cab83bc3d609f225bf95649412a994f70491cd8d2b40ce4fb1f87",
+    "capturedAt": "2026-09-22T06:15:39.892"
+  },
+  {
+    "hash": "4bd3ee8652563b8a10c8ce7fd440efef341eb205776ff234dae0dc00c74216bd",
+    "capturedAt": "2026-09-22T06:19:44.860"
+  },
+  {
+    "hash": "b92a841bc6ea56bab82e9280c26a4af13451df5b681aab1d4191ced10f5293a9",
+    "capturedAt": "2026-09-22T06:37:01.524"
+  },
+  {
+    "hash": "eec9f551e333ba2a8a607b708033ad011a1b5f1cb1dbb2fb3e3acedf7f55ff5e",
+    "capturedAt": "2026-09-22T06:42:00.761"
+  },
+  {
+    "hash": "8d3ad035fe020ce5eda3becb7cd41206a23724638bd2787dc792e408cc684184",
+    "capturedAt": "2026-09-22T06:52:32.235"
+  },
+  {
+    "hash": "b9a558ed6613cc919467c41a1efe5ce584eaca4c7670b6b9e829fdd410fe3f33",
+    "capturedAt": "2026-09-22T06:53:18.128"
+  },
+  {
+    "hash": "15fca19e4861bc38377423c1d666ae39f7fbacc0f7de77faaf7d5e65f981b2a7",
+    "capturedAt": "2026-09-22T07:01:17.683"
+  },
+  {
+    "hash": "ad1fdb375c1539f554755823ea615f34420c9a132d26b655797e18201087b2c4",
+    "capturedAt": "2026-09-22T18:06:12.692"
+  },
+  {
+    "hash": "b8440135b78704abb3c1042210940c3b750106966192e884997d182ce6528aaa",
+    "capturedAt": "2026-09-23T04:31:10.976"
+  },
+  {
+    "hash": "cf8cf2c8b41e399365496babfbd3ab9875146c8eb743bda1012d6f78f8df723c",
+    "capturedAt": "2026-09-23T04:41:15.413"
+  },
+  {
+    "hash": "c55116a17028bf6c7ba86942cc51c80ffb00a43f227d3bcad0f937ae9f12c546",
+    "capturedAt": "2026-09-23T04:41:17.996"
+  },
+  {
+    "hash": "fdb6d14cccdc5d21307a8f667d78a6b554f0f55a2e782363385694214a83c6a1",
+    "capturedAt": "2026-09-23T19:37:19.127"
+  },
+  {
+    "hash": "438f609610ccbfd599e7bd6a07f48923bda2c86e750ce995fd3031052248a482",
+    "capturedAt": "2026-09-23T21:20:57.450"
+  },
+  {
+    "hash": "e2c8f0473b5130f1f784a71c1449934d3e9eabbdd62d8951f033645214a25484",
+    "capturedAt": "2026-09-23T21:21:12.450"
+  },
+  {
+    "hash": "e3ef70b5b7488d0daeb444cee324256cdb7639c25006d7b7328b0ad05b4ed9be",
+    "capturedAt": "2026-09-23T21:25:57.067"
+  },
+  {
+    "hash": "fd8239904cf30a1aad642f82d8244e2eb2ff55c94cea829d30cb6a94875ee0a8",
+    "capturedAt": "2026-09-23T21:27:30.704"
+  },
+  {
+    "hash": "186c12159ae86ad3a8f14ba2c86bfb7ff9790330bd9751f07e56c36b958805ce",
+    "capturedAt": "2026-09-23T21:27:36.270"
+  },
+  {
+    "hash": "149a315f1a9395173fc38f4c18174bcf2b3a73956b1a9fb940ef65f277e657b4",
+    "capturedAt": "2026-09-23T21:50:14.956"
+  },
+  {
+    "hash": "6cb7d3673cbd5a5a9600678ba4d9dd10463b0d6d5b44ad4189d3c865a60e2dde",
+    "capturedAt": "2026-09-23T22:21:12.742"
+  },
+  {
+    "hash": "716650356273177c754668a2b2765b703ffaa5fa5db7b2484150e19874dcad01",
+    "capturedAt": "2026-09-23T22:22:25.265"
+  },
+  {
+    "hash": "c55ab406b092433a1839bcb5455b727046605f038bf35aaccb2ceb74ae6b4ac1",
+    "capturedAt": "2026-09-23T22:23:03.329"
+  },
+  {
+    "hash": "cf0e168de6c4a68b9a59442f47ad5730c348ebda178357615d175763d8853d0e",
+    "capturedAt": "2026-09-23T22:23:27.898"
+  },
+  {
+    "hash": "17a5c5f605b3c8a0384f3e697aa0538c75b68882e99cc68db8435df3aa9911f7",
+    "capturedAt": "2026-09-23T22:23:53.614"
+  },
+  {
+    "hash": "3b168b7d88eecf8daba97f2e106946d26d49bf0dc50c1231b946e9f61323cbeb",
+    "capturedAt": "2026-09-23T22:24:27.264"
+  },
+  {
+    "hash": "c9c4fbb38355be06a397f7fd36e0d3b5c9c049aa57890792ca32651351d2ece6",
+    "capturedAt": "2026-09-23T22:25:04.980"
+  },
+  {
+    "hash": "3c56f3cd99c06ab39bb3c1ec5685a75eac8cadeee22a04857667d063e3c58951",
+    "capturedAt": "2026-09-23T22:25:40.715"
+  },
+  {
+    "hash": "624955b53336a7caf8322deb7d297a36437e089ff4c30790f940fd59a16495a8",
+    "capturedAt": "2026-09-23T22:26:22.366"
+  },
+  {
+    "hash": "d8e4e8b648f8c79d5ef706ee355ed22ce9106cc1d16a1e87d58567933d60885c",
+    "capturedAt": "2026-09-23T22:27:32.849"
+  },
+  {
+    "hash": "2b00702b7f5c96eb1f7d1e5725aec96a3232d46fa04fc6695ff221fd42c24214",
+    "capturedAt": "2026-09-23T22:27:55.362"
+  },
+  {
+    "hash": "653856383837bbb136f18ec5338d38fa470e28eb2001aff855fc38c67d66a2b7",
+    "capturedAt": "2026-09-23T22:29:24.463"
+  },
+  {
+    "hash": "3f3844d6db2585420028bbe1dec963dcd196d039914041fa2495d248b0ae971d",
+    "capturedAt": "2026-09-23T22:30:12.515"
+  },
+  {
+    "hash": "36801dd3fa254b633271747eeeb16537deb9e194b67095ca7790e7fe366734cc",
+    "capturedAt": "2026-09-23T22:32:36.148"
+  },
+  {
+    "hash": "0aad00da47a5eb97dd760124e80e183873d890f5ab790b7280351df46341024c",
+    "capturedAt": "2026-09-23T22:35:20.000"
+  },
+  {
+    "hash": "28dac60a1df51da57d02ce2116e482d51f8f4f22d776c6865089287ce55ccfa9",
+    "capturedAt": "2026-09-23T23:27:32.335"
+  },
+  {
+    "hash": "3c8d10d3736ad0f651faffab9ef4b45c876aa6d33e3e24a725828d36c57617f3",
+    "capturedAt": "2026-09-23T23:53:47.398"
+  },
+  {
+    "hash": "1d38058da549249634dee48f28a07369416c2b3d79b0935bd4b6ec40f9186247",
+    "capturedAt": "2026-09-23T23:55:18.799"
+  },
+  {
+    "hash": "37bb8536cd57d34b74ab01e60375381c1dc1ac3b102abdb4860117e3ecbc0c7e",
+    "capturedAt": "2026-09-24T00:49:46.799"
+  },
+  {
+    "hash": "d75ee399ed8b543953e246b490ec9217c7ffbd1ce6708151e77f39156533c3aa",
+    "capturedAt": "2026-09-24T01:43:30.501"
+  },
+  {
+    "hash": "655b21cc71cfab199bd852b680a17df96515892f190ef4db99ccef162c0519a4",
+    "capturedAt": "2026-09-24T03:37:19.495"
+  },
+  {
+    "hash": "49a77687d5d05c91f6223553fc87f3073b7ff23f16cc71b59a4afb4cdd4e3649",
+    "capturedAt": "2026-09-24T03:40:58.442"
+  },
+  {
+    "hash": "c75460d23b0a07c5abb315dee42d6f0eae34ca71ee200309eccb0043a0175caf",
+    "capturedAt": "2026-09-24T03:41:40.763"
+  },
+  {
+    "hash": "c23822a19d4189960d33e6aad08e80403a22d4817f52e1e60743d8b5e5f95f0c",
+    "capturedAt": "2026-09-24T05:27:44.299"
+  },
+  {
+    "hash": "f227d239d917e7d0cd147d882971cd1562c5b5792c85dce71b0ebb81abb9a9f0",
+    "capturedAt": "2026-09-24T05:27:49.481"
+  },
+  {
+    "hash": "58cb44fa12a9d64d4c77a3a439b44cfc1e4b42c54be41cff9692f013010baa28",
+    "capturedAt": "2026-09-24T05:29:50.067"
+  },
+  {
+    "hash": "f4cd6644dccf4864115cf396f9bc00f9864666a0b2264ea74eaba8d337ce43aa",
+    "capturedAt": "2026-09-24T05:42:58.435"
+  },
+  {
+    "hash": "11dcddccf6ecaae4cb36c3986d4e055aca522d878709fe7c236de4bcc6d8bc00",
+    "capturedAt": "2026-09-24T06:00:42.441"
+  },
+  {
+    "hash": "f6e09e19ae5bf3fbb4d5462044e6d401940c90f3f3f8b606a68cbf3b6f046782",
+    "capturedAt": "2026-09-25T15:20:08.821"
+  },
+  {
+    "hash": "c785ba3471cc15594df49e70b3dbe30eb12467ed9bf51dacdb899189d4349f6f",
+    "capturedAt": "2026-09-25T15:20:26.508"
+  },
+  {
+    "hash": "a6eedc0422b12ce31109ca1b93596f23e65085380a7239d161d0744c6e019c03",
+    "capturedAt": "2026-09-25T15:21:06.893"
+  },
+  {
+    "hash": "ba2d7fe7b561b19718dd3c56776bce8c497f254d3333982b6c76afb453b869ef",
+    "capturedAt": "2026-09-25T15:22:12.709"
+  },
+  {
+    "hash": "69cdf5a040c0f4764686ef0ccbc1268155d87a57f33ccb9885ca9c6c9cbacacd",
+    "capturedAt": "2026-09-25T15:25:50.911"
+  },
+  {
+    "hash": "b5195cb4262c5285f31c925b4fff2712216e7ca07d1c04d3ca97f284128ecbb4",
+    "capturedAt": "2026-09-26T00:58:50.409"
+  },
+  {
+    "hash": "12ae0bc5cb35cba3319f7ae0d10ba8998226ef1d32275ca42f1649be73d6baff",
+    "capturedAt": "2026-09-26T00:59:28.179"
+  },
+  {
+    "hash": "cc988750fcfcaf3116003bda2a030f65a571d8bcd7d3663d6b7d92cb8c399230",
+    "capturedAt": "2026-09-26T01:00:01.478"
+  },
+  {
+    "hash": "1b63cde0c016a89f834a45acf7245c7f31e38856300c6233548a869b391d9eda",
+    "capturedAt": "2026-09-26T01:01:13.228"
+  },
+  {
+    "hash": "d4ff45fd490dbad44d354c8d2b6a0a5aeae9b134b3590685196d7f2ba560e5bc",
+    "capturedAt": "2026-09-26T01:01:44.543"
+  },
+  {
+    "hash": "a767711f4a7c3b16c58bafc95b9143b6401ec6c39f6d8ecc1e531f2df4f031bc",
+    "capturedAt": "2026-09-26T01:02:26.613"
+  },
+  {
+    "hash": "05781a7742602b05be59c6850c6a52733c86e79f7e57a405916c08f4722fe6f8",
+    "capturedAt": "2026-09-26T01:03:02.730"
+  },
+  {
+    "hash": "7e090490f58d2cb3a6df984ad9ba66bc0e0bb360e4eb8496e9d35e796641c986",
+    "capturedAt": "2026-09-26T01:03:48.781"
+  },
+  {
+    "hash": "3db1d0068287d3eb954c98e6c02080ae7f07f03a71ba241abb314a5a281a4c22",
+    "capturedAt": "2026-09-26T01:04:25.360"
+  },
+  {
+    "hash": "a02b235f55c356d93cec5fe408fa7a9f977508bb5668b3e5123afaf59ed8bf19",
+    "capturedAt": "2026-09-26T01:04:49.797"
+  },
+  {
+    "hash": "ad7606c96f03b6967b15c153a1438d2db6f371926bfbadebca2ecd2d1e19fcc8",
+    "capturedAt": "2026-09-26T01:05:06.443"
+  },
+  {
+    "hash": "a5ef885d8d95abb600996205e5f5eb43132c78c02fab0c15b37bc0618a258188",
+    "capturedAt": "2026-09-26T01:05:27.759"
+  },
+  {
+    "hash": "57493858601fabfef00fc8c57fcf2819e713a1398fe4a9e92b92aa722cd6d8bc",
+    "capturedAt": "2026-09-26T01:05:44.760"
+  },
+  {
+    "hash": "7d7481fd183cd9d1eb844682f5e2e253c451844a755c20d9c7a209559ab2f078",
+    "capturedAt": "2026-09-26T01:06:16.115"
+  },
+  {
+    "hash": "3203f14c872febedaead747f4a83dd009bebf87eb0ba2e5065e510713f9782a9",
+    "capturedAt": "2026-09-26T01:06:46.245"
+  },
+  {
+    "hash": "48b6382a9233538504756eb6dc9c65264f3d5a62e74fbc07158d861a90265cea",
+    "capturedAt": "2026-09-26T01:52:44.594"
+  },
+  {
+    "hash": "fe2386ceefa95cb1fff745df2c5c78fda918f7463c2cab58a58d5b8192ddf8fe",
+    "capturedAt": "2026-09-26T01:52:51.914"
+  },
+  {
+    "hash": "4c44f67d21c30de370809c9e8063a19121af10a89cb502035f39cace5c4420d4",
+    "capturedAt": "2026-09-26T01:52:57.859"
+  },
+  {
+    "hash": "abf224bb1bb907032c486c0a476a6c4f7031be8f5928668a36cc6d05c49d0304",
+    "capturedAt": "2026-09-26T02:04:10.676"
+  },
+  {
+    "hash": "bbe88d528f720fb074081656f97a2d1570f80fb3b95698b55df616d39fce8bad",
+    "capturedAt": "2026-09-26T02:14:48.403"
+  },
+  {
+    "hash": "f8e466c7909ad9f0214024d05f0eed899121258e347f03d27eb0696940bb4d01",
+    "capturedAt": "2026-09-26T02:18:58.154"
+  },
+  {
+    "hash": "8cf30e20fa35ac0d516cf839c4867fec00527ed945268ad45239c2fe5044dc44",
+    "capturedAt": "2026-09-26T02:20:16.172"
+  },
+  {
+    "hash": "fdfcdd086b57442e860b825247cb2ab1de4278056defdf08de99feae7c2b7f37",
+    "capturedAt": "2026-09-26T02:22:30.275"
+  },
+  {
+    "hash": "6edf3886fc79f9da8ab33237b7047bfe59b7b2782d1ff8ca841803aebb6aedf6",
+    "capturedAt": "2026-09-26T02:35:01.369"
+  },
+  {
+    "hash": "e03741f552baa4e4e87ff1d714b3367ac3b0f527d6b224b6897e3d4b53336e6a",
+    "capturedAt": "2026-09-26T02:48:54.092"
+  },
+  {
+    "hash": "1360560dcf0164ac2df545f8c8243d764f15e1d6c7d8d77917b0d9070ee09345",
+    "capturedAt": "2026-09-26T03:08:16.010"
+  },
+  {
+    "hash": "f7af7eec5ffe40ad09433593fc261b62e12af726abe4f33f176ff725af2bcdd8",
+    "capturedAt": "2026-09-26T03:17:06.207"
+  },
+  {
+    "hash": "57bc5f23b08266b02e70ebf36106f49d8c5d9d86678590476519d1d987e03966",
+    "capturedAt": "2026-09-26T03:19:46.831"
+  },
+  {
+    "hash": "bd80fd3d41cdfcd5b4f5b19b1eb5a588b38a29f6fcc20fd0710bc8dc9468c66d",
+    "capturedAt": "2026-09-26T03:35:44.461"
+  },
+  {
+    "hash": "3ea0de515ced6aedcd2a05973e76e7b531ce1b55a95c993b4c92c467404fd421",
+    "capturedAt": "2026-09-26T03:49:48.525"
+  },
+  {
+    "hash": "71ce8f2eab045fbe320eb0eeda64f6c01b352bdea68fe3b8b3bcbdb5820c7f5e",
+    "capturedAt": "2026-09-26T04:34:17.780"
+  },
+  {
+    "hash": "5cc2ee38ff89c59311b64d57445800b93473be15c8d1e19980640461c8f1b320",
+    "capturedAt": "2026-09-26T04:46:52.908"
+  },
+  {
+    "hash": "f0bff636c846f7b2e3aea6757e8d13766c3c8cdb46a06bb8efe97cd250e3ec48",
+    "capturedAt": "2026-09-27T00:00:17.496"
+  },
+  {
+    "hash": "dc0f0e7af9438b9ac2f80c6362f6b15e7fa0238c7ae4e346ae268ad38a2febb7",
+    "capturedAt": "2026-09-27T00:01:04.247"
+  },
+  {
+    "hash": "6c4c786d0ffba53ba2c093ad5a7ba1715980313dc3e11cec01266fca22022361",
+    "capturedAt": "2026-09-27T00:02:12.061"
+  },
+  {
+    "hash": "7f9fab6119be7421ed54d0224fac563ac17b8fc10905b737900d6b27d28ff264",
+    "capturedAt": "2026-09-27T00:02:58.113"
+  },
+  {
+    "hash": "eba81d5416cb4b903fe78f079583abcc053c0d406281380d064c5c687210f623",
+    "capturedAt": "2026-09-27T00:03:44.263"
+  },
+  {
+    "hash": "6a73363d0f4cb2afbd7eb477aaf2f078724e48848d409c81632f68ddcb360ba1",
+    "capturedAt": "2026-09-27T00:05:10.228"
+  },
+  {
+    "hash": "32e611de4e25da227e817870fca0ebabe9fb28457b2e1378780373a9f4ff8b98",
+    "capturedAt": "2026-09-27T00:05:47.749"
+  },
+  {
+    "hash": "93ccb5e91c5af169568e80f29ca7f0fb83eef31dc301e869cf685268a05f47e7",
+    "capturedAt": "2026-09-27T00:06:26.162"
+  },
+  {
+    "hash": "9658d3ebf984d82b540a13de0b1137e3720339b6c85c3b875b6ccb84490da938",
+    "capturedAt": "2026-09-27T00:06:46.811"
+  },
+  {
+    "hash": "89d65f474626e152a5370cbd0beb5acba69ec884ff9d68b88ec6565424b04540",
+    "capturedAt": "2026-09-27T00:07:21.446"
+  },
+  {
+    "hash": "673b523887c5938f23c27ea26fa20fea0294ff76cb0419b5a9d0ea40df94632a",
+    "capturedAt": "2026-09-27T00:08:00.345"
+  },
+  {
+    "hash": "1fb7f0bf549d5c4e479228000d292ee7a67f2ef7c9cd9545e05c654857cea4ae",
+    "capturedAt": "2026-09-27T00:08:24.629"
+  },
+  {
+    "hash": "4ce800ce6a5bd3d630b100300737a755feaf46749b4ca9c72a8925a8a83f0468",
+    "capturedAt": "2026-09-27T00:09:13.499"
+  },
+  {
+    "hash": "6f23f7c38e37e51068b57f8eb778a31cbf59a1e67deafa411723b71c68674853",
+    "capturedAt": "2026-09-27T00:09:51.078"
+  },
+  {
+    "hash": "f5960a6f113c779fe8d031345299e9cb1f71fa4692d42a7881ae5ce94a7c7364",
+    "capturedAt": "2026-09-27T00:11:42.229"
+  },
+  {
+    "hash": "317e78589321bb00e264ae34e855393ec296bca875e16011ff7b9fe8fcbcd673",
+    "capturedAt": "2026-09-27T00:12:01.626"
+  },
+  {
+    "hash": "2bfec619ff546c44daff817f9c05f42f67027712c393d7ae3647a29e828bbd26",
+    "capturedAt": "2026-09-27T00:12:25.464"
+  },
+  {
+    "hash": "f65b7591a311d2c450d27bd0dd8de20a54b1bfa7c6738d88c8036103bc708717",
+    "capturedAt": "2026-09-27T00:13:16.777"
+  },
+  {
+    "hash": "aaf5d9356563f61697409c203a5f413f4c4c5f49d6eb2b818f252f5e85328d53",
+    "capturedAt": "2026-09-27T00:13:38.895"
+  },
+  {
+    "hash": "54a87f56529a264d017103a8b75446f5f0fffc45e5b7b2b53df24c542a2f9fd8",
+    "capturedAt": "2026-09-27T00:14:05.659"
+  },
+  {
+    "hash": "b86a1897f490b4bfb6103311293f77b73944ef948daaabf2eb75ff4ecf7e974f",
+    "capturedAt": "2026-09-27T00:15:21.944"
+  },
+  {
+    "hash": "dd25640f36f63bd313ecfe7b66bac0a99c40ef53b2209b89721eac34fd9a0a0c",
+    "capturedAt": "2026-09-27T00:15:45.546"
+  },
+  {
+    "hash": "377a19e421e6adc924178aa2087f1b42ab017807ac3dba1dfa12ceb759ad695d",
+    "capturedAt": "2026-09-27T00:16:03.126"
+  },
+  {
+    "hash": "b434660f0c65884cccab81fce321c37b3a60124eac7082d13012f59f4f972a58",
+    "capturedAt": "2026-09-27T05:25:18.207"
+  },
+  {
+    "hash": "19b7bcb50a20082556199d4c0c36d93c6dd3dccdd80b4bb0073ec979ed816e11",
+    "capturedAt": "2026-09-27T05:38:41.406"
+  },
+  {
+    "hash": "094d216ec510654e4ff6aad57e527cfee92687886ce1aa73689a6f77ecdbf11f",
+    "capturedAt": "2026-09-27T05:38:53.586"
+  },
+  {
+    "hash": "81abe57e50a105910c5925f4d0d48079bfb383ad21eb9ab20f490f3c0c80a1e7",
+    "capturedAt": "2026-09-27T05:50:48.124"
+  },
+  {
+    "hash": "114e0874937843b12c2418e0da63a933e5502908fa6efdb061e493ef01debfe8",
+    "capturedAt": "2026-09-27T05:50:57.832"
+  },
+  {
+    "hash": "1307d9d5065470724a53c8f146dab793bdf99021fcbb68f9e870dd4f8f5233af",
+    "capturedAt": "2026-09-27T06:07:47.197"
+  },
+  {
+    "hash": "a958237d47d336f253aa9e06559435984d1fb9bc1831e66f225c981cad40ceeb",
+    "capturedAt": "2026-09-27T10:45:45.798"
+  },
+  {
+    "hash": "05089b818ebf58c55b1282f38d71f32998fdb3ce3c370b844b5df0a326c82225",
+    "capturedAt": "2026-09-27T11:05:31.544"
+  },
+  {
+    "hash": "8eee690afed425b7c3366eeaf767fa57aca05112e8b2635867d2f8b01b1a21e5",
+    "capturedAt": "2026-09-27T11:16:51.493"
+  },
+  {
+    "hash": "1c24319ce211c6e4a8d08740e409452fa56f0035ae4fd8d441daa5ed56512afc",
+    "capturedAt": "2026-09-27T11:18:34.991"
+  },
+  {
+    "hash": "e76faf577031e05bf00177d36c6445630975bbaca191eb5e20dc8a0c5e13fa6d",
+    "capturedAt": "2026-09-27T12:40:18.152"
+  },
+  {
+    "hash": "2fc366845eadb44f443a0b29aff2a00e11b5c2f4698eb387fac20123488d4101",
+    "capturedAt": "2026-09-27T12:45:34.561"
+  },
+  {
+    "hash": "bad346cfaaefed624361dc0db90b00ab9fb78ae82f777523b61c720394564cc0",
+    "capturedAt": "2026-09-27T12:51:25.564"
+  },
+  {
+    "hash": "8d97876c2ed71949bab382a7e73dd6a14f693c4baba62841d19f1ced7d3cfddb",
+    "capturedAt": "2026-09-27T13:01:59.383"
+  },
+  {
+    "hash": "4cbb7562e6c46c4828e5ee0a9ce999b730fb5ea26321c1ca861a048e44447fb6",
+    "capturedAt": "2026-09-27T13:11:21.733"
+  },
+  {
+    "hash": "1384e3ebacf4d116aef2c2e303d55d617ee10b2fcd34761e28f1d664040539cc",
+    "capturedAt": "2026-09-27T14:53:26.460"
+  },
+  {
+    "hash": "3571ec50ee5aa3fe35ea4609aad6f16cceffc1807999676b5d04ae0eb880a4bb",
+    "capturedAt": "2026-09-27T15:03:28.681"
+  },
+  {
+    "hash": "4d773a1ce40971c96582c0030b4ef8536b843c89f65c021319482817fb0f45cf",
+    "capturedAt": "2026-09-27T15:13:59.781"
+  },
+  {
+    "hash": "01cb153221ad50feefe2d4958ec8711406024b89a63b289e36601a01def43d84",
+    "capturedAt": "2026-09-27T15:24:07.715"
+  },
+  {
+    "hash": "2f6967e175b8dff8444a5286c62d494112b1c3afa923ae658f571e30744ea7dd",
+    "capturedAt": "2026-09-27T15:24:56.882"
+  },
+  {
+    "hash": "67473c6b5424f4250e4c9f4126d74e395af92e87f043952742652edfd1f3fbeb",
+    "capturedAt": "2026-09-27T15:25:53.764"
+  },
+  {
+    "hash": "7d78afafff44bcd130844a147794d621c603a5af6f36b1791ea8ea414434190d",
+    "capturedAt": "2026-09-27T15:26:40.183"
+  },
+  {
+    "hash": "8660fdd25ea0324c7d76bcc6f96b978ea90d9ff6c8a1ba2c3c245d9c69bf0c9a",
+    "capturedAt": "2026-09-27T15:26:56.632"
+  },
+  {
+    "hash": "6bcb991366f2b90a0aac906c0e30d9fd21f0a59a6c94f7d4bc5ec556b475b806",
+    "capturedAt": "2026-09-27T15:27:15.314"
+  },
+  {
+    "hash": "cc650e219a107892266071188c2d9b7dde1a78d5e13e681b8b272460e7ec364c",
+    "capturedAt": "2026-09-27T15:27:32.352"
+  },
+  {
+    "hash": "5b45119ba336da0d9c497b9e65a1202d56fe9ba5fb2e5278365a378719d285c9",
+    "capturedAt": "2026-09-27T15:27:50.387"
+  },
+  {
+    "hash": "03e495ef3ad3fc1da42c370bde65c6ab71f6675f650fbf52524bc03579e5ef83",
+    "capturedAt": "2026-09-27T15:28:04.914"
+  },
+  {
+    "hash": "80c6f54ea2d09f9777718de4129c23535fc4fea79f2799f74cf538f332547aac",
+    "capturedAt": "2026-09-27T15:28:20.831"
+  },
+  {
+    "hash": "7396a76688648ad944a16472a16094796f5de012b6bb04e066f44c2d55b220de",
+    "capturedAt": "2026-09-27T15:28:36.613"
+  },
+  {
+    "hash": "f96f305967575683e0a812eb77d46148c8955d0c1e66bc23614a709b487c78b9",
+    "capturedAt": "2026-09-27T15:28:52.633"
+  },
+  {
+    "hash": "da5948cd04327f33568dd66e37750b6d39592e3f6835fa940668094f9d4b1d26",
+    "capturedAt": "2026-09-27T15:29:09.131"
+  },
+  {
+    "hash": "23b02adb55ede29549e52b64a0d5e4fae5b11504dd619808e0b7a8abfb0484bd",
+    "capturedAt": "2026-09-27T15:29:24.931"
+  },
+  {
+    "hash": "f29ce86f23608629035a6f0205eb77b362c39e8042fffd3fd7f94ff3063dc59e",
+    "capturedAt": "2026-09-27T15:29:41.147"
+  },
+  {
+    "hash": "38fb33bcbb29e4425fd595aa164f8eff7222a581782b8498cefd651067a32795",
+    "capturedAt": "2026-09-27T15:29:57.531"
+  },
+  {
+    "hash": "98d67ea364a91b3a19cdc47bc99fbfd8cdd9b221d966b06b00c69a6e95d9bcc8",
+    "capturedAt": "2026-09-27T15:30:13.680"
+  },
+  {
+    "hash": "94527a37c5f30f73aeb9614e9277d2cc96e10332363531a1083b8cee2eeda591",
+    "capturedAt": "2026-09-27T15:38:42.233"
+  },
+  {
+    "hash": "c1395a50fc1ba45fdb907f1279560199f2aa760fa78a19178ae9ffcf9ea05f67",
+    "capturedAt": "2026-09-27T15:39:05.048"
+  },
+  {
+    "hash": "b38d564583a4187353501dd10803ca04b16cb385569fe00df06fcae68f0f774b",
+    "capturedAt": "2026-09-27T15:39:23.282"
+  },
+  {
+    "hash": "84b0918550c1ad6ee1e9cefa7651f591df454d8a74b0d9245a7d0fd66a9795b1",
+    "capturedAt": "2026-09-27T15:39:41.794"
+  },
+  {
+    "hash": "4349e9139316e76dcd3567e0fc9057acecae28168d3e16ef20fdf1992ab06e8d",
+    "capturedAt": "2026-09-27T15:40:12.831"
+  },
+  {
+    "hash": "291c4899da8c6bdba8c3e8c365f1d628d925b39bef5e80428492087cbf5a3c63",
+    "capturedAt": "2026-09-27T15:40:29.931"
+  },
+  {
+    "hash": "747c0a9d5db8c0e5855bf445ec73d81c1dc8c56d421182aa273da577551f25e9",
+    "capturedAt": "2026-09-27T15:40:49.013"
+  },
+  {
+    "hash": "3d07a7f3e978debe41465beb230aa11c73bcb76442b7281eb4de8db52052b204",
+    "capturedAt": "2026-09-27T15:41:05.064"
+  },
+  {
+    "hash": "1db4f8f482e4f527e64696bbab0ec60eb9e3ac35c5bcec3253ba50b7449d12fd",
+    "capturedAt": "2026-09-27T15:46:59.879"
+  },
+  {
+    "hash": "862dbe5fe7454e61bd4b3cad291756e864ad7c142df27b21ec4c715e03e93c1a",
+    "capturedAt": "2026-09-27T15:47:25.179"
+  },
+  {
+    "hash": "ef3bff2fdcf222e0241cc837427f8cdf3d5c1b425f55b87b8dd56ce0b3b7e060",
+    "capturedAt": "2026-09-27T15:48:07.552"
+  },
+  {
+    "hash": "251ca6650b149ad55db47febd9c6ee8a9e362c891abf6c149014eabb35c44653",
+    "capturedAt": "2026-09-27T15:49:19.861"
+  },
+  {
+    "hash": "604d405d0ff8fabfc4fca4f0df14a394c09d931cf2dbbf48304d6eed77412ff7",
+    "capturedAt": "2026-09-27T15:49:57.731"
+  },
+  {
+    "hash": "019f9b84258b56bcaa830c972a5ed4e3c86e2480e78280778eb3e79d4df24d7f",
+    "capturedAt": "2026-09-27T15:50:34.629"
+  },
+  {
+    "hash": "b4240b1e945463f63e69209b996f1f637ac830e3f38753d284b5670c561ba0f8",
+    "capturedAt": "2026-09-27T15:50:59.777"
+  },
+  {
+    "hash": "b5c361e159c526265acdbcd096c703ca9859fb11f376ccec95a1dc83ecdd7e5c",
+    "capturedAt": "2026-09-27T15:51:46.029"
+  },
+  {
+    "hash": "717452781b5a23dae31b367b3498b815f870601b69d5d30ccaeddcc2ab388339",
+    "capturedAt": "2026-09-27T15:52:25.647"
+  },
+  {
+    "hash": "cf1e25f171d51498a30fdb24cb12951d90839895491f8b7644201bb38666d6b0",
+    "capturedAt": "2026-09-27T15:53:16.978"
+  },
+  {
+    "hash": "9d463c9383ebbe549e1b31cc344bc99fc014590a97da165e6f8218ab28727a5a",
+    "capturedAt": "2026-09-27T15:53:46.178"
+  },
+  {
+    "hash": "4fc83bc0fee2d04319caf8e32c9ccf7c872277703946cec91257b19e60c58acf",
+    "capturedAt": "2026-09-27T15:54:58.313"
+  },
+  {
+    "hash": "3a4059d5670f52c0c9f9b49cbea1f7636382d2507eb9b8286291ef16f805d444",
+    "capturedAt": "2026-09-27T15:55:33.763"
+  },
+  {
+    "hash": "a268e6391da2df486b680774b11d18813ca721d84d61f030599c011b669083a5",
+    "capturedAt": "2026-09-27T15:57:59.927"
+  },
+  {
+    "hash": "f519be8d30d854acdae17fa72db364c6e8dd5b44607325ba8240c6accc96eb9f",
+    "capturedAt": "2026-09-28T07:08:43.461"
+  },
+  {
+    "hash": "11563c7188e03c490e5917e4df7dbfb3d55aa55b2c357db795703e232d2fd97b",
+    "capturedAt": "2026-09-28T07:08:51.140"
+  },
+  {
+    "hash": "b0fe8edbc3df78fd0ca0f268e39d67780859b06b14d0fa9a206ff6591a93bd4a",
+    "capturedAt": "2026-09-28T07:08:55.403"
+  },
+  {
+    "hash": "dbd756139921f46425b8aa02107382a5b7338f4e514e162938693c238936c4cd",
+    "capturedAt": "2026-09-28T07:08:59.521"
+  },
+  {
+    "hash": "1cb8beb901b1b9232ee1e9fb5717132c6ef82cbe2899e8f603ae8938463b41c9",
+    "capturedAt": "2026-09-28T07:11:43.158"
+  },
+  {
+    "hash": "82600ebcdf5679cd7f7b98d55f361c344a8114742dc606faabfa517ea480599c",
+    "capturedAt": "2026-09-28T07:16:34.070"
+  },
+  {
+    "hash": "20334680a7d6cc59cb169db718a3d9fe3c6fd1d3f6b9bf1c81d72a63a43f58f3",
+    "capturedAt": "2026-09-28T08:23:33.468"
+  },
+  {
+    "hash": "e6c01ab984668318bf19daca3487cb6aa180a9c198fae69d516670e8b40bbb24",
+    "capturedAt": "2026-09-28T08:23:57.652"
+  },
+  {
+    "hash": "f375f1b88b14a6b8739b1669911ecacf31e48d149291b233a7f5e4bc0be46ce2",
+    "capturedAt": "2026-09-28T08:24:34.570"
+  },
+  {
+    "hash": "a04e31121204aaa739faedecaf200474e26ec7e94c6ea799da474622a16faaa9",
+    "capturedAt": "2026-09-28T08:25:13.520"
+  },
+  {
+    "hash": "a28e41415174629b5707ea3a440bf0f6321a04135655b4ba58c1056b9752b3f0",
+    "capturedAt": "2026-09-28T08:26:20.653"
+  },
+  {
+    "hash": "52745828142a5e76dfc3817cf16bd79b7e4c0a94a911057b6e781dc211929ffd",
+    "capturedAt": "2026-09-28T08:26:56.105"
+  },
+  {
+    "hash": "79e2f52b881e8759bab99fe9aff81225c5c9b78ae65f7af17ab43e3decf85925",
+    "capturedAt": "2026-09-28T08:27:30.588"
+  },
+  {
+    "hash": "34fca95c73fb1ea2da25b063a696065ca2005390992ec8b9546ef61d0771cbd8",
+    "capturedAt": "2026-09-28T08:28:23.705"
+  },
+  {
+    "hash": "75a2edb2402bbfcea899de5d7e167d0faa2e2c221c5a87352fe9567e4a763f1b",
+    "capturedAt": "2026-09-28T08:28:45.988"
+  },
+  {
+    "hash": "f449b6beb5f9605bc838aa1308821ea5bad5528f4b1e224c99db23791095e40d",
+    "capturedAt": "2026-09-28T08:29:50.223"
+  },
+  {
+    "hash": "7d6d04be063b3e252f4a2359d0bd4a6ae7dcefaccbfbf8ed1ff4748a5bb19f83",
+    "capturedAt": "2026-09-28T08:32:47.572"
+  },
+  {
+    "hash": "6548c1c9cb6be3c516c7ee4ffcc67d7e333fa2b6ecfe6a0e82a38677c5a83349",
+    "capturedAt": "2026-09-28T08:33:30.739"
+  },
+  {
+    "hash": "a92455934dfef0f4045f21826a461e43cd05d0fdff5ddffd00d6c83dfd3ca090",
+    "capturedAt": "2026-09-28T08:38:20.554"
+  },
+  {
+    "hash": "58b4e9b5d79959fa4f203511fbac7ea946a6dc6968dfc9b55c2ad203c784ea6a",
+    "capturedAt": "2026-09-28T08:38:52.937"
+  },
+  {
+    "hash": "d0421ecac9f2f29aa612bd0b02220fb2c7a76c900da14960a259fea9755efe18",
+    "capturedAt": "2026-09-28T08:39:18.941"
+  },
+  {
+    "hash": "d6a1797c9082890d47faccbcbdb4ebd88c4e7f3e18f599c82033e05eb6e47c6d",
+    "capturedAt": "2026-09-28T08:39:59.757"
+  },
+  {
+    "hash": "1ecb763ae559d42b392701d5ebbf045065a4b8d241244588a2d456686ee83582",
+    "capturedAt": "2026-09-28T08:40:18.789"
+  },
+  {
+    "hash": "4eed8e252a8c5b05f39ee36e31409d16c7f12009962b1d7f9a98972550448cc1",
+    "capturedAt": "2026-09-28T08:41:08.421"
+  },
+  {
+    "hash": "a2e4176e1ba36f459a7d00d5a48de2dc601c99764344de11a52eea125d034954",
+    "capturedAt": "2026-09-28T08:41:29.622"
+  },
+  {
+    "hash": "b1034857dc466a48504fe1eff661cb05ee3eeea6f1c811a5248996d42abd4eb3",
+    "capturedAt": "2026-09-28T08:41:45.991"
+  },
+  {
+    "hash": "76f1a10a1240dbfd52f552506ff8b418ffb64116a270bc29df795472b6ba2d35",
+    "capturedAt": "2026-09-28T08:42:15.638"
+  },
+  {
+    "hash": "3b274c2cf1cb9b6b5ddbe5a1156907997b50a9bffb89365e51728c53ccd8533e",
+    "capturedAt": "2026-09-28T08:42:37.673"
+  },
+  {
+    "hash": "96779197d6b68176e78601737b9bf962a22a4ac4adea012c5b6f918019adbc97",
+    "capturedAt": "2026-09-28T08:43:04.289"
+  },
+  {
+    "hash": "c12a312fb191abdae9a4f463c2728d4b33ae2e822c132ebbfb7a937e1aa27d6e",
+    "capturedAt": "2026-09-28T08:43:34.008"
+  },
+  {
+    "hash": "3589af2dc712dec9cfc2795ea15ee4d435cacacad1be9691f6eef694801bc83c",
+    "capturedAt": "2026-09-28T08:43:54.173"
+  },
+  {
+    "hash": "971643faa31382a513213d706c914df8c836f0edf9191e1038e2d883bdd9e2bc",
+    "capturedAt": "2026-09-28T08:44:26.522"
+  },
+  {
+    "hash": "9858ff1164263b6fb3dc86a82b0128f6a9d403f38cf01d1e69f18cdd7b0b0de7",
+    "capturedAt": "2026-09-28T08:44:45.856"
+  },
+  {
+    "hash": "2174fb624b98f5d2b4e090a3b40258b28d001a5e45516ca0b2630044d536a831",
+    "capturedAt": "2026-09-28T08:45:05.805"
+  },
+  {
+    "hash": "8dbc36c536571b92887987fa063a9c156613a09c6c296bc434377b40c3cf0388",
+    "capturedAt": "2026-09-28T08:45:26.639"
+  },
+  {
+    "hash": "fb2817b4f222cc77967c0d97ebe7896d7d7176c400144e05938ce4b4e8477eb2",
+    "capturedAt": "2026-09-28T08:45:41.689"
+  },
+  {
+    "hash": "235accc346702dc71383e086ac316baed70b9961cd1e318549ba2ddc5c854b5d",
+    "capturedAt": "2026-09-28T08:46:01.655"
+  },
+  {
+    "hash": "58336284616efffe7dd1a577ca3f2ef9ae585e2d3c2aade9b23ba524d7e86690",
+    "capturedAt": "2026-09-28T08:46:22.054"
+  },
+  {
+    "hash": "63ec9f7c3e43b2cc438b353fa0e723918133425bbd050daedab420bef5db1d03",
+    "capturedAt": "2026-09-28T08:46:41.771"
+  },
+  {
+    "hash": "bea3d5feed11f8af046131c232f10ee5ebe81582373232a1ec689f6503ab4202",
+    "capturedAt": "2026-09-28T08:47:01.473"
+  },
+  {
+    "hash": "26178ea2892a9ce9f9a5506aa25f3b238397c8af1b721d311955663708a9bc76",
+    "capturedAt": "2026-09-28T08:47:27.571"
+  },
+  {
+    "hash": "15d36bda5f9284f425843299a6b94f2c84e93d50ba0c65a7ada589970bef5c52",
+    "capturedAt": "2026-09-28T08:47:48.772"
+  },
+  {
+    "hash": "e3df4894947a7692ee109ad1bd8fdec8bc4db350268f8e739c8764f61dbe0027",
+    "capturedAt": "2026-09-28T12:08:36.446"
+  },
+  {
+    "hash": "844cac8efe535324f71539dd47c0a17b71ea84e475f5fd747910e4ed976b5fce",
+    "capturedAt": "2026-09-28T12:44:00.836"
+  },
+  {
+    "hash": "cac7e5de93b61bce1d6d82716ea40958cede9c039c19ab7220c99792f03b4df5",
+    "capturedAt": "2026-09-29T02:50:31.850"
+  },
+  {
+    "hash": "c87d073684f08366aafd6dd7470c25f21737e0425608187f183bd91c27d8235e",
+    "capturedAt": "2026-09-30T04:02:30.108"
+  },
+  {
+    "hash": "90c69a56b24467b14612a0831c31346f0e76037e63ac01a2af9a68bc19f9e6ee",
+    "capturedAt": "2026-09-30T04:02:45.323"
+  },
+  {
+    "hash": "6edbfe6276f22b07eda636207c47608bf899972a103c0ea016e4f833d0cbceda",
+    "capturedAt": "2026-09-30T04:02:59.772"
+  },
+  {
+    "hash": "c6fbaf3e8c232ee8119814348bd6ef2d7f8f81a8c99cb7691f7c9b25c6996363",
+    "capturedAt": "2026-09-30T04:03:10.889"
+  },
+  {
+    "hash": "917f2c03fa5b4f1d5ea72d6efc20287b31c46392c609da9e0c89bedcd445e067",
+    "capturedAt": "2026-09-30T04:03:22.674"
+  },
+  {
+    "hash": "6865d3b9bdb922fc848ab90486516a9f4012f92dd59148755cf585f28f3e0e0e",
+    "capturedAt": "2026-09-30T04:03:36.574"
+  },
+  {
+    "hash": "3b21c9e2f13a1eac3858451494eb74bef8aba3bf2e9499c87504d6b6e68d38e5",
+    "capturedAt": "2026-09-30T04:03:48.342"
+  },
+  {
+    "hash": "6cc3c168ad3dbfa5d31725611539996ad5d91a2ad90dcaf1cdfac1dbb71a24d2",
+    "capturedAt": "2026-09-30T04:04:01.739"
+  },
+  {
+    "hash": "b3f303de5675b1457844ecdc6a805930393f2235c05bb449cd21db9ce9273d8a",
+    "capturedAt": "2026-09-30T04:04:13.526"
+  },
+  {
+    "hash": "a1a961add9d2000a8a5c1148f411abc0119bd645ab40e53bdc09394b353e1c09",
+    "capturedAt": "2026-09-30T04:04:26.925"
+  },
+  {
+    "hash": "b9ff1d5b0eb4388671db348e0e175a3380071e564d7429297f5520ba6c70b845",
+    "capturedAt": "2026-09-30T04:04:40.974"
+  },
+  {
+    "hash": "1c9bdeb9f9260fb8b90ba42b56e503656c5b1baf21fc22717a29df7b9c44a464",
+    "capturedAt": "2026-09-30T04:04:56.256"
+  },
+  {
+    "hash": "350d57fcbd5d70375b5c9b006025c1d4cce4debd111e59e9e1a05ddec5e13a8e",
+    "capturedAt": "2026-09-30T04:05:09.375"
+  },
+  {
+    "hash": "eaa2db1443bf5ae1fe5814276ccf6b8349db152b19028f040ef9024b8b62a0a1",
+    "capturedAt": "2026-09-30T04:05:22.010"
+  },
+  {
+    "hash": "aff32b65a292d9e111fc9651b2f8d6240f940ef1b84f52a0bb85f7fa90f43f4b",
+    "capturedAt": "2026-09-30T04:05:35.091"
+  },
+  {
+    "hash": "ba328d35caaf3f15ccb4af62a79815fc1c136ba338fbfcd1e696ea8b08bd7804",
+    "capturedAt": "2026-09-30T04:05:47.245"
+  },
+  {
+    "hash": "180e7265a93c0ebb9e34a6e59b520eceeb2e7174a49929d2361a4cfbcea67e8f",
+    "capturedAt": "2026-09-30T04:06:01.426"
+  },
+  {
+    "hash": "2a699f6971b9cd0b1b5bfbaa7bb37165b0b51e5b76e0d214b862ca01c271a719",
+    "capturedAt": "2026-09-30T04:06:15.144"
+  },
+  {
+    "hash": "38a7e26d443fd118cdab8db92bb75155675ff50f9d470b5dbf863f5b3d223872",
+    "capturedAt": "2026-09-30T04:06:27.357"
+  },
+  {
+    "hash": "6848dfdd6d747641f6d5cec7cebcd76d725b0179b27460d25b3888efae7015f6",
+    "capturedAt": "2026-09-30T04:06:45.727"
+  },
+  {
+    "hash": "45847f54ae6a847ab5501f194aba67f5e5b6457043407ed88c6631a643e2d6ec",
+    "capturedAt": "2026-09-30T04:06:57.374"
+  },
+  {
+    "hash": "e7c3a4d2f63a171c2717ee00014f4d075dfee94c0278a4c2cf29406ccfeb00c9",
+    "capturedAt": "2026-09-30T04:07:21.428"
+  },
+  {
+    "hash": "d8da6a4fd90d311bd75287ae20e30d1747dbc606be342dfec20c58f1fda390d8",
+    "capturedAt": "2026-09-30T04:07:36.911"
+  },
+  {
+    "hash": "17d274d8505a267674579e3623ba1ea46ccffb757d2895b8e3f66c3d365cc2d1",
+    "capturedAt": "2026-09-30T04:07:50.491"
+  },
+  {
+    "hash": "197ab6fe022fb75a725e64ae40f9fe143a88cd632c2c0ff278c5f3df427f255f",
+    "capturedAt": "2026-09-30T04:08:03.542"
+  },
+  {
+    "hash": "fae518db81b3a1e092a0862360f7ffb75206c44995e16f5abcc0b9dbe6d10b52",
+    "capturedAt": "2026-09-30T04:15:23.781"
+  },
+  {
+    "hash": "07451de16c3f32348a53cf0c4c2a1f78b732e3785c9f716055c3e30c72505155",
+    "capturedAt": "2026-09-30T04:16:04.535"
+  },
+  {
+    "hash": "807049a683f244a8441ced61c71b804627810fa712ede1ef0b991349765fb2a4",
+    "capturedAt": "2026-09-30T04:16:39.985"
+  },
+  {
+    "hash": "a75391e4c15663b510f5ce51ee7ecfde59c684dac14ca51f81e7f651c55a32c6",
+    "capturedAt": "2026-09-30T04:17:22.832"
+  },
+  {
+    "hash": "7a2f9c1551cfbb14584c4500879c14fcfaf555afcffdb3b1648e800147b90a0c",
+    "capturedAt": "2026-09-30T04:17:58.834"
+  },
+  {
+    "hash": "c49dd68fc8b94c0c0d942f01f55a243658fc69661f3224e1819acfa1b3936918",
+    "capturedAt": "2026-09-30T04:18:35.368"
+  },
+  {
+    "hash": "1c5cc50febdfddbb901df9be946714709911b30b9e1beb57b7fadfcf57cfc35b",
+    "capturedAt": "2026-09-30T04:19:04.333"
+  },
+  {
+    "hash": "806b1c23456a5d2e4cab699a05a57a8505c115d615e9342ac190f323a74c7cde",
+    "capturedAt": "2026-09-30T04:19:29.485"
+  },
+  {
+    "hash": "367c05202b046ffb21fc57b51285b55a99ee2d6fb2259d20e9286cbe53496c21",
+    "capturedAt": "2026-09-30T04:19:46.350"
+  },
+  {
+    "hash": "952056a2d87997fd5738be8733568a87a13703ac4ec8c579894ae09f3592dbb7",
+    "capturedAt": "2026-09-30T04:20:06.602"
+  },
+  {
+    "hash": "fbbc68bd2908f72b81a2de4fbaa54725af330a114a95bddd935c938c9cb34cfe",
+    "capturedAt": "2026-09-30T04:20:26.665"
+  },
+  {
+    "hash": "78f9d3013ecb359856c1ddaa425b979f3f20ff69851ef1ef854a986e4225947f",
+    "capturedAt": "2026-09-30T04:20:59.068"
+  },
+  {
+    "hash": "795d220d52f81d0cffc4fd4d00be670733742e35d70dfdc7111617053fdfc987",
+    "capturedAt": "2026-09-30T04:21:30.035"
+  },
+  {
+    "hash": "2bd0609e9b8cfa4857e3882d80089f96de127b7564400b9950f7c412ced78b16",
+    "capturedAt": "2026-09-30T20:46:43.110"
+  },
+  {
+    "hash": "b985f527c505fbc7c62c7131d3db0cc7fbbe17804ccd73d242914844b270d7f0",
+    "capturedAt": "2026-09-30T20:46:55.946"
+  },
+  {
+    "hash": "95fefb0beb7db2d9973a667ee8c6a7a6b50fee2fcee2d2b3e9965c16f35b6fb4",
+    "capturedAt": "2026-09-30T20:47:07.079"
+  },
+  {
+    "hash": "38a1b5059379a2481362539fa7c26c951127964e68555a61975bc45ae97d9e6c",
+    "capturedAt": "2026-09-30T20:47:17.239"
+  },
+  {
+    "hash": "d71d7bf4ad154a016d03dd76dee92a8822a8764d62726d8aa964d8548c3abff8",
+    "capturedAt": "2026-09-30T20:47:31.225"
+  },
+  {
+    "hash": "ea081013cc261c195d2138dd7178ce03289cbaae7a43571d7fdfeafa29e88c90",
+    "capturedAt": "2026-09-30T20:47:42.111"
+  },
+  {
+    "hash": "964287d5a2a31dfb87b8cb53d9f63f6effd9cdf73095a935aaaebc7ea96484a0",
+    "capturedAt": "2026-09-30T20:47:52.612"
+  },
+  {
+    "hash": "803923033531098dc1cbe05620acdec05fda68cad12ce852ef205a4e88cd6dc7",
+    "capturedAt": "2026-09-30T20:48:02.878"
+  },
+  {
+    "hash": "ecd39ea1c97ec01300ccd014e944797731cbb9523ff3f2e7a372f158323186be",
+    "capturedAt": "2026-09-30T20:48:12.195"
+  },
+  {
+    "hash": "fd81ee9cdfc7e7e41090d087785c8f49c0e75df43c5209c682e9796d0a94fa0f",
+    "capturedAt": "2026-09-30T20:48:22.844"
+  },
+  {
+    "hash": "f353bbd15753358cf90a8524034da066e91b0460a90cf5886f15940e68ceb8d7",
+    "capturedAt": "2026-09-30T20:48:33.795"
+  },
+  {
+    "hash": "61c277eedb232696f4e470ba86578170ad9d0ee10bf29262c7343fde07030908",
+    "capturedAt": "2026-09-30T20:48:45.230"
+  },
+  {
+    "hash": "a193261912be13372065657a756520a0017328ec028cc873369bcab42fd13f57",
+    "capturedAt": "2026-09-30T20:48:55.878"
+  },
+  {
+    "hash": "49b0dc4edf840c26a5a5d8cf93fd0e3e55f163271f0b0b27f7220fb880a141ad",
+    "capturedAt": "2026-09-30T20:49:05.565"
+  },
+  {
+    "hash": "6e87d9dc2133274978f5ef1e82df17a6aa3045db9de6024e28b4007b8723e26e",
+    "capturedAt": "2026-09-30T20:49:14.097"
+  },
+  {
+    "hash": "3ba7caf2bb901ad55223e3674e8652379cb32498d94a5d6c7c22246f535a4ecd",
+    "capturedAt": "2026-09-30T20:49:23.297"
+  },
+  {
+    "hash": "1db2e146b71fb488822ba0dce342d8cf85570a4c6551e34d5d4238ff6ff18e1e",
+    "capturedAt": "2026-09-30T20:49:32.879"
+  },
+  {
+    "hash": "6db2b47c6cb25cc1f720ed96cc9b9ff74415b5b2c30451a2315e4ed5fc8a46c8",
+    "capturedAt": "2026-09-30T20:49:42.277"
+  },
+  {
+    "hash": "041938faba588f3064ba704bdeb740b554c8866332b80ab6f474f05850361c1d",
+    "capturedAt": "2026-09-30T20:49:51.928"
+  },
+  {
+    "hash": "fba58fe28a7b5b3c956d0c24f04f8a1b5bc646d6bcbe0c57d838a0bdd1469cbe",
+    "capturedAt": "2026-09-30T20:50:00.104"
+  },
+  {
+    "hash": "b46985bc25b15f91ec738f51585ee5c291c6d8f7e7f74cfbb02945bef93cf2de",
+    "capturedAt": "2026-09-30T20:50:08.096"
+  },
+  {
+    "hash": "73cc312d5578d1473c1b42fac0c8531f7c424f6b6a7e87977740e82d9a741c99",
+    "capturedAt": "2026-09-30T20:50:16.642"
+  },
+  {
+    "hash": "c02c0d02d3c03787622f1804249f11eebeb76d60d37dfd9a27ef4580ac8e4336",
+    "capturedAt": "2026-09-30T20:50:25.896"
+  },
+  {
+    "hash": "099f3a0fb84a5a0ea48acff7de7b973ab9ce7b36efc04b684f5f835d66007a80",
+    "capturedAt": "2026-09-30T20:50:35.147"
+  },
+  {
+    "hash": "fa5442b865ac1f6800d8c8f880679bac9871006957e118a1d697cd9e38b1c5f6",
+    "capturedAt": "2026-09-30T20:51:46.780"
+  },
+  {
+    "hash": "0ceb3b1f86d8c8a7a280b0bfd5909a1bce71237545999b6b0ad8b9184d541c14",
+    "capturedAt": "2026-09-30T22:40:45.680"
+  },
+  {
+    "hash": "b50c918eb7eea2a99b108c06a5285d5c822db1854343bbe507e2faae774ddf0d",
+    "capturedAt": "2026-09-30T22:41:53.630"
+  },
+  {
+    "hash": "26131f6a5bc834f3c7cf66c68aa13722560c3c4edc6c64c75672d6b0728b0c9d",
+    "capturedAt": "2026-09-30T22:42:26.683"
+  },
+  {
+    "hash": "3c1e3552a60be8ce14ac40f3fa3b1694178aada63820f36da6094c0a45153e22",
+    "capturedAt": "2026-09-30T22:43:01.834"
+  },
+  {
+    "hash": "c64a9684ab4451b7df7e16dc8b59b6650f8432c933196bc39c0045b094fd8188",
+    "capturedAt": "2026-09-30T22:43:22.933"
+  },
+  {
+    "hash": "7836e9d9d053c29e306b9c2a071a00504693ab6783c1b715df71583ca129ebbe",
+    "capturedAt": "2026-09-30T22:43:40.384"
+  },
+  {
+    "hash": "9b9d76f18ed5a094189fe2dbe7d4ec91ca2cde383c3e1d35e5c804c928df842b",
+    "capturedAt": "2026-09-30T22:43:57.949"
+  },
+  {
+    "hash": "35f83d870bb401707936559e463416487392ca78884fefd5c09002a136f77225",
+    "capturedAt": "2026-09-30T22:44:18.235"
+  },
+  {
+    "hash": "0b01cf22c4d9ffdb28519943adf91ce7293ebd2ae8ea77f24cd7b4616f86f097",
+    "capturedAt": "2026-09-30T22:44:50.516"
+  },
+  {
+    "hash": "48b837023c78eed5d2b5a2d451a0585a883ecdf71de9a59b6688e64741f308aa",
+    "capturedAt": "2026-09-30T22:45:25.633"
+  },
+  {
+    "hash": "db387ffeef8d8bc621ac1cf8f21cbd4999ae25e098327148bd3a540cac28a86f",
+    "capturedAt": "2026-09-30T22:45:46.671"
+  },
+  {
+    "hash": "9c19387679c4d802d59ebf051fd55672854a8266c0f542564d2ca67f4fae1180",
+    "capturedAt": "2026-09-30T22:46:39.633"
+  },
+  {
+    "hash": "16031060abb88af0edb210016bd648d9391d2b27d2890be3c6e4e77f9536809b",
+    "capturedAt": "2026-09-30T22:47:14.800"
+  },
+  {
+    "hash": "23909454eeb2fe8688653d8bbef62b9f500f3c05bd9b5a35466f83eeca109062",
+    "capturedAt": "2026-09-30T22:47:51.068"
+  },
+  {
+    "hash": "a5ae08c4e178fe056faefb5135ce61923ac5f84484cd53bdd5828c613f1d1c5b",
+    "capturedAt": "2026-09-30T22:50:01.841"
+  },
+  {
+    "hash": "3a28c62389098f996f48d659092dc2f68bdc76820df172aaaf5a5197b786c9e2",
+    "capturedAt": "2026-10-01T11:36:52.057"
+  },
+  {
+    "hash": "b72f2eb5fa6f3b7e46770ab05104e9c74a58d0d6c9f4d14760ff6f8c688da2e0",
+    "capturedAt": "2026-10-01T11:37:02.375"
+  },
+  {
+    "hash": "618b6b130ff567d85cf6001154e0f913fb296c537d4216a824db089211c939b5",
+    "capturedAt": "2026-10-01T11:37:13.740"
+  },
+  {
+    "hash": "54801333a84a36b1a2e62f59a0ae6762ba02b0f518dc1245d3dd8e2b3145490e",
+    "capturedAt": "2026-10-01T11:37:25.376"
+  },
+  {
+    "hash": "befb90e022705ef2dff39b2335c780f71c7f0c58faa2a822106ba5406a79d03f",
+    "capturedAt": "2026-10-01T11:37:35.592"
+  },
+  {
+    "hash": "dc95e685248260ff58e54c26ea44175338ebd7d1aa19819c715bf61f964c4607",
+    "capturedAt": "2026-10-01T11:37:44.323"
+  },
+  {
+    "hash": "0b586235afa627f6f0f7b5e7823835f8ca580146a6f39ca1ead2094e4f732a0b",
+    "capturedAt": "2026-10-01T11:37:54.024"
+  },
+  {
+    "hash": "5bc9e7b9edb7f012aba5e0abeb96d6701ff7bfad2d2d1a31e68d959e4c828453",
+    "capturedAt": "2026-10-01T11:38:02.941"
+  },
+  {
+    "hash": "7a602853da35e1d49a6141404c8b63085cd60056ef50e2aa503824759dd0da63",
+    "capturedAt": "2026-10-01T11:38:11.375"
+  },
+  {
+    "hash": "9f9f9de05c8ee3430f53b933ef5b69392e6776c6e3bf9ea82e5c8590fa51faf4",
+    "capturedAt": "2026-10-01T11:38:21.540"
+  },
+  {
+    "hash": "c8aed7c54f441407baa17760d601d25f737619528eed6a278451995b162fe7ad",
+    "capturedAt": "2026-10-01T11:38:30.557"
+  },
+  {
+    "hash": "7802b2d83f0a6755c25b31d0aa26223a62a8ab2b283a4354a9cbeaf5fe81201b",
+    "capturedAt": "2026-10-01T11:38:39.377"
+  },
+  {
+    "hash": "2cda0e5970f0f69f7c5177be589bf2fe6a74fe8da1dccee66f176932df6209cc",
+    "capturedAt": "2026-10-01T11:38:49.724"
+  },
+  {
+    "hash": "544173c1ca6bd87f4f4cea8690f16317bb5f8a11518146067e96f40edce74d66",
+    "capturedAt": "2026-10-01T11:39:03.206"
+  },
+  {
+    "hash": "e2e158c8e20df4cbfe7b81e5dc392bd994f1d6e49c1806c9f68e167241d87187",
+    "capturedAt": "2026-10-01T11:39:14.492"
+  },
+  {
+    "hash": "fc487d2d7c314a22e5c67e1aa15b08188182e4fa06ad5c30d470df19885e95c1",
+    "capturedAt": "2026-10-01T11:39:24.008"
+  },
+  {
+    "hash": "5bc283e2a4d142b353737ba89e59b497e7006c80c993fc8e5c2ab6b2612bdb04",
+    "capturedAt": "2026-10-01T11:39:36.723"
+  },
+  {
+    "hash": "fa53966f47e5b4461e88aef58cc51a8362c9e9c5f960c2192845445086345f7d",
+    "capturedAt": "2026-10-01T11:39:50.006"
+  },
+  {
+    "hash": "fc5fc409d4b0d47f93fcd2d89c73b1ee865ddcdb9cca63a39ddf655cc82bbeaa",
+    "capturedAt": "2026-10-01T11:39:58.773"
+  },
+  {
+    "hash": "e63751a536ccb9a7a71ae257a0dfa56d606fb25b1d3b202a1817d34f01758030",
+    "capturedAt": "2026-10-01T11:40:07.993"
+  },
+  {
+    "hash": "67868be3952a8ec53ff1e722bad29d4244555c21abf19b3f7b30b4e8f6941efb",
+    "capturedAt": "2026-10-01T11:40:16.457"
+  },
+  {
+    "hash": "c8c34aa8ba8ff49dbaf00993234c7c95bb6767aadbff21f58511511de5b2f090",
+    "capturedAt": "2026-10-01T11:40:25.224"
+  },
+  {
+    "hash": "948ce58009456f74615d3985a9df6305f0d117ba9b0b753d40e20cb21a458017",
+    "capturedAt": "2026-10-01T11:40:33.824"
+  },
+  {
+    "hash": "2106ec8e4710c8b0d7a6a2550f44ab72a03ce63d99f26dd580679a3c24c9527e",
+    "capturedAt": "2026-10-01T11:40:42.274"
+  },
+  {
+    "hash": "5f1916c041fcb1dd5edc1638c13d03f6dd9e38fbd491320897a15b33405bc5b3",
+    "capturedAt": "2026-10-01T11:40:52.690"
+  },
+  {
+    "hash": "1dd26a07bf17405668674c17c1f047f61ba6f0281e99bc1fa512deb12b910c36",
+    "capturedAt": "2026-10-01T11:41:21.342"
+  },
+  {
+    "hash": "6305d5864d8552f296fee1375804e802b5f02f11e3fbb508b4cda37a11c449e3",
+    "capturedAt": "2026-10-01T11:42:50.212"
+  },
+  {
+    "hash": "6a815460e3b5c3118e16744963d3b8e732214cba962cc530bd9bb6c11d280946",
+    "capturedAt": "2026-10-01T11:43:55.007"
+  },
+  {
+    "hash": "9cbda4b6100cf48bf3b6607e74da3e008623e7a3d22ea458cfb7013212061cbb",
+    "capturedAt": "2026-10-01T11:44:16.225"
+  },
+  {
+    "hash": "6b564e6ad44014dd74f6aaff8c28ffbbad320cd06433473871ed1154ba6c4d81",
+    "capturedAt": "2026-10-01T11:45:33.940"
+  },
+  {
+    "hash": "253f9b8a77d02c496d6c921c095de2982486dafa35117b655fdfa8fdae72b184",
+    "capturedAt": "2026-10-01T11:46:08.390"
+  },
+  {
+    "hash": "033f3ef7faf4adcebf7a7e545da6e952e2027d642822b63543223cd0ba17808e",
+    "capturedAt": "2026-10-01T11:46:50.608"
+  },
+  {
+    "hash": "cd8a318fa949a6468cb473364959a07fe6ed1bba9110e3c90dd4664bb3a308ee",
+    "capturedAt": "2026-10-01T11:47:15.292"
+  },
+  {
+    "hash": "5c125c4932d6047cf925875e9e2279e56820a203cf07b07ffb34445dda2fef6a",
+    "capturedAt": "2026-10-01T11:48:02.842"
+  },
+  {
+    "hash": "1af586d2a708a32996a38841f1461a154e5cfab0621d81afd502c71fb9b924d0",
+    "capturedAt": "2026-10-01T11:48:20.075"
+  },
+  {
+    "hash": "92707f5006cad429c6b64a55d3ac2324f1036328a56cf76ad7f1be99f3392637",
+    "capturedAt": "2026-10-01T12:22:32.760"
+  },
+  {
+    "hash": "5aa98c1606f41fb6c371612e82266d032aad44c8e2375eec3c611554b13e3b08",
+    "capturedAt": "2026-10-01T12:23:06.676"
+  },
+  {
+    "hash": "fc4681cd5ed2e17a32cc4c93125882398ccdf2523f7d5ee29bbe0da7e7c23746",
+    "capturedAt": "2026-10-01T12:23:25.789"
+  },
+  {
+    "hash": "59e01cf14a87c2baab31329d96dd995f9e6f82ee4ee5bcf9ceb2743087b76534",
+    "capturedAt": "2026-10-01T12:23:40.189"
+  },
+  {
+    "hash": "8627d1022e9e6c1981d3d03fce49001835229bbb784648bd19ee4d3d9ee13385",
+    "capturedAt": "2026-10-01T12:38:18.086"
+  },
+  {
+    "hash": "6b5d0e172219ea5f42c3a765479ffdb89ce5636888d8d10a3c6bec900bc7954b",
+    "capturedAt": "2026-10-01T12:38:26.922"
+  },
+  {
+    "hash": "99338f8b8a9347c96f013608f65182ed60fe7b27266b2944e2ae78fcb1abc8ed",
+    "capturedAt": "2026-10-01T13:06:53.931"
+  },
+  {
+    "hash": "1c7fb455c95e050f95d721b05860dce4a3fdbd7fd9b94c41ac10dc99417297d9",
+    "capturedAt": "2026-10-01T13:10:17.655"
+  },
+  {
+    "hash": "619965bcc7bed6d58b94007d0878b5e3f15c3c4165fe5542edfd825bf0bdd3d7",
+    "capturedAt": "2026-10-01T13:10:59.936"
+  },
+  {
+    "hash": "1f62c518c970acd16a649e2d63a1125103b46195a9f2e30f12a7d2cbd64cca11",
+    "capturedAt": "2026-10-02T00:16:36.598"
+  },
+  {
+    "hash": "004da85e4bb9b2f42cf00e4617e3d0f89fda499aa5c9e10dda1a851e1ca14751",
+    "capturedAt": "2026-10-02T00:17:03.654"
+  },
+  {
+    "hash": "a23b19560b917ac4d80c026e61423470bbfad3a03e0e022d75bfbdaa8c97b8f3",
+    "capturedAt": "2026-10-02T00:17:33.254"
+  },
+  {
+    "hash": "4a44184426d700f056cdc6014039022a15880483c72a75ca85f69e68086d2fa5",
+    "capturedAt": "2026-10-02T00:18:05.686"
+  },
+  {
+    "hash": "a825255cef0b140824727094896cad955c1c8ea6c29dac2a982ff75610baa845",
+    "capturedAt": "2026-10-02T00:18:36.867"
+  },
+  {
+    "hash": "2aee6b058abeb3f8b28f3bf8b6c589596c5c7b50f74855fdcc16935523be4734",
+    "capturedAt": "2026-10-02T00:19:01.749"
+  },
+  {
+    "hash": "bc3fbeb79144f2a294d523f94a808c4f8534fadb2229862b8d9de74783f1a0ff",
+    "capturedAt": "2026-10-02T00:19:30.551"
+  },
+  {
+    "hash": "0e8938d9f043860922e11596abc0ac4eff11867b3defb5b7a35e9db82feb48ab",
+    "capturedAt": "2026-10-02T00:20:00.164"
+  },
+  {
+    "hash": "fc5d8895e7d8314e94e3deff8960f85a6cda7e227f6b76fb09b6904f88938a8f",
+    "capturedAt": "2026-10-02T00:20:15.650"
+  },
+  {
+    "hash": "773bc50a477854b2dec729bbe3ebffc20592af863575a9ab3a1f15f91eb6e5dc",
+    "capturedAt": "2026-10-02T00:20:37.399"
+  },
+  {
+    "hash": "25a0b103771661f17e8e6ad30bbdd08e09aaaea1afbf90a3a335d29290ac4f5c",
+    "capturedAt": "2026-10-02T00:20:51.832"
+  },
+  {
+    "hash": "332d854fcf7cab3218abec8d0f1dea4a7c4c68d89980ffb3f91cd538ba00373f",
+    "capturedAt": "2026-10-02T00:21:17.833"
+  },
+  {
+    "hash": "a9fcb15440a7994eb2eabf92b540ba95e8c9804275dad7cf7a67a62a6508b5d9",
+    "capturedAt": "2026-10-02T00:21:41.117"
+  },
+  {
+    "hash": "8f6ab14e1a6559cd4c961dda9b0c80900db2103bd749b78326fac55fc6fbd881",
+    "capturedAt": "2026-10-02T00:21:55.633"
+  },
+  {
+    "hash": "f3678aa45860a546702827ac332839501fafba98d4532ebead7eb049c64f2718",
+    "capturedAt": "2026-10-02T00:25:34.829"
+  },
+  {
+    "hash": "05f41cdad051d43f1fc8fbfa56a419a98b0fe0a225ecf00583090bc26a14b15a",
+    "capturedAt": "2026-10-02T00:25:46.701"
+  },
+  {
+    "hash": "c84287e8c46fadb926970cabda6aba61acb40c588ac88d29b76b5e6e8418d381",
+    "capturedAt": "2026-10-02T00:26:05.490"
+  },
+  {
+    "hash": "2c46077de0b7314b53f61b5bf8b37175c014904214886c50bfe5ab0304b97d2e",
+    "capturedAt": "2026-10-02T00:26:19.919"
+  },
+  {
+    "hash": "d10181cdb78dcb319bcf6496dac4d881e0ce290e9a5a0131627b03e44d36efb0",
+    "capturedAt": "2026-10-02T00:26:33.990"
+  },
+  {
+    "hash": "76bcaeaee6ca4218107a765185493adcee3802707f6e31a7e175365733e5d46a",
+    "capturedAt": "2026-10-02T00:26:46.370"
+  },
+  {
+    "hash": "bb359ac125026bcd5636d5cde1c779d893f5fd7e4ad5cd6f254825e8fa07b26e",
+    "capturedAt": "2026-10-02T00:26:59.470"
+  },
+  {
+    "hash": "0c0d4cf2c4302ee1ef9eeeeb0410415f82b34d34edc44bb4929730ce3b8c6aa8",
+    "capturedAt": "2026-10-02T00:27:12.721"
+  },
+  {
+    "hash": "8a22dd708403ccff5908513491c25cfc3fd123cda50f6c26ea25f6adbdc86016",
+    "capturedAt": "2026-10-02T00:27:25.135"
+  },
+  {
+    "hash": "08dbff672f80bfe0af7ea8419dcb0164fb616ab6a48f6f430bb9a6d7ea81dd19",
+    "capturedAt": "2026-10-02T00:27:36.521"
+  },
+  {
+    "hash": "b1dda934d0bb96f3ab5d0079c0d5ede81ed5ccd5370ebe8d537f83cf1f4eb2e2",
+    "capturedAt": "2026-10-02T00:27:49.753"
+  },
+  {
+    "hash": "934f930ca5ceb880695286ef1c941a0f8752d99cfca66c1ec28dfaf3af24b283",
+    "capturedAt": "2026-10-02T00:28:02.855"
+  },
+  {
+    "hash": "da7761c7ba848d6d4c6aa0458c8e2ff5c864ba5bf99e6dc0db2d3a6e1da411dc",
+    "capturedAt": "2026-10-02T00:28:15.572"
+  },
+  {
+    "hash": "bad73ab233a6ec953323e85f68c005927769b98e29e42e0bf2d1774caafce152",
+    "capturedAt": "2026-10-02T00:28:29.053"
+  },
+  {
+    "hash": "c709643e0cd47b3eec6aaf443542b1b2d939cb3ef71ec70d157c1834ef278e3b",
+    "capturedAt": "2026-10-02T00:28:41.538"
+  },
+  {
+    "hash": "31a93bcaa539be6160e8dcf5f8243df1237f953a64d075388b727cd1b8f25b10",
+    "capturedAt": "2026-10-02T00:28:54.169"
+  },
+  {
+    "hash": "540fdc0ce9d1484a92b7748ec3da78c964094681214ff08ce0f12c5fbc7cf9b3",
+    "capturedAt": "2026-10-02T00:29:08.702"
+  },
+  {
+    "hash": "bddc42b2b66894e92787ad3068682ec672027b65c5411dea3956f7d98382b9c2",
+    "capturedAt": "2026-10-02T00:29:22.301"
+  },
+  {
+    "hash": "779e61f686adbd7937bcc1d9f1f563f48f10dd7dd900edc8287de2849c767263",
+    "capturedAt": "2026-10-02T00:29:33.619"
+  },
+  {
+    "hash": "5b29be30bb9c7d16b1232b5874bbeb525164adf350786221447e109512db7574",
+    "capturedAt": "2026-10-02T00:29:45.749"
+  },
+  {
+    "hash": "6b25a1b2d4b029f69fa938d1681491ed6fbb6974ac7e70eae9f8b979429e36c0",
+    "capturedAt": "2026-10-02T00:29:57.353"
+  },
+  {
+    "hash": "4554b0c6fb5e7b242e6ab0d19ebf14dd17b5d77101e50c5bc5fb2ea99700908e",
+    "capturedAt": "2026-10-02T00:30:08.920"
+  },
+  {
+    "hash": "a14c2aee7b1c7e14b7421489129667e0e60ff7213bc0a2213544f0cf55740f81",
+    "capturedAt": "2026-10-02T00:30:20.986"
+  },
+  {
+    "hash": "783ea25a9b3ac904518e9d2c91db121087e89cd75352da2496c7f15ee2616383",
+    "capturedAt": "2026-10-02T00:30:32.186"
+  },
+  {
+    "hash": "b56274df1a38291c98b6c54f85ad1c73e2c718b0564bab376bcef9a3c2fb5f84",
+    "capturedAt": "2026-10-02T00:36:34.078"
+  },
+  {
+    "hash": "9e3d8b8271346539fec1639b588cce819901cc980462f83aafa900316923b216",
+    "capturedAt": "2026-10-02T00:36:37.332"
+  }
+]

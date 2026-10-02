@@ -285,5 +285,12 @@
     "rows": 364,
     "retrievedAt": "2026-09-27T19:33:22.577889+00:00",
     "sha256": "c3f0b2ce1eda99b7f48b1c9a802fd3108556f3379d4b1ba56806f1f680df991d"
+  },
+  {
+    "world": "Cantabra",
+    "url": "https://api.tibiamarket.top/item_history?server=Cantabra&item_id=22118&start_days_ago=2000&end_days_ago=-1",
+    "rows": 365,
+    "retrievedAt": "2026-10-02T06:50:32.995332+00:00",
+    "sha256": "6eff9e9144eed50a45e6b855fecd8d5d1ece32e2e8ad64ac00c70f532edf3ae5"
   }
 ]

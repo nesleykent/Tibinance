@@ -5,11 +5,89 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from reprocess_market import main, scan_file, safe_result, write_outputs
+from reprocess_market import main, scan_file, safe_result, write_outputs, capture_order
 from website_pipeline import WebsitePipeline
 
 
 class WebsitePipelineTests(unittest.TestCase):
+    def test_runtime_retry_preserves_other_review_checkpoints_in_chronological_stream(self):
+        import contextlib
+        import hashlib
+        import io
+        with tempfile.TemporaryDirectory() as d:
+            folder=Path(d)/'raw';folder.mkdir();output=Path(d)/'output';output.mkdir()
+            files=[folder/'2026-10-02_003637100_Synthetic Character_Hotkey.png',
+                   folder/'2026-10-02_003636099_Synthetic Character_Hotkey.png']
+            for i,file in enumerate(files):file.write_bytes(str(i).encode())
+            hashes=[hashlib.sha256(file.read_bytes()).hexdigest() for file in files]
+            with WebsitePipeline() as bridge:version=bridge.version
+            prior=[{'hash':h,'status':'needs_review','processingVersion':version,'issues':[],'offers':[],
+                    'stages':{'filename':True},'attemptedStages':['filename']} for h in hashes]
+            prior[1]['runtimeFault']='browser_closed'
+            (output/'backfill-results.json').write_text(json.dumps(prior))
+            seen=[]
+            class LocalPipeline:
+                def __init__(self):
+                    self.bridge=WebsitePipeline();self.version=self.bridge.version;self.stages=self.bridge.stages
+                    self.capture_time_zone=self.bridge.capture_time_zone
+                def __enter__(self):return self
+                def __exit__(self,*_):self.bridge.close()
+                def eligible(self,files):return self.bridge.eligible(files)
+                def capture_times(self,files):return self.bridge.capture_times(files)
+                def ingest(self,file,context=None,correction=None,reprocess=True):
+                    if not reprocess:return self.bridge.ingest(file,context,reprocess=False)
+                    seen.append(file)
+                    return {'status':'excluded_market','stages':{'filename':True,'deduplication':True,'market':False},
+                            'attemptedStages':['filename','deduplication','market'],'offers':[],'issues':[]}
+            with patch('reprocess_market.WebsitePipeline',LocalPipeline),patch('sys.argv',['reprocess_market.py',str(folder),'--output',str(output),'--resume','--retry-runtime']),contextlib.redirect_stdout(io.StringIO()):main()
+            self.assertEqual(seen,[files[1]])
+            audit=json.loads((output/'backfill-results.json').read_text())
+            self.assertEqual([(r['hash'],r['status']) for r in audit],[(hashes[1],'excluded_market'),(hashes[0],'needs_review')])
+            self.assertEqual(json.loads((output/'summary.json').read_text())['reusedCheckpoints'],1)
+
+    def test_shared_filename_clocks_order_all_fractional_digits(self):
+        names=[Path(f'2026-10-02_{t}_Synthetic Character_Hotkey.png') for t in
+               ('0036371','0036370999999999','0036371000000001','003637')]
+        with WebsitePipeline() as pipeline:
+            times=pipeline.capture_times(names)
+            self.assertEqual(times[2],'2026-10-02T00:36:37.1000000001')
+            self.assertEqual(pipeline.capture_times([Path('2026-02-30_000000000_Synthetic Character_Hotkey.png')]),[None])
+        self.assertEqual(sorted(range(4),key=lambda i:capture_order(times[i])),[3,1,0,2])
+
+    def test_batch_stream_interleaves_views_by_full_filename_clock_and_deduplicates(self):
+        import contextlib
+        import io
+        with tempfile.TemporaryDirectory() as d:
+            folder=Path(d)/'raw';folder.mkdir();output=Path(d)/'output'
+            specs=[('0036371000000001','offers',b'late'),('0036371','statistics',b'middle'),
+                   ('0036370999999999','offers',b'early'),('003638','offers',b'early')]
+            expected=['2026-10-02T00:36:37.0999999999','2026-10-02T00:36:37.1','2026-10-02T00:36:37.1000000001']
+            for clock,view,payload in specs:
+                (folder/f'2026-10-02_{clock}_Synthetic Character_Hotkey.png').write_bytes(payload)
+            seen=[]
+            class LocalPipeline:
+                def __init__(self):
+                    self.bridge=WebsitePipeline();self.version=self.bridge.version;self.stages=self.bridge.stages
+                    self.capture_time_zone=self.bridge.capture_time_zone
+                def __enter__(self):return self
+                def __exit__(self,*_):self.bridge.close()
+                def eligible(self,files):return self.bridge.eligible(files)
+                def capture_times(self,files):return self.bridge.capture_times(files)
+                def ingest(self,file,context=None,correction=None,reprocess=True):
+                    if not reprocess:return self.bridge.ingest(file,context,reprocess=False)
+                    captured=self.capture_times([file])[0];seen.append(captured)
+                    return {'status':'needs_review','capturedAt':captured,'viewType':'statistics' if file.read_bytes()==b'middle' else 'offers',
+                            'stages':{'filename':True,'deduplication':True},'attemptedStages':['filename','deduplication'],
+                            'offers':[],'issues':[]}
+            with patch('reprocess_market.WebsitePipeline',LocalPipeline),patch('sys.argv',['reprocess_market.py',str(folder),'--output',str(output)]),contextlib.redirect_stdout(io.StringIO()):main()
+            self.assertEqual(seen,expected)
+            summary=json.loads((output/'summary.json').read_text())
+            self.assertEqual(summary['duplicateScreenshots'],1)
+            self.assertEqual(summary['filenameEligible'],4)
+            audit=json.loads((output/'backfill-results.json').read_text())
+            self.assertEqual([r['viewType'] for r in audit],['offers','statistics','offers'])
+            self.assertEqual(len(json.loads((output/'processing-order.json').read_text())),4)
+
     def test_python_runs_the_actual_website_filename_gate(self):
         with WebsitePipeline() as pipeline:
             source = lambda kind: Path('_'.join(['2026-10-01', '120000123', 'Synthetic Character', kind]) + '.webp')
@@ -100,6 +178,7 @@ class WebsitePipelineTests(unittest.TestCase):
                 def __enter__(self): return self
                 def __exit__(self, *_): self.bridge.close()
                 def eligible(self, files): return self.bridge.eligible(files)
+                def capture_times(self, files): return self.bridge.capture_times(files)
                 def ingest(self, file, context, correction):
                     entered.append(file == accepted)
                     return {'status': 'excluded_market', 'stages': {'filename': True, 'deduplication': True, 'market': False},

@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {parseStatisticsText,validatedStatistics,statisticsIssues,statisticsReferenceDate,captureInstant,statisticsObservations} from '../js/statistics.js';
-import {parseFilename} from '../js/filename.js';
+import {parseFilename,compareCaptureTimes} from '../js/filename.js';
 import {ingestScreenshot,STAGES,INGESTION_VERSION} from '../js/ingestion.js';
 import {toRecord} from '../js/store.js';
 
@@ -52,6 +52,12 @@ test('each side validates independently, without live crossed-book checks',()=>{
 test('filename clock preserves fractional seconds and rejects invalid calendar dates',()=>{
   assert.equal(parseFilename(source.name).capturedAt,'2026-10-02T00:36:37.332');
   assert.throws(()=>parseFilename(source.name.replace('2026-10-02','2026-02-30')));
+});
+test('archive clocks sort below millisecond precision without lexical suffix shortcuts',()=>{
+  const clocks=['2026-10-02T00:36:37.1','2026-10-02T00:36:37.0999999999',
+    '2026-10-02T00:36:37.1000000001','2026-10-02T00:36:37'];
+  assert.deepEqual([...clocks].sort(compareCaptureTimes),[clocks[3],clocks[1],clocks[0],clocks[2]]);
+  assert.equal(compareCaptureTimes(clocks[0],clocks[0]+'0'),0);
 });
 test('local IANA timezone resolves exact capture instant and CET/CEST 10:00 dates',()=>{
   const cases=[['2026-01-02T05:59:59','2026-01-01'],['2026-01-02T06:00:00','2026-01-02'],

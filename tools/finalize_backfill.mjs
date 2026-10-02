@@ -1,6 +1,7 @@
 import { toRecord, ALLOWED } from '../js/store.js';
 import { INGESTION_VERSION } from '../js/ingestion.js';
 import { STATISTICS_CSV_HEADERS, statisticsCSVValues } from '../js/statistics.js';
+import { compareCaptureTimes } from '../js/filename.js';
 // Allocate canonical UUIDs with the same matcher as interactive ingestion.
 import { readFile, writeFile, rename } from 'node:fs/promises';
 import { resolve } from 'node:path';
@@ -13,7 +14,7 @@ const path = name => resolve(directory, name);
 const allowed = ALLOWED;
 const extracted = JSON.parse(await readFile(path('captures-extracted.json'), 'utf8'))
   .map(c => c.processingVersion >= INGESTION_VERSION || c.statistics30d != null ? toRecord(c) : Object.fromEntries(allowed.filter(k => k in c).map(k => [k,c[k]])))
-  .sort((a,b) => Date.parse(a.capturedAtUtc ?? `${a.capturedAt}Z`)-Date.parse(b.capturedAtUtc ?? `${b.capturedAt}Z`) || a.hash.localeCompare(b.hash));
+  .sort((a,b) => compareCaptureTimes(a.capturedAt,b.capturedAt) || a.hash.localeCompare(b.hash));
 if (new Set(extracted.map(c => c.hash)).size !== extracted.length) throw new Error('Duplicate capture hashes');
 if (extracted.some(c => !Number.isFinite(Date.parse(`${c.capturedAt}Z`)))) throw new Error('Invalid capture timestamp');
 let verifiedItems = null;
