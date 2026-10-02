@@ -15,13 +15,25 @@ export function parseFilename(name) {
   const m = RE.exec(stem);
   if (!m) {
     const auto = TIBIA_RE.exec(stem);
-    if (auto) throw new Error(`This is an automatic ${auto[1]} screenshot. ${HOTKEY_MSG}`);
-    throw new Error(`${HOTKEY_MSG} Expected a name like 2026-09-21_124317718_Character Name_Hotkey.jpeg`);
+    if (auto) throw new Error(HOTKEY_MSG);
+    throw new Error(HOTKEY_MSG);
   }
   const [, Y, Mo, D, h, mi, s, rest] = m;
   const character = rest.trim();
   if (!character) throw new Error('No character name found in the filename');
   // ISO 8601 extended format. Sorts correctly as a plain string, and carries
   // no locale ambiguity about which field is the day and which is the month.
-  return { character, capturedAt: `${Y}-${Mo}-${D}T${h}:${mi}:${s}` };
+  const capturedAt = `${Y}-${Mo}-${D}T${h}:${mi}:${s}`;
+  const date = new Date(`${capturedAt}Z`);
+  if (!Number.isFinite(date.getTime()) || date.toISOString().slice(0, 19) !== capturedAt) {
+    throw new Error('Invalid capture timestamp');
+  }
+  return { character, capturedAt };
+}
+
+// The original website filename rule, without extracting private metadata.
+// Python executes this JavaScript implementation through the local bridge.
+export function acceptsScreenshotName(name) {
+  const match = RE.exec(name.replace(/\.[^.]+$/, ''));
+  return Boolean(match && match[7].trim());
 }

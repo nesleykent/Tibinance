@@ -6,7 +6,7 @@ const WORLDS_TTL = 6 * 60 * 60 * 1000;
 async function getJSON(url) {
   let r;
   try {
-    r = await fetch(url, { headers: { Accept: 'application/json' } });
+    r = await fetch(url, { cache: 'no-store', headers: { Accept: 'application/json' } });
   } catch (e) {
     // TibiaData answers an unknown character with a 502 that carries no CORS
     // header, so the browser reports it as a bare network failure rather than
@@ -30,7 +30,7 @@ async function getJSON(url) {
 export async function lookupWorld(character) {
   const data = await getJSON(`${API}/character/${encodeURIComponent(character)}`);
   const world = data?.character?.character?.world;
-  if (!world) throw new Error(`Character "${character}" was not found on TibiaData`);
+  if (!world) throw new Error('Character world could not be resolved on TibiaData');
   return world;
 }
 

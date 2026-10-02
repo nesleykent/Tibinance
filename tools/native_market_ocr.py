@@ -25,7 +25,7 @@ def tesseract_words(path, psm=11, whitelist=None):
         cmd += ['-c', f'tessedit_char_whitelist={whitelist}']
     run = subprocess.run(cmd + ['tsv'], capture_output=True, text=True, timeout=90)
     if run.returncode:
-        raise RuntimeError('Tesseract failed: ' + run.stderr[-300:])
+        raise RuntimeError('Tesseract failed (diagnostic details suppressed)')
     out = []
     for r in csv.DictReader(io.StringIO(run.stdout), delimiter='\t', quoting=csv.QUOTE_NONE):
         if not r['text'].strip() or float(r['conf']) < 0:
@@ -41,7 +41,7 @@ def vision_words(path, executable):
         raise RuntimeError('Apple Vision fallback unavailable; provide --vision-binary')
     run = subprocess.run([str(executable), str(path)], capture_output=True, text=True, timeout=90)
     if run.returncode:
-        raise RuntimeError('Apple Vision failed: ' + run.stderr[-300:])
+        raise RuntimeError('Apple Vision failed (diagnostic details suppressed)')
     return json.loads(run.stdout)
 
 
@@ -136,6 +136,23 @@ def numeric_valid(row):
 
 def needs_fallback(row):
     return not numeric_valid(row) or not row['endsAt'] or row['_confidence']['endsAt'] < 70 or any(row['_confidence'][k]<35 for k in FIELDS[:3]) or row.get('_conflict') or row.get('_numericConflict')
+
+
+def visual_row_centers(image, table):
+    """Count text bands in the anonymous price column independently of OCR."""
+    left=max(0,round(table['amountR']+2))
+    right=min(image.width,round(table['pieceR']-2))
+    pixels=image.load()
+    bands=[]
+    for y in range(max(0,round(table['top'])),min(image.height,round(table['stop']-table['glyph']*.8))):
+        count=sum(sum(pixels[x,y])/3>110 for x in range(left,right))
+        if right<=left or not max(3,(right-left)*.04)<=count<(right-left)*.7:
+            continue
+        if bands and y-bands[-1][-1]<=2:
+            bands[-1].append(y)
+        else:
+            bands.append([y])
+    return [median(band) for band in bands if len(band)>=max(2,table['glyph']*.35)]
 
 
 def merge_rows(base, incoming, glyph, fallback=False):
@@ -251,7 +268,7 @@ def recover_stripes(image, table, rows, workdir, vision_binary, anchors=()):
             path=Path(workdir)/f"stripe-{table['side']}-{index}-{field}.png"
             crop.save(path)
             reads={}
-            for engine,reader in (('tesseract',lambda:tesseract_words(path,7)),
+            for engine,reader in (('tesseract',lambda:tesseract_words(path,7,'0123456789,-: ')),
                                   ('apple-vision',lambda:vision_words(path,vision_binary))):
                 try:
                     value,confidence,text=stripe_observation(reader(),field)
@@ -268,7 +285,7 @@ def recover_stripes(image, table, rows, workdir, vision_binary, anchors=()):
                 retry_path=Path(workdir)/f"stripe-{table['side']}-{index}-{field}-inverted.png"
                 inverted.save(retry_path)
                 try:
-                    value,confidence,text=stripe_observation(tesseract_words(retry_path,7),field)
+                    value,confidence,text=stripe_observation(tesseract_words(retry_path,7,'0123456789,-: '),field)
                     if value is not None and confidence>=threshold:
                         reads['tesseract']={'value':value,'confidence':confidence,'readText':text,
                                             'rendering':'inverted','initialRead':primary}
@@ -344,6 +361,8 @@ def read_market(path, workdir, vision_binary=None):
         gaps=[b['_cy']-a['_cy'] for a,b in zip(rs,rs[1:])]
         if len(gaps)>=2 and max(gaps)>median(gaps)*1.6:
             fallback_needed=True
+    if tables and any(len(rows.get(t['side'],[]))!=len(visual_row_centers(im,t)) for t in tables):
+        fallback_needed=True
     fallback_error=None
     if fallback_needed:
         if 'apple-vision' not in engines:
@@ -382,6 +401,9 @@ def read_market(path, workdir, vision_binary=None):
     offers=[]
     for side in ('sell','buy'):
         rs=rows.get(side,[])
+        table=next((t for t in tables or [] if t['side']==side),None)
+        if table and len(rs)!=len(visual_row_centers(im,table)):
+            issues.append({'side':side,'row':None,'field':'row','reason':'OCR row count does not match visible numeric text bands'})
         for index,r in enumerate(rs):
             for field in FIELDS:
                 if r[field] is None or (field!='endsAt' and r[field]<=0):

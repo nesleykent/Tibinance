@@ -75,16 +75,13 @@ character name or a filename into the database even by mistake.
 ## How a screenshot is processed
 
 ```
-file ──► SHA-256 ──► duplicate? ──► stop (unless reprocessing is enabled)
-     ──► filename ──► character name ──┐
-     ──► canvas ──► OCR ──► rows       │
-                                       ▼
-        TibiaData /character ──► world ──► /worlds ──► type + BattlEye
-                                       │
-     rows ──► best prices + volumes ───┴──► review ──► save
+file ──► original Hotkey filename filter ──► SHA-256 duplicate check
+     ──► original Market verification ──► Tibia Coins verification
+     ──► filename metadata ──► existing TibiaData world workflow
+     ──► individual offers ──► shared validation ──► persistence
 ```
 
-The OCR and the API calls run concurrently.
+Screenshot ingestion is shared with the Python batch. The original filename filter runs first, followed by hash deduplication, Market verification, Tibia Coins verification, metadata parsing, world resolution, offer extraction and validation. World resolution completes before individual offers are extracted. Filenames are never displayed in the queue.
 
 ### Reading the market table
 
@@ -303,7 +300,8 @@ To backfill screenshots already saved in this browser:
 2. Enable **Reprocess saved screenshots**, then drop the original files again.
 3. Review the individual offers and correct any unread **Ends At** values.
 4. Save. The existing capture gains offer observations; its original world,
-   capture date and snapshot totals remain intact. Current character-world
+   capture date remain intact. Canonical ingestion recomputes snapshot totals from
+   the validated visible offers. Current character-world
    lookups are skipped for existing captures, including transferred characters.
 
 The mode defaults to off. Accidental duplicate files and identical files within

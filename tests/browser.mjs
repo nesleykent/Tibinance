@@ -71,12 +71,51 @@ try {
     return { captures: captures.length, observations: offers.length };
   });
   console.log('IndexedDB integration passed', outcome);
+  let apiCalls = 0;
+  await page.route('**/api.tibiadata.com/**', route => { apiCalls++; return route.abort(); });
+  const synthetic = await page.evaluate(() => {
+    window.__savedTesseract = window.Tesseract;
+    window.__ocrCalls = 0;
+    window.Tesseract = { PSM: { SPARSE_TEXT: 11 }, createWorker: async () => ({
+      setParameters: async () => {}, terminate: async () => {},
+      recognize: async () => { window.__ocrCalls++; return { data: { words: [] } }; }
+    }) };
+    const canvas = document.createElement('canvas'); canvas.width = canvas.height = 32;
+    const ctx = canvas.getContext('2d'); ctx.fillStyle = '#444'; ctx.fillRect(0, 0, 32, 32);
+    return canvas.toDataURL().split(',')[1];
+  });
+  const testFile = kind => ({ name: ['2026-10-01', '120000123', 'Synthetic Private', kind].join('_') + '.png',
+    mimeType: 'image/png', buffer: Buffer.from(synthetic, 'base64') });
+  await page.locator('#file').setInputFiles(testFile('Death'));
+  await page.waitForFunction(() => document.querySelector('#queue .msg-bad'));
+  assert.equal(await page.evaluate(() => window.__ocrCalls), 0, 'Filename rejection precedes OCR');
+  await page.locator('#file').setInputFiles(testFile('Hotkey'));
+  await page.waitForFunction(() => document.querySelectorAll('#queue .msg-bad').length === 2);
+  const ocrCalls = await page.evaluate(() => window.__ocrCalls);
+  assert.ok(ocrCalls > 0, 'Eligible input reaches original Market filter');
+  await page.locator('#file').setInputFiles(testFile('Hotkey'));
+  await page.waitForFunction(() => document.querySelector('#queue .msg-warn'));
+  assert.equal(await page.evaluate(() => window.__ocrCalls), ocrCalls, 'SHA duplicate stops before OCR');
+  assert.equal(apiCalls, 0, 'Rejected images never reach character API');
+  assert.ok(!await page.locator('#queue').innerHTML().then(s => s.includes('Synthetic Private')),
+    'Private filenames absent from visible text, tooltips and attributes');
+  assert.equal(await page.locator('[data-force]').count(), 0, 'Validation override removed');
+  console.log('Filename, duplicate, Market rejection and UI privacy integration passed');
   for (const width of [320, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     assert.ok(await page.getByLabel('Reprocess saved screenshots').isVisible());
     assert.ok(await page.getByRole('button', { name: 'Export Offers', exact: true }).isVisible());
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `Page overflow at ${width}`);
   }
+  if (process.env.TIBINANCE_VISUAL) console.log(JSON.stringify({ preview:
+    (await page.screenshot({ type: 'jpeg', quality: 35, fullPage: true })).toString('base64') }));
+  await page.evaluate(async () => {
+    await (await import('/js/ocr.js')).disposeOcr();
+    window.Tesseract = window.__savedTesseract;
+  });
+  await page.unroute('**/api.tibiadata.com/**');
+  page.once('dialog', d => d.accept());
+  await page.getByRole('button', { name: 'Discard All', exact: true }).click();
   // Optional real OCR + file upload flow, requires the local sample and CDN access.
   if (process.env.TIBINANCE_SAMPLE) {
     await page.route('**/api.tibiadata.com/v4/character/**', r => r.fulfill({ json: { character: { character: { world: 'Ustebra' } } } }));

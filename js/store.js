@@ -1,4 +1,6 @@
 import { matchOffers, normalizeEndsAt, PROCESSING_VERSION } from './offers.js';
+import { analyse } from './validation.js';
+import { INGESTION_VERSION } from './ingestion.js';
 /*
  * Persistence + the privacy boundary.
  *
@@ -35,6 +37,15 @@ export function toRecord(input) {
     rec.offers = matchOffers(rec.world, input.offers);
     rec.processingVersion = Number.isSafeInteger(input.processingVersion) && input.processingVersion > 0
       ? input.processingVersion : PROCESSING_VERSION;
+    if (rec.processingVersion >= INGESTION_VERSION) {
+      const checked = analyse({ capturedAt: rec.capturedAt,
+        world: { world: rec.world }, rows: Object.fromEntries(['sell', 'buy'].map(side =>
+          [side, rec.offers.filter(row => row.side === side)])) });
+      if (!checked.ok) throw new Error('Canonical capture validation failed');
+      for (const field of ['sell', 'buy', 'sellVolume', 'buyVolume', 'goldSupply', 'goldDemand', 'sellTopAmount', 'buyTopAmount']) {
+        if (rec[field] !== checked[field]) throw new Error('Canonical capture totals do not match its offers');
+      }
+    }
   }
   // belt and braces: nothing outside ALLOWED can have survived
   const extra = Object.keys(rec).filter(k => !ALLOWED.includes(k));
@@ -114,10 +125,14 @@ export async function put(input, { reprocess = false, enrich = false } = {}) {
         const existing = captures.find(c => c.hash === input.hash);
         if (existing && !reprocess && !enrich) throw new Error('Screenshot already stored; enable reprocessing to enrich it');
         if (existing && enrich && !canEnrich(existing, input)) { rec = existing; return; }
-        // Historical reprocessing only adds extraction data. Original market
-        // aggregates and world/time provenance survive even a changed filename.
-        rec = toRecord(existing ? { ...existing, offers: input.offers,
-          processingVersion: input.processingVersion } : input);
+        // Preserve historical world/time. Canonical reprocessing recomputes
+        // validated totals; older enrichment retains its original snapshots.
+        const canonical = input.processingVersion >= INGESTION_VERSION;
+        rec = toRecord(existing ? canonical
+          ? { ...input, world: existing.world, type: existing.type, battleye: existing.battleye,
+              capturedAt: existing.capturedAt, hash: existing.hash }
+          : { ...existing, offers: input.offers, processingVersion: input.processingVersion }
+          : input);
         if (existing && !input.offers) throw new Error('Reprocessing requires offer data');
         if (rec.offers) {
           for (const side of ['sell', 'buy']) {

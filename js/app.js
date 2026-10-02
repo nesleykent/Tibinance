@@ -1,69 +1,13 @@
-import { sha256 } from './hash.js';
-import { parseFilename } from './filename.js';
-import { lookupWorld, worldInfo } from './tibiadata.js';
-import { readMarket, disposeOcr } from './ocr.js';
+import { disposeOcr } from './ocr.js';
+import { ingestScreenshot, prepareCapture } from './ingestion.js';
+import { analyse } from './validation.js';
 import * as store from './store.js';
-import { fmt, esc, spread, goldOf, num } from './format.js';
-import { normalizeEndsAt, PROCESSING_VERSION, offerObservations } from './offers.js';
+import { fmt, esc, spread, num } from './format.js';
+import { offerObservations } from './offers.js';
 
 const $ = id => document.getElementById(id);
 
 /* ---------------------------------------------------------------- analysis */
-function analyse(state) {
-  const { sell, buy } = state.rows;
-  const warn = [...(state.ocrWarnings ?? [])];
-  // Without a world there is nothing to file the observation under. Flagging it
-  // here is what keeps it out of the "ready" count and out of Save all.
-  if (!state.world) {
-    warn.push(state.worldNote ?? 'the world could not be resolved from the filename');
-  }
-  const live = s => s.filter(r => r.amount > 0 && r.price > 0);
-  const S = live(sell), B = live(buy);
-
-  for (const [side, rows] of [['Sell', sell], ['Buy', buy]]) {
-    rows.forEach((r, i) => {
-      if (r.amount > 0 && r.price > 0 && !normalizeEndsAt(r.endsAt)) {
-        warn.push(`${side} row ${i + 1}: correct Ends At (YYYY-MM-DDTHH:MM:SS) to track this offer`);
-      }
-      if (r.total > 0 && r.amount * r.price !== r.total) {
-        r.bad = true;
-        warn.push(`${side} row ${i + 1}: ${fmt(r.amount)} × ${fmt(r.price)} = ` +
-                  `${fmt(r.amount * r.price)}, but the screenshot total reads ${fmt(r.total)}`);
-      } else r.bad = false;
-    });
-  }
-  if (!S.length || !B.length) {
-    return { warn: [...warn, 'Both a Sell and a Buy offer are required'], ok: false };
-  }
-  const bestSell = Math.min(...S.map(r => r.price));
-  const bestBuy = Math.max(...B.map(r => r.price));
-  if (S[0].price !== bestSell) {
-    warn.push(`the first Sell row (${fmt(S[0].price)}) is not the best Sell price ` +
-              `(${fmt(bestSell)}); the market is normally sorted, so check the read`);
-  }
-  if (B[0].price !== bestBuy) {
-    warn.push(`the first Buy row (${fmt(B[0].price)}) is not the best Buy price ` +
-              `(${fmt(bestBuy)}); the market is normally sorted, so check the read`);
-  }
-  if (bestBuy >= bestSell) {
-    warn.push(`crossed market: best Buy ${fmt(bestBuy)} ≥ best Sell ${fmt(bestSell)}; ` +
-              'those offers would already have matched, so a price is misread');
-  }
-  return {
-    sell: bestSell, buy: bestBuy,
-    sellVolume: S.reduce((a, r) => a + r.amount, 0),
-    buyVolume: B.reduce((a, r) => a + r.amount, 0),
-    goldDemand: goldOf(S),
-    goldSupply: goldOf(B),
-    // quantity available at the best price - the binding constraint on any
-    // cross-world trade, since only these coins change hands at that price
-    sellTopAmount: S.filter(r => r.price === bestSell).reduce((a, r) => a + r.amount, 0),
-    buyTopAmount: B.filter(r => r.price === bestBuy).reduce((a, r) => a + r.amount, 0),
-    sellRows: S.length, buyRows: B.length,
-    spread: spread({ sell: bestSell, buy: bestBuy }),
-    warn, ok: warn.length === 0
-  };
-}
 
 /* ------------------------------------------------------------------ cards */
 const cards = new Map();
@@ -117,10 +61,10 @@ function rowsHtml(state, side) {
 
 function render(state) {
   const el = cardEl(state.id);
-  el.title = state.name;
+  const label = `Capture ${state.id.slice(1)}`;
+  el.title = label;
 
-  // Every card is a single row. A batch of thirty has to stay scannable, so
-  // the filename moves to the tooltip and the world leads instead.
+  // Anonymous queue labels keep the cards scannable without exposing metadata.
   const line = (cls, flag, mid, right) => {
     el.className = `card ${cls}`;
     el.innerHTML = `<div class="cline"><span class="cflag" aria-hidden="true">${flag}</span>${mid}
@@ -129,17 +73,17 @@ function render(state) {
 
   if (state.status === 'error') {
     line('bad', '✕', `<span class="cmsg msg-bad">${esc(state.error)}</span>`,
-         `<span class="cfile">${esc(state.name)}</span>`);
+         `<span class="cfile">${esc(label)}</span>`);
     updateQueueBar(); return;
   }
   if (state.status === 'dup') {
     line('warn', '⇄', `<span class="cmsg msg-warn">${esc(state.dupNote ?? 'Already in the database')}</span>`,
-         `<span class="cfile">${esc(state.name)}</span>`);
+         `<span class="cfile">${esc(label)}</span>`);
     updateQueueBar(); return;
   }
   if (state.status !== 'review') {
     line('', '…', `<span class="cmsg">${esc(state.stage ?? 'working…')}</span>`,
-         `<span class="cfile">${esc(state.name)}</span>`);
+         `<span class="cfile">${esc(label)}</span>`);
     updateQueueBar(); return;
   }
 
@@ -173,14 +117,14 @@ function render(state) {
       <span class="cnums">${nums}</span>
     </span></summary>
     <div class="cbody">
-      <div class="cfile" title="${state.reprocess ? 'Adds offer history while preserving the original world, capture date and market totals' : ''}">${state.reprocess ? 'Reprocessing: ' : ''}${esc(state.name)}</div>
+      <div class="cfile" title="${state.reprocess ? 'Updates validated offers and totals while preserving the original world and capture date' : ''}">${state.reprocess ? 'Reprocessing: ' : ''}${esc(label)}</div>
       <div class="rows">${rowsHtml(state, 'sell')}${rowsHtml(state, 'buy')}</div>
       ${a.warn.length ? `<div class="steps msg-warn">${a.warn.map(x => `<div>⚠ ${esc(x)}</div>`).join('')}</div>` : ''}
       ${state.saveError ? `<div class="steps msg-warn" role="alert">${esc(state.saveError)}</div>` : ''}
       ${(state.ocrNotices ?? []).length ? `<div class="steps msg-note">${state.ocrNotices.map(x => `<div>ⓘ ${esc(x)}</div>`).join('')}</div>` : ''}
       <div class="btnrow">
         <button class="btn primary" data-save="${state.id}" ${a.ok ? '' : 'disabled'}>Save</button>
-        ${a.ok ? '' : `<button class="btn" data-force="${state.id}">Save Anyway</button>`}
+        ${a.ok ? '' : '<span class="fine">Correct the issues before saving.</span>'}
         <button class="btn" data-discard="${state.id}">Discard</button>
       </div>
     </div>
@@ -217,97 +161,45 @@ let seq = 0;
 
 async function handleFile(file) {
   const id = `f${++seq}`;
-  const state = { id, name: file.name, status: 'work', stage: 'hashing…', rows: { sell: [], buy: [] } };
+  const state = { id, status: 'work', stage: 'checking eligibility…', rows: { sell: [], buy: [] } };
   cards.set(id, state);
   render(state);
-
-  try {
-    // 0. reject anything not taken with the screenshot hotkey before any work
-    const { character, capturedAt } = parseFilename(file.name);
-
-    // 1. hash the bytes - the only thing kept from the image itself
-    state.hash = await sha256(file);
-    render(state);
-
-    // Two identical screenshots dropped together are both new to the database,
-    // and storing by hash would silently collapse them into one row.
-    const alreadyQueued = [...cards.values()].some(c => c !== state && c.hash === state.hash);
-    const existing = await store.get(state.hash);
-    state.reprocess = Boolean(existing && $('reprocess').checked);
-    if (alreadyQueued || (existing && !state.reprocess)) {
-      state.status = 'dup';
-      state.dupNote = alreadyQueued ? 'Identical to another screenshot in this batch'
-                                    : 'Already in the database';
-      render(state); return;
-    }
-
-    // 2. character + capture time came from the filename; the name lives in this scope only.
-    state.capturedAt = existing?.capturedAt ?? capturedAt;
-
-    // 3. OCR and the API lookups run together
-    state.stage = 'reading the market…';
-    render(state);
-    const bitmap = await createImageBitmap(file);
-
-    const ocrP = readMarket(bitmap, s => { state.stage = s; render(state); });
-    const worldP = existing ? Promise.resolve({ world: existing.world, type: existing.type, battleye: existing.battleye }) : lookupWorld(character)
-      .then(worldInfo)
-      .catch(e => { state.worldNote = e.message; return null; });
-
-    let reading, world;
-    try { [reading, world] = await Promise.all([ocrP, worldP]); }
-    finally { bitmap.close?.(); }
-
-    state.world = world;
-    state.rows.sell = (reading.sell ?? []).map(r => ({ ...r }));
-    state.rows.buy = (reading.buy ?? []).map(r => ({ ...r }));
-    state.ocrWarnings = reading.warnings ?? [];
-    state.ocrNotices = reading.notices ?? [];
-    state.status = 'review';
-    if (!world) state.worldNote ||= 'World lookup failed; fix the filename and retry';
-    render(state);
-  } catch (e) {
-    state.status = 'error';
-    state.error = e.message;
-    render(state);
+  const result = await ingestScreenshot(file, {
+    reprocess: $('reprocess').checked,
+    getExisting: hash => store.get(hash),
+    onHash: hash => { state.hash = hash; },
+    isQueued: hash => [...cards.values()].some(c => c !== state && c.hash === hash),
+    onStep: stage => { state.stage = stage; render(state); }
+  });
+  // Only anonymous capture data enters UI state; private metadata stays in ingestion.
+  for (const key of ['hash', 'capturedAt', 'world', 'rows', 'ocrWarnings', 'ocrNotices', 'reprocess']) {
+    if (result[key] !== undefined) state[key] = result[key];
   }
-  // `file` and `character` go out of scope here; nothing referencing them is kept
+  if (result.status === 'duplicate') {
+    state.status = 'dup'; state.dupNote = 'Already in the database or queued';
+  } else if (result.status === 'ready' || (result.status === 'needs_review' && result.rows)) {
+    state.status = 'review';
+  } else {
+    state.status = 'error'; state.error = result.error ?? 'Capture could not be processed.';
+  }
+  render(state);
 }
 
 async function save(id) {
   const state = cards.get(id);
   if (!state) return false;
-  if (!state.world) {           // surfaced on the card rather than swallowed
-    state.open = true;
-    render(state);
-    return false;
-  }
-  const a = state.analysis ?? analyse(state);
   state.saveError = null;
   try {
-    await store.put({
-      world: state.world.world,
-      type: state.world.type,
-      battleye: state.world.battleye,
-      sell: a.sell, sellVolume: a.sellVolume,
-      buy: a.buy, buyVolume: a.buyVolume,
-      goldSupply: a.goldSupply, goldDemand: a.goldDemand,
-      sellTopAmount: a.sellTopAmount, buyTopAmount: a.buyTopAmount,
-      capturedAt: state.capturedAt,
-      hash: state.hash,
-      processingVersion: PROCESSING_VERSION,
-      offers: ['sell', 'buy'].flatMap(side => state.rows[side]
-        .filter(r => r.amount > 0 && r.price > 0)
-        .map((r, rowIndex) => ({ ...r, side, rowIndex })))
-    }, { reprocess: state.reprocess });
+    const capture = prepareCapture(state);
+    await store.put(capture, { reprocess: state.reprocess });
     cards.delete(id);
     $(`card-${id}`)?.remove();
     if (!$('queue').children.length) $('queue').hidden = true;
     updateQueueBar();
     await renderTable();
     return true;
-  } catch (e) {
-    state.saveError = `Could not save: ${e.message}`;
+  } catch {
+    state.saveError = 'Correct the validation issues before saving; the capture was not stored.';
     state.open = true;
     render(state);
     return false;
@@ -483,7 +375,7 @@ $('file').addEventListener('change', async e => {
 $('queue').addEventListener('click', e => {
   const b = e.target.closest('button');
   if (!b) return;
-  if (b.dataset.save || b.dataset.force) save(b.dataset.save ?? b.dataset.force);
+  if (b.dataset.save) save(b.dataset.save);
   else if (b.dataset.discard) {
     cards.delete(b.dataset.discard);
     $(`card-${b.dataset.discard}`)?.remove();
@@ -608,7 +500,7 @@ $('importFile').addEventListener('change', async e => {
     const { added, enriched, skipped } = await store.importRows(JSON.parse(await f.text()));
     await renderTable();
     alert(`Imported ${added} capture(s), enriched ${enriched}, skipped ${skipped}.`);
-  } catch (err) { alert(`Import failed: ${err.message}`); }
+  } catch { alert('Import failed; check the record format. Private diagnostics are suppressed.'); }
   e.target.value = '';
 });
 $('clearBtn').addEventListener('click', async () => {

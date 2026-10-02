@@ -169,155 +169,57 @@ missing or malformed.
 - `.api_cache.json` — worlds cache, 6h TTL; delete it or use `worlds --refresh` to bust
 - `batch.example.json` — batch format template
 
-## Offline archive OCR on macOS
+## Canonical screenshot ingestion from Python
 
-The optional batch reader runs local Tesseract first, with Apple Vision
-[`VNRecognizeTextRequest`](https://developer.apple.com/documentation/vision/vnrecognizetextrequest)
-as fallback for missing, invalid or uncertain readings. It uses the same
-header-derived Market layout and checksum principles as the browser. Vision
-reads enlarged table crops; no screenshot is uploaded. Python with Pillow,
-Tesseract, Node.js, and the macOS Swift compiler are required. The Vision helper
-is compiled into a temporary directory; no app installation is needed.
+Python calls the website's actual JavaScript filename filter and ingestion functions
+through a local Node/Playwright bridge. The filename regex, Market verification,
+selected-item proof, API resolution, offer extraction and validation have one source
+of truth. No ported Python filter or native-reader fallback participates in ingestion.
 
-Before accepting any offers, both readers verify the exact `Tibia Coins` name
-inside the highlighted row of the Market's **Items** list. A search term, an
-unselected coin row, or text elsewhere on screen does not establish selection.
-The local reader retries uncertain item recognition with Vision. A different
-selected item is explicitly reported as `excluded_other_item`; an unread item
-stays in manual review. These cases never contribute new coin observations.
-If the Search anchor is missed, a larger sidebar crop retries its recognition;
-the crop itself cannot establish a selected item. Conflicting numeric/date cells
-are retried in tightly bounded row crops. A conflict is cleared only when both
-OCR engines agree, with numeric products independently validated. Failed reads
-and recovery evidence stay in the audit rather than being silently replaced.
+The shared order is:
 
-From the repository root:
+1. Original website filename filter.
+2. SHA-256 duplicate check (explicit reprocessing permits saved captures).
+3. Original website Market-label and column-heading verification.
+4. New highlighted-item verification requiring Tibia Coins.
+5. Filename metadata parsing.
+6. Existing website character/world API workflow, awaited before extraction.
+7. Individual-offer extraction.
+8. Shared validation and anonymous persistence/offer matching.
+
+The source filename and image bytes travel only through local memory/IPC. The
+character name is transient input to the existing TibiaData lookup. No source
+names, paths, raw API responses or arbitrary OCR/error text enter generated outputs.
 
 ```bash
-python3 tools/reprocess_market.py /path/to/screenshots \
-  --baseline /path/to/observations.json --output /path/to/backfill \
-  --utc-offset=-03:00
-node tools/finalize_backfill.mjs /path/to/backfill
+python3 tools/reprocess_market.py /path/to/private-archive \
+  --output /path/to/backfill --rebuild
 ```
 
-The original export supplies historical worlds and capture context by screenshot
-hash. Clean extractions must also reproduce previously reviewed snapshot prices,
-volumes, gold totals and amounts at best prices. Every supplied image is accounted
-for. Automatic screenshots are explicitly excluded under the existing Hotkey
-rule. Unknown hashes remain in the review results until their original capture
-context is supplied; the batch does not assume a character's current world was
-its historical world.
+Node, Playwright and Chrome must be available. Set `TIBINANCE_NODE_MODULES` to a
+Playwright dependency directory when it is not installed locally, `TIBINANCE_NODE`
+to the Node executable, and `TIBINANCE_CHROME` to Chrome when needed. Browser OCR
+loads the same Tesseract assets as the website; images are processed locally.
 
-Capture and Market expiration timestamps are local clock values. Keep the displayed
-times unchanged; `--utc-offset=-03:00` records a confirmed BRT offset in
-`backfill-metadata.json` without converting them. Supply the offset appropriate to
-the archive. Unknown hashes need their original world and capture context added
-to the baseline before they can be enriched.
+An optional `--baseline` supplies existing anonymous capture context, preserving
+historical worlds for saved hashes as website reprocessing already does. New captures
+resolve through the API; no historical export is required. Enriched observation
+exports are not accepted as world context.
 
-Outputs:
+`inventory.json` and `summary.json` include entered/passed counts for each canonical
+stage, counting executed work rather than cached prior stages. `--resume` only reuses checkpoints from the current ingestion contract;
+old native-reader checkpoints are invalidated. Cache reuse still executes the website
+filename and SHA duplicate preflight; it skips image/API work exactly like a website
+duplicate. Browser closures retain fixed review diagnostics and restart the local
+worker for the next image. `--retry-review` retries unresolved
+captures. Complete explicit corrections may replace extracted rows, but cannot
+bypass the filename, duplicate, Market, selected-item or world gates.
 
-- `observations-enriched.json`: an importable copy of the original dataset with
-  validated offer observations and canonical UUIDs added. Original captures are
-  retained even when OCR fails. Import into the updated browser app.
-- `offer-observations.csv`: anonymous validated observations for research.
-- `backfill-results.json`: every screenshot hash, its status, partial rows,
-  field sources/confidence, selected-item verification, alternative readings and exact review issues.
-- `excluded-captures.json`: original baseline captures positively identified as
-  another item, preserved separately and excluded from the coin import file.
-- `review-report.csv`: screenshot paths and hash, world, capture time, side, 1-based row,
-  field and reason; missing table/row information is also explicit.
-- `review-corrections.json`: editable complete-row templates for unresolved
-  captures. Missing values remain null. Supply every visible row on both sides,
-  including rows neither OCR engine recognized, and exact expiration seconds.
-  If those manually verified rows differ from an old snapshot's aggregates, set
-  `confirmSnapshotDifferences` to `true` to acknowledge the difference. Original
-  snapshot aggregates are still preserved.
-  For an unread selected item, explicitly set `confirmedSelectedItem` to
-  `Tibia Coins` only after visually checking the highlighted row. Numeric/date
-  corrections alone cannot bypass item verification.
+`captures-extracted.json` contains validated captures. The runner then invokes
+`finalize_backfill.mjs`, which uses the website's canonical offer matcher and writes
+anonymous enriched observations and offer CSVs. Review outputs contain only hashes,
+public world/time context, numeric rows and fixed diagnostics.
 
-Conflicting readings remain flagged. Numeric values must satisfy
-`amount × price == total`; the reader does not compute a replacement for an
-unread cell. Missing rows, unread dates, low confidence, engine failures and
-mismatches against manual historical corrections prevent automatic enrichment.
-Partial rows survive in the review dataset. The browser's JSON import remains
-protected by its privacy whitelist; diagnostic fields do not enter storage.
-
-Locate a review screenshot by hash:
-
-```bash
-python3 tools/reprocess_market.py /path/to/screenshots --locate SHA256_HASH
-```
-
-Revalidate item selection on an existing batch without repeating offer OCR:
-
-```bash
-python3 tools/reprocess_market.py /path/to/screenshots \
-  --baseline /path/to/observations.json --output /path/to/backfill \
-  --resume --verify-items-only
-node tools/finalize_backfill.mjs /path/to/backfill
-```
-
-Unconfirmed item checks are retried on resume. Finalization cannot restore old
-offer observations for a capture whose selected item is not verified.
-
-Use `--resume --retry-review` to rerun unresolved screenshots after improving
-the OCR. Successful extractions are kept; review audits remain until replacement
-and prior issues remain in `previousAttempts`. Identical image bytes are queued
-only once, with all source paths recorded locally. An updated baseline retries
-captures whose world/time context changed. `--exclude-name 'Screenshot.png'`
-explicitly retains a user-excluded image as `excluded_manual`, without OCR.
-
-Copy only corrected entries into a separate correction file, then rerun:
-
-```bash
-python3 tools/reprocess_market.py /path/to/screenshots \
-  --baseline /path/to/observations.json --output /path/to/backfill \
-  --resume --corrections /path/to/corrections.json
-node tools/finalize_backfill.mjs /path/to/backfill
-```
-
-Correction entries replace the complete visible row list for that hash and are
-revalidated. Invalid corrections retain the original partial OCR readings and
-add a correction error. `--resume` keeps completed OCR checkpoints and reprocesses
-explicit correction hashes; newly supplied original images are retried. Run
-finalization after the reader finishes. Finalization uses `js/offers.js` and
-preserves UUIDs already generated in that output directory across repeated runs.
-
-No archive or generated data is committed automatically. Keep the baseline and
-original screenshots while reviewing remaining cases.
-
-## Generate an expanded export in main's legacy schema
-
-When deliberately using main's current character-world lookup for images absent
-from an old export, `legacy_archive.mjs` reads the actual OCR, filename, API and
-analysis modules from a Git ref without changing that checkout. It requires
-Playwright and Chrome; `TIBINANCE_NODE_MODULES` can point to a dependency directory
-and `TIBINANCE_CHROME` to an installed browser executable. Compile the local
-Vision helper first and pass its path as `TIBINANCE_VISION_BINARY`.
-
-```bash
-node tools/legacy_archive.mjs /path/to/screenshots /path/to/old-export.json \
-  /path/to/backfill origin/main --native-fallback --utc-offset=-03:00
-```
-
-The optional native fallback retries failed main readings locally, then validates
-the observed numeric rows through main's original analysis. Expiration failures
-stay in its audit; the legacy schema has no expiration field. Only positively
-confirmed Tibia Coins captures with validated numeric rows enter
-`observations-legacy-expanded.json`. Existing hashes preserve baseline context.
-Use that expanded file as `--baseline` for the offer backfill afterward.
-
-`legacy-results.json` retains failed/partial main readings and fallback evidence;
-`legacy-review.csv` lists review issues. Retried failures remain in checkpoints
-until replaced; interrupted runs retain pending audits. `legacy-context.json`
-records the main commit and live lookup time/source, with one lookup per explicit
-character name in a batch. Existing native audit rows can supply the fallback
-by screenshot hash; their numeric issues still block acceptance. These lookups do not prove the character's historical
-world. Correct ambiguous filenames explicitly: an underscore is never
-automatically interpreted as a space or apostrophe. Automatic screenshots are
-excluded from this bridge; the full backfill separately accounts for all images.
-When a newly expanded baseline supplies missing context, normal backfill resume
-can reuse cells whose sole issue was that context. It revalidates their numeric
-products, dates and legacy snapshot aggregates before accepting them; an explicit
-`--retry-review` still repeats OCR.
+The old `legacy_archive.mjs` command delegates to this runner. Git-ref readers and
+native fallback are retired. Native OCR utilities remain diagnostic tools and do
+not determine canonical screenshot eligibility or extraction.

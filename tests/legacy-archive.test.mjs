@@ -5,7 +5,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {execFileSync} from 'node:child_process';
 
-test('legacy retries retain absent review audits and preserve baseline context without duplicate hashes',async()=>{
+test('legacy command delegates to canonical pipeline without trusting stale exports',async()=>{
  const directory=await mkdtemp(join(tmpdir(),'tibinance-legacy-test-'));
  try{
   const folder=join(directory,'images'),output=join(directory,'output'),runtime=join(directory,'modules');
@@ -21,7 +21,10 @@ test('legacy retries retain absent review audits and preserve baseline context w
    execFileSync(process.execPath,['tools/legacy_archive.mjs',folder,baseline,output,ref],
     {env:{...process.env,TIBINANCE_NODE_MODULES:runtime}});
    assert.deepEqual(JSON.parse(await readFile(join(output,'legacy-results.json'),'utf8')),prior);
-   assert.deepEqual(JSON.parse(await readFile(join(output,'observations-legacy-expanded.json'),'utf8')),base);
+   assert.deepEqual(JSON.parse(await readFile(join(output,'observations-legacy-expanded.json'),'utf8')),[]);
+   const summary=JSON.parse(await readFile(join(output,'summary.json'),'utf8'));
+   assert.equal(summary.pipeline,'website JavaScript implementation');
+   assert.deepEqual(summary.stageCounts.filename,{entered:0,passed:0});
   }
  }finally{await rm(directory,{recursive:true,force:true});}
 });

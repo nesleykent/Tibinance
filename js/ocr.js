@@ -204,7 +204,7 @@ function cropCanvas(src, x0, y0, x1, y1, scale) {
   return c;
 }
 
-export async function readMarket(bitmap, onStep = () => {}) {
+export async function verifyMarket(bitmap, onStep = () => {}) {
   const worker = await getWorker();
 
   onStep('locating the market window');
@@ -247,20 +247,41 @@ export async function readMarket(bitmap, onStep = () => {}) {
     if (k > 1 && full.width * k > 4200) break;
     anchors = await readAnchors(k);
     tables = locateTables(anchors);
-    if (tables.length < 2) continue;
+    if (tables.length !== 2 || new Set(tables.map(t => t.side)).size !== 2) continue;
     const creates = anchors.filter(w => /^create/i.test(w.t)).sort((a, b) => a.y - b.y);
     stops = [...tables.slice(1).map(t => t.y), creates.length ? creates[0].y : bitmap.height];
     heads = mergeHeaders(tables.map((t, i) => headerRow(anchors, t.y, stops[i])));
     if (heads.some(complete)) break;
   }
 
-  if (tables.length < 2) {
+  if (tables.length !== 2 || new Set(tables.map(t => t.side)).size !== 2) {
     throw new Error(full.width < 1100
       ? `This screenshot is only ${full.width}px wide; the market text is too small ` +
         'to read. Send the original capture rather than a resized or forwarded copy.'
       : 'Could not find both the Sell Offers and Buy Offers tables. Make sure the ' +
         'whole market window is visible and not covered by another window.');
   }
+  const donorIdx = heads.findIndex(complete);
+  if (donorIdx === -1) {
+    const tooSmall = full.width < 1300
+      ? `; at ${full.width}px wide the headings are only a few pixels tall`
+      : '';
+    throw new Error('Found the tables but could not read the Amount / Piece Price / ' +
+      'Total Price headings' + tooSmall + '. Send the original capture rather than a ' +
+      'resized copy.');
+  }
+  for (let i = 0; i < heads.length; i++) {
+    if (!complete(heads[i])) {
+      heads[i] = reuseGeometry(heads[donorIdx], tables[donorIdx].y, tables[i].y);
+    }
+  }
+
+  return { full, worker, anchors, tables, stops, heads };
+}
+
+export async function verifyTibiaCoins(context, onStep = () => {}) {
+  const { full, worker, tables } = context;
+  let { anchors } = context;
   onStep('checking the selected Market item');
   let region = itemRegion(anchors, tables);
   if (!region) {
@@ -301,25 +322,18 @@ export async function readMarket(bitmap, onStep = () => {}) {
     item = selectedItem(itemWords, region, luminance);
   }
   if (item.status !== 'tibia_coins') {
-    throw new Error(item.status === 'other_item'
-      ? `The selected Market item is "${item.text}". Only Tibia Coins screenshots can be saved.`
+    const error = new Error(item.status === 'other_item'
+      ? 'Only Tibia Coins screenshots can be saved.'
       : 'Could not confirm Tibia Coins in the selected Items row. Review the screenshot and submit a capture showing the selected item clearly.');
+    error.code = item.status === 'other_item' ? 'other_item' : 'unconfirmed_item';
+    throw error;
   }
-  const donorIdx = heads.findIndex(complete);
-  if (donorIdx === -1) {
-    const tooSmall = full.width < 1300
-      ? `; at ${full.width}px wide the headings are only a few pixels tall`
-      : '';
-    throw new Error('Found the tables but could not read the Amount / Piece Price / ' +
-      'Total Price headings' + tooSmall + '. Send the original capture rather than a ' +
-      'resized copy.');
-  }
-  for (let i = 0; i < heads.length; i++) {
-    if (!complete(heads[i])) {
-      heads[i] = reuseGeometry(heads[donorIdx], tables[donorIdx].y, tables[i].y);
-    }
-  }
+  context.anchors = anchors;
+  return { status: 'tibia_coins' };
+}
 
+export async function extractMarketOffers(context, onStep = () => {}) {
+  const { full, worker, tables, stops, heads } = context;
   const result = {};
   const warnings = [];   // blocking
   const notices = [];    // informational

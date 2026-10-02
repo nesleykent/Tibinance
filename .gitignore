@@ -7,6 +7,9 @@
 *.gif
 *.bmp
 screenshots/
+*.heic
+*.tif
+*.tiff
 samples/
 
 # Local artefacts of the CLI in tools/
@@ -21,3 +24,7 @@ node_modules/
 
 # local editor/agent config
 .claude/
+
+# Local rebuild outputs and hosting metadata stay outside the public repository.
+data/rebuilt-market/
+.openai/
