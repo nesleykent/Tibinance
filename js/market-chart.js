@@ -110,8 +110,10 @@ const activity = {
 export const LAYERS = [bestOffer, dailyAverage, activity, projectionsLayer, eventsLayer];
 
 /* ---------------------------------------------------------------- chart */
-export function createMarketChart(container, { scale: k = 1, width, height } = {}) {
+export function createMarketChart(container, { scale: k = 1, width, height, profile = null } = {}) {
   const L = window.LightweightCharts, c = colors();
+  const layers = profile?.layers ?? LAYERS;
+  const priceFormatter = profile?.format ?? (v => fmt(Math.round(v)));
   const chart = L.createChart(container, {
     ...(width ? { width, height, autoSize: false } : { autoSize: true }),
     layout: { background: { type: 'solid', color: 'transparent' }, textColor: c.text, fontFamily: token('--font-ui'), fontSize: 11 * k,
@@ -123,42 +125,42 @@ export function createMarketChart(container, { scale: k = 1, width, height } = {
     crosshair: { mode: L.CrosshairMode.Normal,
       vertLine: { color: c.crosshair, labelBackgroundColor: c.ink },
       horzLine: { color: c.crosshair, labelBackgroundColor: c.ink } },
-    localization: { priceFormatter: v => fmt(Math.round(v)), timeFormatter: dayOf }
+    localization: { priceFormatter, timeFormatter: dayOf }
   });
-  const line = options => chart.addSeries(L.LineSeries, { priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false, ...options });
+  const line = options => chart.addSeries(L.LineSeries, { ...(profile?.priceFormat ? { priceFormat: profile.priceFormat } : {}), priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false, ...options });
   const series = new Map();
-  for (const layer of [...LAYERS].sort((a, b) => a.depth - b.depth)) series.set(layer, layer.add(chart, { line, k, L }, c));
+  for (const layer of [...layers].sort((a, b) => a.depth - b.depth)) series.set(layer, layer.add(chart, { line, k, L }, c));
   // Dots shrink, then give way to the line, as more days share the same width.
   chart.timeScale().subscribeVisibleLogicalRangeChange(range => {
     if (!range) return;
     const spacing = chart.timeScale().width() / Math.max(1, range.to - range.from) / k;
-    series.get(bestOffer).points.applyOptions({ pointMarkersVisible: spacing >= 2, pointMarkersRadius: k * Math.min(3, Math.max(1.5, spacing / 2)) });
+    series.get(profile?.priceLayer ?? bestOffer).points.applyOptions({ pointMarkersVisible: spacing >= 2, pointMarkersRadius: k * Math.min(3, Math.max(1.5, spacing / 2)) });
   });
   // Optional layers start shown, unless they say otherwise (`hidden: true`); hiding one redraws only that layer.
-  const hidden = new Set(LAYERS.filter(l => l.optional && l.hidden).map(l => l.id));
+  const hidden = new Set(layers.filter(l => l.optional && l.hidden).map(l => l.id));
   const shown = layer => !(layer.optional && hidden.has(layer.id));
   let last = null;
   const drawLayer = layer => layer.draw(series.get(layer), last.view, last.side, c, { visible: shown(layer) });
   return {
     chart,
-    draw(view, side) { last = { view, side }; LAYERS.forEach(drawLayer); },
+    draw(view, side) { last = { view, side }; layers.forEach(drawLayer); },
     setVisible(id, on) {
-      const layer = LAYERS.find(l => l.id === id && l.optional);
+      const layer = layers.find(l => l.id === id && l.optional);
       if (!layer || on === !hidden.has(id)) return;
       on ? hidden.delete(id) : hidden.add(id);
       if (last) drawLayer(layer);
     },
-    refresh(id) { const layer = LAYERS.find(l => l.id === id); if (last && layer) drawLayer(layer); },
+    refresh(id) { const layer = layers.find(l => l.id === id); if (last && layer) drawLayer(layer); },
     visible: id => !hidden.has(id),
-    optional: LAYERS.filter(l => l.optional).map(l => l.id),
-    part: id => series.get(LAYERS.find(l => l.id === id)),
-    keys: side => LAYERS.filter(shown).flatMap(layer => layer.keys(side, c)),
-    annotate: (ctx, geometry) => LAYERS.filter(shown).forEach(layer => layer.annotate?.(ctx, { ...geometry, chart, k, c })),
+    optional: layers.filter(l => l.optional).map(l => l.id),
+    part: id => series.get(layers.find(l => l.id === id)),
+    keys: side => layers.filter(shown).flatMap(layer => layer.keys(side, c)),
+    annotate: (ctx, geometry) => layers.filter(shown).forEach(layer => layer.annotate?.(ctx, { ...geometry, chart, k, c })),
     // The notes describe what the image shows: `through` is its last day.
     notes: () => {
       const through = chart.timeScale().getVisibleRange()?.to;
       const helpers = { fmt, offer: side => SIDES[side].offer, through: through === undefined ? null : dayOf(through) };
-      return LAYERS.filter(shown).map(layer => layer.notes?.(series.get(layer), c, helpers)).filter(Boolean);
+      return layers.filter(shown).map(layer => layer.notes?.(series.get(layer), c, helpers)).filter(Boolean);
     },
   };
 }

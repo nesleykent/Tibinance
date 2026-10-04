@@ -1,0 +1,5 @@
+{
+  "asOf": "2026-10-04",
+  "pages": ["daily-1.json", "daily-2.json"],
+  "coverageNote": "Public API history begins on 2025-10-06. Earlier candles require provider access unavailable to this dataset. No pre-coverage prices are estimated."
+}

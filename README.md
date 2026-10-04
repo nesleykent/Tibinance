@@ -81,6 +81,18 @@ figures end where their history ends (for most worlds in early to mid September
 2026); they are never derived from 30-day Statistics. Changes compare the latest best offer with
 the last one observed on or before the start of the range.
 
+### Tibia Token
+
+Markets also supports **Tibia Token (TIB)** through the header's Asset picker,
+with its own [USD history](markets.html?asset=tibia-token&range=1Y). TIB is an
+asset, separate from TC's worlds. Its completed UTC daily closes and pool USD
+volume reuse the chart layers, ranges, event browser and PNG export. The initial
+verified TIB/USDT pool history covers 2025-10-06 through 2026-10-03; the asset
+panel states the public provider's earlier-history restriction. No offer sides,
+TC daily counters or TC forecasts are assigned to TIB. Read the
+[TIB data, refresh and comparison notes](docs/tibia-token.md), including the
+aggregate TC indicator exploration.
+
 ### Market events
 
 Events are dated facts drawn over the chart as markers along its foot, each at
