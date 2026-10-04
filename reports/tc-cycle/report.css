@@ -161,7 +161,7 @@ h1 { font-size:var(--step-5); }
 h2 { font-size:var(--step-4); }
 .kpi .value { font-size:var(--step-2); font-weight:var(--weight-strong); line-height:var(--leading-tight); letter-spacing:var(--tracking-tight); }
 h3 { font-size:var(--step-2); }
-.dossier h3,.deck,.card-title,.site .wordmark { font-size:var(--step-1); }
+.dossier h3,.deck,.card-title { font-size:var(--step-1); }
 .card-title { font-family:var(--font-ui); font-weight:var(--weight-strong); line-height:var(--leading-tight); letter-spacing:normal; }
 
 /* step -1: supporting text, captions, data and controls (captions are told apart by colour, not size) */
@@ -191,19 +191,14 @@ select,.seg button {
 }
 .sort-button .sort-arrow { text-transform:none; letter-spacing:normal; font-weight:var(--weight-regular); }
 
-.site .wordmark { font-weight:var(--weight-strong); letter-spacing:var(--tracking-tight); }
-.wordmark span { font-family:var(--font-editorial); font-weight:var(--weight-regular); }
-
 table.data,.kpi .value,.tip,.toc-num,h2 .num { font-variant-numeric:lining-nums tabular-nums; }
 
 /* ---- header ---------------------------------------------------------------- */
 .site { position:sticky; top:0; z-index:var(--layer-header); background:var(--canvas); }
 .site .wrap { min-height:var(--header-height); display:flex; align-items:center; justify-content:space-between; gap:var(--space-4); position:relative; }
 .site .wrap::after { content:""; position:absolute; bottom:0; left:var(--page-gutter); right:var(--page-gutter); height:var(--rule-strong); background:var(--ink); }
+/* the trail, its menu of sections and the header's controls: ../../css/site-header.css */
 .site a { text-decoration:none; }
-.site .wordmark { color:var(--ink); white-space:nowrap; }
-.wordmark span { color:var(--muted); }
-.site nav { display:flex; align-items:center; justify-content:flex-end; gap:var(--space-4); }
 select.picker { min-width:var(--picker-min); }
 
 /* ---- hero ------------------------------------------------------------------ */
@@ -507,8 +502,6 @@ footer p { margin:0 0 var(--space-3); }
   .answers { grid-template-columns:minmax(0,1fr); gap:var(--space-1); }
   .answers dd { margin-bottom:var(--space-3); }
   .controls select { flex:1; max-width:var(--picker-max); }
-  .site nav { flex:1 1 auto; min-width:0; gap:var(--space-3); }
-  .site nav select.picker { flex:1 1 auto; min-width:0; }
   .toc-mobile select { max-width:none; }
   .tip { max-width:100%; white-space:normal; }
 }
@@ -516,7 +509,7 @@ footer p { margin:0 0 var(--space-3); }
 @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
 @media print {
   :root { --type-base:11px; --page-gutter:0; }
-  .toc,.controls,.card-controls,.site nav,.skip-link,.seg,.icon-button,.export-status { display:none; }
+  .toc,.controls,.card-controls,.skip-link,.seg,.icon-button,.export-status { display:none; }
   .site { position:static; }
   .report-layout { display:block; }
   .card,.kpi,.dossier { break-inside:avoid; }

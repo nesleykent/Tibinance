@@ -12,7 +12,6 @@
   --toolbar-height:calc(var(--unit) * 11);
   --row-pad:calc(var(--unit) * 0.75);
 }
-.nav-link[aria-current="page"] { color:var(--ink); }
 .site .wrap { max-width:none; }
 
 /* ---- the frame -------------------------------------------------------------- */

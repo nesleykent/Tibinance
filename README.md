@@ -9,6 +9,15 @@ a timeline instead of starting one.
 
 No backend, no build step, no API key, no cost.
 
+## Navigation
+
+Capture, Markets and Research share one header, `Tibinance / Section`. Tibinance
+links home, and the section's name opens a small menu of the three sections with
+the current one marked. On Capture, the home page, Tibinance itself opens the menu.
+The right of the header belongs to the section: Research keeps its world picker
+(All Worlds, searchable) and the edition's language there. The header is
+`css/site-header.css` and `js/site-header.js`.
+
 ## Research
 
 [**Tibia Coins: Price Dynamics, Predictability and Execution**](https://nesleykent.github.io/Tibinance/reports/tc-cycle/) is an interactive research report covering every world in its Market capture export. It follows one inferential chain, from data construction and the empirical structure of the Market through cycles, competing models and out-of-sample validation to prospective scenarios, execution frictions, differences across worlds and robustness checks, and it treats Sell Offers and Buy Offers separately throughout. It is published in two editions built from the same data: [English](https://nesleykent.github.io/Tibinance/reports/tc-cycle/) and [Brazilian Portuguese](https://nesleykent.github.io/Tibinance/reports/tc-cycle/pt-br.html), the latter keeping every financial, statistical, Tibia and game term in English.
@@ -449,6 +458,7 @@ python3 -m http.server 8765 --bind 127.0.0.1
 # In another terminal, with Playwright available:
 node tests/browser.mjs
 node tests/markets-browser.mjs
+node tests/site-header-browser.mjs
 ```
 
 The browser suite checks real IndexedDB, privacy whitelists, world isolation,

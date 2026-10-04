@@ -13,8 +13,10 @@ def main():
     REPORT.mkdir(parents=True, exist_ok=True)
     for filename in PUBLIC_FILES:
         shutil.copyfile(ROOT / filename, REPORT / filename)
-    (OUTPUT / 'js').mkdir(parents=True, exist_ok=True)
-    shutil.copyfile(ROOT.parents[1] / 'js' / 'statistics.js', OUTPUT / 'js' / 'statistics.js')
+    # Shared with the site: the Statistics reader and the site header (menu and header controls).
+    for shared in ('js/statistics.js', 'js/site-header.js', 'css/site-header.css'):
+        (OUTPUT / shared).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(ROOT.parents[1] / shared, OUTPUT / shared)
     # The source report and the Sites publication share the same route and assets.
     (OUTPUT / "index.html").write_text('''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">

@@ -38,15 +38,17 @@ try {
   const text=selector=>page.$eval(selector,e=>e.innerText.trim().replace(/\s+/g,' '));
   const chartBox=()=>page.$eval('#chart',e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height};});
 
-  // The existing page gains only the Markets link.
+  // Markets is reached from the site menu (tests/site-header-browser.mjs covers the menu itself).
   await page.goto(`${root}/`);
   assert.equal(await page.title(),'Tibinance');
-  assert.deepEqual(await page.$$eval('header.site nav a',as=>as.map(a=>[a.textContent,a.getAttribute('href')])),
-    [['Markets','markets.html'],['Research','reports/tc-cycle/']]);
-  await page.click('header.site nav a[href="markets.html"]');
+  assert.deepEqual(await page.$$eval('#site-menu a',as=>as.map(a=>[a.textContent,a.getAttribute('href')])),
+    [['Capture','./'],['Markets','markets.html'],['Research','reports/tc-cycle/']]);
+  await page.click('header.site [data-site-menu]');
+  await page.click('#site-menu a[href="markets.html"]');
   await shown('Antica');
   assert.equal(await page.title(),'Tibinance Markets');
-  assert.equal(await page.getAttribute('header.site a[aria-current="page"]','href'),'markets.html');
+  assert.equal(await page.getAttribute('#site-menu a[aria-current="page"]','href'),'markets.html');
+  assert.equal(await page.$eval('header.site [data-site-menu]',b=>b.textContent.trim()),'Markets');
 
   // One market, not two sources: no source is named anywhere in the page.
   assert.doesNotMatch(await page.content(),/tibiamarket/i);

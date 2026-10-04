@@ -1,0 +1,90 @@
+/*
+ * The site header shared by Capture, Markets and Research (js/site-header.js): the trail, Tibinance / Section, on
+ * the left, its last crumb opening the menu of sections; the section's own controls on the right. It draws in the
+ * tokens every page already defines (css/app.css, reports/tc-cycle/report.css), so it takes each page's type, space
+ * and colour.
+ *
+ * Header controls are quiet: text with no box, which gains the control track on hover and while its panel is
+ * open. A bar at the start of a row marks the current page or the chosen option; grey marks where the pointer
+ * or the keyboard is.
+ */
+.site-nav { display:flex; align-items:baseline; min-width:0; }
+.site-controls { display:flex; align-items:center; gap:var(--space-2); min-width:0; margin-inline-end:calc(var(--space-2) * -1); }
+
+/* ---- the trail and the controls ------------------------------------------------------
+   The trail reads Tibinance / Section. Its last crumb opens the menu of sections; Tibinance before it links home.
+   On Capture, the home page, Tibinance is the only crumb and opens the menu. */
+.site-crumb,.site-control {
+  display:inline-flex; align-items:center; gap:var(--space-1); min-width:0; min-height:var(--control-height);
+  padding:var(--space-1) var(--space-2); border:0; border-radius:var(--radius-sm); background:transparent;
+  line-height:var(--leading-tight); white-space:nowrap; text-decoration:none; cursor:pointer;
+}
+/* The wordmark keeps its place on the page's edge; the hover track extends past it. */
+.site-nav > :first-child { margin-inline-start:calc(var(--space-2) * -1); }
+.site-home { color:var(--ink); font-family:var(--font-ui); font-size:var(--step-1); font-weight:var(--weight-strong); letter-spacing:var(--tracking-tight); }
+.site-section,.site-slash { color:var(--muted); font-family:var(--font-editorial); font-size:var(--step-1); font-weight:var(--weight-regular); letter-spacing:var(--tracking-tight); }
+/* the crumbs' own padding already spaces the slash */
+.site-slash { margin-inline:calc(var(--space-1) * -1); }
+.site-section:is(:hover,[aria-expanded="true"]) { color:var(--ink); }
+.site-control { color:var(--ink); font-family:var(--font-ui); font-size:var(--step-n1); letter-spacing:normal; }
+.site-crumb:is(:hover,:active,[aria-expanded="true"]),.site-control:is(:hover,:active,[aria-expanded="true"]) { background:var(--control-track); }
+.site-control-value { min-width:0; overflow:hidden; text-overflow:ellipsis; }
+.site-world,.site-language { display:flex; min-width:0; }
+.site-language > .site-control { letter-spacing:var(--tracking-caps); }
+.site-chevron { flex:none; width:var(--space-3); height:var(--space-3); fill:none; stroke:var(--muted); stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+:is(.site-crumb,.site-control):hover .site-chevron,[aria-expanded="true"] > .site-chevron { stroke:var(--ink); }
+[aria-expanded="true"] > .site-chevron { transform:rotate(180deg); }
+
+/* ---- panels ------------------------------------------------------------------------ */
+/* Placed under their button by js/site-header.js; until then, under the header at the page's edge. */
+.site-panel {
+  position:fixed; inset:auto; top:var(--header-height); left:var(--space-4); margin:0; padding:var(--space-1); overflow:auto; overscroll-behavior:contain;
+  border:var(--rule) solid var(--line-strong); border-radius:var(--radius); background:var(--surface); color:var(--ink);
+  box-shadow:0 var(--space-2) var(--space-6) rgb(0 0 0 / .12);
+  font-family:var(--font-ui); font-size:var(--step-n1); font-weight:var(--weight-regular); letter-spacing:normal; line-height:var(--leading-text);
+}
+.site-panel:not([popover]) { z-index:calc(var(--layer-header) + 1); }
+.site-panel :focus-visible { outline-offset:calc(var(--rule-strong) * -1); }
+
+/* a menu of links */
+.site-menu { min-width:calc(var(--unit) * 40); list-style:none; }
+.site-menu li { margin:0; }
+.site-menu a { position:relative; display:flex; align-items:center; justify-content:space-between; gap:var(--space-6); padding:var(--space-2) var(--space-3); border-radius:var(--radius-sm); color:var(--ink); text-decoration:none; }
+.site-menu a:hover { background:var(--control-track); }
+.site-menu a[aria-current] { font-weight:var(--weight-strong); }
+.site-code { color:var(--muted); font-size:var(--step-n2); font-weight:var(--weight-regular); letter-spacing:var(--tracking-caps); }
+
+/* a searchable list */
+.site-picker { flex-direction:column; width:calc(var(--unit) * 56); overflow:hidden; }
+/* only while shown: a display of its own would otherwise keep a closed popover on screen */
+.site-picker:not([hidden]):is(:popover-open,:not([popover])) { display:flex; }
+.site-search { flex:none; width:100%; min-height:var(--control-height); margin:0 0 var(--space-1); padding:0 var(--space-2); border:0; border-radius:var(--radius-sm);
+  background:var(--control-track); color:var(--ink); font:inherit; }
+.site-search::placeholder { color:var(--muted); }
+.site-options { flex:0 1 auto; min-height:0; max-height:calc(var(--unit) * 80); margin:0; padding:0; overflow-y:auto; overscroll-behavior:contain; list-style:none; }
+.site-options li { position:relative; padding:var(--space-1) var(--space-3); border-radius:var(--radius-sm); cursor:pointer; }
+.site-options li[hidden] { display:none; }
+.site-options li.active { background:var(--control-track); }
+.site-options li[aria-selected="true"] { font-weight:var(--weight-strong); }
+/* the current page, or the chosen option */
+.site-menu a[aria-current]::before,.site-options li[aria-selected="true"]::before { content:""; position:absolute; inset-block:var(--space-1); left:0; width:var(--rule-strong); background:var(--accent); }
+.site-empty { margin:0; padding:var(--space-1) var(--space-3); color:var(--muted); }
+.site-empty:empty { display:none; }
+
+/* Touch: rows tall enough to tap, and a search field iOS does not zoom into. */
+@media (pointer:coarse) {
+  .site-menu a,.site-options li { min-height:calc(var(--unit) * 10); }
+  .site-options li { display:flex; align-items:center; }
+  .site-search { min-height:calc(var(--unit) * 10); font-size:var(--step-0); }
+}
+/* Phones: the section's controls give up their chevrons and the header's gaps tighten, so a world's name fits beside the section. */
+@media (max-width:480px) {
+  .site .wrap { gap:var(--space-2); }
+  .site-controls { gap:0; }
+  .site-controls .site-chevron { display:none; }
+}
+@media print {
+  .site-controls,.site-chevron,.site-panel { display:none; }
+  .site-crumb { padding:0; margin:0; }
+  .site-slash { margin-inline:var(--space-1); }
+}
