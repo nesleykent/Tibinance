@@ -1,0 +1,185 @@
+{
+ "note": "Retired worlds with Tibia Coin market history: offline date, merge target, type, location and BattlEye from each world's TibiaWiki infobox (retrieved 2026-10-04).",
+ "worlds": [
+  {
+   "world": "Ambra",
+   "offline": "2025-11-06",
+   "mergedInto": "Sombra",
+   "type": "Retro Open PvP",
+   "location": "Brazil",
+   "battleye": "Green",
+   "source": "https://tibia.fandom.com/wiki/Ambra"
+  },
+  {
+   "world": "Divina",
+   "offline": "2025-11-06",
+   "mergedInto": "Eclipta",
+   "type": "Retro Open PvP",
+   "location": "United Kingdom",
+   "battleye": "Green",
+   "source": "https://tibia.fandom.com/wiki/Divina"
+  },
+  {
+   "world": "Esmera",
+   "offline": "2025-11-06",
+   "mergedInto": "Blumera",
+   "type": "Optional PvP",
+   "location": "USA",
+   "battleye": "Green",
+   "source": "https://tibia.fandom.com/wiki/Esmera"
+  },
+  {
+   "world": "Fibera",
+   "offline": "2025-11-06",
+   "mergedInto": "Tempestera",
+   "type": "Retro Open PvP",
+   "location": "USA",
+   "battleye": "Green",
+   "source": "https://tibia.fandom.com/wiki/Fibera"
+  },
+  {
+   "world": "Flamera",
+   "offline": "2025-11-06",
+   "mergedInto": "Tempestera",
+   "type": "Retro Open PvP",
+   "location": "USA",
+   "battleye": "Green",
+   "source": "https://tibia.fandom.com/wiki/Flamera"
+  },
+  {
+   "world": "Gravitera",
+   "offline": "2025-11-06",
+   "mergedInto": "Monstera",
+   "type": "Retro Hardcore PvP",
+   "location": "USA",
+   "battleye": "Green",
+   "source": "https://tibia.fandom.com/wiki/Gravitera"
+  },
+  {
+   "world": "Jacabra",
+   "offline": "2025-11-06",
+   "mergedInto": "Terribra",
+   "type": "Retro Hardcore PvP",
+   "location": "Brazil",
+   "battleye": "Green",
+   "source": "https://tibia.fandom.com/wiki/Jacabra"
+  },
+  {
+   "world": "Jaguna",
+   "offline": "2025-11-06",
+   "mergedInto": "Citra",
+   "type": "Open PvP",
+   "location": "United Kingdom",
+   "battleye": "Green",
+   "source": "https://tibia.fandom.com/wiki/Jaguna"
+  },
+  {
+   "world": "Malivora",
+   "offline": "2025-11-06",
+   "mergedInto": "Eclipta",
+   "type": "Retro Open PvP",
+   "location": "United Kingdom",
+   "battleye": "Green",
+   "source": "https://tibia.fandom.com/wiki/Malivora"
+  },
+  {
+   "world": "Obscubra",
+   "offline": "2025-11-06",
+   "mergedInto": "Terribra",
+   "type": "Retro Hardcore PvP",
+   "location": "Brazil",
+   "battleye": "Green",
+   "source": "https://tibia.fandom.com/wiki/Obscubra"
+  },
+  {
+   "world": "Quebra",
+   "offline": "2025-11-06",
+   "mergedInto": "Sombra",
+   "type": "Retro Open PvP",
+   "location": "Brazil",
+   "battleye": "Green",
+   "source": "https://tibia.fandom.com/wiki/Quebra"
+  },
+  {
+   "world": "Runera",
+   "offline": "2025-11-06",
+   "mergedInto": "Xymera",
+   "type": "Open PvP",
+   "location": "USA",
+   "battleye": "Green",
+   "source": "https://tibia.fandom.com/wiki/Runera"
+  },
+  {
+   "world": "Temera",
+   "offline": "2025-11-06",
+   "mergedInto": "Tempestera",
+   "type": "Retro Open PvP",
+   "location": "USA",
+   "battleye": "Green",
+   "source": "https://tibia.fandom.com/wiki/Temera"
+  },
+  {
+   "world": "Ulera",
+   "offline": "2025-11-06",
+   "mergedInto": "Blumera",
+   "type": "Optional PvP",
+   "location": "USA",
+   "battleye": "Green",
+   "source": "https://tibia.fandom.com/wiki/Ulera"
+  },
+  {
+   "world": "Vandera",
+   "offline": "2025-11-06",
+   "mergedInto": "Xymera",
+   "type": "Open PvP",
+   "location": "USA",
+   "battleye": "Green",
+   "source": "https://tibia.fandom.com/wiki/Vandera"
+  },
+  {
+   "world": "Vitera",
+   "offline": "2025-11-06",
+   "mergedInto": "Blumera",
+   "type": "Optional PvP",
+   "location": "USA",
+   "battleye": "Green",
+   "source": "https://tibia.fandom.com/wiki/Vitera"
+  },
+  {
+   "world": "Wadira",
+   "offline": "2025-11-06",
+   "mergedInto": "Kalanta",
+   "type": "Optional PvP",
+   "location": "United Kingdom",
+   "battleye": "Green",
+   "source": "https://tibia.fandom.com/wiki/Wadira"
+  },
+  {
+   "world": "Wildera",
+   "offline": "2025-11-06",
+   "mergedInto": "Monstera",
+   "type": "Retro Hardcore PvP",
+   "location": "USA",
+   "battleye": "Green",
+   "source": "https://tibia.fandom.com/wiki/Wildera"
+  },
+  {
+   "world": "Yara",
+   "offline": "2025-11-06",
+   "mergedInto": "Citra",
+   "type": "Open PvP",
+   "location": "United Kingdom",
+   "battleye": "Green",
+   "source": "https://tibia.fandom.com/wiki/Yara"
+  },
+  {
+   "world": "Zephyra",
+   "offline": "2025-11-06",
+   "mergedInto": "Kalanta",
+   "type": "Optional PvP",
+   "location": "United Kingdom",
+   "battleye": "Green",
+   "source": "https://tibia.fandom.com/wiki/Zephyra"
+  }
+ ]
+}

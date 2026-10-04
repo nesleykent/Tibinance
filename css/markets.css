@@ -1,0 +1,164 @@
+/*
+ * Markets: a terminal layout in Tibinance's own type and tokens (css/app.css).
+ * The chart panel and the watchlist fill the viewport under the site header;
+ * each panel scrolls on its own. Narrow screens stack them and scroll the page.
+ */
+:root {
+  --sell:#b4532a; --buy:#2f6db5;
+  --average:#a9a8b3;   /* the daily average: context for the best offer, never competing with it */
+  --page-gutter:var(--space-4);
+  --header-height:calc(var(--unit) * 12);
+  --watch-width:calc(var(--unit) * 92);
+  --toolbar-height:calc(var(--unit) * 11);
+  --row-pad:calc(var(--unit) * 0.75);
+}
+.nav-link[aria-current="page"] { color:var(--ink); }
+.site .wrap { max-width:none; }
+
+/* ---- the frame -------------------------------------------------------------- */
+body { display:flex; flex-direction:column; height:100dvh; overflow:hidden; }
+.site { position:static; flex:none; }
+.terminal { flex:1; min-height:0; display:grid; grid-template-columns:minmax(0,1fr) var(--watch-width); }
+
+/* ---- chart panel -------------------------------------------------------------- */
+.chart-panel { display:flex; flex-direction:column; min-width:0; min-height:0; border-right:var(--rule) solid var(--line); background:var(--canvas); }
+.toolbar { flex:none; display:flex; align-items:center; gap:var(--space-2) var(--space-4); min-height:var(--toolbar-height); padding:var(--space-1) var(--space-4); font-family:var(--font-ui); }
+.toolbar-top { flex-wrap:wrap; border-bottom:var(--rule) solid var(--line); }
+.toolbar-bottom { min-height:calc(var(--toolbar-height) - var(--space-2)); border-top:var(--rule) solid var(--line); }
+.symbol { display:flex; align-items:baseline; gap:var(--space-2) var(--space-3); flex-wrap:wrap; min-width:0; }
+.symbol h2 { font-size:var(--step-2); white-space:nowrap; }
+.symbol-meta { display:inline-flex; gap:var(--space-3); color:var(--muted); font-size:var(--step-n2); white-space:nowrap; }
+.symbol-quote { display:flex; flex-wrap:wrap; align-items:baseline; gap:var(--space-2); font-variant-numeric:lining-nums tabular-nums; white-space:nowrap; }
+.symbol-last { font-size:var(--step-1); font-weight:var(--weight-strong); }
+.symbol-change { font-size:var(--step-n1); }
+/* World, quote and side read as three groups: a hairline after each of the first two, full toolbar height. */
+.toolbar-top > .symbol,.toolbar-top > .symbol-quote { align-self:stretch; align-content:center; padding-right:var(--space-4); border-right:var(--rule) solid var(--line); }
+.toolbar-end { display:flex; gap:var(--space-1); margin-left:auto; }
+.tool { display:inline-grid; place-items:center; width:var(--control-height); height:var(--control-height); padding:0; border:0; border-radius:var(--control-radius); background:transparent; color:var(--muted); cursor:pointer; }
+.tool:hover,.tool[aria-pressed="true"],.tool[aria-expanded="true"] { background:var(--control-track); color:var(--ink); }
+.tool svg { width:calc(var(--unit) * 5); height:calc(var(--unit) * 5); fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.tool .icon-collapse,.tool[aria-pressed="true"] .icon-expand { display:none; }
+.tool[aria-pressed="true"] .icon-collapse { display:block; }
+
+.ranges { display:flex; gap:var(--space-0); }
+.ranges button { min-height:calc(var(--control-height) - var(--space-1)); padding:0 var(--space-2); border:0; border-radius:var(--radius-sm); background:transparent; color:var(--muted); font-family:var(--font-ui); font-size:var(--control-type); cursor:pointer; }
+.ranges button:hover { background:var(--control-track); color:var(--ink); }
+.ranges button[aria-checked="true"] { background:var(--accent-soft); color:var(--accent); font-weight:var(--weight-strong); }
+
+/* ---- chart and its legends ------------------------------------------------------ */
+.chart-area { position:relative; flex:1; min-height:0; }
+.chart { position:absolute; inset:0; }
+.legend { position:absolute; z-index:2; left:var(--space-4); top:var(--space-2); max-width:calc(100% - var(--space-8) * 2); display:flex; flex-direction:column; gap:var(--space-0); pointer-events:none;
+  color:var(--muted); font-family:var(--font-ui); font-size:var(--step-n1); font-variant-numeric:lining-nums tabular-nums; line-height:var(--leading-tight); }
+.legend .row { display:flex; flex-wrap:wrap; align-items:center; gap:0 var(--space-2); }
+.legend .day { color:var(--ink); font-weight:var(--weight-strong); }
+.legend b { color:var(--ink); font-weight:var(--weight-strong); }
+.legend .label { display:inline-flex; align-items:center; gap:var(--space-1); }
+.legend-volume { top:0; }
+/* Above the chart's canvases (z-index 1 and 2), so a message hides a stale price scale. */
+.chart-status { position:absolute; z-index:3; inset:0; display:grid; place-items:center; margin:0; color:var(--muted); font-family:var(--font-ui); font-size:var(--step-n1); background:var(--canvas); }
+.chart-status[hidden] { display:none; }
+
+/* Line keys, shared by the legends and the help. currentColor is the side colour. */
+.side-sell { --side:var(--sell); } .side-buy { --side:var(--buy); }
+.key { display:inline-block; flex:none; width:calc(var(--unit) * 4); border-top:var(--rule-strong) solid var(--side,var(--muted)); }
+.key-dot { width:var(--space-2); height:var(--space-2); border:0; border-radius:50%; background:var(--side); }
+.key-dotted { border-top-style:dotted; }
+.key-average { border-top:var(--rule) solid var(--average); }
+.key-volume { width:var(--space-2); height:var(--space-3); border:0; background:var(--side); opacity:.45; }
+
+.up { color:var(--positive); } .down { color:var(--negative); }
+/* A retired world is labelled wherever it appears. */
+.tag { display:inline-block; margin-left:var(--space-1); padding:0 var(--space-1); border:var(--rule) solid var(--line-strong); border-radius:var(--radius-sm);
+  color:var(--muted); font-family:var(--font-ui); font-size:var(--step-n2); font-weight:var(--weight-strong); letter-spacing:var(--tracking-caps); line-height:var(--leading-text); text-transform:uppercase; vertical-align:middle; }
+.symbol-meta .tag { margin-left:0; }
+.world-link { padding:0; border:0; background:none; color:var(--accent); font:inherit; text-decoration:underline; text-underline-offset:var(--space-0); cursor:pointer; }
+
+/* ---- help ---------------------------------------------------------------------- */
+.help { width:min(calc(var(--unit) * 100), calc(100vw - var(--space-6))); margin:0; padding:var(--space-4); border:var(--rule) solid var(--line-strong); border-radius:var(--radius);
+  background:var(--surface); color:var(--ink); box-shadow:0 var(--space-2) var(--space-6) rgb(0 0 0 / .12); font-family:var(--font-ui); font-size:var(--step-n1); line-height:var(--leading-text); }
+.help[popover] { position:fixed; inset:auto; }
+.help:not([popover]) { position:absolute; z-index:5; top:var(--toolbar-height); right:var(--space-4); }
+.help h3 { margin:0 0 var(--space-2); font-size:var(--step-0); }
+.help p { margin:var(--space-2) 0 0; }
+.help-keys { display:grid; gap:var(--space-1); margin:0; padding:0; list-style:none; }
+.help-keys li { display:grid; grid-template-columns:calc(var(--unit) * 5) 1fr; align-items:center; gap:var(--space-2); }
+.help-fine { color:var(--muted); font-size:var(--step-n2); }
+
+/* ---- watchlist ------------------------------------------------------------------- */
+.watchlist { display:flex; flex-direction:column; min-height:0; font-family:var(--font-ui); }
+.watch-head { flex:none; display:flex; align-items:center; gap:var(--space-2); min-height:var(--toolbar-height); padding:var(--space-1) var(--space-3); border-bottom:var(--rule) solid var(--line); }
+.watch-title { color:var(--ink); font-size:var(--step-n2); font-weight:var(--weight-strong); letter-spacing:var(--tracking-caps); text-transform:uppercase; white-space:nowrap; }
+.watch-count { color:var(--muted); font-weight:var(--weight-regular); }
+.watch-head .filter { flex:1; min-width:0; width:auto; min-height:calc(var(--control-height) - var(--space-1)); }
+.watch-scroll { flex:1; min-height:0; overflow:auto; overscroll-behavior:contain; }
+table.watch { width:100%; border-collapse:collapse; font-size:var(--step-n1); font-variant-numeric:lining-nums tabular-nums; }
+table.watch thead th { position:sticky; top:0; z-index:1; padding:var(--space-1) var(--space-2); border-bottom:var(--rule) solid var(--line-strong); background:var(--surface-soft);
+  color:var(--muted); font-size:var(--step-n2); font-weight:var(--weight-strong); letter-spacing:var(--tracking-caps); text-align:left; text-transform:uppercase; white-space:nowrap; }
+table.watch thead th.num { text-align:right; }
+table.watch thead th:first-child,table.watch tbody th { padding-left:var(--space-3); }
+table.watch thead th:last-child,table.watch td:last-child { padding-right:var(--space-3); }
+table.watch th button { padding:0; border:0; background:none; color:inherit; font:inherit; letter-spacing:inherit; text-transform:inherit; cursor:pointer; }
+table.watch th[aria-sort="ascending"] button::after { content:" ↑"; }
+table.watch th[aria-sort="descending"] button::after { content:" ↓"; }
+table.watch tbody tr { cursor:pointer; }
+table.watch tbody tr:hover { background:var(--surface-hover); }
+table.watch tbody tr[aria-selected="true"] { background:var(--accent-soft); box-shadow:inset var(--rule-strong) 0 var(--accent); }
+table.watch tbody th,table.watch td { padding:var(--row-pad) var(--space-2); border-bottom:var(--rule) solid var(--line-faint); white-space:nowrap; }
+/* A stale world's date or a Retired tag wraps under the name only where the row lacks room. */
+/* position: the row's screen-reader note stays inside the scrolling list, not the page. */
+table.watch tbody th { position:relative; font-weight:var(--weight-regular); text-align:left; }
+table.watch td { text-align:right; }
+table.watch .pick { padding:0; border:0; background:none; color:var(--ink); font:inherit; text-align:left; cursor:pointer; }
+table.watch tr[aria-selected="true"] .pick { font-weight:var(--weight-strong); }
+/* Compact row indicators: R (retired) and i (latest best offer is old); the note is in the tooltip. */
+table.watch .flag { display:inline-grid; place-items:center; width:calc(var(--unit) * 3.5); height:calc(var(--unit) * 3.5); margin-left:var(--space-1);
+  border:var(--rule) solid var(--line-strong); border-radius:50%; color:var(--muted); font-size:var(--step-n2); font-weight:var(--weight-strong);
+  line-height:1; vertical-align:middle; cursor:help; }
+table.watch .flag-retired { border-radius:var(--radius-sm); }
+table.watch .flag:hover,table.watch .flag:focus-visible { border-color:var(--accent); color:var(--accent); }
+.watch-tip { position:fixed; z-index:var(--layer-header); max-width:calc(var(--unit) * 70); padding:var(--space-1) var(--space-2); border-radius:var(--radius-sm);
+  background:var(--ink); color:var(--canvas); font-family:var(--font-ui); font-size:var(--step-n2); line-height:var(--leading-text); pointer-events:none; }
+.details-status { margin:calc(var(--space-1) * -1) 0 var(--space-2); color:var(--muted); font-size:var(--step-n1); }
+table.watch td.stale { color:var(--muted); }
+.watchlist .empty { padding:var(--space-5) var(--space-3); }
+
+/* ---- selected world -------------------------------------------------------------- */
+.details { flex:none; padding:var(--space-3); border-top:var(--rule) solid var(--line); }
+.details-title { margin:0 0 var(--space-2); font-family:var(--font-editorial); font-size:var(--step-1); font-weight:var(--weight-regular); }
+.details-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--space-2) var(--space-3); margin:0; font-variant-numeric:lining-nums tabular-nums; }
+.details-grid dt { color:var(--muted); font-size:var(--step-n2); font-weight:var(--weight-strong); letter-spacing:var(--tracking-caps); text-transform:uppercase; }
+.details-grid dd { margin:0; font-size:var(--step-n1); white-space:nowrap; }
+
+/* ---- expanded chart: true full screen, or the whole viewport where that is unavailable ---- */
+.chart-panel:fullscreen { width:100%; height:100%; border:0; }
+.chart-panel.expanded { position:fixed; inset:0; z-index:var(--layer-header); border:0; }
+
+/* ---- narrow: chart first, then the list; the page scrolls ------------------------- */
+@media (max-width:900px) {
+  body { display:block; height:auto; overflow:visible; }
+  .terminal { display:flex; flex-direction:column; }
+  .chart-panel { height:clamp(calc(var(--unit) * 95), 72dvh, calc(var(--unit) * 160)); border-right:0; border-bottom:var(--rule) solid var(--line); }
+  .watch-scroll { overflow:visible; }
+  table.watch thead th { position:static; }
+  .details { order:-1; border-top:0; border-bottom:var(--rule) solid var(--line); }
+  .watchlist { order:1; }
+}
+/* Wide screens keep the toolbar on one row at its fixed height: the world's
+   metadata gives way first, cut short at its end (type and BattlEye before a
+   retired world's status and successor link). */
+@media (min-width:641px) {
+  .toolbar-top { flex-wrap:nowrap; }
+  .toolbar-top > * { flex:none; }
+  .toolbar-top > .symbol { flex:0 1 auto; min-width:0; flex-wrap:nowrap; }
+  .symbol h2 { flex:none; }
+  .symbol-meta { display:block; min-width:0; overflow:hidden; text-overflow:ellipsis; }
+  .symbol-meta > * + * { margin-left:var(--space-3); }
+}
+@media (max-width:640px) {
+  /* The toolbar wraps here; a divider would start a line. */
+  .toolbar-top > .symbol,.toolbar-top > .symbol-quote { padding-right:0; border-right:0; }
+}
+@media (max-width:520px) {
+  .symbol-meta,.legend .meta { display:none; }
+}

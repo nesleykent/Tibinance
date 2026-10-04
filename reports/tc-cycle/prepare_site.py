@@ -19,7 +19,7 @@ def main():
     (OUTPUT / "index.html").write_text('''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="refresh" content="0;url=reports/tc-cycle/"><title>Tibinance Research</title></head>
-<body><a href="reports/tc-cycle/">Open the Tibia Coins report</a> · <a href="reports/tc-cycle/pt-br.html" hreflang="pt-BR" lang="pt-BR">Abrir o relatório em português</a></body></html>
+<body><a href="reports/tc-cycle/">Open the Tibia Coins report</a><br><a href="reports/tc-cycle/pt-br.html" hreflang="pt-BR" lang="pt-BR">Abrir o relatório em português</a></body></html>
 ''')
     manifest = json.loads((ROOT / ".openai/hosting.json").read_text())
     assert manifest["static"]["directory"] == "dist"

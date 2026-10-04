@@ -24,7 +24,7 @@ const pctU = (v, d = 1) => ok(v) ? `${fmt(v, d)}%` : MISSING;
 // Percentage points are a financial unit, so both editions write "pp".
 const pp = (v, d = 1) => ok(v) ? `${sign(v, d)}${fmt(Math.abs(v), d)} pp` : MISSING;
 const price = v => fmt(v);
-const marketGroup = v => v.replace(/ · BattlEye (Yellow|Green)/g, (_, colour) => ` (${colour[0]}BE)`);
+const marketGroup = v => v.replace(/; BattlEye (Yellow|Green)/g, (_, colour) => ` (${colour[0]}BE)`);
 const priceUnit = t('Prices in gold pieces (gp) per TC', 'Prices em gold pieces (gp) por TC');
 const prob = v => ok(v) ? `${fmt(v * 100, 0)}%` : MISSING;
 // Tables, tooltips and captions are structured in English in both editions: months, periods and categorical values included.
@@ -96,9 +96,9 @@ const UI_LABELS = {
   "Ano": "Year",
   "Anos": "Years",
   "Baixa": "Low",
-  "Brier · ano anterior": "Brier: Previous Year",
-  "Brier · frequência histórica": "Brier: Historical Frequency",
-  "Brier · modelo": "Brier: Model",
+  "Brier; ano anterior": "Brier: Previous Year",
+  "Brier; frequência histórica": "Brier: Historical Frequency",
+  "Brier; modelo": "Brier: Model",
   "Central": "Base",
   "Cenário central": "Base Scenario",
   "Ciclo": "Cycle",
@@ -116,8 +116,8 @@ const UI_LABELS = {
   "Defasagem (semanas)": "Lag (Weeks)",
   "Dentro de 50%": "Within 50%",
   "Dentro de 80%": "Within 80%",
-  "Desde 2023 · ≥+3%": "Since 2023, ≥+3%",
-  "Desde 2024 · ≥+3%": "Since 2024, ≥+3%",
+  "Desde 2023; ≥+3%": "Since 2023, ≥+3%",
+  "Desde 2024; ≥+3%": "Since 2024, ≥+3%",
   "Desvio": "Deviation",
   "Desvio do mundo": "World SD",
   "Desvio-padrão semanal": "Weekly Standard Deviation",
@@ -130,8 +130,8 @@ const UI_LABELS = {
   "Dias pareados": "Matched Days",
   "Dias recompra": "Repurchase Days",
   "Dias venda": "Sale Days",
-  "Dias · Buy Offers": "Buy Offer Days",
-  "Dias · Sell Offers": "Sell Offer Days",
+  "Dias; Buy Offers": "Buy Offer Days",
+  "Dias; Sell Offers": "Sell Offer Days",
   "Direção": "Direction",
   "Episódios": "Episodes",
   "Erro da mediana": "Median Error",
@@ -163,8 +163,8 @@ const UI_LABELS = {
   "Mediana seguinte": "Forward Median",
   "Mediana sem deslocar dia": "Same-Day Median",
   "Mediana semanal": "Weekly Median",
-  "Mediana · desde 2023": "Median Since 2023",
-  "Mediana · desde 2024": "Median Since 2024",
+  "Mediana; desde 2023": "Median Since 2023",
+  "Mediana; desde 2024": "Median Since 2024",
   "Mesmos meses, outros anos": "Same Months, Other Years",
   "Máxima": "Maximum",
   "Máximo diário": "Daily Maximum",
@@ -177,13 +177,13 @@ const UI_LABELS = {
   "Nível": "Level",
   "Nível implícito": "Implied Level",
   "Ocorrências": "Occurrences",
-  "Ofertas · desde 2023": "Offers Since 2023",
-  "Ofertas · desde 2024": "Offers Since 2024",
+  "Ofertas; desde 2023": "Offers Since 2023",
+  "Ofertas; desde 2024": "Offers Since 2024",
   "Origens": "Origins",
   "P(alta) média": "Mean P(Rise)",
-  "P50 · desde 2024": "P50 Since 2024",
-  "Pacote · médias diárias": "Package: Daily Averages",
-  "Pacote · ≥+3%": "Package: ≥+3%",
+  "P50; desde 2024": "P50 Since 2024",
+  "Pacote; médias diárias": "Package: Daily Averages",
+  "Pacote; ≥+3%": "Package: ≥+3%",
   "Para": "To",
   "Pares": "Pairs",
   "Partida": "Starting Value",
@@ -216,16 +216,16 @@ const UI_LABELS = {
   "q ajustado": "Adjusted q",
   "Última oferta": "Latest Offer",
   "Último dia": "Last Day",
-  "Buy Offers · Amount total": "Buy Offers: Total Amount",
-  "Buy Offers · central": "Buy Offers: Base",
-  "Buy Offers · melhor Amount": "Buy Offers: Best Amount",
-  "Buy Offers · venda": "Buy Offers: Sale",
-  "Sell Offers · Amount total": "Sell Offers: Total Amount",
-  "Sell Offers · central": "Sell Offers: Base",
-  "Sell Offers · melhor Amount": "Sell Offers: Best Amount",
-  "Sell Offers · recompra": "Sell Offers: Repurchase",
-  "Sell Offers · baixa": "Sell Offers: Low",
-  "Sell Offers · alta": "Sell Offers: High",
+  "Buy Offers; Amount total": "Buy Offers: Total Amount",
+  "Buy Offers; central": "Buy Offers: Base",
+  "Buy Offers; melhor Amount": "Buy Offers: Best Amount",
+  "Buy Offers; venda": "Buy Offers: Sale",
+  "Sell Offers; Amount total": "Sell Offers: Total Amount",
+  "Sell Offers; central": "Sell Offers: Base",
+  "Sell Offers; melhor Amount": "Sell Offers: Best Amount",
+  "Sell Offers; recompra": "Sell Offers: Repurchase",
+  "Sell Offers; baixa": "Sell Offers: Low",
+  "Sell Offers; alta": "Sell Offers: High",
   "26 semanas": "26 Weeks",
   "8 semanas": "8 Weeks",
   // categorical values printed in table cells
@@ -298,8 +298,7 @@ function tableLabel(column) {
 // Data strings from the pipeline may still carry dash-like glyphs (cycles such as 2025 to 2026 are written with one): a range reads "to" / "a", a spaced dash
 // becomes a comma, a lone dash a missing value, and a typographic minus the hyphen-minus. No dash-like glyph is ever printed.
 function cleanText(value) {
-  return String(value).replace(/\s*·\s*/g, '; ')
-    .replace(/(\S)[‒–](\S)/g, `$1${t(' to ', ' a ')}$2`).replace(/\s+[‒–—―]\s+/g, ', ').replace(/[‒–—―]/g, MISSING).replace(/−/g, '-');
+  return String(value).replace(/(\S)[‒–](\S)/g, `$1${t(' to ', ' a ')}$2`).replace(/\s+[‒–—―]\s+/g, ', ').replace(/[‒–—―]/g, MISSING).replace(/−/g, '-');
 }
 // Exhibits abbreviate BattlEye colours (YBE, GBE) to keep columns narrow; running text spells them out.
 const abbreviateBattlEye = text => text.replace(/\b(Yellow|Green) BattlEye\b/g, (_, colour) => `${colour[0]}BE`);
@@ -1190,7 +1189,7 @@ async function main() {
   const yA = grp(Y, 'ask'), yB = grp(Y, 'bid');
   const others = C.crossWorld.groups.filter(g => g.side === 'ask' && g.group !== Y);
   // A group in running text: "Optional PvP worlds with Yellow BattlEye" / "worlds Optional PvP com Yellow BattlEye".
-  const groupWorldsPhrase = g => { const [type, be] = g.split(' · BattlEye '); return be ? t(`${type} worlds with ${be} BattlEye`, `worlds ${type} com ${be} BattlEye`) : t(`${type} worlds`, `worlds ${type}`); };
+  const groupWorldsPhrase = g => { const [type, be] = g.split('; BattlEye '); return be ? t(`${type} worlds with ${be} BattlEye`, `worlds ${type} com ${be} BattlEye`) : t(`${type} worlds`, `worlds ${type}`); };
   // "declined" / "risen" only when both later readings moved the same way; otherwise the neutral "moved".
   const moved = (from, ...to) => to.every(v => v < from) ? 'down' : to.every(v => v > from) ? 'up' : 'mixed';
   const cwOf = (world, side) => C.crossWorld.worlds.find(x => x.world === world && x.side === side);
@@ -2257,7 +2256,7 @@ async function main() {
     ${para(`is negative when the daily average lies below the comparable offer. Following the convention of the reference documentation, averages are assigned to the server day before collection without changing the date of the offers; because that alignment awaits confirmation, an additional same-day pairing tests the sensitivity to the shift, and the pairing covers up to 12 months ending on ${cutoffDay}, depending on each world's history. ${gapVerdict === 'unknown' ? `In ${bench}, offers and daily averages have too few paired days to be compared` : `In ${bench}, the median gap over ${fmt(tradeAntica('ask')?.n)} paired days is ${sgn(tradeAntica('ask')?.medianGapPct, 2)} for Sell Offers and ${sgn(tradeAntica('bid')?.medianGapPct, 2)} for Buy Offers, ${gapVerdict === 'close' ? 'so for the benchmark the two measures differ by less than one per cent' : gapVerdict === 'differ' ? 'so for the benchmark the two measures differ materially' : 'so the benchmark lacks the paired days needed to compare the two measures'}`}. Because a quote summarises an instant whereas an average covers a period, such gaps demonstrate neither error nor capturable profit nor execution at the best price, which is why daily averages never feed the models of offers.`,
       `é negativo quando a daily average fica abaixo da offer comparável. Seguindo a convenção da documentação de referência, as averages são atribuídas ao server day anterior à coleta sem alterar a data das offers; como esse alinhamento aguarda confirmação, um pareamento adicional no mesmo dia testa a sensibilidade ao deslocamento, e o pareamento cobre até 12 meses encerrados em ${cutoffDay}, conforme o histórico de cada world. ${gapVerdict === 'unknown' ? `Em ${bench}, offers e daily averages têm poucos dias pareados para serem comparadas` : `Em ${bench}, a median do gap em ${fmt(tradeAntica('ask')?.n)} dias pareados é ${sgn(tradeAntica('ask')?.medianGapPct, 2)} para Sell Offers e ${sgn(tradeAntica('bid')?.medianGapPct, 2)} para Buy Offers, ${gapVerdict === 'close' ? 'de modo que, no benchmark, as duas medidas diferem em menos de um por cento' : gapVerdict === 'differ' ? 'de modo que, no benchmark, as duas medidas diferem materialmente' : 'de modo que faltam ao benchmark os dias pareados necessários para comparar as duas medidas'}`}. Como uma quote resume um instante, enquanto uma average cobre um período, esses gaps não demonstram erro, profit capturável nem execution no best price, razão pela qual as daily averages nunca alimentam os modelos de offers.`)}
     </div>
-    <div class="evidence-stack">${card({evidence: 'observed', title: 'World Comparison: Median Daily Average vs Offer Gap', sub: t('Median gap, %', 'Median do gap, %'), body: table({columns: [{key: 'world', label: 'Mundo'}, num('askN', 'Dias · Sell Offers'), percent('askGap', 'Sell Offers', 2), num('bidN', 'Dias · Buy Offers'), percent('bidGap', 'Buy Offers', 2)],
+    <div class="evidence-stack">${card({evidence: 'observed', title: 'World Comparison: Median Daily Average vs Offer Gap', sub: t('Median gap, %', 'Median do gap, %'), body: table({columns: [{key: 'world', label: 'Mundo'}, num('askN', 'Dias; Sell Offers'), percent('askGap', 'Sell Offers', 2), num('bidN', 'Dias; Buy Offers'), percent('bidGap', 'Buy Offers', 2)],
       rows: worlds.map(w => { const a = R.tradeComparison.find(x => x.world === w.world && x.side === 'ask'), b = R.tradeComparison.find(x => x.world === w.world && x.side === 'bid'); return {world: w.world, askN: a?.n, askGap: a?.medianGapPct, bidN: b?.n, bidGap: b?.medianGapPct}; })})})}
     </div>
     </div>
@@ -2464,7 +2463,7 @@ async function main() {
   const recentFrom = '2025-06-01', anticaRecent = anticaHist.filter(x => x.date >= recentFrom);
   const weeklyHistory = t('Weekly history', 'Histórico semanal'), baseScenario = 'Ensemble scenario', stressBand = 'Heuristic stress band';
 
-  // 07 · base scenario chart
+  // 07: base scenario chart
   on(() => {
     const s = state.side, f = R.forecast.filter(x => x.side === s), recent = anticaRecent;
     document.getElementById('card-model').innerHTML = card({evidence: 'model', title: sided(bench, s), sub: t(`${priceUnit}. Weekly history since ${monthAxis(recentFrom)}, capture of ${shortDate(antica.date)} and ${horizonWeeks} weeks of scenario`, `${priceUnit}. Histórico semanal desde ${monthAxis(recentFrom)}, captura de ${shortDate(antica.date)} e ${horizonWeeks} semanas de scenario`), controls: sideControl(), body: '<div class="chart" id="ch-model"></div>',
@@ -2478,7 +2477,7 @@ async function main() {
     }));
   }, ['side'], ['card-model']);
 
-  // 04 · turning points chart
+  // 04: turning points chart
   on(() => {
     const s = state.side, sw = SW[s], c = sw.current;
     document.getElementById('card-pivots').innerHTML = card({evidence: 'observed', title: sided(`${bench}: Turning Points`, s), sub: t(`${priceUnit}. Weekly medians; peaks and troughs confirmed by a 5% reversal`, `${priceUnit}. Weekly medians; peaks e troughs confirmados por reversal de 5%`), controls: sideControl(), body: '<div class="chart" id="ch-pivots"></div>',
@@ -2491,12 +2490,12 @@ async function main() {
     }));
   }, ['side'], ['card-pivots']);
 
-  // 06, 07 · simulated distribution, probabilities, seeds, anchor and calibration
+  // 06, 07: simulated distribution, probabilities, seeds, anchor and calibration
   on(() => {
     const s = state.side, fan = P.fan.filter(f => f.side === s && f.sample === 'main'), fan24 = P.fan.filter(f => f.side === s && f.sample === 'since2024');
     const f = R.forecast.filter(x => x.side === s), recent = anticaRecent;
     document.getElementById('card-fan').innerHTML = card({evidence: 'model', title: sided(`${bench}: Simulated Distribution`, s), sub: t(`${priceUnit}. Training since 2023, seed ${SEED}; ${fmt(PATHS)} paths`, `${priceUnit}. Treino desde 2023, seed ${SEED}; ${fmt(PATHS)} paths`), controls: sideControl(), body: '<div class="chart" id="ch-fan"></div>',
-      drawer: table({columns: [{key: 'date', label: 'Semana', render: cellDate}, num('p10', 'P10'), num('p25', 'P25'), num('p50', 'P50'), num('p75', 'P75'), num('p90', 'P90'), num('p50b', 'P50 · desde 2024')], rows: fan.map((x, i) => ({...x, p50b: fan24[i]?.p50}))})});
+      drawer: table({columns: [{key: 'date', label: 'Semana', render: cellDate}, num('p10', 'P10'), num('p25', 'P25'), num('p50', 'P50'), num('p75', 'P75'), num('p90', 'P90'), num('p50b', 'P50; desde 2024')], rows: fan.map((x, i) => ({...x, p50b: fan24[i]?.p50}))})});
     chart('ch-fan', host => lineChart(host, {
       aria: t(`Simulated distribution of ${SIDES[s]} in ${bench} to September 2027`, `Distribution simulada de ${SIDES[s]} em ${bench} até setembro de 2027`),
       series: [{label: weeklyHistory, cls: `c-${s}`, points: recent.map(x => [x.date, x[s]])}, {label: t('Median, since 2023', 'Median, desde 2023'), cls: 'c-ink', points: fan.map(x => [x.date, x.p50])},
@@ -2533,7 +2532,7 @@ async function main() {
         caption: t(`The package uses an index of daily averages of Sell Offers across 71 worlds and starts on ${shortDate(PK.start.date)}, so it is not directly comparable with the offers and is the same for both sides; its weeks are dated by the Sunday that closes them.`,
           `O pacote usa um índice de daily averages de Sell Offers de 71 worlds e parte de ${shortDate(PK.start.date)}, de modo que não é diretamente comparável às offers e é igual para os dois lados; suas semanas são datadas pelo domingo que as encerra.`)})});
   }, ['side'], ['card-fan', 'card-prob']);
-  // 09 · break-even levels from today's quotes and the fee schedule; the model's distribution of the round trip's outcome
+  // 09: break-even levels from today's quotes and the fee schedule; the model's distribution of the round trip's outcome
   const MODE = {aceitando: 'Taking Offers', 'criando ofertas': 'Making Offers'};
   on(() => {
     document.getElementById('card-breakeven').innerHTML = card({evidence: 'observed', title: `${bench}: Break-Even Levels for Selling and Rebuying`,
@@ -2563,7 +2562,7 @@ async function main() {
       series: [{label: 'Taking Offers', cls: 'c-ink', points: rc.map(x => [x.date, x.taker * 100])}, {label: 'Making Offers', cls: 'c-muted', points: rc.map(x => [x.date, x.maker * 100])}],
       vlines: [{x: junWeek, label: shortDate(weekStart(junWeek))}]}));
   }, ['sample'], ['card-rebuy-curve']);
-  // 10 · buying or selling once: today's orders in the selected world, what gold and TC fetch in each scenario, the odds of waiting
+  // 10: buying or selling once: today's orders in the selected world, what gold and TC fetch in each scenario, the odds of waiting
   // by week, each player's plans and the same decisions in past cycles. Cells are built only from formatted numbers and dates.
   on(() => {
     const w = W[state.world] ? state.world : bench, q = W[w];
@@ -2651,9 +2650,9 @@ async function main() {
     const s = state.side;
     const seedRows = PK.stability.map((p, i) => { const o = P.sides[s].main.runs[i], o24 = P.sides[s].since2024.runs[i]; return {seed: p.seed, a: p.p_peak_gt3, b: p.p_jun27_below, c: p.p_trough_above_2026, e: o.prob.peakAbove3, g: o.prob.jun28BelowStart, h: o.prob.troughAbove2026, i: o24.prob.peakAbove3, j: o24.prob.jun28BelowStart, k: o24.prob.troughAbove2026}; });
     document.getElementById('card-seeds').innerHTML = card({evidence: 'model', title: sided('Seed Stability', s), sub: t(`Package (forecast_stability.json) and offers: peak at least +3%; June below the start; 2027 low above the 2026 low`, `Pacote (forecast_stability.json) e offers: peak de pelo menos +3%; junho abaixo do ponto de partida; mínimo de 2027 acima do de 2026`), controls: sideControl(), body: table({columns: [{key: 'seed', label: 'Semente', num: true, render: v => String(v)},
-      probability('a', 'Pacote · ≥+3%'), probability('b', 'Junho'), probability('c', 'Mínimo'),
-      probability('e', 'Desde 2023 · ≥+3%'), probability('g', 'Junho'), probability('h', 'Mínimo'),
-      probability('i', 'Desde 2024 · ≥+3%'), probability('j', 'Junho'), probability('k', 'Mínimo')], rows: seedRows,
+      probability('a', 'Pacote; ≥+3%'), probability('b', 'Junho'), probability('c', 'Mínimo'),
+      probability('e', 'Desde 2023; ≥+3%'), probability('g', 'Junho'), probability('h', 'Mínimo'),
+      probability('i', 'Desde 2024; ≥+3%'), probability('j', 'Junho'), probability('k', 'Mínimo')], rows: seedRows,
       caption: t(`If the ${fmt(PATHS)} paths were independent, the Monte Carlo error would be about ${fmt(PK.mcErrorPp.p_jun27_below[0], 1)} pp; because they derive from ${fmt(DRAWS)} parameter draws, it may reach about ${fmt(PK.mcErrorPp.p_jun27_below[1], 1)} pp. The training sample weighs more than the seed.`,
         `Se os ${fmt(PATHS)} paths fossem independentes, o erro de Monte Carlo seria de cerca de ${fmt(PK.mcErrorPp.p_jun27_below[0], 1)} pp; como derivam de ${fmt(DRAWS)} parameter draws, pode chegar a cerca de ${fmt(PK.mcErrorPp.p_jun27_below[1], 1)} pp. A training sample pesa mais do que a seed.`)})});
   }, ['side'], ['card-seeds']);
@@ -2662,11 +2661,11 @@ async function main() {
     document.getElementById('card-calib').innerHTML = card({evidence: 'backtested', title: sided('Out-of-Sample Calibration: Training Since 2023', s), sub: t('Fortnightly origins; ideal: 50% and 80% inside the intervals', 'Origins quinzenais; ideal: 50% e 80% dentro dos intervalos'), controls: sideControl(), body: table({columns: [num('horizon', 'Semanas'), num('n', 'Origens'), num('windows', 'Janelas sem sobreposição'),
       probability('cov50', 'Dentro de 50%'), probability('cov80', 'Dentro de 80%'),
       probability('meanPUp', 'P(alta) média'), probability('freqUp', 'Altas observadas'),
-      num('brier', 'Brier · modelo', 2), num('brierSeasonal', 'Brier · ano anterior', 2), num('brierClimate', 'Brier · frequência histórica', 2), percent('mapePct', 'Erro da mediana', 1)],
+      num('brier', 'Brier; modelo', 2), num('brierSeasonal', 'Brier; ano anterior', 2), num('brierClimate', 'Brier; frequência histórica', 2), percent('mapePct', 'Erro da mediana', 1)],
       rows: P.calibration.filter(c => c.side === s), caption: t('A lower Brier score is better; a constant 50% scores 0.25. "Prior Year" repeats the direction of the same window a year earlier; "History" uses the share of rises over the horizon up to the origin.', 'Quanto menor o Brier score, melhor; 50% fixos resultam em 0,25. "Prior Year" repete a direção da mesma janela um ano antes; "History" usa a fração de altas no horizon até a origin.')})});
   }, ['side'], ['card-calib']);
 
-  // 09 · executable depth: Amount at the best prices, visible Amount and slippage bounds, latest capture of every world
+  // 09: executable depth: Amount at the best prices, visible Amount and slippage bounds, latest capture of every world
   on(() => {
     const le = v => ok(v) ? `≤ ${pctU(v, 2)}` : 'Beyond Visible Book';
     document.getElementById('card-depth').innerHTML = card({evidence: 'observed', title: 'Executable Depth and Slippage Bounds',
@@ -2678,7 +2677,7 @@ async function main() {
         caption: t('Bounds, not estimates: the capture gives the best price, its Amount, the visible Amount and its gold value, not every level of the book. Captures are snapshots; the Amount at the best price changes between them.', 'Limites, não estimativas: a captura informa o best price, seu Amount, o Amount visível e seu valor em gold, não cada nível do book. Capturas são snapshots; o Amount no best price muda entre elas.')})});
   }, [], ['card-depth']);
 
-  // 12 · the Buy/Sell floor (the whole pipeline rerun under each floor) and the anchor windows of every world
+  // 12: the Buy/Sell floor (the whole pipeline rerun under each floor) and the anchor windows of every world
   on(() => {
     const label = r => r.floor === null ? 'No Floor' : `${fmt(r.floor, 2)}${r.baseline ? ' (Baseline)' : ''}`;
     const rows = FR.slice().sort((a, b) => (a.floor ?? -1) - (b.floor ?? -1)).map(r => ({floor: label(r), excluded: r.excluded, worlds: floorWorlds(r).length, days: floorDays(r),
@@ -2704,7 +2703,7 @@ async function main() {
         caption: t('A world with one capture in the window has a difference of zero: its latest quote stands alone. 13-Week Band: half-width of the heuristic stress band of the world\'s scenario.', 'Um world com uma captura na janela tem diferença zero: sua última quote está isolada. 13-Week Band: meia largura da heuristic stress band do scenario do world.')})});
   }, [], ['card-filter', 'card-anchors']);
 
-  // 06 · independent evidence per horizon, the registered challenger and the prospective record
+  // 06: independent evidence per horizon, the registered challenger and the prospective record
   on(() => {
     const s = state.side;
     const rows = IND.filter(x => x.side === s).map(x => { const k = rollSkill(s, x.horizon); return {...x, skill: k?.skill, lo: k?.skillLow, hi: k?.skillHigh}; });
@@ -2740,7 +2739,7 @@ async function main() {
     }
   }, [], ['card-ledger']);
 
-  // 13 · falsification criteria, each with the reading at this cutoff
+  // 13: falsification criteria, each with the reading at this cutoff
   on(() => {
     // Table text is English in both editions, so lists and months are joined here in English.
     const yCur = yA.currentMedianPct, yRec = yA.recentMedianPct, merger = relevantMergers[0];
@@ -2774,7 +2773,7 @@ async function main() {
   const TRANSFER_H = [...new Set(R.transferRolling.map(x => x.horizon))].sort((a, b) => a - b).map(String);
   const transferHorizonControl = () => stateControl({label: 'Horizon', key: 'transferH', options: TRANSFER_H.map(h => [h, `${h}W`])});
 
-  // 11 · the one-to-one transfer against a slope and a slope with drift estimated for each world before each origin
+  // 11: the one-to-one transfer against a slope and a slope with drift estimated for each world before each origin
   on(() => {
     const s = state.side, h = +state.transferH;
     const slopeVerdict = x => !x || !ok(x.skill_slopeLow) ? 'Too Few Origins' : x.skill_slopeLow > 0 ? 'Slope Better' : x.skill_slopeHigh < 0 ? 'One-to-One Better' : 'Inconclusive';
@@ -2793,7 +2792,7 @@ async function main() {
         caption: t(`Slope over the full history, with a block-bootstrap interval over runs of ${h} spans. A world needs ${X.transfer.minPairs} completed spans before an origin to enter the test.`, `Inclinação no histórico completo, com intervalo de block bootstrap sobre sequências de ${h} intervalos. Um world precisa de ${X.transfer.minPairs} intervalos concluídos antes de uma origin para entrar no teste.`)})});
   }, ['side', 'transferH'], ['card-transfer-slope']);
 
-  // 10 · transferability matrix: the rolling transfer test beside premium stability, correlation, history and type
+  // 10: transferability matrix: the rolling transfer test beside premium stability, correlation, history and type
   on(() => {
     const s = state.side, h = +state.transferH;
     const rows = worlds.filter(w => w.world !== bench).map(w => {
@@ -2813,7 +2812,7 @@ async function main() {
         caption: t(`Premium instability: 80th percentile of the absolute 13-week change in the log premium over ${bench}, the term that widens each world's stress band. Skill: reduction in MAPE against the world's own last quote; 95% circular block bootstrap over runs of ${h} origins, reported where two such blocks fit.`, `Instabilidade do premium: percentil 80 da variação absoluta de 13 semanas do log premium sobre ${bench}, o termo que amplia a stress band de cada world. Skill: redução do MAPE ante a última quote do próprio world; circular block bootstrap de 95% sobre sequências de ${h} origins, informado onde cabem dois desses blocos.`)})});
   }, ['side', 'transferH'], ['card-transfer']);
 
-  // 06 · rolling origins, skill with block-bootstrap intervals, the ablation and the calibration of the probability of a fall
+  // 06: rolling origins, skill with block-bootstrap intervals, the ablation and the calibration of the probability of a fall
   on(() => {
     const s = state.side, H = V.horizons;
     const metricRows = H.flatMap(h => ['Constante', 'Sazonal 52 semanas', 'Harmônico', ENSEMBLE].map(m => rollMetric(s, h, m)));
@@ -2864,7 +2863,7 @@ async function main() {
         caption: t('Brier equals reliability minus resolution plus uncertainty, up to the spread of forecasts within each bin. A slope above 1 means forecasts too timid; a positive intercept, falls forecast too rarely. Overlapping origins overstate the independent evidence; N/A marks a horizon without a finite estimate.', 'Brier é igual a reliability menos resolution mais uncertainty, a menos da dispersão dos forecasts dentro de cada faixa. Inclinação acima de 1 indica forecasts tímidos demais; intercepto positivo, quedas previstas raramente demais. Origins sobrepostas superestimam a evidência independente; N/A marca um horizon sem estimativa finita.')})});
   }, ['side'], ['card-rolling', 'card-skill', 'card-ablation', 'card-reliability', 'card-calib-stats']);
 
-  // 08 · will the price fall? Two references for a fall, its size, both training windows and what moves the probabilities.
+  // 08: will the price fall? Two references for a fall, its size, both training windows and what moves the probabilities.
   on(() => {
     const s = state.side, k = state.sample, d = DS[s][k];
     document.getElementById('card-downside-curve').innerHTML = card({evidence: 'model', title: sided('Probability of Trading below Two References', s),
@@ -2933,7 +2932,7 @@ async function main() {
       aria: t(`Range of the probability "${name}" across seeds, training windows, starting captures and specifications`, `Amplitude da probabilidade "${name}" entre seeds, training windows, capturas iniciais e especificações`)}));
   }, ['tornado'], ['card-tornado']);
 
-  // 09 · predecessor and server-age information. Exploratory comparisons share the report's side selection and exhibits.
+  // 09: predecessor and server-age information. Exploratory comparisons share the report's side selection and exhibits.
   // The data call the predecessor rule 'Precursor'; the report names it after the concept it tests.
   const lifeModels = {Constant: 'Constant', Benchmark: 'Benchmark', Local: 'Local', Precursor: 'Predecessor', AgeRelative: 'Age Relative', AgeRaw: 'Age Raw'};
   const regimeLabel = x => x === 'preTransfer' ? 'Pre-transfer' : 'Pre-merger';
@@ -2976,7 +2975,7 @@ async function main() {
     const ts = terr.scenarios.filter(r => r.side === side), as = age.scenarios.filter(r => r.side === side && r.regime === 'preTransfer');
     document.getElementById('card-precursor-scenario').innerHTML = card({evidence: 'exploratory', title: sided(`${terr.world}: Predecessor Forecasts`, side), controls: sideControl(), body: lifeTable(ts, ['Constant', 'Benchmark', 'Local', 'Precursor'], true),
       note: t('Each predecessor contributes only when it has at least three returns at the horizon.', 'Cada predecessor contribui apenas quando tem pelo menos três returns no horizon.'),
-      drawer: table({columns: [num('horizon', 'Weeks'), num('localReturnSample', 'Local Returns'), {key: 'donorReturnSample', label: 'Donor Returns', render: v => esc(Object.entries(v || {}).map(([w, n]) => `${w}: ${n}`).join(' · '))}], rows: ts.filter(r => !r.model || r.model === 'Precursor')})});
+      drawer: table({columns: [num('horizon', 'Weeks'), num('localReturnSample', 'Local Returns'), {key: 'donorReturnSample', label: 'Donor Returns', render: v => esc(Object.entries(v || {}).map(([w, n]) => `${w}: ${n}`).join('; '))}], rows: ts.filter(r => !r.model || r.model === 'Precursor')})});
     document.getElementById('card-age-scenario').innerHTML = card({evidence: 'exploratory', title: sided(`${age.target}: Age Forecasts`, side), sub: t(`${age.donor} at the same server age, pre-transfer`, `${age.donor} na mesma server age, pre-transfer`),
       note: t(`Age Raw is an analogy ${at.some(r => r.model === 'AgeRaw') ? 'evaluated at the eligible origins of the test above' : 'not yet validated locally'}, whereas Age Relative depends on quotes paired with ${bench} on the dates of the donor's endpoints.`,
         `Age Raw é uma analogia ${at.some(r => r.model === 'AgeRaw') ? 'avaliada nas origins elegíveis do teste acima' : 'ainda sem validação local'}, enquanto Age Relative depende de quotes pareadas com ${bench} nas datas dos endpoints do donor.`),
@@ -2992,7 +2991,7 @@ async function main() {
       series: predecessors.map((p, i) => ({label: p.world, cls: i ? 'c-bid' : 'c-ask', points: hist(p.world).map(x => [x.date, x[side]])}))}));
   }, ['side'], ['card-precursor-test', 'card-age-test', 'lifecycle-findings', 'card-precursor-scenario', 'card-age-scenario', 'card-age-curve', 'card-predecessor']);
 
-  // 09 · world blocks. The header carries the world picker and the link to the other edition.
+  // 09: world blocks. The header carries the world picker and the link to the other edition.
   document.querySelector('.site nav').innerHTML = `<a class="icon-button" href="${t('pt-br.html', './')}" hreflang="${t('pt-BR', 'en')}" lang="${t('pt-BR', 'en')}" aria-label="${t('Português', 'English')}" title="${t('Português', 'English')}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18M4.6 7.5h14.8M4.6 16.5h14.8"/></svg></a>${worldControl({all: true})}`;
   on(() => {
     // Any world of the universe can be selected; one the research does not model keeps its captures and says why the rest is absent.
@@ -3008,11 +3007,11 @@ async function main() {
       return {...x, sellDelta: d.sell, buyDelta: d.buy};
     });
     document.getElementById('card-world-daily').innerHTML = card({evidence: 'observed', title: `${w}: Recent Captures`, sub: t(`${priceUnit}; Amount in TC. ${u.captureCount} Market readings`, `${priceUnit}; Amount em TC. ${u.captureCount} leituras do Market`), body: table({columns: [
-      {key: 'capturedAt', label: 'Captura', render: v => `${cellDate(v)} · ${v.slice(11, 16)}`},
+      {key: 'capturedAt', label: 'Captura', render: v => `${cellDate(v)}; ${v.slice(11, 16)}`},
       num('sell', 'Sell Offers'), {key: 'sellDelta', label: 'Variação', num: true, render: change},
       num('buy', 'Buy Offers'), {key: 'buyDelta', label: 'Variação', num: true, render: change},
-      num('sellTopAmount', 'Sell Offers · melhor Amount'), num('buyTopAmount', 'Buy Offers · melhor Amount'),
-      num('sellVolume', 'Sell Offers · Amount total'), num('buyVolume', 'Buy Offers · Amount total')
+      num('sellTopAmount', 'Sell Offers; melhor Amount'), num('buyTopAmount', 'Buy Offers; melhor Amount'),
+      num('sellVolume', 'Sell Offers; Amount total'), num('buyVolume', 'Buy Offers; Amount total')
     ], rows: dailyRows, caption: t('Dates without a stated time zone; changes between captures, not continuous daily changes.', 'Datas sem fuso horário informado; variações entre capturas, e não variações diárias contínuas.'), empty: t(`No recent capture for ${w}; latest API offer on ${cellDate(u.latest.capturedAt)}.`, `Sem captura recente de ${w}; última offer da API em ${cellDate(u.latest.capturedAt)}.`)})});
     if (!sel) { document.getElementById('selected-context').innerHTML = `<p>${outsideResearch(w)}</p>`; return; }
     const h = hist(w), wf = R.worldForecast.filter(x => x.world === w);
@@ -3029,7 +3028,7 @@ async function main() {
       vlines: sel.mergerDate ? [{x: sel.mergerDate, label: `merger: ${mergerDateLabel(mergerFor(w))}`}] : [],
       markers: [{x: sel.date, y: sel[s], label: `Anchor ${fmt(sel[s])}`, key: t(`Anchor of ${shortDate(sel.date)}`, `Anchor de ${shortDate(sel.date)}`), kind: 'capture'}]}));
     const rows = MILESTONES.map(d => { const a = wf.find(x => x.side === 'ask' && x.date === d), b = wf.find(x => x.side === 'bid' && x.date === d); return {date: d, ask: a?.base, bid: b?.base, low: a?.low, high: a?.high, status: a?.status}; });
-    document.getElementById('card-scenario-table').innerHTML = card({evidence: 'model', title: `${w}: Cycle Milestones`, sub: priceUnit, body: table({columns: [{key: 'date', label: 'Marco', render: monthYearEn}, num('bid', 'Buy Offers · central'), num('ask', 'Sell Offers · central'), num('low', 'Sell Offers · baixa'), num('high', 'Sell Offers · alta'), {key: 'status', label: 'Condição'}], rows})});
+    document.getElementById('card-scenario-table').innerHTML = card({evidence: 'model', title: `${w}: Cycle Milestones`, sub: priceUnit, body: table({columns: [{key: 'date', label: 'Marco', render: monthYearEn}, num('bid', 'Buy Offers; central'), num('ask', 'Sell Offers; central'), num('low', 'Sell Offers; baixa'), num('high', 'Sell Offers; alta'), {key: 'status', label: 'Condição'}], rows})});
     // Every special case is read from the world's own data; several can apply at once.
     const cwAsk = cwOf(w, 'ask');
     const firstNull = wf.find(x => x.base == null)?.date;
@@ -3051,7 +3050,7 @@ async function main() {
     document.querySelectorAll('.dossier').forEach(d => d.classList.toggle('on', d.dataset.world === w));
   }, ['side', 'world'], ['card-world-history', 'card-scenario-table', 'card-world-daily', 'selected-context', 'card-world-projection']);
 
-  // 09 · relative value
+  // 09: relative value
   on(() => {
     document.getElementById('relative-prose').innerHTML = t(`
       <p>The comparison across groups shows ${yA.recentMedianPct - nextGroup >= 5 ? 'a clearly higher premium in one group' : 'recent premiums close to one another'}: ${list(yA.worlds)}, ${groupWorlds(yA.worlds.length)}, recorded median premiums of ${sgn(yA.recentMedianPct)} in Sell Offers and ${sgn(yB.recentMedianPct)} in Buy Offers over the last 26 weeks, while the other groups ranged from ${sgn(Math.min(...others.map(g => g.recentMedianPct)))} to ${sgn(nextGroup)} in Sell Offers. A sample of ${nw(yA.worlds.length)} ${yA.worlds.length === 1 ? 'world' : 'worlds'} cannot isolate causes, because PvP type, BattlEye, region and age are confounded.${y24v.length && Math.max(...y24v) > yA.recentMedianPct ? ` In the quarters of 2024, the premium was higher, between ${sgn(Math.min(...y24v), 0)} and ${sgn(Math.max(...y24v), 0)} over ${bench}, when only ${list(y24m)} had history in the group` : ''}${g25.length ? `; in the second quarter of 2025, ${list(g25.map(x => x.world))}, ${g25Phrase}, stood about ${sgn(green25.medianPremiumPct, 0)} above it, against ${list(g25.map(x => sgn(x.recentPremiumPct)))} over the last 26 weeks` : ''}.</p>
@@ -3088,7 +3087,7 @@ async function main() {
       rows: quarters.map(q => ({q: q.replace(/^(\d{4})-T(\d)$/, 'Q$2 $1'), ...Object.fromEntries(G.map((g, i) => ['g' + i, C.crossWorld.groupsByQuarter.find(r => r.side === s && r.group === g && r.quarter === q)]))}))})});
   }, ['side'], ['card-groups', 'card-premium-table', 'card-groups-quarter']);
 
-  // 09 · dossiers
+  // 09: dossiers
   const NOTES = {
     [bench]: t(`The length of the series allows temporal models to be compared, although ${bench} serves as the benchmark and is not an index of the whole Market.`, `A extensão da série permite comparar modelos temporais, embora ${bench} funcione como benchmark e não seja um índice de todo o Market.`),
     [target]: t(`Because the short history and the shifts in relative premium limit the transfer from ${bench}, the comparison with ${donor} by server age explores an alternative without identifying a causal effect of maturation.`, `Como o histórico curto e as mudanças de relative premium limitam a transferência de ${bench}, a comparação com ${donor} por server age explora uma alternativa sem identificar um efeito causal de maturação.`),
@@ -3138,7 +3137,7 @@ async function main() {
     document.querySelectorAll('.dossier').forEach(d => { d.hidden = d.dataset.world !== state.world; });
   }, ['world'], ['individual-title', 'dossiers']);
 
-  // 03 · seasonality
+  // 03: seasonality
   on(() => {
     chart('card-season', host => {
       host.innerHTML = card({evidence: 'observed', title: `${bench}: Median Monthly Δ`, sub: t(`First to last daily offer of the month, %; at least 10 days; ${monthYear(R.asOf)} still partial`, `Da primeira à última offer diária do mês, %; mínimo de 10 dias; ${monthYear(R.asOf)} ainda parcial`), body: '<div class="chart" id="ch-season"></div>',
@@ -3149,10 +3148,10 @@ async function main() {
     });
   }, [], ['card-season']);
 
-  // 08 · round trips, maker, spreads; 10 · weekday. The round-trip cards show the benchmark until a world is selected.
+  // 08: round trips, maker, spreads; 10: weekday. The round-trip cards show the benchmark until a world is selected.
   on(() => {
     const w = W[state.world] ? state.world : bench, rows = R.roundtrips.filter(x => x.world === w && [9, 11].includes(x.sellMonth));
-    document.getElementById('card-roundtrip').innerHTML = card({evidence: 'observed', title: `${w}: Sell in September/November, Repurchase in May to July`, sub: t('Historical round trips when taking existing offers', 'Round trips históricos como taker, aceitando offers existentes'), controls: worldControl({value: w}), body: table({columns: [{key: 'cycle', label: 'Ciclo'}, num('sellMonth', 'Mês de venda'), num('bidMedian', 'Buy Offers · venda'), num('askRebuyMedian', 'Sell Offers · recompra'), signed('tcGainPct', 'Variação TC'), num('sellN', 'Dias venda'), num('buyN', 'Dias recompra')], rows, empty: t(`No cycle of ${w} meets the minimum of three days with offers in each window.`, `Nenhum cycle de ${w} atinge o mínimo de três dias com offers em cada janela.`)})});
+    document.getElementById('card-roundtrip').innerHTML = card({evidence: 'observed', title: `${w}: Sell in September/November, Repurchase in May to July`, sub: t('Historical round trips when taking existing offers', 'Round trips históricos como taker, aceitando offers existentes'), controls: worldControl({value: w}), body: table({columns: [{key: 'cycle', label: 'Ciclo'}, num('sellMonth', 'Mês de venda'), num('bidMedian', 'Buy Offers; venda'), num('askRebuyMedian', 'Sell Offers; recompra'), signed('tcGainPct', 'Variação TC'), num('sellN', 'Dias venda'), num('buyN', 'Dias recompra')], rows, empty: t(`No cycle of ${w} meets the minimum of three days with offers in each window.`, `Nenhum cycle de ${w} atinge o mínimo de três dias com offers em cada janela.`)})});
     const mk = C.roundtripMaker.filter(x => x.world === w);
     document.getElementById('card-maker').innerHTML = card({evidence: 'observed', title: `${w}: Taking and Making Offers`, sub: t('Hypothetical gain in TC; Create Offer pays 2% on each placement', 'Gain hipotético em TC; Create Offer paga 2% em cada publicação'), controls: worldControl({value: w}), body: table({columns: [{key: 'cycle', label: 'Ciclo'}, num('sellMonth', 'Mês de venda'), signed('acceptPct', 'Aceitando'), signed('makerGrossPct', 'Criando, bruto'), signed('makerNetPct', 'Criando, após taxas')], rows: mk, empty: t(`No cycle of ${w} meets the minimum of three days with offers in each window.`, `Nenhum cycle de ${w} atinge o mínimo de três dias com offers em cada janela.`)})});
   }, ['world'], ['card-roundtrip', 'card-maker']);
@@ -3173,7 +3172,7 @@ async function main() {
       series: [[bench, bench, 'c-ink'], [OTHERS, t('Other worlds', 'Demais worlds'), 'c-muted']].map(([scope, name, c]) => { const r = get(scope); return {label: t(`${name}, mean`, `${name}, mean`), cls: c, values: r.map(x => x?.devPct), lo: r.map(x => x?.ciLowPct), hi: r.map(x => x?.ciHighPct)}; })}));
   }, ['side'], ['card-weekday']);
 
-  // 04 · volatility and persistence; 09 · relative volatility
+  // 04: volatility and persistence; 09: relative volatility
   on(() => {
     document.getElementById('card-vol-year').innerHTML = card({evidence: 'observed', title: `${bench}: Annual Volatility`, sub: t('One point per week; consecutive days for the daily change; %', 'Um ponto por semana; dias consecutivos para a variação diária; %'), body: table({columns: [{key: 'year', label: 'Ano', render: v => String(v)}, {key: 'side', label: 'Lado do Market', render: v => SIDES[v]}, num('weeklyStdPct', 'Desvio-padrão semanal', 2), num('weeklyN', 'Semanas'), num('dailyMedianAbsPct', 'Variação diária mediana', 2), num('dailyN', 'Dias')], rows: C.volatility.byYear, caption: t(`${R.asOf.slice(0, 4)} covers January to ${MONTHS_LONG[isoMonth(R.asOf)]}.`, `${R.asOf.slice(0, 4)} até ${MONTHS_LONG[isoMonth(R.asOf)]}.`)})});
   }, [], ['card-vol-year']);
@@ -3191,7 +3190,7 @@ async function main() {
       rows: SIDE_KEYS.flatMap(s => C.momentum[s].conditional.map(c => ({...c, side: s}))), caption: t('Windows overlap; p uses a Mann-Whitney test on seasonally adjusted changes, comparing episodes at least 21 days apart with all other weeks. "Seasonally adjusted" subtracts the change expected from the fitted annual cycle.', 'As janelas se sobrepõem; p usa um teste de Mann-Whitney sobre variações sem seasonality, comparando episódios separados por pelo menos 21 dias às demais semanas. "Seasonally adjusted" subtrai a variação esperada pelo cycle anual ajustado.')})});
   }, [], ['card-cond']);
 
-  // 10 · offers and daily averages for the selected world
+  // 10: offers and daily averages for the selected world
   on(() => {
     document.getElementById('card-trade').hidden = !W[state.world];
     if (!W[state.world]) return;
@@ -3199,14 +3198,14 @@ async function main() {
     document.getElementById('card-trade').innerHTML = card({evidence: 'observed', title: `${w}: Daily Average vs Offer Gap`, controls: worldControl(), body: table({columns: [{key: 'side', label: 'Lado do Market', render: v => SIDES[v]}, num('n', 'Dias pareados'), percent('medianGapPct', 'Mediana', 2), percent('p10', 'P10', 2), percent('p90', 'P90', 2), num('within2Pct', 'Dias dentro de ±2%', 1), percent('sameDayMedianGapPct', 'Mediana sem deslocar dia', 2), {key: 'last', label: 'Último dia', render: cellDate}], rows: R.tradeComparison.filter(x => x.world === w)})});
   }, ['world'], ['card-trade']);
 
-  // 10 · events by side
+  // 10: events by side
   on(() => {
     const s = state.side;
     document.getElementById('card-events').innerHTML = card({evidence: 'observed', title: sided(`${bench}: Selected Events`, s), controls: sideControl(), body: table({columns: [{key: 'event', label: 'Evento'}, num('n', 'Ocorrências'), signed('returnPct', 'Variação', 2), signed('abnormalPct', 'Excesso vs placebo', 2), num('q', 'q ajustado', 3)],
       rows: R.eventStudy.filter(x => x.side === s && ['XP/Skill Event', 'Rapid Respawn', 'Loot Event', 'Halloween Event', 'Lightbearer', 'Orcsoberfest', 'Colours of Magic', 'Annual Autumn Vintage', 'Winterlight Solstice'].includes(x.event))})});
   }, ['side'], ['card-events']);
 
-  // 03 · offer inflation. Its world cards follow the shared selection over the whole universe, worlds
+  // 03: offer inflation. Its world cards follow the shared selection over the whole universe, worlds
   // without frozen history included; with none selected they show the benchmark the section is anchored on.
   state.inflationMonth = I.comparisonMonth;
   const inflationMonths = [...new Set(I.monthly.map(r => r.date))].sort().reverse();
@@ -3266,7 +3265,7 @@ async function main() {
       {key: 'accelerationPp', label: '12M Δ', num: true, render: v => pp(v, 2)}, num('days', 'Days'), percent('coveragePct', 'Coverage', 1),
       {key: 'first', label: 'First Quote', render: cellDate}, {key: 'last', label: 'Last Quote', render: cellDate}, {key: 'status', label: 'Status', render: (_, r) => inflationStatus(r)}].map(inflationColumn), rows,
       caption: t('* The rate compares limited samples when a reference period falls short of the minimum coverage. Months in progress have no rates. 12M Δ pp: the change, in pp, in 12-month inflation from the previous month.', '* A rate compara samples limitadas quando um período de referência não atinge a coverage mínima. Meses em andamento não têm rates. 12M Δ pp: a variação, em pp, da inflation em 12 meses em relação ao mês anterior.')})});
-    document.getElementById('card-inflation-annual').innerHTML = card({evidence: 'observed', title: `${w}: Annual Comparison`, sub: `${inflationYears.join(', ')} · ${list(Object.values(SIDES))}`, body: table({columns: [
+    document.getElementById('card-inflation-annual').innerHTML = card({evidence: 'observed', title: `${w}: Annual Comparison`, sub: `${inflationYears.join(', ')}; ${list(Object.values(SIDES))}`, body: table({columns: [
       {key: 'year', label: 'Year', render: String}, {key: 'side', label: 'Market Side', render: s => SIDES[s]}, {key: 'period', label: 'Period', render: (_, r) => inflationPeriod(r)},
       {key: 'months', label: 'Months', render: (v, r) => `${v}/${r.referenceMonths}`}, num('meanPrice', 'Mean gp/TC', 0), signed('meanYoYPct', 'Mean vs Prior Year'), num('endPrice', 'End gp/TC', 0),
       signed('endVsDecemberPct', 'End vs Prior Dec'), signed('janToEndPct', 'End vs Jan')].map(inflationColumn), rows: I.annual.filter(r => r.world === w).map(inflationObserved),

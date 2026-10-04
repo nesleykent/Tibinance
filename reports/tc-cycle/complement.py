@@ -417,7 +417,7 @@ for w in OTHERS:
 
 
 def group_of(r):
-    if r['type'] == 'Optional PvP': return f"Optional PvP · BattlEye {r['battleye']}"
+    if r['type'] == 'Optional PvP': return f"Optional PvP; BattlEye {r['battleye']}"
     if r['type'] == 'Open PvP': return 'Open PvP'
     return None
 

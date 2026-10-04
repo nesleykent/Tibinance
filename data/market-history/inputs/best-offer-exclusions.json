@@ -1,0 +1,45 @@
+{
+ "note": "Reviewed source-data exceptions. Each listed TibiaMarket.top snapshot keeps its frozen raw row and its other usable data (30-day and daily statistics); only its best-offer pair is withheld from publication. This is not a rule: every entry was reviewed individually on 2026-10-04.",
+ "exclusions": [
+  {
+   "world": "Antica",
+   "time": 1681190366.5804427,
+   "capturedAtUtc": "2023-04-11T05:19:26.580Z",
+   "sell": 36898,
+   "buy": 1,
+   "reason": "The source marks this snapshot is_full_data: false. Its best Buy Offer of 1 sits far below a best Sell Offer of 36,898, and the snapshot carries no offer counts or 30-day figures; the snapshots before and after show best Buy Offers of 36,302 and 36,424. Taken as an incomplete snapshot, not a real book."
+  },
+  {
+   "world": "Antica",
+   "time": 1700190105.9078124,
+   "capturedAtUtc": "2023-11-17T03:01:45.908Z",
+   "sell": 39650,
+   "buy": 6403,
+   "reason": "The source marks this snapshot is_full_data: false. Its best Buy Offer of 6,403 sits far below a best Sell Offer of 39,650 while the same snapshot lists 31 Buy Offers and a 30-day average Buy trade of 39,240; the snapshots before and after show best Buy Offers of 38,802 and 39,303. Taken as an incomplete snapshot, not a real book."
+  },
+  {
+   "world": "Antica",
+   "time": 1700363788.8007727,
+   "capturedAtUtc": "2023-11-19T03:16:28.801Z",
+   "sell": 39285,
+   "buy": 1,
+   "reason": "The source marks this snapshot is_full_data: false. Its best Buy Offer of 1 sits far below a best Sell Offer of 39,285 while the same snapshot lists 32 Buy Offers and a 30-day average Buy trade of 39,262; the snapshots before and after show best Buy Offers of 38,722 and 38,723. Taken as an incomplete snapshot, not a real book."
+  },
+  {
+   "world": "Antica",
+   "time": 1700535704.8006012,
+   "capturedAtUtc": "2023-11-21T03:01:44.801Z",
+   "sell": 39387,
+   "buy": 2000,
+   "reason": "The source marks this snapshot is_full_data: false. Its best Buy Offer of 2,000 sits far below a best Sell Offer of 39,387 while the same snapshot lists 32 Buy Offers and a 30-day average Buy trade of 39,243; the snapshots before and after show best Buy Offers of 39,046 and 38,805. Taken as an incomplete snapshot, not a real book."
+  },
+  {
+   "world": "Antica",
+   "time": 1703994939.1146927,
+   "capturedAtUtc": "2023-12-31T03:55:39.115Z",
+   "sell": 36250,
+   "buy": 1,
+   "reason": "The source marks this snapshot is_full_data: false. Its best Buy Offer of 1 sits far below a best Sell Offer of 36,250 while the same snapshot lists 32 Buy Offers and a 30-day average Buy trade of 36,798; the snapshots before and after show best Buy Offers of 35,201 and 35,962. Taken as an incomplete snapshot, not a real book."
+  }
+ ]
+}

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tibinance Markets</title>
+<meta name="description" content="Tibia Coin best offers and daily trading history for every tracked world.">
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/markets.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪙</text></svg>">
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <a class="wordmark" href="./">Tibinance</a>
+    <nav aria-label="Site">
+      <a class="nav-link" href="markets.html" aria-current="page">Markets</a>
+      <a class="nav-link" href="reports/tc-cycle/">Research</a>
+    </nav>
+  </div>
+</header>
+
+<main id="market" class="terminal" aria-busy="true">
+  <h1 class="sr-only">Tibia Coin Markets</h1>
+
+  <section id="chartPanel" class="chart-panel" aria-labelledby="world">
+    <div class="toolbar toolbar-top">
+      <div class="symbol">
+        <h2 id="world">Markets</h2>
+        <span id="worldMeta" class="symbol-meta"></span>
+      </div>
+      <div class="symbol-quote" aria-live="polite">
+        <span id="lastPrice" class="symbol-last"></span>
+        <span id="lastChange" class="symbol-change"></span>
+      </div>
+      <div id="side" class="segmented" role="radiogroup" aria-label="Market side">
+        <button type="button" data-side="sell" role="radio" aria-checked="true">Sell</button>
+        <button type="button" data-side="buy" role="radio" aria-checked="false">Buy</button>
+      </div>
+      <div class="toolbar-end">
+        <button type="button" id="helpButton" class="tool" popovertarget="help" aria-label="How to read this chart" title="How to read this chart">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5"/><path d="M10 9v5M10 6.2v.1"/></svg>
+        </button>
+        <button type="button" id="expand" class="tool" aria-pressed="false" aria-label="Expand chart" title="Expand chart">
+          <svg class="icon-expand" viewBox="0 0 20 20" aria-hidden="true"><path d="M3.5 8V3.5H8M12 3.5h4.5V8M16.5 12v4.5H12M8 16.5H3.5V12"/></svg>
+          <svg class="icon-collapse" viewBox="0 0 20 20" aria-hidden="true"><path d="M8 3.5V8H3.5M16.5 8H12V3.5M12 16.5V12h4.5M3.5 12H8v4.5"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="chart-area">
+      <div id="chart" class="chart" role="img"></div>
+      <div id="legend" class="legend" aria-hidden="true"></div>
+      <div id="volumeLegend" class="legend legend-volume" aria-hidden="true"></div>
+      <p id="status" class="chart-status">Loading…</p>
+    </div>
+
+    <div class="toolbar toolbar-bottom">
+      <div id="range" class="ranges" role="radiogroup" aria-label="Range">
+        <button type="button" data-range="1M" role="radio" aria-checked="false">1M</button>
+        <button type="button" data-range="3M" role="radio" aria-checked="false">3M</button>
+        <button type="button" data-range="6M" role="radio" aria-checked="false">6M</button>
+        <button type="button" data-range="YTD" role="radio" aria-checked="false">YTD</button>
+        <button type="button" data-range="1Y" role="radio" aria-checked="true">1Y</button>
+        <button type="button" data-range="All" role="radio" aria-checked="false">All</button>
+      </div>
+    </div>
+
+    <div id="help" class="help" popover>
+      <h3>Reading the chart</h3>
+      <ul class="help-keys">
+        <li><i class="key key-dot" aria-hidden="true"></i>Observed best offer: the server day's last observation.</li>
+        <li><i class="key key-solid" aria-hidden="true"></i>Solid line: observations on consecutive server days.</li>
+        <li><i class="key key-dotted" aria-hidden="true"></i>Dotted line: the days in between were not observed. Nothing is filled in.</li>
+        <li><i class="key key-average" aria-hidden="true"></i>Daily average: the average price of the trades that filled this side's offers.</li>
+        <li><i class="key key-volume" aria-hidden="true"></i>Volume: the coins those trades moved each day.</li>
+      </ul>
+      <p>Server days run from 10:00 to 10:00 CET/CEST. Change compares the latest best offer with the last one observed on or before the start of the range.</p>
+      <p><span id="helpThrough"></span> <span id="helpWorld"></span></p>
+      <p>Search reaches retired worlds as well. A retired world keeps its own history, separate from the world it merged into, and its ranges end on its last observed day.</p>
+      <p class="help-fine">Not affiliated with CipSoft. Tibia is a trademark of CipSoft GmbH.</p>
+    </div>
+  </section>
+
+  <aside class="watchlist" aria-label="Worlds">
+    <div class="watch-head">
+      <span class="watch-title">Worlds <span id="worldCount" class="watch-count"></span></span>
+      <input type="search" id="filter" class="filter" placeholder="Filter World…" aria-label="Filter worlds">
+    </div>
+    <div class="watch-scroll">
+      <table class="watch">
+        <thead>
+          <tr>
+            <th aria-sort="ascending"><button type="button" data-sort="world">World</button></th>
+            <th class="num" aria-sort="none"><button type="button" data-sort="last">Last</button></th>
+            <th class="num" aria-sort="none"><button type="button" data-sort="delta" title="Change over the selected range">Chg</button></th>
+            <th class="num" aria-sort="none"><button type="button" data-sort="ratio" title="Change over the selected range, in percent">Chg%</button></th>
+          </tr>
+        </thead>
+        <tbody id="worlds"></tbody>
+      </table>
+      <p id="noWorlds" class="empty" hidden>No world matches.</p>
+    </div>
+    <section class="details" aria-labelledby="detailsWorld">
+      <h3 id="detailsWorld" class="details-title"></h3>
+      <p id="detailStatus" class="details-status" hidden></p>
+      <dl class="details-grid">
+        <div><dt>Best Sell Offer</dt><dd id="detailSell"></dd></div>
+        <div><dt>Best Buy Offer</dt><dd id="detailBuy"></dd></div>
+        <div><dt>Spread</dt><dd id="detailSpread"></dd></div>
+        <div><dt id="detailChangeLabel">Change</dt><dd id="detailChange"></dd></div>
+        <div><dt>Observed</dt><dd id="detailObserved"></dd></div>
+        <div><dt>Daily figures</dt><dd id="detailDaily"></dd></div>
+      </dl>
+    </section>
+    <div id="watchTip" class="watch-tip" role="tooltip" hidden></div>
+  </aside>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.1/dist/lightweight-charts.standalone.production.js"
+        integrity="sha384-KkYqTZlM13Zya6fVUF3IGCBOQ1ehFeJVVgxaVvD/0MebineF9EI8Jkd3NnWNChqN" crossorigin="anonymous"></script>
+<script type="module" src="js/markets.js"></script>
+</body>
+</html>

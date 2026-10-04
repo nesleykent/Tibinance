@@ -8686,7 +8686,7 @@
    },
    {
     "side": "ask",
-    "group": "Optional PvP · BattlEye Green",
+    "group": "Optional PvP; BattlEye Green",
     "quarter": "2025-T1",
     "worlds": 3,
     "members": [
@@ -8698,7 +8698,7 @@
    },
    {
     "side": "ask",
-    "group": "Optional PvP · BattlEye Green",
+    "group": "Optional PvP; BattlEye Green",
     "quarter": "2025-T2",
     "worlds": 3,
     "members": [
@@ -8710,7 +8710,7 @@
    },
    {
     "side": "ask",
-    "group": "Optional PvP · BattlEye Green",
+    "group": "Optional PvP; BattlEye Green",
     "quarter": "2025-T3",
     "worlds": 7,
     "members": [
@@ -8726,7 +8726,7 @@
    },
    {
     "side": "ask",
-    "group": "Optional PvP · BattlEye Green",
+    "group": "Optional PvP; BattlEye Green",
     "quarter": "2025-T4",
     "worlds": 8,
     "members": [
@@ -8743,7 +8743,7 @@
    },
    {
     "side": "ask",
-    "group": "Optional PvP · BattlEye Green",
+    "group": "Optional PvP; BattlEye Green",
     "quarter": "2026-T1",
     "worlds": 8,
     "members": [
@@ -8760,7 +8760,7 @@
    },
    {
     "side": "ask",
-    "group": "Optional PvP · BattlEye Green",
+    "group": "Optional PvP; BattlEye Green",
     "quarter": "2026-T2",
     "worlds": 8,
     "members": [
@@ -8777,7 +8777,7 @@
    },
    {
     "side": "ask",
-    "group": "Optional PvP · BattlEye Green",
+    "group": "Optional PvP; BattlEye Green",
     "quarter": "2026-T3",
     "worlds": 8,
     "members": [
@@ -8794,7 +8794,7 @@
    },
    {
     "side": "ask",
-    "group": "Optional PvP · BattlEye Yellow",
+    "group": "Optional PvP; BattlEye Yellow",
     "quarter": "2024-T1",
     "worlds": 3,
     "members": [
@@ -8806,7 +8806,7 @@
    },
    {
     "side": "ask",
-    "group": "Optional PvP · BattlEye Yellow",
+    "group": "Optional PvP; BattlEye Yellow",
     "quarter": "2024-T2",
     "worlds": 4,
     "members": [
@@ -8819,7 +8819,7 @@
    },
    {
     "side": "ask",
-    "group": "Optional PvP · BattlEye Yellow",
+    "group": "Optional PvP; BattlEye Yellow",
     "quarter": "2024-T3",
     "worlds": 4,
     "members": [
@@ -8832,7 +8832,7 @@
    },
    {
     "side": "ask",
-    "group": "Optional PvP · BattlEye Yellow",
+    "group": "Optional PvP; BattlEye Yellow",
     "quarter": "2024-T4",
     "worlds": 5,
     "members": [
@@ -8846,7 +8846,7 @@
    },
    {
     "side": "ask",
-    "group": "Optional PvP · BattlEye Yellow",
+    "group": "Optional PvP; BattlEye Yellow",
     "quarter": "2025-T1",
     "worlds": 7,
     "members": [
@@ -8862,7 +8862,7 @@
    },
    {
     "side": "ask",
-    "group": "Optional PvP · BattlEye Yellow",
+    "group": "Optional PvP; BattlEye Yellow",
     "quarter": "2025-T2",
     "worlds": 7,
     "members": [
@@ -8878,7 +8878,7 @@
    },
    {
     "side": "ask",
-    "group": "Optional PvP · BattlEye Yellow",
+    "group": "Optional PvP; BattlEye Yellow",
     "quarter": "2025-T3",
     "worlds": 7,
     "members": [
@@ -8894,7 +8894,7 @@
    },
    {
     "side": "ask",
-    "group": "Optional PvP · BattlEye Yellow",
+    "group": "Optional PvP; BattlEye Yellow",
     "quarter": "2025-T4",
     "worlds": 11,
     "members": [
@@ -8914,7 +8914,7 @@
    },
    {
     "side": "ask",
-    "group": "Optional PvP · BattlEye Yellow",
+    "group": "Optional PvP; BattlEye Yellow",
     "quarter": "2026-T1",
     "worlds": 11,
     "members": [
@@ -8934,7 +8934,7 @@
    },
    {
     "side": "ask",
-    "group": "Optional PvP · BattlEye Yellow",
+    "group": "Optional PvP; BattlEye Yellow",
     "quarter": "2026-T2",
     "worlds": 11,
     "members": [
@@ -8954,7 +8954,7 @@
    },
    {
     "side": "ask",
-    "group": "Optional PvP · BattlEye Yellow",
+    "group": "Optional PvP; BattlEye Yellow",
     "quarter": "2026-T3",
     "worlds": 11,
     "members": [
@@ -9183,7 +9183,7 @@
    },
    {
     "side": "bid",
-    "group": "Optional PvP · BattlEye Green",
+    "group": "Optional PvP; BattlEye Green",
     "quarter": "2025-T1",
     "worlds": 3,
     "members": [
@@ -9195,7 +9195,7 @@
    },
    {
     "side": "bid",
-    "group": "Optional PvP · BattlEye Green",
+    "group": "Optional PvP; BattlEye Green",
     "quarter": "2025-T2",
     "worlds": 3,
     "members": [
@@ -9207,7 +9207,7 @@
    },
    {
     "side": "bid",
-    "group": "Optional PvP · BattlEye Green",
+    "group": "Optional PvP; BattlEye Green",
     "quarter": "2025-T3",
     "worlds": 7,
     "members": [
@@ -9223,7 +9223,7 @@
    },
    {
     "side": "bid",
-    "group": "Optional PvP · BattlEye Green",
+    "group": "Optional PvP; BattlEye Green",
     "quarter": "2025-T4",
     "worlds": 8,
     "members": [
@@ -9240,7 +9240,7 @@
    },
    {
     "side": "bid",
-    "group": "Optional PvP · BattlEye Green",
+    "group": "Optional PvP; BattlEye Green",
     "quarter": "2026-T1",
     "worlds": 8,
     "members": [
@@ -9257,7 +9257,7 @@
    },
    {
     "side": "bid",
-    "group": "Optional PvP · BattlEye Green",
+    "group": "Optional PvP; BattlEye Green",
     "quarter": "2026-T2",
     "worlds": 8,
     "members": [
@@ -9274,7 +9274,7 @@
    },
    {
     "side": "bid",
-    "group": "Optional PvP · BattlEye Green",
+    "group": "Optional PvP; BattlEye Green",
     "quarter": "2026-T3",
     "worlds": 8,
     "members": [
@@ -9291,7 +9291,7 @@
    },
    {
     "side": "bid",
-    "group": "Optional PvP · BattlEye Yellow",
+    "group": "Optional PvP; BattlEye Yellow",
     "quarter": "2024-T1",
     "worlds": 3,
     "members": [
@@ -9303,7 +9303,7 @@
    },
    {
     "side": "bid",
-    "group": "Optional PvP · BattlEye Yellow",
+    "group": "Optional PvP; BattlEye Yellow",
     "quarter": "2024-T2",
     "worlds": 4,
     "members": [
@@ -9316,7 +9316,7 @@
    },
    {
     "side": "bid",
-    "group": "Optional PvP · BattlEye Yellow",
+    "group": "Optional PvP; BattlEye Yellow",
     "quarter": "2024-T3",
     "worlds": 4,
     "members": [
@@ -9329,7 +9329,7 @@
    },
    {
     "side": "bid",
-    "group": "Optional PvP · BattlEye Yellow",
+    "group": "Optional PvP; BattlEye Yellow",
     "quarter": "2024-T4",
     "worlds": 5,
     "members": [
@@ -9343,7 +9343,7 @@
    },
    {
     "side": "bid",
-    "group": "Optional PvP · BattlEye Yellow",
+    "group": "Optional PvP; BattlEye Yellow",
     "quarter": "2025-T1",
     "worlds": 7,
     "members": [
@@ -9359,7 +9359,7 @@
    },
    {
     "side": "bid",
-    "group": "Optional PvP · BattlEye Yellow",
+    "group": "Optional PvP; BattlEye Yellow",
     "quarter": "2025-T2",
     "worlds": 7,
     "members": [
@@ -9375,7 +9375,7 @@
    },
    {
     "side": "bid",
-    "group": "Optional PvP · BattlEye Yellow",
+    "group": "Optional PvP; BattlEye Yellow",
     "quarter": "2025-T3",
     "worlds": 7,
     "members": [
@@ -9391,7 +9391,7 @@
    },
    {
     "side": "bid",
-    "group": "Optional PvP · BattlEye Yellow",
+    "group": "Optional PvP; BattlEye Yellow",
     "quarter": "2025-T4",
     "worlds": 11,
     "members": [
@@ -9411,7 +9411,7 @@
    },
    {
     "side": "bid",
-    "group": "Optional PvP · BattlEye Yellow",
+    "group": "Optional PvP; BattlEye Yellow",
     "quarter": "2026-T1",
     "worlds": 11,
     "members": [
@@ -9431,7 +9431,7 @@
    },
    {
     "side": "bid",
-    "group": "Optional PvP · BattlEye Yellow",
+    "group": "Optional PvP; BattlEye Yellow",
     "quarter": "2026-T2",
     "worlds": 11,
     "members": [
@@ -9451,7 +9451,7 @@
    },
    {
     "side": "bid",
-    "group": "Optional PvP · BattlEye Yellow",
+    "group": "Optional PvP; BattlEye Yellow",
     "quarter": "2026-T3",
     "worlds": 11,
     "members": [
@@ -9531,7 +9531,7 @@
     "currentMedianPct": -0.03948300454668652
    },
    {
-    "group": "Optional PvP · BattlEye Green",
+    "group": "Optional PvP; BattlEye Green",
     "side": "ask",
     "worlds": [
      "Collabra",
@@ -9548,7 +9548,7 @@
     "currentMedianPct": 1.7741232597077938
    },
    {
-    "group": "Optional PvP · BattlEye Green",
+    "group": "Optional PvP; BattlEye Green",
     "side": "bid",
     "worlds": [
      "Collabra",
@@ -9565,7 +9565,7 @@
     "currentMedianPct": -0.7767061659221863
    },
    {
-    "group": "Optional PvP · BattlEye Yellow",
+    "group": "Optional PvP; BattlEye Yellow",
     "side": "ask",
     "worlds": [
      "Astera",
@@ -9585,7 +9585,7 @@
     "currentMedianPct": 7.664137709480068
    },
    {
-    "group": "Optional PvP · BattlEye Yellow",
+    "group": "Optional PvP; BattlEye Yellow",
     "side": "bid",
     "worlds": [
      "Astera",

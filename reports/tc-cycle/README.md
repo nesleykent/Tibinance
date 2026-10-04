@@ -1,6 +1,6 @@
 # Tibia Coins: Price Dynamics, Predictability and Execution
 
-**Relatório publicado:** [English](https://nesleykent.github.io/Tibinance/reports/tc-cycle/) · [Português (Brasil)](https://nesleykent.github.io/Tibinance/reports/tc-cycle/pt-br.html)
+**Relatório publicado:** [English](https://nesleykent.github.io/Tibinance/reports/tc-cycle/), [Português (Brasil)](https://nesleykent.github.io/Tibinance/reports/tc-cycle/pt-br.html)
 
 Rebuild de **02/10/2026**: **40 worlds, 390 capturas** (388 Offers e 2 Statistics), após revisão com Apple Vision. A pesquisa usa 386 capturas de Offers que passam pelo filtro de preços existente, com corte em **02/10/2026**; os dois snapshots de Statistics permanecem separados das séries de quotes. Astera integra todas as análises para as quais possui cobertura. Jacabra e Obscubra são séries separadas de precursores de Terribra. Os modelos usam melhores Piece Prices de Sell Offers e Buy Offers, nunca preços supostamente executados.
 

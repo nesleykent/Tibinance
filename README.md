@@ -15,6 +15,105 @@ No backend, no build step, no API key, no cost.
 
 The analysis uses [TibiaMarket’s public API](https://api.tibiamarket.top/docs) and the supplied Market captures; the page reads every count and date from its data files. Daily averages are compared separately and never substituted for Sell Offers, Buy Offers or verified transaction prices. Forecast ranges and simulated probabilities are conditional on the model and the historical sample, with backtest limits stated in the report. [Read the methodology, source data and reproduction guide](reports/tc-cycle/README.md).
 
+## Markets
+
+[Markets](markets.html) is a market terminal for the Tibia Coin history of every
+tracked world. The chart fills the viewport under the header: Sell / Buy, help and
+an expand (full screen) control sit in its top toolbar, the 1M / 3M / 6M / YTD /
+1Y / All ranges in its bottom toolbar. Legends on the chart follow the crosshair
+(server day, best offer with its change from the previous observation, daily
+average, volume), and the latest best offer is marked on the price scale. The
+side panel holds a dense, separately scrolling watchlist (latest best offer and
+its absolute and percentage change over the selected range) and the selected
+world's details. Selecting a world updates the chart and the address
+(`markets.html?world=Gentebra&side=sell&range=1Y`), so a view can be linked.
+The page presents one market history; it does not label where each value came from.
+
+The watchlist lists every current Tibia world; a world without market data yet
+shows N/A until captures provide it. Retired worlds with market history are kept
+for historical analysis: a search reaches them, they are labelled Retired
+wherever they appear, their history stays separate from the world they merged
+into, and their ranges end on their last observed day.
+
+The price pane shows two measures and never substitutes one for the other:
+
+- **Best offers** (dots): the best Sell or Buy Offer, one point per server day
+  (the day's last observation). A solid line joins consecutive server days; a
+  dotted line joins two real observations across server days that were not
+  observed. Nothing is added inside a gap, including the September 2026 gap.
+- **Daily average** (grey): the average price of the trades that filled that
+  side's offers during a server day, joined by the same solid / dotted rule.
+
+The volume pane shows the coins traded per server day on that side. Daily
+figures end where their history ends (for most worlds in early to mid September
+2026); they are never derived from 30-day Statistics. Changes compare the latest best offer with
+the last one observed on or before the start of the range.
+
+### Market history dataset
+
+The page reads only `data/market-history/tibia-coin/`, generated from frozen
+inputs. It is separate from `data/observations.json`; the Database page and the
+research do not read it.
+
+- `index.json`: input files with their SHA-256, conversion counts, and one
+  summary per world: status (`active` or `retired`, with `offline` and
+  `mergedInto`; a successor lists `formedFrom`), type, BattlEye, location, and
+  its complete daily best-offer closes for the watchlist.
+- `worlds/<world>.json`: `observations` (`capturedAtUtc`, `serverDay`, `sell`,
+  `buy`, the captured volumes and gold figures where they exist, and
+  `statistics30d`) and `dailyStatistics` (per server day and side:
+  `transactions` in 25-TC lots, `highestPrice`, `averagePrice`, `lowestPrice`,
+  `tcVolume`).
+
+TibiaMarket.top `item_history` snapshots are read from the research's frozen
+copies (`reports/tc-cycle/inputs/api/`, never changed here) and from the
+dataset's own frozen inputs in `data/market-history/inputs/`:
+
+- `tibiamarket/<world>.json.gz` and `manifest.json`: more worlds and newer copies,
+  gzipped as received, with URL, retrieval time, row count and the SHA-256 of
+  the raw JSON. Copies of one world are merged by timestamp; a row present in
+  two copies must be identical, or the build fails.
+- `worlds.json`: a dated TibiaData snapshot of the current worlds (type,
+  location, BattlEye). It is not synchronised; a later snapshot replaces it.
+- `retired-worlds.json`: offline date, merge target, type, location and BattlEye
+  of each retired world that has market history, with its TibiaWiki source.
+  A world with market data that is neither current nor listed here fails the build.
+- `best-offer-exclusions.json`: individually reviewed source snapshots whose
+  best-offer pair is not published, each identified by world and source
+  timestamp, with the prices it withholds and the reason (for example a partial
+  snapshot, `is_full_data: false`, whose best Buy Offer contradicts its own
+  listing). The raw rows stay unchanged and the snapshot's other data (30-day and
+  daily statistics) remains. It is a reviewed list, not a rule: an entry that no
+  longer matches its source row, or matches none, fails the build.
+
+They are converted to these Tibinance names: `sell_offer` / `buy_offer` become `sell` /
+`buy`, the `month_*` fields become `statistics30d`, and the `day_*` fields become
+`dailyStatistics`, all validated by the same Statistics contract as captures.
+`-1` means not collected and becomes an absent field. A snapshot's `day_*` values
+describe the completed server day before the snapshot's own: they change exactly
+at the 10:00 Europe/Berlin save, and thirty consecutive days sum to the 30-day
+transaction counts. Every best-offer pair needs positive whole prices and an
+uncrossed book (Buy below Sell). The research's 80% floor (Buy at least 80% of
+Sell) applies to screenshot captures only, where an extreme spread usually means
+a misread price; TibiaMarket history keeps genuinely wide spreads, which are real
+on thin worlds. Server days open at the 10:00 Europe/Berlin save and are labelled by its
+date. Days reported two different ways are dropped rather than resolved.
+
+Freeze more inputs, then rebuild after them or after installing a new
+`data/observations.json`, and commit the result:
+
+```bash
+node tools/fetch_market_history.mjs --worlds --refresh=Antica
+node tools/build_market_history.mjs
+```
+
+The fetch tool only adds worlds that are not frozen yet, plus those named in
+`--refresh`; `--worlds` replaces the TibiaData snapshot. It spaces requests and
+backs off on rate limits like the research's `fetch_api.py`.
+
+`--check` fails when the committed files differ from a fresh build;
+`tests/market-history.test.mjs` runs the same check.
+
 ## Building the dataset
 
 Drop screenshots, review and correct what OCR read before saving, see every
@@ -26,11 +125,11 @@ also where the privacy boundary lives; see below.
 
 Stored snapshot fields:
 
-`World · Type · BattlEye · Sell · Sell Volume · Gold Demand · Buy · Buy Volume ·
-Gold Supply · Amounts at best prices · Capture Date · Screenshot Hash`
+`World, Type, BattlEye, Sell, Sell Volume, Gold Demand, Buy, Buy Volume,
+Gold Supply, Amounts at best prices, Capture Date, Screenshot Hash`
 
 Each capture also stores its processing version and visible offer observations:
-`Side · Row Position · Amount · Piece Price · Total Price · Ends At · Offer UUID ·
+`Side, Row Position, Amount, Piece Price, Total Price, Ends At, Offer UUID,
 Matching Ambiguity`. No character or offer-owner names enter these observations.
 
 ### Gold supply and demand
@@ -349,6 +448,7 @@ python3 -m unittest discover -s tools -p 'test_*.py' -v
 python3 -m http.server 8765 --bind 127.0.0.1
 # In another terminal, with Playwright available:
 node tests/browser.mjs
+node tests/markets-browser.mjs
 ```
 
 The browser suite checks real IndexedDB, privacy whitelists, world isolation,
@@ -384,6 +484,14 @@ js/offers.js               world-specific UUID matching and offer observations
 js/filename.js              filename parsing
 js/hash.js                  SHA-256
 data/observations.json    committed baseline (starts empty)
+markets.html              Markets page shell
+css/markets.css           Markets layout
+js/markets.js             Markets chart, watchlist and address state
+js/market-series.js       chart layers, ranges and changes (no DOM)
+js/market-history.js      TibiaMarket and capture conversion to the history format
+tools/build_market_history.mjs  generates data/market-history/
+tools/fetch_market_history.mjs  freezes extra inputs in data/market-history/inputs/
+data/market-history/      generated Markets dataset and its frozen inputs
 tools/tcmarket.py         optional CLI for the same pipeline (see tools/README.cli.md)
 reports/tc-cycle/         Tibia Coins cycle report: static page + Python analysis
 ```

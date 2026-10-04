@@ -25,7 +25,7 @@ Constraint: no rendered size may change as a side effect (measure before/after a
       card-prob Seed 11; package sentence keeps seed 11; draws/per-draw/seed counts derived; six more titles use
       sided(); dashed/thin legend keys carry colour and weight; premium period uses stateControl; remaining
       equivalent columns use builders; 864e5 left over; icon stroke = --rule non-scaling; numeric day axis uses
-      xTicks; one unit rule for table headers; Chart Data export title keeps the side last; two · subtitles)
+      xTicks; one unit rule for table headers; Chart Data export title keeps the side last; two middle-dot subtitles)
 - [x] 9. README conventions note added; committed and pushed to main (see git log)
 
 ## Findings so far
@@ -61,7 +61,7 @@ main() and wiring
 - Card titles place the side five ways ("X: Side", "X (Side)", "Bench Side: X", "X, Side", "Side: X") and
   six titles carry the unit "%" that the anatomy puts in the subtitle.
 - "Event Calendar: September 2026 to September 2027" is hardcoded; the rows run from the data.
-- export.js joins the context caption with " · " while the page prints "; "; its min width 600, pad 48 and
+- export.js joins the context caption with a middle dot while the page prints "; "; its min width 600, pad 48 and
   #fff canvas are hand values.
 - aria-busy is set to false twice (once before the dynamic blocks have rendered).
 

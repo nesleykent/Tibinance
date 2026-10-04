@@ -270,7 +270,7 @@ async function renderTable() {
         <td class="world">${esc(c.world)}</td>
         ${['sell','buy'].map(side => ['transactions','tcVolume','highestPrice','averagePrice','lowestPrice']
           .map(k => `<td class="num">${num(c.statistics30d[side][k])}</td>`).join('')).join('')}
-        <td><time datetime="${esc(c.capturedAt)}" title="${esc(c.captureTimeZone ?? '')} · UTC ${esc(c.capturedAtUtc ?? 'unresolved')}">${esc(showTimestamp(c.capturedAt))}</time></td>
+        <td><time datetime="${esc(c.capturedAt)}" title="${esc(c.captureTimeZone ?? '')}; UTC ${esc(c.capturedAtUtc ?? 'unresolved')}">${esc(showTimestamp(c.capturedAt))}</time></td>
         <td class="hash" title="${esc(c.hash)}">${esc(c.hash.slice(0, 10))}</td>
         <td><button class="del" data-del="${esc(c.hash)}" title="Remove" aria-label="Remove Statistics snapshot">×</button></td>
       </tr>`).join('')}</tbody>
