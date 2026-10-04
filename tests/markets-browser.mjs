@@ -401,10 +401,10 @@ try {
     const view=await fresh.newPage();
     await view.goto(`${root}/markets.html`);
     await view.waitForFunction(()=>document.getElementById('market').getAttribute('aria-busy')==='false');
-    assert.equal(await view.getAttribute('.dock-tool','aria-expanded'),expanded,`${width}px default`);
+    assert.equal(await view.getAttribute('[data-dock-target="worldsPanel"]','aria-expanded'),expanded,`${width}px default`);
     assert.equal(await view.isVisible('#worldsPanel'),expanded==='true');
     // Opened here anyway, the panel narrows the chart like a small screen: the toolbar wraps rather than overlap.
-    if (expanded==='false') await view.click('.dock-tool');
+    if (expanded==='false') await view.click('[data-dock-target="worldsPanel"]');
     assert.ok(await view.evaluate(()=>{const parts=['#world','.symbol-quote'].map(s=>document.querySelector(s).getBoundingClientRect());
       return parts.every((a,i)=>parts.slice(i+1).every(b=>a.right<=b.left+1 || b.right<=a.left+1 || a.bottom<=b.top+1 || b.bottom<=a.top+1));}),`${width}px toolbar parts overlap`);
     await fresh.close();

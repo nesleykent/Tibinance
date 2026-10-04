@@ -28,10 +28,12 @@ body { display:flex; flex-direction:column; height:100dvh; overflow:hidden; }
 /* The toolbar follows the chart's own width (below), which the open panel narrows as much as a small screen does. */
 .chart-panel { container:chart / inline-size; display:flex; flex-direction:column; min-width:0; min-height:0; border-right:var(--rule) solid var(--line); background:var(--canvas); }
 .toolbar { flex:none; display:flex; align-items:center; gap:var(--space-2) var(--space-4); min-height:var(--toolbar-height); padding:var(--space-1) var(--space-4); font-family:var(--font-ui); }
-.toolbar-top { flex-wrap:wrap; border-bottom:var(--rule) solid var(--line); }
+/* No rule under the first row: a second rule parallel to the header's would join the row to the navigation above.
+   The row belongs to the chart beneath it, and the world's name, a step larger, opens the content. */
+.toolbar-top { flex-wrap:wrap; }
 .toolbar-bottom { min-height:calc(var(--toolbar-height) - var(--space-2)); border-top:var(--rule) solid var(--line); }
 .symbol { display:flex; align-items:baseline; gap:var(--space-2) var(--space-3); flex-wrap:wrap; min-width:0; }
-.symbol h2 { font-size:var(--step-2); white-space:nowrap; }
+.symbol h2 { font-size:var(--step-3); white-space:nowrap; }
 .symbol-meta { display:inline-flex; gap:var(--space-3); color:var(--muted); font-size:var(--step-n2); white-space:nowrap; }
 .symbol-quote { display:flex; flex-wrap:wrap; align-items:baseline; gap:var(--space-2); font-variant-numeric:lining-nums tabular-nums; white-space:nowrap; }
 .symbol-last { font-size:var(--step-1); font-weight:var(--weight-strong); }
@@ -92,7 +94,7 @@ body { display:flex; flex-direction:column; height:100dvh; overflow:hidden; }
 /* ---- watchlist ------------------------------------------------------------------- */
 .watchlist { display:flex; flex-direction:column; min-height:0; font-family:var(--font-ui); }
 /* A panel opens with a head as tall as the chart's toolbar: its name in capitals, and its own controls. */
-.watch-head,.panel-head { flex:none; display:flex; align-items:center; gap:var(--space-2); min-height:var(--toolbar-height); padding:var(--space-1) var(--space-3); border-bottom:var(--rule) solid var(--line); }
+.watch-head,.panel-head { flex:none; display:flex; align-items:center; gap:var(--space-2); min-height:var(--toolbar-height); padding:var(--space-1) var(--space-3); }
 .panel-title { margin:0; font-family:var(--font-ui); line-height:var(--leading-tight); }
 .watch-title,.panel-title { color:var(--ink); font-size:var(--step-n2); font-weight:var(--weight-strong); letter-spacing:var(--tracking-caps); text-transform:uppercase; white-space:nowrap; }
 .watch-count { color:var(--muted); font-weight:var(--weight-regular); }
@@ -133,16 +135,20 @@ table.watch td.stale { color:var(--muted); }
 .dock { display:flex; min-width:0; min-height:0; }
 .dock-panel { width:var(--watch-width); border-right:var(--rule) solid var(--line); }
 .dock-panel:not(.is-open) { display:none; }
-/* The rail's buttons line up with the toolbar; the open panel's button holds the control track. Panel tools come
-   first, then a hairline, then the actions. Above them all, the market side the chart shows, Sell or Buy, as a
-   compact stacked switch. */
-.dock-rail { flex:none; display:flex; flex-direction:column; align-items:center; gap:var(--space-1); width:var(--rail-width);
-  padding-top:calc((var(--toolbar-height) - var(--space-6)) / 2); }
+/* The rail is regions by meaning (markets.html): the chart's state at the top, then the tools that analyse or
+   navigate the market, flexible space, and the utilities at the bottom, level with the ranges row. Every tool is
+   one square slot; on, open or pressed, a slot holds the control track. */
+.dock-rail { flex:none; display:flex; flex-direction:column; align-items:center; width:var(--rail-width);
+  padding-block:calc((var(--toolbar-height) - var(--space-6)) / 2) calc((var(--toolbar-height) - var(--space-2) - var(--space-6)) / 2); }
+.dock-group { display:flex; flex-direction:column; align-items:center; gap:var(--space-1); }
+.dock-space { flex:1; }
 .dock-tool { width:var(--space-6); height:var(--space-6); }
-.dock-side { grid-auto-flow:row; grid-auto-rows:var(--control-height); width:calc(var(--space-6) + var(--space-1)); }
-.dock-side button { padding:0; }
-.dock-side button:not([aria-checked="true"]) + button:not([aria-checked="true"]) { background:linear-gradient(var(--line-strong),var(--line-strong)) center top / 50% var(--rule) no-repeat; }
-.dock-rule { flex:none; width:var(--space-5); height:var(--rule); margin:var(--space-1) 0; background:var(--line); }
+.dock-rule { flex:none; width:var(--space-5); height:var(--rule); margin:var(--space-2) 0; background:var(--line); }
+/* The market side: two slots, the one shown on the track in its side's colour, as the chart draws it. */
+.dock-side .tool { font-family:var(--font-ui); font-size:var(--control-type); line-height:1; }
+.dock-side .tool[aria-checked="true"] { background:var(--control-track); font-weight:var(--weight-strong); }
+.dock-side .tool[data-side="sell"][aria-checked="true"] { color:var(--sell); }
+.dock-side .tool[data-side="buy"][aria-checked="true"] { color:var(--buy); }
 
 /* ---- selected world -------------------------------------------------------------- */
 .details { flex:none; padding:var(--space-3); border-top:var(--rule) solid var(--line); }
@@ -170,12 +176,12 @@ table.watch td.stale { color:var(--muted); }
   /* Under the chart, the rail as a row, then the panel it opens; the default panel stands last, open or not,
      so its button is not shown. */
   .dock { display:flex; flex-direction:column; }
-  .dock-rail { order:-1; flex-direction:row; justify-content:flex-end; width:auto; padding:var(--space-1) 0; border-bottom:var(--rule) solid var(--line); }
-  .dock-rule { width:var(--rule); height:var(--space-5); margin:0 var(--space-1); }
-  /* The side leads the row; the tools keep to the end. */
-  .dock-side { grid-auto-flow:column; grid-auto-columns:1fr; width:fit-content; margin-right:auto; }
-  .dock-side button { padding:0 var(--control-pad); }
-  .dock-side + .dock-rule { display:none; }
+  /* The same regions, start to end: the side, the market tools, space, the utilities. */
+  .dock-rail { order:-1; flex-direction:row; width:auto; padding:var(--space-1) 0; border-bottom:var(--rule) solid var(--line); }
+  .dock-group { flex-direction:row; }
+  .dock-rule { width:var(--rule); height:var(--space-5); margin:0 var(--space-2); }
+  /* With Worlds always listed below, its region is empty here, and so is the rule before it. */
+  .dock-group:has(> [data-dock-default]:only-child),.dock-rule:has(+ .dock-group > [data-dock-default]:only-child) { display:none; }
   .dock-tool[data-dock-default] { display:none; }
   .dock-panel { width:auto; border-right:0; }
   .dock-panel:not([data-dock-default]) { border-bottom:var(--rule) solid var(--line); }
