@@ -1,0 +1,297 @@
+{
+  "formula": "new interval activity = later rolling counter - earlier rolling counter + expired daily counters",
+  "assumptions": [
+    "Each rolling reference D covers completed days D-30 through D-1.",
+    "Counters for the shared portion of the two windows have not been revised."
+  ],
+  "worlds": 116,
+  "candidateSidePairs": 24048,
+  "calculableSideIntervals": 23045,
+  "independentlyChecked": 22848,
+  "mismatches": [
+    {
+      "world": "Descubra",
+      "side": "sell",
+      "firstDay": "2025-05-29",
+      "lastDay": "2025-05-30",
+      "days": 2,
+      "earlier": {
+        "timestamp": "2025-05-29T21:52:46.198Z",
+        "source": "tibiamarket",
+        "counter": 3466
+      },
+      "later": {
+        "timestamp": "2025-05-31T21:37:07.427Z",
+        "source": "tibiamarket",
+        "counter": 3318
+      },
+      "expired": 249,
+      "calculated": 101,
+      "observed": 216
+    },
+    {
+      "world": "Descubra",
+      "side": "sell",
+      "firstDay": "2025-05-31",
+      "lastDay": "2025-06-01",
+      "days": 2,
+      "earlier": {
+        "timestamp": "2025-05-31T21:37:07.427Z",
+        "source": "tibiamarket",
+        "counter": 3318
+      },
+      "later": {
+        "timestamp": "2025-06-02T21:53:55.974Z",
+        "source": "tibiamarket",
+        "counter": 3324
+      },
+      "expired": 313,
+      "calculated": 319,
+      "observed": 204
+    },
+    {
+      "world": "Jadebra",
+      "side": "buy",
+      "firstDay": "2026-05-16",
+      "lastDay": "2026-05-18",
+      "days": 3,
+      "earlier": {
+        "timestamp": "2026-05-16T08:00:21.950Z",
+        "source": "tibiamarket",
+        "counter": 4410
+      },
+      "later": {
+        "timestamp": "2026-05-20T07:44:15.678Z",
+        "source": "tibiamarket",
+        "counter": 4563
+      },
+      "expired": 395,
+      "calculated": 548,
+      "observed": 478
+    },
+    {
+      "world": "Jadebra",
+      "side": "sell",
+      "firstDay": "2026-05-16",
+      "lastDay": "2026-05-18",
+      "days": 3,
+      "earlier": {
+        "timestamp": "2026-05-16T08:00:21.950Z",
+        "source": "tibiamarket",
+        "counter": 5074
+      },
+      "later": {
+        "timestamp": "2026-05-20T07:44:15.678Z",
+        "source": "tibiamarket",
+        "counter": 5121
+      },
+      "expired": 518,
+      "calculated": 565,
+      "observed": 515
+    },
+    {
+      "world": "Jadebra",
+      "side": "buy",
+      "firstDay": "2026-06-13",
+      "lastDay": "2026-06-20",
+      "days": 8,
+      "earlier": {
+        "timestamp": "2026-06-14T07:44:25.742Z",
+        "source": "tibiamarket",
+        "counter": 4409
+      },
+      "later": {
+        "timestamp": "2026-06-22T07:44:24.730Z",
+        "source": "tibiamarket",
+        "counter": 4292
+      },
+      "expired": 1169,
+      "calculated": 1052,
+      "observed": 1040
+    },
+    {
+      "world": "Jadebra",
+      "side": "sell",
+      "firstDay": "2026-06-13",
+      "lastDay": "2026-06-20",
+      "days": 8,
+      "earlier": {
+        "timestamp": "2026-06-14T07:44:25.742Z",
+        "source": "tibiamarket",
+        "counter": 5367
+      },
+      "later": {
+        "timestamp": "2026-06-22T07:44:24.730Z",
+        "source": "tibiamarket",
+        "counter": 5497
+      },
+      "expired": 1363,
+      "calculated": 1493,
+      "observed": 1545
+    },
+    {
+      "world": "Vunira",
+      "side": "sell",
+      "firstDay": "2024-03-08",
+      "lastDay": "2024-03-08",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2024-03-09T07:23:40.562Z",
+        "source": "tibiamarket",
+        "counter": 3840
+      },
+      "later": {
+        "timestamp": "2024-03-10T07:36:43.039Z",
+        "source": "tibiamarket",
+        "counter": 3931
+      },
+      "expired": 138,
+      "calculated": 229,
+      "observed": 114
+    }
+  ],
+  "missingSingleDays": [
+    {
+      "world": "Vunira",
+      "side": "sell",
+      "firstDay": "2024-03-07",
+      "lastDay": "2024-03-07",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2024-03-08T07:36:41.915Z",
+        "source": "tibiamarket",
+        "counter": 3928
+      },
+      "later": {
+        "timestamp": "2024-03-09T07:23:40.562Z",
+        "source": "tibiamarket",
+        "counter": 3840
+      },
+      "expired": 88,
+      "calculated": 0,
+      "observed": null
+    }
+  ],
+  "gentebraRecent": [
+    {
+      "world": "Gentebra",
+      "side": "buy",
+      "firstDay": "2026-09-12",
+      "lastDay": "2026-09-23",
+      "days": 12,
+      "earlier": {
+        "timestamp": "2026-09-13T06:46:23.507Z",
+        "source": "tibiamarket",
+        "counter": 3765
+      },
+      "later": {
+        "timestamp": "2026-09-24T08:27:49.481Z",
+        "source": "screenshot",
+        "counter": 3651
+      },
+      "expired": 1289,
+      "calculated": 1175,
+      "observed": null
+    },
+    {
+      "world": "Gentebra",
+      "side": "sell",
+      "firstDay": "2026-09-12",
+      "lastDay": "2026-09-23",
+      "days": 12,
+      "earlier": {
+        "timestamp": "2026-09-13T06:46:23.507Z",
+        "source": "tibiamarket",
+        "counter": 6526
+      },
+      "later": {
+        "timestamp": "2026-09-24T08:27:49.481Z",
+        "source": "screenshot",
+        "counter": 6386
+      },
+      "expired": 2454,
+      "calculated": 2314,
+      "observed": null
+    },
+    {
+      "world": "Gentebra",
+      "side": "buy",
+      "firstDay": "2026-09-24",
+      "lastDay": "2026-09-30",
+      "days": 7,
+      "earlier": {
+        "timestamp": "2026-09-24T08:27:49.481Z",
+        "source": "screenshot",
+        "counter": 3651
+      },
+      "later": {
+        "timestamp": "2026-10-02T03:36:37.332Z",
+        "source": "screenshot",
+        "counter": 3396
+      },
+      "expired": 902,
+      "calculated": 647,
+      "observed": null
+    },
+    {
+      "world": "Gentebra",
+      "side": "sell",
+      "firstDay": "2026-09-24",
+      "lastDay": "2026-09-30",
+      "days": 7,
+      "earlier": {
+        "timestamp": "2026-09-24T08:27:49.481Z",
+        "source": "screenshot",
+        "counter": 6386
+      },
+      "later": {
+        "timestamp": "2026-10-02T03:36:37.332Z",
+        "source": "screenshot",
+        "counter": 6082
+      },
+      "expired": 1523,
+      "calculated": 1219,
+      "observed": null
+    },
+    {
+      "world": "Gentebra",
+      "side": "buy",
+      "firstDay": "2026-10-01",
+      "lastDay": "2026-10-02",
+      "days": 2,
+      "earlier": {
+        "timestamp": "2026-10-02T03:36:37.332Z",
+        "source": "screenshot",
+        "counter": 3396
+      },
+      "later": {
+        "timestamp": "2026-10-04T02:20:59.957Z",
+        "source": "screenshot",
+        "counter": 3412
+      },
+      "expired": 239,
+      "calculated": 255,
+      "observed": null
+    },
+    {
+      "world": "Gentebra",
+      "side": "sell",
+      "firstDay": "2026-10-01",
+      "lastDay": "2026-10-02",
+      "days": 2,
+      "earlier": {
+        "timestamp": "2026-10-02T03:36:37.332Z",
+        "source": "screenshot",
+        "counter": 6082
+      },
+      "later": {
+        "timestamp": "2026-10-04T02:20:59.957Z",
+        "source": "screenshot",
+        "counter": 6137
+      },
+      "expired": 427,
+      "calculated": 482,
+      "observed": null
+    }
+  ]
+}
