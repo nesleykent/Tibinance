@@ -11,16 +11,19 @@ const root=process.env.TIBINANCE_TEST_URL ?? 'http://127.0.0.1:8765';
 const SITE='https://nesleykent.github.io/Tibinance/';
 const LOCAL=[['Capture','./'],['Markets','markets.html'],['Research','reports/tc-cycle/']];
 const pages=[
-  {name:'Capture',path:'/',ready:'#capturesLoading[hidden]',trail:['Tibinance'],trigger:'Tibinance',home:null,links:LOCAL,height:{desktop:56,phone:56}},
-  {name:'Markets',path:'/markets.html',ready:'#market[aria-busy="false"]',trail:['Tibinance','/','Markets'],trigger:'Markets',home:'./',links:LOCAL,height:{desktop:48,phone:48}},
+  {name:'Capture',path:'/',ready:'#capturesLoading[hidden]',trail:['Tibinance'],trigger:'Tibinance',home:null,links:LOCAL},
+  {name:'Markets',path:'/markets.html',ready:'#market[aria-busy="false"]',trail:['Tibinance','/','Markets'],trigger:'Markets',home:'./',links:LOCAL},
   {name:'Research',path:'/reports/tc-cycle/',ready:'#report[aria-busy="false"]',trail:['Tibinance','/','Research'],trigger:'Research',home:SITE,
-    links:[['Capture',SITE],['Markets',`${SITE}markets.html`],['Research','./']],height:{desktop:56,phone:56},
+    links:[['Capture',SITE],['Markets',`${SITE}markets.html`],['Research','./']],
     language:{name:'Language: EN, English',code:'EN',current:'English',empty:'No world matches.'}},
   {name:'Research',path:'/reports/tc-cycle/pt-br.html',ready:'#report[aria-busy="false"]',trail:['Tibinance','/','Research'],trigger:'Research',home:SITE,
-    links:[['Capture',SITE],['Markets',`${SITE}markets.html`],['Research','pt-br.html']],height:{desktop:56,phone:56},
+    links:[['Capture',SITE],['Markets',`${SITE}markets.html`],['Research','pt-br.html']],
     language:{name:'Idioma: PT, Português',code:'PT',current:'Português',empty:'Nenhum world encontrado.'}},
 ];
 const EDITIONS=[['English','./','en'],['Português','pt-br.html','pt-BR']];
+// The site's shell: one header height and one set of page margins (css/app.css, reports/tc-cycle/report.css).
+const HEADER=56;
+let captureEdges;
 const browser=await (engine==='webkit' ? webkit.launch({headless:true}) : chromium.launch({headless:true,...(process.env.TIBINANCE_CHROME ? {executablePath:process.env.TIBINANCE_CHROME} : {channel:'chrome'})}));
 try {
   const context=await browser.newContext({locale:'en-US',viewport:{width:1440,height:900}});
@@ -56,7 +59,13 @@ try {
     assert.deepEqual(await open(),[]);
     assert.equal(await menu.isVisible(),false);
     assert.equal(await page.locator('header.site a:visible').count(),p.home ? 1 : 0,`${label}: no visible section links`);
-    assert.equal((await box('header.site')).bottom,p.height.desktop,`${label}: header height unchanged`);
+    assert.equal((await box('header.site')).bottom,HEADER,`${label}: the shared header height`);
+    // The same margins as Capture, and room kept for a scrollbar whether the page scrolls or not, so they stay the
+    // same where scrollbars take up width.
+    const edges=await page.$eval('.site .wrap',w=>{const r=w.getBoundingClientRect(),s=getComputedStyle(w);return [r.left+parseFloat(s.paddingLeft),r.right-parseFloat(s.paddingRight)];});
+    captureEdges??=edges;
+    assert.deepEqual(edges,captureEdges,`${label}: Capture's margins`);
+    assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).scrollbarGutter),'stable',`${label}: scrollbar room kept`);
 
     // Pointer: the menu opens under its button, lists the three sections and marks this one.
     assert.equal(await trigger.getAttribute('aria-expanded'),'false');
@@ -185,7 +194,7 @@ try {
         return {overflow:document.documentElement.scrollWidth-innerWidth,truncated:v ? v.scrollWidth>v.clientWidth : false,
           apart:!r('.site-controls') || r('.site-nav').right<=r('.site-controls').left,header:Math.round(r('header.site').height)};
       });
-      assert.deepEqual(fit,{overflow:0,truncated:false,apart:true,header:p.height.phone},`${label} at ${width}px`);
+      assert.deepEqual(fit,{overflow:0,truncated:false,apart:true,header:HEADER},`${label} at ${width}px`);
       for (const [button,panel] of [[SECTIONS,'#site-menu'],...(p.language ? [['#site-world .site-control','#world-picker'],['.site-language .site-control','#language-menu']] : [])]) {
         await page.click(button);
         assert.deepEqual(await open(),[panel.slice(1)]);

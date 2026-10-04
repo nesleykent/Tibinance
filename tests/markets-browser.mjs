@@ -41,6 +41,11 @@ try {
   // Markets is reached from the site menu (tests/site-header-browser.mjs covers the menu itself).
   await page.goto(`${root}/`);
   assert.equal(await page.title(),'Tibinance');
+  // Capture's page margins: Markets is framed by the same ones.
+  const pageEdges=()=>page.$eval('.site .wrap',w=>{const r=w.getBoundingClientRect(),s=getComputedStyle(w);
+    return [r.left+parseFloat(s.paddingLeft),r.right-parseFloat(s.paddingRight)];});
+  const captureEdges=await pageEdges();
+  assert.ok(captureEdges[0]>100,`Capture's margin at 1440px: ${captureEdges[0]}`);
   assert.deepEqual(await page.$$eval('#site-menu a',as=>as.map(a=>[a.textContent,a.getAttribute('href')])),
     [['Capture','./'],['Markets','markets.html'],['Research','reports/tc-cycle/']]);
   await page.click('header.site [data-site-menu]');
@@ -56,17 +61,50 @@ try {
   // Terminal layout: Sell/Buy and tools above the chart, ranges below it, the list beside it.
   assert.ok(await page.$('.toolbar-top #side') && await page.$('.toolbar-top #expand') && await page.$('.toolbar-top #helpButton'));
   assert.ok(await page.$('.toolbar-bottom #range'));
-  const frame=await page.evaluate(()=>{
-    const area=document.querySelector('.chart-area').getBoundingClientRect(),list=document.querySelector('.watchlist').getBoundingClientRect();
-    const scroll=document.querySelector('.watch-scroll'),header=document.querySelector('header.site').getBoundingClientRect();
+  // Inside Capture's margins, with or without the panel: the chart, then the Worlds panel, then the rail at the edge.
+  const frame=()=>page.evaluate(()=>{
+    const r=s=>document.querySelector(s).getBoundingClientRect(),area=r('.chart-area'),list=r('.watchlist'),rail=r('.dock-rail'),header=r('header.site');
+    const scroll=document.querySelector('.watch-scroll');
     return {pageScroll:document.documentElement.scrollHeight-innerHeight,overflow:document.documentElement.scrollWidth-innerWidth,
-      areaShare:area.height/(innerHeight-header.height),widthShare:area.width/innerWidth,beside:list.left>=area.right,
-      listTop:list.top,areaTop:area.top,ownScroll:scroll.scrollHeight>scroll.clientHeight};
+      areaShare:area.height/(innerHeight-header.height),edges:[area.left,rail.right],chart:area.width,rail:rail.width,list:list.width,
+      beside:list.width>0 && list.left>=area.right && rail.left>=list.right,ownScroll:scroll.scrollHeight>scroll.clientHeight};
   });
-  assert.ok(frame.pageScroll<=0 && frame.overflow<=0,'the terminal fits the viewport');
-  assert.ok(frame.areaShare>0.75,`chart area is ${frame.areaShare} of the height under the header`);
-  assert.ok(frame.widthShare>0.7,`chart area is ${frame.widthShare} of the width`);
-  assert.ok(frame.beside && frame.ownScroll,'the watchlist is a side panel with its own scrolling');
+  const open=await frame();
+  assert.equal(await pageEdges().then(String),String(captureEdges),'the header keeps Capture\'s margins');
+  assert.deepEqual(open.edges,captureEdges,'the terminal keeps Capture\'s margins');
+  assert.ok(open.pageScroll<=0 && open.overflow<=0,'the terminal fits the viewport');
+  assert.ok(open.areaShare>0.75,`chart area is ${open.areaShare} of the height under the header`);
+  assert.ok(open.beside && open.ownScroll,'the Worlds panel is open beside the chart, with its own scrolling');
+
+  // The rail closes the panel, gives its width to the chart and keeps the chart on the same days.
+  const rail=page.getByRole('group',{name:'Panels'}).getByRole('button',{name:'Worlds',exact:true});
+  assert.deepEqual([await rail.getAttribute('aria-expanded'),await rail.getAttribute('aria-controls'),await rail.getAttribute('title')],['true','worldsPanel','Hide Worlds']);
+  const plot=await chartBox();
+  // The day under the pointer just inside the chart's left edge, and at its newest observation.
+  const firstDay=async()=>{const b=await chartBox();await page.mouse.move(b.x+3,b.y+b.h/3);return text('#legend .day');};
+  const before=await firstDay();
+  const url=page.url();
+  await rail.click();
+  await page.waitForFunction(w=>document.getElementById('chart').getBoundingClientRect().width>w+100,plot.w);
+  await page.waitForTimeout(100);
+  const closed=await frame();
+  assert.equal(await rail.getAttribute('aria-expanded'),'false');
+  assert.equal(await page.isVisible('#worldsPanel'),false);
+  assert.deepEqual(closed.edges,captureEdges,'the margins stay with the panel closed');
+  assert.ok(Math.abs(closed.chart-(open.chart+open.list))<=1,`the chart takes the panel's width: ${open.chart}+${open.list} to ${closed.chart}`);
+  assert.ok(closed.rail<=48 && closed.overflow<=0 && closed.pageScroll<=0);
+  const after=await firstDay();
+  assert.ok(Math.abs(Date.parse(after)-Date.parse(before))<=2*864e5,`the same days stay in view: ${before} then ${after}`);
+  assert.equal(page.url(),url,'the address keeps only the world, side and range');
+  // Remembered in this browser; the keyboard opens it again, at the selected world.
+  await page.reload();
+  await shown('Antica');
+  assert.equal(await rail.getAttribute('aria-expanded'),'false','the closed rail is remembered');
+  await rail.focus();
+  await page.keyboard.press('Enter');
+  assert.equal(await rail.getAttribute('aria-expanded'),'true');
+  assert.equal(await page.isVisible('#worlds tr[data-world="Antica"][aria-selected="true"]'),true);
+  assert.deepEqual((await frame()).edges,captureEdges);
 
   // Defaults: Antica, Sell, 1Y; every world listed with its latest best offer and absolute and percentage change.
   assert.deepEqual([param('world'),param('side'),param('range')],['Antica','sell','1Y']);
@@ -199,9 +237,14 @@ try {
   assert.match(await page.getAttribute('#worldMeta','title'),/merged into Terribra/);
   assert.ok(await page.$eval('#worlds tr[data-world="Jacabra"]',row=>{const r=row.getBoundingClientRect(),box=row.closest('.watch-scroll').getBoundingClientRect();
     return r.top>=box.top && r.bottom<=box.bottom+1;}),'the deep-linked world is visible in the list');
-  // Its successor is one click away and keeps its own, separate history.
+  // Its successor is one click away and keeps its own, separate history. Beside the open Worlds panel the toolbar
+  // line is cut short (its whole text is its tooltip) and the details carry the link; with the panel closed the
+  // toolbar has room for it.
+  assert.equal(await page.isVisible('#detailStatus .world-link'),true);
+  await rail.click();
   await page.click('#worldMeta .world-link');
   await shown('Terribra');
+  await rail.click();
   assert.equal(await page.$('#worldMeta .tag'),null);
   assert.equal(await page.isHidden('#detailStatus'),true,'a current world has no retired status line');
   assert.equal(await page.$$eval('#worlds tr',rows=>rows.length),active.length,'retired worlds leave the list again');
@@ -216,7 +259,7 @@ try {
   assert.match(await text('#detailsWorld'),/^Ambra RETIRED$/);
   assert.match(await page.$eval('#worldMeta',e=>e.textContent),/merged into Sombra/);
   // Following the successor link clears the search, so the successor is listed and selected.
-  await page.click('#worldMeta .world-link');
+  await page.click('#detailStatus .world-link');
   await shown('Sombra');
   assert.equal(await page.inputValue('#filter'),'');
   assert.equal(await page.$$eval('#worlds tr',rows=>rows.length),active.length);
@@ -264,6 +307,29 @@ try {
   await page.mouse.move(0,0);
   await page.$eval('.watch-scroll',s=>{s.scrollTop=0;});
   assert.equal(await tip(),null,'leaving the indicator closes it');
+
+  // Until a choice is remembered, the panel opens only where the chart keeps room beside it; phones always list
+  // the worlds under the chart, whatever the rail last did, and show no rail.
+  for (const [width,height,expanded] of [[1024,768,'false'],[1280,800,'true']]) {
+    const fresh=await browser.newContext({viewport:{width,height}});
+    const view=await fresh.newPage();
+    await view.goto(`${root}/markets.html`);
+    await view.waitForFunction(()=>document.getElementById('market').getAttribute('aria-busy')==='false');
+    assert.equal(await view.getAttribute('.dock-tool','aria-expanded'),expanded,`${width}px default`);
+    assert.equal(await view.isVisible('#worldsPanel'),expanded==='true');
+    // Opened here anyway, the panel narrows the chart like a small screen: the toolbar wraps rather than overlap.
+    if (expanded==='false') await view.click('.dock-tool');
+    assert.ok(await view.evaluate(()=>{const parts=['#world','.symbol-quote','#side','.toolbar-end'].map(s=>document.querySelector(s).getBoundingClientRect());
+      return parts.every((a,i)=>parts.slice(i+1).every(b=>a.right<=b.left+1 || b.right<=a.left+1 || a.bottom<=b.top+1 || b.bottom<=a.top+1));}),`${width}px toolbar parts overlap`);
+    await fresh.close();
+  }
+  await rail.click();
+  await page.setViewportSize({width:390,height:844});
+  assert.equal(await page.isVisible('.dock-rail'),false);
+  assert.equal(await page.isVisible('#worlds tr[data-world="Antica"]'),true,'phones list the worlds with the rail closed');
+  await page.setViewportSize({width:1440,height:900});
+  await rail.click();
+  assert.equal(await rail.getAttribute('aria-expanded'),'true');
 
   // Wide, tablet and phone: the chart leads and never scrolls sideways; narrow screens stack the list below.
   for (const [width,height] of [[1440,900],[768,1024],[390,844]]) {

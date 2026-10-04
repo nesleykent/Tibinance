@@ -1,26 +1,28 @@
 /*
  * Markets: a terminal layout in Tibinance's own type and tokens (css/app.css).
- * The chart panel and the watchlist fill the viewport under the site header;
- * each panel scrolls on its own. Narrow screens stack them and scroll the page.
+ * The chart and the dock fill the viewport under the site header, inside the
+ * page margins every Tibinance page shares (.wrap); each panel scrolls on its own.
+ * The dock is a rail of panel buttons at the right edge and the panel it has open
+ * (js/markets-dock.js). Narrow screens stack the chart and the panel and scroll the page.
  */
 :root {
   --sell:#b4532a; --buy:#2f6db5;
   --average:#a9a8b3;   /* the daily average: context for the best offer, never competing with it */
-  --page-gutter:var(--space-4);
-  --header-height:calc(var(--unit) * 12);
   --watch-width:calc(var(--unit) * 92);
+  --rail-width:calc(var(--unit) * 10);
   --toolbar-height:calc(var(--unit) * 11);
   --row-pad:calc(var(--unit) * 0.75);
 }
-.site .wrap { max-width:none; }
 
 /* ---- the frame -------------------------------------------------------------- */
 body { display:flex; flex-direction:column; height:100dvh; overflow:hidden; }
 .site { position:static; flex:none; }
-.terminal { flex:1; min-height:0; display:grid; grid-template-columns:minmax(0,1fr) var(--watch-width); }
+/* The terminal sits in the page's own margins (.wrap), however wide the chart is. */
+.terminal { flex:1; width:100%; min-height:0; display:grid; grid-template-columns:minmax(0,1fr) auto; }
 
 /* ---- chart panel -------------------------------------------------------------- */
-.chart-panel { display:flex; flex-direction:column; min-width:0; min-height:0; border-right:var(--rule) solid var(--line); background:var(--canvas); }
+/* The toolbar follows the chart's own width (below), which the open panel narrows as much as a small screen does. */
+.chart-panel { container:chart / inline-size; display:flex; flex-direction:column; min-width:0; min-height:0; border-right:var(--rule) solid var(--line); background:var(--canvas); }
 .toolbar { flex:none; display:flex; align-items:center; gap:var(--space-2) var(--space-4); min-height:var(--toolbar-height); padding:var(--space-1) var(--space-4); font-family:var(--font-ui); }
 .toolbar-top { flex-wrap:wrap; border-bottom:var(--rule) solid var(--line); }
 .toolbar-bottom { min-height:calc(var(--toolbar-height) - var(--space-2)); border-top:var(--rule) solid var(--line); }
@@ -122,6 +124,15 @@ table.watch .flag:hover,table.watch .flag:focus-visible { border-color:var(--acc
 table.watch td.stale { color:var(--muted); }
 .watchlist .empty { padding:var(--space-5) var(--space-3); }
 
+/* ---- the dock: the open panel, then the rail -------------------------------------- */
+.dock { display:flex; min-width:0; min-height:0; }
+.dock-panel { width:var(--watch-width); border-right:var(--rule) solid var(--line); }
+.dock-panel:not(.is-open) { display:none; }
+/* The rail's buttons line up with the toolbar; the open panel's button holds the control track. */
+.dock-rail { flex:none; display:flex; flex-direction:column; align-items:center; gap:var(--space-1); width:var(--rail-width);
+  padding-top:calc((var(--toolbar-height) - var(--space-6)) / 2); }
+.dock-tool { width:var(--space-6); height:var(--space-6); }
+
 /* ---- selected world -------------------------------------------------------------- */
 .details { flex:none; padding:var(--space-3); border-top:var(--rule) solid var(--line); }
 .details-title { margin:0 0 var(--space-2); font-family:var(--font-editorial); font-size:var(--step-1); font-weight:var(--weight-regular); }
@@ -132,6 +143,9 @@ table.watch td.stale { color:var(--muted); }
 /* ---- expanded chart: true full screen, or the whole viewport where that is unavailable ---- */
 .chart-panel:fullscreen { width:100%; height:100%; border:0; }
 .chart-panel.expanded { position:fixed; inset:0; z-index:var(--layer-header); border:0; }
+/* In the page, the chart's text starts on the page's edge, under Tibinance; on its own it keeps an inset. */
+.chart-panel:not(.expanded,:fullscreen) .toolbar { padding-left:0; }
+.chart-panel:not(.expanded,:fullscreen) .legend { left:0; }
 
 /* ---- narrow: chart first, then the list; the page scrolls ------------------------- */
 @media (max-width:900px) {
@@ -141,12 +155,17 @@ table.watch td.stale { color:var(--muted); }
   .watch-scroll { overflow:visible; }
   table.watch thead th { position:static; }
   .details { order:-1; border-top:0; border-bottom:var(--rule) solid var(--line); }
-  .watchlist { order:1; }
+  /* No rail: the default panel stands under the chart, open or not. */
+  .dock { display:block; }
+  .dock-rail { display:none; }
+  .dock-panel { width:auto; border-right:0; }
+  .dock-panel[data-dock-default] { display:flex; }
 }
-/* Wide screens keep the toolbar on one row at its fixed height: the world's
+/* A wide chart keeps the toolbar on one row at its fixed height: the world's
    metadata gives way first, cut short at its end (type and BattlEye before a
-   retired world's status and successor link). */
-@media (min-width:641px) {
+   retired world's status and successor link). The widths are the chart's: the
+   former 640px and 520px screen breakpoints less a phone's page margins. */
+@container chart (min-width:592px) {
   .toolbar-top { flex-wrap:nowrap; }
   .toolbar-top > * { flex:none; }
   .toolbar-top > .symbol { flex:0 1 auto; min-width:0; flex-wrap:nowrap; }
@@ -154,10 +173,10 @@ table.watch td.stale { color:var(--muted); }
   .symbol-meta { display:block; min-width:0; overflow:hidden; text-overflow:ellipsis; }
   .symbol-meta > * + * { margin-left:var(--space-3); }
 }
-@media (max-width:640px) {
+@container chart (max-width:591.98px) {
   /* The toolbar wraps here; a divider would start a line. */
   .toolbar-top > .symbol,.toolbar-top > .symbol-quote { padding-right:0; border-right:0; }
 }
-@media (max-width:520px) {
+@container chart (max-width:471.98px) {
   .symbol-meta,.legend .meta { display:none; }
 }
