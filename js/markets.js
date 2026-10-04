@@ -10,8 +10,10 @@
  */
 import { fmt, esc, num } from './format.js';
 import { bestOfferCloses } from './market-history.js';
-import { RANGES, changeOver, dayGrid, daysBetween, lineLayers, neighbours, rangeStart } from './market-series.js';
+import { RANGES, changeOver, dayGrid, daysBetween, neighbours, rangeStart } from './market-series.js';
+import { SIDES, createMarketChart, dayOf } from './market-chart.js';
 import { dock } from './markets-dock.js';
+import { marketImage } from './market-export.js';
 
 const ASSET = 'tibia-coin';
 const DATA = `data/market-history/${ASSET}/`;
@@ -19,10 +21,6 @@ const STALE_DAYS = 7;   // a world whose latest best offer is older than this is
 // Where the Worlds panel opens by default: from here up, the chart keeps at least 600px beside it
 // (the page's gutters and maximum width, css/app.css, less the panel and the rail, css/markets.css).
 const ROOMY = '(min-width: 1280px)';
-const SIDES = {
-  sell: { offer: 'Best Sell Offer', offers: 'Sell Offers' },
-  buy: { offer: 'Best Buy Offer', offers: 'Buy Offers' }
-};
 const $ = id => document.getElementById(id);
 const percent = new Intl.NumberFormat(undefined, { style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2, signDisplay: 'exceptZero' });
 const signedNumber = new Intl.NumberFormat(undefined, { signDisplay: 'exceptZero' });
@@ -33,51 +31,9 @@ const signedDelta = delta => delta == null ? num(null) : `<span class="${tone(de
 const state = { index: null, world: null, side: 'sell', range: '1Y', sort: { key: 'world', dir: 1 }, filter: '', files: new Map(), view: null };
 
 /* ------------------------------------------------------------------ chart */
-const L = window.LightweightCharts;
-const token = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-const colors = { sell: token('--sell'), buy: token('--buy'), average: token('--average'), text: token('--muted'),
-  grid: token('--line-faint'), rule: token('--line'), crosshair: token('--line-strong'), ink: token('--ink') };
-// Lightweight Charts reports a day as the string it was given or as {year, month, day}.
-const dayOf = time => typeof time === 'string' ? time
-  : typeof time === 'object' ? `${time.year}-${String(time.month).padStart(2, '0')}-${String(time.day).padStart(2, '0')}`
-  : new Date(time * 1000).toISOString().slice(0, 10);
-
-const chart = L.createChart($('chart'), {
-  autoSize: true,
-  layout: { background: { type: 'solid', color: 'transparent' }, textColor: colors.text, fontFamily: token('--font-ui'), fontSize: 11,
-    panes: { separatorColor: colors.rule, separatorHoverColor: colors.crosshair } },
-  grid: { vertLines: { visible: false }, horzLines: { color: colors.grid } },
-  // Room above the highest price for the legend.
-  rightPriceScale: { borderVisible: false, scaleMargins: { top: 0.14, bottom: 0.06 } },
-  timeScale: { borderVisible: false, rightOffset: 4 },
-  crosshair: { mode: L.CrosshairMode.Normal,
-    vertLine: { color: colors.crosshair, labelBackgroundColor: colors.ink },
-    horzLine: { color: colors.crosshair, labelBackgroundColor: colors.ink } },
-  localization: { priceFormatter: v => fmt(Math.round(v)), timeFormatter: dayOf }
-});
-const line = options => chart.addSeries(L.LineSeries, { priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false, ...options });
-const series = {
-  averageSolid: line({ color: colors.average, lineWidth: 1 }),
-  averageDotted: line({ color: colors.average, lineWidth: 1, lineStyle: L.LineStyle.Dotted }),
-  bestSolid: line({ lineWidth: 2 }),
-  bestDotted: line({ lineWidth: 2, lineStyle: L.LineStyle.Dotted }),
-  // The observations themselves, with the latest one marked across the chart
-  // and on the price scale; the two line layers above only join them.
-  bestPoints: line({ lineVisible: false, pointMarkersVisible: true, pointMarkersRadius: 3, crosshairMarkerVisible: true,
-    lastValueVisible: true, priceLineVisible: true, priceLineWidth: 1, priceLineStyle: L.LineStyle.LargeDashed }),
-  volume: chart.addSeries(L.HistogramSeries, { priceLineVisible: false, lastValueVisible: false,
-    priceFormat: { type: 'custom', minMove: 1, formatter: v => fmt(Math.round(v)) } }, 1)
-};
-series.volume.priceScale().applyOptions({ scaleMargins: { top: 0.3, bottom: 0 } });
-chart.panes()[0].setStretchFactor(4);
-chart.panes()[1].setStretchFactor(1);
-
-// Dots shrink, then give way to the line, as more days share the same width.
-chart.timeScale().subscribeVisibleLogicalRangeChange(range => {
-  if (!range) return;
-  const spacing = chart.timeScale().width() / Math.max(1, range.to - range.from);
-  series.bestPoints.applyOptions({ pointMarkersVisible: spacing >= 2, pointMarkersRadius: Math.min(3, Math.max(1.5, spacing / 2)) });
-});
+// Built by js/market-chart.js, which also builds the chart an exported image is drawn from.
+const market = createMarketChart($('chart'));
+const chart = market.chart;
 chart.subscribeCrosshairMove(p => showLegend(p.time === undefined ? null : dayOf(p.time)));
 // The volume legend sits at the top of the volume pane, wherever the panes divide.
 new ResizeObserver(placeVolumeLegend).observe($('chart'));
@@ -103,28 +59,10 @@ function worldView(summary, file) {
 }
 
 function drawChart() {
-  const { closes, daily, grid } = state.view, side = state.side, color = colors[side];
-  const points = closes.map(c => ({ time: c.serverDay, value: c[side] }));
-  const best = lineLayers(points);
-  // A day without trades has no average price; its volume is a real zero.
-  const average = lineLayers(daily.filter(d => d[side]?.transactions > 0).map(d => ({ time: d.serverDay, value: d[side].averagePrice })));
-  series.bestSolid.applyOptions({ color });
-  series.bestDotted.applyOptions({ color });
-  series.bestPoints.applyOptions({ color, priceLineColor: color });
-  series.bestSolid.setData(best.solid);
-  series.bestDotted.setData(best.dotted);
-  series.bestPoints.setData(points);
-  series.averageSolid.setData(average.solid);
-  series.averageDotted.setData(average.dotted);
-  // Every server day is on the axis, so a gap takes the width of its missing days.
-  series.volume.applyOptions({ color: `${color}73` });
-  series.volume.setData(grid.map(day => {
-    const value = state.view.dailyByDay.get(day)?.[side]?.tcVolume;
-    return value === undefined ? { time: day } : { time: day, value };
-  }));
+  market.draw(state.view, state.side);
   // Keys in the legends and the help take the side's colour from here.
-  $('chartPanel').classList.toggle('side-sell', side === 'sell');
-  $('chartPanel').classList.toggle('side-buy', side === 'buy');
+  $('market').classList.toggle('side-sell', state.side === 'sell');
+  $('market').classList.toggle('side-buy', state.side === 'buy');
   applyRange();
   placeVolumeLegend();
 }
@@ -172,9 +110,12 @@ function showLegend(day) {
   $('volumeLegend').innerHTML = `<div class="row"><span class="label"><i class="key key-volume"></i>Volume</span> ${stats ? `<b>${fmt(stats.tcVolume)}</b>` : num(null)}</div>`;
 }
 
+// The selected side's latest best offer against the last one on or before the start of the range.
+const rangeChange = () => changeOver(state.view.closes.map(c => ({ day: c.serverDay, value: c[state.side] })), rangeStart(state.view.end, state.range));
+
 function showQuote() {
-  const { summary, closes, daily } = state.view, side = state.side, latest = summary.latestBestOffer;
-  const change = changeOver(closes.map(c => ({ day: c.serverDay, value: c[side] })), rangeStart(state.view.end, state.range));
+  const { summary, daily } = state.view, side = state.side, latest = summary.latestBestOffer;
+  const change = rangeChange();
   const changeText = change ? `${signedDelta(change.to.value - change.from.value)} ${signedRatio(change.ratio)}` : num(null);
   const changeTitle = change ? `${state.range}: ${fmt(change.from.value)} on ${change.from.day} to ${fmt(change.to.value)} on ${change.to.day}` : '';
   $('world').textContent = summary.world;
@@ -278,6 +219,9 @@ async function select(world, { focus = false } = {}) {
   showLegend(null);
   // A current world without market data yet says so instead of drawing an empty chart.
   $('status').hidden = state.view.grid.length > 0;
+  // An image needs something to show.
+  $('exportButton').disabled = !state.view.grid.length;
+  $('exportButton').title = state.view.grid.length ? 'Export chart image' : `No market data for ${world} to export`;
   if (!state.view.grid.length) $('status').textContent = `No market data for ${world} yet.`;
   // The filled details panel shortens the list; keep the selection in view once it has.
   document.querySelector(`#worlds tr[data-world="${CSS.escape(world)}"]`)?.scrollIntoView({ block: 'nearest' });
@@ -327,47 +271,68 @@ function dockChanged(open) {
   }));
 }
 
-/* ------------------------------------------------------- expand and help */
-const panel = $('chartPanel');
+/* ------------------------------------------------------------ full screen */
+// The whole terminal, so the rail and its way back stay on screen; the CSS fallback where element full screen is
+// unavailable (iPhone) or refused.
+const terminal = $('market');
 function showExpanded(on) {
   $('expand').setAttribute('aria-pressed', String(on));
-  $('expand').setAttribute('aria-label', on ? 'Exit full screen' : 'Expand chart');
-  $('expand').title = on ? 'Exit full screen' : 'Expand chart';
+  $('expand').setAttribute('aria-label', on ? 'Exit full screen' : 'Full screen');
+  $('expand').title = on ? 'Exit full screen' : 'Full screen';
 }
-// The CSS fallback, where element full screen is unavailable (iPhone) or refused.
 function setExpanded(on) {
-  panel.classList.toggle('expanded', on);
+  terminal.classList.toggle('expanded', on);
   showExpanded(on);
 }
 async function toggleExpanded() {
-  if (document.fullscreenElement === panel) return document.exitFullscreen();
-  if (panel.classList.contains('expanded')) return setExpanded(false);
-  if (document.fullscreenEnabled && panel.requestFullscreen) {
-    try { return await panel.requestFullscreen(); } catch { /* fall through to the CSS fallback */ }
+  if (document.fullscreenElement === terminal) return document.exitFullscreen();
+  if (terminal.classList.contains('expanded')) return setExpanded(false);
+  if (document.fullscreenEnabled && terminal.requestFullscreen) {
+    try { return await terminal.requestFullscreen(); } catch { /* fall through to the CSS fallback */ }
   }
   setExpanded(true);
 }
-document.addEventListener('fullscreenchange', () => showExpanded(document.fullscreenElement === panel));
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && panel.classList.contains('expanded')) setExpanded(false); });
+document.addEventListener('fullscreenchange', () => showExpanded(document.fullscreenElement === terminal));
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && terminal.classList.contains('expanded')) setExpanded(false); });
 
-// The help opens under its button; browsers without popovers toggle it in place.
-const help = $('help');
-function placeHelp() {
-  if (!help.hasAttribute('popover')) return;
-  const button = $('helpButton').getBoundingClientRect();
-  help.style.top = `${button.bottom + 6}px`;
-  help.style.right = `${Math.max(8, innerWidth - button.right)}px`;
+/* ------------------------------------------------------------------ export */
+// An image of what the chart shows: this world and side, over the days in view (js/market-export.js).
+function imageContext() {
+  const { summary, end } = state.view, side = state.side, latest = summary.latestBestOffer, change = rangeChange();
+  const delta = change && change.to.value - change.from.value, shown = chart.timeScale().getVisibleRange();
+  return {
+    world: summary.world,
+    tag: retired(summary) ? 'Retired' : '',
+    meta: [retired(summary) && `Offline since ${summary.offline}, merged into ${summary.mergedInto}`, summary.type,
+      summary.battleye && `BattlEye ${summary.battleye}`].filter(Boolean),
+    value: latest ? fmt(latest[side]) : 'N/A',
+    valueNote: latest ? `${SIDES[side].offer} on server day ${latest.serverDay}` : SIDES[side].offer,
+    change: change && { text: `${signedNumber.format(delta)} ${percent.format(change.ratio)}`, tone: tone(delta), note: `change over ${state.range}` },
+    shown: shown ? `Server days ${dayOf(shown.from)} to ${dayOf(shown.to)}` : '',
+    footer: `Server days run from 10:00 to 10:00 CET/CEST. Market history through ${end}.`
+  };
 }
-if ('popover' in HTMLElement.prototype) {
-  help.addEventListener('beforetoggle', e => { if (e.newState === 'open') placeHelp(); });
-} else {
-  help.removeAttribute('popover');
-  help.hidden = true;
-  $('helpButton').setAttribute('aria-expanded', 'false');
-  $('helpButton').addEventListener('click', () => {
-    help.hidden = !help.hidden;
-    $('helpButton').setAttribute('aria-expanded', String(!help.hidden));
-  });
+async function exportImage() {
+  const button = $('exportButton');
+  if (button.disabled || !state.view?.grid.length) return;
+  const { summary } = state.view;
+  button.disabled = true;
+  try {
+    const canvas = await marketImage({ view: state.view, side: state.side, logicalRange: chart.timeScale().getVisibleLogicalRange(), context: imageContext() });
+    const blob = await new Promise((resolve, reject) => canvas.toBlob(b => (b ? resolve(b) : reject(new Error('The image could not be encoded.'))), 'image/png'));
+    const name = `tibinance-${summary.world.toLowerCase()}-${state.side}-${state.range.toLowerCase()}-${state.view.end}.png`;
+    const link = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: name });
+    document.body.append(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(link.href), 10000);
+    $('exportStatus').textContent = `Saved ${name}.`;
+  } catch (error) {
+    console.error(error);
+    $('exportStatus').textContent = 'The chart image could not be exported.';
+  } finally {
+    button.disabled = !state.view?.grid.length;
+  }
 }
 
 function wire() {
@@ -387,6 +352,7 @@ function wire() {
     saveUrl(); drawWatchlist(); applyRange(); showQuote();
   });
   $('expand').addEventListener('click', () => toggleExpanded().catch(failed));
+  $('exportButton').addEventListener('click', exportImage);
   for (const host of [$('worldMeta'), $('detailStatus')]) host.addEventListener('click', e => {
     const world = e.target.closest('.world-link')?.dataset.world;
     if (!world) return;
