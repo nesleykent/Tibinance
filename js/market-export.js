@@ -37,26 +37,27 @@ export async function marketImage({ view, side, logicalRange, context, hidden = 
   document.body.append(host);
   const market = createMarketChart(host, { scale: k, width: plotWidth * k, height: CHART_HEIGHT * k });
   try {
-    for (const id of hidden) market.setVisible(id, false);
+    for (const id of market.optional) market.setVisible(id, !hidden.includes(id));
     market.draw(view, side);
     if (logicalRange) market.chart.timeScale().setVisibleLogicalRange(logicalRange);
     else market.chart.timeScale().fitContent();
     await frames(2);
     // With the top layer, where layers draw their primitives; without the crosshair.
     const shot = market.chart.takeScreenshot(true, false);
-    return compose({ shot, ratio: dpr * k, k, plotWidth, market, keys: market.keys(side), notes: market.notes(), context });
+    return compose({ shot, ratio: dpr * k, k, plotWidth, market, keys: market.keys(side), notes: market.notes(), context, side });
   } finally {
     market.chart.remove();
     host.remove();
   }
 }
 
-function compose({ shot, ratio, k, plotWidth, market, keys, notes, context }) {
+function compose({ shot, ratio, k, plotWidth, market, keys, notes, context, side }) {
   const c = { canvas: token('--canvas') || '#fff', ink: token('--ink'), muted: token('--muted'), line: token('--line'), lineStrong: token('--line-strong'),
     up: token('--positive'), down: token('--negative'),
-    events: { world: token('--event-world'), game: token('--event-game'), market: token('--event-market') } };
+    events: { world: token('--event-world'), game: token('--event-game'), market: token('--event-market') },
+    band: token(side === 'buy' ? '--buy' : '--sell') };
   const ui = token('--font-ui'), serif = token('--font-editorial');
-  const noteLines = notes.reduce((n, note) => n + 1 + note.rows.length + (note.more ? 1 : 0), 0);
+  const noteLines = notes.reduce((n, note) => n + (note.lines ? note.lines.length : 1 + note.rows.length + (note.more ? 1 : 0)), 0);
   const height = HEAD + CHART_HEIGHT + (noteLines ? 12 + noteLines * LINE : 0) + FOOT + PAD * 2;
   const canvas = document.createElement('canvas');
   canvas.width = Math.round(WIDTH * ratio);
@@ -130,6 +131,16 @@ function drawNotes(ctx, notes, { x, y, right, c, ui, text }) {
   const font = `400 13px ${ui}`;
   const colorOf = category => c.events[category.group] ?? c.ink;
   for (const note of notes) {
+    // Plain lines (a projection): a key, then the text, cut short where it would pass the edge.
+    if (note.lines) {
+      for (const line of note.lines) {
+        if (line.mark !== 'none') drawKey(ctx, { mark: line.mark, color: line.mark === 'band' ? c.band : c.ink }, x, y + 10);
+        const tx = line.mark === 'none' ? x : x + 28;
+        text(fit(ctx, line.text, right - tx, font), tx, y + 14, { font, color: line.mark === 'none' ? c.muted : c.ink });
+        y += LINE;
+      }
+      continue;
+    }
     let kx = x;
     for (const { category, count } of note.keys) {
       const w = drawMarker(ctx, { x: kx + 10, y: y + 10, label: category.mark, color: colorOf(category), background: c.canvas, font: ui });
@@ -171,7 +182,17 @@ function drawKey(ctx, { mark, color }, x, y) {
   ctx.save();
   ctx.strokeStyle = ctx.fillStyle = color;
   ctx.lineCap = 'round';
-  if (mark === 'bar') {
+  if (mark === 'band') {
+    ctx.globalAlpha = 0.25;
+    ctx.fillRect(x, y - 5, 18, 10);
+  } else if (mark === 'dashed') {
+    ctx.lineWidth = 2;
+    ctx.setLineDash([5, 3]);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + 18, y);
+    ctx.stroke();
+  } else if (mark === 'bar') {
     ctx.globalAlpha = 0.45;
     ctx.fillRect(x + 5, y - 6, 8, 12);
   } else {
