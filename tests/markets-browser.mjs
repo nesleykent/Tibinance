@@ -48,7 +48,7 @@ try {
   const captureEdges=await pageEdges();
   assert.ok(captureEdges[0]>100,`Capture's margin at 1440px: ${captureEdges[0]}`);
   assert.deepEqual(await page.$$eval('#site-menu a',as=>as.map(a=>[a.textContent,a.getAttribute('href')])),
-    [['Capture','./'],['Markets','markets.html'],['Research','reports/tc-cycle/']]);
+    [['Capture','./'],['Markets','markets.html'],['Trade','trade.html'],['Research','reports/tc-cycle/']]);
   await page.click('header.site [data-site-menu]');
   await page.click('#site-menu a[href="markets.html"]');
   await shown('Antica');
@@ -60,13 +60,13 @@ try {
   assert.doesNotMatch(await page.content(),/tibiamarket/i);
 
   // Terminal layout: the world and quote above the chart, ranges below it, the rail and the list beside it.
-  // The chart's toolbar holds the world and its quote only; the rail holds the market side, Sell or Buy, then panel
-  // tools, then direct actions.
+  // The market side is the chart's own state, on the chart under the world: Sell and Buy with their latest best
+  // offers and the spread between them. The rail only launches panels and actions.
   assert.equal(await page.$$eval('.toolbar-top button,.toolbar-top [role="radio"]',bs=>bs.length),0);
   const tools=page.getByRole('group',{name:'Tools'});
-  const sides=tools.getByRole('radiogroup',{name:'Market side'});
-  assert.deepEqual(await sides.getByRole('radio').evaluateAll(rs=>rs.map(r=>[r.textContent,r.getAttribute('aria-checked')])),[['Sell','true'],['Buy','false']]);
-  assert.ok(await page.evaluate(()=>{const s=document.getElementById('side').getBoundingClientRect(),t=document.querySelector('[data-dock-target="worldsPanel"]').getBoundingClientRect();return s.bottom<=t.top && s.width<=48;}),'the side leads the rail, compact');
+  assert.equal(await tools.getByRole('radio').count(),0,'no chart state in the rail');
+  const sides=page.locator('.chart-area').getByRole('radiogroup',{name:'Market side'});
+  assert.deepEqual(await sides.getByRole('radio').evaluateAll(rs=>rs.map(r=>[r.querySelector('span').textContent,r.getAttribute('aria-checked')])),[['Sell','true'],['Buy','false']]);
   assert.deepEqual(await tools.getByRole('button').evaluateAll(bs=>bs.map(b=>[b.getAttribute('aria-label'),b.hasAttribute('data-dock-target') ? 'panel' : 'action'])),
     [['Worlds','panel'],['Help','panel'],['Export chart image','action'],['Full screen','action']]);
   assert.ok(await page.$('.toolbar-bottom #range'));
@@ -140,11 +140,13 @@ try {
   assert.deepEqual([await text('#detailSell'),await text('#detailBuy'),await text('#detailSpread')],
     [number.format(gentebra.sell),number.format(gentebra.buy),number.format(gentebra.sell-gentebra.buy)]);
   assert.equal(await text('#detailDaily'),'through 2026-09-11');
+  assert.deepEqual([await text('#sideSell'),await text('#sideBuy'),await text('#sideSpread')],
+    [number.format(gentebra.sell),number.format(gentebra.buy),number.format(gentebra.sell-gentebra.buy)]);
   // Copy rule: no middle dots anywhere, generated text included; the metadata is separate items instead.
   assert.doesNotMatch(await page.content(),/\u00b7|&middot;/);
   assert.deepEqual(await page.$$eval('#worldMeta > span',spans=>spans.map(s=>s.textContent)),['Optional PvP','BattlEye Yellow']);
-  // The bottom toolbar holds only the ranges; the top toolbar keeps its single-row height.
-  assert.equal(await text('.toolbar-bottom'),'1M 3M 6M YTD 1Y All');
+  // The bottom toolbar holds the ranges and the day the history runs through; the top toolbar keeps its single-row height.
+  assert.equal(await text('.toolbar-bottom'),`1M 3M 6M YTD 1Y All Server days through ${index.through}`);
   assert.ok(await page.$eval('.toolbar-top',e=>e.getBoundingClientRect().height)<=45,'top toolbar height');
   assert.equal(await page.getAttribute('#worlds tr[data-world="Gentebra"]','aria-selected'),'true');
   assert.match(await page.getAttribute('#chart','aria-label'),/^Gentebra, Best Sell Offer history and daily transaction activity \(count\), range 1Y\./);

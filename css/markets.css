@@ -7,7 +7,6 @@
  * the panels, and scroll the page.
  */
 :root {
-  --sell:#b4532a; --buy:#2f6db5;
   --average:#a9a8b3;   /* the daily average: context for the best offer, never competing with it */
   --watch-width:calc(var(--unit) * 92);
   --rail-width:calc(var(--unit) * 10);
@@ -31,7 +30,8 @@ body { display:flex; flex-direction:column; height:100dvh; overflow:hidden; }
 /* No rule under the first row: a second rule parallel to the header's would join the row to the navigation above.
    The row belongs to the chart beneath it, and the world's name, a step larger, opens the content. */
 .toolbar-top { flex-wrap:wrap; }
-.toolbar-bottom { min-height:calc(var(--toolbar-height) - var(--space-2)); border-top:var(--rule) solid var(--line); }
+.toolbar-bottom { justify-content:space-between; min-height:calc(var(--toolbar-height) - var(--space-3)); padding-block:0; border-top:var(--rule) solid var(--line); }
+.through { color:var(--muted); font-size:var(--step-n2); font-variant-numeric:lining-nums tabular-nums; white-space:nowrap; }
 .symbol { display:flex; align-items:baseline; gap:var(--space-2) var(--space-3); flex-wrap:wrap; min-width:0; }
 .symbol h2 { font-size:var(--step-3); white-space:nowrap; }
 .symbol-meta { display:inline-flex; gap:var(--space-3); color:var(--muted); font-size:var(--step-n2); white-space:nowrap; }
@@ -50,20 +50,33 @@ body { display:flex; flex-direction:column; height:100dvh; overflow:hidden; }
 .tool[aria-pressed="true"] .icon-collapse { display:block; }
 
 .ranges { display:flex; gap:var(--space-0); }
-.ranges button { min-height:calc(var(--control-height) - var(--space-1)); padding:0 var(--space-2); border:0; border-radius:var(--radius-sm); background:transparent; color:var(--muted); font-family:var(--font-ui); font-size:var(--control-type); cursor:pointer; }
+.ranges button { min-height:calc(var(--control-height) - var(--space-1)); padding:0 var(--space-2); font-variant-numeric:lining-nums; border:0; border-radius:var(--radius-sm); background:transparent; color:var(--muted); font-family:var(--font-ui); font-size:var(--control-type); cursor:pointer; }
 .ranges button:hover { background:var(--control-track); color:var(--ink); }
-.ranges button[aria-checked="true"] { background:var(--accent-soft); color:var(--accent); font-weight:var(--weight-strong); }
+.ranges button[aria-checked="true"] { background:var(--control-track); color:var(--ink); font-weight:var(--weight-strong); }
 
 /* ---- chart and its legends ------------------------------------------------------ */
 .chart-area { position:relative; flex:1; min-height:0; }
 .chart { position:absolute; inset:0; }
-.legend { position:absolute; z-index:2; left:var(--space-4); top:var(--space-2); max-width:calc(100% - var(--space-8) * 2); display:flex; flex-direction:column; gap:var(--space-0); pointer-events:none;
+.chart-legend { position:absolute; z-index:2; left:var(--space-4); top:var(--space-1); max-width:calc(100% - var(--space-8) * 2); display:flex; flex-direction:column; align-items:flex-start; gap:var(--space-1); pointer-events:none; }
+.legend { display:flex; flex-direction:column; gap:var(--space-0);
   color:var(--muted); font-family:var(--font-ui); font-size:var(--step-n1); font-variant-numeric:lining-nums tabular-nums; line-height:var(--leading-tight); }
 .legend .row { display:flex; flex-wrap:wrap; align-items:center; gap:0 var(--space-2); }
 .legend .day { color:var(--ink); font-weight:var(--weight-strong); }
 .legend b { color:var(--ink); font-weight:var(--weight-strong); }
 .legend .label { display:inline-flex; align-items:center; gap:var(--space-1); }
-.legend-volume { top:0; }
+.legend-volume { margin-top:calc(var(--space-0) * -1); }
+/* The market side: both sides' latest best offers, the spread between them, the one shown outlined in its colour.
+   Quiet outlines, not filled buttons: they choose the series, they place nothing. */
+.sides { display:flex; align-items:center; gap:var(--space-1); pointer-events:auto; font-family:var(--font-ui); font-variant-numeric:lining-nums tabular-nums; }
+.side-pick { --side-color:var(--sell); display:grid; justify-items:center; min-width:calc(var(--unit) * 17); padding:var(--space-0) var(--space-2); border:var(--rule) solid var(--line); border-radius:var(--radius-sm);
+  background:var(--canvas); color:var(--muted); font-family:var(--font-ui); line-height:var(--leading-tight); cursor:pointer; }
+.side-pick[data-side="buy"] { --side-color:var(--buy); }
+.side-pick b { font-size:var(--step-n1); font-weight:var(--weight-strong); }
+.side-pick span { font-size:var(--step-n2); font-weight:var(--weight-strong); letter-spacing:var(--tracking-caps); text-transform:uppercase; }
+.side-pick:hover { border-color:var(--line-strong); color:var(--ink); }
+.side-pick[aria-checked="true"] { border-color:var(--side-color); background:color-mix(in srgb, var(--side-color) 7%, var(--canvas)); color:var(--side-color); }
+.side-pick:focus-visible { outline:var(--rule-strong) solid var(--side-color); outline-offset:var(--rule); }
+.side-spread { min-width:calc(var(--unit) * 8); color:var(--muted); font-size:var(--step-n2); text-align:center; }
 /* Above the chart's canvases (z-index 1 and 2), so a message hides a stale price scale. */
 .chart-status { position:absolute; z-index:3; inset:0; display:grid; place-items:center; margin:0; color:var(--muted); font-family:var(--font-ui); font-size:var(--step-n1); background:var(--canvas); }
 .chart-status[hidden] { display:none; }
@@ -74,7 +87,7 @@ body { display:flex; flex-direction:column; height:100dvh; overflow:hidden; }
 .key-dot { width:var(--space-2); height:var(--space-2); border:0; border-radius:50%; background:var(--side); }
 .key-dotted { border-top-style:dotted; }
 .key-average { border-top:var(--rule) solid var(--average); }
-.key-volume { width:var(--space-2); height:var(--space-3); border:0; background:var(--side); opacity:.45; }
+.key-volume { width:var(--space-2); height:var(--space-3); border:0; background:var(--side); opacity:.3; }
 
 .up { color:var(--positive); } .down { color:var(--negative); }
 /* A retired world is labelled wherever it appears. */
@@ -101,7 +114,7 @@ body { display:flex; flex-direction:column; height:100dvh; overflow:hidden; }
 .watch-head .filter { flex:1; min-width:0; width:auto; min-height:calc(var(--control-height) - var(--space-1)); }
 .watch-scroll { flex:1; min-height:0; overflow:auto; overscroll-behavior:contain; }
 table.watch { width:100%; border-collapse:collapse; font-size:var(--step-n1); font-variant-numeric:lining-nums tabular-nums; }
-table.watch thead th { position:sticky; top:0; z-index:1; padding:var(--space-1) var(--space-2); border-bottom:var(--rule) solid var(--line-strong); background:var(--surface-soft);
+table.watch thead th { position:sticky; top:0; z-index:1; padding:var(--space-1) var(--space-2); border-bottom:var(--rule) solid var(--line); background:var(--canvas);
   color:var(--muted); font-size:var(--step-n2); font-weight:var(--weight-strong); letter-spacing:var(--tracking-caps); text-align:left; text-transform:uppercase; white-space:nowrap; }
 table.watch thead th.num { text-align:right; }
 table.watch thead th:first-child,table.watch tbody th { padding-left:var(--space-3); }
@@ -112,7 +125,7 @@ table.watch th[aria-sort="descending"] button::after { content:" ↓"; }
 table.watch tbody tr { cursor:pointer; }
 table.watch tbody tr:hover { background:var(--surface-hover); }
 table.watch tbody tr[aria-selected="true"] { background:var(--accent-soft); box-shadow:inset var(--rule-strong) 0 var(--accent); }
-table.watch tbody th,table.watch td { padding:var(--row-pad) var(--space-2); border-bottom:var(--rule) solid var(--line-faint); white-space:nowrap; }
+table.watch tbody th,table.watch td { padding:var(--row-pad) var(--space-2); white-space:nowrap; }
 /* A stale world's date or a Retired tag wraps under the name only where the row lacks room. */
 /* position: the row's screen-reader note stays inside the scrolling list, not the page. */
 table.watch tbody th { position:relative; font-weight:var(--weight-regular); text-align:left; }
@@ -135,27 +148,22 @@ table.watch td.stale { color:var(--muted); }
 .dock { display:flex; min-width:0; min-height:0; }
 .dock-panel { width:var(--watch-width); border-right:var(--rule) solid var(--line); }
 .dock-panel:not(.is-open) { display:none; }
-/* The rail is regions by meaning (markets.html): the chart's state at the top, then the tools that analyse or
-   navigate the market, flexible space, and the utilities at the bottom, level with the ranges row. Every tool is
+/* The rail launches panels and tools; the chart's own state lives on the chart. In regions by meaning (markets.html):
+   the tools that analyse or navigate the market, flexible space, and the utilities at the bottom. Every tool is
    one square slot; on, open or pressed, a slot holds the control track. */
 .dock-rail { flex:none; display:flex; flex-direction:column; align-items:center; width:var(--rail-width);
-  padding-block:calc((var(--toolbar-height) - var(--space-6)) / 2) calc((var(--toolbar-height) - var(--space-2) - var(--space-6)) / 2); }
+  padding-block:calc((var(--toolbar-height) - var(--space-6)) / 2) calc((var(--toolbar-height) - var(--space-3) - var(--space-6)) / 2); }
 .dock-group { display:flex; flex-direction:column; align-items:center; gap:var(--space-1); }
 .dock-space { flex:1; }
 .dock-tool { width:var(--space-6); height:var(--space-6); }
-.dock-rule { flex:none; width:var(--space-5); height:var(--rule); margin:var(--space-2) 0; background:var(--line); }
-/* The market side: two slots, the one shown on the track in its side's colour, as the chart draws it. */
-.dock-side .tool { font-family:var(--font-ui); font-size:var(--control-type); line-height:1; }
-.dock-side .tool[aria-checked="true"] { background:var(--control-track); font-weight:var(--weight-strong); }
-.dock-side .tool[data-side="sell"][aria-checked="true"] { color:var(--sell); }
-.dock-side .tool[data-side="buy"][aria-checked="true"] { color:var(--buy); }
 
-/* ---- selected world -------------------------------------------------------------- */
+/* ---- selected world: under the list, like an instrument's key facts ------------------ */
 .details { flex:none; padding:var(--space-3); border-top:var(--rule) solid var(--line); }
 .details-title { margin:0 0 var(--space-2); font-family:var(--font-editorial); font-size:var(--step-1); font-weight:var(--weight-regular); }
-.details-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--space-2) var(--space-3); margin:0; font-variant-numeric:lining-nums tabular-nums; }
-.details-grid dt { color:var(--muted); font-size:var(--step-n2); font-weight:var(--weight-strong); letter-spacing:var(--tracking-caps); text-transform:uppercase; }
-.details-grid dd { margin:0; font-size:var(--step-n1); white-space:nowrap; }
+.details-grid { display:grid; gap:var(--space-1); margin:0; font-variant-numeric:lining-nums tabular-nums; }
+.details-grid > div { display:flex; align-items:baseline; justify-content:space-between; gap:var(--space-3); }
+.details-grid dt { color:var(--muted); font-size:var(--step-n1); }
+.details-grid dd { margin:0; font-size:var(--step-n1); font-weight:var(--weight-strong); white-space:nowrap; }
 
 /* ---- full screen: the whole terminal, rail and open panel included; true full screen, or the whole viewport
    where that is unavailable. The page's margins give way to the screen's edges. ---- */
@@ -163,7 +171,7 @@ table.watch td.stale { color:var(--muted); }
 .terminal.expanded { position:fixed; inset:0; z-index:var(--layer-header); max-width:none; padding:0; background:var(--canvas); }
 /* In the page, the chart's text starts on the page's edge, under Tibinance; at full screen it keeps an inset. */
 .terminal:not(.expanded,:fullscreen) .toolbar { padding-left:0; }
-.terminal:not(.expanded,:fullscreen) .legend { left:0; }
+.terminal:not(.expanded,:fullscreen) .chart-legend { left:0; }
 
 /* ---- narrow: chart first, then the list; the page scrolls ------------------------- */
 @media (max-width:900px) {
@@ -179,9 +187,8 @@ table.watch td.stale { color:var(--muted); }
   /* The same regions, start to end: the side, the market tools, space, the utilities. */
   .dock-rail { order:-1; flex-direction:row; width:auto; padding:var(--space-1) 0; border-bottom:var(--rule) solid var(--line); }
   .dock-group { flex-direction:row; }
-  .dock-rule { width:var(--rule); height:var(--space-5); margin:0 var(--space-2); }
-  /* With Worlds always listed below, its region is empty here, and so is the rule before it. */
-  .dock-group:has(> [data-dock-default]:only-child),.dock-rule:has(+ .dock-group > [data-dock-default]:only-child) { display:none; }
+  /* With Worlds always listed below, its region is empty here. */
+  .dock-group:has(> [data-dock-default]:only-child) { display:none; }
   .dock-tool[data-dock-default] { display:none; }
   .dock-panel { width:auto; border-right:0; }
   .dock-panel:not([data-dock-default]) { border-bottom:var(--rule) solid var(--line); }
@@ -189,7 +196,7 @@ table.watch td.stale { color:var(--muted); }
   /* At full screen a phone shows the chart and the rail's actions. */
   .terminal:is(.expanded,:fullscreen) { display:flex; flex-direction:column; overflow:hidden; }
   .terminal:is(.expanded,:fullscreen) .chart-panel { flex:1; height:auto; border-bottom:0; }
-  .terminal:is(.expanded,:fullscreen) :is(.dock-panel,[data-dock-target],.dock-rule) { display:none; }
+  .terminal:is(.expanded,:fullscreen) :is(.dock-panel,[data-dock-target]) { display:none; }
   .terminal:is(.expanded,:fullscreen) .dock-rail { padding-inline:var(--space-2); border-top:var(--rule) solid var(--line); border-bottom:0; }
 }
 /* A wide chart keeps the toolbar on one row at its fixed height: the world's
@@ -209,5 +216,5 @@ table.watch td.stale { color:var(--muted); }
   .toolbar-top > .symbol { padding-right:0; border-right:0; }
 }
 @container chart (max-width:471.98px) {
-  .symbol-meta,.legend .meta { display:none; }
+  .symbol-meta,.legend .meta,.through { display:none; }
 }

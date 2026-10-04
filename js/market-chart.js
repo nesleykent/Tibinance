@@ -66,35 +66,27 @@ const dailyAverage = {
   keys: (side, c) => [{ mark: 'line', color: c.average, label: 'Daily average' }]
 };
 
-// Raw transaction activity per completed server day on that side, in its own pane. Every server day is on the axis, so a gap takes the
-// width of its missing days; a day without trades is a real zero.
+// Raw transaction activity per completed server day, on a separate hidden scale below prices.
+// Missing observations remain gaps; an observed zero counter remains zero.
 const activity = {
-  depth: 2,
+  depth: -1,
   add(chart, { L }) {
-    const s = chart.addSeries(L.HistogramSeries, { priceLineVisible: false, lastValueVisible: false,
-      priceFormat: { type: 'custom', minMove: 1, formatter: v => fmt(Math.round(v)) } }, 1);
-    s.priceScale().applyOptions({ scaleMargins: { top: 0.3, bottom: 0 } });
+    const s = chart.addSeries(L.HistogramSeries, { priceScaleId: 'volume', priceLineVisible: false, lastValueVisible: false,
+      priceFormat: { type: 'custom', minMove: 1, formatter: v => fmt(Math.round(v)) } });
+    s.priceScale().applyOptions({ scaleMargins: { top: 0.8, bottom: 0 } });
     return s;
   },
   draw(s, view, side, c) {
-    s.applyOptions({ color: `${c[side]}73` });
+    s.applyOptions({ color: `${c[side]}40` });
     s.setData(view.grid.map(day => {
       const value = view.dailyByDay.get(day)?.[side]?.transactions;
       return value === undefined ? { time: day } : { time: day, value };
     }));
   },
-  keys: (side, c) => [{ mark: 'bar', color: c[side], label: 'Transactions (count)' }],
-  // The pane's name at its top left, as on the page.
-  annotate(ctx, { chart, x, y, k, font, c }) {
-    ctx.font = font(11 * k);
-    ctx.fillStyle = c.text;
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'top';
-    ctx.fillText('Transactions', x + 4 * k, y + chart.paneSize(0).height + 4 * k);
-  }
+  keys: (side, c) => [{ mark: 'bar', color: c[side], label: 'Transactions (count)' }]
 };
 
-// Read in this order; drawn by depth: the average beneath the best offer, transaction activity in its own pane.
+// Read in this order; drawn by depth: activity behind the price series.
 export const LAYERS = [bestOffer, dailyAverage, activity];
 
 /* ---------------------------------------------------------------- chart */
@@ -105,8 +97,8 @@ export function createMarketChart(container, { scale: k = 1, width, height } = {
     layout: { background: { type: 'solid', color: 'transparent' }, textColor: c.text, fontFamily: token('--font-ui'), fontSize: 11 * k,
       panes: { separatorColor: c.rule, separatorHoverColor: c.crosshair }, attributionLogo: !width },
     grid: { vertLines: { visible: false }, horzLines: { color: c.grid } },
-    // Room above the highest price for the legend.
-    rightPriceScale: { borderVisible: false, scaleMargins: { top: 0.14, bottom: 0.06 } },
+    // Room above the highest price for the status lines, and below the lowest for transaction activity.
+    rightPriceScale: { borderVisible: false, scaleMargins: { top: 0.18, bottom: 0.22 } },
     timeScale: { borderVisible: false, rightOffset: 4 },
     crosshair: { mode: L.CrosshairMode.Normal,
       vertLine: { color: c.crosshair, labelBackgroundColor: c.ink },
@@ -116,8 +108,6 @@ export function createMarketChart(container, { scale: k = 1, width, height } = {
   const line = options => chart.addSeries(L.LineSeries, { priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false, ...options });
   const series = new Map();
   for (const layer of [...LAYERS].sort((a, b) => a.depth - b.depth)) series.set(layer, layer.add(chart, { line, k, L }, c));
-  chart.panes()[0].setStretchFactor(4);
-  chart.panes()[1].setStretchFactor(1);
   // Dots shrink, then give way to the line, as more days share the same width.
   chart.timeScale().subscribeVisibleLogicalRangeChange(range => {
     if (!range) return;

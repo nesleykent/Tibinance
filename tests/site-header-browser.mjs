@@ -1,4 +1,4 @@
-// The shared site header (js/site-header.js, css/site-header.css) on Capture, Markets and both Research editions,
+// The shared site header (js/site-header.js, css/site-header.css) on Capture, Markets, Trade and both Research editions,
 // in a real browser: the trail and its menu of sections, keyboard and pointer use, Research's world and language
 // controls, their accessible names, and the layout at desktop and phone widths.
 // Run with the same local server / Playwright environment as markets-browser.mjs (TIBINANCE_BROWSER=webkit for WebKit).
@@ -9,15 +9,16 @@ const {chromium,webkit}=require(process.env.TIBINANCE_NODE_MODULES ? `${process.
 const engine=process.env.TIBINANCE_BROWSER ?? 'chrome';
 const root=process.env.TIBINANCE_TEST_URL ?? 'http://127.0.0.1:8765';
 const SITE='https://nesleykent.github.io/Tibinance/';
-const LOCAL=[['Capture','./'],['Markets','markets.html'],['Research','reports/tc-cycle/']];
+const LOCAL=[['Capture','./'],['Markets','markets.html'],['Trade','trade.html'],['Research','reports/tc-cycle/']];
 const pages=[
   {name:'Capture',path:'/',ready:'#capturesLoading[hidden]',trail:['Tibinance'],trigger:'Tibinance',home:null,links:LOCAL},
   {name:'Markets',path:'/markets.html',ready:'#market[aria-busy="false"]',trail:['Tibinance','/','Markets'],trigger:'Markets',home:'./',links:LOCAL},
+  {name:'Trade',path:'/trade.html',ready:'#tradeResult .trade-prompt',trail:['Tibinance','/','Trade'],trigger:'Trade',home:'./',links:LOCAL},
   {name:'Research',path:'/reports/tc-cycle/',ready:'#report[aria-busy="false"]',trail:['Tibinance','/','Research'],trigger:'Research',home:SITE,
-    links:[['Capture',SITE],['Markets',`${SITE}markets.html`],['Research','./']],
+    links:[['Capture',SITE],['Markets',`${SITE}markets.html`],['Trade',`${SITE}trade.html`],['Research','./']],
     language:{name:'Language: EN, English',code:'EN',current:'English',empty:'No world matches.'}},
   {name:'Research',path:'/reports/tc-cycle/pt-br.html',ready:'#report[aria-busy="false"]',trail:['Tibinance','/','Research'],trigger:'Research',home:SITE,
-    links:[['Capture',SITE],['Markets',`${SITE}markets.html`],['Research','pt-br.html']],
+    links:[['Capture',SITE],['Markets',`${SITE}markets.html`],['Trade',`${SITE}trade.html`],['Research','pt-br.html']],
     language:{name:'Idioma: PT, Português',code:'PT',current:'Português',empty:'Nenhum world encontrado.'}},
 ];
 const EDITIONS=[['English','./','en'],['Português','pt-br.html','pt-BR']];
@@ -67,7 +68,7 @@ try {
     assert.deepEqual(edges,captureEdges,`${label}: Capture's margins`);
     assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).scrollbarGutter),'stable',`${label}: scrollbar room kept`);
 
-    // Pointer: the menu opens under its button, lists the three sections and marks this one.
+    // Pointer: the menu opens under its button, lists the four sections and marks this one.
     assert.equal(await trigger.getAttribute('aria-expanded'),'false');
     await trigger.click();
     assert.deepEqual(await open(),['site-menu']);
@@ -87,6 +88,7 @@ try {
     assert.equal(await focused(),p.name);
     await page.keyboard.press('Home'); assert.equal(await focused(),'Capture');
     await page.keyboard.press('ArrowDown'); assert.equal(await focused(),'Markets');
+    await page.keyboard.press('ArrowDown'); assert.equal(await focused(),'Trade');
     await page.keyboard.press('End'); assert.equal(await focused(),'Research');
     await page.keyboard.press('ArrowDown'); assert.equal(await focused(),'Capture');
     await page.keyboard.press('ArrowUp'); assert.equal(await focused(),'Research');
@@ -224,7 +226,7 @@ try {
   assert.equal(new URL(page.url()).pathname,'/');
 
   assert.deepEqual(errors,[]);
-  console.log(`PASS ${engine}: shared trail and menu on Capture, Markets and Research (EN, PT); keyboard, pointer, focus, Research world and language controls, deep links, 1440/768/390/375 layouts`);
+  console.log(`PASS ${engine}: shared trail and menu on Capture, Markets, Trade and Research (EN, PT); keyboard, pointer, focus, Research world and language controls, deep links, 1440/768/390/375 layouts`);
 } finally {
   await browser.close();
 }
