@@ -112,6 +112,13 @@ try {
   assert.equal(await page.locator('#eventDayList [data-event]').count(), 2);
   await page.locator('#eventDayList [data-event]').first().click();
   assert.match(await page.innerText('#eventDetails'), /Winterberries/);
+  await page.goto(`${process.env.TIBINANCE_TEST_URL ?? 'http://127.0.0.1:8765'}/markets.html?world=Terribra&range=All`);
+  await page.waitForFunction(() => document.querySelector('#market').getAttribute('aria-busy') === 'false');
+  await page.click('#eventsToggle');
+  await page.fill('#eventMonth', '2026-10');
+  await page.click('[data-day="2026-10-04"]');
+  await page.locator('#eventDayList [data-event]').first().click();
+  await page.waitForTimeout(250);
   await page.screenshot({ path: '/tmp/tibinance-game-events-calendar.png' });
   assert.deepEqual(errors, []);
   console.log(`Events panel browser checks passed (${engine}).`);
