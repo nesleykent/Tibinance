@@ -22,7 +22,7 @@ try{
   await page.goto(`${root}/markets.html?world=${world}&range=${range}`);
   await page.waitForFunction(()=>document.querySelector('#market').getAttribute('aria-busy')==='false');
   for(const c of cases.filter(c=>c.world===world))for(const side of ['buy','sell']){
-   await page.locator(`[data-side="${side}"]`).click();
+   await page.locator(`#side [data-side="${side}"]`).click();
    const result=await page.evaluate(({day,side})=>{
     const {state,showLegend}=window.__marketAudit;showLegend(day);
     const stats=day?state.view.dailyByDay.get(day)?.[side]:undefined;
@@ -30,7 +30,9 @@ try{
       count:state.view.observations?.length};
    },{day:c.day,side});
    if(c.day){assert.match(result.activity,new RegExp('Transactions\\s+'+(result.stats?fmt.format(result.stats.transactions):'N/A')+'$'));
-    if(result.stats?.transactions>0)assert.match(result.legend,new RegExp('Daily average\\s+'+fmt.format(result.stats.averagePrice)+'$'));
+    // A trading day's readout: its average, then the day's traded high and low, all exactly the canonical values.
+    if(result.stats?.transactions>0)assert.match(result.legend,new RegExp('Daily average\\s+'+fmt.format(result.stats.averagePrice)
+      +'\\s+High\\s+'+fmt.format(result.stats.highestPrice)+'\\s+Low\\s+'+fmt.format(result.stats.lowestPrice)+'$'));
     else if(!result.stats)assert.match(result.legend,/Daily average\s+N\/A$/);
    }
   }

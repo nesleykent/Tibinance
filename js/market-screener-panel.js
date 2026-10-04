@@ -2,7 +2,7 @@
  * The Screener's markup (markets.html #screenerPanel): a grid of worlds, each a mini chart of its best offers over the
  * range with its key figures, and the controls that search, filter and sort them. The rows and the mini chart's
  * geometry come from js/market-screener.js; the page (js/markets.js) owns the side, the range and the selected world,
- * and is told when a world is opened or the range changes.
+ * and is told when a world is opened or the side or range changes.
  *
  * Every card is a link to the world's chart, so it can be opened in a new tab; a plain click opens it in place. The
  * filters and the order are a viewing preference, remembered on this device rather than in the address; the search
@@ -22,7 +22,7 @@ const signed = new Intl.NumberFormat(undefined, { signDisplay: 'exceptZero' });
 const share = new Intl.NumberFormat(undefined, { style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const tone = v => v > 0 ? 'up' : v < 0 ? 'down' : '';
 
-export function screenerPanel(root, { onOpen, onRange }) {
+export function screenerPanel(root, { onOpen, onRange, onSide }) {
   const $ = id => root.querySelector(`#${id}`);
   let prefs = { ...DEFAULTS }, query = '', data = null;
   try { prefs = { ...DEFAULTS, ...JSON.parse(localStorage.getItem(KEY) ?? '{}') }; } catch { /* storage unavailable or unreadable */ }
@@ -145,6 +145,11 @@ export function screenerPanel(root, { onOpen, onRange }) {
   $('screenerEmpty').addEventListener('click', e => {
     const status = e.target.closest('[data-status]')?.dataset.status;
     if (status) { $('screenerStatus').value = status; set('status', status); }
+  });
+  // The Screener takes the chart's place, and with it the chart's side choice: it has its own, for the same side.
+  $('screenerSide').addEventListener('click', e => {
+    const side = e.target.closest('button')?.dataset.side;
+    if (side && side !== data?.side) onSide(side);
   });
   $('screenerRange').addEventListener('click', e => {
     const range = e.target.closest('button')?.dataset.range;

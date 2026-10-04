@@ -59,17 +59,21 @@ try {
   // One market, not two sources: no source is named anywhere in the page.
   assert.doesNotMatch(await page.content(),/tibiamarket/i);
 
-  // Terminal layout: the world and quote above the chart, ranges below it, the rail and the list beside it.
-  // The chart's toolbar holds the world and its quote only; the rail holds the market side, Sell or Buy, then panel
-  // tools, then direct actions.
-  assert.equal(await page.$$eval('#chartPanel .toolbar-top button,#chartPanel .toolbar-top [role="radio"]',bs=>bs.length),0);
+  // Terminal layout: the chart leads, ranges below it, the rail and the list beside it. The chart's status, over its
+  // top left, reads the world, its quote and the market side, with both sides' latest best offers and the spread
+  // between them; the rail launches tools and holds no chart state.
   const tools=page.getByRole('group',{name:'Tools'});
-  const sides=tools.getByRole('radiogroup',{name:'Market side'});
-  assert.deepEqual(await sides.getByRole('radio').evaluateAll(rs=>rs.map(r=>[r.textContent,r.getAttribute('aria-checked')])),[['Sell','true'],['Buy','false']]);
-  assert.ok(await page.evaluate(()=>{const s=document.getElementById('side').getBoundingClientRect(),t=document.querySelector('[data-dock-target="worldsPanel"]').getBoundingClientRect();return s.bottom<=t.top && s.width<=48;}),'the side leads the rail, compact');
-  // One left edge for the world, its readout and the ranges; one right edge for the quote and the price labels' column.
-  const lefts=await page.evaluate(()=>['#world','#legend .day','#legend .label'].map(s=>document.querySelector(s).getBoundingClientRect().left));
-  assert.ok(lefts.every(l=>Math.abs(l-lefts[0])<=1),`the world, the day and the series share a left edge: ${lefts}`);
+  const sides=page.locator('#chartHead').getByRole('radiogroup',{name:'Market side'});
+  assert.deepEqual(await sides.getByRole('radio').evaluateAll(rs=>rs.map(r=>[r.querySelector('.side-name').textContent,r.getAttribute('aria-checked')])),[['Sell','true'],['Buy','false']]);
+  const anticaQuote=summary('Antica').latestBestOffer;
+  assert.deepEqual([await text('#sideSell'),await text('#sideSpread'),await text('#sideBuy')],
+    [number.format(anticaQuote.sell),number.format(anticaQuote.sell-anticaQuote.buy),number.format(anticaQuote.buy)]);
+  assert.equal(await tools.getByRole('radiogroup').count(),0,'the rail holds no chart state');
+  assert.ok(await page.evaluate(()=>{const a=document.querySelector('.chart-area').getBoundingClientRect(),h=document.getElementById('chartHead').getBoundingClientRect();
+    return h.top>=a.top && h.top-a.top<16 && h.left>=a.left-1 && h.right<a.right-60;}),'the status is over the chart\'s top left, clear of the price scale');
+  // One left edge for the world, the side and the readout.
+  const lefts=await page.evaluate(()=>['#world','#side','#legend .day','#legend .label'].map(s=>document.querySelector(s).getBoundingClientRect().left));
+  assert.ok(lefts.every(l=>Math.abs(l-lefts[0])<=1),`the world, the side, the day and the series share a left edge: ${lefts}`);
   assert.deepEqual(await tools.getByRole('button').evaluateAll(bs=>bs.map(b=>[b.getAttribute('aria-label'),b.hasAttribute('data-dock-target') ? 'panel' : 'action'])),
     [['Worlds','panel'],['Screener','action'],['Events','panel'],['Projections','action'],['Help','panel'],['Export chart image','action'],['Full screen','action']]);
   assert.ok(await page.$('.toolbar-bottom #range'));
@@ -159,9 +163,9 @@ try {
   // Copy rule: no middle dots anywhere, generated text included; the metadata is separate items instead.
   assert.doesNotMatch(await page.content(),/\u00b7|&middot;/);
   assert.deepEqual(await page.$$eval('#worldMeta > span',spans=>spans.map(s=>s.textContent)),['Optional PvP','BattlEye Yellow']);
-  // The bottom toolbar holds the ranges and the day the history runs through; the top toolbar keeps its single-row height.
+  // The bottom toolbar holds the ranges and the day the history runs through; the world's line keeps to one row.
   assert.equal(await text('.toolbar-bottom'),`1M 3M 6M YTD 1Y All Server days through ${index.through}`);
-  assert.ok(await page.$eval('.toolbar-top',e=>e.getBoundingClientRect().height)<=45,'top toolbar height');
+  assert.ok(await page.$eval('#chartHead .head-line',e=>e.getBoundingClientRect().height)<=40,'the world\'s line height');
   assert.equal(await page.getAttribute('#worlds tr[data-world="Gentebra"]','aria-selected'),'true');
   assert.match(await page.getAttribute('#chart','aria-label'),/^Gentebra, Best Sell Offer history and daily transaction activity \(count\), range 1Y\./);
   const [prior,last]=closes.slice(-2);
@@ -180,7 +184,8 @@ try {
     seen.push([await text('#legend'),await text('#volumeLegend')]);
   }
   assert.ok(seen.some(([l])=>l.includes('Best Sell Offer not observed between 2026-09-12 and 2026-09-21') && l.endsWith('Daily average N/A')),'gap legend');
-  assert.ok(seen.some(([l,v])=>/Daily average \d[\d,]*$/.test(l) && /^Transactions \d[\d,]*$/.test(v)),'trading-day legend');
+  // A trading day reads like a bar: its average with the day's traded high and low, and its transactions.
+  assert.ok(seen.some(([l,v])=>/Daily average \d[\d,]* High \d[\d,]* Low \d[\d,]*$/.test(l) && /^Transactions \d[\d,]*$/.test(v)),'trading-day legend');
   await page.mouse.move(0,0);
   await page.waitForFunction(t=>document.querySelector('#legend .day').textContent===t,last[0]);
 
@@ -197,6 +202,14 @@ try {
   assert.equal(await text('#detailChange'),expectedChange('Gentebra','buy','All').join(' '));
   assert.deepEqual(await page.$$eval('#worlds tr[data-world="Gentebra"] td:not(:first-of-type)',tds=>tds.map(td=>td.textContent.trim())),
     expectedChange('Gentebra','buy','All'));
+  // The details: the quote for the side shown, and the change over every range, each one press from the chart.
+  assert.deepEqual([await text('#detailLast'),await text('#detailLastLabel')],[number.format(gentebra.buy),'Best Buy Offer']);
+  assert.deepEqual(await page.$$eval('#detailPerformance button',bs=>bs.map(b=>[b.querySelector('.perf-range').textContent,b.querySelector('.perf-value').textContent,b.getAttribute('aria-pressed')])),
+    ['1M','3M','6M','YTD','1Y','All'].map(r=>[r,expectedChange('Gentebra','buy',r)[1],String(r==='All')]));
+  await page.click('#detailPerformance button[data-range="6M"]');
+  assert.equal(param('range'),'6M');
+  assert.equal(await page.getAttribute('#range button[data-range="6M"]','aria-checked'),'true');
+  await page.click('#range button[data-range="All"]');
 
   // Filtering, sorting and keyboard movement through the list.
   await page.fill('#filter','bra');
@@ -340,9 +353,9 @@ try {
     [['R','Retired: offline since 2025-11-06, merged into Terribra.']]);
   assert.equal(await text('#detailStatus'),'Offline since 2025-11-06, merged into Terribra');
   assert.equal(await page.$$eval('#worlds tr',rows=>rows.length),active.length+1,'the selected retired world stays listed');
-  // Regressions found in the final visual pass: a retired world's longer metadata keeps the toolbar on one
-  // row, and a deep-linked world is scrolled into view once the details panel has filled.
-  assert.ok(await page.$eval('.toolbar-top',e=>e.getBoundingClientRect().height)<=45,'a retired world keeps the toolbar on one row');
+  // Regressions found in visual passes: a retired world's longer metadata wraps inside the status, clear of the price
+  // scale, and a deep-linked world is scrolled into view once the details panel has filled.
+  assert.ok(await page.evaluate(()=>document.getElementById('chartHead').getBoundingClientRect().right<document.querySelector('.chart-area').getBoundingClientRect().right-60),'a retired world\'s status stays clear of the price scale');
   assert.match(await page.getAttribute('#worldMeta','title'),/merged into Terribra/);
   assert.ok(await page.$eval('#worlds tr[data-world="Jacabra"]',row=>{const r=row.getBoundingClientRect(),box=row.closest('.watch-scroll').getBoundingClientRect();
     return r.top>=box.top && r.bottom<=box.bottom+1;}),'the deep-linked world is visible in the list');
@@ -468,6 +481,8 @@ try {
     await page.setViewportSize({width,height});
     await page.goto(`${root}/markets.html?world=Gentebra&range=3M`);
     await shown('Gentebra');
+    // Loading never scrolls the page to the list: the reader starts on the chart.
+    assert.equal(await page.evaluate(()=>scrollY),0,`${width}px opens on the chart`);
     const layout=await page.evaluate(()=>{
       const chart=document.querySelector('.chart-panel').getBoundingClientRect(),list=document.querySelector('.watchlist').getBoundingClientRect();
       return {overflow:document.documentElement.scrollWidth-innerWidth,beside:list.left>=chart.right,below:list.top>=chart.bottom,share:chart.height/innerHeight};

@@ -134,7 +134,7 @@ function applyRange(attempt = 0) {
  * observations on either side instead of showing a value.
  */
 function showLegend(day) {
-  const view = state.view;
+  const view = state.view, rest = day == null;
   if (!view) return;
   $('projectionLegend').innerHTML = '';
   if (!view.latestDay) { $('legend').innerHTML = ''; $('volumeLegend').innerHTML = ''; return; }
@@ -158,10 +158,14 @@ function showLegend(day) {
   } else best = '<span class="note">not observed</span>';
   const stats = statisticsAt(view, day, side);
   const average = !stats ? num(null) : stats.transactions ? fmt(stats.averagePrice) : 'no trades';
+  // The day's traded range beside its average, as a terminal reads a bar: the highest and lowest prices of the trades
+  // that filled this side's offers. Read out only; never drawn, since a Buy low of 1 is common.
+  const range = stats?.transactions ? ` <span class="rest"><span class="meta-label">High</span> ${fmt(stats.highestPrice)} <span class="meta-label">Low</span> ${fmt(stats.lowestPrice)}</span>` : '';
   $('legend').innerHTML = `<span class="day">${esc(day)}</span> <span class="label"><i class="key key-dot"></i>${labels.offer}</span> ${best} `
-    + `<span class="label"><i class="key key-average"></i>Daily average</span> <b class="value">${average}</b>`;
+    + `<span class="label"><i class="key key-average"></i>Daily average</span> <b class="value">${average}</b>${range}`;
   $('volumeLegend').innerHTML = ` <span class="label"><i class="key key-volume"></i>Transactions</span> <b class="value">${stats ? fmt(stats.transactions) : num(null)}</b>`;
   if (market.visible('projections') && view.projection) $('projectionLegend').innerHTML = projectionRow(view.projection[side]);
+  if (rest) fitHead();
 }
 
 const projectionLabel = '<span class="label"><i class="key key-projection"></i>Projection</span>';
@@ -204,8 +208,11 @@ function showQuote() {
     summary.type && `<span>${esc(summary.type)}</span>`,
     summary.battleye && `<span>BattlEye <span class="be-${esc(summary.battleye)}">${esc(summary.battleye)}</span></span>`].filter(Boolean).join('');
   $('worldMeta').title = $('worldMeta').textContent.replace(/\s+/g, ' ').trim();   // the whole line where it is cut short
-  // The rail's side choice names each side's latest best offer on hover, without competing with the quote.
+  // The side choice carries both sides' latest best offers and the spread between them, as a terminal shows its quote.
   for (const b of $('side').querySelectorAll('button')) b.title = `${SIDES[b.dataset.side].offer}: ${latest ? fmt(latest[b.dataset.side]) : 'N/A'}`;
+  $('sideSell').innerHTML = num(latest?.sell);
+  $('sideBuy').innerHTML = num(latest?.buy);
+  $('sideSpread').innerHTML = latest ? fmt(latest.sell - latest.buy) : num(null);
   $('through').textContent = `Server days through ${state.view.end}`;
   $('lastPrice').innerHTML = num(latest?.[side]);
   $('lastPrice').title = SIDES[side].offer;
@@ -214,6 +221,10 @@ function showQuote() {
   $('lastRange').textContent = change ? state.range : '';
 
   $('detailsWorld').innerHTML = esc(summary.world) + (retired(summary) ? ' <span class="tag">Retired</span>' : '');
+  $('detailMeta').innerHTML = [summary.type, summary.battleye && `BattlEye <span class="be-${esc(summary.battleye)}">${esc(summary.battleye)}</span>`,
+    summary.location].filter(Boolean).map(x => `<span>${x.startsWith('BattlEye') ? x : esc(x)}</span>`).join('');
+  $('detailLast').innerHTML = num(latest?.[side]);
+  $('detailLastLabel').textContent = SIDES[side].offer;
   // Also in the details: narrow screens hide the toolbar metadata but show the details under the chart.
   $('detailStatus').hidden = !retired(summary);
   $('detailStatus').innerHTML = retired(summary) ? `Offline since ${esc(summary.offline)}, merged into <button type="button" class="world-link" data-world="${esc(summary.mergedInto)}">${esc(summary.mergedInto)}</button>` : '';
@@ -228,8 +239,38 @@ function showQuote() {
   const lastDaily = daily.at(-1)?.serverDay;
   $('detailDaily').innerHTML = lastDaily ? `through ${esc(lastDaily)}` : num(null);
   $('helpWorld').textContent = lastDaily ? `Daily figures for ${summary.world} run through ${lastDaily}.` : `There are no daily figures for ${summary.world}.`;
+  showPerformance();
   describeChart();
+  fitHead();
 }
+
+// The selected side's change over every range, by the same rule as the quote; a range is one press away.
+function showPerformance() {
+  const closes = state.view.closes.map(c => ({ day: c.serverDay, value: c[state.side] }));
+  $('detailPerformance').innerHTML = RANGES.map(range => {
+    const change = changeOver(closes, rangeStart(state.view.end, range));
+    const title = change ? `${range}: ${fmt(change.from.value)} on ${change.from.day} to ${fmt(change.to.value)} on ${change.to.day}` : `${range}: no earlier best offer`;
+    return `<button type="button" data-range="${range}" aria-pressed="${range === state.range}" title="${esc(title)}">`
+      + `<span class="perf-value">${signedRatio(change?.ratio ?? null)}</span><span class="perf-range">${range}</span></button>`;
+  }).join('');
+}
+
+/*
+ * The status block stands over the top of the chart: the price scale starts below it, so the highest price is never
+ * drawn under the world, its quote or the readout. Fitted when the block or the chart changes size for a reason other
+ * than the crosshair, so moving the pointer never rescales the chart.
+ */
+let headFraction = null;
+function fitHead() {
+  const area = $('chart').getBoundingClientRect(), head = $('chartHead').getBoundingClientRect();
+  const pane = area.height - chart.timeScale().height();
+  if (pane <= 0 || !head.height) return;
+  const top = Math.min(0.5, Math.max(0.08, (head.bottom - area.top + 12) / pane));
+  if (headFraction !== null && Math.abs(top - headFraction) < 0.004) return;
+  headFraction = top;
+  chart.priceScale('right').applyOptions({ scaleMargins: { top, bottom: 0.22 } });
+}
+new ResizeObserver(() => requestAnimationFrame(fitHead)).observe($('chart'));
 
 // The chart's accessible description: the history, and the projection when it is shown.
 function describeChart() {
@@ -302,7 +343,7 @@ async function select(world, { focus = false } = {}) {
   drawWatchlist();
   drawScreener();
   const row = document.querySelector(`#worlds tr[data-world="${CSS.escape(world)}"]`);
-  row?.scrollIntoView({ block: 'nearest' });
+  revealRow(row);
   if (focus) row?.querySelector('.pick').focus();
   if (!state.files.has(world)) {
     const response = await fetch(DATA + summary.file);
@@ -320,7 +361,17 @@ async function select(world, { focus = false } = {}) {
   chartTools();
   if (!state.view.grid.length) $('status').textContent = `No market data for ${world} yet.`;
   // The filled details panel shortens the list; keep the selection in view once it has.
-  document.querySelector(`#worlds tr[data-world="${CSS.escape(world)}"]`)?.scrollIntoView({ block: 'nearest' });
+  revealRow(document.querySelector(`#worlds tr[data-world="${CSS.escape(world)}"]`));
+}
+
+// The selected world in view inside the list, under its sticky column heads. Only the list scrolls: where it is part
+// of the page (phones), the page stays where the reader is, on the chart.
+function revealRow(row) {
+  const list = row?.closest('.watch-scroll');
+  if (!list || list.scrollHeight <= list.clientHeight) return;
+  const r = row.getBoundingClientRect(), box = list.getBoundingClientRect(), top = box.top + list.querySelector('thead').offsetHeight;
+  if (r.top < top) list.scrollTop -= top - r.top;
+  else if (r.bottom > box.bottom) list.scrollTop += r.bottom - box.bottom;
 }
 
 // Fixed to the viewport, so the scrolling list never clips it; kept inside the screen.
@@ -364,7 +415,7 @@ function dockChanged(open) {
   const days = chart.timeScale().getVisibleLogicalRange();
   requestAnimationFrame(() => requestAnimationFrame(() => {
     if (days) chart.timeScale().setVisibleLogicalRange(days);
-    if (open === 'worldsPanel') document.querySelector('#worlds tr[aria-selected="true"]')?.scrollIntoView({ block: 'nearest' });
+    if (open === 'worldsPanel') revealRow(document.querySelector('#worlds tr[aria-selected="true"]'));
   }));
 }
 
@@ -386,13 +437,13 @@ function showProjections(on, { remember = true } = {}) {
   button.setAttribute('aria-pressed', String(on));
   button.title = on ? 'Hide projections' : 'Show projections';
   if (remember) try { on ? localStorage.setItem(PROJECTIONS_SHOWN, 'shown') : localStorage.removeItem(PROJECTIONS_SHOWN); } catch { /* this visit only */ }
-  if (state.view?.grid.length) { applyRange(); showLegend(null); describeChart(); }
+  if (state.view?.grid.length) { applyRange(); showLegend(null); describeChart(); fitHead(); }
 }
 
 /* --------------------------------------------------------------- screener */
 // Every world side by side, in the chart's place, for the same side and range. The panel open beside the chart gives its
 // width to the grid, and is back with the chart.
-const screener = screenerPanel($('screenerPanel'), { onOpen: world => openWorld(world).catch(failed), onRange: setRange });
+const screener = screenerPanel($('screenerPanel'), { onOpen: world => openWorld(world).catch(failed), onRange: setRange, onSide: setSide });
 let panelBeforeScreener = null, overviewLoading = null;
 
 function showScreener(on) {
@@ -442,6 +493,15 @@ function chartTools() {
   projections.disabled = state.screen || !state.projections;
   if (state.screen) projections.title = "Projections: on a world's chart";
   else projections.title = market.visible('projections') ? 'Hide projections' : 'Show projections';
+}
+
+// One side for the chart and the Screener, chosen in either: every figure that depends on it follows.
+function setSide(side) {
+  if (!SIDES[side] || side === state.side) return;
+  state.side = side;
+  setChoice('side', 'side', side);
+  setChoice('screenerSide', 'side', side);
+  saveUrl(); drawWatchlist(); drawChart(); showQuote(); showLegend(null); drawScreener();
 }
 
 // One range for the chart and the Screener: the list, the quote and the grid follow it.
@@ -522,13 +582,8 @@ async function exportImage() {
 function wire() {
   tools = dock($('dock'), { key: 'tibinance.markets.dock', roomy: () => matchMedia(ROOMY).matches, onChange: dockChanged });
   $('screenerToggle').addEventListener('click', () => showScreener(!state.screen));
-  $('side').addEventListener('click', e => {
-    const side = e.target.closest('button')?.dataset.side;
-    if (!side || side === state.side) return;
-    state.side = side;
-    setChoice('side', 'side', side);
-    saveUrl(); drawWatchlist(); drawChart(); showQuote(); showLegend(null); drawScreener();
-  });
+  $('side').addEventListener('click', e => setSide(e.target.closest('button')?.dataset.side));
+  $('detailPerformance').addEventListener('click', e => { const range = e.target.closest('button')?.dataset.range; if (range) setRange(range); });
   $('range').addEventListener('click', e => {
     const range = e.target.closest('button')?.dataset.range;
     if (range) setRange(range);
@@ -637,6 +692,7 @@ async function main() {
   state.range = RANGES.includes(params.get('range')) ? params.get('range') : '1Y';
   const asked = names.find(n => n.toLowerCase() === params.get('world')?.toLowerCase());
   setChoice('side', 'side', state.side);
+  setChoice('screenerSide', 'side', state.side);
   setChoice('range', 'range', state.range);
   $('helpThrough').textContent = `The market history runs through server day ${state.index.through}.`;
   // Initial ranges use the settled font metrics and dock width, just like later range selections.

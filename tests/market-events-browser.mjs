@@ -131,8 +131,9 @@ try {
   shown=await marks();
   assert.deepEqual(shown.filter(m=>m.tab===0).map(m=>m.ids),[shown[0].ids],'one marker in the tab order, the first');
   const focused=()=>page.evaluate(()=>document.activeElement.closest('#eventMarks') ? document.activeElement.dataset.events : document.activeElement.id || document.activeElement.tagName);
-  // Tab from just before the markers lands on that one marker (the readout before them is made focusable to start).
-  await page.evaluate(()=>{const before=document.getElementById('eventMarks').previousElementSibling;before.tabIndex=-1;before.focus();});
+  // Tab from just before the markers lands on that one marker: the chart's status comes first, its last control is
+  // the market side's Buy.
+  await page.evaluate(()=>[...document.querySelectorAll('#chartHead button')].at(-1).focus());
   await page.keyboard.press('Tab');
   assert.equal(await focused(),shown[0].ids.join(' '));
   assert.ok((await tipText()).startsWith(byId.get(shown[0].ids[0]).start),'focus shows the details');

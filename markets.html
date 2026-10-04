@@ -31,28 +31,35 @@
   <h1 class="sr-only">Tibia Coin Markets</h1>
 
   <section id="chartPanel" class="chart-panel" aria-labelledby="world">
-    <!-- One line, read like the world's row in the list: the world and what it is at the start, its quote at the end,
-         over the price scale. -->
-    <div class="toolbar toolbar-top">
-      <div class="symbol">
-        <h2 id="world">Markets</h2>
-        <span id="worldMeta" class="symbol-meta"></span>
-      </div>
-      <div class="symbol-quote" aria-live="polite">
-        <span id="lastPrice" class="symbol-last"></span>
-        <span id="lastChange" class="symbol-change"></span>
-        <span id="lastRange" class="symbol-range"></span>
-      </div>
-    </div>
-
     <div class="chart-area">
       <div id="chart" class="chart" role="img"></div>
-      <!-- The series readout over the chart's top left, one small table: the day, then a row per series with its key,
-           its name, its value and, for the best offer, its change from the previous observation. -->
-      <div class="chart-legend" aria-hidden="true">
-        <div id="legend" class="legend"></div>
-        <div id="volumeLegend" class="legend"></div>
-        <div id="projectionLegend" class="legend"></div>
+      <!-- The chart's status, one block over its top left (css/markets.css), as a market terminal reads it: the world,
+           what it is, its latest best offer and change over the range; the market side shown, with both sides' latest
+           best offers and the spread between them; then the readout of the day under the crosshair. The price scale
+           starts below the block, so no price is drawn under it. Only its controls take the pointer. -->
+      <div id="chartHead" class="chart-head">
+        <div class="head-line">
+          <h2 id="world">Markets</h2>
+          <span id="worldMeta" class="symbol-meta"></span>
+          <span class="symbol-quote" aria-live="polite">
+            <span id="lastPrice" class="symbol-last"></span>
+            <span id="lastChange" class="symbol-change"></span>
+            <span id="lastRange" class="symbol-range"></span>
+          </span>
+        </div>
+        <!-- Which side's history the chart shows: a view of the market, chosen like any other Tibinance choice of two. -->
+        <div id="side" class="side-picker" role="radiogroup" aria-label="Market side">
+          <button type="button" data-side="sell" role="radio" aria-checked="true"><span class="side-name">Sell</span> <span id="sideSell" class="side-value"></span></button>
+          <span class="side-spread" title="Spread: the Best Sell Offer less the Best Buy Offer"><span class="sr-only">Spread </span><span id="sideSpread"></span></span>
+          <button type="button" data-side="buy" role="radio" aria-checked="false"><span class="side-name">Buy</span> <span id="sideBuy" class="side-value"></span></button>
+        </div>
+        <!-- The readout, one small table: the day, then a row per series with its key, its name, its value and, for the
+             best offer, its change from the previous observation. -->
+        <div class="chart-legend" aria-hidden="true">
+          <div id="legend" class="legend"></div>
+          <div id="volumeLegend" class="legend"></div>
+          <div id="projectionLegend" class="legend"></div>
+        </div>
       </div>
       <!-- Over the event markers the chart draws at its foot (js/market-events-ui.js): one tab stop, arrows between. -->
       <div id="eventMarks" class="event-marks" role="toolbar" aria-label="Events"></div>
@@ -80,6 +87,10 @@
       <div class="symbol">
         <h2 id="screenerTitle">Screener</h2>
         <span id="screenerCount" class="symbol-meta" aria-live="polite"></span>
+      </div>
+      <div id="screenerSide" class="segmented screener-side" role="radiogroup" aria-label="Market side">
+        <button type="button" data-side="sell" role="radio" aria-checked="true">Sell</button>
+        <button type="button" data-side="buy" role="radio" aria-checked="false">Buy</button>
       </div>
       <span class="screener-find">
         <input type="search" id="screenerFilter" class="filter" placeholder="Filter World…" aria-label="Filter worlds">
@@ -140,17 +151,22 @@
         </table>
         <p id="noWorlds" class="empty" hidden>No world matches.</p>
       </div>
+      <!-- The selected world under the list, as a watchlist shows its symbol: what it is, its quote for the side shown and
+           its change over the range, when it was observed, both sides, and its change over every range. -->
       <section class="details" aria-labelledby="detailsWorld">
         <h3 id="detailsWorld" class="details-title"></h3>
+        <p id="detailMeta" class="details-meta"></p>
         <p id="detailStatus" class="details-status" hidden></p>
-        <dl class="details-grid">
-          <div><dt>Best Sell Offer</dt><dd id="detailSell"></dd></div>
-          <div><dt>Best Buy Offer</dt><dd id="detailBuy"></dd></div>
-          <div><dt>Spread</dt><dd id="detailSpread"></dd></div>
-          <div><dt id="detailChangeLabel">Change</dt><dd id="detailChange"></dd></div>
-          <div><dt>Observed</dt><dd id="detailObserved"></dd></div>
-          <div><dt>Daily figures</dt><dd id="detailDaily"></dd></div>
+        <p class="details-quote"><span id="detailLast" class="details-last"></span> <span id="detailLastLabel" class="details-unit"></span></p>
+        <p class="details-change"><span id="detailChange"></span> <span id="detailChangeLabel" class="details-unit">Change</span></p>
+        <p class="details-note">Observed <span id="detailObserved"></span><br>Daily figures <span id="detailDaily"></span></p>
+        <dl class="details-book">
+          <div title="Best Sell Offer"><dt>Sell</dt><dd id="detailSell"></dd></div>
+          <div title="Best Buy Offer"><dt>Buy</dt><dd id="detailBuy"></dd></div>
+          <div title="Best Sell Offer less Best Buy Offer"><dt>Spread</dt><dd id="detailSpread"></dd></div>
         </dl>
+        <h4 class="details-heading" id="performanceTitle">Performance</h4>
+        <div id="detailPerformance" class="performance" role="group" aria-labelledby="performanceTitle"></div>
       </section>
       <div id="watchTip" class="watch-tip" role="tooltip" hidden></div>
     </aside>
@@ -178,6 +194,7 @@
           <li><i class="key key-projection" aria-hidden="true"></i>Projection, off until shown: the Research report's offer scenario for this world and side, never an observation. It starts on the last observed best offer, in the tinted days after it. The dashed line is the central path, an equal-weight ensemble of three models for Antica moved to this world's own last best offer, weekly for up to 52 weeks; the faint band is a heuristic stress band, not a confidence interval. It stops where the Research suspends it before an announced merge. Worlds outside the Research's captures, retired worlds and worlds observed after the Research's cutoff have none.</li>
 
         </ul>
+        <p>Sell and Buy, at the top of the chart, choose the side shown; each names its latest best offer, and the figure between them is the spread. The day's high and low in the readout are the highest and lowest prices of that day's trades on the side shown.</p>
         <p>Server days run from 10:00 to 10:00 CET/CEST. Change compares the latest best offer with the last one observed on or before the start of the range.</p>
         <p><span id="helpThrough"></span> <span id="helpWorld"></span></p>
         <p>The Screener, in the tool rail, sets every world side by side for the side and range chosen: a mini chart of its best offers over the range (solid and dotted as on the chart; the hairline is the value the change is measured from), the latest Sell and Buy Offers and their spread, the change over the range, the mean daily Transactions over the range's days with daily figures (Tx/day), and the latest Captured Depth, the Tibia Coins across every visible offer of the last capture that recorded it (not traded volume). Search, filter by status, PvP type, BattlEye, location and data, and sort by any figure; select a world to open its chart.</p>
@@ -185,16 +202,11 @@
         <p class="help-fine">Not affiliated with CipSoft. Tibia is a trademark of CipSoft GmbH.</p>
       </div>
     </section>
-    <!-- The tool rail, in regions by meaning, top to bottom (a row on phones, start to end):
-         the chart's own state, the market side; tools that analyse or navigate the market (panel tools carry
-         data-dock-target); flexible space; then utilities. A tool to come joins the region it belongs to, not the end
-         of the list. -->
+    <!-- The tool rail launches tools and holds no chart state (the market side is the chart's own, in its status). In
+         regions by meaning, top to bottom (a row on phones, start to end): tools that analyse or navigate the market
+         (panel tools carry data-dock-target); flexible space; then utilities. A tool to come joins the region it
+         belongs to, not the end of the list. -->
     <div class="dock-rail" role="group" aria-label="Tools">
-      <div id="side" class="dock-side" role="radiogroup" aria-label="Market side">
-        <button type="button" data-side="sell" role="radio" aria-checked="true">Sell</button>
-        <button type="button" data-side="buy" role="radio" aria-checked="false">Buy</button>
-      </div>
-      <span class="dock-rule" aria-hidden="true"></span>
       <div class="dock-group">
         <button type="button" class="tool dock-tool" data-dock-target="worldsPanel" aria-label="Worlds">
           <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7.5 5.5h9M7.5 10h9M7.5 14.5h9M3.5 5.5h.01M3.5 10h.01M3.5 14.5h.01"/></svg>
