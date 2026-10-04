@@ -11,6 +11,8 @@
   --average:#a9a8b3;   /* the daily average: context for the best offer, never competing with it */
   /* Event markers by group: a world's own lifecycle, the game's events and updates, the market and the Store. */
   --event-world:var(--accent); --event-game:var(--caution); --event-market:var(--ink);
+  /* Projections: the central path in ink, as the Research draws its scenario; the projected days faintly tinted. */
+  --projection:var(--ink); --projection-region:rgb(118 118 128 / .06);
   --watch-width:calc(var(--unit) * 92);
   --rail-width:calc(var(--unit) * 10);
   --toolbar-height:calc(var(--unit) * 11);
@@ -114,6 +116,7 @@ body { display:flex; flex-direction:column; height:100dvh; overflow:hidden; }
 .key-dotted { border-top-style:dotted; }
 .key-average { border-top:var(--rule) solid var(--average); }
 .key-volume { width:var(--space-2); height:var(--space-3); border:0; background:var(--side); opacity:.3; }
+.key-projection { border-top:var(--rule-strong) dashed var(--projection); }
 
 .up { color:var(--positive); } .down { color:var(--negative); }
 /* A retired world is labelled wherever it appears. */
@@ -259,4 +262,6 @@ table.watch td.stale { color:var(--muted); }
   /* The readout may run up to the price scale, so the change keeps to one line. */
   .chart-legend { max-width:calc(100% - var(--space-8)); column-gap:var(--space-2); }
   .legend .rest { flex-wrap:nowrap; white-space:nowrap; }
+  /* The projection's band and day take their own line under its name, where there is no room beside its value. */
+  .legend .rest.projected { grid-column:1 / -1; flex-wrap:wrap; padding-left:calc(var(--space-4) + var(--space-1)); }
 }
