@@ -40,7 +40,7 @@
     "world identity",
     "separate Offers/Statistics gates",
     "local/UTC capture and expiry",
-    "Statistics reference date and 25-TC volumes",
+    "Statistics reference date and raw counters",
     "offer identity/history/collision consistency",
     "closed privacy whitelists"
   ]

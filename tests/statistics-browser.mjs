@@ -41,9 +41,9 @@ try {
    await page.locator('#queue summary').click();
    const count=page.locator('[data-stat-side="buy"][data-stat-field="transactions"]');
    await count.fill('4');
-   assert.ok(await page.locator('.statistics-sides fieldset').first().innerText().then(t => t.includes('TC Volume: 100')), await page.locator('.statistics-sides fieldset').first().innerText());
+   assert.ok(await page.locator('.statistics-sides fieldset').first().innerText().then(t => !t.includes('TC Volume')), await page.locator('.statistics-sides fieldset').first().innerText());
    await count.fill('');
-   assert.ok(await page.locator('.statistics-sides fieldset').first().innerText().then(t=>t.includes('TC Volume: —')));
+   assert.ok(await page.locator('.statistics-sides fieldset').first().innerText().then(t=>!t.includes('TC Volume')));
    assert.equal(await page.locator('[data-save]').isDisabled(),true);
    assert.match(await page.locator('#queue').innerText(),/extraction incomplete.*Number of Transactions/);
    assert.equal((await page.locator('#queue').innerText()).includes('all four values'),false);
@@ -61,7 +61,7 @@ try {
    await page.locator('[data-save]').click();
    await page.waitForFunction(()=>document.getElementById('queue').children.length===0);
    capture=await page.evaluate(async()=> (await (await import('/js/store.js')).all())[0]);
-   assert.equal(capture.viewType,'statistics');assert.equal(capture.statistics30d.buy.tcVolume,84900);
+   assert.equal(capture.viewType,'statistics');assert.equal(capture.statistics30d.buy.transactions,3396);assert.ok(!('tcVolume' in capture.statistics30d.buy));
    assert.equal(capture.capturedAtUtc,'2026-10-02T03:36:37.332Z');
    assert.equal(capture.statisticsReferenceDate,'2026-10-01');
    assert.equal(JSON.stringify(capture).includes('Synthetic'),false);
@@ -72,7 +72,7 @@ try {
    assert.equal(again.skipped,1);
    console.log('PASS real Details OCR, eight values, editing, responsive review, UTC/Statistics reference date, lot volume, persistence and re-import');
  }
- capture??={world:'Antica',type:'Open PvP',battleye:'Yellow',hash:'stats',viewType:'statistics',processingVersion:6,capturedAt:'2026-10-02T00:36:37.332',captureTimeZone:'America/Sao_Paulo',capturedAtUtc:'2026-10-02T03:36:37.332Z',captureDate:'2026-10-02',statisticsReferenceDate:'2026-10-01',statistics30d:{buy:{transactions:3396,highestPrice:49985,averagePrice:44155,lowestPrice:1,tcVolume:84900},sell:{transactions:6082,highestPrice:49998,averagePrice:45942,lowestPrice:44000,tcVolume:152050}}};
+ capture??={world:'Antica',type:'Open PvP',battleye:'Yellow',hash:'stats',viewType:'statistics',processingVersion:6,capturedAt:'2026-10-02T00:36:37.332',captureTimeZone:'America/Sao_Paulo',capturedAtUtc:'2026-10-02T03:36:37.332Z',captureDate:'2026-10-02',statisticsReferenceDate:'2026-10-01',statistics30d:{buy:{transactions:3396,highestPrice:49985,averagePrice:44155,lowestPrice:1},sell:{transactions:6082,highestPrice:49998,averagePrice:45942,lowestPrice:44000}}};
  if (process.env.TIBINANCE_OFFERS_SAMPLE) {
    // Separate real-layout scenarios also isolate OCR/browser lifetime limits.
    if (sample) {
@@ -99,7 +99,7 @@ try {
  const csvDownload=page.waitForEvent('download');
  await page.locator('#exportCsv').click();
  const csv=await readFile(await (await csvDownload).path(),'utf8');
- assert.ok(csv.includes('Statistics Reference Date') && csv.includes('30d buy tcVolume (TC)'));
+ assert.ok(csv.includes('Statistics Reference Date') && csv.includes('30d buy transactions (count)'));
  if (sample) assert.ok(csv.includes('84900') && csv.includes('2026-10-01'));
  const offerDownload=page.waitForEvent('download');
  await page.locator('#exportOffers').click();
@@ -116,7 +116,7 @@ try {
    const feedback=await page.locator('#queue').innerText();
    assert.match(feedback,/Statistics extraction incomplete/);
    assert.equal(/all four values|private OCR failure/.test(feedback),false);
-   assert.deepEqual(await page.locator('.statistics-sides fieldset > p').allTextContents(),['TC Volume: —','TC Volume: —']);
+   assert.deepEqual(await page.locator('.statistics-sides fieldset > p').allTextContents(),[]);
    for(const side of ['buy','sell'])for(const field of ['transactions','highestPrice','averagePrice','lowestPrice'])
      await page.locator(`[data-stat-side="${side}"][data-stat-field="${field}"]`).fill(String(capture.statistics30d[side][field]));
    assert.equal(await page.locator('[data-save]').isEnabled(),true);
@@ -138,10 +138,10 @@ try {
    assert.equal(await page.locator('[data-stats-control="bucket"]').inputValue(),'reference');
    assert.ok(await page.locator('#statistics-chart path.line').evaluateAll(paths => paths.every(p => getComputedStyle(p).stroke !== 'none' && p.getAttribute('d').length > 5)), 'Statistics series have visible strokes');
    assert.ok((await page.locator('#statistics-chart').innerText()).includes('Antica Buy Offers'), 'World/side legend');
-   await page.locator('[data-stats-control="metric"]').selectOption('tcVolume');
+   await page.locator('[data-stats-control="metric"]').selectOption('transactions');
    await page.locator('[data-stats-control="bucket"]').selectOption('reference');
    await page.locator('[data-stats-control="world"]').selectOption('Antica');
-   assert.ok(await page.locator('#statistics-30d').innerText().then(t=>t.includes('TC Volume')));
+   assert.ok(await page.locator('#statistics-30d').innerText().then(t=>t.includes('Number of Transactions')));
    await page.locator('#statistics-30d details summary').click();
    assert.equal(await page.locator('#statistics-30d tbody tr').count(),4);
    for(const width of [1440,768,390]){
@@ -152,5 +152,5 @@ try {
    await page.locator('#statistics-30d').screenshot({path:`/private/tmp/tibinance-statistics-report-${lang}.png`});
  }
  assert.deepEqual(errors,[]);
- console.log('PASS snapshot/offer CSV exports; EN/PT mixed-schema reports, rolling-volume chart, compact controls, reference-date history, responsive layout, clean runtime');
+ console.log('PASS snapshot/offer CSV exports; EN/PT mixed-schema reports, rolling-transaction chart, compact controls, reference-date history, responsive layout, clean runtime');
 } finally {await browser.close();}

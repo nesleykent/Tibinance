@@ -16743,15 +16743,13 @@
         "transactions": 3651,
         "highestPrice": 46001,
         "averagePrice": 43744,
-        "lowestPrice": 1,
-        "tcVolume": 91275
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 6386,
         "highestPrice": 47000,
         "averagePrice": 45283,
-        "lowestPrice": 44000,
-        "tcVolume": 159650
+        "lowestPrice": 44000
       }
     },
     "captureDate": "2026-09-24",
@@ -81826,15 +81824,13 @@
         "transactions": 3396,
         "highestPrice": 49985,
         "averagePrice": 44155,
-        "lowestPrice": 1,
-        "tcVolume": 84900
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 6082,
         "highestPrice": 49998,
         "averagePrice": 45942,
-        "lowestPrice": 44000,
-        "tcVolume": 152050
+        "lowestPrice": 44000
       }
     },
     "captureDate": "2026-10-02",
@@ -82339,15 +82335,13 @@
         "transactions": 5151,
         "highestPrice": 46002,
         "averagePrice": 42011,
-        "lowestPrice": 1,
-        "tcVolume": 128775
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 6802,
         "highestPrice": 47999,
         "averagePrice": 43787,
-        "lowestPrice": 40611,
-        "tcVolume": 170050
+        "lowestPrice": 40611
       }
     },
     "captureDate": "2026-10-03",
@@ -82610,15 +82604,13 @@
         "transactions": 2657,
         "highestPrice": 45123,
         "averagePrice": 41814,
-        "lowestPrice": 1,
-        "tcVolume": 66425
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 4425,
         "highestPrice": 49999,
         "averagePrice": 43422,
-        "lowestPrice": 40600,
-        "tcVolume": 110625
+        "lowestPrice": 40600
       }
     },
     "captureDate": "2026-10-03",
@@ -82881,15 +82873,13 @@
         "transactions": 2642,
         "highestPrice": 45800,
         "averagePrice": 40397,
-        "lowestPrice": 1,
-        "tcVolume": 66050
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 3346,
         "highestPrice": 47499,
         "averagePrice": 43392,
-        "lowestPrice": 41000,
-        "tcVolume": 83650
+        "lowestPrice": 41000
       }
     },
     "captureDate": "2026-10-03",
@@ -83152,15 +83142,13 @@
         "transactions": 3832,
         "highestPrice": 46700,
         "averagePrice": 41937,
-        "lowestPrice": 1,
-        "tcVolume": 95800
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 3384,
         "highestPrice": 47999,
         "averagePrice": 43977,
-        "lowestPrice": 41600,
-        "tcVolume": 84600
+        "lowestPrice": 41600
       }
     },
     "captureDate": "2026-10-03",
@@ -83423,15 +83411,13 @@
         "transactions": 25766,
         "highestPrice": 45508,
         "averagePrice": 42076,
-        "lowestPrice": 1,
-        "tcVolume": 644150
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 13451,
         "highestPrice": 47999,
         "averagePrice": 43097,
-        "lowestPrice": 40295,
-        "tcVolume": 336275
+        "lowestPrice": 40295
       }
     },
     "captureDate": "2026-10-03",
@@ -83694,15 +83680,13 @@
         "transactions": 4140,
         "highestPrice": 47993,
         "averagePrice": 41697,
-        "lowestPrice": 1,
-        "tcVolume": 103500
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 6083,
         "highestPrice": 48000,
         "averagePrice": 43500,
-        "lowestPrice": 40000,
-        "tcVolume": 152075
+        "lowestPrice": 40000
       }
     },
     "captureDate": "2026-10-03",
@@ -83943,15 +83927,13 @@
         "transactions": 1134,
         "highestPrice": 43334,
         "averagePrice": 40525,
-        "lowestPrice": 36000,
-        "tcVolume": 28350
+        "lowestPrice": 36000
       },
       "sell": {
         "transactions": 980,
         "highestPrice": 46999,
         "averagePrice": 43499,
-        "lowestPrice": 40000,
-        "tcVolume": 24500
+        "lowestPrice": 40000
       }
     },
     "captureDate": "2026-10-03",
@@ -84214,15 +84196,13 @@
         "transactions": 3667,
         "highestPrice": 49997,
         "averagePrice": 41342,
-        "lowestPrice": 1,
-        "tcVolume": 91675
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 3959,
         "highestPrice": 49999,
         "averagePrice": 43822,
-        "lowestPrice": 41000,
-        "tcVolume": 98975
+        "lowestPrice": 41000
       }
     },
     "captureDate": "2026-10-03",
@@ -84485,15 +84465,13 @@
         "transactions": 3514,
         "highestPrice": 45013,
         "averagePrice": 41527,
-        "lowestPrice": 36500,
-        "tcVolume": 87850
+        "lowestPrice": 36500
       },
       "sell": {
         "transactions": 4400,
         "highestPrice": 47999,
         "averagePrice": 43611,
-        "lowestPrice": 39999,
-        "tcVolume": 110000
+        "lowestPrice": 39999
       }
     },
     "captureDate": "2026-10-03",
@@ -84756,15 +84734,13 @@
         "transactions": 3840,
         "highestPrice": 53000,
         "averagePrice": 43756,
-        "lowestPrice": 1,
-        "tcVolume": 96000
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 5942,
         "highestPrice": 55000,
         "averagePrice": 46185,
-        "lowestPrice": 44200,
-        "tcVolume": 148550
+        "lowestPrice": 44200
       }
     },
     "captureDate": "2026-10-03",
@@ -85027,15 +85003,13 @@
         "transactions": 2451,
         "highestPrice": 49302,
         "averagePrice": 44950,
-        "lowestPrice": 44076,
-        "tcVolume": 61275
+        "lowestPrice": 44076
       },
       "sell": {
         "transactions": 4265,
         "highestPrice": 49988,
         "averagePrice": 46472,
-        "lowestPrice": 44700,
-        "tcVolume": 106625
+        "lowestPrice": 44700
       }
     },
     "captureDate": "2026-10-03",
@@ -85298,15 +85272,13 @@
         "transactions": 4363,
         "highestPrice": 45603,
         "averagePrice": 41944,
-        "lowestPrice": 1,
-        "tcVolume": 109075
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 7778,
         "highestPrice": 47999,
         "averagePrice": 43702,
-        "lowestPrice": 41100,
-        "tcVolume": 194450
+        "lowestPrice": 41100
       }
     },
     "captureDate": "2026-10-03",
@@ -85569,15 +85541,13 @@
         "transactions": 3412,
         "highestPrice": 49985,
         "averagePrice": 44352,
-        "lowestPrice": 1,
-        "tcVolume": 85300
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 6137,
         "highestPrice": 49998,
         "averagePrice": 46140,
-        "lowestPrice": 44000,
-        "tcVolume": 153425
+        "lowestPrice": 44000
       }
     },
     "captureDate": "2026-10-03",
@@ -85840,15 +85810,13 @@
         "transactions": 5530,
         "highestPrice": 48849,
         "averagePrice": 40990,
-        "lowestPrice": 1,
-        "tcVolume": 138250
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 6606,
         "highestPrice": 50000,
         "averagePrice": 43353,
-        "lowestPrice": 39813,
-        "tcVolume": 165150
+        "lowestPrice": 39813
       }
     },
     "captureDate": "2026-10-03",
@@ -86111,15 +86079,13 @@
         "transactions": 4896,
         "highestPrice": 47886,
         "averagePrice": 43498,
-        "lowestPrice": 1,
-        "tcVolume": 122400
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 7710,
         "highestPrice": 49998,
         "averagePrice": 45914,
-        "lowestPrice": 42220,
-        "tcVolume": 192750
+        "lowestPrice": 42220
       }
     },
     "captureDate": "2026-10-03",
@@ -86382,15 +86348,13 @@
         "transactions": 2485,
         "highestPrice": 49500,
         "averagePrice": 44466,
-        "lowestPrice": 1,
-        "tcVolume": 62125
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 4416,
         "highestPrice": 50000,
         "averagePrice": 46520,
-        "lowestPrice": 43424,
-        "tcVolume": 110400
+        "lowestPrice": 43424
       }
     },
     "captureDate": "2026-10-03",
@@ -86653,15 +86617,13 @@
         "transactions": 2103,
         "highestPrice": 44499,
         "averagePrice": 38278,
-        "lowestPrice": 1,
-        "tcVolume": 52575
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 1773,
         "highestPrice": 44800,
         "averagePrice": 42099,
-        "lowestPrice": 37500,
-        "tcVolume": 44325
+        "lowestPrice": 37500
       }
     },
     "captureDate": "2026-10-03",
@@ -86924,15 +86886,13 @@
         "transactions": 8068,
         "highestPrice": 47993,
         "averagePrice": 41641,
-        "lowestPrice": 1,
-        "tcVolume": 201700
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 6889,
         "highestPrice": 47999,
         "averagePrice": 43713,
-        "lowestPrice": 40525,
-        "tcVolume": 172225
+        "lowestPrice": 40525
       }
     },
     "captureDate": "2026-10-03",
@@ -87195,15 +87155,13 @@
         "transactions": 3671,
         "highestPrice": 30001,
         "averagePrice": 19538,
-        "lowestPrice": 12222,
-        "tcVolume": 91775
+        "lowestPrice": 12222
       },
       "sell": {
         "transactions": 2336,
         "highestPrice": 37000,
         "averagePrice": 22241,
-        "lowestPrice": 14054,
-        "tcVolume": 58400
+        "lowestPrice": 14054
       }
     },
     "captureDate": "2026-10-03",
@@ -87466,15 +87424,13 @@
         "transactions": 4524,
         "highestPrice": 46001,
         "averagePrice": 41994,
-        "lowestPrice": 1,
-        "tcVolume": 113100
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 5489,
         "highestPrice": 49999,
         "averagePrice": 43888,
-        "lowestPrice": 41200,
-        "tcVolume": 137225
+        "lowestPrice": 41200
       }
     },
     "captureDate": "2026-10-03",
@@ -87737,15 +87693,13 @@
         "transactions": 5466,
         "highestPrice": 46998,
         "averagePrice": 41714,
-        "lowestPrice": 1,
-        "tcVolume": 136650
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 9202,
         "highestPrice": 48000,
         "averagePrice": 43528,
-        "lowestPrice": 40404,
-        "tcVolume": 230050
+        "lowestPrice": 40404
       }
     },
     "captureDate": "2026-10-03",
@@ -87964,15 +87918,13 @@
         "transactions": 2005,
         "highestPrice": 45981,
         "averagePrice": 42059,
-        "lowestPrice": 1,
-        "tcVolume": 50125
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 3223,
         "highestPrice": 47000,
         "averagePrice": 43972,
-        "lowestPrice": 41900,
-        "tcVolume": 80575
+        "lowestPrice": 41900
       }
     },
     "captureDate": "2026-10-03",
@@ -88235,15 +88187,13 @@
         "transactions": 2524,
         "highestPrice": 44444,
         "averagePrice": 41054,
-        "lowestPrice": 1,
-        "tcVolume": 63100
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 1971,
         "highestPrice": 50000,
         "averagePrice": 43140,
-        "lowestPrice": 40500,
-        "tcVolume": 49275
+        "lowestPrice": 40500
       }
     },
     "captureDate": "2026-10-03",
@@ -88506,15 +88456,13 @@
         "transactions": 3712,
         "highestPrice": 47010,
         "averagePrice": 44553,
-        "lowestPrice": 1,
-        "tcVolume": 92800
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 5661,
         "highestPrice": 51998,
         "averagePrice": 45991,
-        "lowestPrice": 44100,
-        "tcVolume": 141525
+        "lowestPrice": 44100
       }
     },
     "captureDate": "2026-10-03",
@@ -88777,15 +88725,13 @@
         "transactions": 6758,
         "highestPrice": 45601,
         "averagePrice": 41700,
-        "lowestPrice": 37000,
-        "tcVolume": 168950
+        "lowestPrice": 37000
       },
       "sell": {
         "transactions": 6997,
         "highestPrice": 50000,
         "averagePrice": 43308,
-        "lowestPrice": 40800,
-        "tcVolume": 174925
+        "lowestPrice": 40800
       }
     },
     "captureDate": "2026-10-03",
@@ -89048,15 +88994,13 @@
         "transactions": 4091,
         "highestPrice": 49287,
         "averagePrice": 44648,
-        "lowestPrice": 1,
-        "tcVolume": 102275
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 6044,
         "highestPrice": 49998,
         "averagePrice": 46223,
-        "lowestPrice": 43635,
-        "tcVolume": 151100
+        "lowestPrice": 43635
       }
     },
     "captureDate": "2026-10-03",
@@ -89319,15 +89263,13 @@
         "transactions": 8100,
         "highestPrice": 44001,
         "averagePrice": 41632,
-        "lowestPrice": 1,
-        "tcVolume": 202500
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 4543,
         "highestPrice": 44999,
         "averagePrice": 42868,
-        "lowestPrice": 40500,
-        "tcVolume": 113575
+        "lowestPrice": 40500
       }
     },
     "captureDate": "2026-10-03",
@@ -89546,15 +89488,13 @@
         "transactions": 3831,
         "highestPrice": 47000,
         "averagePrice": 44399,
-        "lowestPrice": 1,
-        "tcVolume": 95775
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 4627,
         "highestPrice": 48996,
         "averagePrice": 45804,
-        "lowestPrice": 43262,
-        "tcVolume": 115675
+        "lowestPrice": 43262
       }
     },
     "captureDate": "2026-10-03",
@@ -89817,15 +89757,13 @@
         "transactions": 6076,
         "highestPrice": 45769,
         "averagePrice": 41471,
-        "lowestPrice": 1,
-        "tcVolume": 151900
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 4341,
         "highestPrice": 46999,
         "averagePrice": 43493,
-        "lowestPrice": 41099,
-        "tcVolume": 108525
+        "lowestPrice": 41099
       }
     },
     "captureDate": "2026-10-03",
@@ -90088,15 +90026,13 @@
         "transactions": 4735,
         "highestPrice": 47120,
         "averagePrice": 43672,
-        "lowestPrice": 42426,
-        "tcVolume": 118375
+        "lowestPrice": 42426
       },
       "sell": {
         "transactions": 4304,
         "highestPrice": 48984,
         "averagePrice": 45061,
-        "lowestPrice": 43400,
-        "tcVolume": 107600
+        "lowestPrice": 43400
       }
     },
     "captureDate": "2026-10-03",
@@ -90359,15 +90295,13 @@
         "transactions": 13381,
         "highestPrice": 48900,
         "averagePrice": 44731,
-        "lowestPrice": 1,
-        "tcVolume": 334525
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 10466,
         "highestPrice": 55544,
         "averagePrice": 45777,
-        "lowestPrice": 43498,
-        "tcVolume": 261650
+        "lowestPrice": 43498
       }
     },
     "captureDate": "2026-10-03",
@@ -90630,15 +90564,13 @@
         "transactions": 4450,
         "highestPrice": 45703,
         "averagePrice": 41821,
-        "lowestPrice": 1,
-        "tcVolume": 111250
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 6618,
         "highestPrice": 47999,
         "averagePrice": 44060,
-        "lowestPrice": 41500,
-        "tcVolume": 165450
+        "lowestPrice": 41500
       }
     },
     "captureDate": "2026-10-03",
@@ -90901,15 +90833,13 @@
         "transactions": 9561,
         "highestPrice": 46866,
         "averagePrice": 40503,
-        "lowestPrice": 1,
-        "tcVolume": 239025
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 7030,
         "highestPrice": 50000,
         "averagePrice": 42788,
-        "lowestPrice": 39500,
-        "tcVolume": 175750
+        "lowestPrice": 39500
       }
     },
     "captureDate": "2026-10-03",
@@ -91172,15 +91102,13 @@
         "transactions": 2293,
         "highestPrice": 41001,
         "averagePrice": 39201,
-        "lowestPrice": 1,
-        "tcVolume": 57325
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 2692,
         "highestPrice": 46000,
         "averagePrice": 41061,
-        "lowestPrice": 39000,
-        "tcVolume": 67300
+        "lowestPrice": 39000
       }
     },
     "captureDate": "2026-10-03",
@@ -91388,15 +91316,13 @@
         "transactions": 2961,
         "highestPrice": 45500,
         "averagePrice": 42121,
-        "lowestPrice": 1,
-        "tcVolume": 74025
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 4217,
         "highestPrice": 46999,
         "averagePrice": 44267,
-        "lowestPrice": 40623,
-        "tcVolume": 105425
+        "lowestPrice": 40623
       }
     },
     "captureDate": "2026-10-03",
@@ -91659,15 +91585,13 @@
         "transactions": 6370,
         "highestPrice": 45561,
         "averagePrice": 41914,
-        "lowestPrice": 1,
-        "tcVolume": 159250
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 5323,
         "highestPrice": 46999,
         "averagePrice": 43293,
-        "lowestPrice": 41000,
-        "tcVolume": 133075
+        "lowestPrice": 41000
       }
     },
     "captureDate": "2026-10-03",
@@ -91875,15 +91799,13 @@
         "transactions": 2684,
         "highestPrice": 49981,
         "averagePrice": 44493,
-        "lowestPrice": 1,
-        "tcVolume": 67100
+        "lowestPrice": 1
       },
       "sell": {
         "transactions": 5919,
         "highestPrice": 49998,
         "averagePrice": 45999,
-        "lowestPrice": 43895,
-        "tcVolume": 147975
+        "lowestPrice": 43895
       }
     },
     "captureDate": "2026-10-03",
@@ -92146,15 +92068,13 @@
         "transactions": 1361,
         "highestPrice": 43200,
         "averagePrice": 39875,
-        "lowestPrice": 37003,
-        "tcVolume": 34025
+        "lowestPrice": 37003
       },
       "sell": {
         "transactions": 1335,
         "highestPrice": 49980,
         "averagePrice": 43222,
-        "lowestPrice": 39500,
-        "tcVolume": 33375
+        "lowestPrice": 39500
       }
     },
     "captureDate": "2026-10-03",

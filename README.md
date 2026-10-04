@@ -30,7 +30,7 @@ The analysis uses [TibiaMarket’s public API](https://api.tibiamarket.top/docs)
 tracked world. The chart fills the viewport under the header: the world and
 its quote head it, the 1M / 3M / 6M / YTD / 1Y / All ranges sit below it. Legends on the chart follow the crosshair
 (server day, best offer with its change from the previous observation, daily
-average, volume), and the latest best offer is marked on the price scale. The
+average, transaction activity), and the latest best offer is marked on the price scale. The
 page keeps the same outer margins as Capture and Research.
 
 At its right edge, the tool rail leads with the market side, a compact Sell /
@@ -44,7 +44,7 @@ showing the same days; the open panel is remembered in the browser. Until
 then, Worlds starts open on screens wide enough to keep the chart roomy beside
 it. **Export** saves a PNG of the chart itself, not of the page: the world,
 its latest best offer and change over the range, the legend, Best Offer, Daily
-Average and volume over the days in view, axes and dates, and a discreet
+Average and transaction activity over the days in view, axes and dates, and a discreet
 Tibinance mark. It is drawn from a second chart built offscreen from the same
 state (`js/market-export.js`), so every image has the same layout at twice the
 pixels or more, from any window. **Full screen** takes the whole terminal,
@@ -71,7 +71,7 @@ The price pane shows two measures and never substitutes one for the other:
 - **Daily average** (grey): the average price of the trades that filled that
   side's offers during a server day, joined by the same solid / dotted rule.
 
-The volume pane shows the coins traded per server day on that side. Daily
+The activity pane shows the raw Number of Transactions per completed server day on that side. Actual traded TC quantity is unknown. Daily
 figures end where their history ends (for most worlds in early to mid September
 2026); they are never derived from 30-day Statistics. Changes compare the latest best offer with
 the last one observed on or before the start of the range.
@@ -89,8 +89,7 @@ research do not read it.
 - `worlds/<world>.json`: `observations` (`capturedAtUtc`, `serverDay`, `sell`,
   `buy`, the captured volumes and gold figures where they exist, and
   `statistics30d`) and `dailyStatistics` (per server day and side:
-  `transactions` in 25-TC lots, `highestPrice`, `averagePrice`, `lowestPrice`,
-  `tcVolume`).
+  `transactions` as raw activity counters, `highestPrice`, `averagePrice`, `lowestPrice`).
 
 TibiaMarket.top `item_history` snapshots are read from the research's frozen
 copies (`reports/tc-cycle/inputs/api/`, never changed here) and from the
@@ -152,8 +151,8 @@ also where the privacy boundary lives; see below.
 
 Stored snapshot fields:
 
-`World, Type, BattlEye, Sell, Sell Volume, Gold Demand, Buy, Buy Volume,
-Gold Supply, Amounts at best prices, Capture Date, Screenshot Hash`
+`World, Type, BattlEye, Sell, Captured Sell Depth, Quoted Sell Gold Notional, Buy, Captured Buy Depth,
+Quoted Buy Gold Notional, Amounts at best prices, Capture Date, Screenshot Hash`
 
 Each capture also stores its processing version and visible offer observations:
 `Side, Row Position, Amount, Piece Price, Total Price, Ends At, Offer UUID,
@@ -165,8 +164,8 @@ Two aggregates over every visible offer, not just the best one:
 
 | | |
 |---|---|
-| **Gold Demand** | `Σ (sell amount × sell price)` — the gold sellers are asking for. Buy out every coin on offer and this is the bill. |
-| **Gold Supply** | `Σ (buy amount × buy price)` — gold committed in buy offers. Tibia escrows the gold behind a buy offer, so this is real gold standing ready on that world. |
+| **Quoted Sell Gold Notional** | `Σ (sell amount × sell price)` — the gold sellers are asking for. Buy out every captured coin on offer and this is the bill. |
+| **Quoted Buy Gold Notional** | `Σ (buy amount × buy price)` — gold committed in buy offers. Tibia escrows the gold behind a buy offer, so this is quoted gold committed behind the captured buy offers. |
 
 Unlike the spread these are sums over rows, so they cannot be rebuilt from the
 best price and the volume once the rows are gone — which is why they are stored.
@@ -356,28 +355,28 @@ ordinary signed number in the semantic "bad" colour, paired with a tooltip —
 never with an accounting convention like parentheses. A dash stands only for
 a value that does not exist yet (an optional field on an older row) — a real zero is shown as `0`.
 
-Column headers name each figure once (`Sell Price`, `Gold Demand`, …); the
+Column headers name each figure once (`Sell Price`, `Quoted Sell Gold Notional`, …); the
 figure itself is never re-labelled or re-formatted to say so again.
 
 ### Where a unit does matter
 
 `observations.json` and the CSV carry plain integers with no separators or
 symbols at all, because they are read by machines. The snapshot CSV states each unit
-in its column heading instead: `Sell (gp/TC)`, `Gold Demand (gp)`.
+in its column heading instead: `Sell (gp/TC)`, `Quoted Sell Gold Notional (gp)`.
 
 ## Presentation of the captures table
 
 The Database table orders its groups **Sell side** / **Buy side** / **Derived** /
-**Data**, after World. Sell price, volume and Gold Demand stay together; Buy price,
-volume and Gold Supply stay together. Spread sits under Derived. Type, BattlEye,
+**Data**, after World. Sell price, volume and Quoted Sell Gold Notional stay together; Buy price,
+volume and Quoted Buy Gold Notional stay together. Spread sits under Derived. Type, BattlEye,
 Capture, Hash and removal sit under Data. Existing column visibility preferences
-remain in effect. Gold Demand and Gold Supply remain gross, never offset against
+remain in effect. Quoted Sell Gold Notional and Quoted Buy Gold Notional remain gross, never offset against
 one another. Column tooltips explain the measures and calculations.
 
 Saved 30-day Statistics use the same compact table styling, with exactly one row
-per snapshot: World, five Sell metrics, five Buy metrics, then Capture, Hash and
-removal under Data. Each side has **Tx / Volume / High / Avg / Low**; tooltips expand
-these to transactions (25-TC lots), TC volume and the three prices. The capture
+per snapshot: World, four Sell metrics, four Buy metrics, then Capture, Hash and
+removal under Data. Each side has **Tx / High / Avg / Low**; tooltips expand
+these to raw transaction counters and the three prices. The capture
 keeps its local fractional seconds; its tooltip retains the timezone and resolved
 UTC timestamp. This presentation does not change records or exported data.
 
@@ -545,7 +544,7 @@ qualify.
 
 The Market has two separate supported views: `viewType: "offers"` retains the
 existing live order-book fields and offer observations; `viewType: "statistics"`
-contains the eight historical Details values plus the derived TC volumes, with
+contains the eight historical Details values plus the raw Statistics counters, with
 no fabricated live quotes or offer rows. Records without `viewType` are legacy
 Offers captures. Both types share the existing world/API flow, hash deduplication,
 privacy boundary and storage. Details screenshots do not need offer-table headers.
@@ -571,15 +570,13 @@ the existing API flow; the numbers below illustrate the reference layout):
       "transactions": 3396,
       "highestPrice": 49985,
       "averagePrice": 44155,
-      "lowestPrice": 1,
-      "tcVolume": 84900
+      "lowestPrice": 1
     },
     "sell": {
       "transactions": 6082,
       "highestPrice": 49998,
       "averagePrice": 45942,
-      "lowestPrice": 44000,
-      "tcVolume": 152050
+      "lowestPrice": 44000
     }
   }
 }
@@ -614,23 +611,21 @@ and DST rules. An ambiguous or nonexistent local expiry retains its displayed
 clock with null UTC; it is never interpreted as CET/CEST. Existing offer UUID
 matching remains compatible with legacy displayed-clock identities.
 
-`transactions` preserves the Number of Transactions exactly as displayed: for
-Tibia Coins, it counts **25-TC lots**. Each side's `tcVolume = transactions × 25`.
+`transactions` preserves the raw Number of Transactions exactly as displayed.
+No conversion to TC quantity is established. Legacy `tcVolume` fields are ignored on import and omitted from normalized exports.
 The three prices remain gold per TC and are never multiplied by 25. Both sides
 validate independently: complete nonnegative safe integers, positive ordered
 prices when transactions exist (`lowest ≤ average ≤ highest`), explicit zero
-summary for zero transactions, and safe consistent lot volume. Historical side
+summary for zero transactions. Historical side
 averages may cross; live-book spread checks do not apply to Statistics. Missing,
 unreadable, incomplete, low-confidence or conflicting OCR fields require review.
 All eight fields are editable before saving; saving cannot override validation.
 The image reader uses the already verified Statistics pane even when the cropped
 heading is misread by WebKit. Side/field labels, numeric confidence and agreement
 between OCR passes remain required. Missing OCR values stay blank and produce
-extraction-specific review feedback before value validation. TC Volume is shown
-only after a valid transaction count is available.
+extraction-specific review feedback before value validation. No traded TC quantity is derived from these counters.
 
-JSON and snapshot CSV include both capture types, all Statistics fields and both
-lot volumes. Offer-observation exports continue to contain only actual offers.
+JSON and snapshot CSV include both capture types, all eight directly observed Statistics fields. Offer-observation exports continue to contain only actual offers.
 Nested Statistics values are explicitly whitelisted; filenames, characters,
 paths, raw OCR and image data remain transient. Old exports without Statistics
 still import and retain their existing report behavior.
@@ -640,9 +635,9 @@ exports. Existing live-offer charts/models continue to use Offers captures.
 The separate Statistics exhibit provides compact world, date and metric selectors,
 historical charts and a source table. History defaults to Statistics reference dates;
 local capture dates remain an optional observation view. It shows the transaction counts,
-TC volumes, each price, high/low range, average-price changes and a best-quote
+each price, high/low range, average-price changes and a best-quote
 comparison when an earlier resolved quote is available. Rolling windows overlap:
-counts/volumes are never summed across captures or differenced into daily flows.
+counts are never summed across captures or differenced into daily flows.
 The latest snapshot per world/side/date bucket is selected without interpolating
 missing observations. Legacy unresolved captures remain in the local view and
 are excluded only when a Statistics reference-date view needs a resolved instant.
@@ -721,3 +716,11 @@ TIBINANCE_SCREENSHOT_DIR=screenshots TIBINANCE_BROWSER=webkit TIBINANCE_OCR_FIXT
 Set `TIBINANCE_NODE_MODULES` when Playwright comes from an external runtime.
 The control fixtures cover previously validated historical Offers and Statistics;
 the review fixtures contain independently transcribed ground truth.
+
+### Market metric semantics and compatibility
+
+Statistics counters measure raw transaction activity, with daily and last-30-day windows kept separate. Actual traded TC quantity and executed gold turnover are unknown. Legacy `tcVolume` fields are ignored during import; new normalized records, CSVs and generated history omit them. No replacement quantity is estimated.
+
+`buyVolume` and `sellVolume` retain their compatible field keys and actual TC values, but are displayed as Captured Buy/Sell Depth. Best-price quantities include only captured rows at that price. `goldSupply` and `goldDemand` are Quoted Buy/Sell Gold Notional over captured rows, not turnover or total world gold. Complete order-book coverage is not established.
+
+The upstream board API exposes legitimate returned-offer TC quantities and could support a separate future depth feature. Its coverage requires validation; it is not imported into production by this correction. Frozen historical source inputs and older counter-analysis field names remain intact; their activity values are not traded TC volume.

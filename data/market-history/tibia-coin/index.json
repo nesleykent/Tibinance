@@ -3,12 +3,11 @@
   "asset": {
     "id": "tibia-coin",
     "name": "Tibia Coin",
-    "tibiaMarketItemId": 22118,
-    "lotSize": 25
+    "tibiaMarketItemId": 22118
   },
   "through": "2026-10-03",
   "inputs": [
-    {"path":"data/observations.json","sha256":"e85dde71be6c026a2fccc6d1d1d11c99859cdc5ee57a619f148035a885fbc37c"},
+    {"path":"data/observations.json","sha256":"a63912642f540cc997a07228cb6108c68648ea267ee4d9c2e6ec393afeee9521"},
     {"path":"data/market-history/inputs/worlds.json","sha256":"cf144c59a1cabdaa767b418362f676d8a674e85452e951d41bbe5ae2c99443cf"},
     {"path":"data/market-history/inputs/retired-worlds.json","sha256":"f40d512d2664e70f8f96c250ab8f103aa5b171e0d751b7f45ffd7e16b5f7f5eb"},
     {"path":"data/market-history/inputs/best-offer-exclusions.json","sha256":"2cbf9c0623223af5a001f9d1c877867c18ab191134166fe4e95a5709cd8ab508"},

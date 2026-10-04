@@ -32,8 +32,8 @@ async function fixture(){
  // Finalization runs the matcher again, which drops transient validation flags.
  for(const r of offers.offers)delete r.bad;
  const statistics=toRecord({...base,hash:hashes[1],capturedAt:clock[1],viewType:'statistics',statistics30d:{
-  buy:{transactions:4,highestPrice:49985,averagePrice:44155,lowestPrice:1,tcVolume:100},
-  sell:{transactions:8,highestPrice:49998,averagePrice:45942,lowestPrice:44000,tcVolume:200}}});
+  buy:{transactions:4,highestPrice:49985,averagePrice:44155,lowestPrice:1},
+  sell:{transactions:8,highestPrice:49998,averagePrice:45942,lowestPrice:44000}}});
  const anonymousOffers=offers.offers.map(({offerId,matchAmbiguous,bad,...r})=>r);
  const evidence=c=>({hash:c.hash,world:c.world,capturedAt:c.capturedAt,status:'ready',processingVersion:INGESTION_VERSION,
   viewType:c.viewType,stages:Object.fromEntries(STAGES.filter(s=>s!==(c.viewType==='offers'?'statistics':'extraction')).map(s=>[s,true])),
@@ -104,7 +104,7 @@ test('validation blocks order loss, missing raw files, private metadata, volume 
   {file:'processing-order.json',mutate:a=>a.slice(0,-1)},
   {file:'observations-enriched.json',mutate:a=>(a[0].filename='private.png',a)},
   {file:'backfill-results.json',mutate:a=>(a[0].capture.localPath='/private/source',a)},
-  {file:'observations-enriched.json',mutate:a=>(a[1].statistics30d.buy.tcVolume=4,a)},
+  {file:'observations-enriched.json',mutate:a=>(a[1].statistics30d.buy.transactions=-1,a)},
   {file:'observations-enriched.json',mutate:a=>(a[0].offers[0].endsAtUtc='2026-10-20T12:00:00.000Z',a)},
   {file:'observations-enriched.json',mutate:a=>(a[0].captureTimeZone='Europe/Berlin',a)},
   {file:'source-baseline.json',mutate:a=>(a[0].world='Secura',a)}

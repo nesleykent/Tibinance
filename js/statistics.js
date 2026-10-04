@@ -25,9 +25,6 @@ export function statisticsIssues(value) {
     }
     // No transactions is valid only with an explicit zero summary; absent values
     // never become zeros. With transactions, prices must be positive and ordered.
-    if (!Number.isSafeInteger(row.transactions * 25) || (row.tcVolume !== undefined && row.tcVolume !== row.transactions * 25)) {
-      issues.push({field:`statistics30d.${side}`, reason:`${name} Statistics: TC volume must equal transactions × 25`});
-    }
     const prices = [row.lowestPrice, row.averagePrice, row.highestPrice];
     if (row.transactions === 0 ? prices.some(v => v !== 0)
       : prices.some(v => v <= 0) || row.lowestPrice > row.averagePrice || row.averagePrice > row.highestPrice) {
@@ -48,7 +45,8 @@ export function validatedStatistics(value) {
   if (statisticsIssues(value).length) throw new Error('Invalid 30-day Statistics');
   const clean = cleanStatistics(value);
   if (statisticsIssues(clean).length) throw new Error('Invalid 30-day Statistics');
-  return Object.fromEntries(STATISTICS_SIDES.map(side => [side,{...clean[side],tcVolume:clean[side].transactions*25}]));
+  // Legacy tcVolume fields are accepted on import but never retained or consumed.
+  return clean;
 }
 
 // Labelled rows only. No digit repair or unlabelled-number inference. Duplicate
@@ -78,10 +76,10 @@ export function parseStatisticsText(text, {verifiedBlock = false} = {}) {
 }
 
 export function statisticsCSVValues(capture) {
-  return STATISTICS_SIDES.flatMap(side => [...STATISTICS_FIELDS,'tcVolume'].map(k => capture.statistics30d?.[side]?.[k] ?? ''));
+  return STATISTICS_SIDES.flatMap(side => STATISTICS_FIELDS.map(k => capture.statistics30d?.[side]?.[k] ?? ''));
 }
-export const STATISTICS_CSV_HEADERS = STATISTICS_SIDES.flatMap(side => [...STATISTICS_FIELDS,'tcVolume'].map(k =>
-  `30d ${side} ${k}${k === 'transactions' ? ' (25-TC lots)' : k === 'tcVolume' ? ' (TC)' : ' (gp/TC)'}`));
+export const STATISTICS_CSV_HEADERS = STATISTICS_SIDES.flatMap(side => STATISTICS_FIELDS.map(k =>
+  `30d ${side} ${k}${k === 'transactions' ? ' (count)' : ' (gp/TC)'}`));
 
 const partsAt = (instant, timeZone) => Object.fromEntries(new Intl.DateTimeFormat('en-CA', {
   timeZone, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit',
@@ -146,7 +144,7 @@ export function statisticsObservations(captures, { bucket = 'reference' } = {}) 
       const s = c.statistics30d[side];
       const quote = Number.isFinite(c[side]) ? c : c.capturedAtUtc ? quotes.get(c.world) : null;
       rows.push({world:c.world, hash:c.hash, capturedAt:c.capturedAt, captureDate:c.capturedAt.slice(0,10),
-        capturedAtUtc:c.capturedAtUtc ?? null, statisticsReferenceDate:referenceDate, date:bucket === 'capture' ? c.capturedAt.slice(0,10) : referenceDate, side, ...s, tcVolume:s.transactions*25,
+        capturedAtUtc:c.capturedAtUtc ?? null, statisticsReferenceDate:referenceDate, date:bucket === 'capture' ? c.capturedAt.slice(0,10) : referenceDate, side, ...cleanStatistics(c.statistics30d)[side],
         rangePct:s.lowestPrice > 0 ? (s.highestPrice / s.lowestPrice - 1) * 100 : null,
         quoteCapturedAt:quote?.capturedAt ?? null, quoteVsAveragePct:s.averagePrice > 0 && Number.isFinite(quote?.[side]) ? (quote[side] / s.averagePrice - 1) * 100 : null});
     }

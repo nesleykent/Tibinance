@@ -41,7 +41,6 @@ export const worldFile = world => `worlds/${world.toLowerCase()}.json`;
  * Returns {index, worlds: Map(world -> file object)}.
  */
 export function buildMarketHistory({ captures, tibiaMarket, registry, inputs, exclusions = [], asset = ASSETS['tibia-coin'] }) {
-  if (asset.lotSize !== 25) throw new Error('The shared Statistics contract counts 25-TC lots');
   const names = new Map();
   const canonical = world => {
     const key = world.toLowerCase();

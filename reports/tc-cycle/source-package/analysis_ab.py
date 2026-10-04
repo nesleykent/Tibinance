@@ -1,3 +1,4 @@
+# Activity fields with legacy volume names contain raw transaction counters, not traded TC quantity.
 """A) long-run level, B) volatility, C) seasonality, D) regimes, E) rallies, F) cross-world."""
 import json, numpy as np, pandas as pd, ruptures as rpt
 from scipy import stats
@@ -79,7 +80,7 @@ res['weekday_level_dev_gentebra_pct'],res['weekday_level_dev_gentebra_p']=wd_lev
 # buy side too (price at which Buy Offers were filled)
 PB=pd.read_pickle('PB.pkl')
 res['weekday_level_dev_gentebra_buy_pct'],res['weekday_level_dev_gentebra_buy_p']=wd_level(PB['gentebra'])
-# volume by weekday: median over core worlds of log(v/rolling 28d median)
+# transaction-counter activity by weekday: median over core worlds of log(v/rolling 28d median)
 lv=np.log(V[core].where(V[core]>0)); abn=lv-lv.rolling(28,min_periods=14).median()
 av=abn.median(axis=1).dropna()
 res['weekday_volume_dev_pct']={names[d]:round((np.exp(av[av.index.dayofweek==d].mean())-1)*100,1) for d in range(7)}

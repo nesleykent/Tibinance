@@ -5,8 +5,8 @@
  *
  * Price pane: best offers for the selected side (dots), joined solid between
  * consecutive server days and dotted across unobserved days; the daily average
- * trade price for the same side in grey, by the same rule. Volume pane: coins
- * traded per server day on that side. Nothing is interpolated.
+ * trade price for the same side in grey, by the same rule. Activity pane: raw transaction counters
+ * per completed server day on that side. Nothing is interpolated.
  */
 import { fmt, esc, num } from './format.js';
 import { bestOfferCloses } from './market-history.js';
@@ -35,7 +35,7 @@ const state = { index: null, world: null, side: 'sell', range: '1Y', sort: { key
 const market = createMarketChart($('chart'));
 const chart = market.chart;
 chart.subscribeCrosshairMove(p => showLegend(p.time === undefined ? null : dayOf(p.time)));
-// The volume legend sits at the top of the volume pane, wherever the panes divide.
+// The transaction legend sits at the top of the activity pane, wherever the panes divide.
 new ResizeObserver(placeVolumeLegend).observe($('chart'));
 function placeVolumeLegend() {
   $('volumeLegend').style.top = `calc(${chart.paneSize(0).height + 1}px + var(--space-1))`;
@@ -80,7 +80,7 @@ function applyRange(attempt = 0) {
 /*
  * The legends read the day under the crosshair, or the world's latest day when
  * the pointer is away: the best offer with its change from the previous
- * observation, the daily average, and the volume. An unobserved day names the
+ * observation, the daily average, and transaction activity. An unobserved day names the
  * observations on either side instead of showing a value.
  */
 function showLegend(day) {
@@ -107,7 +107,7 @@ function showLegend(day) {
   $('legend').innerHTML = `<div class="row"><span class="day">${esc(day)}</span>`
     + `<span class="label"><i class="key key-dot"></i>${labels.offer}</span> ${best}</div>`
     + `<div class="row"><span class="label"><i class="key key-average"></i>Daily average</span> ${average}</div>`;
-  $('volumeLegend').innerHTML = `<div class="row"><span class="label"><i class="key key-volume"></i>Volume</span> ${stats ? `<b>${fmt(stats.tcVolume)}</b>` : num(null)}</div>`;
+  $('volumeLegend').innerHTML = `<div class="row"><span class="label"><i class="key key-volume"></i>Transactions</span> ${stats ? `<b>${fmt(stats.transactions)}</b>` : num(null)}</div>`;
 }
 
 // The selected side's latest best offer against the last one on or before the start of the range.
@@ -145,7 +145,7 @@ function showQuote() {
   const lastDaily = daily.at(-1)?.serverDay;
   $('detailDaily').innerHTML = lastDaily ? `through ${esc(lastDaily)}` : num(null);
   $('helpWorld').textContent = lastDaily ? `Daily figures for ${summary.world} run through ${lastDaily}.` : `There are no daily figures for ${summary.world}.`;
-  $('chart').setAttribute('aria-label', `${summary.world}, ${SIDES[side].offer} history, range ${state.range}. `
+  $('chart').setAttribute('aria-label', `${summary.world}, ${SIDES[side].offer} history and daily transaction activity (count), range ${state.range}. `
     + (latest ? `Latest ${fmt(latest[side])} on server day ${latest.serverDay}.` : 'No best offers observed.'));
 }
 

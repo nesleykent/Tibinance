@@ -167,7 +167,7 @@ const report={filesScanned:files.length,imageFiles:images.length,eligibleScreens
  statisticsCaptures:captures.filter(c=>c.viewType==='statistics').length,offerRows:rows.length,uniqueOffers:ids.size,
  statisticsRecords:captures.filter(c=>c.viewType==='statistics').length,statisticsSideRecords:captures.filter(c=>c.viewType==='statistics').length*2,
  filenameRejected:images.length-eligible.length,chronologicalRange:{oldest:validOrder[0]?.capturedAt,newest:validOrder.at(-1)?.capturedAt},
- captureTimeZone:inventory.captureTimeZone,checksPassed:['complete current raw archive','full-precision chronological processing','SHA duplicate reconciliation','shared schema and validation','world identity','separate Offers/Statistics gates','local/UTC capture and expiry','Statistics reference date and 25-TC volumes','offer identity/history/collision consistency','closed privacy whitelists']};
+ captureTimeZone:inventory.captureTimeZone,checksPassed:['complete current raw archive','full-precision chronological processing','SHA duplicate reconciliation','shared schema and validation','world identity','separate Offers/Statistics gates','local/UTC capture and expiry','Statistics reference date and raw activity counters','offer identity/history/collision consistency','closed privacy whitelists']};
 await writeFile(join(directory,'validation.json'),JSON.stringify(report,null,2)+'\n');
 await writeFile(join(directory,'review-and-rejections.json'),JSON.stringify(failures,null,2)+'\n');
 console.log(JSON.stringify(report));

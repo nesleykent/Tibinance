@@ -1,4 +1,4 @@
-import { STATISTICS_FIELDS, STATISTICS_SIDES, STATISTICS_CSV_HEADERS, statisticsCSVValues } from './statistics.js';
+import { STATISTICS_FIELDS, STATISTICS_SIDES, STATISTICS_CSV_HEADERS, statisticsCSVValues, cleanStatistics } from './statistics.js';
 import { disposeOcr } from './ocr.js';
 import { ingestScreenshot, prepareCapture } from './ingestion.js';
 import { analyse } from './validation.js';
@@ -64,7 +64,7 @@ function statisticsHtml(state) {
   const labels = {transactions:'Number of Transactions', highestPrice:'Highest Price', averagePrice:'Average Price', lowestPrice:'Lowest Price'};
   return `<section class="statistics-review"><h4>30-day Statistics</h4>
     <div class="statistics-sides">${STATISTICS_SIDES.map(side => `<fieldset><legend>${side === 'buy' ? 'Buy' : 'Sell'} Offers</legend>
-      <p class="fine">TC Volume: ${Number.isSafeInteger(state.statistics30d?.[side]?.transactions) && state.statistics30d[side].transactions >= 0 && Number.isSafeInteger(state.statistics30d[side].transactions * 25) ? fmt(state.statistics30d[side].transactions * 25) : '—'}</p>${STATISTICS_FIELDS.map(key => `<label>${labels[key]}<input data-stat-side="${side}" data-stat-field="${key}" inputmode="numeric"
+      ${STATISTICS_FIELDS.map(key => `<label>${labels[key]}<input data-stat-side="${side}" data-stat-field="${key}" inputmode="numeric"
         aria-label="${side === 'buy' ? 'Buy' : 'Sell'} Statistics, ${labels[key]}" value="${esc(state.statisticsInputs?.[side]?.[key] ?? state.statistics30d?.[side]?.[key] ?? '')}"></label>`).join('')}</fieldset>`).join('')}</div>
   </section>`;
 }
@@ -112,7 +112,7 @@ function render(state) {
   const nums = state.viewType === 'statistics' ? `<span class="cn">30-day Statistics</span>` : a.sell
     ? `<span class="cn price"><b>${fmt(a.sell)}</b>/<b>${fmt(a.buy)}</b></span>
        <span class="cn spread${a.spread < 0 ? ' neg' : ''}">Δ${fmt(a.spread)}</span>
-       <span class="cn vol">${fmt(a.sellVolume)}/${fmt(a.buyVolume)}</span>
+       <span class="cn vol" title="Captured Sell / Buy Depth (TC)">${fmt(a.sellVolume)}/${fmt(a.buyVolume)}</span>
        <span class="cn gold">${fmt(a.goldDemand)}/${fmt(a.goldSupply)}</span>`
     : '';
 
@@ -228,7 +228,9 @@ const expanded = new Set();
 const valueOf = (r, k) => (k === 'spread' ? spread(r) : r[k]);
 
 async function renderTable() {
-  rowsCache = await store.all();
+  // Project legacy stored Statistics into the current export/presentation contract.
+  rowsCache = (await store.all()).map(c => c.statistics30d
+    ? {...c, statistics30d: cleanStatistics(c.statistics30d)} : c);
   $('capturesLoading').hidden = true;
   let rows = rowsCache.filter(r => r.viewType !== 'statistics');
   let statCaptures = rowsCache.filter(r => r.viewType === 'statistics').sort((a,b) => (b.capturedAtUtc ?? b.capturedAt).localeCompare(a.capturedAtUtc ?? a.capturedAt));
@@ -251,15 +253,14 @@ async function renderTable() {
     <div class="table-wrap"><table class="data" aria-label="Saved 30-day Statistics">
       <thead>
         <tr class="grp">
-          <th></th><th colspan="5" scope="colgroup" class="g-sell">Sell Side</th>
-          <th colspan="5" scope="colgroup" class="g-buy">Buy Side</th>
+          <th></th><th colspan="4" scope="colgroup" class="g-sell">Sell Side</th>
+          <th colspan="4" scope="colgroup" class="g-buy">Buy Side</th>
           <th colspan="3" scope="colgroup" class="g-data">Data</th>
         </tr>
         <tr>
           <th scope="col">World</th>
           ${['sell','buy'].map(() => `
-            <th scope="col" class="num" title="Number of Transactions (25-TC lots)">Tx</th>
-            <th scope="col" class="num" title="TC Volume">Volume</th>
+            <th scope="col" class="num" title="Number of Transactions (last 30 days)">Tx</th>
             <th scope="col" class="num" title="Highest Price (gp/TC)">High</th>
             <th scope="col" class="num" title="Average Price (gp/TC)">Avg</th>
             <th scope="col" class="num" title="Lowest Price (gp/TC)">Low</th>`).join('')}
@@ -268,7 +269,7 @@ async function renderTable() {
       </thead>
       <tbody>${statCaptures.map(c => `<tr>
         <td class="world">${esc(c.world)}</td>
-        ${['sell','buy'].map(side => ['transactions','tcVolume','highestPrice','averagePrice','lowestPrice']
+        ${['sell','buy'].map(side => STATISTICS_FIELDS
           .map(k => `<td class="num">${num(c.statistics30d[side][k])}</td>`).join('')).join('')}
         <td><time datetime="${esc(c.capturedAt)}" title="${esc(c.captureTimeZone ?? '')}; UTC ${esc(c.capturedAtUtc ?? 'unresolved')}">${esc(showTimestamp(c.capturedAt))}</time></td>
         <td class="hash" title="${esc(c.hash)}">${esc(c.hash.slice(0, 10))}</td>
@@ -352,11 +353,11 @@ function download(name, text, type) {
 // Every column but World can be hidden. Positions are 1-based within a row.
 const COLUMNS = [
   { key: 'sell', label: 'Sell Price', pos: 2, group: 1 },
-  { key: 'sellVolume', label: 'Sell Volume', pos: 3, group: 1 },
-  { key: 'goldDemand', label: 'Gold Demand', pos: 4, group: 1 },
+  { key: 'sellVolume', label: 'Captured Sell Depth', pos: 3, group: 1 },
+  { key: 'goldDemand', label: 'Quoted Sell Gold Notional', pos: 4, group: 1 },
   { key: 'buy', label: 'Buy Price', pos: 5, group: 2 },
-  { key: 'buyVolume', label: 'Buy Volume', pos: 6, group: 2 },
-  { key: 'goldSupply', label: 'Gold Supply', pos: 7, group: 2 },
+  { key: 'buyVolume', label: 'Captured Buy Depth', pos: 6, group: 2 },
+  { key: 'goldSupply', label: 'Quoted Buy Gold Notional', pos: 7, group: 2 },
   { key: 'spread', label: 'Spread', pos: 8, group: 3 },
   { key: 'type', label: 'Type', pos: 9, group: 4 },
   { key: 'battleye', label: 'BattlEye', pos: 10, group: 4 },
@@ -554,8 +555,8 @@ $('exportJson').addEventListener('click', () =>
   download('observations.json', JSON.stringify(rowsCache, null, 2), 'application/json'));
 $('exportCsv').addEventListener('click', () => {
   // Units belong in the header of a data file; the values stay plain integers.
-  const head = 'World,Type,BattlEye,Sell (gp/TC),Sell Volume (TC),Gold Demand (gp),' +
-               'Buy (gp/TC),Buy Volume (TC),Gold Supply (gp),Spread (gp/TC),Capture,Hash,View Type,Capture UTC,Capture Date,Capture Timezone,Statistics Reference Date,' + STATISTICS_CSV_HEADERS.join(',');
+  const head = 'World,Type,BattlEye,Sell (gp/TC),Captured Sell Depth (TC),Quoted Sell Gold Notional (gp),' +
+               'Buy (gp/TC),Captured Buy Depth (TC),Quoted Buy Gold Notional (gp),Spread (gp/TC),Capture,Hash,View Type,Capture UTC,Capture Date,Capture Timezone,Statistics Reference Date,' + STATISTICS_CSV_HEADERS.join(',');
   const body = rowsCache.map(r => [r.world, r.type, r.battleye, r.sell, r.sellVolume,
     r.goldDemand ?? '', r.buy, r.buyVolume, r.goldSupply ?? '', r.viewType === 'statistics' ? '' : spread(r), r.capturedAt, r.hash, r.viewType ?? 'offers', r.capturedAtUtc ?? '', r.capturedAt.slice(0,10), r.captureTimeZone ?? '', r.statisticsReferenceDate ?? '', ...statisticsCSVValues(r)]
     .map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',')).join('\n');

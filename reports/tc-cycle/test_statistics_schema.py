@@ -16,6 +16,15 @@ class StatisticsDatasetTests(unittest.TestCase):
                 'statistics30d':{'buy':{'transactions':3396,'highestPrice':49985,'averagePrice':44155,'lowestPrice':1,'tcVolume':84900},
                                 'sell':{'transactions':6082,'highestPrice':49998,'averagePrice':45942,'lowestPrice':44000,'tcVolume':152050}}}
 
+    def test_publication_omits_legacy_derived_fields_without_mutating_input(self):
+        row = self.fixture()
+        result = market.publication_rows([row])[0]
+        self.assertEqual(result['statistics30d']['buy']['transactions'], 3396)
+        self.assertNotIn('tcVolume', result['statistics30d']['buy'])
+        self.assertIn('tcVolume', row['statistics30d']['buy'])
+        self.assertEqual({k:v for k,v in result.items() if k != 'statistics30d'},
+                         {k:v for k,v in row.items() if k != 'statistics30d'})
+
     def test_old_and_new_market_update_records_share_one_dataset(self):
         old = json.loads(market.OUTPUT_FILE.read_text())
         self.assertEqual(market.validate(old + [self.fixture()]), market.validate(old))
@@ -37,17 +46,17 @@ class StatisticsDatasetTests(unittest.TestCase):
         row['statisticsReferenceDate']='2026-10-01'
         with self.assertRaises(AssertionError): market.validate([row])
 
-    def test_lot_semantics_temporal_and_each_side_failures_are_rejected(self):
+    def test_raw_counter_temporal_and_each_side_failures_are_rejected(self):
         for key in ['buy','sell']:
             row = self.fixture()
-            row['statistics30d'][key]['tcVolume'] += 1
+            row['statistics30d'][key]['transactions'] = -1
             with self.assertRaises(AssertionError): market.validate([row])
         for key,value in [('capturedAtUtc','2026-10-02T00:36:37.332Z'),
                           ('statisticsReferenceDate','2026-10-02'),('captureDate','2026-10-01')]:
             row = self.fixture(); row[key]=value
             with self.assertRaises(AssertionError): market.validate([row])
         row=self.fixture(); del row['statistics30d']['buy']['tcVolume']
-        with self.assertRaises(AssertionError):market.validate([row])
+        market.validate([row]) # Legacy derived fields are optional and ignored.
         row=self.fixture();row['capturedAtUtc']=None
         with self.assertRaises(AssertionError):market.validate([row])
         row=self.fixture(); del row['statistics30d']['buy']['averagePrice']

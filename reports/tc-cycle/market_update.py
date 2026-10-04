@@ -1,9 +1,10 @@
 """Validate (and optionally install) the raw Market capture export.
 
-market-update.json is the capture export exactly as received: a list with one
+market-update.json preserves the capture export except unsupported legacy
+Statistics-derived fields, which are omitted on publication: a list with one
 object per capture, for any world. The page builds the Market monitor from it
 in the browser and shows every world it contains, so updating the monitor is
-copying a new export over this file:
+validating and installing a new export:
 
     python3 market_update.py ~/Downloads/market-update.json   # validate + install
     python3 market_update.py                                  # validate current file
@@ -59,8 +60,8 @@ def validate(captures):
       let raw=''; for await (const part of process.stdin) raw+=part;
       for (const c of JSON.parse(raw)) {
         if (c.viewType === 'statistics' || c.statistics30d != null) {
-          const normalized=validatedStatistics(c.statistics30d);
-          for (const side of ['buy','sell']) if (c.statistics30d[side].tcVolume !== normalized[side].tcVolume) throw Error();
+          validatedStatistics(c.statistics30d);
+          // Legacy derived fields are ignored; the raw four-field Statistics contract is authoritative.
         }
         if (c.processingVersion >= 6) {
           for (const key of ['viewType','captureDate','captureTimeZone','capturedAtUtc']) if (!(key in c)) throw Error();
@@ -87,17 +88,30 @@ def validate(captures):
     return sorted({c["world"] for c in captures})
 
 
+def publication_rows(captures):
+    """Drop legacy derived Statistics fields without changing source counters."""
+    fields = ('transactions', 'highestPrice', 'averagePrice', 'lowestPrice')
+    return [{**c, 'statistics30d': {side: {key: c['statistics30d'][side][key] for key in fields}
+             for side in ('buy', 'sell')}} if c.get('statistics30d') is not None else c
+            for c in captures]
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("source", nargs="?", type=Path, help="new export to validate and copy over market-update.json")
     args = parser.parse_args()
     source = args.source or OUTPUT_FILE
     try:
-        worlds = validate(json.loads(source.read_text()))
+        captures = json.loads(source.read_text())
+        worlds = validate(captures)
     except AssertionError as error:
         sys.exit(f"FAIL: {source}: {error}")
     if args.source and source.resolve() != OUTPUT_FILE:
-        shutil.copyfile(source, OUTPUT_FILE)  # byte-for-byte: the file stays identical to the export
+        normalized = publication_rows(captures)
+        if normalized == captures:
+            shutil.copyfile(source, OUTPUT_FILE)  # current exports remain byte-identical
+        else:
+            OUTPUT_FILE.write_text(json.dumps(normalized, indent=2) + "\n")
         print(f"Installed {source} -> {OUTPUT_FILE}")
     print(f"PASS: {len(json.loads(OUTPUT_FILE.read_text()))} captures, {len(worlds)} worlds: {', '.join(worlds)}")
 

@@ -147,13 +147,13 @@ try {
   assert.equal(await text('.toolbar-bottom'),'1M 3M 6M YTD 1Y All');
   assert.ok(await page.$eval('.toolbar-top',e=>e.getBoundingClientRect().height)<=45,'top toolbar height');
   assert.equal(await page.getAttribute('#worlds tr[data-world="Gentebra"]','aria-selected'),'true');
-  assert.match(await page.getAttribute('#chart','aria-label'),/^Gentebra, Best Sell Offer history, range 1Y\./);
+  assert.match(await page.getAttribute('#chart','aria-label'),/^Gentebra, Best Sell Offer history and daily transaction activity \(count\), range 1Y\./);
   const [prior,last]=closes.slice(-2);
   const history=JSON.parse(await readFile(new URL(`../data/market-history/tibia-coin/${summary('Gentebra').file}`,import.meta.url),'utf8'));
   const lastDayCount=history.observations.filter(o=>o.serverDay===last[0] && o.sell!=null && o.buy!=null).length;
   assert.equal(await text('#legend'),`${last[0]} Best Sell Offer ${number.format(last[1])} ${signed.format(last[1]-prior[1])} `
     + `${percent.format(last[1]/prior[1]-1)} since ${prior[0]}${lastDayCount>1?` last of ${lastDayCount}`:''} Daily average N/A`);
-  assert.equal(await text('#volumeLegend'),'Volume N/A');
+  assert.equal(await text('#volumeLegend'),'Transactions N/A');
 
   // The legends follow the crosshair: a day in the September gap names the observations around it,
   // and a day with trading shows its average and volume.
@@ -164,7 +164,7 @@ try {
     seen.push([await text('#legend'),await text('#volumeLegend')]);
   }
   assert.ok(seen.some(([l])=>l.includes('Best Sell Offer not observed between 2026-09-12 and 2026-09-21') && l.endsWith('Daily average N/A')),'gap legend');
-  assert.ok(seen.some(([l,v])=>/Daily average \d[\d,]*$/.test(l) && /^Volume \d[\d,]*$/.test(v)),'trading-day legend');
+  assert.ok(seen.some(([l,v])=>/Daily average \d[\d,]*$/.test(l) && /^Transactions \d[\d,]*$/.test(v)),'trading-day legend');
   await page.mouse.move(0,0);
   await page.waitForFunction(t=>document.querySelector('#legend .day').textContent===t,last[0]);
 

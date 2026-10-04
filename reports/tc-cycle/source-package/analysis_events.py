@@ -1,3 +1,4 @@
+# Activity fields with legacy volume names contain raw transaction counters, not traded TC quantity.
 """Event study on the cross-world TC index (abnormal = raw log change minus prior-60-day median drift).
 Placebo: same computation at random anchor days (same durations), 4000 draws of k-occurrence means.
 Windows: pre = 7 days before start; during = start..end; post7 = 7 days after end; post30 = 30 days after end.
@@ -8,7 +9,7 @@ I=pd.read_pickle('index.pkl'); V=pd.read_pickle('V.pkl'); core=json.load(open('c
 li=I['logI']; R=I['R']
 first=li.first_valid_index(); last=li.last_valid_index()
 liff=li.ffill(limit=2)   # tolerate 1-2 missing days
-# activity index: per world log volume minus trailing median, median over worlds (computed on the fly per anchor)
+# activity index: per world log transaction counter minus trailing median, median over worlds (computed on the fly per anchor)
 LV=np.log(V[core].where(V[core]>0))
 def lv_at(t): 
     return LV.loc[t] if t in LV.index else None

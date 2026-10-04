@@ -66,9 +66,9 @@ const dailyAverage = {
   keys: (side, c) => [{ mark: 'line', color: c.average, label: 'Daily average' }]
 };
 
-// Coins traded per server day on that side, in its own pane. Every server day is on the axis, so a gap takes the
+// Raw transaction activity per completed server day on that side, in its own pane. Every server day is on the axis, so a gap takes the
 // width of its missing days; a day without trades is a real zero.
-const volume = {
+const activity = {
   depth: 2,
   add(chart, { L }) {
     const s = chart.addSeries(L.HistogramSeries, { priceLineVisible: false, lastValueVisible: false,
@@ -79,23 +79,23 @@ const volume = {
   draw(s, view, side, c) {
     s.applyOptions({ color: `${c[side]}73` });
     s.setData(view.grid.map(day => {
-      const value = view.dailyByDay.get(day)?.[side]?.tcVolume;
+      const value = view.dailyByDay.get(day)?.[side]?.transactions;
       return value === undefined ? { time: day } : { time: day, value };
     }));
   },
-  keys: (side, c) => [{ mark: 'bar', color: c[side], label: 'Volume (TC)' }],
+  keys: (side, c) => [{ mark: 'bar', color: c[side], label: 'Transactions (count)' }],
   // The pane's name at its top left, as on the page.
   annotate(ctx, { chart, x, y, k, font, c }) {
     ctx.font = font(11 * k);
     ctx.fillStyle = c.text;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
-    ctx.fillText('Volume', x + 4 * k, y + chart.paneSize(0).height + 4 * k);
+    ctx.fillText('Transactions', x + 4 * k, y + chart.paneSize(0).height + 4 * k);
   }
 };
 
-// Read in this order; drawn by depth: the average beneath the best offer, the volume in its own pane.
-export const LAYERS = [bestOffer, dailyAverage, volume];
+// Read in this order; drawn by depth: the average beneath the best offer, transaction activity in its own pane.
+export const LAYERS = [bestOffer, dailyAverage, activity];
 
 /* ---------------------------------------------------------------- chart */
 export function createMarketChart(container, { scale: k = 1, width, height } = {}) {
