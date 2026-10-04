@@ -154,10 +154,9 @@ try {
     const right=box(620,140,1100,640),left=box(40,140,560,640);
     return {height:image.height/r,bandRight:count(right,[237,222,216]),bandLeft:count(left,[237,222,216]),inkRight:count(right,[36,35,42],60),tintRight:count(right,[247,247,248],4)};
   },png);
-  // The events' own notes are tested in market-events-browser.mjs: the Events panel hides their markers.
-  const eventMarkers=async on=>{const panel=await page.getAttribute('#dock','data-open');await page.click('#eventsToggle');await page.setChecked('#eventMarkers',on);
-    panel ? await page.click(`[data-dock-target="${panel}"]`) : await page.click('#eventsToggle');};
-  await eventMarkers(false);
+  await page.click('#eventsToggle');
+  await page.uncheck('#eventMarkers');
+  await page.click('#eventsToggle');   // the events' own notes are tested in market-events-browser.mjs
   let image=await inspect(await exportPng());
   assert.equal(image.height,780+12+2*20,`two lines of projection notes ${JSON.stringify(image)}`);
   assert.ok(image.bandRight>2000 && image.bandLeft<50,`the band after the boundary only ${JSON.stringify(image)}`);
@@ -171,7 +170,9 @@ try {
   await open('Aethera','1Y');
   image=await inspect(await exportPng());
   assert.equal(image.height,780+12+20);
-  await eventMarkers(true);
+  await page.click('#eventsToggle');
+  await page.check('#eventMarkers');
+  await page.click('#eventsToggle');
 
   // ---- Phones: the tool in the rail row, the readout and the window ahead, no sideways scroll.
   await page.setViewportSize({width:390,height:844});

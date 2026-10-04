@@ -639,7 +639,10 @@ async function main() {
   setChoice('side', 'side', state.side);
   setChoice('range', 'range', state.range);
   $('helpThrough').textContent = `The market history runs through server day ${state.index.through}.`;
+  // Initial ranges use the settled font metrics and dock width, just like later range selections.
+  await document.fonts.ready;
   wire();
+  await new Promise(requestAnimationFrame);
   if (params.get('view') === 'screener') showScreener(true);
   await select(asked ?? (names.includes('Antica') ? 'Antica' : names[0]));
   $('market').setAttribute('aria-busy', 'false');

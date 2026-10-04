@@ -7,6 +7,8 @@
 //   reports/tc-cycle/mergers.json                    announced merges
 //   reports/tc-cycle/source-package/events_intervals.json   XP/Skill and Rapid Respawn events (TibiaMarket)
 //   reports/tc-cycle/source-package/extra_events.json       updates and Tibia Token changes
+//   reports/tc-cycle/inputs/eventschedule.json              official scheduled calendar and descriptions
+//   data/market-events/inputs/api-history.json              complete returned TibiaMarket event observations
 //
 //   node tools/build_market_events.mjs          rebuild and write
 //   node tools/build_market_events.mjs --check  fail if the committed file differs
@@ -34,7 +36,7 @@ export const list = names => names.length < 2 ? names.join('') : `${names.slice(
  * inputs: { curated, retired, worlds, mergers, intervals, dated, files: [{path, sha256}] } as parsed JSON.
  * Returns the dataset; throws when it is not valid.
  */
-export function buildMarketEvents({ curated, retired, worlds, mergers, intervals, dated, files }) {
+export function buildMarketEvents({ curated, retired, worlds, mergers, intervals, dated, calendar, history, files }) {
   const events = [];
   const add = (event, key) => events.push({ id: `${event.category}-${event.start}-${slug(key)}`, end: event.start, ...event });
 
@@ -70,10 +72,49 @@ export function buildMarketEvents({ curated, retired, worlds, mergers, intervals
   const kinds = curated.research.intervals.events;
   for (const interval of intervals) {
     const kind = kinds[interval.event];
-    if (!kind) continue;
+    if (!kind) throw new Error(`Unclassified calendar event: ${interval.event}`);
     const end = interval.end > interval.start ? addDays(interval.end, -1) : interval.start;
     add({ category: kind.category, start: interval.start, end, worlds: 'all', title: kind.title, description: kind.description,
       source: { file: curated.research.intervals.file, event: interval.event, calendarDays: [interval.start, interval.end] } }, kind.title);
+  }
+
+  // Official server-save timestamps settle scheduled boundaries, including partial historical dumps.
+  const dayOf = seconds => new Date(seconds * 1000).toISOString().slice(0, 10);
+  for (const item of calendar.eventlist) {
+    const kind = kinds[item.name];
+    if (!kind) throw new Error(`Unclassified calendar event: ${item.name}`);
+    const start = dayOf(item.startdate), end = addDays(dayOf(item.enddate), -1);
+    const existing = events.find(e => e.category === kind.category && e.start === start);
+    const fact = { category: kind.category, start, end, worlds: 'all', title: kind.title,
+      description: kind.description, source: { file: curated.calendar.file, url: curated.calendar.url,
+        calendarDays: [start, dayOf(item.enddate)], lastUpdated: calendar.lastupdatetimestamp } };
+    if (existing) Object.assign(existing, fact); // Keep its original stable ID.
+    else add(fact, kind.title);
+  }
+
+  // Preserve every returned observation. Missing days do not imply an event continued.
+  const observations = new Map();
+  for (const entry of history) for (const raw of entry.events) {
+    const name = raw.replace(/^\*\s*/, '').trim();
+    if (!name || name === '-') continue;
+    const kind = kinds[name];
+    if (!kind) throw new Error(`Unclassified calendar event: ${name}`);
+    const day = entry.date.slice(0, 10);
+    // The final calendar date may contain only the hours before server save.
+    if (events.some(e => e.category === kind.category && e.start <= day && (e.source.calendarDays?.[1] ?? e.end) >= day)) continue;
+    if (!observations.has(name)) observations.set(name, new Set());
+    observations.get(name).add(day);
+  }
+  for (const [name, dates] of observations) {
+    const kind = kinds[name], runs = [];
+    for (const day of [...dates].sort()) {
+      const last = runs.at(-1);
+      if (last && addDays(last.end, 1) === day) last.end = day;
+      else runs.push({ start: day, end: day });
+    }
+    for (const run of runs) add({ ...run, category: kind.category, worlds: 'all', title: kind.title,
+      description: `${kind.description} Recorded active on these dates; complete server-save boundaries are not available.`,
+      source: { file: curated.history.file, url: curated.history.url, observed: true } }, kind.title);
   }
 
   // Dated events the research recorded with their own sources.
@@ -89,7 +130,7 @@ export function buildMarketEvents({ curated, retired, worlds, mergers, intervals
   events.sort((a, b) => order(a, b, curated.categories));
   const dataset = {
     format: 1,
-    note: 'Events plotted over the Markets chart, separate from the market history. Dates are server days, inclusive. Built by tools/build_market_events.mjs; source is provenance, never shown on the chart.',
+    note: 'Shared game calendar and market events for the calendar, agenda, details, chart markers and exports. Dates are server days, inclusive. Built by tools/build_market_events.mjs; source records provenance.',
     inputs: files,
     categories: curated.categories,
     events: events.map(({ id, category, start, end, worlds: scope, title, description, merge, source }) =>
@@ -109,7 +150,8 @@ export async function readInputs(root = ROOT) {
   const curated = await read(CURATED);
   const research = curated.value.research;
   const parts = { curated, retired: await read(RETIRED), worlds: await read(WORLD_SNAPSHOT), mergers: await read(research.mergers.file),
-    intervals: await read(research.intervals.file), dated: await read(research.dated.file) };
+    intervals: await read(research.intervals.file), dated: await read(research.dated.file),
+    calendar: await read(curated.value.calendar.file), history: await read(curated.value.history.file) };
   return { ...Object.fromEntries(Object.entries(parts).map(([k, v]) => [k, v.value])),
     files: Object.values(parts).map(({ path, sha256 }) => ({ path, sha256 })) };
 }

@@ -1,36 +1,478 @@
 {
  "note": "Curated inputs for the Markets event dataset (tools/build_market_events.mjs). Categories define the model; `research` classifies events the research report already records (reports/tc-cycle); `events` holds facts found only in prose, each with the official source the repository already cites. Dates are server days (opening at the 10:00 Europe/Berlin server save).",
  "categories": [
-  { "id": "world-created", "label": "World opened", "mark": "N", "group": "world", "lifecycle": true, "recurring": false },
-  { "id": "world-retired", "label": "World retired", "mark": "R", "group": "world", "lifecycle": true, "recurring": false },
-  { "id": "world-merge", "label": "World merge", "mark": "M", "group": "world", "lifecycle": true, "recurring": false },
-  { "id": "update", "label": "Major update", "mark": "U", "group": "game", "lifecycle": false, "recurring": false },
-  { "id": "xp-skill", "label": "XP/Skill Event", "mark": "XP", "group": "game", "lifecycle": false, "recurring": true },
-  { "id": "rapid-respawn", "label": "Rapid Respawn", "mark": "RR", "group": "game", "lifecycle": false, "recurring": true },
-  { "id": "economy", "label": "Economy", "mark": "E", "group": "market", "lifecycle": false, "recurring": false },
-  { "id": "store", "label": "Store, Premium and Tibia Coin", "mark": "S", "group": "market", "lifecycle": false, "recurring": false }
+  {
+   "id": "world-created",
+   "label": "World opened",
+   "mark": "N",
+   "group": "world",
+   "lifecycle": true,
+   "recurring": false
+  },
+  {
+   "id": "world-retired",
+   "label": "World retired",
+   "mark": "R",
+   "group": "world",
+   "lifecycle": true,
+   "recurring": false
+  },
+  {
+   "id": "world-merge",
+   "label": "World merge",
+   "mark": "M",
+   "group": "world",
+   "lifecycle": true,
+   "recurring": false
+  },
+  {
+   "id": "update",
+   "label": "Major update",
+   "mark": "U",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": false
+  },
+  {
+   "id": "xp-skill",
+   "label": "XP/Skill Event",
+   "mark": "XP",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "rapid-respawn",
+   "label": "Rapid Respawn",
+   "mark": "RR",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "economy",
+   "label": "Economy",
+   "mark": "E",
+   "group": "market",
+   "lifecycle": false,
+   "recurring": false
+  },
+  {
+   "id": "store",
+   "label": "Store, Premium and Tibia Coin",
+   "mark": "S",
+   "group": "market",
+   "lifecycle": false,
+   "recurring": false
+  },
+  {
+   "id": "a-piece-of-cake",
+   "label": "A Piece of Cake",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "annual-autumn-vintage",
+   "label": "Annual Autumn Vintage",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "bewitched",
+   "label": "Bewitched",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "carnival-month",
+   "label": "Carnival Month",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "christmas",
+   "label": "Christmas",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "chyllfroest",
+   "label": "Chyllfroest",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "colours-of-magic",
+   "label": "Colours of Magic",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "demon-s-lullaby",
+   "label": "Demon's Lullaby",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "double-daily-reward-month",
+   "label": "Double Daily Reward Month",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "exaltation-overload",
+   "label": "Exaltation Overload",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "flower-month",
+   "label": "Flower Month",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "full-moon",
+   "label": "Full Moon",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "halloween-event",
+   "label": "Halloween Event",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "hot-cuisine-month",
+   "label": "Hot Cuisine Month",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "last-creep-standing",
+   "label": "Last Creep Standing",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "lightbearer",
+   "label": "Lightbearer",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "loot-event",
+   "label": "Loot Event",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "new-year",
+   "label": "New Year",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "orcsoberfest",
+   "label": "Orcsoberfest",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "prank-month",
+   "label": "Prank Month",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "rise-of-devovorga",
+   "label": "Rise of Devovorga",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "spring-into-life",
+   "label": "Spring into Life",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "the-first-dragon",
+   "label": "The First Dragon",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "the-great-expedition",
+   "label": "The Great Expedition",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "tibia-anniversary",
+   "label": "Tibia Anniversary",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "valentine-s-day",
+   "label": "Valentine's Day",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "winterlight-solstice",
+   "label": "Winterlight Solstice",
+   "mark": "EV",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  }
  ],
  "otherWorlds": [
-  { "world": "Sonera", "note": "Named in tibia.com news 8475 (2025-07-30); neither in the TibiaData snapshot nor among the retired worlds with market history." }
+  {
+   "world": "Sonera",
+   "note": "Named in tibia.com news 8475 (2025-07-30); neither in the TibiaData snapshot nor among the retired worlds with market history."
+  }
  ],
  "research": {
   "intervals": {
    "file": "reports/tc-cycle/source-package/events_intervals.json",
    "note": "TibiaMarket /events dumps parsed by reports/tc-cycle/source-package/parse_events.py (calendar days, short gaps filled). An event runs from one server save to another, so its last listed calendar day holds only the morning before the save: the last server day is the day before (checked against the official schedule, reports/tc-cycle/inputs/eventschedule.json, 2026-07-03 to 2026-07-06 08:00 UTC).",
    "events": {
-    "XP/Skill Event": { "category": "xp-skill", "title": "XP/Skill Event", "description": "More experience and skill points from hunting, offline training and exercise weapons." },
-    "Skill Event": { "category": "xp-skill", "title": "Skill Event", "description": "More skill points for the event's duration." },
-    "Rapid Respawn": { "category": "rapid-respawn", "title": "Rapid Respawn", "description": "Monsters respawn at a faster rate." }
+    "XP/Skill Event": {
+     "category": "xp-skill",
+     "title": "XP/Skill Event",
+     "description": "More experience and skill points from hunting, offline training and exercise weapons."
+    },
+    "Skill Event": {
+     "category": "xp-skill",
+     "title": "Skill Event",
+     "description": "More skill points for the event's duration."
+    },
+    "Rapid Respawn": {
+     "category": "rapid-respawn",
+     "title": "Rapid Respawn",
+     "description": "Monsters respawn at a faster rate."
+    },
+    "A Piece of Cake": {
+     "category": "a-piece-of-cake",
+     "title": "A Piece of Cake",
+     "description": "Defeat the invading cake golems and build a bridge to a legendary island reachable only once a year. There you will have to face a challenge unlike any before. Grab your fork and be ready."
+    },
+    "Annual Autumn Vintage": {
+     "category": "annual-autumn-vintage",
+     "title": "Annual Autumn Vintage",
+     "description": "Winterberries can now be found all over Tibia! The Combined Magical Winterberry Society wants YOU to help gathering them to create the juice that keeps the magic in the world flowing: good treading!"
+    },
+    "Bewitched": {
+     "category": "bewitched",
+     "title": "Bewitched",
+     "description": "Avert the wrath of evil spirits! Help the good witches to create a powerful spirit brew. Gather exotic ingredients and protect the witches' cauldron from the forces of destruction."
+    },
+    "Carnival Month": {
+     "category": "carnival-month",
+     "title": "Carnival Month",
+     "description": "Celebrate a huge costume party! Visit Stan in Venore to buy fancy costumes, colourful party hats and funny trumpets. Have a great carnival party with all of your friends."
+    },
+    "Christmas": {
+     "category": "christmas",
+     "title": "Christmas",
+     "description": "It's the most wonderful time of the year: but beware of the Grynch Clan Goblins! Have you been good all year? Then Santa might have a present for you."
+    },
+    "Chyllfroest": {
+     "category": "chyllfroest",
+     "title": "Chyllfroest",
+     "description": "An ice bridge now connects Svargrond to a frosty island, where monsters and a strange frozen creature have been sighted."
+    },
+    "Colours of Magic": {
+     "category": "colours-of-magic",
+     "title": "Colours of Magic",
+     "description": "Mysterious letters with coloured powders can now be found everywhere. Choose your wizard and make your friends join your cause: what is your true colour?"
+    },
+    "Demon's Lullaby": {
+     "category": "demon-s-lullaby",
+     "title": "Demon's Lullaby",
+     "description": "When does a mother's burden become a hero's burden? When a demon mother decides to take a few days off. Guard her horrible children to avert her wrath. But be warned: Demon babies might prove too hot to handle."
+    },
+    "Double Daily Reward Month": {
+     "category": "double-daily-reward-month",
+     "title": "Double Daily Reward Month",
+     "description": "Make sure you collect your daily reward. If the golden sun welcomes you at the shrine all daily rewards will be doubled."
+    },
+    "Exaltation Overload": {
+     "category": "exaltation-overload",
+     "title": "Exaltation Overload",
+     "description": "An event affecting exaltation forge gameplay."
+    },
+    "Flower Month": {
+     "category": "flower-month",
+     "title": "Flower Month",
+     "description": "Remember that June is the month of flowers. If you have collected any seeds, exchange them for a flower pot with the dryad Rosemarie. But beware, wild dryads are roaming the lands again."
+    },
+    "Full Moon": {
+     "category": "full-moon",
+     "title": "Full Moon",
+     "description": "The moon is full! Beware, lycanthropic creatures like werewolves, werefoxes or werebears roam the lands now. And they are more aggressive and numerous than usual."
+    },
+    "Halloween Event": {
+     "category": "halloween-event",
+     "title": "Halloween Event",
+     "description": "This is the time of witches, ghosts and vampires. Look out for the Mutated Pumpkin and the Halloween Hare to make your flesh crawl."
+    },
+    "Hot Cuisine Month": {
+     "category": "hot-cuisine-month",
+     "title": "Hot Cuisine Month",
+     "description": "If you are a real gourmet, ask Jean Pierre in the Darama desert for some delicious and exceptional recipes. August is undoubtedly the month of hot cuisine! Bon appetit!"
+    },
+    "Last Creep Standing": {
+     "category": "last-creep-standing",
+     "title": "Last Creep Standing",
+     "description": "Participate in a fun challenge of wits and agility. The trials of Kurik to test the mortals and fool around with them will lead you to a test of your reactions and luck."
+    },
+    "Lightbearer": {
+     "category": "lightbearer",
+     "title": "Lightbearer",
+     "description": "Now that the veil between the worlds is thin, darkness is striving to break through. Lucius calls for Lightbearers to keep sacred light basins burning for four days. Don't let even one go out or all hope is lost."
+    },
+    "Loot Event": {
+     "category": "loot-event",
+     "title": "Loot Event",
+     "description": "Increased loot during the event."
+    },
+    "New Year": {
+     "category": "new-year",
+     "title": "New Year",
+     "description": "Make a wish in the magical night between the years and perhaps a dream will come true. Don't forget to visit Ned Nobel and buy some fireworks. Happy New Year!"
+    },
+    "Orcsoberfest": {
+     "category": "orcsoberfest",
+     "title": "Orcsoberfest",
+     "description": "Join the Orgers in traditional festivities of fun and feast to earn their respect and tasty rewards!"
+    },
+    "Prank Month": {
+     "category": "prank-month",
+     "title": "Prank Month",
+     "description": "Enjoy a whole month of pranks! Hoaxette is offering special spellwands, pillows and presents that all have some funny effects. One final advice: Always treat jesters well, you never know if they seek revenge one day."
+    },
+    "Rise of Devovorga": {
+     "category": "rise-of-devovorga",
+     "title": "Rise of Devovorga",
+     "description": "A powerful ancient weapon meant to be sleeping forever has awoken deep under Vengoth. With thirst for revenge and burning rage she will destroy the world: unless you fight her back."
+    },
+    "Spring into Life": {
+     "category": "spring-into-life",
+     "title": "Spring into Life",
+     "description": "There are unusual activities in almost all known dragon lairs. Lots of dragon eggs have been sighted in their caves."
+    },
+    "The First Dragon": {
+     "category": "the-first-dragon",
+     "title": "The First Dragon",
+     "description": "Search for traces of the First Dragon and his descendants. Find out if there is more to the tale of a beautiful festive garment that has been lost ever since it fell into its claws."
+    },
+    "The Great Expedition": {
+     "category": "the-great-expedition",
+     "title": "The Great Expedition",
+     "description": "Support Proprietor Piers and join the Great Expedition in Thais. Work together with your friends to keep the wharf safe and the construction running to help get this endeavour on the way. Assemble the perfect crew for the journey and set sail to new horizons!"
+    },
+    "Tibia Anniversary": {
+     "category": "tibia-anniversary",
+     "title": "Tibia Anniversary",
+     "description": "Let's celebrate! It's Tibia's birthday! Join us for the party and take part in the festivities! Many exciting activities await you. Try your luck on the pi\u00f1ata dragons. Visit the islands Vigintia and Nostalgia for fun things like can knockdown and a treasure hunt, or take a trip down memory lane."
+    },
+    "Valentine's Day": {
+     "category": "valentine-s-day",
+     "title": "Valentine's Day",
+     "description": "Romantic times! Buy Valentine's cakes, flower bouquets, heart backpacks and other romantic items for your loved one from Valentina in Greenshore."
+    },
+    "Winterlight Solstice": {
+     "category": "winterlight-solstice",
+     "title": "Winterlight Solstice",
+     "description": "The days are getting colder and grisly, shaggy creatures are roaming the lands. Are you brave enough to face their queen in her frozen lair? Anyhow, don't forget: You are already halfway out of the dark!"
+    }
    }
   },
   "dated": {
    "file": "reports/tc-cycle/source-package/extra_events.json",
    "events": {
-    "Summer Update": { "category": "update", "title": "Summer Update {year}", "description": "Tibia's Summer Update {year} went live." },
-    "Winter Update": { "category": "update", "title": "Winter Update {year}", "description": "Tibia's Winter Update {year} went live." },
-    "Monk release": { "category": "update", "title": "Monk released", "description": "The Monk vocation became playable." },
-    "Tibia Token launch": { "category": "economy", "title": "Tibia Token launched", "description": "Tibia Tokens were introduced." },
-    "Tibia Token fee 6%->8%": { "category": "economy", "title": "Tibia Token fee raised to 8%", "description": "The Tibia Token fee rose from 6% to 8%." }
+    "Summer Update": {
+     "category": "update",
+     "title": "Summer Update {year}",
+     "description": "Tibia's Summer Update {year} went live."
+    },
+    "Winter Update": {
+     "category": "update",
+     "title": "Winter Update {year}",
+     "description": "Tibia's Winter Update {year} went live."
+    },
+    "Monk release": {
+     "category": "update",
+     "title": "Monk released",
+     "description": "The Monk vocation became playable."
+    },
+    "Tibia Token launch": {
+     "category": "economy",
+     "title": "Tibia Token launched",
+     "description": "Tibia Tokens were introduced."
+    },
+    "Tibia Token fee 6%->8%": {
+     "category": "economy",
+     "title": "Tibia Token fee raised to 8%",
+     "description": "The Tibia Token fee rose from 6% to 8%."
+    }
    }
   },
   "mergers": {
@@ -39,34 +481,97 @@
  },
  "events": [
   {
-   "category": "world-created", "start": "2025-05-21", "worlds": ["Luzibra"],
-   "title": "Luzibra opened", "description": "Luzibra opened as a new game world.",
-   "source": { "url": "https://www.tibia.com/news/?id=8385&subtopic=newsarchive", "via": "reports/tc-cycle/README.md, lifecycle.py" }
+   "category": "world-created",
+   "start": "2025-05-21",
+   "worlds": [
+    "Luzibra"
+   ],
+   "title": "Luzibra opened",
+   "description": "Luzibra opened as a new game world.",
+   "source": {
+    "url": "https://www.tibia.com/news/?id=8385&subtopic=newsarchive",
+    "via": "reports/tc-cycle/README.md, lifecycle.py"
+   }
   },
   {
-   "category": "world-created", "start": "2025-11-06", "worlds": ["Terribra"],
-   "title": "Terribra opened", "description": "Terribra opened as a new game world, formed by the merge of Jacabra and Obscubra.",
-   "source": { "url": "https://www.tibia.com/news/?id=8515&subtopic=newsarchive", "via": "reports/tc-cycle/README.md, lifecycle.py" }
+   "category": "world-created",
+   "start": "2025-11-06",
+   "worlds": [
+    "Terribra"
+   ],
+   "title": "Terribra opened",
+   "description": "Terribra opened as a new game world, formed by the merge of Jacabra and Obscubra.",
+   "source": {
+    "url": "https://www.tibia.com/news/?id=8515&subtopic=newsarchive",
+    "via": "reports/tc-cycle/README.md, lifecycle.py"
+   }
   },
   {
-   "category": "world-created", "start": "2026-05-20", "worlds": ["Floribra"],
-   "title": "Floribra opened", "description": "Floribra opened as a new game world.",
-   "source": { "url": "https://www.tibia.com/news/?id=8767&subtopic=newsarchive", "via": "reports/tc-cycle/README.md, lifecycle.py" }
+   "category": "world-created",
+   "start": "2026-05-20",
+   "worlds": [
+    "Floribra"
+   ],
+   "title": "Floribra opened",
+   "description": "Floribra opened as a new game world.",
+   "source": {
+    "url": "https://www.tibia.com/news/?id=8767&subtopic=newsarchive",
+    "via": "reports/tc-cycle/README.md, lifecycle.py"
+   }
   },
   {
-   "category": "store", "start": "2025-07-29", "worlds": ["Kalimera", "Luzibra", "Sonera"],
-   "title": "Premium restriction lifted", "description": "Kalimera, Luzibra and Sonera opened to free accounts at the server save.",
-   "source": { "url": "https://www.tibia.com/news/?subtopic=newsarchive&id=8475", "via": "reports/tc-cycle/review/source-evidence.json", "note": "News of 2025-07-30: 'with yesterday's server save'." }
+   "category": "store",
+   "start": "2025-07-29",
+   "worlds": [
+    "Kalimera",
+    "Luzibra",
+    "Sonera"
+   ],
+   "title": "Premium restriction lifted",
+   "description": "Kalimera, Luzibra and Sonera opened to free accounts at the server save.",
+   "source": {
+    "url": "https://www.tibia.com/news/?subtopic=newsarchive&id=8475",
+    "via": "reports/tc-cycle/review/source-evidence.json",
+    "note": "News of 2025-07-30: 'with yesterday's server save'."
+   }
   },
   {
-   "category": "economy", "start": "2025-07-29", "worlds": ["Ambra", "Flamera", "Wadira"],
-   "title": "Transfer block lifted", "description": "Ambra, Flamera and Wadira accepted character transfers again from the server save.",
-   "source": { "url": "https://www.tibia.com/news/?subtopic=newsarchive&id=8475", "via": "reports/tc-cycle/review/source-evidence.json", "note": "News of 2025-07-30: 'with yesterday's server save'." }
+   "category": "economy",
+   "start": "2025-07-29",
+   "worlds": [
+    "Ambra",
+    "Flamera",
+    "Wadira"
+   ],
+   "title": "Transfer block lifted",
+   "description": "Ambra, Flamera and Wadira accepted character transfers again from the server save.",
+   "source": {
+    "url": "https://www.tibia.com/news/?subtopic=newsarchive&id=8475",
+    "via": "reports/tc-cycle/review/source-evidence.json",
+    "note": "News of 2025-07-30: 'with yesterday's server save'."
+   }
   },
   {
-   "category": "economy", "start": "2026-06-30", "worlds": ["Luzibra"],
-   "title": "Transfers opened", "description": "Luzibra opened to character transfers.",
-   "source": { "url": "https://www.tibia.com/news/?id=8866&subtopic=newsarchive", "via": "reports/tc-cycle/README.md, lifecycle.py" }
+   "category": "economy",
+   "start": "2026-06-30",
+   "worlds": [
+    "Luzibra"
+   ],
+   "title": "Transfers opened",
+   "description": "Luzibra opened to character transfers.",
+   "source": {
+    "url": "https://www.tibia.com/news/?id=8866&subtopic=newsarchive",
+    "via": "reports/tc-cycle/README.md, lifecycle.py"
+   }
   }
- ]
+ ],
+ "calendar": {
+  "file": "reports/tc-cycle/inputs/eventschedule.json",
+  "url": "https://www.tibia.com/news/?subtopic=eventcalendar"
+ },
+ "history": {
+  "file": "data/market-events/inputs/api-history.json",
+  "url": "https://api.tibiamarket.top/events?start_days_ago=10000&end_days_ago=-1",
+  "retrievedOn": "2026-10-04"
+ }
 }

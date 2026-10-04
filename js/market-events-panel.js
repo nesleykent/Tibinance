@@ -10,7 +10,7 @@ export function eventsPanel(root, { onFilter, onFocus }) {
   const row = e => `<button type="button" class="event-row" data-event="${esc(e.id)}" aria-pressed="${e.id === selected}"><small>${esc(dateText(e))} / ${esc(e.category.label)}</small><strong>${esc(e.title)}</strong><small>${esc(scopeText(e))}</small></button>`;
   function render() {
     const list = filtered();
-    $('eventsContext').textContent = available ? `Global events and events concerning ${world}. Dates are inclusive server days. ${events.length} recorded events, ${events[0]?.start ?? 'no start date'} to ${events.at(-1)?.end ?? 'no end date'}. Categories show recorded counts.` : 'Event data is unavailable. Reload to try again.';
+    $('eventsContext').textContent = available ? `Global events and events concerning ${world}. Dates are inclusive server days. ${events.length} recorded events, ${events[0]?.start ?? 'no start date'} to ${events.reduce((last, e) => e.end > last ? e.end : last, '') || 'no end date'}. Game calendar types and market events share these filters.` : 'Event data is unavailable. Reload to try again.';
     $('eventCategory').innerHTML = '<option value="">All categories</option>' + categories.map(c => `<option value="${esc(c.id)}">${esc(c.label)} (${events.filter(e => e.category.id === c.id).length})</option>`).join('');
     $('eventCategory').value = category;
     $('eventMonth').value = month;

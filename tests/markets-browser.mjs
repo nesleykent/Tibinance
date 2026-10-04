@@ -92,8 +92,17 @@ try {
   const rail=tools.getByRole('button',{name:'Worlds',exact:true});
   assert.deepEqual([await rail.getAttribute('aria-expanded'),await rail.getAttribute('aria-controls'),await rail.getAttribute('title')],['true','worldsPanel','Hide Worlds']);
   const plot=await chartBox();
-  // The day under the pointer just inside the chart's left edge, and at its newest observation.
-  const firstDay=async()=>{const b=await chartBox();await page.mouse.move(b.x+3,b.y+b.h/3);return text('#legend .day');};
+  // The day under the pointer near the chart's left edge, and at its newest observation.
+  const firstDay=async()=>{
+    const b=await page.locator('#chart canvas').first().boundingBox();
+    // Enter the pane before positioning the crosshair: WebKit can deliver the
+    // initial pointer move as mouseenter without a crosshair update.
+    await page.mouse.move(b.x+b.width*0.5,b.y+b.height/3);
+    await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+    await page.mouse.move(b.x+b.width*0.03,b.y+b.height/3);
+    await page.waitForFunction(last=>document.querySelector('#legend .day').textContent!==last,summary('Antica').latestBestOffer.serverDay);
+    return text('#legend .day');
+  };
   const before=await firstDay();
   const url=page.url();
   await rail.click();

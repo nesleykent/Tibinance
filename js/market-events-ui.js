@@ -74,7 +74,7 @@ export function eventMarks({ chart, part, strip, tip }) {
     if (anchor.bottom < 0 || anchor.top > innerHeight) { hide(); return; }
     tip.style.left = `${Math.min(Math.max(8, anchor.left + anchor.width / 2 - box.width / 2), innerWidth - box.width - 8)}px`;
     const above = anchor.top - box.height - 8;
-    tip.style.top = `${above >= 8 ? above : anchor.bottom + 8}px`;
+    tip.style.top = `${Math.max(8, Math.min(above >= 8 ? above : anchor.bottom + 8, innerHeight - box.height - 8))}px`;
   }
 
   const keyOf = e => e.target.closest('.event-mark')?.dataset.key;
