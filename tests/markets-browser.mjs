@@ -147,8 +147,10 @@ try {
   assert.equal(await page.getAttribute('#worlds tr[data-world="Gentebra"]','aria-selected'),'true');
   assert.match(await page.getAttribute('#chart','aria-label'),/^Gentebra, Best Sell Offer history, range 1Y\./);
   const [prior,last]=closes.slice(-2);
+  const history=JSON.parse(await readFile(new URL(`../data/market-history/tibia-coin/${summary('Gentebra').file}`,import.meta.url),'utf8'));
+  const lastDayCount=history.observations.filter(o=>o.serverDay===last[0] && o.sell!=null && o.buy!=null).length;
   assert.equal(await text('#legend'),`${last[0]} Best Sell Offer ${number.format(last[1])} ${signed.format(last[1]-prior[1])} `
-    + `${percent.format(last[1]/prior[1]-1)} since ${prior[0]} last of 6 Daily average N/A`);
+    + `${percent.format(last[1]/prior[1]-1)} since ${prior[0]}${lastDayCount>1?` last of ${lastDayCount}`:''} Daily average N/A`);
   assert.equal(await text('#volumeLegend'),'Volume N/A');
 
   // The legends follow the crosshair: a day in the September gap names the observations around it,

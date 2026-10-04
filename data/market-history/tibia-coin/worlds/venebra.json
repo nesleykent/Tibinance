@@ -73,7 +73,9 @@
     {"capturedAtUtc":"2026-09-30T07:20:59.068Z","serverDay":"2026-09-29","sell":46271,"sellVolume":38550,"sellTopAmount":250,"goldDemand":1800605100,"buy":44511,"buyVolume":124000,"buyTopAmount":7275,"goldSupply":5414945625},
     {"capturedAtUtc":"2026-10-01T01:42:26.683Z","serverDay":"2026-09-30","sell":46929,"sellVolume":47175,"sellTopAmount":6950,"goldDemand":2214257525,"buy":45208,"buyVolume":46900,"buyTopAmount":50,"goldSupply":2099559650},
     {"capturedAtUtc":"2026-10-01T14:42:50.212Z","serverDay":"2026-10-01","sell":45475,"sellVolume":48675,"sellTopAmount":1850,"goldDemand":2249948375,"buy":41700,"buyVolume":36300,"buyTopAmount":8025,"goldSupply":1500344800},
-    {"capturedAtUtc":"2026-10-02T03:19:30.551Z","serverDay":"2026-10-01","sell":44199,"sellVolume":35975,"sellTopAmount":775,"goldDemand":1604690400,"buy":42000,"buyVolume":83175,"buyTopAmount":50875,"goldSupply":3471112275}
+    {"capturedAtUtc":"2026-10-02T03:19:30.551Z","serverDay":"2026-10-01","sell":44199,"sellVolume":35975,"sellTopAmount":775,"goldDemand":1604690400,"buy":42000,"buyVolume":83175,"buyTopAmount":50875,"goldSupply":3471112275},
+    {"capturedAtUtc":"2026-10-04T02:09:58.226Z","serverDay":"2026-10-03","sell":43498,"sellVolume":14825,"sellTopAmount":4850,"goldDemand":647432850,"buy":42351,"buyVolume":82300,"buyTopAmount":11325,"goldSupply":3462230800},
+    {"capturedAtUtc":"2026-10-04T02:09:59.678Z","serverDay":"2026-10-03","statistics30d":{"buy":{"transactions":2642,"highestPrice":45800,"averagePrice":40397,"lowestPrice":1,"tcVolume":66050},"sell":{"transactions":3346,"highestPrice":47499,"averagePrice":43392,"lowestPrice":41000,"tcVolume":83650}}}
   ],
   "dailyStatistics": [
     {"serverDay":"2025-08-27","sell":{"transactions":87,"highestPrice":38780,"averagePrice":38725,"lowestPrice":37777,"tcVolume":2175},"buy":{"transactions":60,"highestPrice":37764,"averagePrice":37122,"lowestPrice":1,"tcVolume":1500}},

@@ -95,6 +95,40 @@ test('explicit historical reprocessing preserves context after eligibility and s
   assert.ok(!h.calls.includes('characterAPI'));
 });
 
+test('anonymous world context is awaited before OCR and survives an extraction failure',async()=>{
+  let release,context;
+  const checkpoint=new Promise(resolve=>{release=resolve;});
+  const h=harness({extractMarketOffers:async()=>{h.calls.push('extract');throw new Error('private error');}});
+  const running=ingestScreenshot(source('Hotkey'),{captureTimeZone:'America/Sao_Paulo',
+    onContext:async value=>{context=value;await checkpoint;}},h.services);
+  while(!context)await new Promise(resolve=>setTimeout(resolve,0));
+  assert.deepEqual(context,{hash,world:'Antica',type:'Open PvP',battleye:'Yellow',
+    capturedAt:'2026-10-01T12:00:00.123',captureTimeZone:'America/Sao_Paulo'});
+  assert.ok(!h.calls.includes('extract'));
+  release();const result=await running;
+  assert.equal(result.status,'needs_review');
+  assert.equal(result.world.world,'Antica');
+  assert.equal(result.stages.world,true);
+  assert.ok(!JSON.stringify(context).includes('Synthetic Character'));
+});
+
+test('the OCR worker is released after success and failure before the next queued image',async()=>{
+  for(const fails of [false,true]) {
+    let releases=0;
+    const h=harness({disposeOcr:async()=>{releases++;},
+      extractMarketOffers:async()=>{if(fails)throw new Error();return rows();}});
+    const result=await ingestScreenshot(source('Hotkey'),{},h.services);
+    assert.equal(result.status,fails?'needs_review':'ready');
+    assert.equal(releases,1);
+  }
+});
+
+test('a synchronous worker cleanup failure cannot strand the reader queue',async()=>{
+  const h=harness({disposeOcr:()=>{throw new Error('worker unavailable');}});
+  assert.equal((await ingestScreenshot(source('Hotkey'),{},h.services)).status,'ready');
+  assert.equal((await ingestScreenshot(source('Hotkey'),{},h.services)).status,'ready');
+});
+
 test('invalid observations cannot produce a persistable canonical capture', async () => {
   const invalid = rows(); invalid.sell[0].total = 1;
   const h = harness({ extractMarketOffers: async () => invalid });

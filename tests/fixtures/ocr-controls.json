@@ -1,0 +1,180 @@
+[
+  {
+    "hash": "4f269f2f64348a8f573d5cfc226f9a0f4c4007da18f8df7c1cbbbfa85884f649",
+    "viewType": "offers",
+    "context": {
+      "hash": "4f269f2f64348a8f573d5cfc226f9a0f4c4007da18f8df7c1cbbbfa85884f649",
+      "world": "Gentebra",
+      "type": "Optional PvP",
+      "battleye": "Yellow",
+      "capturedAt": "2024-11-29T10:44:26.518",
+      "captureTimeZone": "America/Sao_Paulo"
+    },
+    "offers": [
+      {
+        "side": "sell",
+        "rowIndex": 0,
+        "amount": 30450,
+        "price": 44691,
+        "total": 1360840950,
+        "endsAt": "2024-12-29T10:40:32"
+      },
+      {
+        "side": "sell",
+        "rowIndex": 1,
+        "amount": 8175,
+        "price": 44691,
+        "total": 365348925,
+        "endsAt": "2024-12-29T10:40:33"
+      },
+      {
+        "side": "sell",
+        "rowIndex": 2,
+        "amount": 25000,
+        "price": 44692,
+        "total": 1117300000,
+        "endsAt": "2024-12-29T09:58:39"
+      },
+      {
+        "side": "sell",
+        "rowIndex": 3,
+        "amount": 5175,
+        "price": 44777,
+        "total": 231720975,
+        "endsAt": "2024-12-28T16:03:35"
+      },
+      {
+        "side": "sell",
+        "rowIndex": 4,
+        "amount": 450,
+        "price": 47419,
+        "total": 21338550,
+        "endsAt": "2024-12-28T10:58:27"
+      },
+      {
+        "side": "sell",
+        "rowIndex": 5,
+        "amount": 2500,
+        "price": 47499,
+        "total": 118747500,
+        "endsAt": "2024-12-28T09:21:53"
+      },
+      {
+        "side": "sell",
+        "rowIndex": 6,
+        "amount": 1900,
+        "price": 69999,
+        "total": 132998100,
+        "endsAt": "2024-12-26T11:15:24"
+      },
+      {
+        "side": "buy",
+        "rowIndex": 0,
+        "amount": 2275,
+        "price": 43809,
+        "total": 99665475,
+        "endsAt": "2024-12-29T03:53:18"
+      },
+      {
+        "side": "buy",
+        "rowIndex": 1,
+        "amount": 7375,
+        "price": 43807,
+        "total": 323076625,
+        "endsAt": "2024-12-28T19:05:07"
+      },
+      {
+        "side": "buy",
+        "rowIndex": 2,
+        "amount": 200,
+        "price": 43805,
+        "total": 8761000,
+        "endsAt": "2024-12-28T17:50:33"
+      },
+      {
+        "side": "buy",
+        "rowIndex": 3,
+        "amount": 450,
+        "price": 43801,
+        "total": 19710450,
+        "endsAt": "2024-12-28T17:28:12"
+      },
+      {
+        "side": "buy",
+        "rowIndex": 4,
+        "amount": 1575,
+        "price": 43789,
+        "total": 68967675,
+        "endsAt": "2024-12-28T14:43:30"
+      },
+      {
+        "side": "buy",
+        "rowIndex": 5,
+        "amount": 1725,
+        "price": 43779,
+        "total": 75518775,
+        "endsAt": "2024-12-28T12:29:33"
+      },
+      {
+        "side": "buy",
+        "rowIndex": 6,
+        "amount": 750,
+        "price": 43700,
+        "total": 32775000,
+        "endsAt": "2024-12-27T20:50:13"
+      },
+      {
+        "side": "buy",
+        "rowIndex": 7,
+        "amount": 1275,
+        "price": 43700,
+        "total": 55717500,
+        "endsAt": "2024-12-28T00:38:24"
+      },
+      {
+        "side": "buy",
+        "rowIndex": 8,
+        "amount": 925,
+        "price": 43608,
+        "total": 40337400,
+        "endsAt": "2024-12-27T18:52:39"
+      },
+      {
+        "side": "buy",
+        "rowIndex": 9,
+        "amount": 3700,
+        "price": 43603,
+        "total": 161331100,
+        "endsAt": "2024-12-27T17:45:11"
+      }
+    ],
+    "provenance": "previously validated canonical capture"
+  },
+  {
+    "hash": "f227d239d917e7d0cd147d882971cd1562c5b5792c85dce71b0ebb81abb9a9f0",
+    "viewType": "statistics",
+    "context": {
+      "hash": "f227d239d917e7d0cd147d882971cd1562c5b5792c85dce71b0ebb81abb9a9f0",
+      "world": "Gentebra",
+      "type": "Optional PvP",
+      "battleye": "Yellow",
+      "capturedAt": "2026-09-24T05:27:49.481",
+      "captureTimeZone": "America/Sao_Paulo"
+    },
+    "statistics30d": {
+      "buy": {
+        "transactions": 3651,
+        "highestPrice": 46001,
+        "averagePrice": 43744,
+        "lowestPrice": 1
+      },
+      "sell": {
+        "transactions": 6386,
+        "highestPrice": 47000,
+        "averagePrice": 45283,
+        "lowestPrice": 44000
+      }
+    },
+    "provenance": "previously validated canonical capture"
+  }
+]

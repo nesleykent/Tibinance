@@ -78,7 +78,11 @@ try {
   await page.locator('#filter').fill(world);await page.waitForFunction(w=>[...document.querySelectorAll('#tbody .world')].every(t=>t.textContent.includes(w)),world);
   assert.equal(await statTable.locator('tbody tr').count(),statistics.filter(c=>c.world===world).length);
   await page.locator('#captureRange [data-days="7"]').click();
-  await page.waitForFunction(()=>document.querySelectorAll('#statisticsSaved tbody tr').length===1);
+  const worldStatistics=statistics.filter(c=>c.world===world);
+  const instant=c=>Date.parse(c.capturedAtUtc??`${c.capturedAt}Z`);
+  const latestStatistics=Math.max(...worldStatistics.map(instant));
+  const recentStatistics=worldStatistics.filter(c=>instant(c)>=latestStatistics-7*86400000).length;
+  await page.waitForFunction(n=>document.querySelectorAll('#statisticsSaved tbody tr').length===n,recentStatistics);
   await page.locator('#captureRange [data-days="0"]').click();
   await page.locator('#filter').fill('no-such-world');
   await page.waitForFunction(()=>document.querySelector('#statisticsSaved').textContent==='');
@@ -100,7 +104,10 @@ try {
   await statTable.locator('button.del').first().click();
   await page.waitForFunction(n=>document.querySelectorAll('#statisticsSaved tbody tr').length===n,statistics.length-1);
   assert.deepEqual(await stored(),original.filter(c=>c.hash!==removed),'Removal deletes only the selected snapshot');
-  for(const button of await statTable.locator('button.del').all()) await button.click();
+  for(let remaining=statistics.length-1;remaining>0;remaining--) {
+    await statTable.locator('button.del').first().click();
+    await page.waitForFunction(n=>document.querySelectorAll('#statisticsSaved tbody tr').length===n,remaining-1);
+  }
   await page.waitForFunction(()=>document.querySelector('#statisticsSaved').textContent==='');
   const deletedOffer=await page.locator('#tbody button.del').first().getAttribute('data-del');
   page.once('dialog',d=>d.accept());await page.locator('#tbody button.del').first().click();

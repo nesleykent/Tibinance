@@ -10,7 +10,7 @@ const require = createRequire(import.meta.url);
 const root = new URL('../', import.meta.url);
 let browser, page;
 const queuedHashes = new Set();
-let activeStage = 'filename', activeHash, browserEvent = 'none';
+let activeStage = 'filename', activeHash, activeContext, browserEvent = 'none';
 async function start() {
   const { chromium } = require(process.env.TIBINANCE_NODE_MODULES
     ? `${process.env.TIBINANCE_NODE_MODULES}/playwright` : 'playwright');
@@ -22,6 +22,11 @@ async function start() {
   browser.on('disconnected', () => { browserEvent = 'disconnected'; });
   await page.exposeFunction('__ingestionStage', stage => { if (STAGES.includes(stage)) activeStage = stage; });
   await page.exposeFunction('__ingestionHash', hash => { if (/^[a-f0-9]{64}$/.test(hash)) activeHash = hash; });
+  await page.exposeFunction('__ingestionContext', context => {
+    if (context?.hash!==activeHash) throw new Error('Invalid anonymous context');
+    activeContext=Object.fromEntries(['hash','world','type','battleye','capturedAt','captureTimeZone']
+      .filter(k=>k in context).map(k=>[k,context[k]]));
+  });
   await page.route('http://127.0.0.1:8766/**', async route => {
     const pathname = new URL(route.request().url()).pathname;
     if (pathname === '/') return route.fulfill({ contentType: 'text/html',
@@ -45,7 +50,7 @@ async function dispatch(request) {
   if (request.op === 'close') return { closed: true };
   if (request.op !== 'ingest') throw new Error();
   if (request.captureTimeZone != null && !validTimeZone(request.captureTimeZone)) throw new Error('Invalid capture timezone');
-  activeStage = 'filename'; activeHash = undefined; browserEvent = 'none';
+  activeStage = 'filename'; activeHash = undefined; activeContext = undefined; browserEvent = 'none';
   const source = { name: request.name, arrayBuffer: async () => {
     const bytes = Buffer.from(request.bytes, 'base64');
     return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
@@ -72,6 +77,7 @@ async function dispatch(request) {
       captureTimeZone: input.captureTimeZone,
       isQueued: hash => input.queuedHashes.includes(hash),
       onHash: hash => { window.__ingestionHash(hash).catch(() => {}); },
+      onContext: context => window.__ingestionContext(context),
       onStage: stage => { window.__ingestionStage(stage).catch(() => {}); }
     });
     return result;
@@ -100,6 +106,9 @@ try {
         if (activeHash) queuedHashes.add(activeHash);
         response = { result: { hash: activeHash, processingVersion: INGESTION_VERSION,
           status: 'needs_review', stages, attemptedStages: entered, offers: [], runtimeFault: fault,
+          ...(activeContext ? {context:activeContext,capturedAt:activeContext.capturedAt,
+            captureTimeZone:activeContext.captureTimeZone,world:Object.fromEntries(
+              ['world','type','battleye'].map(k=>[k,activeContext[k]]))} : {}),
           itemVerification: { status: entered.includes('metadata') ? 'tibia_coins' : 'unconfirmed' },
           issues: [{ field: activeStage, reason: 'Local execution failed; retry required.' }] } };
         await browser?.close().catch(() => {});

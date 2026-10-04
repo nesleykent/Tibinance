@@ -11,8 +11,12 @@ export function normalizeEndsAt(value) {
 export function extractEndsAt(text) {
   // A date crop may also catch scrollbar glyphs. Require one complete timestamp
   // (including seconds), validate its calendar, and ignore surrounding noise.
-  const matches = String(text ?? '').match(/(?<!\d)\d{4}-\d{2}-\d{2}[T, ]\s*\d{2}:\d{2}:\d{2}(?!\d)/g) ?? [];
-  return matches.length === 1 ? normalizeEndsAt(matches[0]) : null;
+  // OCR may insert a space between intact digits ("1 1" for November).
+  // Preserve every digit and separator; never repair a digit or a missing part.
+  const matches = [...String(text ?? '').matchAll(/(?<!\d)((?:\d[ \t]*){4})-[ \t]*((?:\d[ \t]*){2})-[ \t]*((?:\d[ \t]*){2})[T, ]\s*((?:\d[ \t]*){2}):[ \t]*((?:\d[ \t]*){2}):[ \t]*((?:\d[ \t]*){2})(?!\d)/g)];
+  if (matches.length !== 1) return null;
+  const parts=matches[0].slice(1).map(v=>v.replace(/[ \t]/g,''));
+  return normalizeEndsAt(`${parts[0]}-${parts[1]}-${parts[2]}T${parts[3]}:${parts[4]}:${parts[5]}`);
 }
 
 const uuid = value => typeof value === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);

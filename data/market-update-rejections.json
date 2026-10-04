@@ -1,0 +1,362 @@
+[
+  {
+    "hash": "ee79d0f181b3d212d344c002cbdbf26b0e988d68b6ee083b0b96ed51e4a03820",
+    "capturedAt": "2026-04-18T10:57:08.152",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_manual",
+    "reasons": [
+      "Visual review: mixed-item Offer History, outside the supported Offers and Details/Statistics views"
+    ]
+  },
+  {
+    "hash": "eb92bfdb8714727f17f2d1ae207b63cc09e4fa4b189ce7a9b0f402e0d562484f",
+    "capturedAt": "2026-04-18T10:57:11.301",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_manual",
+    "reasons": [
+      "Visual review: mixed-item Offer History, outside the supported Offers and Details/Statistics views"
+    ]
+  },
+  {
+    "hash": "5d10e5460d4506a8993bd1c688694fb09bcb49a0fb9a8c41654b34cda1340541",
+    "capturedAt": "2026-08-11T10:03:10.679",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_other_item",
+    "reasons": [
+      "Highlighted Market item is not Tibia Coins"
+    ]
+  },
+  {
+    "hash": "97f129a6bd677397afd8b7906ebeb69c397259293385b50d3f2d22166de1a76e",
+    "capturedAt": "2026-08-11T10:03:46.596",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_manual",
+    "reasons": [
+      "Visual review: selected Market item is cursed coin, not Tibia Coins"
+    ]
+  },
+  {
+    "hash": "2b89b687d9ca0dc8885801bfb608b12310ec221ffc574bb399a1e52bf58dcc4a",
+    "capturedAt": "2026-09-21T14:19:35.404",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "ee868760d7f85dcd268255a61fd0e9ecff0868b94a6f333bd5ad6971e346b5a8",
+    "capturedAt": "2026-09-21T17:57:44.848",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "b8440135b78704abb3c1042210940c3b750106966192e884997d182ce6528aaa",
+    "capturedAt": "2026-09-23T04:31:10.976",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "cf8cf2c8b41e399365496babfbd3ab9875146c8eb743bda1012d6f78f8df723c",
+    "capturedAt": "2026-09-23T04:41:15.413",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "c55116a17028bf6c7ba86942cc51c80ffb00a43f227d3bcad0f937ae9f12c546",
+    "capturedAt": "2026-09-23T04:41:17.996",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "fdb6d14cccdc5d21307a8f667d78a6b554f0f55a2e782363385694214a83c6a1",
+    "capturedAt": "2026-09-23T19:37:19.127",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "438f609610ccbfd599e7bd6a07f48923bda2c86e750ce995fd3031052248a482",
+    "capturedAt": "2026-09-23T21:20:57.450",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "e2c8f0473b5130f1f784a71c1449934d3e9eabbdd62d8951f033645214a25484",
+    "capturedAt": "2026-09-23T21:21:12.450",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "e3ef70b5b7488d0daeb444cee324256cdb7639c25006d7b7328b0ad05b4ed9be",
+    "capturedAt": "2026-09-23T21:25:57.067",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "fd8239904cf30a1aad642f82d8244e2eb2ff55c94cea829d30cb6a94875ee0a8",
+    "capturedAt": "2026-09-23T21:27:30.704",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "186c12159ae86ad3a8f14ba2c86bfb7ff9790330bd9751f07e56c36b958805ce",
+    "capturedAt": "2026-09-23T21:27:36.270",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "149a315f1a9395173fc38f4c18174bcf2b3a73956b1a9fb940ef65f277e657b4",
+    "capturedAt": "2026-09-23T21:50:14.956",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "1d38058da549249634dee48f28a07369416c2b3d79b0935bd4b6ec40f9186247",
+    "capturedAt": "2026-09-23T23:55:18.799",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "655b21cc71cfab199bd852b680a17df96515892f190ef4db99ccef162c0519a4",
+    "capturedAt": "2026-09-24T03:37:19.495",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "11dcddccf6ecaae4cb36c3986d4e055aca522d878709fe7c236de4bcc6d8bc00",
+    "capturedAt": "2026-09-24T06:00:42.441",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "48b6382a9233538504756eb6dc9c65264f3d5a62e74fbc07158d861a90265cea",
+    "capturedAt": "2026-09-26T01:52:44.594",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "fe2386ceefa95cb1fff745df2c5c78fda918f7463c2cab58a58d5b8192ddf8fe",
+    "capturedAt": "2026-09-26T01:52:51.914",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "4c44f67d21c30de370809c9e8063a19121af10a89cb502035f39cace5c4420d4",
+    "capturedAt": "2026-09-26T01:52:57.859",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "bbe88d528f720fb074081656f97a2d1570f80fb3b95698b55df616d39fce8bad",
+    "capturedAt": "2026-09-26T02:14:48.403",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "f8e466c7909ad9f0214024d05f0eed899121258e347f03d27eb0696940bb4d01",
+    "capturedAt": "2026-09-26T02:18:58.154",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "fdfcdd086b57442e860b825247cb2ab1de4278056defdf08de99feae7c2b7f37",
+    "capturedAt": "2026-09-26T02:22:30.275",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "f7af7eec5ffe40ad09433593fc261b62e12af726abe4f33f176ff725af2bcdd8",
+    "capturedAt": "2026-09-26T03:17:06.207",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "094d216ec510654e4ff6aad57e527cfee92687886ce1aa73689a6f77ecdbf11f",
+    "capturedAt": "2026-09-27T05:38:53.586",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_other_item",
+    "reasons": [
+      "Highlighted Market item is not Tibia Coins"
+    ]
+  },
+  {
+    "hash": "114e0874937843b12c2418e0da63a933e5502908fa6efdb061e493ef01debfe8",
+    "capturedAt": "2026-09-27T05:50:57.832",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_other_item",
+    "reasons": [
+      "Highlighted Market item is not Tibia Coins"
+    ]
+  },
+  {
+    "hash": "2fc366845eadb44f443a0b29aff2a00e11b5c2f4698eb387fac20123488d4101",
+    "capturedAt": "2026-09-27T12:45:34.561",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "f519be8d30d854acdae17fa72db364c6e8dd5b44607325ba8240c6accc96eb9f",
+    "capturedAt": "2026-09-28T07:08:43.461",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "11563c7188e03c490e5917e4df7dbfb3d55aa55b2c357db795703e232d2fd97b",
+    "capturedAt": "2026-09-28T07:08:51.140",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_manual",
+    "reasons": [
+      "Visual review: Task Board screenshot without a Market view"
+    ]
+  },
+  {
+    "hash": "b0fe8edbc3df78fd0ca0f268e39d67780859b06b14d0fa9a206ff6591a93bd4a",
+    "capturedAt": "2026-09-28T07:08:55.403",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "dbd756139921f46425b8aa02107382a5b7338f4e514e162938693c238936c4cd",
+    "capturedAt": "2026-09-28T07:08:59.521",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "e3df4894947a7692ee109ad1bd8fdec8bc4db350268f8e739c8764f61dbe0027",
+    "capturedAt": "2026-09-28T12:08:36.446",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_manual",
+    "reasons": [
+      "Visual review: combat screenshot without a Market view"
+    ]
+  },
+  {
+    "hash": "844cac8efe535324f71539dd47c0a17b71ea84e475f5fd747910e4ed976b5fce",
+    "capturedAt": "2026-09-28T12:44:00.836",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  },
+  {
+    "hash": "cac7e5de93b61bce1d6d82716ea40958cede9c039c19ab7220c99792f03b4df5",
+    "capturedAt": "2026-09-29T02:50:31.850",
+    "world": null,
+    "viewType": null,
+    "status": "excluded_market",
+    "reasons": [
+      "Market Offers/Details layout could not be verified"
+    ]
+  }
+]

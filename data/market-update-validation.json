@@ -1,0 +1,47 @@
+{
+  "filesScanned": 1656,
+  "imageFiles": 1655,
+  "eligibleScreenshots": 543,
+  "uniqueEligible": 503,
+  "duplicates": 40,
+  "statuses": {
+    "ready": 467,
+    "excluded_manual": 5,
+    "excluded_other_item": 3,
+    "excluded_market": 28
+  },
+  "views": {
+    "offers": 427,
+    "unidentified": 36,
+    "statistics": 40
+  },
+  "capturesAccepted": 467,
+  "capturesRequiringReview": 0,
+  "runtimeFailures": 0,
+  "offerExtractionsAttempted": 427,
+  "statisticsExtractionsAttempted": 40,
+  "offerCaptures": 427,
+  "statisticsCaptures": 40,
+  "offerRows": 7419,
+  "uniqueOffers": 5433,
+  "statisticsRecords": 40,
+  "statisticsSideRecords": 80,
+  "filenameRejected": 1112,
+  "chronologicalRange": {
+    "oldest": "2024-10-10T21:23:56.092",
+    "newest": "2026-10-03T23:29:49.255"
+  },
+  "captureTimeZone": "America/Sao_Paulo",
+  "checksPassed": [
+    "complete current raw archive",
+    "full-precision chronological processing",
+    "SHA duplicate reconciliation",
+    "shared schema and validation",
+    "world identity",
+    "separate Offers/Statistics gates",
+    "local/UTC capture and expiry",
+    "Statistics reference date and 25-TC volumes",
+    "offer identity/history/collision consistency",
+    "closed privacy whitelists"
+  ]
+}

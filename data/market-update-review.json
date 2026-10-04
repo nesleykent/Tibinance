@@ -1,0 +1,3817 @@
+{
+  "reviewPolicy": "Ground truth transcribed from original screenshot pixels before comparison and before algorithm edits. Filename mapping and full-window previews remain private and ignored. No per-image corrections used.",
+  "reviewedScreenshots": 11,
+  "matchingFields": 572,
+  "differences": 49,
+  "visuallyAmbiguousFields": 0,
+  "cases": [
+    {
+      "case": 1,
+      "groundTruth": {
+        "hash": "b82bf15c8f3599646215735283c91b6d74ae16aebc217e706ba86af88c7bcab6",
+        "method": "Direct visual inspection of original screenshot; transcribed before comparison with extracted rows",
+        "selectedItem": "Tibia Coins",
+        "ambiguousFields": [],
+        "viewType": "offers",
+        "offers": [
+          {
+            "side": "sell",
+            "rowIndex": 0,
+            "amount": 875,
+            "price": 43898,
+            "total": 38410750,
+            "endsAt": "2026-11-02T22:45:44"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 1,
+            "amount": 175,
+            "price": 43899,
+            "total": 7682325,
+            "endsAt": "2026-11-02T20:49:28"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 2,
+            "amount": 9575,
+            "price": 43900,
+            "total": 420342500,
+            "endsAt": "2026-11-02T20:18:17"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 3,
+            "amount": 40000,
+            "price": 44993,
+            "total": 1799720000,
+            "endsAt": "2026-11-02T22:43:19"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 4,
+            "amount": 600,
+            "price": 44995,
+            "total": 26997000,
+            "endsAt": "2026-11-02T20:14:41"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 5,
+            "amount": 2000,
+            "price": 44999,
+            "total": 89998000,
+            "endsAt": "2026-11-02T18:21:02"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 6,
+            "amount": 950,
+            "price": 45182,
+            "total": 42922900,
+            "endsAt": "2026-11-02T20:49:00"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 7,
+            "amount": 50,
+            "price": 45183,
+            "total": 2259150,
+            "endsAt": "2026-11-02T11:38:23"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 8,
+            "amount": 37825,
+            "price": 45289,
+            "total": 1713056425,
+            "endsAt": "2026-11-02T17:26:44"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 9,
+            "amount": 250,
+            "price": 45290,
+            "total": 11322500,
+            "endsAt": "2026-11-02T02:27:27"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 0,
+            "amount": 2450,
+            "price": 42205,
+            "total": 103402250,
+            "endsAt": "2026-11-02T15:17:21"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 1,
+            "amount": 800,
+            "price": 42204,
+            "total": 33763200,
+            "endsAt": "2026-11-02T14:31:47"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 2,
+            "amount": 2875,
+            "price": 42201,
+            "total": 121327875,
+            "endsAt": "2026-11-02T13:06:47"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 3,
+            "amount": 14175,
+            "price": 42200,
+            "total": 598185000,
+            "endsAt": "2026-11-01T16:00:01"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 4,
+            "amount": 4825,
+            "price": 42059,
+            "total": 202934675,
+            "endsAt": "2026-11-01T15:21:35"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 5,
+            "amount": 650,
+            "price": 42057,
+            "total": 27337050,
+            "endsAt": "2026-11-01T14:50:34"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 6,
+            "amount": 625,
+            "price": 42055,
+            "total": 26284375,
+            "endsAt": "2026-11-01T13:37:33"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 7,
+            "amount": 25,
+            "price": 42015,
+            "total": 1050375,
+            "endsAt": "2026-10-31T21:23:08"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 8,
+            "amount": 225,
+            "price": 42014,
+            "total": 9453150,
+            "endsAt": "2026-10-31T21:20:36"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 9,
+            "amount": 50,
+            "price": 42012,
+            "total": 2100600,
+            "endsAt": "2026-10-31T21:04:49"
+          }
+        ]
+      },
+      "phase1Extraction": {
+        "status": "ready",
+        "offers": [
+          {
+            "amount": 875,
+            "price": 43898,
+            "total": 38410750,
+            "endsAt": "2026-11-02T22:45:44",
+            "endsAtUtc": "2026-11-03T01:45:44.000Z",
+            "side": "sell",
+            "rowIndex": 0
+          },
+          {
+            "amount": 175,
+            "price": 43899,
+            "total": 7682325,
+            "endsAt": "2026-11-02T20:49:28",
+            "endsAtUtc": "2026-11-02T23:49:28.000Z",
+            "side": "sell",
+            "rowIndex": 1
+          },
+          {
+            "amount": 9575,
+            "price": 43900,
+            "total": 420342500,
+            "endsAt": "2026-11-02T20:18:17",
+            "endsAtUtc": "2026-11-02T23:18:17.000Z",
+            "side": "sell",
+            "rowIndex": 2
+          },
+          {
+            "amount": 40000,
+            "price": 44993,
+            "total": 1799720000,
+            "endsAt": "2026-11-02T22:43:19",
+            "endsAtUtc": "2026-11-03T01:43:19.000Z",
+            "side": "sell",
+            "rowIndex": 3
+          },
+          {
+            "amount": 600,
+            "price": 44995,
+            "total": 26997000,
+            "endsAt": "2026-11-02T20:14:41",
+            "endsAtUtc": "2026-11-02T23:14:41.000Z",
+            "side": "sell",
+            "rowIndex": 4
+          },
+          {
+            "amount": 2000,
+            "price": 44999,
+            "total": 89998000,
+            "endsAt": "2026-11-02T18:21:02",
+            "endsAtUtc": "2026-11-02T21:21:02.000Z",
+            "side": "sell",
+            "rowIndex": 5
+          },
+          {
+            "amount": 950,
+            "price": 45182,
+            "total": 42922900,
+            "endsAt": "2026-11-02T20:49:00",
+            "endsAtUtc": "2026-11-02T23:49:00.000Z",
+            "side": "sell",
+            "rowIndex": 6
+          },
+          {
+            "amount": 50,
+            "price": 45183,
+            "total": 2259150,
+            "endsAt": "2026-11-02T11:38:23",
+            "endsAtUtc": "2026-11-02T14:38:23.000Z",
+            "side": "sell",
+            "rowIndex": 7
+          },
+          {
+            "amount": 37825,
+            "price": 45289,
+            "total": 1713056425,
+            "endsAt": "2026-11-02T17:26:44",
+            "endsAtUtc": "2026-11-02T20:26:44.000Z",
+            "side": "sell",
+            "rowIndex": 8
+          },
+          {
+            "amount": 250,
+            "price": 45290,
+            "total": 11322500,
+            "endsAt": "2026-11-02T02:27:27",
+            "endsAtUtc": "2026-11-02T05:27:27.000Z",
+            "side": "sell",
+            "rowIndex": 9
+          },
+          {
+            "amount": 2450,
+            "price": 42205,
+            "total": 103402250,
+            "endsAt": "2026-11-02T15:17:21",
+            "endsAtUtc": "2026-11-02T18:17:21.000Z",
+            "side": "buy",
+            "rowIndex": 0
+          },
+          {
+            "amount": 800,
+            "price": 42204,
+            "total": 33763200,
+            "endsAt": "2026-11-02T14:31:47",
+            "endsAtUtc": "2026-11-02T17:31:47.000Z",
+            "side": "buy",
+            "rowIndex": 1
+          },
+          {
+            "amount": 2875,
+            "price": 42201,
+            "total": 121327875,
+            "endsAt": "2026-11-02T13:06:47",
+            "endsAtUtc": "2026-11-02T16:06:47.000Z",
+            "side": "buy",
+            "rowIndex": 2
+          },
+          {
+            "amount": 14175,
+            "price": 42200,
+            "total": 598185000,
+            "endsAt": "2026-11-01T16:00:01",
+            "endsAtUtc": "2026-11-01T19:00:01.000Z",
+            "side": "buy",
+            "rowIndex": 3
+          },
+          {
+            "amount": 4825,
+            "price": 42059,
+            "total": 202934675,
+            "endsAt": "2026-11-01T15:21:35",
+            "endsAtUtc": "2026-11-01T18:21:35.000Z",
+            "side": "buy",
+            "rowIndex": 4
+          },
+          {
+            "amount": 650,
+            "price": 42057,
+            "total": 27337050,
+            "endsAt": "2026-11-01T14:50:34",
+            "endsAtUtc": "2026-11-01T17:50:34.000Z",
+            "side": "buy",
+            "rowIndex": 5
+          },
+          {
+            "amount": 625,
+            "price": 42055,
+            "total": 26284375,
+            "endsAt": "2026-11-01T13:37:33",
+            "endsAtUtc": "2026-11-01T16:37:33.000Z",
+            "side": "buy",
+            "rowIndex": 6
+          },
+          {
+            "amount": 25,
+            "price": 42015,
+            "total": 1050375,
+            "endsAt": "2026-10-31T21:23:08",
+            "endsAtUtc": "2026-11-01T00:23:08.000Z",
+            "side": "buy",
+            "rowIndex": 7
+          },
+          {
+            "amount": 225,
+            "price": 42014,
+            "total": 9453150,
+            "endsAt": "2026-10-31T21:20:36",
+            "endsAtUtc": "2026-11-01T00:20:36.000Z",
+            "side": "buy",
+            "rowIndex": 8
+          },
+          {
+            "amount": 50,
+            "price": 42012,
+            "total": 2100600,
+            "endsAt": "2026-10-31T21:04:49",
+            "endsAtUtc": "2026-11-01T00:04:49.000Z",
+            "side": "buy",
+            "rowIndex": 9
+          }
+        ],
+        "statistics30d": null,
+        "viewType": "offers",
+        "itemVerification": {
+          "status": "tibia_coins"
+        }
+      },
+      "originalMarkedStatus": "needs_review",
+      "originalRuntimeFault": "browser_closed",
+      "matchingFields": [
+        "sell row 1: amount",
+        "sell row 1: price",
+        "sell row 1: total",
+        "sell row 1: endsAt",
+        "sell row 2: amount",
+        "sell row 2: price",
+        "sell row 2: total",
+        "sell row 2: endsAt",
+        "sell row 3: amount",
+        "sell row 3: price",
+        "sell row 3: total",
+        "sell row 3: endsAt",
+        "sell row 4: amount",
+        "sell row 4: price",
+        "sell row 4: total",
+        "sell row 4: endsAt",
+        "sell row 5: amount",
+        "sell row 5: price",
+        "sell row 5: total",
+        "sell row 5: endsAt",
+        "sell row 6: amount",
+        "sell row 6: price",
+        "sell row 6: total",
+        "sell row 6: endsAt",
+        "sell row 7: amount",
+        "sell row 7: price",
+        "sell row 7: total",
+        "sell row 7: endsAt",
+        "sell row 8: amount",
+        "sell row 8: price",
+        "sell row 8: total",
+        "sell row 8: endsAt",
+        "sell row 9: amount",
+        "sell row 9: price",
+        "sell row 9: total",
+        "sell row 9: endsAt",
+        "sell row 10: amount",
+        "sell row 10: price",
+        "sell row 10: total",
+        "sell row 10: endsAt",
+        "buy row 1: amount",
+        "buy row 1: price",
+        "buy row 1: total",
+        "buy row 1: endsAt",
+        "buy row 2: amount",
+        "buy row 2: price",
+        "buy row 2: total",
+        "buy row 2: endsAt",
+        "buy row 3: amount",
+        "buy row 3: price",
+        "buy row 3: total",
+        "buy row 3: endsAt",
+        "buy row 4: amount",
+        "buy row 4: price",
+        "buy row 4: total",
+        "buy row 4: endsAt",
+        "buy row 5: amount",
+        "buy row 5: price",
+        "buy row 5: total",
+        "buy row 5: endsAt",
+        "buy row 6: amount",
+        "buy row 6: price",
+        "buy row 6: total",
+        "buy row 6: endsAt",
+        "buy row 7: amount",
+        "buy row 7: price",
+        "buy row 7: total",
+        "buy row 7: endsAt",
+        "buy row 8: amount",
+        "buy row 8: price",
+        "buy row 8: total",
+        "buy row 8: endsAt",
+        "buy row 9: amount",
+        "buy row 9: price",
+        "buy row 9: total",
+        "buy row 9: endsAt",
+        "buy row 10: amount",
+        "buy row 10: price",
+        "buy row 10: total",
+        "buy row 10: endsAt"
+      ],
+      "differences": [],
+      "rootCause": "Browser execution failed; a fresh-browser retry matched every independently transcribed field.",
+      "finalStatus": "ready"
+    },
+    {
+      "case": 2,
+      "groundTruth": {
+        "hash": "6a83e92167b4ca3c85cfb7279f55c5c387c945a9e1c0709f7861dfcb45f1aab9",
+        "method": "Direct visual inspection of original screenshot; transcribed before comparison with extracted rows",
+        "selectedItem": "Tibia Coins",
+        "ambiguousFields": [],
+        "viewType": "statistics",
+        "statistics30d": {
+          "buy": {
+            "transactions": 2657,
+            "highestPrice": 45123,
+            "averagePrice": 41814,
+            "lowestPrice": 1
+          },
+          "sell": {
+            "transactions": 4425,
+            "highestPrice": 49999,
+            "averagePrice": 43422,
+            "lowestPrice": 40600
+          }
+        }
+      },
+      "phase1Extraction": {
+        "status": "ready",
+        "offers": [],
+        "statistics30d": {
+          "buy": {
+            "transactions": 2657,
+            "highestPrice": 45123,
+            "averagePrice": 41814,
+            "lowestPrice": 1,
+            "tcVolume": null
+          },
+          "sell": {
+            "transactions": 4425,
+            "highestPrice": 49999,
+            "averagePrice": 43422,
+            "lowestPrice": 40600,
+            "tcVolume": null
+          }
+        },
+        "viewType": "statistics",
+        "itemVerification": {
+          "status": "tibia_coins"
+        }
+      },
+      "originalMarkedStatus": "needs_review",
+      "originalRuntimeFault": "browser_closed",
+      "matchingFields": [
+        "buy.transactions",
+        "buy.highestPrice",
+        "buy.averagePrice",
+        "buy.lowestPrice",
+        "sell.transactions",
+        "sell.highestPrice",
+        "sell.averagePrice",
+        "sell.lowestPrice"
+      ],
+      "differences": [],
+      "rootCause": "Browser execution failed; a fresh-browser retry matched every independently transcribed field.",
+      "finalStatus": "ready"
+    },
+    {
+      "case": 3,
+      "groundTruth": {
+        "hash": "b7d2d3f58305176c4d775548a8d71622bbd9444490e93810d39140517a9487ff",
+        "method": "Direct visual inspection of original screenshot; transcribed before comparison with extracted rows",
+        "selectedItem": "Tibia Coins",
+        "ambiguousFields": [],
+        "viewType": "statistics",
+        "statistics30d": {
+          "buy": {
+            "transactions": 2642,
+            "highestPrice": 45800,
+            "averagePrice": 40397,
+            "lowestPrice": 1
+          },
+          "sell": {
+            "transactions": 3346,
+            "highestPrice": 47499,
+            "averagePrice": 43392,
+            "lowestPrice": 41000
+          }
+        }
+      },
+      "phase1Extraction": {
+        "status": "needs_review",
+        "offers": [],
+        "statistics30d": null,
+        "viewType": "statistics",
+        "itemVerification": {
+          "status": "tibia_coins"
+        }
+      },
+      "originalMarkedStatus": "needs_review",
+      "originalRuntimeFault": null,
+      "matchingFields": [],
+      "differences": [
+        {
+          "field": "buy.transactions",
+          "correct": 2642,
+          "extracted": null
+        },
+        {
+          "field": "buy.highestPrice",
+          "correct": 45800,
+          "extracted": null
+        },
+        {
+          "field": "buy.averagePrice",
+          "correct": 40397,
+          "extracted": null
+        },
+        {
+          "field": "buy.lowestPrice",
+          "correct": 1,
+          "extracted": null
+        },
+        {
+          "field": "sell.transactions",
+          "correct": 3346,
+          "extracted": null
+        },
+        {
+          "field": "sell.highestPrice",
+          "correct": 47499,
+          "extracted": null
+        },
+        {
+          "field": "sell.averagePrice",
+          "correct": 43392,
+          "extracted": null
+        },
+        {
+          "field": "sell.lowestPrice",
+          "correct": 41000,
+          "extracted": null
+        }
+      ],
+      "rootCause": "Whole-image OCR missed the Statistics heading; no numeric extraction was attempted.",
+      "finalStatus": "ready"
+    },
+    {
+      "case": 4,
+      "groundTruth": {
+        "hash": "3c45ecadea57f3e25a8395b9e2fb81915cca0fffd2c05ab42faa4fa4cf9849b2",
+        "method": "Direct visual inspection of original screenshot; transcribed before comparison with extracted rows",
+        "selectedItem": "Tibia Coins",
+        "ambiguousFields": [],
+        "viewType": "offers",
+        "offers": [
+          {
+            "side": "sell",
+            "rowIndex": 0,
+            "amount": 325,
+            "price": 47100,
+            "total": 15307500,
+            "endsAt": "2026-11-02T23:09:07"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 1,
+            "amount": 39925,
+            "price": 47189,
+            "total": 1884020825,
+            "endsAt": "2026-11-02T23:00:25"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 2,
+            "amount": 2300,
+            "price": 47190,
+            "total": 108537000,
+            "endsAt": "2026-11-02T22:57:08"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 3,
+            "amount": 300,
+            "price": 47199,
+            "total": 14159700,
+            "endsAt": "2026-11-02T21:38:40"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 4,
+            "amount": 225,
+            "price": 47200,
+            "total": 10620000,
+            "endsAt": "2026-11-02T20:03:26"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 5,
+            "amount": 25,
+            "price": 47398,
+            "total": 1184950,
+            "endsAt": "2026-11-02T19:56:15"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 6,
+            "amount": 300,
+            "price": 47400,
+            "total": 14220000,
+            "endsAt": "2026-11-02T18:43:22"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 7,
+            "amount": 225,
+            "price": 47497,
+            "total": 10686825,
+            "endsAt": "2026-11-01T20:02:44"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 8,
+            "amount": 25,
+            "price": 47498,
+            "total": 1187450,
+            "endsAt": "2026-11-01T19:40:16"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 9,
+            "amount": 900,
+            "price": 47498,
+            "total": 42748200,
+            "endsAt": "2026-11-01T23:24:16"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 0,
+            "amount": 25,
+            "price": 43560,
+            "total": 1089000,
+            "endsAt": "2026-11-02T23:07:07"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 1,
+            "amount": 250,
+            "price": 43550,
+            "total": 10887500,
+            "endsAt": "2026-11-02T22:47:57"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 2,
+            "amount": 2725,
+            "price": 43508,
+            "total": 118559300,
+            "endsAt": "2026-11-02T21:58:35"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 3,
+            "amount": 200,
+            "price": 43507,
+            "total": 8701400,
+            "endsAt": "2026-11-02T21:36:30"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 4,
+            "amount": 975,
+            "price": 43506,
+            "total": 42418350,
+            "endsAt": "2026-11-02T18:56:37"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 5,
+            "amount": 225,
+            "price": 43505,
+            "total": 9788625,
+            "endsAt": "2026-11-02T13:39:20"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 6,
+            "amount": 4725,
+            "price": 43503,
+            "total": 205551675,
+            "endsAt": "2026-11-02T12:24:43"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 7,
+            "amount": 2050,
+            "price": 43502,
+            "total": 89179100,
+            "endsAt": "2026-11-02T12:10:17"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 8,
+            "amount": 100,
+            "price": 43100,
+            "total": 4310000,
+            "endsAt": "2026-11-02T11:41:55"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 9,
+            "amount": 200,
+            "price": 43001,
+            "total": 8600200,
+            "endsAt": "2026-11-02T11:42:06"
+          }
+        ]
+      },
+      "phase1Extraction": {
+        "status": "ready",
+        "offers": [
+          {
+            "amount": 325,
+            "price": 47100,
+            "total": 15307500,
+            "endsAt": "2026-11-02T23:09:07",
+            "endsAtUtc": "2026-11-03T02:09:07.000Z",
+            "side": "sell",
+            "rowIndex": 0
+          },
+          {
+            "amount": 39925,
+            "price": 47189,
+            "total": 1884020825,
+            "endsAt": "2026-11-02T23:00:25",
+            "endsAtUtc": "2026-11-03T02:00:25.000Z",
+            "side": "sell",
+            "rowIndex": 1
+          },
+          {
+            "amount": 2300,
+            "price": 47190,
+            "total": 108537000,
+            "endsAt": "2026-11-02T22:57:08",
+            "endsAtUtc": "2026-11-03T01:57:08.000Z",
+            "side": "sell",
+            "rowIndex": 2
+          },
+          {
+            "amount": 300,
+            "price": 47199,
+            "total": 14159700,
+            "endsAt": "2026-11-02T21:38:40",
+            "endsAtUtc": "2026-11-03T00:38:40.000Z",
+            "side": "sell",
+            "rowIndex": 3
+          },
+          {
+            "amount": 225,
+            "price": 47200,
+            "total": 10620000,
+            "endsAt": "2026-11-02T20:03:26",
+            "endsAtUtc": "2026-11-02T23:03:26.000Z",
+            "side": "sell",
+            "rowIndex": 4
+          },
+          {
+            "amount": 25,
+            "price": 47398,
+            "total": 1184950,
+            "endsAt": "2026-11-02T19:56:15",
+            "endsAtUtc": "2026-11-02T22:56:15.000Z",
+            "side": "sell",
+            "rowIndex": 5
+          },
+          {
+            "amount": 300,
+            "price": 47400,
+            "total": 14220000,
+            "endsAt": "2026-11-02T18:43:22",
+            "endsAtUtc": "2026-11-02T21:43:22.000Z",
+            "side": "sell",
+            "rowIndex": 6
+          },
+          {
+            "amount": 225,
+            "price": 47497,
+            "total": 10686825,
+            "endsAt": "2026-11-01T20:02:44",
+            "endsAtUtc": "2026-11-01T23:02:44.000Z",
+            "side": "sell",
+            "rowIndex": 7
+          },
+          {
+            "amount": 25,
+            "price": 47498,
+            "total": 1187450,
+            "endsAt": "2026-11-01T19:40:16",
+            "endsAtUtc": "2026-11-01T22:40:16.000Z",
+            "side": "sell",
+            "rowIndex": 8
+          },
+          {
+            "amount": 900,
+            "price": 47498,
+            "total": 42748200,
+            "endsAt": "2026-11-01T23:24:16",
+            "endsAtUtc": "2026-11-02T02:24:16.000Z",
+            "side": "sell",
+            "rowIndex": 9
+          },
+          {
+            "amount": 25,
+            "price": 43560,
+            "total": 1089000,
+            "endsAt": "2026-11-02T23:07:07",
+            "endsAtUtc": "2026-11-03T02:07:07.000Z",
+            "side": "buy",
+            "rowIndex": 0
+          },
+          {
+            "amount": 250,
+            "price": 43550,
+            "total": 10887500,
+            "endsAt": "2026-11-02T22:47:57",
+            "endsAtUtc": "2026-11-03T01:47:57.000Z",
+            "side": "buy",
+            "rowIndex": 1
+          },
+          {
+            "amount": 2725,
+            "price": 43508,
+            "total": 118559300,
+            "endsAt": "2026-11-02T21:58:35",
+            "endsAtUtc": "2026-11-03T00:58:35.000Z",
+            "side": "buy",
+            "rowIndex": 2
+          },
+          {
+            "amount": 200,
+            "price": 43507,
+            "total": 8701400,
+            "endsAt": "2026-11-02T21:36:30",
+            "endsAtUtc": "2026-11-03T00:36:30.000Z",
+            "side": "buy",
+            "rowIndex": 3
+          },
+          {
+            "amount": 975,
+            "price": 43506,
+            "total": 42418350,
+            "endsAt": "2026-11-02T18:56:37",
+            "endsAtUtc": "2026-11-02T21:56:37.000Z",
+            "side": "buy",
+            "rowIndex": 4
+          },
+          {
+            "amount": 225,
+            "price": 43505,
+            "total": 9788625,
+            "endsAt": "2026-11-02T13:39:20",
+            "endsAtUtc": "2026-11-02T16:39:20.000Z",
+            "side": "buy",
+            "rowIndex": 5
+          },
+          {
+            "amount": 4725,
+            "price": 43503,
+            "total": 205551675,
+            "endsAt": "2026-11-02T12:24:43",
+            "endsAtUtc": "2026-11-02T15:24:43.000Z",
+            "side": "buy",
+            "rowIndex": 6
+          },
+          {
+            "amount": 2050,
+            "price": 43502,
+            "total": 89179100,
+            "endsAt": "2026-11-02T12:10:17",
+            "endsAtUtc": "2026-11-02T15:10:17.000Z",
+            "side": "buy",
+            "rowIndex": 7
+          },
+          {
+            "amount": 100,
+            "price": 43100,
+            "total": 4310000,
+            "endsAt": "2026-11-02T11:41:55",
+            "endsAtUtc": "2026-11-02T14:41:55.000Z",
+            "side": "buy",
+            "rowIndex": 8
+          },
+          {
+            "amount": 200,
+            "price": 43001,
+            "total": 8600200,
+            "endsAt": "2026-11-02T11:42:06",
+            "endsAtUtc": "2026-11-02T14:42:06.000Z",
+            "side": "buy",
+            "rowIndex": 9
+          }
+        ],
+        "statistics30d": null,
+        "viewType": "offers",
+        "itemVerification": {
+          "status": "tibia_coins"
+        }
+      },
+      "originalMarkedStatus": "needs_review",
+      "originalRuntimeFault": "browser_closed",
+      "matchingFields": [
+        "sell row 1: amount",
+        "sell row 1: price",
+        "sell row 1: total",
+        "sell row 1: endsAt",
+        "sell row 2: amount",
+        "sell row 2: price",
+        "sell row 2: total",
+        "sell row 2: endsAt",
+        "sell row 3: amount",
+        "sell row 3: price",
+        "sell row 3: total",
+        "sell row 3: endsAt",
+        "sell row 4: amount",
+        "sell row 4: price",
+        "sell row 4: total",
+        "sell row 4: endsAt",
+        "sell row 5: amount",
+        "sell row 5: price",
+        "sell row 5: total",
+        "sell row 5: endsAt",
+        "sell row 6: amount",
+        "sell row 6: price",
+        "sell row 6: total",
+        "sell row 6: endsAt",
+        "sell row 7: amount",
+        "sell row 7: price",
+        "sell row 7: total",
+        "sell row 7: endsAt",
+        "sell row 8: amount",
+        "sell row 8: price",
+        "sell row 8: total",
+        "sell row 8: endsAt",
+        "sell row 9: amount",
+        "sell row 9: price",
+        "sell row 9: total",
+        "sell row 9: endsAt",
+        "sell row 10: amount",
+        "sell row 10: price",
+        "sell row 10: total",
+        "sell row 10: endsAt",
+        "buy row 1: amount",
+        "buy row 1: price",
+        "buy row 1: total",
+        "buy row 1: endsAt",
+        "buy row 2: amount",
+        "buy row 2: price",
+        "buy row 2: total",
+        "buy row 2: endsAt",
+        "buy row 3: amount",
+        "buy row 3: price",
+        "buy row 3: total",
+        "buy row 3: endsAt",
+        "buy row 4: amount",
+        "buy row 4: price",
+        "buy row 4: total",
+        "buy row 4: endsAt",
+        "buy row 5: amount",
+        "buy row 5: price",
+        "buy row 5: total",
+        "buy row 5: endsAt",
+        "buy row 6: amount",
+        "buy row 6: price",
+        "buy row 6: total",
+        "buy row 6: endsAt",
+        "buy row 7: amount",
+        "buy row 7: price",
+        "buy row 7: total",
+        "buy row 7: endsAt",
+        "buy row 8: amount",
+        "buy row 8: price",
+        "buy row 8: total",
+        "buy row 8: endsAt",
+        "buy row 9: amount",
+        "buy row 9: price",
+        "buy row 9: total",
+        "buy row 9: endsAt",
+        "buy row 10: amount",
+        "buy row 10: price",
+        "buy row 10: total",
+        "buy row 10: endsAt"
+      ],
+      "differences": [],
+      "rootCause": "Browser execution failed; a fresh-browser retry matched every independently transcribed field.",
+      "finalStatus": "ready"
+    },
+    {
+      "case": 5,
+      "groundTruth": {
+        "hash": "ac01d8e6f61a9b20ce24c830b2cebbeb584d37a79b0e8cc3637478f972772166",
+        "method": "Direct visual inspection of original screenshot; transcribed before comparison with extracted rows",
+        "selectedItem": "Tibia Coins",
+        "ambiguousFields": [],
+        "viewType": "offers",
+        "offers": [
+          {
+            "side": "sell",
+            "rowIndex": 0,
+            "amount": 11250,
+            "price": 43114,
+            "total": 485032500,
+            "endsAt": "2026-11-02T21:21:42"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 1,
+            "amount": 225,
+            "price": 43115,
+            "total": 9700875,
+            "endsAt": "2026-11-02T21:04:08"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 2,
+            "amount": 150,
+            "price": 43116,
+            "total": 6467400,
+            "endsAt": "2026-11-02T20:33:51"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 3,
+            "amount": 63125,
+            "price": 43119,
+            "total": 2721886875,
+            "endsAt": "2026-11-02T20:12:43"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 4,
+            "amount": 27625,
+            "price": 43120,
+            "total": 1191190000,
+            "endsAt": "2026-11-02T20:12:08"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 5,
+            "amount": 7475,
+            "price": 43150,
+            "total": 322546250,
+            "endsAt": "2026-11-02T19:07:20"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 6,
+            "amount": 8300,
+            "price": 43255,
+            "total": 359016500,
+            "endsAt": "2026-11-02T17:54:22"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 7,
+            "amount": 6550,
+            "price": 43289,
+            "total": 283542950,
+            "endsAt": "2026-11-02T03:36:10"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 8,
+            "amount": 50,
+            "price": 43995,
+            "total": 2199750,
+            "endsAt": "2026-10-31T20:29:07"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 9,
+            "amount": 31425,
+            "price": 44438,
+            "total": 1396464150,
+            "endsAt": "2026-10-31T18:20:56"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 0,
+            "amount": 250,
+            "price": 41608,
+            "total": 10402000,
+            "endsAt": "2026-11-02T23:07:33"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 1,
+            "amount": 46375,
+            "price": 41603,
+            "total": 1929339125,
+            "endsAt": "2026-11-02T20:37:16"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 2,
+            "amount": 22000,
+            "price": 41602,
+            "total": 915244000,
+            "endsAt": "2026-11-02T20:36:44"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 3,
+            "amount": 2300,
+            "price": 41600,
+            "total": 95680000,
+            "endsAt": "2026-11-02T20:26:34"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 4,
+            "amount": 63725,
+            "price": 41510,
+            "total": 2645224750,
+            "endsAt": "2026-11-02T02:44:22"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 5,
+            "amount": 63975,
+            "price": 41508,
+            "total": 2655474300,
+            "endsAt": "2026-11-02T02:37:48"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 6,
+            "amount": 250,
+            "price": 41507,
+            "total": 10376750,
+            "endsAt": "2026-11-02T01:19:26"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 7,
+            "amount": 4650,
+            "price": 41504,
+            "total": 192993600,
+            "endsAt": "2026-11-02T01:15:35"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 8,
+            "amount": 3450,
+            "price": 41245,
+            "total": 142295250,
+            "endsAt": "2026-11-01T22:18:30"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 9,
+            "amount": 11900,
+            "price": 41241,
+            "total": 490767900,
+            "endsAt": "2026-11-01T12:28:38"
+          }
+        ]
+      },
+      "phase1Extraction": {
+        "status": "ready",
+        "offers": [
+          {
+            "amount": 11250,
+            "price": 43114,
+            "total": 485032500,
+            "endsAt": "2026-11-02T21:21:42",
+            "endsAtUtc": "2026-11-03T00:21:42.000Z",
+            "side": "sell",
+            "rowIndex": 0
+          },
+          {
+            "amount": 225,
+            "price": 43115,
+            "total": 9700875,
+            "endsAt": "2026-11-02T21:04:08",
+            "endsAtUtc": "2026-11-03T00:04:08.000Z",
+            "side": "sell",
+            "rowIndex": 1
+          },
+          {
+            "amount": 150,
+            "price": 43116,
+            "total": 6467400,
+            "endsAt": "2026-11-02T20:33:51",
+            "endsAtUtc": "2026-11-02T23:33:51.000Z",
+            "side": "sell",
+            "rowIndex": 2
+          },
+          {
+            "amount": 63125,
+            "price": 43119,
+            "total": 2721886875,
+            "endsAt": "2026-11-02T20:12:43",
+            "endsAtUtc": "2026-11-02T23:12:43.000Z",
+            "side": "sell",
+            "rowIndex": 3
+          },
+          {
+            "amount": 27625,
+            "price": 43120,
+            "total": 1191190000,
+            "endsAt": "2026-11-02T20:12:08",
+            "endsAtUtc": "2026-11-02T23:12:08.000Z",
+            "side": "sell",
+            "rowIndex": 4
+          },
+          {
+            "amount": 7475,
+            "price": 43150,
+            "total": 322546250,
+            "endsAt": "2026-11-02T19:07:20",
+            "endsAtUtc": "2026-11-02T22:07:20.000Z",
+            "side": "sell",
+            "rowIndex": 5
+          },
+          {
+            "amount": 8300,
+            "price": 43255,
+            "total": 359016500,
+            "endsAt": "2026-11-02T17:54:22",
+            "endsAtUtc": "2026-11-02T20:54:22.000Z",
+            "side": "sell",
+            "rowIndex": 6
+          },
+          {
+            "amount": 6550,
+            "price": 43289,
+            "total": 283542950,
+            "endsAt": "2026-11-02T03:36:10",
+            "endsAtUtc": "2026-11-02T06:36:10.000Z",
+            "side": "sell",
+            "rowIndex": 7
+          },
+          {
+            "amount": 50,
+            "price": 43995,
+            "total": 2199750,
+            "endsAt": "2026-10-31T20:29:07",
+            "endsAtUtc": "2026-10-31T23:29:07.000Z",
+            "side": "sell",
+            "rowIndex": 8
+          },
+          {
+            "amount": 31425,
+            "price": 44438,
+            "total": 1396464150,
+            "endsAt": "2026-10-31T18:20:56",
+            "endsAtUtc": "2026-10-31T21:20:56.000Z",
+            "side": "sell",
+            "rowIndex": 9
+          },
+          {
+            "amount": 250,
+            "price": 41608,
+            "total": 10402000,
+            "endsAt": "2026-11-02T23:07:33",
+            "endsAtUtc": "2026-11-03T02:07:33.000Z",
+            "side": "buy",
+            "rowIndex": 0
+          },
+          {
+            "amount": 46375,
+            "price": 41603,
+            "total": 1929339125,
+            "endsAt": "2026-11-02T20:37:16",
+            "endsAtUtc": "2026-11-02T23:37:16.000Z",
+            "side": "buy",
+            "rowIndex": 1
+          },
+          {
+            "amount": 22000,
+            "price": 41602,
+            "total": 915244000,
+            "endsAt": "2026-11-02T20:36:44",
+            "endsAtUtc": "2026-11-02T23:36:44.000Z",
+            "side": "buy",
+            "rowIndex": 2
+          },
+          {
+            "amount": 2300,
+            "price": 41600,
+            "total": 95680000,
+            "endsAt": "2026-11-02T20:26:34",
+            "endsAtUtc": "2026-11-02T23:26:34.000Z",
+            "side": "buy",
+            "rowIndex": 3
+          },
+          {
+            "amount": 63725,
+            "price": 41510,
+            "total": 2645224750,
+            "endsAt": "2026-11-02T02:44:22",
+            "endsAtUtc": "2026-11-02T05:44:22.000Z",
+            "side": "buy",
+            "rowIndex": 4
+          },
+          {
+            "amount": 63975,
+            "price": 41508,
+            "total": 2655474300,
+            "endsAt": "2026-11-02T02:37:48",
+            "endsAtUtc": "2026-11-02T05:37:48.000Z",
+            "side": "buy",
+            "rowIndex": 5
+          },
+          {
+            "amount": 250,
+            "price": 41507,
+            "total": 10376750,
+            "endsAt": "2026-11-02T01:19:26",
+            "endsAtUtc": "2026-11-02T04:19:26.000Z",
+            "side": "buy",
+            "rowIndex": 6
+          },
+          {
+            "amount": 4650,
+            "price": 41504,
+            "total": 192993600,
+            "endsAt": "2026-11-02T01:15:35",
+            "endsAtUtc": "2026-11-02T04:15:35.000Z",
+            "side": "buy",
+            "rowIndex": 7
+          },
+          {
+            "amount": 3450,
+            "price": 41245,
+            "total": 142295250,
+            "endsAt": "2026-11-01T22:18:30",
+            "endsAtUtc": "2026-11-02T01:18:30.000Z",
+            "side": "buy",
+            "rowIndex": 8
+          },
+          {
+            "amount": 11900,
+            "price": 41241,
+            "total": 490767900,
+            "endsAt": "2026-11-01T12:28:38",
+            "endsAtUtc": "2026-11-01T15:28:38.000Z",
+            "side": "buy",
+            "rowIndex": 9
+          }
+        ],
+        "statistics30d": null,
+        "viewType": "offers",
+        "itemVerification": {
+          "status": "tibia_coins"
+        }
+      },
+      "originalMarkedStatus": "needs_review",
+      "originalRuntimeFault": "browser_closed",
+      "matchingFields": [
+        "sell row 1: amount",
+        "sell row 1: price",
+        "sell row 1: total",
+        "sell row 1: endsAt",
+        "sell row 2: amount",
+        "sell row 2: price",
+        "sell row 2: total",
+        "sell row 2: endsAt",
+        "sell row 3: amount",
+        "sell row 3: price",
+        "sell row 3: total",
+        "sell row 3: endsAt",
+        "sell row 4: amount",
+        "sell row 4: price",
+        "sell row 4: total",
+        "sell row 4: endsAt",
+        "sell row 5: amount",
+        "sell row 5: price",
+        "sell row 5: total",
+        "sell row 5: endsAt",
+        "sell row 6: amount",
+        "sell row 6: price",
+        "sell row 6: total",
+        "sell row 6: endsAt",
+        "sell row 7: amount",
+        "sell row 7: price",
+        "sell row 7: total",
+        "sell row 7: endsAt",
+        "sell row 8: amount",
+        "sell row 8: price",
+        "sell row 8: total",
+        "sell row 8: endsAt",
+        "sell row 9: amount",
+        "sell row 9: price",
+        "sell row 9: total",
+        "sell row 9: endsAt",
+        "sell row 10: amount",
+        "sell row 10: price",
+        "sell row 10: total",
+        "sell row 10: endsAt",
+        "buy row 1: amount",
+        "buy row 1: price",
+        "buy row 1: total",
+        "buy row 1: endsAt",
+        "buy row 2: amount",
+        "buy row 2: price",
+        "buy row 2: total",
+        "buy row 2: endsAt",
+        "buy row 3: amount",
+        "buy row 3: price",
+        "buy row 3: total",
+        "buy row 3: endsAt",
+        "buy row 4: amount",
+        "buy row 4: price",
+        "buy row 4: total",
+        "buy row 4: endsAt",
+        "buy row 5: amount",
+        "buy row 5: price",
+        "buy row 5: total",
+        "buy row 5: endsAt",
+        "buy row 6: amount",
+        "buy row 6: price",
+        "buy row 6: total",
+        "buy row 6: endsAt",
+        "buy row 7: amount",
+        "buy row 7: price",
+        "buy row 7: total",
+        "buy row 7: endsAt",
+        "buy row 8: amount",
+        "buy row 8: price",
+        "buy row 8: total",
+        "buy row 8: endsAt",
+        "buy row 9: amount",
+        "buy row 9: price",
+        "buy row 9: total",
+        "buy row 9: endsAt",
+        "buy row 10: amount",
+        "buy row 10: price",
+        "buy row 10: total",
+        "buy row 10: endsAt"
+      ],
+      "differences": [],
+      "rootCause": "Browser execution failed; a fresh-browser retry matched every independently transcribed field.",
+      "finalStatus": "ready"
+    },
+    {
+      "case": 6,
+      "groundTruth": {
+        "hash": "cc86346e6ef501502c0c384c391194fddbd7d010fa731755af15788f46c0f876",
+        "method": "Direct visual inspection of original screenshot; transcribed before comparison with extracted rows",
+        "selectedItem": "Tibia Coins",
+        "ambiguousFields": [],
+        "viewType": "offers",
+        "offers": [
+          {
+            "side": "sell",
+            "rowIndex": 0,
+            "amount": 31025,
+            "price": 44888,
+            "total": 1392650200,
+            "endsAt": "2026-11-02T16:38:27"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 1,
+            "amount": 50,
+            "price": 44889,
+            "total": 2244450,
+            "endsAt": "2026-11-02T16:12:01"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 2,
+            "amount": 7400,
+            "price": 44899,
+            "total": 332252600,
+            "endsAt": "2026-11-02T15:44:42"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 3,
+            "amount": 1275,
+            "price": 44998,
+            "total": 57372450,
+            "endsAt": "2026-11-02T15:39:32"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 4,
+            "amount": 200,
+            "price": 45054,
+            "total": 9010800,
+            "endsAt": "2026-11-02T15:13:09"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 5,
+            "amount": 50,
+            "price": 45055,
+            "total": 2252750,
+            "endsAt": "2026-11-02T14:54:04"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 6,
+            "amount": 200,
+            "price": 45247,
+            "total": 9049400,
+            "endsAt": "2026-11-02T13:10:57"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 7,
+            "amount": 250,
+            "price": 45250,
+            "total": 11312500,
+            "endsAt": "2026-11-02T13:01:37"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 8,
+            "amount": 40000,
+            "price": 45880,
+            "total": 1835200000,
+            "endsAt": "2026-11-02T12:41:35"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 9,
+            "amount": 250,
+            "price": 45886,
+            "total": 11471500,
+            "endsAt": "2026-11-02T12:02:48"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 0,
+            "amount": 625,
+            "price": 43000,
+            "total": 26875000,
+            "endsAt": "2026-11-02T23:06:47"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 1,
+            "amount": 50,
+            "price": 42761,
+            "total": 2138050,
+            "endsAt": "2026-11-02T23:08:26"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 2,
+            "amount": 6175,
+            "price": 42760,
+            "total": 264043000,
+            "endsAt": "2026-11-02T22:42:34"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 3,
+            "amount": 3975,
+            "price": 42759,
+            "total": 169967025,
+            "endsAt": "2026-11-02T22:13:10"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 4,
+            "amount": 7075,
+            "price": 42758,
+            "total": 302512850,
+            "endsAt": "2026-11-01T16:02:21"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 5,
+            "amount": 650,
+            "price": 42758,
+            "total": 27792700,
+            "endsAt": "2026-11-02T22:12:35"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 6,
+            "amount": 450,
+            "price": 42750,
+            "total": 19237500,
+            "endsAt": "2026-11-01T13:43:14"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 7,
+            "amount": 1525,
+            "price": 42363,
+            "total": 64603575,
+            "endsAt": "2026-11-01T12:16:38"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 8,
+            "amount": 250,
+            "price": 42359,
+            "total": 10589750,
+            "endsAt": "2026-11-01T09:29:59"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 9,
+            "amount": 3475,
+            "price": 42355,
+            "total": 147183625,
+            "endsAt": "2026-10-31T22:57:26"
+          }
+        ]
+      },
+      "phase1Extraction": {
+        "status": "ready",
+        "offers": [
+          {
+            "amount": 31025,
+            "price": 44888,
+            "total": 1392650200,
+            "endsAt": "2026-11-02T16:38:27",
+            "endsAtUtc": "2026-11-02T19:38:27.000Z",
+            "side": "sell",
+            "rowIndex": 0
+          },
+          {
+            "amount": 50,
+            "price": 44889,
+            "total": 2244450,
+            "endsAt": "2026-11-02T16:12:01",
+            "endsAtUtc": "2026-11-02T19:12:01.000Z",
+            "side": "sell",
+            "rowIndex": 1
+          },
+          {
+            "amount": 7400,
+            "price": 44899,
+            "total": 332252600,
+            "endsAt": "2026-11-02T15:44:42",
+            "endsAtUtc": "2026-11-02T18:44:42.000Z",
+            "side": "sell",
+            "rowIndex": 2
+          },
+          {
+            "amount": 1275,
+            "price": 44998,
+            "total": 57372450,
+            "endsAt": "2026-11-02T15:39:32",
+            "endsAtUtc": "2026-11-02T18:39:32.000Z",
+            "side": "sell",
+            "rowIndex": 3
+          },
+          {
+            "amount": 200,
+            "price": 45054,
+            "total": 9010800,
+            "endsAt": "2026-11-02T15:13:09",
+            "endsAtUtc": "2026-11-02T18:13:09.000Z",
+            "side": "sell",
+            "rowIndex": 4
+          },
+          {
+            "amount": 50,
+            "price": 45055,
+            "total": 2252750,
+            "endsAt": "2026-11-02T14:54:04",
+            "endsAtUtc": "2026-11-02T17:54:04.000Z",
+            "side": "sell",
+            "rowIndex": 5
+          },
+          {
+            "amount": 200,
+            "price": 45247,
+            "total": 9049400,
+            "endsAt": "2026-11-02T13:10:57",
+            "endsAtUtc": "2026-11-02T16:10:57.000Z",
+            "side": "sell",
+            "rowIndex": 6
+          },
+          {
+            "amount": 250,
+            "price": 45250,
+            "total": 11312500,
+            "endsAt": "2026-11-02T13:01:37",
+            "endsAtUtc": "2026-11-02T16:01:37.000Z",
+            "side": "sell",
+            "rowIndex": 7
+          },
+          {
+            "amount": 40000,
+            "price": 45880,
+            "total": 1835200000,
+            "endsAt": "2026-11-02T12:41:35",
+            "endsAtUtc": "2026-11-02T15:41:35.000Z",
+            "side": "sell",
+            "rowIndex": 8
+          },
+          {
+            "amount": 250,
+            "price": 45886,
+            "total": 11471500,
+            "endsAt": "2026-11-02T12:02:48",
+            "endsAtUtc": "2026-11-02T15:02:48.000Z",
+            "side": "sell",
+            "rowIndex": 9
+          },
+          {
+            "amount": 625,
+            "price": 43000,
+            "total": 26875000,
+            "endsAt": "2026-11-02T23:06:47",
+            "endsAtUtc": "2026-11-03T02:06:47.000Z",
+            "side": "buy",
+            "rowIndex": 0
+          },
+          {
+            "amount": 50,
+            "price": 42761,
+            "total": 2138050,
+            "endsAt": "2026-11-02T23:08:26",
+            "endsAtUtc": "2026-11-03T02:08:26.000Z",
+            "side": "buy",
+            "rowIndex": 1
+          },
+          {
+            "amount": 6175,
+            "price": 42760,
+            "total": 264043000,
+            "endsAt": "2026-11-02T22:42:34",
+            "endsAtUtc": "2026-11-03T01:42:34.000Z",
+            "side": "buy",
+            "rowIndex": 2
+          },
+          {
+            "amount": 3975,
+            "price": 42759,
+            "total": 169967025,
+            "endsAt": "2026-11-02T22:13:10",
+            "endsAtUtc": "2026-11-03T01:13:10.000Z",
+            "side": "buy",
+            "rowIndex": 3
+          },
+          {
+            "amount": 7075,
+            "price": 42758,
+            "total": 302512850,
+            "endsAt": "2026-11-01T16:02:21",
+            "endsAtUtc": "2026-11-01T19:02:21.000Z",
+            "side": "buy",
+            "rowIndex": 4
+          },
+          {
+            "amount": 650,
+            "price": 42758,
+            "total": 27792700,
+            "endsAt": "2026-11-02T22:12:35",
+            "endsAtUtc": "2026-11-03T01:12:35.000Z",
+            "side": "buy",
+            "rowIndex": 5
+          },
+          {
+            "amount": 450,
+            "price": 42750,
+            "total": 19237500,
+            "endsAt": "2026-11-01T13:43:14",
+            "endsAtUtc": "2026-11-01T16:43:14.000Z",
+            "side": "buy",
+            "rowIndex": 6
+          },
+          {
+            "amount": 1525,
+            "price": 42363,
+            "total": 64603575,
+            "endsAt": "2026-11-01T12:16:38",
+            "endsAtUtc": "2026-11-01T15:16:38.000Z",
+            "side": "buy",
+            "rowIndex": 7
+          },
+          {
+            "amount": 250,
+            "price": 42359,
+            "total": 10589750,
+            "endsAt": "2026-11-01T09:29:59",
+            "endsAtUtc": "2026-11-01T12:29:59.000Z",
+            "side": "buy",
+            "rowIndex": 8
+          },
+          {
+            "amount": 3475,
+            "price": 42355,
+            "total": 147183625,
+            "endsAt": "2026-10-31T22:57:26",
+            "endsAtUtc": "2026-11-01T01:57:26.000Z",
+            "side": "buy",
+            "rowIndex": 9
+          }
+        ],
+        "statistics30d": null,
+        "viewType": "offers",
+        "itemVerification": {
+          "status": "tibia_coins"
+        }
+      },
+      "originalMarkedStatus": null,
+      "originalRuntimeFault": null,
+      "matchingFields": [
+        "sell row 1: amount",
+        "sell row 1: price",
+        "sell row 1: total",
+        "sell row 1: endsAt",
+        "sell row 2: amount",
+        "sell row 2: price",
+        "sell row 2: total",
+        "sell row 2: endsAt",
+        "sell row 3: amount",
+        "sell row 3: price",
+        "sell row 3: total",
+        "sell row 3: endsAt",
+        "sell row 4: amount",
+        "sell row 4: price",
+        "sell row 4: total",
+        "sell row 4: endsAt",
+        "sell row 5: amount",
+        "sell row 5: price",
+        "sell row 5: total",
+        "sell row 5: endsAt",
+        "sell row 6: amount",
+        "sell row 6: price",
+        "sell row 6: total",
+        "sell row 6: endsAt",
+        "sell row 7: amount",
+        "sell row 7: price",
+        "sell row 7: total",
+        "sell row 7: endsAt",
+        "sell row 8: amount",
+        "sell row 8: price",
+        "sell row 8: total",
+        "sell row 8: endsAt",
+        "sell row 9: amount",
+        "sell row 9: price",
+        "sell row 9: total",
+        "sell row 9: endsAt",
+        "sell row 10: amount",
+        "sell row 10: price",
+        "sell row 10: total",
+        "sell row 10: endsAt",
+        "buy row 1: amount",
+        "buy row 1: price",
+        "buy row 1: total",
+        "buy row 1: endsAt",
+        "buy row 2: amount",
+        "buy row 2: price",
+        "buy row 2: total",
+        "buy row 2: endsAt",
+        "buy row 3: amount",
+        "buy row 3: price",
+        "buy row 3: total",
+        "buy row 3: endsAt",
+        "buy row 4: amount",
+        "buy row 4: price",
+        "buy row 4: total",
+        "buy row 4: endsAt",
+        "buy row 5: amount",
+        "buy row 5: price",
+        "buy row 5: total",
+        "buy row 5: endsAt",
+        "buy row 6: amount",
+        "buy row 6: price",
+        "buy row 6: total",
+        "buy row 6: endsAt",
+        "buy row 7: amount",
+        "buy row 7: price",
+        "buy row 7: total",
+        "buy row 7: endsAt",
+        "buy row 8: amount",
+        "buy row 8: price",
+        "buy row 8: total",
+        "buy row 8: endsAt",
+        "buy row 9: amount",
+        "buy row 9: price",
+        "buy row 9: total",
+        "buy row 9: endsAt",
+        "buy row 10: amount",
+        "buy row 10: price",
+        "buy row 10: total",
+        "buy row 10: endsAt"
+      ],
+      "differences": [],
+      "rootCause": "Browser execution failed; a fresh-browser retry matched every independently transcribed field.",
+      "finalStatus": "ready"
+    },
+    {
+      "case": 7,
+      "groundTruth": {
+        "hash": "7f5ca3a7c5f33f799b5434c158699fccb1efc82582880bd315301cc7157b5c3e",
+        "method": "Direct visual inspection of original screenshot; transcribed before comparison with extracted rows",
+        "selectedItem": "Tibia Coins",
+        "ambiguousFields": [],
+        "viewType": "offers",
+        "offers": [
+          {
+            "side": "sell",
+            "rowIndex": 0,
+            "amount": 75,
+            "price": 45898,
+            "total": 3442350,
+            "endsAt": "2026-11-02T19:32:25"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 1,
+            "amount": 50,
+            "price": 45899,
+            "total": 2294950,
+            "endsAt": "2026-11-02T18:32:19"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 2,
+            "amount": 50,
+            "price": 45901,
+            "total": 2295050,
+            "endsAt": "2026-11-02T17:02:21"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 3,
+            "amount": 225,
+            "price": 46000,
+            "total": 10350000,
+            "endsAt": "2026-11-02T13:28:44"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 4,
+            "amount": 250,
+            "price": 46799,
+            "total": 11699750,
+            "endsAt": "2026-11-02T17:42:23"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 5,
+            "amount": 25,
+            "price": 46800,
+            "total": 1170000,
+            "endsAt": "2026-11-02T13:16:22"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 6,
+            "amount": 500,
+            "price": 46986,
+            "total": 23493000,
+            "endsAt": "2026-11-02T13:19:35"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 7,
+            "amount": 11825,
+            "price": 46987,
+            "total": 555621275,
+            "endsAt": "2026-10-31T07:51:35"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 0,
+            "amount": 25,
+            "price": 41516,
+            "total": 1037900,
+            "endsAt": "2026-11-02T23:15:25"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 1,
+            "amount": 300,
+            "price": 41515,
+            "total": 12454500,
+            "endsAt": "2026-11-02T22:13:29"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 2,
+            "amount": 50,
+            "price": 41509,
+            "total": 2075450,
+            "endsAt": "2026-11-02T21:49:09"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 3,
+            "amount": 450,
+            "price": 41507,
+            "total": 18678150,
+            "endsAt": "2026-11-02T20:57:43"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 4,
+            "amount": 25,
+            "price": 41506,
+            "total": 1037650,
+            "endsAt": "2026-11-02T20:42:38"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 5,
+            "amount": 50,
+            "price": 41505,
+            "total": 2075250,
+            "endsAt": "2026-11-02T20:30:19"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 6,
+            "amount": 300,
+            "price": 41504,
+            "total": 12451200,
+            "endsAt": "2026-11-02T11:17:21"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 7,
+            "amount": 300,
+            "price": 41001,
+            "total": 12300300,
+            "endsAt": "2026-11-02T00:13:36"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 8,
+            "amount": 1925,
+            "price": 41000,
+            "total": 78925000,
+            "endsAt": "2026-11-01T23:59:11"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 9,
+            "amount": 100,
+            "price": 39510,
+            "total": 3951000,
+            "endsAt": "2026-11-01T22:53:30"
+          }
+        ]
+      },
+      "phase1Extraction": {
+        "status": "ready",
+        "offers": [
+          {
+            "amount": 75,
+            "price": 45898,
+            "total": 3442350,
+            "endsAt": "2026-11-02T19:32:25",
+            "endsAtUtc": "2026-11-02T22:32:25.000Z",
+            "side": "sell",
+            "rowIndex": 0
+          },
+          {
+            "amount": 50,
+            "price": 45899,
+            "total": 2294950,
+            "endsAt": "2026-11-02T18:32:19",
+            "endsAtUtc": "2026-11-02T21:32:19.000Z",
+            "side": "sell",
+            "rowIndex": 1
+          },
+          {
+            "amount": 50,
+            "price": 45901,
+            "total": 2295050,
+            "endsAt": "2026-11-02T17:02:21",
+            "endsAtUtc": "2026-11-02T20:02:21.000Z",
+            "side": "sell",
+            "rowIndex": 2
+          },
+          {
+            "amount": 225,
+            "price": 46000,
+            "total": 10350000,
+            "endsAt": "2026-11-02T13:28:44",
+            "endsAtUtc": "2026-11-02T16:28:44.000Z",
+            "side": "sell",
+            "rowIndex": 3
+          },
+          {
+            "amount": 250,
+            "price": 46799,
+            "total": 11699750,
+            "endsAt": "2026-11-02T17:42:23",
+            "endsAtUtc": "2026-11-02T20:42:23.000Z",
+            "side": "sell",
+            "rowIndex": 4
+          },
+          {
+            "amount": 25,
+            "price": 46800,
+            "total": 1170000,
+            "endsAt": "2026-11-02T13:16:22",
+            "endsAtUtc": "2026-11-02T16:16:22.000Z",
+            "side": "sell",
+            "rowIndex": 5
+          },
+          {
+            "amount": 500,
+            "price": 46986,
+            "total": 23493000,
+            "endsAt": "2026-11-02T13:19:35",
+            "endsAtUtc": "2026-11-02T16:19:35.000Z",
+            "side": "sell",
+            "rowIndex": 6
+          },
+          {
+            "amount": 11825,
+            "price": 46987,
+            "total": 555621275,
+            "endsAt": "2026-10-31T07:51:35",
+            "endsAtUtc": "2026-10-31T10:51:35.000Z",
+            "side": "sell",
+            "rowIndex": 7
+          },
+          {
+            "amount": 25,
+            "price": 41516,
+            "total": 1037900,
+            "endsAt": "2026-11-02T23:15:25",
+            "endsAtUtc": "2026-11-03T02:15:25.000Z",
+            "side": "buy",
+            "rowIndex": 0
+          },
+          {
+            "amount": 300,
+            "price": 41515,
+            "total": 12454500,
+            "endsAt": "2026-11-02T22:13:29",
+            "endsAtUtc": "2026-11-03T01:13:29.000Z",
+            "side": "buy",
+            "rowIndex": 1
+          },
+          {
+            "amount": 50,
+            "price": 41509,
+            "total": 2075450,
+            "endsAt": "2026-11-02T21:49:09",
+            "endsAtUtc": "2026-11-03T00:49:09.000Z",
+            "side": "buy",
+            "rowIndex": 2
+          },
+          {
+            "amount": 450,
+            "price": 41507,
+            "total": 18678150,
+            "endsAt": "2026-11-02T20:57:43",
+            "endsAtUtc": "2026-11-02T23:57:43.000Z",
+            "side": "buy",
+            "rowIndex": 3
+          },
+          {
+            "amount": 25,
+            "price": 41506,
+            "total": 1037650,
+            "endsAt": "2026-11-02T20:42:38",
+            "endsAtUtc": "2026-11-02T23:42:38.000Z",
+            "side": "buy",
+            "rowIndex": 4
+          },
+          {
+            "amount": 50,
+            "price": 41505,
+            "total": 2075250,
+            "endsAt": "2026-11-02T20:30:19",
+            "endsAtUtc": "2026-11-02T23:30:19.000Z",
+            "side": "buy",
+            "rowIndex": 5
+          },
+          {
+            "amount": 300,
+            "price": 41504,
+            "total": 12451200,
+            "endsAt": "2026-11-02T11:17:21",
+            "endsAtUtc": "2026-11-02T14:17:21.000Z",
+            "side": "buy",
+            "rowIndex": 6
+          },
+          {
+            "amount": 300,
+            "price": 41001,
+            "total": 12300300,
+            "endsAt": "2026-11-02T00:13:36",
+            "endsAtUtc": "2026-11-02T03:13:36.000Z",
+            "side": "buy",
+            "rowIndex": 7
+          },
+          {
+            "amount": 1925,
+            "price": 41000,
+            "total": 78925000,
+            "endsAt": "2026-11-01T23:59:11",
+            "endsAtUtc": "2026-11-02T02:59:11.000Z",
+            "side": "buy",
+            "rowIndex": 8
+          },
+          {
+            "amount": 100,
+            "price": 39510,
+            "total": 3951000,
+            "endsAt": "2026-11-01T22:53:30",
+            "endsAtUtc": "2026-11-02T01:53:30.000Z",
+            "side": "buy",
+            "rowIndex": 9
+          }
+        ],
+        "statistics30d": null,
+        "viewType": "offers",
+        "itemVerification": {
+          "status": "tibia_coins"
+        }
+      },
+      "originalMarkedStatus": null,
+      "originalRuntimeFault": null,
+      "matchingFields": [
+        "sell row 1: amount",
+        "sell row 1: price",
+        "sell row 1: total",
+        "sell row 1: endsAt",
+        "sell row 2: amount",
+        "sell row 2: price",
+        "sell row 2: total",
+        "sell row 2: endsAt",
+        "sell row 3: amount",
+        "sell row 3: price",
+        "sell row 3: total",
+        "sell row 3: endsAt",
+        "sell row 4: amount",
+        "sell row 4: price",
+        "sell row 4: total",
+        "sell row 4: endsAt",
+        "sell row 5: amount",
+        "sell row 5: price",
+        "sell row 5: total",
+        "sell row 5: endsAt",
+        "sell row 6: amount",
+        "sell row 6: price",
+        "sell row 6: total",
+        "sell row 6: endsAt",
+        "sell row 7: amount",
+        "sell row 7: price",
+        "sell row 7: total",
+        "sell row 7: endsAt",
+        "sell row 8: amount",
+        "sell row 8: price",
+        "sell row 8: total",
+        "sell row 8: endsAt",
+        "buy row 1: amount",
+        "buy row 1: price",
+        "buy row 1: total",
+        "buy row 1: endsAt",
+        "buy row 2: amount",
+        "buy row 2: price",
+        "buy row 2: total",
+        "buy row 2: endsAt",
+        "buy row 3: amount",
+        "buy row 3: price",
+        "buy row 3: total",
+        "buy row 3: endsAt",
+        "buy row 4: amount",
+        "buy row 4: price",
+        "buy row 4: total",
+        "buy row 4: endsAt",
+        "buy row 5: amount",
+        "buy row 5: price",
+        "buy row 5: total",
+        "buy row 5: endsAt",
+        "buy row 6: amount",
+        "buy row 6: price",
+        "buy row 6: total",
+        "buy row 6: endsAt",
+        "buy row 7: amount",
+        "buy row 7: price",
+        "buy row 7: total",
+        "buy row 7: endsAt",
+        "buy row 8: amount",
+        "buy row 8: price",
+        "buy row 8: total",
+        "buy row 8: endsAt",
+        "buy row 9: amount",
+        "buy row 9: price",
+        "buy row 9: total",
+        "buy row 9: endsAt",
+        "buy row 10: amount",
+        "buy row 10: price",
+        "buy row 10: total",
+        "buy row 10: endsAt"
+      ],
+      "differences": [],
+      "rootCause": "Browser execution failed; a fresh-browser retry matched every independently transcribed field.",
+      "finalStatus": "ready"
+    },
+    {
+      "case": 8,
+      "groundTruth": {
+        "hash": "5bd1433a19d1fb4637d43e22bb18e5d271a8edf2198689acb1d8a9036b1ec192",
+        "method": "Direct visual inspection of original Market pixels in a privacy mask; no numeric or expiry pixels altered; transcribed before comparison with extracted rows",
+        "selectedItem": "Tibia Coins",
+        "ambiguousFields": [],
+        "viewType": "offers",
+        "offers": [
+          {
+            "side": "sell",
+            "rowIndex": 0,
+            "amount": 6725,
+            "price": 45887,
+            "total": 308590075,
+            "endsAt": "2026-11-02T22:20:31"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 1,
+            "amount": 16550,
+            "price": 45888,
+            "total": 759446400,
+            "endsAt": "2026-11-02T18:16:34"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 2,
+            "amount": 23075,
+            "price": 45899,
+            "total": 1059119425,
+            "endsAt": "2026-11-02T17:20:40"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 3,
+            "amount": 16050,
+            "price": 45955,
+            "total": 737577750,
+            "endsAt": "2026-11-02T15:59:57"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 4,
+            "amount": 1100,
+            "price": 45986,
+            "total": 50584600,
+            "endsAt": "2026-11-02T15:26:54"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 5,
+            "amount": 19200,
+            "price": 45987,
+            "total": 882950400,
+            "endsAt": "2026-11-02T15:20:40"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 6,
+            "amount": 75,
+            "price": 45990,
+            "total": 3449250,
+            "endsAt": "2026-11-02T15:00:38"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 7,
+            "amount": 200,
+            "price": 46497,
+            "total": 9299400,
+            "endsAt": "2026-11-02T14:13:34"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 8,
+            "amount": 175,
+            "price": 47500,
+            "total": 8312500,
+            "endsAt": "2026-11-01T14:51:35"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 9,
+            "amount": 14950,
+            "price": 47798,
+            "total": 714580100,
+            "endsAt": "2026-11-01T12:26:43"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 0,
+            "amount": 50,
+            "price": 44890,
+            "total": 2244500,
+            "endsAt": "2026-11-02T23:17:41"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 1,
+            "amount": 2225,
+            "price": 44889,
+            "total": 99878025,
+            "endsAt": "2026-11-02T22:20:43"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 2,
+            "amount": 12025,
+            "price": 44888,
+            "total": 539778200,
+            "endsAt": "2026-10-31T08:02:59"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 3,
+            "amount": 48225,
+            "price": 44810,
+            "total": 2160962250,
+            "endsAt": "2026-10-25T23:16:53"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 4,
+            "amount": 6425,
+            "price": 44111,
+            "total": 283413175,
+            "endsAt": "2026-10-15T08:14:21"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 5,
+            "amount": 64000,
+            "price": 1,
+            "total": 64000,
+            "endsAt": "2026-10-12T03:48:06"
+          }
+        ]
+      },
+      "phase1Extraction": {
+        "status": "needs_review",
+        "offers": [
+          {
+            "amount": 6725,
+            "price": 45887,
+            "total": 308590075,
+            "endsAt": "2026-11-02T22:20:31",
+            "endsAtUtc": null,
+            "side": "sell",
+            "rowIndex": 0
+          },
+          {
+            "amount": 16550,
+            "price": 45888,
+            "total": 759446400,
+            "endsAt": "2026-11-02T18:16:34",
+            "endsAtUtc": null,
+            "side": "sell",
+            "rowIndex": 1
+          },
+          {
+            "amount": 23075,
+            "price": 45899,
+            "total": 1059119425,
+            "endsAt": "2026-11-02T17:20:40",
+            "endsAtUtc": null,
+            "side": "sell",
+            "rowIndex": 2
+          },
+          {
+            "amount": 16050,
+            "price": 45955,
+            "total": 737577750,
+            "endsAt": "2026-11-02T15:59:57",
+            "endsAtUtc": null,
+            "side": "sell",
+            "rowIndex": 3
+          },
+          {
+            "amount": 1100,
+            "price": 45986,
+            "total": 50584600,
+            "endsAt": "2026-11-02T15:26:54",
+            "endsAtUtc": null,
+            "side": "sell",
+            "rowIndex": 4
+          },
+          {
+            "amount": 19200,
+            "price": 45987,
+            "total": 882950400,
+            "endsAt": "2026-11-02T15:20:40",
+            "endsAtUtc": null,
+            "side": "sell",
+            "rowIndex": 5
+          },
+          {
+            "amount": 75,
+            "price": 45990,
+            "total": 3449250,
+            "endsAt": "2026-11-02T15:00:38",
+            "endsAtUtc": null,
+            "side": "sell",
+            "rowIndex": 6
+          },
+          {
+            "amount": 200,
+            "price": 46497,
+            "total": 9299400,
+            "endsAt": "2026-11-02T14:13:34",
+            "endsAtUtc": null,
+            "side": "sell",
+            "rowIndex": 7
+          },
+          {
+            "amount": 175,
+            "price": 47500,
+            "total": 8312500,
+            "endsAt": "2026-11-01T14:51:35",
+            "endsAtUtc": null,
+            "side": "sell",
+            "rowIndex": 8
+          },
+          {
+            "amount": 14950,
+            "price": 47798,
+            "total": 714580100,
+            "endsAt": "2026-11-01T12:26:43",
+            "endsAtUtc": null,
+            "side": "sell",
+            "rowIndex": 9
+          },
+          {
+            "amount": 50,
+            "price": 44890,
+            "total": 2244500,
+            "endsAt": "2026-11-02T23:17:41",
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 0
+          },
+          {
+            "amount": 502225,
+            "price": 44889,
+            "total": 24450099878025,
+            "endsAt": null,
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 1
+          },
+          {
+            "amount": 2225,
+            "price": 44889,
+            "total": 99878025,
+            "endsAt": "2026-11-02T22:20:43",
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 2
+          },
+          {
+            "amount": 12025,
+            "price": 44888,
+            "total": 539778200,
+            "endsAt": "2026-10-31T08:02:59",
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 3
+          },
+          {
+            "amount": 48225,
+            "price": 44810,
+            "total": 2160962250,
+            "endsAt": "2026-10-25T23:16:53",
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 4
+          },
+          {
+            "amount": 6425,
+            "price": 44111,
+            "total": 283413175,
+            "endsAt": "2026-10-15T08:14:21",
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 5
+          },
+          {
+            "amount": 64000,
+            "price": 1,
+            "total": 64000,
+            "endsAt": "2026-10-12T03:48:06",
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 6
+          }
+        ],
+        "statistics30d": null,
+        "viewType": "offers",
+        "itemVerification": {
+          "status": "tibia_coins"
+        }
+      },
+      "originalMarkedStatus": null,
+      "originalRuntimeFault": null,
+      "matchingFields": [
+        "sell row 1: amount",
+        "sell row 1: price",
+        "sell row 1: total",
+        "sell row 1: endsAt",
+        "sell row 2: amount",
+        "sell row 2: price",
+        "sell row 2: total",
+        "sell row 2: endsAt",
+        "sell row 3: amount",
+        "sell row 3: price",
+        "sell row 3: total",
+        "sell row 3: endsAt",
+        "sell row 4: amount",
+        "sell row 4: price",
+        "sell row 4: total",
+        "sell row 4: endsAt",
+        "sell row 5: amount",
+        "sell row 5: price",
+        "sell row 5: total",
+        "sell row 5: endsAt",
+        "sell row 6: amount",
+        "sell row 6: price",
+        "sell row 6: total",
+        "sell row 6: endsAt",
+        "sell row 7: amount",
+        "sell row 7: price",
+        "sell row 7: total",
+        "sell row 7: endsAt",
+        "sell row 8: amount",
+        "sell row 8: price",
+        "sell row 8: total",
+        "sell row 8: endsAt",
+        "sell row 9: amount",
+        "sell row 9: price",
+        "sell row 9: total",
+        "sell row 9: endsAt",
+        "sell row 10: amount",
+        "sell row 10: price",
+        "sell row 10: total",
+        "sell row 10: endsAt",
+        "buy row 1: amount",
+        "buy row 1: price",
+        "buy row 1: total",
+        "buy row 1: endsAt",
+        "buy row 2: price"
+      ],
+      "differences": [
+        {
+          "field": "buy row 2: amount",
+          "correct": 2225,
+          "extracted": 502225
+        },
+        {
+          "field": "buy row 2: total",
+          "correct": 99878025,
+          "extracted": 24450099878025
+        },
+        {
+          "field": "buy row 2: endsAt",
+          "correct": "2026-11-02T22:20:43",
+          "extracted": null
+        },
+        {
+          "field": "buy row 3: amount",
+          "correct": 12025,
+          "extracted": 2225
+        },
+        {
+          "field": "buy row 3: price",
+          "correct": 44888,
+          "extracted": 44889
+        },
+        {
+          "field": "buy row 3: total",
+          "correct": 539778200,
+          "extracted": 99878025
+        },
+        {
+          "field": "buy row 3: endsAt",
+          "correct": "2026-10-31T08:02:59",
+          "extracted": "2026-11-02T22:20:43"
+        },
+        {
+          "field": "buy row 4: amount",
+          "correct": 48225,
+          "extracted": 12025
+        },
+        {
+          "field": "buy row 4: price",
+          "correct": 44810,
+          "extracted": 44888
+        },
+        {
+          "field": "buy row 4: total",
+          "correct": 2160962250,
+          "extracted": 539778200
+        },
+        {
+          "field": "buy row 4: endsAt",
+          "correct": "2026-10-25T23:16:53",
+          "extracted": "2026-10-31T08:02:59"
+        },
+        {
+          "field": "buy row 5: amount",
+          "correct": 6425,
+          "extracted": 48225
+        },
+        {
+          "field": "buy row 5: price",
+          "correct": 44111,
+          "extracted": 44810
+        },
+        {
+          "field": "buy row 5: total",
+          "correct": 283413175,
+          "extracted": 2160962250
+        },
+        {
+          "field": "buy row 5: endsAt",
+          "correct": "2026-10-15T08:14:21",
+          "extracted": "2026-10-25T23:16:53"
+        },
+        {
+          "field": "buy row 6: amount",
+          "correct": 64000,
+          "extracted": 6425
+        },
+        {
+          "field": "buy row 6: price",
+          "correct": 1,
+          "extracted": 44111
+        },
+        {
+          "field": "buy row 6: total",
+          "correct": 64000,
+          "extracted": 283413175
+        },
+        {
+          "field": "buy row 6: endsAt",
+          "correct": "2026-10-12T03:48:06",
+          "extracted": "2026-10-15T08:14:21"
+        },
+        {
+          "field": "buy unexpected row 7",
+          "correct": null,
+          "extracted": {
+            "amount": 64000,
+            "price": 1,
+            "total": 64000,
+            "endsAt": "2026-10-12T03:48:06",
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 6
+          }
+        }
+      ],
+      "rootCause": "A tall sparse OCR token bridged adjacent physical rows; chained clustering merged values and shifted row indices.",
+      "finalStatus": "ready"
+    },
+    {
+      "case": 9,
+      "groundTruth": {
+        "hash": "86fd6d9b279133ee03b7a2662a71c6539b3b720bbadaf0bcf0455c5186895f78",
+        "method": "Direct visual inspection of original Market pixels in a privacy mask; no numeric or expiry pixels altered; transcribed before comparison with extracted rows",
+        "selectedItem": "Tibia Coins",
+        "ambiguousFields": [],
+        "viewType": "offers",
+        "offers": [
+          {
+            "side": "sell",
+            "rowIndex": 0,
+            "amount": 575,
+            "price": 42996,
+            "total": 24722700,
+            "endsAt": "2026-11-02T22:16:32"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 1,
+            "amount": 225,
+            "price": 42997,
+            "total": 9674325,
+            "endsAt": "2026-11-02T21:43:41"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 2,
+            "amount": 9675,
+            "price": 42998,
+            "total": 416005650,
+            "endsAt": "2026-11-02T07:50:52"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 3,
+            "amount": 14825,
+            "price": 42998,
+            "total": 637445350,
+            "endsAt": "2026-11-02T20:59:40"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 4,
+            "amount": 24475,
+            "price": 42999,
+            "total": 1052400525,
+            "endsAt": "2026-11-01T18:06:50"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 5,
+            "amount": 50,
+            "price": 43999,
+            "total": 2199950,
+            "endsAt": "2026-11-01T11:42:21"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 6,
+            "amount": 7500,
+            "price": 44245,
+            "total": 331837500,
+            "endsAt": "2026-11-01T10:43:07"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 7,
+            "amount": 50,
+            "price": 44249,
+            "total": 2212450,
+            "endsAt": "2026-11-01T08:43:41"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 8,
+            "amount": 4750,
+            "price": 44290,
+            "total": 210377500,
+            "endsAt": "2026-11-01T08:12:14"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 9,
+            "amount": 25,
+            "price": 44299,
+            "total": 1107475,
+            "endsAt": "2026-11-01T07:22:25"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 0,
+            "amount": 20000,
+            "price": 40222,
+            "total": 804440000,
+            "endsAt": "2026-11-02T22:45:53"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 1,
+            "amount": 46850,
+            "price": 40221,
+            "total": 1884353850,
+            "endsAt": "2026-11-02T20:53:54"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 2,
+            "amount": 62875,
+            "price": 40219,
+            "total": 2528769625,
+            "endsAt": "2026-11-02T20:24:11"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 3,
+            "amount": 4900,
+            "price": 40216,
+            "total": 197058400,
+            "endsAt": "2026-11-02T19:53:18"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 4,
+            "amount": 25,
+            "price": 40214,
+            "total": 1005350,
+            "endsAt": "2026-11-02T19:40:25"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 5,
+            "amount": 450,
+            "price": 40213,
+            "total": 18095850,
+            "endsAt": "2026-11-02T19:21:44"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 6,
+            "amount": 625,
+            "price": 40212,
+            "total": 25132500,
+            "endsAt": "2026-11-02T19:21:21"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 7,
+            "amount": 12175,
+            "price": 40200,
+            "total": 489435000,
+            "endsAt": "2026-11-02T15:00:27"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 8,
+            "amount": 7025,
+            "price": 40101,
+            "total": 281709525,
+            "endsAt": "2026-11-02T14:00:25"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 9,
+            "amount": 3175,
+            "price": 40100,
+            "total": 127317500,
+            "endsAt": "2026-11-02T13:39:01"
+          }
+        ]
+      },
+      "phase1Extraction": {
+        "status": "needs_review",
+        "offers": [
+          {
+            "amount": 575,
+            "price": 42996,
+            "total": 24722700,
+            "endsAt": "2026-11-02T22:16:32",
+            "endsAtUtc": null,
+            "side": "sell",
+            "rowIndex": 0
+          },
+          {
+            "amount": 225,
+            "price": 42997,
+            "total": 9674325,
+            "endsAt": "2026-11-02T21:43:41",
+            "endsAtUtc": null,
+            "side": "sell",
+            "rowIndex": 1
+          },
+          {
+            "amount": 9675,
+            "price": 42998,
+            "total": 416005650,
+            "endsAt": "2026-11-02T07:50:52",
+            "endsAtUtc": null,
+            "side": "sell",
+            "rowIndex": 2
+          },
+          {
+            "amount": 14825,
+            "price": 42998,
+            "total": 637445350,
+            "endsAt": "2026-11-02T20:59:40",
+            "endsAtUtc": null,
+            "side": "sell",
+            "rowIndex": 3
+          },
+          {
+            "amount": 24475,
+            "price": 42999,
+            "total": 1052400525,
+            "endsAt": "2026-11-01T18:06:50",
+            "endsAtUtc": null,
+            "side": "sell",
+            "rowIndex": 4
+          },
+          {
+            "amount": 50,
+            "price": 43999,
+            "total": 2199950,
+            "endsAt": "2026-11-01T11:42:21",
+            "endsAtUtc": null,
+            "side": "sell",
+            "rowIndex": 5
+          },
+          {
+            "amount": 7500,
+            "price": 44245,
+            "total": 331837500,
+            "endsAt": "2026-11-01T10:43:07",
+            "endsAtUtc": null,
+            "side": "sell",
+            "rowIndex": 6
+          },
+          {
+            "amount": 50,
+            "price": 44249,
+            "total": 2212450,
+            "endsAt": "2026-11-01T08:43:41",
+            "endsAtUtc": null,
+            "side": "sell",
+            "rowIndex": 7
+          },
+          {
+            "amount": 4750,
+            "price": 44290,
+            "total": 210377500,
+            "endsAt": "2026-11-01T08:12:14",
+            "endsAtUtc": null,
+            "side": "sell",
+            "rowIndex": 8
+          },
+          {
+            "amount": 25,
+            "price": 44299,
+            "total": 1107475,
+            "endsAt": "2026-11-01T07:22:25",
+            "endsAtUtc": null,
+            "side": "sell",
+            "rowIndex": 9
+          },
+          {
+            "amount": 20000,
+            "price": 40222,
+            "total": 804440000,
+            "endsAt": "2026-11-02T22:45:53",
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 0
+          },
+          {
+            "amount": 46850,
+            "price": 40221,
+            "total": 1884353850,
+            "endsAt": "2026-11-02T20:53:54",
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 1
+          },
+          {
+            "amount": 62875,
+            "price": 40219,
+            "total": 2528769625,
+            "endsAt": "2026-11-02T20:24:11",
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 2
+          },
+          {
+            "amount": 4900,
+            "price": 40216,
+            "total": 197058400,
+            "endsAt": "2026-11-02T19:53:18",
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 3
+          },
+          {
+            "amount": 25,
+            "price": 40214,
+            "total": 1005350,
+            "endsAt": "2026-11-02T19:40:25",
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 4
+          },
+          {
+            "amount": 450,
+            "price": 40213,
+            "total": 18095850,
+            "endsAt": "2026-11-02T19:21:44",
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 5
+          },
+          {
+            "amount": 625,
+            "price": 40212,
+            "total": 25132500,
+            "endsAt": "2026-11-02T19:21:21",
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 6
+          },
+          {
+            "amount": 7025,
+            "price": 40101,
+            "total": 281709525,
+            "endsAt": "2026-11-02T14:00:25",
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 7
+          },
+          {
+            "amount": 3175,
+            "price": 40100,
+            "total": 127317500,
+            "endsAt": "2026-11-02T13:39:01",
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 8
+          }
+        ],
+        "statistics30d": null,
+        "viewType": "offers",
+        "itemVerification": {
+          "status": "tibia_coins"
+        }
+      },
+      "originalMarkedStatus": null,
+      "originalRuntimeFault": null,
+      "matchingFields": [
+        "sell row 1: amount",
+        "sell row 1: price",
+        "sell row 1: total",
+        "sell row 1: endsAt",
+        "sell row 2: amount",
+        "sell row 2: price",
+        "sell row 2: total",
+        "sell row 2: endsAt",
+        "sell row 3: amount",
+        "sell row 3: price",
+        "sell row 3: total",
+        "sell row 3: endsAt",
+        "sell row 4: amount",
+        "sell row 4: price",
+        "sell row 4: total",
+        "sell row 4: endsAt",
+        "sell row 5: amount",
+        "sell row 5: price",
+        "sell row 5: total",
+        "sell row 5: endsAt",
+        "sell row 6: amount",
+        "sell row 6: price",
+        "sell row 6: total",
+        "sell row 6: endsAt",
+        "sell row 7: amount",
+        "sell row 7: price",
+        "sell row 7: total",
+        "sell row 7: endsAt",
+        "sell row 8: amount",
+        "sell row 8: price",
+        "sell row 8: total",
+        "sell row 8: endsAt",
+        "sell row 9: amount",
+        "sell row 9: price",
+        "sell row 9: total",
+        "sell row 9: endsAt",
+        "sell row 10: amount",
+        "sell row 10: price",
+        "sell row 10: total",
+        "sell row 10: endsAt",
+        "buy row 1: amount",
+        "buy row 1: price",
+        "buy row 1: total",
+        "buy row 1: endsAt",
+        "buy row 2: amount",
+        "buy row 2: price",
+        "buy row 2: total",
+        "buy row 2: endsAt",
+        "buy row 3: amount",
+        "buy row 3: price",
+        "buy row 3: total",
+        "buy row 3: endsAt",
+        "buy row 4: amount",
+        "buy row 4: price",
+        "buy row 4: total",
+        "buy row 4: endsAt",
+        "buy row 5: amount",
+        "buy row 5: price",
+        "buy row 5: total",
+        "buy row 5: endsAt",
+        "buy row 6: amount",
+        "buy row 6: price",
+        "buy row 6: total",
+        "buy row 6: endsAt",
+        "buy row 7: amount",
+        "buy row 7: price",
+        "buy row 7: total",
+        "buy row 7: endsAt"
+      ],
+      "differences": [
+        {
+          "field": "buy row 8: amount",
+          "correct": 12175,
+          "extracted": 7025
+        },
+        {
+          "field": "buy row 8: price",
+          "correct": 40200,
+          "extracted": 40101
+        },
+        {
+          "field": "buy row 8: total",
+          "correct": 489435000,
+          "extracted": 281709525
+        },
+        {
+          "field": "buy row 8: endsAt",
+          "correct": "2026-11-02T15:00:27",
+          "extracted": "2026-11-02T14:00:25"
+        },
+        {
+          "field": "buy row 9: amount",
+          "correct": 7025,
+          "extracted": 3175
+        },
+        {
+          "field": "buy row 9: price",
+          "correct": 40101,
+          "extracted": 40100
+        },
+        {
+          "field": "buy row 9: total",
+          "correct": 281709525,
+          "extracted": 127317500
+        },
+        {
+          "field": "buy row 9: endsAt",
+          "correct": "2026-11-02T14:00:25",
+          "extracted": "2026-11-02T13:39:01"
+        },
+        {
+          "field": "buy row 10: amount",
+          "correct": 3175,
+          "extracted": null
+        },
+        {
+          "field": "buy row 10: price",
+          "correct": 40100,
+          "extracted": null
+        },
+        {
+          "field": "buy row 10: total",
+          "correct": 127317500,
+          "extracted": null
+        },
+        {
+          "field": "buy row 10: endsAt",
+          "correct": "2026-11-02T13:39:01",
+          "extracted": null
+        }
+      ],
+      "rootCause": "Whole-table OCR missed one buy row; the narrow rescue stripe clipped its glyphs and subsequent indices shifted.",
+      "finalStatus": "ready"
+    },
+    {
+      "case": 10,
+      "groundTruth": {
+        "hash": "4e0cfbcdcaa58e83add5b66279259498f8f8b75235859ad8172860e691643a94",
+        "method": "Direct visual inspection of original Market pixels in a privacy mask; no numeric or expiry pixels altered; transcribed before comparison with extracted rows",
+        "selectedItem": "Tibia Coins",
+        "ambiguousFields": [],
+        "viewType": "statistics",
+        "statistics30d": {
+          "buy": {
+            "transactions": 4450,
+            "highestPrice": 45703,
+            "averagePrice": 41821,
+            "lowestPrice": 1
+          },
+          "sell": {
+            "transactions": 6618,
+            "highestPrice": 47999,
+            "averagePrice": 44060,
+            "lowestPrice": 41500
+          }
+        }
+      },
+      "phase1Extraction": {
+        "status": "needs_review",
+        "offers": [],
+        "statistics30d": {
+          "buy": {
+            "transactions": null,
+            "highestPrice": null,
+            "averagePrice": null,
+            "lowestPrice": null,
+            "tcVolume": null
+          },
+          "sell": {
+            "transactions": null,
+            "highestPrice": null,
+            "averagePrice": null,
+            "lowestPrice": null,
+            "tcVolume": null
+          }
+        },
+        "viewType": "statistics",
+        "itemVerification": {
+          "status": "tibia_coins"
+        }
+      },
+      "originalMarkedStatus": null,
+      "originalRuntimeFault": null,
+      "matchingFields": [],
+      "differences": [
+        {
+          "field": "buy.transactions",
+          "correct": 4450,
+          "extracted": null
+        },
+        {
+          "field": "buy.highestPrice",
+          "correct": 45703,
+          "extracted": null
+        },
+        {
+          "field": "buy.averagePrice",
+          "correct": 41821,
+          "extracted": null
+        },
+        {
+          "field": "buy.lowestPrice",
+          "correct": 1,
+          "extracted": null
+        },
+        {
+          "field": "sell.transactions",
+          "correct": 6618,
+          "extracted": null
+        },
+        {
+          "field": "sell.highestPrice",
+          "correct": 47999,
+          "extracted": null
+        },
+        {
+          "field": "sell.averagePrice",
+          "correct": 44060,
+          "extracted": null
+        },
+        {
+          "field": "sell.lowestPrice",
+          "correct": 41500,
+          "extracted": null
+        }
+      ],
+      "rootCause": "An inflated Statistics title box doubled the crop scale and included adjacent sidebar text, contaminating label/value association.",
+      "finalStatus": "ready"
+    },
+    {
+      "case": 11,
+      "groundTruth": {
+        "hash": "af38ca4e50a492d4f0cd90d4a6815cfd22440c052097ef2ddfb12be2c1e82e95",
+        "method": "Direct visual inspection of original Market pixels in a privacy mask; no numeric or expiry pixels altered; transcribed before comparison with extracted rows",
+        "selectedItem": "Tibia Coins",
+        "ambiguousFields": [],
+        "viewType": "offers",
+        "offers": [
+          {
+            "side": "sell",
+            "rowIndex": 0,
+            "amount": 13675,
+            "price": 45993,
+            "total": 628954275,
+            "endsAt": "2026-11-02T22:03:23"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 1,
+            "amount": 16725,
+            "price": 45994,
+            "total": 769249650,
+            "endsAt": "2026-11-02T16:52:52"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 2,
+            "amount": 49225,
+            "price": 45995,
+            "total": 2264103875,
+            "endsAt": "2026-11-01T17:08:54"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 3,
+            "amount": 25,
+            "price": 46589,
+            "total": 1164725,
+            "endsAt": "2026-11-01T11:37:52"
+          },
+          {
+            "side": "sell",
+            "rowIndex": 4,
+            "amount": 75,
+            "price": 49980,
+            "total": 3748500,
+            "endsAt": "2026-10-29T23:23:12"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 0,
+            "amount": 1875,
+            "price": 45290,
+            "total": 84918750,
+            "endsAt": "2026-11-02T10:40:19"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 1,
+            "amount": 5850,
+            "price": 45285,
+            "total": 264917250,
+            "endsAt": "2026-11-02T05:48:22"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 2,
+            "amount": 4525,
+            "price": 45277,
+            "total": 204878425,
+            "endsAt": "2026-11-02T00:07:14"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 3,
+            "amount": 375,
+            "price": 44901,
+            "total": 16837875,
+            "endsAt": "2026-11-01T11:45:19"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 4,
+            "amount": 4025,
+            "price": 44531,
+            "total": 179237275,
+            "endsAt": "2026-11-01T11:23:32"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 5,
+            "amount": 25,
+            "price": 44512,
+            "total": 1112800,
+            "endsAt": "2026-11-01T10:37:39"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 6,
+            "amount": 1100,
+            "price": 44510,
+            "total": 48961000,
+            "endsAt": "2026-11-01T10:20:41"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 7,
+            "amount": 5750,
+            "price": 44501,
+            "total": 255880750,
+            "endsAt": "2026-11-01T10:08:52"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 8,
+            "amount": 8350,
+            "price": 44100,
+            "total": 368235000,
+            "endsAt": "2026-11-01T09:43:36"
+          },
+          {
+            "side": "buy",
+            "rowIndex": 9,
+            "amount": 25,
+            "price": 43860,
+            "total": 1096500,
+            "endsAt": "2026-10-11T15:53:33"
+          }
+        ]
+      },
+      "phase1Extraction": {
+        "status": "needs_review",
+        "offers": [
+          {
+            "amount": 13675,
+            "price": 45993,
+            "total": 628954275,
+            "endsAt": "2026-11-02T22:03:23",
+            "endsAtUtc": null,
+            "side": "sell",
+            "rowIndex": 0
+          },
+          {
+            "amount": 16725,
+            "price": 45994,
+            "total": 769249650,
+            "endsAt": "2026-11-02T16:52:52",
+            "endsAtUtc": null,
+            "side": "sell",
+            "rowIndex": 1
+          },
+          {
+            "amount": 49225,
+            "price": 45995,
+            "total": 2264103875,
+            "endsAt": "2026-11-01T17:08:54",
+            "endsAtUtc": null,
+            "side": "sell",
+            "rowIndex": 2
+          },
+          {
+            "amount": 25,
+            "price": 46589,
+            "total": 1164725,
+            "endsAt": "2026-11-01T11:37:52",
+            "endsAtUtc": null,
+            "side": "sell",
+            "rowIndex": 3
+          },
+          {
+            "amount": 75,
+            "price": 49980,
+            "total": 3748500,
+            "endsAt": "2026-10-29T23:23:12",
+            "endsAtUtc": null,
+            "side": "sell",
+            "rowIndex": 4
+          },
+          {
+            "amount": 1875,
+            "price": 45290,
+            "total": 84918750,
+            "endsAt": "2026-11-02T10:40:19",
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 0
+          },
+          {
+            "amount": 5850,
+            "price": 45285,
+            "total": 264917250,
+            "endsAt": "2026-11-02T05:48:22",
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 1
+          },
+          {
+            "amount": 4525,
+            "price": 45277,
+            "total": 204878425,
+            "endsAt": "2026-11-02T00:07:14",
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 2
+          },
+          {
+            "amount": 375,
+            "price": 44901,
+            "total": 16837875,
+            "endsAt": "2026-11-01T11:45:19",
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 3
+          },
+          {
+            "amount": 4025,
+            "price": 44531,
+            "total": 179237275,
+            "endsAt": "2026-11-01T11:23:32",
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 4
+          },
+          {
+            "amount": 25,
+            "price": 44512,
+            "total": 1112800,
+            "endsAt": "2026-11-01T10:37:39",
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 5
+          },
+          {
+            "amount": 1100,
+            "price": 44510,
+            "total": 48961000,
+            "endsAt": "2026-11-01T10:20:41",
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 6
+          },
+          {
+            "amount": 5750,
+            "price": 44501,
+            "total": 255880750,
+            "endsAt": "2026-11-01T10:08:52",
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 7
+          },
+          {
+            "amount": 8350,
+            "price": 44100,
+            "total": 368235000,
+            "endsAt": "2026-11-01T09:43:36",
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 8
+          },
+          {
+            "amount": 25,
+            "price": 43860,
+            "total": 1096500,
+            "endsAt": null,
+            "endsAtUtc": null,
+            "side": "buy",
+            "rowIndex": 9
+          }
+        ],
+        "statistics30d": null,
+        "viewType": "offers",
+        "itemVerification": {
+          "status": "tibia_coins"
+        }
+      },
+      "originalMarkedStatus": null,
+      "originalRuntimeFault": null,
+      "matchingFields": [
+        "sell row 1: amount",
+        "sell row 1: price",
+        "sell row 1: total",
+        "sell row 1: endsAt",
+        "sell row 2: amount",
+        "sell row 2: price",
+        "sell row 2: total",
+        "sell row 2: endsAt",
+        "sell row 3: amount",
+        "sell row 3: price",
+        "sell row 3: total",
+        "sell row 3: endsAt",
+        "sell row 4: amount",
+        "sell row 4: price",
+        "sell row 4: total",
+        "sell row 4: endsAt",
+        "sell row 5: amount",
+        "sell row 5: price",
+        "sell row 5: total",
+        "sell row 5: endsAt",
+        "buy row 1: amount",
+        "buy row 1: price",
+        "buy row 1: total",
+        "buy row 1: endsAt",
+        "buy row 2: amount",
+        "buy row 2: price",
+        "buy row 2: total",
+        "buy row 2: endsAt",
+        "buy row 3: amount",
+        "buy row 3: price",
+        "buy row 3: total",
+        "buy row 3: endsAt",
+        "buy row 4: amount",
+        "buy row 4: price",
+        "buy row 4: total",
+        "buy row 4: endsAt",
+        "buy row 5: amount",
+        "buy row 5: price",
+        "buy row 5: total",
+        "buy row 5: endsAt",
+        "buy row 6: amount",
+        "buy row 6: price",
+        "buy row 6: total",
+        "buy row 6: endsAt",
+        "buy row 7: amount",
+        "buy row 7: price",
+        "buy row 7: total",
+        "buy row 7: endsAt",
+        "buy row 8: amount",
+        "buy row 8: price",
+        "buy row 8: total",
+        "buy row 8: endsAt",
+        "buy row 9: amount",
+        "buy row 9: price",
+        "buy row 9: total",
+        "buy row 9: endsAt",
+        "buy row 10: amount",
+        "buy row 10: price",
+        "buy row 10: total"
+      ],
+      "differences": [
+        {
+          "field": "buy row 10: endsAt",
+          "correct": "2026-10-11T15:53:33",
+          "extracted": null
+        }
+      ],
+      "rootCause": "The expiry crop stopped before the last visible seconds digit.",
+      "finalStatus": "ready"
+    }
+  ],
+  "manualTranscriptionAmendments": {
+    "case": 9,
+    "method": "Fresh nearest-neighbour zoom of original pixels resolved three draft transcription mistakes. These fields were correctly extracted by Tibinance; they are not algorithm failures. Final comparison counts and fixtures use the independently confirmed pixels.",
+    "fields": [
+      {
+        "field": "sell[5].price",
+        "draft": 43990,
+        "confirmed": 43999
+      },
+      {
+        "field": "sell[5].total",
+        "draft": 2199500,
+        "confirmed": 2199950
+      },
+      {
+        "field": "sell[3].endsAt",
+        "draft": "2026-11-01T20:59:40",
+        "confirmed": "2026-11-02T20:59:40"
+      }
+    ]
+  },
+  "algorithmChanges": [
+    "Detect physical numeric text bands within OCR-derived table columns before assigning offer rows.",
+    "Read numeric rows with separate resampling passes, strict complete integers and amount \u00d7 price checks; independently confirm conflicting candidates.",
+    "Follow visible expiry glyph extent, normalize only inserted whitespace, and require two agreeing complete timestamps.",
+    "Recover missed Statistics titles within the verified pane; use nearby field-label glyph heights to bound the Statistics crop.",
+    "Checkpoint anonymous world/time context before value OCR and release failed workers without blocking the reader queue."
+  ],
+  "regressionCoverage": {
+    "independentOriginalImages": 11,
+    "historicalControls": 2,
+    "fixturesContainPrivateNamesOrImages": false,
+    "runtimeTests": [
+      "same seed produces identical innovation paths",
+      "different seeds change paths",
+      "all four research dependencies match requirements.txt"
+    ]
+  },
+  "testResults": {
+    "javascript": {
+      "passed": 79,
+      "failed": 0
+    },
+    "pythonTools": {
+      "executed": 59,
+      "passed": 58,
+      "skipped": 1,
+      "failed": 0
+    },
+    "pythonReports": {
+      "passed": 37,
+      "failed": 0
+    },
+    "originalImageBrowsers": [
+      "WebKit: eleven-image canonical queue",
+      "Chrome: eleven isolated canonical sessions"
+    ],
+    "historicalControls": "WebKit: both exact",
+    "reportReproduction": "Complementary output byte-identical under pinned runtime",
+    "archive": "467 ready, zero review or runtime failures; all 390 previous captures retained"
+  },
+  "remainingLimitations": [
+    "Reused local Chrome OCR sessions can close unexpectedly; isolated canonical processing completed the batch.",
+    "Real-image regressions require the ignored local original archive. No visually ambiguous reviewed field remains."
+  ]
+}

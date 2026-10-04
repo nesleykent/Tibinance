@@ -194,7 +194,10 @@
     {"capturedAtUtc":"2026-10-01T16:10:17.655Z","serverDay":"2026-10-01","sell":48500,"sellVolume":43500,"sellTopAmount":3150,"goldDemand":2158407025,"buy":47514,"buyVolume":70775,"buyTopAmount":25,"goldSupply":3301171825},
     {"capturedAtUtc":"2026-10-02T03:16:36.598Z","serverDay":"2026-10-01","sell":47799,"sellVolume":82325,"sellTopAmount":20225,"goldDemand":4023665125,"buy":46050,"buyVolume":81450,"buyTopAmount":500,"goldSupply":3713118750},
     {"capturedAtUtc":"2026-10-02T03:36:34.078Z","serverDay":"2026-10-01","sell":47799,"sellVolume":79900,"sellTopAmount":17800,"goldDemand":3907752550,"buy":46052,"buyVolume":65375,"buyTopAmount":150,"goldSupply":2985250900},
-    {"capturedAtUtc":"2026-10-02T03:36:37.332Z","serverDay":"2026-10-01","statistics30d":{"buy":{"transactions":3396,"highestPrice":49985,"averagePrice":44155,"lowestPrice":1,"tcVolume":84900},"sell":{"transactions":6082,"highestPrice":49998,"averagePrice":45942,"lowestPrice":44000,"tcVolume":152050}}}
+    {"capturedAtUtc":"2026-10-02T03:36:37.332Z","serverDay":"2026-10-01","statistics30d":{"buy":{"transactions":3396,"highestPrice":49985,"averagePrice":44155,"lowestPrice":1,"tcVolume":84900},"sell":{"transactions":6082,"highestPrice":49998,"averagePrice":45942,"lowestPrice":44000,"tcVolume":152050}}},
+    {"capturedAtUtc":"2026-10-03T06:28:36.970Z","serverDay":"2026-10-02","sell":46497,"sellVolume":96500,"sellTopAmount":18925,"goldDemand":4608372425,"buy":45552,"buyVolume":185100,"buyTopAmount":975,"goldSupply":8347197300},
+    {"capturedAtUtc":"2026-10-04T02:20:58.559Z","serverDay":"2026-10-03","sell":46794,"sellVolume":74650,"sellTopAmount":7100,"goldDemand":3623553475,"buy":45002,"buyVolume":57825,"buyTopAmount":1500,"goldSupply":2583556650},
+    {"capturedAtUtc":"2026-10-04T02:20:59.957Z","serverDay":"2026-10-03","statistics30d":{"buy":{"transactions":3412,"highestPrice":49985,"averagePrice":44352,"lowestPrice":1,"tcVolume":85300},"sell":{"transactions":6137,"highestPrice":49998,"averagePrice":46140,"lowestPrice":44000,"tcVolume":153425}}}
   ],
   "dailyStatistics": [
     {"serverDay":"2024-12-30","sell":{"transactions":143,"highestPrice":42700,"averagePrice":42148,"lowestPrice":41798,"tcVolume":3575},"buy":{"transactions":100,"highestPrice":41202,"averagePrice":41103,"lowestPrice":41025,"tcVolume":2500}},

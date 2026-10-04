@@ -662,7 +662,58 @@ node tests/tables-browser.mjs
 `TIBINANCE_OFFERS_SAMPLE` enables the paired real Offers regression. These checks
 use isolated browser storage and API fixtures. No test state is imported into
 canonical data. The historical rebuild and subsequent Apple Vision review are
-complete: 390 accepted captures across 40 worlds, with no unresolved review cases.
+complete: its 390 accepted captures are preserved; the latest screenshot update has 467 accepted captures across 40 worlds, with no unresolved review cases.
 The anonymous [review audit](data/rebuild-vision-review.json) records recoveries and
 per-world coverage; [validation](data/rebuild-validation.json) reconciles the archive.
 The progress ledger is in `PROGRESS.md`.
+
+
+### October 3 screenshot update and independent review
+
+The current canonical data contains 467 captures (427 Offers and 40 Statistics),
+7,419 offer observations and 5,433 offer identities across 40 worlds. The update
+adds 77 captures and preserves every previously accepted capture, timestamp,
+world and offer identity. The complete local archive reconciles to 503 unique
+eligible images plus 40 duplicate copies: 467 ready, 28 no-Market, three other
+items and five historical manual exclusions. No review/runtime failures remain.
+
+Before changing extraction, eleven marked originals were independently inspected
+and transcribed from their pixels. The anonymous [field review](data/market-update-review.json)
+records the visible values, pre-fix extraction, 572 matching fields, 49 differences
+(including a spurious row), and each failure's cause. No field remained visually
+ambiguous. Filename mappings and full Market-window privacy previews stay in the
+ignored local review directory. Neither image-specific corrections nor filename,
+hash or fixed-coordinate extraction rules were used.
+
+Offers now use header-derived columns and physical text bands before reading
+individual rows. Separate resampling passes, strict integer parsing, amount ×
+price checks and conflicting-read confirmation prevent merged or silently
+shifted rows. Expiry crops follow the visible text extent and require two agreeing
+complete timestamps; normalization removes only inserted horizontal whitespace.
+Statistics title recovery stays within the verified pane, and neighbouring field
+labels determine glyph size rather than an inflated title box. Incomplete or
+conflicting readings remain review cases.
+
+Anonymous world/time context is checkpointed after canonical world resolution
+and before value extraction. Worker cleanup releases the queue on success or
+failure. This machine's reused Chrome OCR sessions can still close unexpectedly;
+`--isolate-browser` completed the batch, while WebKit passed the full eleven-image
+queue. Runtime failures remain explicit review evidence and require retry.
+
+[Archive validation](data/market-update-validation.json),
+[rejections](data/market-update-rejections.json) and
+[chronological processing](data/market-update-processing-order.json) are anonymous.
+The Markets history was regenerated from the installed captures and existing frozen inputs; its conversion retains 465 usable capture observations under the unchanged spread policy. All 79 JavaScript tests pass, including deterministic history reproduction and canonical quote preservation.
+
+Real-image regressions locate ignored originals by SHA; hashes select fixtures,
+never production algorithm behaviour:
+
+```sh
+TIBINANCE_SCREENSHOT_DIR=screenshots TIBINANCE_BROWSER=webkit node tests/ocr-review-browser.mjs
+TIBINANCE_SCREENSHOT_DIR=screenshots TIBINANCE_ISOLATE_BROWSER=1 node tests/ocr-review-browser.mjs
+TIBINANCE_SCREENSHOT_DIR=screenshots TIBINANCE_BROWSER=webkit TIBINANCE_OCR_FIXTURES=tests/fixtures/ocr-controls.json node tests/ocr-review-browser.mjs
+```
+
+Set `TIBINANCE_NODE_MODULES` when Playwright comes from an external runtime.
+The control fixtures cover previously validated historical Offers and Statistics;
+the review fixtures contain independently transcribed ground truth.
