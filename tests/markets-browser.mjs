@@ -2,8 +2,9 @@
 // Run with the same local server / Playwright environment as tables-browser.mjs.
 // Set TIBINANCE_SCREENSHOTS to a directory to keep full-page screenshots for inspection.
 import {createRequire} from 'node:module';
-import {readFile, mkdir} from 'node:fs/promises';
+import {readFile, mkdir, mkdtemp} from 'node:fs/promises';
 import {join} from 'node:path';
+import {tmpdir} from 'node:os';
 import assert from 'node:assert/strict';
 import {changeOver, rangeStart} from '../js/market-series.js';
 const require=createRequire(import.meta.url);
@@ -59,7 +60,13 @@ try {
   assert.doesNotMatch(await page.content(),/tibiamarket/i);
 
   // Terminal layout: Sell/Buy and tools above the chart, ranges below it, the list beside it.
-  assert.ok(await page.$('.toolbar-top #side') && await page.$('.toolbar-top #expand') && await page.$('.toolbar-top #helpButton'));
+  // Sell/Buy stays in the chart's toolbar, the state of the series shown; the tools are in the rail at the edge:
+  // panel tools first, then direct actions.
+  assert.ok(await page.$('.toolbar-top #side'));
+  assert.deepEqual(await page.$$eval('.toolbar-top button',bs=>bs.map(b=>b.textContent.trim())),['Sell','Buy']);
+  const tools=page.getByRole('group',{name:'Tools'});
+  assert.deepEqual(await tools.getByRole('button').evaluateAll(bs=>bs.map(b=>[b.getAttribute('aria-label'),b.hasAttribute('data-dock-target') ? 'panel' : 'action'])),
+    [['Worlds','panel'],['Help','panel'],['Export chart image','action'],['Full screen','action']]);
   assert.ok(await page.$('.toolbar-bottom #range'));
   // Inside Capture's margins, with or without the panel: the chart, then the Worlds panel, then the rail at the edge.
   const frame=()=>page.evaluate(()=>{
@@ -77,7 +84,7 @@ try {
   assert.ok(open.beside && open.ownScroll,'the Worlds panel is open beside the chart, with its own scrolling');
 
   // The rail closes the panel, gives its width to the chart and keeps the chart on the same days.
-  const rail=page.getByRole('group',{name:'Panels'}).getByRole('button',{name:'Worlds',exact:true});
+  const rail=tools.getByRole('button',{name:'Worlds',exact:true});
   assert.deepEqual([await rail.getAttribute('aria-expanded'),await rail.getAttribute('aria-controls'),await rail.getAttribute('title')],['true','worldsPanel','Hide Worlds']);
   const plot=await chartBox();
   // The day under the pointer just inside the chart's left edge, and at its newest observation.
@@ -193,28 +200,103 @@ try {
   await shown(next);
   assert.equal(await page.evaluate(()=>document.activeElement.closest('tr').dataset.world),next);
 
-  // Help replaces the explanatory paragraph; it opens under its button and closes with Escape.
-  await page.click('#helpButton');
-  await page.waitForFunction(()=>document.getElementById('help').matches(':popover-open'));
-  const help=await text('#help');
+  // Help is a panel of the rail: it takes the Worlds panel's place beside the chart, one panel at a time.
+  const helpTool=tools.getByRole('button',{name:'Help',exact:true});
+  await helpTool.click();
+  assert.deepEqual([await helpTool.getAttribute('aria-expanded'),await rail.getAttribute('aria-expanded')],['true','false']);
+  assert.deepEqual([await page.isVisible('#helpPanel'),await page.isVisible('#worldsPanel')],[true,false]);
+  assert.equal(await page.getByRole('region',{name:'Reading the chart'}).count(),1);
+  const help=await text('#helpPanel');
   assert.match(help,/Dotted line: the days in between were not observed/);
   assert.match(help,new RegExp(`Daily figures for ${next} run through`));
   assert.match(help,/Search reaches retired worlds as well/);
   assert.match(help,new RegExp(`Server days run from 10:00 to 10:00 CET/CEST.*The market history runs through server day ${index.through}\\.`));
   assert.doesNotMatch(await page.content(),/\u00b7|&middot;/);
-  const [button,panel]=await page.evaluate(()=>[document.getElementById('helpButton').getBoundingClientRect().bottom,document.getElementById('help').getBoundingClientRect().top]);
-  assert.ok(panel>=button && panel-button<20,'help sits under its button');
-  await page.keyboard.press('Escape');
-  assert.equal(await page.$eval('#help',e=>e.matches(':popover-open')),false);
+  assert.ok(await page.evaluate(()=>{const c=document.getElementById('chartPanel').getBoundingClientRect(),h=document.getElementById('helpPanel').getBoundingClientRect();return h.left>=c.right && h.top<c.top+50;}),'help sits beside the chart');
+  // Its keys take the selected side's colour, as the legends do.
+  assert.equal(await page.$eval('#helpPanel .key-dot',k=>getComputedStyle(k).backgroundColor),await page.$eval('#legend .key-dot',k=>getComputedStyle(k).backgroundColor));
+  await rail.click();
+  assert.deepEqual([await helpTool.getAttribute('aria-expanded'),await page.isVisible('#helpPanel'),await page.isVisible('#worldsPanel')],['false',false,true]);
 
-  // Expand fills the screen with the chart and returns.
-  await page.click('#expand');
+  // Full screen takes the whole terminal: the chart grows and the rail keeps its way back.
+  const fullScreen=tools.getByRole('button',{name:'Full screen',exact:true});
+  const pageChart=(await chartBox()).w;
+  await fullScreen.click();
   await page.waitForFunction(()=>document.getElementById('expand').getAttribute('aria-pressed')==='true');
-  const expanded=await page.evaluate(()=>{const r=document.getElementById('chartPanel').getBoundingClientRect();return {w:r.width/innerWidth,h:r.height/innerHeight,
-    mode:document.fullscreenElement?.id ?? (document.getElementById('chartPanel').classList.contains('expanded') ? 'expanded' : null)};});
-  assert.ok(expanded.mode && expanded.w>0.99 && expanded.h>0.99,`expanded ${JSON.stringify(expanded)}`);
-  await page.click('#expand');
+  const expanded=await page.evaluate(()=>{const t=document.getElementById('market').getBoundingClientRect(),rail=document.querySelector('.dock-rail').getBoundingClientRect();
+    return {w:t.width/innerWidth,h:t.height/innerHeight,rail:rail.right<=innerWidth && rail.width>0,mode:document.fullscreenElement?.id ?? (document.getElementById('market').classList.contains('expanded') ? 'expanded' : null)};});
+  assert.ok(expanded.mode && expanded.w>0.99 && expanded.h>0.99 && expanded.rail,`expanded ${JSON.stringify(expanded)}`);
+  assert.ok((await chartBox()).w>pageChart,'the chart grows at full screen');
+  const exitFullScreen=tools.getByRole('button',{name:'Exit full screen',exact:true});
+  assert.equal(await exitFullScreen.getAttribute('aria-pressed'),'true');
+  await exitFullScreen.click();
   await page.waitForFunction(()=>document.getElementById('expand').getAttribute('aria-pressed')==='false' && !document.fullscreenElement);
+  // Where element full screen is unavailable (iPhone), the terminal covers the viewport instead, and Escape returns.
+  await page.evaluate(()=>Object.defineProperty(document,'fullscreenEnabled',{value:false,configurable:true}));
+  await fullScreen.click();
+  assert.deepEqual(await page.evaluate(()=>{const t=document.getElementById('market'),r=t.getBoundingClientRect();return [t.classList.contains('expanded'),r.width===innerWidth && r.height===innerHeight];}),[true,true]);
+  await page.keyboard.press('Escape');
+  assert.equal(await page.$eval('#market',t=>t.classList.contains('expanded')),false);
+  assert.equal(await fullScreen.getAttribute('aria-pressed'),'false');
+  await page.evaluate(()=>delete document.fullscreenEnabled);
+
+  // Export: an image of the chart itself, drawn from its state, the same size from any window.
+  const saved=await mkdtemp(join(tmpdir(),'tibinance-export-'));
+  const exportImage=async target=>{
+    const download=target.waitForEvent('download');
+    await target.click('#exportButton');
+    const file=await download,path=join(saved,file.suggestedFilename());
+    await file.saveAs(path);
+    return {name:file.suggestedFilename(),png:(await readFile(path)).toString('base64'),status:await target.textContent('#exportStatus')};
+  };
+  // Counts of pixels near the side colours and a probe colour in the chart area, and of dark pixels in the title
+  // and footer; the chart area is the image's layout (js/market-export.js) at its pixel ratio.
+  const inspect=png=>page.evaluate(async png=>{
+    const image=await createImageBitmap(await (await fetch(`data:image/png;base64,${png}`)).blob());
+    const canvas=new OffscreenCanvas(image.width,image.height),ctx=canvas.getContext('2d');ctx.drawImage(image,0,0);
+    const r=image.width/1200,box=(x0,y0,x1,y1)=>ctx.getImageData(x0*r,y0*r,(x1-x0)*r,(y1-y0)*r).data;
+    const count=(data,test)=>{let n=0;for(let i=0;i<data.length;i+=4) if(test(data[i],data[i+1],data[i+2])) n++;return n;};
+    const near=([R,G,B])=>(r,g,b)=>Math.abs(r-R)+Math.abs(g-G)+Math.abs(b-B)<60;
+    const chart=box(32,136,1168,696),dark=(r,g,b)=>r+g+b<200;
+    const xs=[];{const d=chart,w=1136*r;for(let i=0;i<d.length;i+=4) if(near([180,83,42])(d[i],d[i+1],d[i+2])||near([47,109,181])(d[i],d[i+1],d[i+2])) xs.push((i/4)%w);}
+    return {width:image.width,height:image.height,sell:count(chart,near([180,83,42])),buy:count(chart,near([47,109,181])),probe:count(chart,near([0,255,0])),
+      span:xs.length ? (Math.max(...xs)-Math.min(...xs))/(1136*r) : 0,title:count(box(32,32,600,90),dark),footer:count(box(32,708,400,750),dark)};
+  },png);
+  await page.click('#side button[data-side="sell"]');
+  await page.click('#range button[data-range="1Y"]');
+  let image=await exportImage(page);
+  assert.equal(image.name,`tibinance-${next.toLowerCase()}-sell-1y-${index.through}.png`);
+  assert.equal(image.status,`Saved ${image.name}.`);
+  let pixels=await inspect(image.png);
+  assert.deepEqual([pixels.width,pixels.height],[2400,1560],'twice the image layout from a 1x screen');
+  assert.ok(pixels.sell>2000 && pixels.buy<50,`the Sell series ${JSON.stringify(pixels)}`);
+  assert.ok(pixels.span>0.85,`the days shown fill the plot: ${pixels.span}`);
+  assert.ok(pixels.title>300 && pixels.footer>100,`title and branding ${JSON.stringify(pixels)}`);
+  await page.click('#side button[data-side="buy"]');
+  await page.click('#range button[data-range="3M"]');
+  image=await exportImage(page);
+  assert.equal(image.name,`tibinance-${next.toLowerCase()}-buy-3m-${index.through}.png`);
+  pixels=await inspect(image.png);
+  assert.ok(pixels.buy>2000 && pixels.sell<50,`the Buy series ${JSON.stringify(pixels)}`);
+  // A layer added to the chart takes part in the image with its key and annotation, with no change to the export.
+  await page.evaluate(async()=>{const {LAYERS}=await import('/js/market-chart.js');
+    window.probeLayer={depth:9,add:()=>null,draw(){},keys:()=>[{mark:'bar',color:'#00ff00',label:'Probe'}],annotate(ctx){ctx.fillStyle='#00ff00';ctx.fillRect(200,200,60,60);}};
+    LAYERS.push(window.probeLayer);});
+  pixels=await inspect((await exportImage(page)).png);
+  assert.ok(pixels.probe>1000,`the probe layer is drawn: ${pixels.probe}`);
+  await page.evaluate(async()=>{const {LAYERS}=await import('/js/market-chart.js');LAYERS.splice(LAYERS.indexOf(window.probeLayer),1);});
+  await page.click('#side button[data-side="sell"]');
+  await page.click('#range button[data-range="1Y"]');
+  // A world without market data has nothing to export.
+  await page.fill('#filter','jinx');
+  await page.click('#worlds tr[data-world="Jinxibra"]');
+  await page.waitForFunction(()=>document.getElementById('status').textContent.includes('No market data'));
+  assert.equal(await page.isDisabled('#exportButton'),true);
+  assert.match(await page.getAttribute('#exportButton','title'),/No market data for Jinxibra/);
+  await page.fill('#filter','');
+  await page.click(`#worlds tr[data-world="${next}"]`);
+  await shown(next);
+  assert.equal(await page.isDisabled('#exportButton'),false);
 
   // A retired world deep-links like any other: labelled, listed while selected, ranges ending on its last day.
   await page.goto(`${root}/markets.html?world=jacabra&side=buy&range=6M`);
@@ -319,14 +401,33 @@ try {
     assert.equal(await view.isVisible('#worldsPanel'),expanded==='true');
     // Opened here anyway, the panel narrows the chart like a small screen: the toolbar wraps rather than overlap.
     if (expanded==='false') await view.click('.dock-tool');
-    assert.ok(await view.evaluate(()=>{const parts=['#world','.symbol-quote','#side','.toolbar-end'].map(s=>document.querySelector(s).getBoundingClientRect());
+    assert.ok(await view.evaluate(()=>{const parts=['#world','.symbol-quote','#side'].map(s=>document.querySelector(s).getBoundingClientRect());
       return parts.every((a,i)=>parts.slice(i+1).every(b=>a.right<=b.left+1 || b.right<=a.left+1 || a.bottom<=b.top+1 || b.bottom<=a.top+1));}),`${width}px toolbar parts overlap`);
     await fresh.close();
   }
   await rail.click();
   await page.setViewportSize({width:390,height:844});
-  assert.equal(await page.isVisible('.dock-rail'),false);
+  // On a phone the rail is a row under the chart, without the Worlds tool: the worlds are always listed.
+  assert.equal(await page.isVisible('.dock-rail'),true);
+  assert.deepEqual(await tools.getByRole('button').filter({visible:true}).evaluateAll(bs=>bs.map(b=>b.getAttribute('aria-label'))),['Help','Export chart image','Full screen']);
+  assert.ok(await page.evaluate(()=>{const c=document.getElementById('chartPanel').getBoundingClientRect(),r=document.querySelector('.dock-rail').getBoundingClientRect();return r.top>=c.bottom && r.height<60;}),'the rail is a row under the chart');
   assert.equal(await page.isVisible('#worlds tr[data-world="Antica"]'),true,'phones list the worlds with the rail closed');
+  // Help opens between the rail and the worlds.
+  await helpTool.click();
+  assert.ok(await page.evaluate(()=>{const r=document.querySelector('.dock-rail').getBoundingClientRect(),h=document.getElementById('helpPanel').getBoundingClientRect(),d=document.querySelector('.details').getBoundingClientRect();
+    return h.height>0 && h.top>=r.bottom && h.bottom<=d.top;}),'help opens under the rail, above the details');
+  await helpTool.click();
+  // The same image from a phone.
+  pixels=await inspect((await exportImage(page)).png);
+  assert.deepEqual([pixels.width,pixels.height],[2400,1560]);
+  assert.ok(pixels.sell>2000 && pixels.span>0.85,`phone export ${JSON.stringify(pixels)}`);
+  // At full screen a phone shows the chart and the rail's actions.
+  await page.evaluate(()=>Object.defineProperty(document,'fullscreenEnabled',{value:false,configurable:true}));
+  await fullScreen.click();
+  assert.deepEqual(await tools.getByRole('button').filter({visible:true}).evaluateAll(bs=>bs.map(b=>b.getAttribute('aria-label'))),['Export chart image','Exit full screen']);
+  assert.ok(await page.evaluate(()=>{const c=document.getElementById('chartPanel').getBoundingClientRect(),r=document.querySelector('.dock-rail').getBoundingClientRect();return c.height>innerHeight*0.8 && r.bottom<=innerHeight+1;}));
+  await exitFullScreen.click();
+  await page.evaluate(()=>delete document.fullscreenEnabled);
   await page.setViewportSize({width:1440,height:900});
   await rail.click();
   assert.equal(await rail.getAttribute('aria-expanded'),'true');

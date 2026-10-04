@@ -1,12 +1,16 @@
 /*
- * The Markets dock (css/markets.css): at the terminal's right edge, a narrow rail of panel buttons, and beside the
- * chart the one panel the rail has open. A button opens its panel, or closes it when it is already open, which
- * leaves only the rail and gives the panel's width back to the chart. A tool to come is one more button
- * (data-dock-target, the panel's id) and one more panel (.dock-panel) in the markup; nothing here changes.
+ * The Markets dock (css/markets.css): at the terminal's right edge, the tool rail, and beside the chart the one
+ * panel the rail has open. The rail holds two kinds of tool:
+ *
+ *   a panel tool   a button with data-dock-target (the panel's id). It opens its panel, or closes it when it is
+ *                  already open, which leaves only the rail and gives the panel's width back to the chart.
+ *   an action      any other button: it acts at once (export, full screen) and its page script wires it.
+ *
+ * A tool to come is one more button, and for a panel tool one more .dock-panel, in the markup; nothing here changes.
  *
  * The open panel, or none, is remembered in this browser. Until something is remembered, the default panel
  * (data-dock-default) opens where the chart keeps enough width beside it (`roomy`), and the rail starts closed
- * elsewhere. Narrow screens stack the default panel under the chart and hide the rail (css/markets.css).
+ * elsewhere. Narrow screens stack the rail, as a row, and the panels under the chart (css/markets.css).
  */
 export function dock(root, { key, roomy, onChange }) {
   const buttons = [...root.querySelectorAll('[data-dock-target]')];
@@ -26,7 +30,11 @@ export function dock(root, { key, roomy, onChange }) {
     if (remember) try { localStorage.setItem(key, open ?? ''); } catch { /* storage unavailable: the choice lasts this visit */ }
   }
 
-  for (const button of buttons) button.setAttribute('aria-controls', button.dataset.dockTarget);
+  for (const button of buttons) {
+    button.setAttribute('aria-controls', button.dataset.dockTarget);
+    // Narrow screens always show the default panel, so they do not show its button.
+    if (button.dataset.dockTarget === fallback) button.dataset.dockDefault = '';
+  }
   let saved = null;
   try { saved = localStorage.getItem(key); } catch { /* storage unavailable */ }
   // '' remembers a closed rail; a panel that no longer exists counts as nothing remembered.

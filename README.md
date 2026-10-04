@@ -27,19 +27,31 @@ The analysis uses [TibiaMarket’s public API](https://api.tibiamarket.top/docs)
 ## Markets
 
 [Markets](markets.html) is a market terminal for the Tibia Coin history of every
-tracked world. The chart fills the viewport under the header: Sell / Buy, help and
-an expand (full screen) control sit in its top toolbar, the 1M / 3M / 6M / YTD /
+tracked world. The chart fills the viewport under the header: Sell / Buy, the
+state of the series shown, sits in its top toolbar, the 1M / 3M / 6M / YTD /
 1Y / All ranges in its bottom toolbar. Legends on the chart follow the crosshair
 (server day, best offer with its change from the previous observation, daily
 average, volume), and the latest best offer is marked on the price scale. The
-page keeps the same outer margins as Capture and Research. At its right edge, a
-narrow rail opens and closes the Worlds panel: a dense, separately scrolling
-watchlist (latest best offer and its absolute and percentage change over the
-selected range) and the selected world's details. Closed, the panel gives its
-width back to the chart, which keeps showing the same days; the choice is
-remembered in the browser. Until then, the panel starts open on screens wide
-enough to keep the chart roomy beside it. Phones list the worlds under the chart.
-Later Markets tools join the rail as panels of their own (`js/markets-dock.js`).
+page keeps the same outer margins as Capture and Research.
+
+At its right edge, the tool rail holds two kinds of tool (`js/markets-dock.js`):
+panel tools, which open a panel beside the chart, and direct actions. **Worlds**
+opens a dense, separately scrolling watchlist (latest best offer and its
+absolute and percentage change over the selected range) and the selected
+world's details; **Help** explains how to read the chart. One panel is open at
+a time. Closed, the panel gives its width back to the chart, which keeps
+showing the same days; the open panel is remembered in the browser. Until
+then, Worlds starts open on screens wide enough to keep the chart roomy beside
+it. **Export** saves a PNG of the chart itself, not of the page: the world,
+its latest best offer and change over the range, the legend, Best Offer, Daily
+Average and volume over the days in view, axes and dates, and a discreet
+Tibinance mark. It is drawn from a second chart built offscreen from the same
+state (`js/market-export.js`), so every image has the same layout at twice the
+pixels or more, from any window. **Full screen** takes the whole terminal,
+rail included. Phones show the rail as a row under the chart and list the
+worlds below it. The chart is built from layers (`js/market-chart.js`); a
+layer added there, such as events or projections, is drawn on the page and in
+every export alike.
 Selecting a world updates the chart and the address
 (`markets.html?world=Gentebra&side=sell&range=1Y`), so a view can be linked.
 The page presents one market history; it does not label where each value came from.

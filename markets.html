@@ -43,15 +43,6 @@
         <button type="button" data-side="sell" role="radio" aria-checked="true">Sell</button>
         <button type="button" data-side="buy" role="radio" aria-checked="false">Buy</button>
       </div>
-      <div class="toolbar-end">
-        <button type="button" id="helpButton" class="tool" popovertarget="help" aria-label="How to read this chart" title="How to read this chart">
-          <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5"/><path d="M10 9v5M10 6.2v.1"/></svg>
-        </button>
-        <button type="button" id="expand" class="tool" aria-pressed="false" aria-label="Expand chart" title="Expand chart">
-          <svg class="icon-expand" viewBox="0 0 20 20" aria-hidden="true"><path d="M3.5 8V3.5H8M12 3.5h4.5V8M16.5 12v4.5H12M8 16.5H3.5V12"/></svg>
-          <svg class="icon-collapse" viewBox="0 0 20 20" aria-hidden="true"><path d="M8 3.5V8H3.5M16.5 8H12V3.5M12 16.5V12h4.5M3.5 12H8v4.5"/></svg>
-        </button>
-      </div>
     </div>
 
     <div class="chart-area">
@@ -71,24 +62,9 @@
         <button type="button" data-range="All" role="radio" aria-checked="false">All</button>
       </div>
     </div>
-
-    <div id="help" class="help" popover>
-      <h3>Reading the chart</h3>
-      <ul class="help-keys">
-        <li><i class="key key-dot" aria-hidden="true"></i>Observed best offer: the server day's last observation.</li>
-        <li><i class="key key-solid" aria-hidden="true"></i>Solid line: observations on consecutive server days.</li>
-        <li><i class="key key-dotted" aria-hidden="true"></i>Dotted line: the days in between were not observed. Nothing is filled in.</li>
-        <li><i class="key key-average" aria-hidden="true"></i>Daily average: the average price of the trades that filled this side's offers.</li>
-        <li><i class="key key-volume" aria-hidden="true"></i>Volume: the coins those trades moved each day.</li>
-      </ul>
-      <p>Server days run from 10:00 to 10:00 CET/CEST. Change compares the latest best offer with the last one observed on or before the start of the range.</p>
-      <p><span id="helpThrough"></span> <span id="helpWorld"></span></p>
-      <p>Search reaches retired worlds as well. A retired world keeps its own history, separate from the world it merged into, and its ranges end on its last observed day.</p>
-      <p class="help-fine">Not affiliated with CipSoft. Tibia is a trademark of CipSoft GmbH.</p>
-    </div>
   </section>
 
-  <!-- The dock: the panel open beside the chart, and the rail of buttons that opens and closes each panel. -->
+  <!-- The dock: the panel open beside the chart, and the tool rail at the right edge. -->
   <div id="dock" class="dock">
     <aside id="worldsPanel" class="dock-panel watchlist" aria-label="Worlds" data-dock-default>
       <div class="watch-head">
@@ -123,11 +99,40 @@
       </section>
       <div id="watchTip" class="watch-tip" role="tooltip" hidden></div>
     </aside>
-    <div class="dock-rail" role="group" aria-label="Panels">
+    <section id="helpPanel" class="dock-panel help-panel" aria-labelledby="helpTitle">
+      <div class="panel-head"><h2 id="helpTitle" class="panel-title">Reading the chart</h2></div>
+      <div class="panel-body">
+        <ul class="help-keys">
+          <li><i class="key key-dot" aria-hidden="true"></i>Observed best offer: the server day's last observation.</li>
+          <li><i class="key key-solid" aria-hidden="true"></i>Solid line: observations on consecutive server days.</li>
+          <li><i class="key key-dotted" aria-hidden="true"></i>Dotted line: the days in between were not observed. Nothing is filled in.</li>
+          <li><i class="key key-average" aria-hidden="true"></i>Daily average: the average price of the trades that filled this side's offers.</li>
+          <li><i class="key key-volume" aria-hidden="true"></i>Volume: the coins those trades moved each day.</li>
+        </ul>
+        <p>Server days run from 10:00 to 10:00 CET/CEST. Change compares the latest best offer with the last one observed on or before the start of the range.</p>
+        <p><span id="helpThrough"></span> <span id="helpWorld"></span></p>
+        <p>Search reaches retired worlds as well. A retired world keeps its own history, separate from the world it merged into, and its ranges end on its last observed day.</p>
+        <p class="help-fine">Not affiliated with CipSoft. Tibia is a trademark of CipSoft GmbH.</p>
+      </div>
+    </section>
+    <!-- The tool rail: buttons that open a panel (data-dock-target), then direct actions. -->
+    <div class="dock-rail" role="group" aria-label="Tools">
       <button type="button" class="tool dock-tool" data-dock-target="worldsPanel" aria-label="Worlds">
         <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7.5 5.5h9M7.5 10h9M7.5 14.5h9M3.5 5.5h.01M3.5 10h.01M3.5 14.5h.01"/></svg>
       </button>
+      <button type="button" class="tool dock-tool" data-dock-target="helpPanel" aria-label="Help">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5"/><path d="M10 9v5M10 6.2v.1"/></svg>
+      </button>
+      <span class="dock-rule" aria-hidden="true"></span>
+      <button type="button" id="exportButton" class="tool dock-tool" aria-label="Export chart image" title="Export chart image">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3.5v9M6.5 9l3.5 3.5L13.5 9M3.5 13v3.5h13V13"/></svg>
+      </button>
+      <button type="button" id="expand" class="tool dock-tool" aria-pressed="false" aria-label="Full screen" title="Full screen">
+        <svg class="icon-expand" viewBox="0 0 20 20" aria-hidden="true"><path d="M3.5 8V3.5H8M12 3.5h4.5V8M16.5 12v4.5H12M8 16.5H3.5V12"/></svg>
+        <svg class="icon-collapse" viewBox="0 0 20 20" aria-hidden="true"><path d="M8 3.5V8H3.5M16.5 8H12V3.5M12 16.5V12h4.5M3.5 12H8v4.5"/></svg>
+      </button>
     </div>
+    <p id="exportStatus" class="sr-only" role="status"></p>
   </div>
 </main>
 
