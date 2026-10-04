@@ -34,7 +34,7 @@ analytical output, forecast or ranking changed.
 
 ## Verification
 
-- 101 JavaScript regression tests passed, including generated-history reproduction.
+- 115 JavaScript regression tests passed, including generated-history reproduction.
 - 59 tools Python tests passed (one optional original-image browser test skipped).
 - 38 Research Python tests passed.
 - Research validation and byte-identical complement reproduction passed.
@@ -43,6 +43,9 @@ analytical output, forecast or ranking changed.
 - Existing Markets browser/image-export and Statistics UI/CSV-export checks passed.
 - Research exported all 71 figures per language at 2x, including PNG download.
 - Generated-history `--check` and `git diff --check` passed.
+
+The concurrent main changes for Markets layout/events were merged without rewriting
+history. The JavaScript suite and generated history/events checks passed again.
 
 ## Changed file inventory
 
