@@ -104,9 +104,10 @@ python complement.py
 python inflation.py
 python lifecycle.py
 python robustness.py
-python ledger.py
 python -m unittest discover -p 'test_*.py'
 python validate.py --reproduce
+python ledger.py
+python validate.py
 node --check report.js
 node test_premium.cjs
 node test_report_findings.cjs
@@ -187,3 +188,27 @@ The review inspected all 107 previously nonaccepted cases using Apple Vision/Tes
 Verification: 47 JavaScript tests passed; 58 Python tools tests passed, including the optional real Details screenshot test. Six real item-layout browser regressions confirm three recovered Tibia Coins selections and three genuine other items still rejected. Independent archive validation checks chronology, duplicate reconciliation, schema, world identity, timestamps/expiries, Statistics reference dates/lot volumes, UUID history and privacy whitelists. The previous-dataset guard blocks removal or changes to accepted captures. Actual canonical website import retained all 390 captures / 6,659 offer rows exactly, including clocks, expiries, Statistics and UUIDs; reimport skipped all 390 existing hashes.
 
 All 34 report Python tests passed. `validate.py --reproduce` verified 40 worlds, 386 research Offers captures, 4,160 world/side/week forecasts, source hashes/reconciliation, temporal bounds, model/fee arithmetic, robust sensitivity results, append-only forecasts and byte-identical complementary output. Node premium checks passed 204 comparisons; findings and runtime compatibility checks passed. Actual EN/PT reports render all 40 worlds, including Unebra, and four Statistics side rows with correct 25-TC volumes, functional controls and responsive layouts. All 71 exhibits per language rasterized and exported at 2x, including complete table contents and actual PNG download. The site package was regenerated; all 16 generated/public outputs passed the source-identifier/privacy scan, while frozen historical inputs and the two-entry forecast ledger remain unchanged.
+
+
+### October 3 screenshot update
+
+The canonical export now contains 467 captures across 40 worlds: 427 Offers,
+40 Statistics snapshots and 7,419 individual offer observations. Its bytes match
+`data/observations.json`. The independent screenshot review and anonymous field
+comparisons are in `../../data/market-update-review.json`; all 390 previous
+captures, clocks, worlds and offer identities are preserved.
+
+Generate and validate the report with the exact versions in `requirements.txt`.
+The simulation regression checks both exact dependency versions and same-seed
+innovation paths. Statsmodels 0.15 uses `rng`; 0.14 accepts `random_state`, and
+silently ignores the newer keyword. See the [Statsmodels 0.15 release notes](https://www.statsmodels.org/stable/release/). Using an older external environment can
+therefore produce plausible yet unreproducible simulations. The original
+simulator remains unchanged; the report is rebuilt under the pinned versions.
+Run tests and `validate.py --reproduce` before freezing a new cutoff with
+`ledger.py`, then validate the append-only ledger again.
+
+The uncommitted October 3 draft produced by the mismatched runtime was archived
+locally before installation. The two previously published ledger records remain
+byte-identical; the first published October 3 forecast is frozen only after
+pinned-runtime validation. Diagnostic program/output copies remain in the ignored
+local update archive.
