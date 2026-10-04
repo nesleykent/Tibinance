@@ -17,6 +17,7 @@
   --control-track:rgb(118 118 128 / .12); --control-track-hover:rgb(118 118 128 / .18);
   --control-thumb-shadow:0 1px 3px rgb(0 0 0 / .12), 0 0 0 var(--rule) rgb(0 0 0 / .04);
   --positive:#246644; --negative:#a42f45; --caution:#805909;
+  --sell:#b4532a; --buy:#2f6db5;   /* the two sides of the Market, as Markets charts them and Trade labels them */
 
   --font-ui:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   --font-editorial:Georgia,"Times New Roman",serif;

@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tibinance Trade</title>
+<meta name="description" content="Compare selling or buying Tibia Coins now with creating your own Market offer, fee included, from the offers you see in the Market.">
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/trade.css">
+<link rel="stylesheet" href="css/site-header.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪙</text></svg>">
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <nav class="site-nav" aria-label="Site">
+      <a class="site-crumb site-home" href="./">Tibinance</a>
+      <span class="site-slash" aria-hidden="true">/</span>
+      <button type="button" class="site-crumb site-section" popovertarget="site-menu" data-site-menu>Trade<svg class="site-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg></button>
+      <ul id="site-menu" class="site-panel site-menu" popover>
+        <li><a href="./">Capture</a></li>
+        <li><a href="markets.html">Markets</a></li>
+        <li><a href="trade.html" aria-current="page">Trade</a></li>
+        <li><a href="reports/tc-cycle/">Research</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<div class="hero">
+  <h1>Trade Now or Create an Offer</h1>
+  <p class="deck">Copy the top offers from Tibia's Market and say what you want to do: see what trading at once, an offer of your own, or both would come to, fee included.</p>
+</div>
+
+<div class="trade-layout">
+  <!-- Every figure comes from these fields: js/trade.js reads them, js/trade-strategies.js does the arithmetic.
+       Nothing on this page reads the market history. -->
+  <form id="tradeForm" class="trade-form" novalidate autocomplete="off" aria-label="Your trade">
+    <fieldset class="trade-group">
+      <legend class="trade-label">Your order</legend>
+      <div class="trade-order">
+        <div id="tradeIntent" class="segmented trade-intent" role="radiogroup" aria-label="Sell or buy">
+          <button type="button" data-intent="sell" role="radio" aria-checked="true">Sell</button>
+          <button type="button" data-intent="buy" role="radio" aria-checked="false">Buy</button>
+        </div>
+        <label class="trade-amount">
+          <span class="trade-label">Amount</span>
+          <input id="tradeAmount" class="field trade-input" data-field="amount" data-error="tradeAmountError" inputmode="numeric" spellcheck="false" enterkeyhint="next">
+        </label>
+      </div>
+      <p id="tradeAmountError" class="trade-error" hidden></p>
+    </fieldset>
+
+    <!-- The book, laid out as the Market lists it: Sell Offers above Buy Offers, Amount before Piece Price. Each
+         field names its place (book.<side>.<row>.<amount|price>), so a deeper row is one more pair of fields. -->
+    <fieldset class="trade-group">
+      <legend class="trade-label">In the Market now</legend>
+      <div class="trade-grid">
+        <span aria-hidden="true"></span>
+        <span class="trade-label trade-col" aria-hidden="true">Amount</span>
+        <span class="trade-label trade-col" aria-hidden="true">Piece Price</span>
+
+        <span class="trade-side side-sell">Sell Offers<small>top row</small></span>
+        <input class="field trade-input" data-field="book.sell.0.amount" data-error="tradeSellError" aria-label="Sell Offers, top row, Amount" inputmode="numeric" spellcheck="false">
+        <input class="field trade-input" data-field="book.sell.0.price" data-error="tradeSellError" aria-label="Sell Offers, top row, Piece Price" inputmode="numeric" spellcheck="false">
+        <p id="tradeSellError" class="trade-error" hidden></p>
+
+        <span class="trade-side side-buy">Buy Offers<small>top row</small></span>
+        <input class="field trade-input" data-field="book.buy.0.amount" data-error="tradeBuyError" aria-label="Buy Offers, top row, Amount" inputmode="numeric" spellcheck="false">
+        <input class="field trade-input" data-field="book.buy.0.price" data-error="tradeBuyError" aria-label="Buy Offers, top row, Piece Price" inputmode="numeric" spellcheck="false">
+        <p id="tradeBuyError" class="trade-error" hidden></p>
+      </div>
+    </fieldset>
+
+    <fieldset class="trade-group">
+      <legend class="trade-label">Your offer <span class="trade-optional">optional</span></legend>
+      <div class="trade-grid">
+        <span id="tradeOwnName" class="trade-side">Your Sell Offer</span>
+        <output id="tradeOwnAmount" class="trade-echo" for="tradeAmount" aria-label="Your offer, Amount"></output>
+        <input id="tradeOfferPrice" class="field trade-input" data-field="offerPrice" data-error="tradeOfferError" aria-label="Your Sell Offer, Piece Price" inputmode="numeric" spellcheck="false" enterkeyhint="done">
+        <p id="tradeOfferError" class="trade-error" hidden></p>
+      </div>
+    </fieldset>
+
+    <div class="trade-actions">
+      <p class="trade-hint">Numbers can be typed as 38520, 38,520 or 38.5k.</p>
+      <button type="button" id="tradeClear" class="btn">Clear</button>
+    </div>
+  </form>
+
+  <section class="trade-result" aria-labelledby="tradeResultTitle">
+    <h2 id="tradeResultTitle" class="sr-only">Comparison</h2>
+    <div id="tradeResult"></div>
+    <p id="tradeStatus" class="sr-only" role="status"></p>
+  </section>
+</div>
+
+<footer>
+  <p>Every figure comes from the numbers you enter: nothing is read from the market history, kept or sent anywhere.
+     The Market fee follows the <a href="https://www.tibia.com/gameguides/?section=controls_trading&amp;subtopic=manual" target="_blank" rel="noopener noreferrer">Tibia Manual</a>.
+     Not affiliated with CipSoft. Tibia is a trademark of CipSoft GmbH.</p>
+</footer>
+
+</main>
+
+<script type="module" src="js/site-header.js"></script>
+<script type="module" src="js/trade.js"></script>
+</body>
+</html>

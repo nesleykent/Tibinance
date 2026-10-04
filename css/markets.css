@@ -7,7 +7,6 @@
  * the panels, and scroll the page.
  */
 :root {
-  --sell:#b4532a; --buy:#2f6db5;
   --average:#a9a8b3;   /* the daily average: context for the best offer, never competing with it */
   --watch-width:calc(var(--unit) * 92);
   --rail-width:calc(var(--unit) * 10);

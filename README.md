@@ -11,9 +11,9 @@ No backend, no build step, no API key, no cost.
 
 ## Navigation
 
-Capture, Markets and Research share one header, `Tibinance / Section`. Tibinance
-links home, and the section's name opens a small menu of the three sections with
-the current one marked. On Capture, the home page, Tibinance itself opens the menu.
+Capture, Markets, Trade and Research share one header, `Tibinance / Section`.
+Tibinance links home, and the section's name opens a small menu of the four sections
+with the current one marked. On Capture, the home page, Tibinance itself opens the menu.
 The right of the header belongs to the section: Research keeps its world picker
 (All Worlds, searchable) and the edition's language there. The header is
 `css/site-header.css` and `js/site-header.js`.
@@ -140,6 +140,61 @@ backs off on rate limits like the research's `fetch_api.py`.
 
 `--check` fails when the committed files differ from a fresh build;
 `tests/market-history.test.mjs` runs the same check.
+
+## Trade
+
+[Trade](trade.html) answers one question at the moment of trading: trade at once
+against the offers already in the Market, or create an offer of one's own? The
+player copies what Tibia's Market shows and says what they want to do; nothing on
+the page is read from the market history or the captures, and nothing is kept.
+
+- **Your order**: Sell or Buy, and the amount of Tibia Coins.
+- **In the Market now**: the top row of the Sell Offers and of the Buy Offers,
+  Amount and Piece Price, laid out as the Market lists them.
+- **Your offer** (optional): the Piece Price one would ask or bid.
+
+Numbers can be typed plainly, grouped (`38,520`, `38.520`) or with Tibia's `k`
+and `kk` (`38.5k`); a field is written back in full when it is left. A decimal
+without `k` (`38.52`) is not read rather than guessed.
+
+The page then compares, for the whole amount:
+
+- **Sell now / Buy now**: accepting the entered offers. Only the amount those
+  offers hold is priced; the rest is shown as unsold or not bought, and no
+  deeper price is assumed.
+- **Create Sell Offer / Create Buy Offer**: one's own offer for the whole amount,
+  with the Market fee.
+- **Sell now, offer the rest / Buy now, offer the rest**: when the entered
+  offers hold only part of the amount, taking them and offering the remainder.
+
+It shows each one's gold now, Total Price, fee and net result, the best of those
+that cover the whole amount with its difference in gold and percent from the next
+best, and the **break-even offer price**: selling, the lowest Sell Offer price at
+which an offer that fills nets at least as much as selling now (buying, the highest
+Buy Offer price at which it costs no more). It needs no offer price of one's own.
+On equal results, trading now leads, since it does not wait on an offer. An offer's
+figures hold only if it fills completely at its price: the page does not estimate
+whether or when it will, and says so.
+
+Rules applied (CipSoft, ["The Market"](https://www.tibia.com/gameguides/?section=controls_trading&subtopic=manual),
+Tibia Manual, the research's source for the same fee):
+
+- Accepting an offer has no fee. Placing one pays 2% of its Total Price, at least
+  20 and at most 1,000,000 gold, taken from the bank when it is placed (with the
+  price itself, for a Buy Offer) and lost if it is cancelled.
+- One offer holds at most 64,000 items, so a larger amount takes several offers,
+  each paying its own fee; one character holds at most 100 offers.
+- Tibia Coins trade in lots of 25. Prices are whole gold up to 999,999,999,999.
+- An offer priced at or past the best offer on the other side would be matched
+  against it at once, fee included, so it is refused as an offer: trading now does
+  the same without the fee. A Buy Offer at or above a Sell Offer is a crossed book
+  and is refused, as the market history refuses one.
+- The manual does not say how 2% is rounded to whole gold. The fee is rounded up,
+  so it is never understated; it can differ from the client's by 1 gold.
+
+The arithmetic is `js/trade-strategies.js` (pure functions, BigInt gold, so the
+largest orders stay exact); `js/trade.js` reads the fields and writes the words.
+The engine already takes any number of rows per side; the page enters one.
 
 ## Building the dataset
 
@@ -476,6 +531,7 @@ python3 -m http.server 8765 --bind 127.0.0.1
 # In another terminal, with Playwright available:
 node tests/browser.mjs
 node tests/markets-browser.mjs
+node tests/trade-browser.mjs
 node tests/site-header-browser.mjs
 ```
 
@@ -517,6 +573,10 @@ css/markets.css           Markets layout
 js/markets.js             Markets chart, watchlist and address state
 js/market-series.js       chart layers, ranges and changes (no DOM)
 js/market-history.js      TibiaMarket and capture conversion to the history format
+trade.html                Trade page shell
+css/trade.css             Trade layout
+js/trade.js               Trade fields and comparison text
+js/trade-strategies.js    trade now or create an offer: fee, strategies, break-even (no DOM)
 tools/build_market_history.mjs  generates data/market-history/
 tools/fetch_market_history.mjs  freezes extra inputs in data/market-history/inputs/
 data/market-history/      generated Markets dataset and its frozen inputs

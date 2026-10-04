@@ -48,7 +48,7 @@ try {
   const captureEdges=await pageEdges();
   assert.ok(captureEdges[0]>100,`Capture's margin at 1440px: ${captureEdges[0]}`);
   assert.deepEqual(await page.$$eval('#site-menu a',as=>as.map(a=>[a.textContent,a.getAttribute('href')])),
-    [['Capture','./'],['Markets','markets.html'],['Research','reports/tc-cycle/']]);
+    [['Capture','./'],['Markets','markets.html'],['Trade','trade.html'],['Research','reports/tc-cycle/']]);
   await page.click('header.site [data-site-menu]');
   await page.click('#site-menu a[href="markets.html"]');
   await shown('Antica');

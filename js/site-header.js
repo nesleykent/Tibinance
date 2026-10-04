@@ -1,5 +1,5 @@
 /*
- * The site header shared by Capture, Markets and Research (css/site-header.css).
+ * The site header shared by Capture, Markets, Trade and Research (css/site-header.css).
  *
  * The left of the header is a trail, Tibinance / Section: Tibinance links home and the section's name opens the
  * menu of sections (on Capture, the home page, Tibinance is the only crumb and opens it). The right of the header

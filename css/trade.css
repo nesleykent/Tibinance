@@ -1,0 +1,70 @@
+/*
+ * Trade: the order on the left, the comparison beside it; stacked on narrow screens. In Tibinance's own type and
+ * tokens (css/app.css): small capitals label, figures are tabular, and the Market's two sides keep the colours
+ * Markets draws them in. Fields are a step larger than the Capture review's: they are this page's whole purpose,
+ * and at 16px a phone does not zoom into them.
+ */
+:root { --trade-form-width:calc(var(--unit) * 100); --trade-field:calc(var(--unit) * 9); }
+
+.trade-layout { display:grid; grid-template-columns:minmax(0,var(--trade-form-width)) minmax(0,1fr); align-items:start; gap:var(--space-7); margin-top:var(--space-2); }
+.trade-label { display:block; margin:0; color:var(--muted); font-family:var(--font-ui); font-size:var(--step-n2); font-weight:var(--weight-strong);
+  letter-spacing:var(--tracking-caps); line-height:var(--leading-tight); text-transform:uppercase; }
+
+/* ---- the order --------------------------------------------------------------- */
+.trade-form { display:grid; gap:var(--space-5); font-family:var(--font-ui); }
+.trade-group { min-width:0; margin:0; padding:0; border:0; }
+.trade-group > legend { padding:0 0 var(--space-2); color:var(--ink); }
+.trade-optional { margin-left:var(--space-1); color:var(--muted); font-weight:var(--weight-regular); }
+.trade-order { display:flex; align-items:end; gap:var(--space-3); }
+.trade-intent { flex:none; min-height:var(--trade-field); }
+.trade-intent button { min-width:calc(var(--unit) * 16); font-size:var(--step-n1); }
+.trade-amount { flex:1; display:grid; gap:var(--space-1); min-width:0; }
+/* The book and one's own offer share one grid: a row's name, its Amount, its Piece Price. */
+.trade-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.2fr); align-items:center; gap:var(--space-2); }
+.trade-col { text-align:right; }
+.trade-side { display:flex; flex-direction:column; min-width:0; color:var(--ink); font-size:var(--step-n1); font-weight:var(--weight-strong); line-height:var(--leading-tight); }
+.trade-side small { color:var(--muted); font-size:var(--step-n2); font-weight:var(--weight-regular); }
+.trade-side.side-sell { color:var(--sell); }
+.trade-side.side-buy { color:var(--buy); }
+.trade-input { width:100%; min-width:0; min-height:var(--trade-field); font-size:var(--step-0); font-variant-numeric:lining-nums tabular-nums; text-align:right; }
+.trade-input[aria-invalid="true"] { border-color:var(--negative); }
+/* One's own offer is for the whole amount: shown, not entered again. */
+.trade-echo { padding-right:calc(var(--control-pad) + var(--rule)); color:var(--muted); font-size:var(--step-0); font-variant-numeric:lining-nums tabular-nums; text-align:right; overflow-wrap:anywhere; }
+.trade-error { grid-column:1 / -1; margin:var(--space-1) 0 0; color:var(--negative); font-size:var(--step-n1); line-height:var(--leading-text); }
+.trade-grid .trade-error { margin-top:calc(var(--space-1) * -1); }
+.trade-actions { display:flex; align-items:center; justify-content:space-between; gap:var(--space-3); padding-top:var(--space-3); border-top:var(--rule) solid var(--line); }
+.trade-hint { margin:0; color:var(--muted); font-size:var(--step-n2); }
+
+/* ---- the comparison ------------------------------------------------------------ */
+.trade-result { min-width:0; font-family:var(--font-ui); }
+#tradeResult { display:grid; gap:var(--space-5); }
+#tradeResult p { margin:0; }
+.trade-prompt { padding:var(--space-6) var(--space-4); border:var(--rule) dashed var(--line-strong); border-radius:var(--radius); color:var(--muted); font-size:var(--step-n1); text-align:center; }
+/* The answer: which strategy, and what it is worth against the next best. */
+.trade-verdict { display:grid; gap:var(--space-1); padding:var(--space-3) var(--space-4); border-left:var(--rule-strong) solid var(--accent); background:var(--surface-soft); }
+.trade-pick { font-family:var(--font-editorial); font-size:var(--step-3); line-height:var(--leading-tight); letter-spacing:var(--tracking-tight); }
+.trade-gain { font-size:var(--step-0); font-variant-numeric:lining-nums tabular-nums; }
+.trade-breakeven { display:grid; gap:var(--space-1); }
+.trade-figure { font-size:var(--step-2); font-weight:var(--weight-strong); font-variant-numeric:lining-nums tabular-nums; line-height:var(--leading-tight); }
+.trade-note { color:var(--muted); font-size:var(--step-n1); line-height:var(--leading-text); }
+/* One card per strategy, side by side where they fit: its result first, then what makes it up. */
+.trade-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(calc(var(--unit) * 56),1fr)); gap:var(--space-3); margin:0; padding:0; list-style:none; }
+.trade-card { display:flex; flex-direction:column; gap:var(--space-2); min-width:0; padding:var(--space-3); border:var(--rule) solid var(--line); border-radius:var(--radius); }
+.trade-card.is-best { border-color:var(--accent); box-shadow:inset 0 var(--rule-strong) 0 var(--accent); }
+.trade-name { display:flex; align-items:center; justify-content:space-between; gap:var(--space-2); margin:0; font-family:var(--font-ui); font-size:var(--step-0); font-weight:var(--weight-strong); line-height:var(--leading-tight); }
+.trade-best { flex:none; padding:var(--space-0) var(--space-1); border-radius:var(--radius-sm); background:var(--accent-soft); color:var(--accent); font-size:var(--step-n2);
+  letter-spacing:var(--tracking-caps); text-transform:uppercase; }
+.trade-net { display:grid; gap:var(--space-0); }
+.trade-net b { font-size:var(--step-2); font-variant-numeric:lining-nums tabular-nums; line-height:var(--leading-tight); overflow-wrap:break-word; }
+.trade-lines { display:grid; gap:var(--space-0); margin:0; padding-top:var(--space-2); border-top:var(--rule) solid var(--line-faint); font-size:var(--step-n1); font-variant-numeric:lining-nums tabular-nums; }
+.trade-lines > div { display:flex; justify-content:space-between; gap:var(--space-3); }
+.trade-lines dt { color:var(--muted); }
+.trade-lines dd { margin:0; text-align:right; overflow-wrap:break-word; }
+.trade-lines .caution { color:var(--caution); font-weight:var(--weight-strong); }
+.trade-card .trade-note { margin-top:auto; font-size:var(--step-n2); }
+.trade-fine { color:var(--muted); font-size:var(--step-n2); line-height:var(--leading-text); }
+.up { color:var(--positive); }
+
+@media (max-width:900px) {
+  .trade-layout { grid-template-columns:minmax(0,1fr); gap:var(--space-6); }
+}
