@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320" role="img" aria-labelledby="title desc">
+  <title id="title">Tibinance</title>
+  <desc id="desc">Tibia Coin and Tibia Token market tools. The chart illustrates observed TIB daily USD closes from 2026-07-06 to 2026-10-03.</desc>
+  <rect width="1280" height="320" rx="16" fill="#111c2e"/>
+  <g fill="none" stroke="#2c3b50" stroke-width="1">
+    <path d="M790 106H1180M790 145H1180M790 184H1180M790 223H1180"/>
+  </g>
+  <g fill="none" stroke="#64d7be" stroke-width="4" stroke-linecap="round">
+    <path d="M66 71V99M82 61V106M98 77V96"/>
+    <path d="M62 82H70M78 74H86M94 85H102" stroke-width="8"/>
+  </g>
+  <text x="122" y="95" fill="#ffffff" font-family="Arial,Helvetica,sans-serif" font-size="28" font-weight="700" letter-spacing="-.6">Tibinance</text>
+  <text x="64" y="164" fill="#ffffff" font-family="Arial,Helvetica,sans-serif" font-size="42" font-weight="700" letter-spacing="-1.2">A clearer view of Tibia’s markets.</text>
+  <text x="66" y="202" fill="#b4c1d3" font-family="Arial,Helvetica,sans-serif" font-size="21">Capture. Explore. Compare.</text>
+  <text x="66" y="264" fill="#90a4bd" font-family="Arial,Helvetica,sans-serif" font-size="16">Tibia Coin markets and Tibia Token history</text>
+  <text x="790" y="78" fill="#b4c1d3" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="700" letter-spacing="1">TIB / USD</text>
+  <polyline points="790.0,107.6 794.4,108.5 798.8,117.3 803.1,106.0 807.5,125.5 811.9,127.9 816.3,126.6 820.7,141.7 825.1,141.9 829.4,127.8 833.8,123.5 838.2,118.5 842.6,106.9 847.0,128.1 851.3,139.5 855.7,129.7 860.1,129.3 864.5,146.4 868.9,120.8 873.3,126.0 877.6,114.3 882.0,118.7 886.4,134.9 890.8,131.3 895.2,126.5 899.6,137.0 903.9,129.7 908.3,135.0 912.7,130.7 917.1,135.5 921.5,127.9 925.8,130.1 930.2,125.4 934.6,124.7 939.0,129.1 943.4,132.0 947.8,127.2 952.1,133.9 956.5,136.5 960.9,136.1 965.3,135.8 969.7,136.4 974.0,132.8 978.4,129.9 982.8,133.7 987.2,136.7 991.6,125.1 996.0,128.3 1000.3,133.1 1004.7,128.4 1009.1,122.0 1013.5,124.6 1017.9,129.6 1022.2,125.5 1026.6,124.7 1031.0,132.3 1035.4,128.3 1039.8,128.9 1044.2,131.3 1048.5,133.0 1052.9,134.6 1057.3,130.2 1061.7,130.5 1066.1,128.7 1070.4,135.1 1074.8,133.0 1079.2,132.3 1083.6,136.6 1088.0,133.2 1092.4,135.8 1096.7,134.8 1101.1,142.3 1105.5,137.9 1109.9,136.0 1114.3,138.8 1118.7,139.4 1123.0,142.9 1127.4,160.1 1131.8,209.0 1136.2,145.4 1140.6,140.3 1144.9,146.6 1149.3,144.6 1153.7,172.3 1158.1,152.2 1162.5,203.4 1166.9,222.0 1171.2,187.1 1175.6,211.1 1180.0,204.2" fill="none" stroke="#64d7be" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="1180" cy="204.2" r="4.5" fill="#64d7be"/>
+  <text x="790" y="264" fill="#90a4bd" font-family="Arial,Helvetica,sans-serif" font-size="13">2026-07-06</text>
+  <text x="1180" y="264" text-anchor="end" fill="#90a4bd" font-family="Arial,Helvetica,sans-serif" font-size="13">2026-10-03 UTC</text>
+</svg>
