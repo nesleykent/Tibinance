@@ -103,3 +103,8 @@ quantity, or turnover cannot be recovered from these offer histories and raw
 transaction counters. Retirement and merge histories must retain their own
 identity rather than splice into a successor. Aggregate indicators remain an
 exploration until cohort and coverage rules are implemented and validated.
+
+Returning-visitor regression: set `TIBINANCE_STALE_CHART` to a local copy of
+the pre-TIB `market-chart.js` when running the browser test. Its unversioned URL
+is served with that old module; the token page and its PNG export must still
+load the versioned implementation. The test also reloads with the dock closed.

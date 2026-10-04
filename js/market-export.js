@@ -9,7 +9,7 @@
  * The image has the same layout from any window or phone (WIDTH by the height of its parts, in image pixels) and at
  * least twice as many device pixels: on a screen of lower density the offscreen chart is drawn larger instead.
  */
-import { createMarketChart } from './market-chart.js';
+import { createMarketChart } from './market-chart.js?v=20261004-tib';
 import { dateText } from './market-events.js';
 import { drawMarker } from './market-events-layer.js';
 

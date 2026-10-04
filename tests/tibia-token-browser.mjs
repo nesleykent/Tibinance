@@ -17,10 +17,16 @@ try {
     const library = await readFile(process.env.TIBINANCE_CHART_LIBRARY, 'utf8');
     await page.route('https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.1/**', route => route.fulfill({ body: library, contentType: 'text/javascript', headers: { 'access-control-allow-origin': '*' } }));
   }
+  // Simulate a returning visitor with the pre-TIB chart still cached at its old URL.
+  if (process.env.TIBINANCE_STALE_CHART) {
+    const legacy = await readFile(process.env.TIBINANCE_STALE_CHART, 'utf8');
+    await page.route('**/js/market-chart.js', route => route.fulfill({ body: legacy, contentType: 'text/javascript' }));
+  }
   const errors = []; page.on('pageerror', e => errors.push(e.message));
   await page.goto(`${root}/markets.html?asset=tibia-token&world=Antica&side=buy&range=All`);
   await page.waitForFunction(() => document.getElementById('market').getAttribute('aria-busy') === 'false');
   assert.equal(await page.title(), 'Tibinance Markets');
+  assert.equal(await page.getByRole('link', { name: 'Tibinance project on GitHub' }).getAttribute('href'), 'https://github.com/nesleykent/Tibinance');
   assert.equal(await page.locator('#world').textContent(), 'Tibia Token (TIB)');
   assert.equal(await page.locator('#lastPrice').textContent(), expectedPrice);
   assert.ok((await page.locator('#legend').textContent()).includes(`${last.day} UTC`));
@@ -32,6 +38,10 @@ try {
   assert.equal(new URL(page.url()).searchParams.has('side'), false);
   assert.equal(await page.locator('#worlds tr').count(), 0);
   assert.equal(await page.locator('#status').isVisible(), false);
+  await page.getByRole('button', { name: 'Asset details', exact: true }).click();
+  await page.reload();
+  await page.waitForFunction(() => document.getElementById('market').getAttribute('aria-busy') === 'false');
+  assert.equal(await page.locator('#lastPrice').textContent(), expectedPrice);
   await page.locator('#range [data-range="1M"]').click();
   assert.equal(new URL(page.url()).searchParams.get('range'), '1M');
   assert.equal(await page.locator('#range [data-range="1M"]').getAttribute('aria-checked'), 'true');
@@ -53,6 +63,7 @@ try {
   assert.equal(download.suggestedFilename(), `tibinance-tib-usd-all-${last.day}.png`);
   await download.saveAs(`${shots}/tib-export.png`);
   assert.ok((await readFile(`${shots}/tib-export.png`)).length > 10000);
+  if (process.env.TIBINANCE_STALE_CHART) await page.unroute('**/js/market-chart.js');
   await page.locator('#asset').selectOption('tibia-coin');
   await page.waitForFunction(() => document.getElementById('world').textContent === 'Antica' && document.getElementById('market').getAttribute('aria-busy') === 'false');
   assert.equal(await page.locator('#side').isVisible(), true);
