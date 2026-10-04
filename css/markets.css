@@ -298,5 +298,84 @@ table.watch td.stale { color:var(--muted); }
 .event-section-nav { display:flex; gap:var(--space-2); padding:var(--space-1) var(--space-3); border-bottom:var(--rule) solid var(--line); flex:none; }
 .event-section-nav button { flex:1; }
 
+/* ---- screener: every world side by side, in the chart's place (js/market-screener-panel.js) ---------------- */
+/* The same frame as the chart: a head as tall as its toolbar, the controls under it, the grid scrolling on its own and
+   the ranges at the foot. In the page its text starts on the page's edge, under Tibinance. */
+.screener { container:screener / inline-size; display:flex; flex-direction:column; min-width:0; min-height:0; border-right:var(--rule) solid var(--line); background:var(--canvas); font-family:var(--font-ui); }
+.screener .toolbar,.screener-controls,.screener-scroll { padding-right:var(--space-4); }
+.screener-head { align-items:center; }
+.screener-find { display:flex; flex:0 1 var(--filter-width); gap:var(--space-2); min-width:0; }
+.screener-head .filter { flex:1; min-width:0; width:auto; min-height:calc(var(--control-height) - var(--space-1)); }
+.screener-controls { flex:none; display:flex; flex-wrap:wrap; align-items:center; gap:var(--space-2) var(--space-4); padding-left:var(--space-4); padding-bottom:var(--space-2); }
+.terminal:not(.expanded,:fullscreen) .screener-controls { padding-left:0; }
+.screener-controls label { display:inline-flex; align-items:center; gap:var(--space-2); color:var(--muted); font-size:var(--step-n2); font-weight:var(--weight-strong); letter-spacing:var(--tracking-caps); text-transform:uppercase; white-space:nowrap; }
+.screener-controls select { min-height:calc(var(--control-height) - var(--space-1)); max-width:calc(var(--unit) * 48); padding:0 var(--space-1); border:var(--rule) solid var(--line-strong); border-radius:var(--control-radius);
+  background:var(--surface); color:var(--ink); font-family:var(--font-ui); font-size:var(--step-n1); font-weight:var(--weight-regular); letter-spacing:normal; text-transform:none; }
+.screener-controls select:focus { border-color:var(--accent); }
+.screener-sort { display:inline-flex; align-items:center; gap:var(--space-1); }
+.screener-sort .tool { width:calc(var(--control-height) - var(--space-1)); height:calc(var(--control-height) - var(--space-1)); }
+.screener-sort .tool svg { width:calc(var(--unit) * 4); height:calc(var(--unit) * 4); }
+#screenerDirection[data-dir="ascending"] .icon-descending,#screenerDirection[data-dir="descending"] .icon-ascending { display:none; }
+.screener-button { flex:none; min-height:calc(var(--control-height) - var(--space-1)); padding:0 var(--space-2); border:0; border-radius:var(--radius-sm); background:transparent; color:var(--muted); font-family:var(--font-ui); font-size:var(--control-type); cursor:pointer; white-space:nowrap; }
+.screener-button:hover,.screener-button[aria-expanded="true"] { background:var(--control-track); color:var(--ink); }
+.screener-filters-toggle { display:none; }
+.screener-scroll { flex:1; min-height:0; overflow:auto; overscroll-behavior:contain; padding-top:var(--space-3); padding-bottom:var(--space-4); border-top:var(--rule) solid var(--line); }
+.screener .empty { margin:0; padding:var(--space-5) 0; color:var(--muted); font-size:var(--step-n1); }
+
+/* A card per world, like a mini chart on a market overview: the world and its latest best offer, what it is and its
+   change over the range, the mini chart, then its figures. The selected world is marked as in the list. */
+.screener-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(calc(var(--unit) * 60),1fr)); gap:var(--space-3); margin:0; padding:0; list-style:none; }
+.screen-card { display:flex; flex-direction:column; gap:var(--space-1); height:100%; padding:var(--space-3); border:var(--rule) solid var(--line); border-radius:var(--radius);
+  background:var(--canvas); color:var(--ink); font-variant-numeric:lining-nums tabular-nums; text-decoration:none; }
+.screen-card:hover { border-color:var(--line-strong); background:var(--surface-hover); }
+.screen-card:focus-visible { outline-offset:0; }
+.screen-card[aria-current="true"] { border-color:var(--accent); box-shadow:inset 0 0 0 var(--rule) var(--accent); }
+.screen-head,.screen-sub { display:flex; align-items:baseline; justify-content:space-between; gap:var(--space-2); min-width:0; }
+.screen-name { min-width:0; overflow:hidden; font-family:var(--font-editorial); font-size:var(--step-1); line-height:var(--leading-tight); text-overflow:ellipsis; white-space:nowrap; }
+.screen-last { flex:none; font-size:var(--step-0); font-weight:var(--weight-strong); }
+.screen-last.stale { color:var(--muted); }
+.screen-day { color:var(--muted); font-size:var(--step-n2); white-space:nowrap; }
+.screen-change { flex:none; margin-left:auto; font-size:var(--step-n2); white-space:nowrap; }
+/* What the world is, at the foot: it wraps rather than cutting a word. */
+.screen-meta { display:flex; flex-wrap:wrap; gap:0 var(--space-3); margin-top:auto; padding-top:var(--space-1); color:var(--muted); font-size:var(--step-n2); }
+/* The mini chart: the chart's own marks, small. The SVG stretches to the card; its lines keep their width. */
+.screen-spark { display:block; width:100%; height:calc(var(--unit) * 14); margin-block:var(--space-1); overflow:hidden; }
+.screen-spark path { fill:none; vector-effect:non-scaling-stroke; stroke-linejoin:round; }
+.screen-spark .spark-solid,.screen-spark .spark-dotted { stroke:var(--side); stroke-width:1.5; }
+.screen-spark .spark-dotted { stroke-dasharray:2 2; }
+.screen-spark .spark-area { fill:var(--side); opacity:.08; }
+.screen-spark .spark-base { stroke:var(--line-strong); stroke-width:1; stroke-dasharray:2 3; }
+.screen-spark .spark-last { stroke:var(--side); stroke-width:5; stroke-linecap:round; }
+.screen-none { display:grid; place-items:center; border-radius:var(--radius-sm); background:var(--surface-soft); color:var(--muted); font-size:var(--step-n2); }
+.screen-stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--space-1) var(--space-2); margin:0; }
+.screen-stats div { min-width:0; }
+.screen-stats dt { color:var(--muted); font-size:var(--step-n2); }
+.screen-stats dd { margin:0; overflow:hidden; font-size:var(--step-n1); text-overflow:ellipsis; white-space:nowrap; }
+/* The selected side's best offer in its side's colour, as the chart draws it. */
+.screen-stats .on dd { color:var(--side); font-weight:var(--weight-strong); }
+/* Narrow, the filters fold behind a button beside the search, so the grid keeps the room. */
+@container screener (max-width:599.98px) {
+  .screener-filters-toggle { display:block; }
+  .screener:not(.filters-open) .screener-controls { display:none; }
+  .screener-find { flex:1 1 100%; }
+}
+@container screener (max-width:471.98px) {
+  .screener .through { display:none; }
+}
+
+@media (max-width:900px) {
+  /* In the chart's place and at its height, the grid scrolling inside; the list under it would repeat the grid. */
+  /* With the list hidden, the grid may take the screen under the header, less the rail's row. */
+  .screener { height:max(calc(var(--unit) * 95), calc(100dvh - var(--header-height) - var(--space-4) - var(--unit) * 12)); border-right:0; border-bottom:var(--rule) solid var(--line); }
+  .terminal.is-screening .dock-panel[data-dock-default] { display:none; }
+  .terminal:is(.expanded,:fullscreen) .screener { flex:1; height:auto; border-bottom:0; }
+  .screener-controls { gap:var(--space-2) var(--space-3); }
+}
+@media (max-width:760px) {
+  .screener-controls label,.screener-sort { flex:1 1 calc(50% - var(--space-3)); justify-content:space-between; }
+  .screener-controls select { flex:1; max-width:none; min-height:calc(var(--unit) * 11); }
+  .screener-sort label { flex:1; }
+  .screener-button { min-height:calc(var(--unit) * 11); }
+}
 /* Dense event clusters remain inspectable on small screens. */
 .event-tip { max-height:calc(100dvh - 24px); overflow-y:auto; }

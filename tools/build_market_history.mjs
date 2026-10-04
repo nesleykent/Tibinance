@@ -12,7 +12,8 @@ import { gunzipSync } from 'node:zlib';
 import { mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { join, relative } from 'node:path';
-import { ASSETS, addDays, bestOfferCloses, fromCapture, fromTibiaMarket, latestDailyStatistics, mergeDaily, mergeObservations } from '../js/market-history.js';
+import { ASSETS, addDays, bestOfferCloses, dailyTransactionSeries, fromCapture, fromTibiaMarket, latestCapturedDepth, latestDailyStatistics,
+  mergeDaily, mergeObservations } from '../js/market-history.js';
 import { battleyeColour } from '../js/tibiadata.js';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
@@ -38,7 +39,9 @@ export const worldFile = world => `worlds/${world.toLowerCase()}.json`;
  * world's display name; a world may appear more than once (an older and a newer
  * copy). registry: {active: TibiaData world entries, retired: retired-world
  * facts}. inputs: [{path, sha256}] recorded for provenance.
- * Returns {index, worlds: Map(world -> file object)}.
+ * Returns {index, overview, worlds: Map(world -> file object)}. The overview
+ * carries what the Screener compares across worlds and the index does not: daily
+ * transaction counters per side and the latest captured depth.
  */
 export function buildMarketHistory({ captures, tibiaMarket, registry, inputs, exclusions = [], asset = ASSETS['tibia-coin'] }) {
   const names = new Map();
@@ -123,7 +126,7 @@ export function buildMarketHistory({ captures, tibiaMarket, registry, inputs, ex
     if (!active.has(r.mergedInto)) throw new Error(`${r.world} merged into ${r.mergedInto}, which is not a current world`);
     formedFrom.set(r.mergedInto, [...(formedFrom.get(r.mergedInto) ?? []), r.world].sort());
   }
-  const worlds = new Map(), summaries = [];
+  const worlds = new Map(), summaries = [], overview = [];
   let through = ''; // the latest server day anything in the dataset describes
   const dailyTotals = { days: 0, conflictingDaysDropped: 0, conflictingDaysResolved: 0, checked30dTotals: 0, matching30dTotals: 0 };
   for (const key of [...perWorld.keys()].sort()) {
@@ -165,6 +168,8 @@ export function buildMarketHistory({ captures, tibiaMarket, registry, inputs, ex
       // [serverDay, sell, buy] per observed day, so the watchlist needs no world file.
       bestOfferCloses: closes.map(c => [c.serverDay, c.sell, c.buy])
     });
+    const transactions = dailyTransactionSeries(daily), depth = latestCapturedDepth(observations);
+    if (transactions || depth) overview.push({ world, ...(transactions ? { transactions } : {}), ...(depth ? { depth } : {}) });
     // Keep acquisition-level daily reports even when the derived chart projection
     // cannot choose a unique value for a server day. Never discard source evidence.
     worlds.set(world, { asset: asset.id, world, observations, dailyStatistics: daily,
@@ -173,6 +178,7 @@ export function buildMarketHistory({ captures, tibiaMarket, registry, inputs, ex
   for (const source of Object.values(conversion)) source.notConverted = sorted(source.notConverted);
   return {
     index: { format: 1, asset, through, inputs, conversion, dailyStatistics: dailyTotals, worlds: summaries },
+    overview: { format: 1, asset: asset.id, through, worlds: overview },
     worlds
   };
 }
@@ -222,8 +228,8 @@ async function readInputs(root) {
 }
 
 export async function outputFiles(root = ROOT, asset = ASSETS['tibia-coin']) {
-  const { index, worlds } = buildMarketHistory({ ...(await readInputs(root)), asset });
-  const files = new Map([['index.json', formatJson(index) + '\n']]);
+  const { index, overview, worlds } = buildMarketHistory({ ...(await readInputs(root)), asset });
+  const files = new Map([['index.json', formatJson(index) + '\n'], ['overview.json', formatJson(overview) + '\n']]);
   for (const [world, data] of worlds) files.set(worldFile(world), formatJson(data) + '\n');
   return { directory: join(root, 'data/market-history', asset.id), files, index };
 }

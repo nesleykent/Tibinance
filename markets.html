@@ -78,6 +78,52 @@
     </div>
   </section>
 
+  <!-- The Screener takes the chart's place (js/market-screener-panel.js): every world's best offers over the range as a
+       mini chart, with its figures, searched, filtered and sorted. A card opens the world's chart. -->
+  <section id="screenerPanel" class="screener" aria-labelledby="screenerTitle" hidden>
+    <div class="toolbar toolbar-top screener-head">
+      <div class="symbol">
+        <h2 id="screenerTitle">Screener</h2>
+        <span id="screenerCount" class="symbol-meta" aria-live="polite"></span>
+      </div>
+      <span class="screener-find">
+        <input type="search" id="screenerFilter" class="filter" placeholder="Filter World…" aria-label="Filter worlds">
+        <!-- Where the Screener is narrow, the filters fold behind this button. -->
+        <button type="button" id="screenerFiltersToggle" class="screener-button screener-filters-toggle" aria-controls="screenerControls" aria-expanded="false">Filters</button>
+      </span>
+    </div>
+    <div id="screenerControls" class="screener-controls" role="group" aria-label="Filter and sort worlds">
+      <label>Status <select id="screenerStatus"></select></label>
+      <label>PvP type <select id="screenerType"></select></label>
+      <label>BattlEye <select id="screenerBattleye"></select></label>
+      <label>Location <select id="screenerLocation"></select></label>
+      <label>Data <select id="screenerData"></select></label>
+      <span class="screener-sort">
+        <label>Sort by <select id="screenerSort"></select></label>
+        <button type="button" id="screenerDirection" class="tool">
+          <svg class="icon-ascending" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 16V4M5.5 8.5L10 4l4.5 4.5"/></svg>
+          <svg class="icon-descending" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4v12M5.5 11.5L10 16l4.5-4.5"/></svg>
+        </button>
+      </span>
+      <button type="button" id="screenerReset" class="screener-button">Reset</button>
+    </div>
+    <div class="screener-scroll">
+      <ul id="screenerGrid" class="screener-grid" aria-label="Worlds"></ul>
+      <p id="screenerEmpty" class="empty" hidden></p>
+    </div>
+    <div class="toolbar toolbar-bottom">
+      <div id="screenerRange" class="ranges" role="radiogroup" aria-label="Range">
+        <button type="button" data-range="1M" role="radio" aria-checked="false">1M</button>
+        <button type="button" data-range="3M" role="radio" aria-checked="false">3M</button>
+        <button type="button" data-range="6M" role="radio" aria-checked="false">6M</button>
+        <button type="button" data-range="YTD" role="radio" aria-checked="false">YTD</button>
+        <button type="button" data-range="1Y" role="radio" aria-checked="true">1Y</button>
+        <button type="button" data-range="All" role="radio" aria-checked="false">All</button>
+      </div>
+      <span id="screenerThrough" class="through"></span>
+    </div>
+  </section>
+
   <!-- The dock: the panel open beside the chart, and the tool rail at the right edge. -->
   <div id="dock" class="dock">
     <aside id="worldsPanel" class="dock-panel watchlist" aria-label="Worlds" data-dock-default>
@@ -139,6 +185,7 @@
         </ul>
         <p>Server days run from 10:00 to 10:00 CET/CEST. Change compares the latest best offer with the last one observed on or before the start of the range.</p>
         <p><span id="helpThrough"></span> <span id="helpWorld"></span></p>
+        <p>The Screener, in the tool rail, sets every world side by side for the side and range chosen: a mini chart of its best offers over the range (solid and dotted as on the chart; the hairline is the value the change is measured from), the latest Sell and Buy Offers and their spread, the change over the range, the mean daily Transactions over the range's days with daily figures (Tx/day), and the latest Captured Depth, the Tibia Coins across every visible offer of the last capture that recorded it (not traded volume). Search, filter by status, PvP type, BattlEye, location and data, and sort by any figure; select a world to open its chart.</p>
         <p>Search reaches retired worlds as well. A retired world keeps its own history, separate from the world it merged into, and its ranges end on its last observed day.</p>
         <p class="help-fine">Not affiliated with CipSoft. Tibia is a trademark of CipSoft GmbH.</p>
       </div>
@@ -156,6 +203,9 @@
       <div class="dock-group">
         <button type="button" class="tool dock-tool" data-dock-target="worldsPanel" aria-label="Worlds">
           <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7.5 5.5h9M7.5 10h9M7.5 14.5h9M3.5 5.5h.01M3.5 10h.01M3.5 14.5h.01"/></svg>
+        </button>
+        <button type="button" id="screenerToggle" class="tool dock-tool" aria-pressed="false" aria-label="Screener" title="Screener">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="11" y="3" width="6" height="6" rx="1"/><rect x="3" y="11" width="6" height="6" rx="1"/><rect x="11" y="11" width="6" height="6" rx="1"/></svg>
         </button>
         <button type="button" id="eventsToggle" class="tool dock-tool" data-dock-target="eventsPanel" aria-label="Events">
           <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 17V3.5M5 4h10l-2.5 3.5L15 11H5"/></svg>

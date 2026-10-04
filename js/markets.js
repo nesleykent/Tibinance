@@ -10,6 +10,9 @@
  * their own dataset (js/market-events.js); they can be hidden without touching the market series.
  * Projections: the Research report's offer scenario for the world and side (js/market-projections.js), after the
  * last observation, off until the viewer shows them.
+ *
+ * The Screener (js/market-screener-panel.js) takes the chart's place to set every world side by side for the same side
+ * and range; opening a world from it, or from anywhere else, brings its chart back.
  */
 import { fmt, esc, num } from './format.js';
 import { RANGES, changeOver, dayGrid, daysBetween, marketValues, neighbours, rangeStart, statisticsAt } from './market-series.js';
@@ -20,6 +23,7 @@ import { EVENTS, eventsFor, lifecycleSpan } from './market-events.js';
 import { eventsPanel } from './market-events-panel.js';
 import { eventMarks } from './market-events-ui.js';
 import { PROJECTIONS, forwardEnd, pointText, projectionFor, weekOf } from './market-projections.js';
+import { screenerPanel } from './market-screener-panel.js';
 
 const ASSET = 'tibia-coin';
 const DATA = `data/market-history/${ASSET}/`;
@@ -38,7 +42,9 @@ const tone = value => value > 0 ? 'up' : value < 0 ? 'down' : '';
 const signedRatio = ratio => ratio == null ? num(null) : `<span class="${tone(ratio)}">${percent.format(ratio)}</span>`;
 const signedDelta = delta => delta == null ? num(null) : `<span class="${tone(delta)}">${signedNumber.format(delta)}</span>`;
 
-const state = { index: null, events: null, projections: null, world: null, side: 'sell', range: '1Y', sort: { key: 'world', dir: 1 }, filter: '', files: new Map(), view: null };
+const state = { index: null, events: null, projections: null, overview: null, world: null, side: 'sell', range: '1Y', sort: { key: 'world', dir: 1 }, filter: '',
+  files: new Map(), view: null, screen: false };
+let tools = null;   // the dock (js/markets-dock.js), once wired
 
 /* ------------------------------------------------------------------ chart */
 // Built by js/market-chart.js, which also builds the chart an exported image is drawn from.
@@ -57,6 +63,7 @@ const eventBrowser = eventsPanel($('eventsPanel'), {
   },
   onFocus(event) {
     if (!event || !state.view?.grid.length) return 'No market chart is available for this world.';
+    if (state.screen) showScreener(false);
     // Extend only the whitespace time grid when an event precedes or follows observed history.
     const grid = state.view.grid;
     state.view.grid = dayGrid([grid[0], event.start].sort()[0], [grid.at(-1), event.end].sort().at(-1));
@@ -107,8 +114,8 @@ function drawChart() {
 }
 
 function applyRange(attempt = 0) {
-  const { grid } = state.view;
-  if (!grid.length) return;
+  const grid = state.view?.grid;
+  if (!grid?.length) return;
   // The chart measures its container asynchronously; a range set at zero width is lost.
   if (chart.timeScale().width() === 0 && attempt < 30) { requestAnimationFrame(() => applyRange(attempt + 1)); return; }
   // To the axis's last day, not the last value: a lifecycle event after the last market day stays in view. A shown
@@ -293,6 +300,7 @@ async function select(world, { focus = false } = {}) {
   state.world = world;
   saveUrl();
   drawWatchlist();
+  drawScreener();
   const row = document.querySelector(`#worlds tr[data-world="${CSS.escape(world)}"]`);
   row?.scrollIntoView({ block: 'nearest' });
   if (focus) row?.querySelector('.pick').focus();
@@ -309,9 +317,7 @@ async function select(world, { focus = false } = {}) {
   showLegend(null);
   // A current world without market data yet says so instead of drawing an empty chart.
   $('status').hidden = state.view.grid.length > 0;
-  // An image needs something to show.
-  $('exportButton').disabled = !state.view.grid.length;
-  $('exportButton').title = state.view.grid.length ? 'Export chart image' : `No market data for ${world} to export`;
+  chartTools();
   if (!state.view.grid.length) $('status').textContent = `No market data for ${world} yet.`;
   // The filled details panel shortens the list; keep the selection in view once it has.
   document.querySelector(`#worlds tr[data-world="${CSS.escape(world)}"]`)?.scrollIntoView({ block: 'nearest' });
@@ -344,9 +350,10 @@ function setChoice(group, attribute, value) {
 
 function saveUrl() {
   const url = new URL(location.href);
-  url.searchParams.set('world', state.world);
+  if (state.world) url.searchParams.set('world', state.world);
   url.searchParams.set('side', state.side);
   url.searchParams.set('range', state.range);
+  if (state.screen) url.searchParams.set('view', 'screener'); else url.searchParams.delete('view');
   history.replaceState(null, '', url);
 }
 
@@ -380,6 +387,68 @@ function showProjections(on, { remember = true } = {}) {
   button.title = on ? 'Hide projections' : 'Show projections';
   if (remember) try { on ? localStorage.setItem(PROJECTIONS_SHOWN, 'shown') : localStorage.removeItem(PROJECTIONS_SHOWN); } catch { /* this visit only */ }
   if (state.view?.grid.length) { applyRange(); showLegend(null); describeChart(); }
+}
+
+/* --------------------------------------------------------------- screener */
+// Every world side by side, in the chart's place, for the same side and range. The panel open beside the chart gives its
+// width to the grid, and is back with the chart.
+const screener = screenerPanel($('screenerPanel'), { onOpen: world => openWorld(world).catch(failed), onRange: setRange });
+let panelBeforeScreener = null, overviewLoading = null;
+
+function showScreener(on) {
+  if (on === state.screen) return;
+  // A world opened from the keyboard: focus would be lost with the grid, so it goes to the way back to it.
+  const focused = !on && $('screenerPanel').contains(document.activeElement);
+  state.screen = on;
+  $('market').classList.toggle('is-screening', on);
+  $('chartPanel').hidden = on;
+  $('screenerPanel').hidden = !on;
+  const button = $('screenerToggle');
+  button.setAttribute('aria-pressed', String(on));
+  button.title = on ? 'Back to the chart' : 'Screener';
+  if (on) {
+    panelBeforeScreener = tools.open;
+    tools.show(null, { remember: false });
+    marks.hide();
+    drawScreener();
+    // Daily transactions and captured depth arrive with the overview, the first time the Screener is shown.
+    overviewLoading ??= loadOverview().then(overview => { state.overview = overview; drawScreener(); });
+  } else {
+    if (!tools.open && panelBeforeScreener) tools.show(panelBeforeScreener, { remember: false });
+    panelBeforeScreener = null;
+    if (focused) $('screenerToggle').focus();
+    // Hidden, the chart had no width to show the range in.
+    requestAnimationFrame(() => applyRange());
+  }
+  chartTools();
+  saveUrl();
+}
+const drawScreener = () => state.screen && state.index && screener.update({ index: state.index, overview: state.overview,
+  side: state.side, range: state.range, selected: state.world });
+
+// Opening a world from the Screener, the list or a successor link shows its chart.
+function openWorld(world, options) {
+  showScreener(false);
+  return select(world, options);
+}
+
+// The tools that act on the chart wait while the Screener has its place, and Export needs a chart with data.
+function chartTools() {
+  const exportable = !state.screen && !!state.view?.grid.length;
+  $('exportButton').disabled = !exportable;
+  $('exportButton').title = exportable ? 'Export chart image' : state.screen ? "Export chart image: on a world's chart"
+    : `No market data for ${state.world} to export`;
+  const projections = $('projectionsToggle');
+  projections.disabled = state.screen || !state.projections;
+  if (state.screen) projections.title = "Projections: on a world's chart";
+  else projections.title = market.visible('projections') ? 'Hide projections' : 'Show projections';
+}
+
+// One range for the chart and the Screener: the list, the quote and the grid follow it.
+function setRange(range) {
+  state.range = range;
+  setChoice('range', 'range', range);
+  saveUrl(); drawWatchlist(); applyRange(); showQuote(); drawScreener();
 }
 
 /* ------------------------------------------------------------ full screen */
@@ -446,25 +515,23 @@ async function exportImage() {
     console.error(error);
     $('exportStatus').textContent = 'The chart image could not be exported.';
   } finally {
-    button.disabled = !state.view?.grid.length;
+    chartTools();
   }
 }
 
 function wire() {
-  dock($('dock'), { key: 'tibinance.markets.dock', roomy: () => matchMedia(ROOMY).matches, onChange: dockChanged });
+  tools = dock($('dock'), { key: 'tibinance.markets.dock', roomy: () => matchMedia(ROOMY).matches, onChange: dockChanged });
+  $('screenerToggle').addEventListener('click', () => showScreener(!state.screen));
   $('side').addEventListener('click', e => {
     const side = e.target.closest('button')?.dataset.side;
     if (!side || side === state.side) return;
     state.side = side;
     setChoice('side', 'side', side);
-    saveUrl(); drawWatchlist(); drawChart(); showQuote(); showLegend(null);
+    saveUrl(); drawWatchlist(); drawChart(); showQuote(); showLegend(null); drawScreener();
   });
   $('range').addEventListener('click', e => {
     const range = e.target.closest('button')?.dataset.range;
-    if (!range) return;
-    state.range = range;
-    setChoice('range', 'range', range);
-    saveUrl(); drawWatchlist(); applyRange(); showQuote();
+    if (range) setRange(range);
   });
   $('expand').addEventListener('click', () => toggleExpanded().catch(failed));
   $('eventMarkers').addEventListener('change', e => showEvents(e.target.checked));
@@ -474,7 +541,7 @@ function wire() {
     const world = e.target.closest('.world-link')?.dataset.world;
     if (!world) return;
     $('filter').value = state.filter = '';
-    select(world).catch(failed);
+    openWorld(world).catch(failed);
   });
   // The watchlist indicators' tooltip: hover or keyboard focus shows it, leaving or Escape hides it.
   $('worlds').addEventListener('mouseover', e => { const flag = e.target.closest('.flag'); if (flag) showTip(flag); });
@@ -492,7 +559,7 @@ function wire() {
   });
   $('worlds').addEventListener('click', e => {
     const row = e.target.closest('tr[data-world]');
-    if (row) select(row.dataset.world).catch(failed);
+    if (row) openWorld(row.dataset.world).catch(failed);
   });
   // Up and Down move through the visible worlds, as in a watchlist.
   $('worlds').addEventListener('keydown', e => {
@@ -502,7 +569,7 @@ function wire() {
     const next = rows[at + (e.key === 'ArrowDown' ? 1 : -1)];
     if (!next) return;
     e.preventDefault();
-    select(next.dataset.world, { focus: true }).catch(failed);
+    openWorld(next.dataset.world, { focus: true }).catch(failed);
   });
 }
 
@@ -521,6 +588,18 @@ async function loadEvents() {
     return await response.json();
   } catch (error) {
     console.warn('Market events are unavailable.', error);
+    return null;
+  }
+}
+
+// The Screener's overview too: without it, the grid shows no daily transactions or captured depth.
+async function loadOverview() {
+  try {
+    const response = await fetch(`${DATA}overview.json`);
+    if (!response.ok) throw new Error(`overview.json: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.warn('The market overview is unavailable.', error);
     return null;
   }
 }
@@ -564,6 +643,7 @@ async function main() {
   await document.fonts.ready;
   wire();
   await new Promise(requestAnimationFrame);
+  if (params.get('view') === 'screener') showScreener(true);
   await select(asked ?? (names.includes('Antica') ? 'Antica' : names[0]));
   $('market').setAttribute('aria-busy', 'false');
 }

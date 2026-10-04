@@ -62,7 +62,7 @@ try {
   // Terminal layout: the world and quote above the chart, ranges below it, the rail and the list beside it.
   // The chart's toolbar holds the world and its quote only; the rail holds the market side, Sell or Buy, then panel
   // tools, then direct actions.
-  assert.equal(await page.$$eval('.toolbar-top button,.toolbar-top [role="radio"]',bs=>bs.length),0);
+  assert.equal(await page.$$eval('#chartPanel .toolbar-top button,#chartPanel .toolbar-top [role="radio"]',bs=>bs.length),0);
   const tools=page.getByRole('group',{name:'Tools'});
   const sides=tools.getByRole('radiogroup',{name:'Market side'});
   assert.deepEqual(await sides.getByRole('radio').evaluateAll(rs=>rs.map(r=>[r.textContent,r.getAttribute('aria-checked')])),[['Sell','true'],['Buy','false']]);
@@ -71,7 +71,7 @@ try {
   const lefts=await page.evaluate(()=>['#world','#legend .day','#legend .label'].map(s=>document.querySelector(s).getBoundingClientRect().left));
   assert.ok(lefts.every(l=>Math.abs(l-lefts[0])<=1),`the world, the day and the series share a left edge: ${lefts}`);
   assert.deepEqual(await tools.getByRole('button').evaluateAll(bs=>bs.map(b=>[b.getAttribute('aria-label'),b.hasAttribute('data-dock-target') ? 'panel' : 'action'])),
-    [['Worlds','panel'],['Events','panel'],['Projections','action'],['Help','panel'],['Export chart image','action'],['Full screen','action']]);
+    [['Worlds','panel'],['Screener','action'],['Events','panel'],['Projections','action'],['Help','panel'],['Export chart image','action'],['Full screen','action']]);
   assert.ok(await page.$('.toolbar-bottom #range'));
   // Inside Capture's margins, with or without the panel: the chart, then the Worlds panel, then the rail at the edge.
   const frame=()=>page.evaluate(()=>{
@@ -436,7 +436,7 @@ try {
   await page.setViewportSize({width:390,height:844});
   // On a phone the rail is a row under the chart, without the Worlds tool: the worlds are always listed.
   assert.equal(await page.isVisible('.dock-rail'),true);
-  assert.deepEqual(await tools.getByRole('button').filter({visible:true}).evaluateAll(bs=>bs.map(b=>b.getAttribute('aria-label'))),['Events','Projections','Help','Export chart image','Full screen']);
+  assert.deepEqual(await tools.getByRole('button').filter({visible:true}).evaluateAll(bs=>bs.map(b=>b.getAttribute('aria-label'))),['Screener','Events','Projections','Help','Export chart image','Full screen']);
   assert.ok(await page.evaluate(()=>{const c=document.getElementById('chartPanel').getBoundingClientRect(),r=document.querySelector('.dock-rail').getBoundingClientRect();return r.top>=c.bottom && r.height<60;}),'the rail is a row under the chart');
   assert.equal(await page.isVisible('#worlds tr[data-world="Antica"]'),true,'phones list the worlds with the rail closed');
   // Help opens between the rail and the worlds.
@@ -455,7 +455,7 @@ try {
   // At full screen a phone shows the chart and the rail's actions.
   await page.evaluate(()=>Object.defineProperty(document,'fullscreenEnabled',{value:false,configurable:true}));
   await fullScreen.click();
-  assert.deepEqual(await tools.getByRole('button').filter({visible:true}).evaluateAll(bs=>bs.map(b=>b.getAttribute('aria-label'))),['Projections','Export chart image','Exit full screen']);
+  assert.deepEqual(await tools.getByRole('button').filter({visible:true}).evaluateAll(bs=>bs.map(b=>b.getAttribute('aria-label'))),['Screener','Projections','Export chart image','Exit full screen']);
   assert.ok(await page.evaluate(()=>{const c=document.getElementById('chartPanel').getBoundingClientRect(),r=document.querySelector('.dock-rail').getBoundingClientRect();return c.height>innerHeight*0.8 && r.bottom<=innerHeight+1;}));
   await exitFullScreen.click();
   await page.evaluate(()=>delete document.fullscreenEnabled);
