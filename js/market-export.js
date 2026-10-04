@@ -35,7 +35,7 @@ export async function marketImage({ view, side, logicalRange, context, hidden = 
   host.setAttribute('aria-hidden', 'true');
   host.style.cssText = `position:fixed;left:-100000px;top:0;width:${plotWidth * k}px;height:${CHART_HEIGHT * k}px;pointer-events:none`;
   document.body.append(host);
-  const market = createMarketChart(host, { scale: k, width: plotWidth * k, height: CHART_HEIGHT * k });
+  const market = createMarketChart(host, { scale: k, width: plotWidth * k, height: CHART_HEIGHT * k, profile: view.profile });
   try {
     for (const id of market.optional) market.setVisible(id, !hidden.includes(id));
     market.draw(view, side);
@@ -57,9 +57,21 @@ function compose({ shot, ratio, k, plotWidth, market, keys, notes, context, side
     events: { world: token('--event-world'), game: token('--event-game'), market: token('--event-market') },
     band: token(side === 'buy' ? '--buy' : '--sell') };
   const ui = token('--font-ui'), serif = token('--font-editorial');
-  const noteLines = notes.reduce((n, note) => n + (note.lines ? note.lines.length : 1 + note.rows.length + (note.more ? 1 : 0)), 0);
-  const height = HEAD + CHART_HEIGHT + (noteLines ? 12 + noteLines * LINE : 0) + FOOT + PAD * 2;
   const canvas = document.createElement('canvas');
+  const measure = canvas.getContext('2d');
+  const keyLines = note => {
+    measure.font = `400 13px ${ui}`;
+    let lines = 1, used = 0;
+    for (const {category, count} of note.keys) {
+      const label = category.recurring ? `${category.label} (${count})` : category.label;
+      const width = 55 + measure.measureText(label).width;
+      if (used && used + width > WIDTH - PAD * 2) { lines++; used = 0; }
+      used += width;
+    }
+    return lines;
+  };
+  const noteLines = notes.reduce((n, note) => n + (note.lines ? note.lines.length : keyLines(note) + note.rows.length + (note.more ? 1 : 0)), 0);
+  const height = HEAD + CHART_HEIGHT + (noteLines ? 12 + noteLines * LINE : 0) + FOOT + PAD * 2;
   canvas.width = Math.round(WIDTH * ratio);
   canvas.height = Math.round(height * ratio);
   const ctx = canvas.getContext('2d');
@@ -143,9 +155,13 @@ function drawNotes(ctx, notes, { x, y, right, c, ui, text }) {
     }
     let kx = x;
     for (const { category, count } of note.keys) {
-      const w = drawMarker(ctx, { x: kx + 10, y: y + 10, label: category.mark, color: colorOf(category), background: c.canvas, font: ui });
       const label = category.recurring ? `${category.label} (${count})` : category.label;
-      kx += 10 + w / 2 + 6 + text(label, kx + 10 + w / 2 + 6, y + 14, { font, color: c.ink }) + 18;
+      ctx.font = font;
+      const width = 55 + ctx.measureText(label).width;
+      if (kx > x && kx + width > right) { kx = x; y += LINE; }
+      const w = drawMarker(ctx, { x: kx + 10, y: y + 10, label: category.mark, color: colorOf(category), background: c.canvas, font: ui });
+      text(label, kx + 10 + w / 2 + 6, y + 14, { font, color: c.ink });
+      kx += width;
     }
     y += LINE;
     // The days in a column as wide as the longest, then the mark, then what happened.

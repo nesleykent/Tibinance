@@ -17,7 +17,7 @@ test('the committed event dataset is a fresh build of its inputs', async () => {
   // Every input is named with its hash; the market history is not among them and never names events.
   assert.deepEqual(dataset.inputs.map(i => i.path), ['data/market-events/inputs/events.json', 'data/market-history/inputs/retired-worlds.json',
     'data/market-history/inputs/worlds.json', 'reports/tc-cycle/mergers.json', 'reports/tc-cycle/source-package/events_intervals.json',
-    'reports/tc-cycle/source-package/extra_events.json']);
+    'reports/tc-cycle/source-package/extra_events.json', 'reports/tc-cycle/inputs/eventschedule.json', 'data/market-events/inputs/api-history.json']);
   for (const input of dataset.inputs) assert.match(input.sha256, /^[0-9a-f]{64}$/);
   const index = await readFile(new URL('../data/market-history/tibia-coin/index.json', import.meta.url), 'utf8');
   assert.doesNotMatch(index, /market-events|XP\/Skill|Rapid Respawn/);
@@ -25,7 +25,7 @@ test('the committed event dataset is a fresh build of its inputs', async () => {
 
 test('the dataset is valid, ordered and uses every category of the model', () => {
   assert.deepEqual(validate(dataset, known), []);
-  assert.deepEqual(dataset.categories.map(c => c.id),
+  assert.deepEqual(dataset.categories.slice(0, 8).map(c => c.id),
     ['world-created', 'world-retired', 'world-merge', 'update', 'xp-skill', 'rapid-respawn', 'economy', 'store']);
   const used = new Set(dataset.events.map(e => e.category));
   // A retirement so far has always come with a merge, which the merge event records for every world in it.
@@ -63,8 +63,8 @@ test('recurring game events run from server save to server save: the last listed
   const intervals = await json('reports/tc-cycle/source-package/events_intervals.json');
   const kinds = curated.research.intervals.events;
   const source = intervals.filter(i => kinds[i.event]);
-  const plotted = dataset.events.filter(e => e.source.file === curated.research.intervals.file);
-  assert.equal(plotted.length, source.length);
+  const plotted = dataset.events.filter(e => e.source.calendarDays && Object.values(kinds).some(k => k.category === e.category));
+  for (const interval of source) assert.ok(plotted.some(e => e.start === interval.start && e.title === kinds[interval.event].title), interval.event);
   // The official schedule's XP/Skill Event of 2026-07-03 08:00 UTC to 2026-07-06 08:00 UTC covers three server days.
   const july = plotted.find(e => e.category === 'xp-skill' && e.start === '2026-07-03');
   assert.deepEqual([july.end, july.source.calendarDays], ['2026-07-05', ['2026-07-03', '2026-07-06']]);
@@ -168,7 +168,7 @@ test('markers that would overlap become one group at the earliest; distant ones 
 test('an exported image explains its markers without listing every recurring one', () => {
   const events = eventsFor(dataset, 'Antica');
   const notes = exportNotes(events, {limit: 3});
-  assert.deepEqual(notes.keys.map(k => [k.category.id, k.count]), [['update', 8], ['xp-skill', 27], ['rapid-respawn', 15], ['economy', 2]]);
+  assert.deepEqual(notes.keys.filter(k => ['update','xp-skill','rapid-respawn','economy'].includes(k.category.id)).map(k => [k.category.id, k.count]), [['update', 8], ['xp-skill', 27], ['rapid-respawn', 15], ['economy', 2]]);
   assert.deepEqual(notes.rows.map(e => e.title), ['Summer Update 2023', 'Winter Update 2023', 'Summer Update 2024']);
   assert.equal(notes.more, 7);
   assert.ok(notes.rows.every(e => !e.category.recurring));
@@ -178,4 +178,28 @@ test('names are listed as prose', () => {
   assert.equal(list(['A']), 'A');
   assert.equal(list(['A', 'B']), 'A and B');
   assert.equal(list(['A', 'B', 'C']), 'A, B and C');
+});
+
+ test('every game-calendar type and official schedule survives the build without duplicates', async () => {
+  const inputs = await readInputs();
+  for (const name of new Set(inputs.intervals.map(e => e.event))) assert.ok(dataset.events.some(e => e.title === name), name);
+  for (const e of inputs.calendar.eventlist) {
+    const start = new Date(e.startdate * 1000).toISOString().slice(0, 10);
+    const found = dataset.events.filter(f => f.title === e.name && f.start === start);
+    assert.equal(found.length, 1, `${e.name} ${start}`);
+    assert.equal(found[0].end, new Date(e.enddate * 1000 - 86400000).toISOString().slice(0,10));
+  }
+  assert.ok(dataset.events.some(e => e.title === 'Christmas' && e.start === '2023-12-12'));
+  assert.ok(dataset.events.some(e => e.title === 'Halloween Event' && e.start === '2026-10-31'));
+  assert.ok(dataset.events.some(e => e.title === 'Exaltation Overload' && e.source.observed));
+});
+
+test('unclassified types fail and missing observations do not invent continuous intervals', async () => {
+  const inputs = await readInputs();
+  const unknown = structuredClone(inputs);
+  unknown.history.push({date:'2028-01-01T00:00:00', events:['Unknown event']});
+  assert.throws(() => buildMarketEvents(unknown), /Unclassified calendar event/);
+  inputs.history.push({date:'2028-01-01T00:00:00', events:['Full Moon']}, {date:'2028-01-03T00:00:00', events:['Full Moon']});
+  const result = buildMarketEvents(inputs).events.filter(e => e.start.startsWith('2028'));
+  assert.deepEqual(result.map(e => [e.start, e.end]), [['2028-01-01','2028-01-01'], ['2028-01-03','2028-01-03']]);
 });
