@@ -39,7 +39,9 @@ which open a panel beside the chart, and direct actions. **Worlds**
 opens a dense, separately scrolling watchlist (latest best offer and its
 absolute and percentage change over the selected range) and the selected
 world's details; **Events** shows or hides the event markers (below), a choice
-remembered in the browser rather than the address; **Help** explains how to read
+remembered in the browser rather than the address; **Projections** shows or
+hides the Research's offer scenario (below), off until shown and likewise
+remembered in the browser; **Help** explains how to read
 the chart. One panel is open at
 a time. Closed, the panel gives its width back to the chart, which keeps
 showing the same days; the open panel is remembered in the browser. Until
@@ -126,6 +128,59 @@ node tools/build_market_events.mjs
 `--check` fails when the committed file differs from a fresh build;
 `tests/market-events.test.mjs` runs the same check and validates the dataset
 (categories, dates, worlds, merges, sources, order and copy rules).
+
+### Market projections
+
+Markets has no forecasting model of its own. Shown, the projection layer draws
+the Research report's offer scenario for the selected world and side
+(`reports/tc-cycle/analyze.py`, `results.json` `worldForecast`): the equal-weight
+C+S+H ensemble (Constant, Seasonal 52 weeks, Harmonic with trend and two annual
+harmonic pairs, fitted on at most 130 weeks of Antica's weekly medians), moved to
+each world's own anchor by Antica's proportional change, weekly for the 52 weeks
+the Research publishes. Uncertainty is the Research's heuristic stress band
+(observed backtest error, divergence between the three models and the world's
+premium instability over Antica), which is not a confidence interval and is
+never called one. The Research's conditions are kept: a stale anchor and crossed
+central sides make a week conditional, an announced merge suspends the scenario
+from the merge week, and its confidence (limited for a merge, a stale quote or
+fewer than ten transfer tests) is stated.
+
+Projected values never look like observations: the days after the last
+observation are faintly tinted behind a hairline boundary labelled Projection,
+the central path is a dashed ink line without dots, and the band is a faint fill
+in the side's colour. The path starts on the last observed best offer itself,
+so there is no gap to explain. A scenario is placed only when the Research's
+anchor is that very observation (same server day and price; a capture dated by
+its local calendar day resolves to its server day); a newer observation makes
+it unavailable until the Research is rebuilt, never moved to another anchor.
+Worlds outside the Research's capture universe, retired worlds and worlds
+without market data show why they have none. The band does not widen the price
+scale, so a world with a very wide band keeps its history readable; the band is
+cut at the pane's edge and its values stay in the readout.
+
+The readout gains a Projection row: at rest the scenario's last week, its band
+and its conditions; over a day after the last observation, the projected week
+that holds it (weeks are labelled by their last day; days are never
+interpolated). The window ahead is as long as the range behind, up to the
+horizon (1M shows a month ahead, 1Y and All the 52 weeks); the selected range
+and the address are unchanged. Events stay in the history and keep working.
+Exported images draw the same layer and add two lines under the chart: the
+scenario, its start and its central value on the last week shown, and the band
+with its nature and conditions; the header names the last observed day.
+
+The projection state is a viewing preference kept in the browser, like Events,
+not in the address: a linked view stays the same market view for everyone, and
+the projection depends on the Research edition anyway.
+
+```bash
+node tools/build_market_projections.mjs
+```
+
+It copies the scenarios, rounded to whole gold, into
+`data/market-projections/tibia-coin.json` with the hash of `results.json`, and
+checks every week, condition and anchor; `--check` and
+`tests/market-projections.test.mjs` fail when the file is not a fresh build.
+Rebuild it after rerunning the Research.
 
 ### Market history dataset
 
@@ -595,6 +650,7 @@ python3 -m http.server 8765 --bind 127.0.0.1
 node tests/browser.mjs
 node tests/markets-browser.mjs
 node tests/market-events-browser.mjs
+node tests/market-projections-browser.mjs
 node tests/trade-browser.mjs
 node tests/site-header-browser.mjs
 ```
@@ -641,15 +697,19 @@ js/market-chart.js        the Markets chart and its layers, for the page and the
 js/market-events.js       events: applicability, lifecycle span, grouping, validation (no DOM)
 js/market-events-layer.js the Events chart layer: markers drawn by a pane primitive
 js/market-events-ui.js    inspecting the markers by pointer, touch and keyboard
+js/market-projections.js  projections: placement, boundary, weeks and wording (no DOM)
+js/market-projections-layer.js  the Projections chart layer: central path, band, boundary
 trade.html                Trade page shell
 css/trade.css             Trade layout
 js/trade.js               Trade fields and comparison text
 js/trade-strategies.js    trade now or create an offer: fee, strategies, break-even (no DOM)
 tools/build_market_history.mjs  generates data/market-history/
 tools/build_market_events.mjs   generates data/market-events/events.json
+tools/build_market_projections.mjs  copies the Research scenarios to data/market-projections/
 tools/fetch_market_history.mjs  freezes extra inputs in data/market-history/inputs/
 data/market-history/      generated Markets dataset and its frozen inputs
 data/market-events/       generated event dataset and its curated inputs
+data/market-projections/  the Research's offer scenarios, carried over for Markets
 tools/tcmarket.py         optional CLI for the same pipeline (see tools/README.cli.md)
 reports/tc-cycle/         Tibia Coins cycle report: static page + Python analysis
 ```
