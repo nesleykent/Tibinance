@@ -48,7 +48,7 @@ and 164 frozen input files are unchanged. No price, forecast or ranking changed.
 
 ## Verification
 
-- 118 JavaScript tests passed, including all-world chart/legend/source invariants.
+- 128 JavaScript tests passed after merging the optional projection layer, including all-world chart/legend/source invariants.
 - 59 tools Python tests passed (one optional original-image check skipped).
 - 38 Research Python tests and validation/reproduction passed byte for byte.
 - Chrome and WebKit existing Markets suites passed, including image exports.
@@ -195,3 +195,14 @@ not modified. Complete correction inventory:
 - `data/market-history/tibia-coin/worlds/zuna.json`
 - `data/market-history/tibia-coin/worlds/zunera.json`
 - `docs/market-chart-integration.md` (this record)
+
+## Final concurrent-main integration
+
+The optional Research projection layer from `origin/main` was merged with the
+canonical chart pipeline and Events calendar, preserving all three. The projection
+artifact was rebuilt: only `inputs` provenance hashes changed; all scenario values
+are identical. Generated history, events, projections and the audit reproduce.
+Chrome projection controls/exports and Chrome/WebKit Markets checks passed after
+integration. The primary checkout's uncommitted calendar edits remain untouched.
+Additional integration files: `data/market-projections/tibia-coin.json`,
+`markets.html`, `tests/markets-browser.mjs`, `tests/market-projections-browser.mjs`.
