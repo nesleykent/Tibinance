@@ -8,6 +8,8 @@
  * trade price for the same side in grey, by the same rule. Activity: raw transaction counters per completed
  * server day on that side. Nothing is interpolated. Events: markers along the foot of the chart, from
  * their own dataset (js/market-events.js); they can be hidden without touching the market series.
+ * Projections: the Research report's offer scenario for the world and side (js/market-projections.js), after the
+ * last observation, off until the viewer shows them.
  */
 import { fmt, esc, num } from './format.js';
 import { RANGES, changeOver, dayGrid, daysBetween, marketValues, neighbours, rangeStart, statisticsAt } from './market-series.js';
@@ -17,10 +19,14 @@ import { marketImage } from './market-export.js';
 import { EVENTS, eventsFor, lifecycleSpan } from './market-events.js';
 import { eventsPanel } from './market-events-panel.js';
 import { eventMarks } from './market-events-ui.js';
+import { PROJECTIONS, forwardEnd, pointText, projectionFor, weekOf } from './market-projections.js';
 
 const ASSET = 'tibia-coin';
 const DATA = `data/market-history/${ASSET}/`;
 const EVENTS_SHOWN = 'tibinance.markets.events';   // 'hidden' while the viewer keeps events off
+// 'shown' while the viewer keeps projections on. Like events, a viewing preference, not part of a linked view: the
+// address keeps the world, side and range only.
+const PROJECTIONS_SHOWN = 'tibinance.markets.projections';
 const STALE_DAYS = 7;   // a world whose latest best offer is older than this is marked
 // Where the Worlds panel opens by default: from here up, the chart keeps at least 600px beside it
 // (the page's gutters and maximum width, css/app.css, less the panel and the rail, css/markets.css).
@@ -32,7 +38,7 @@ const tone = value => value > 0 ? 'up' : value < 0 ? 'down' : '';
 const signedRatio = ratio => ratio == null ? num(null) : `<span class="${tone(ratio)}">${percent.format(ratio)}</span>`;
 const signedDelta = delta => delta == null ? num(null) : `<span class="${tone(delta)}">${signedNumber.format(delta)}</span>`;
 
-const state = { index: null, events: null, world: null, side: 'sell', range: '1Y', sort: { key: 'world', dir: 1 }, filter: '', files: new Map(), view: null };
+const state = { index: null, events: null, projections: null, world: null, side: 'sell', range: '1Y', sort: { key: 'world', dir: 1 }, filter: '', files: new Map(), view: null };
 
 /* ------------------------------------------------------------------ chart */
 // Built by js/market-chart.js, which also builds the chart an exported image is drawn from.
@@ -86,6 +92,7 @@ function worldView(summary, file) {
   const span = lifecycleSpan(events, summary.world, historyStart());
   const first = [days[0], span?.first].filter(Boolean).sort()[0], last = [end, span?.last].filter(Boolean).sort().at(-1);
   return { ...values, summary, end, events,
+    projection: projectionFor(state.projections, summary, closes.at(-1)),
     grid: days.length ? dayGrid(first, last) : [], latestDay: days.at(-1) };
 }
 // The first server day of any world's market history.
@@ -104,9 +111,13 @@ function applyRange(attempt = 0) {
   if (!grid.length) return;
   // The chart measures its container asynchronously; a range set at zero width is lost.
   if (chart.timeScale().width() === 0 && attempt < 30) { requestAnimationFrame(() => applyRange(attempt + 1)); return; }
-  // To the axis's last day, not the last value: a lifecycle event after the last market day stays in view.
+  // To the axis's last day, not the last value: a lifecycle event after the last market day stays in view. A shown
+  // projection adds as many days after the last observation as the range shows before it, up to its horizon; the
+  // selected range itself is unchanged.
   const start = rangeStart(state.view.end, state.range);
-  chart.timeScale().setVisibleRange({ from: !start || start <= grid[0] ? grid[0] : start, to: grid.at(-1) });
+  const from = !start || start <= grid[0] ? grid[0] : start;
+  const ahead = shownProjection() && forwardEnd(shownProjection(), daysBetween(from, state.view.end));
+  chart.timeScale().setVisibleRange({ from, to: ahead && ahead > grid.at(-1) ? ahead : grid.at(-1) });
 }
 
 /*
@@ -118,8 +129,11 @@ function applyRange(attempt = 0) {
 function showLegend(day) {
   const view = state.view;
   if (!view) return;
+  $('projectionLegend').innerHTML = '';
   if (!view.latestDay) { $('legend').innerHTML = ''; $('volumeLegend').innerHTML = ''; return; }
   day ??= view.latestDay;
+  // After the last observation there is no market value to read, only the projection, if shown.
+  if (day > view.end && market.visible('projections')) { showProjectedDay(day); return; }
   const side = state.side, labels = SIDES[side], closes = view.closes;
   const { at, before, after } = neighbours(view.closeDays, day);
   // Cells of one grid (css/markets.css), separated by spaces so the text also reads as a line.
@@ -140,7 +154,33 @@ function showLegend(day) {
   $('legend').innerHTML = `<span class="day">${esc(day)}</span> <span class="label"><i class="key key-dot"></i>${labels.offer}</span> ${best} `
     + `<span class="label"><i class="key key-average"></i>Daily average</span> <b class="value">${average}</b>`;
   $('volumeLegend').innerHTML = ` <span class="label"><i class="key key-volume"></i>Transactions</span> <b class="value">${stats ? fmt(stats.transactions) : num(null)}</b>`;
+  if (market.visible('projections') && view.projection) $('projectionLegend').innerHTML = projectionRow(view.projection[side]);
 }
+
+const projectionLabel = '<span class="label"><i class="key key-projection"></i>Projection</span>';
+// The projection, at rest: its value at the end of its horizon, or why there is none.
+function projectionRow(p) {
+  if (!p.available) return ` ${projectionLabel} <span class="note">unavailable: ${esc(p.reason)}</span>`;
+  const end = p.points.at(-1), t = pointText(end, fmt);
+  const notes = [p.confidence === 'limited' && 'limited confidence', p.suspendedFrom && `suspended from ${p.suspendedFrom}`].filter(Boolean);
+  // Its day and conditions are never dropped on a narrow chart, as other rows' details are: they say what it is.
+  return ` ${projectionLabel} <b class="value">${t.value}</b> <span class="rest projected"><span>band ${t.band}</span> <span>on ${esc(end.day)}</span>`
+    + notes.map(n => ` <span>${esc(n)}</span>`).join('') + '</span>';
+}
+// A day after the last observation: the projected week that holds it, never an interpolated day.
+function showProjectedDay(day) {
+  const p = state.view.projection[state.side], week = weekOf(p, day);
+  let cells;
+  if (week) {
+    const t = pointText(week, fmt);
+    cells = `<b class="value">${t.value}</b> <span class="rest projected"><span>band ${t.band}</span> <span>week to ${esc(week.day)}</span>`
+      + t.notes.map(n => ` <span>${esc(n)}</span>`).join('') + '</span>';
+  } else cells = `<span class="note">${p.available && p.suspendedFrom && day >= p.suspendedFrom ? `suspended from ${esc(p.suspendedFrom)}` : 'not projected'}</span>`;
+  $('legend').innerHTML = `<span class="day">${esc(day)}</span> ${projectionLabel} ${cells}`;
+  $('volumeLegend').innerHTML = '';
+}
+// The selected side's projection, when shown and placeable.
+const shownProjection = () => market.visible('projections') && state.view?.projection?.[state.side].available ? state.view.projection[state.side] : null;
 
 // The selected side's latest best offer against the last one on or before the start of the range.
 const rangeChange = () => changeOver(state.view.closes.map(c => ({ day: c.serverDay, value: c[state.side] })), rangeStart(state.view.end, state.range));
@@ -181,8 +221,21 @@ function showQuote() {
   const lastDaily = daily.at(-1)?.serverDay;
   $('detailDaily').innerHTML = lastDaily ? `through ${esc(lastDaily)}` : num(null);
   $('helpWorld').textContent = lastDaily ? `Daily figures for ${summary.world} run through ${lastDaily}.` : `There are no daily figures for ${summary.world}.`;
+  describeChart();
+}
+
+// The chart's accessible description: the history, and the projection when it is shown.
+function describeChart() {
+  const { summary } = state.view, side = state.side, latest = summary.latestBestOffer;
+  let projection = '';
+  if (market.visible('projections') && state.view.projection) {
+    const p = state.view.projection[side], end = p.available && p.points.at(-1);
+    projection = p.available
+      ? ` Projection from the last observation: Research offer scenario to ${end.day}, central ${fmt(end.central)}, heuristic stress band ${fmt(end.low)} to ${fmt(end.high)}${p.confidence === 'limited' ? `, limited confidence (${p.limits.join('; ')})` : ''}${p.suspendedFrom ? `, suspended from ${p.suspendedFrom}` : ''}.`
+      : ` Projection unavailable: ${p.reason}`;
+  }
   $('chart').setAttribute('aria-label', `${summary.world}, ${SIDES[side].offer} history and daily transaction activity (count), range ${state.range}. `
-    + (latest ? `Latest ${fmt(latest[side])} on server day ${latest.serverDay}.` : 'No best offers observed.'));
+    + (latest ? `Latest ${fmt(latest[side])} on server day ${latest.serverDay}.` : 'No best offers observed.') + projection);
 }
 
 // The viewer's own clock, written the way the rest of Tibinance writes times.
@@ -317,6 +370,18 @@ function showEvents(on, { remember = true } = {}) {
   if (remember) try { on ? localStorage.removeItem(EVENTS_SHOWN) : localStorage.setItem(EVENTS_SHOWN, 'hidden'); } catch { /* this visit only */ }
 }
 
+/* ------------------------------------------------------------ projections */
+// Off until the viewer shows them; shown, the choice is remembered on this device. Showing or hiding redraws only the
+// projection and moves the window's right edge; the history, the events and the selected range stay as they are.
+function showProjections(on, { remember = true } = {}) {
+  market.setVisible('projections', on);
+  const button = $('projectionsToggle');
+  button.setAttribute('aria-pressed', String(on));
+  button.title = on ? 'Hide projections' : 'Show projections';
+  if (remember) try { on ? localStorage.setItem(PROJECTIONS_SHOWN, 'shown') : localStorage.removeItem(PROJECTIONS_SHOWN); } catch { /* this visit only */ }
+  if (state.view?.grid.length) { applyRange(); showLegend(null); describeChart(); }
+}
+
 /* ------------------------------------------------------------ full screen */
 // The whole terminal, so the rail and its way back stay on screen; the CSS fallback where element full screen is
 // unavailable (iPhone) or refused.
@@ -354,7 +419,10 @@ function imageContext() {
     value: latest ? fmt(latest[side]) : 'N/A',
     valueNote: latest ? `${SIDES[side].offer} on server day ${latest.serverDay}` : SIDES[side].offer,
     change: change && { text: `${signedNumber.format(delta)} ${percent.format(change.ratio)}`, tone: tone(delta), note: `change over ${state.range}` },
-    shown: shown ? `Server days ${dayOf(shown.from)} to ${dayOf(shown.to)}` : '',
+    // Days after the last observation are projected, and the image says where one ends and the other begins.
+    shown: !shown ? '' : dayOf(shown.to) > end && shownProjection()
+      ? `Server days ${dayOf(shown.from)} to ${end}, projected to ${dayOf(shown.to)}`
+      : `Server days ${dayOf(shown.from)} to ${dayOf(shown.to)}`,
     footer: `Server days run from 10:00 to 10:00 CET/CEST. Market history through ${end}.`
   };
 }
@@ -365,7 +433,7 @@ async function exportImage() {
   button.disabled = true;
   try {
     const canvas = await marketImage({ view: state.view, side: state.side, logicalRange: chart.timeScale().getVisibleLogicalRange(), context: imageContext(),
-      hidden: market.visible('events') ? [] : ['events'] });
+      hidden: ['events', 'projections'].filter(id => !market.visible(id)) });
     const blob = await new Promise((resolve, reject) => canvas.toBlob(b => (b ? resolve(b) : reject(new Error('The image could not be encoded.'))), 'image/png'));
     const name = `tibinance-${summary.world.toLowerCase()}-${state.side}-${state.range.toLowerCase()}-${state.view.end}.png`;
     const link = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: name });
@@ -400,6 +468,7 @@ function wire() {
   });
   $('expand').addEventListener('click', () => toggleExpanded().catch(failed));
   $('eventMarkers').addEventListener('change', e => showEvents(e.target.checked));
+  $('projectionsToggle').addEventListener('click', () => showProjections(!market.visible('projections')));
   $('exportButton').addEventListener('click', exportImage);
   for (const host of [$('worldMeta'), $('detailStatus')]) host.addEventListener('click', e => {
     const world = e.target.closest('.world-link')?.dataset.world;
@@ -456,12 +525,29 @@ async function loadEvents() {
   }
 }
 
+// Projections too: without them the market loads as before, and the tool says there is nothing to show.
+async function loadProjections() {
+  try {
+    const response = await fetch(PROJECTIONS(ASSET));
+    if (!response.ok) throw new Error(`${PROJECTIONS(ASSET)}: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.warn('Market projections are unavailable.', error);
+    return null;
+  }
+}
+
 async function main() {
-  const events = loadEvents();
+  const events = loadEvents(), projections = loadProjections();
   const response = await fetch(`${DATA}index.json`);
   if (!response.ok) throw new Error(`index.json: ${response.status}`);
   state.index = await response.json();
   state.events = await events;
+  state.projections = await projections;
+  let projectionsOn = false;
+  try { projectionsOn = localStorage.getItem(PROJECTIONS_SHOWN) === 'shown'; } catch { /* storage unavailable */ }
+  showProjections(projectionsOn && !!state.projections, { remember: false });
+  $('projectionsToggle').disabled = !state.projections;
   let hidden = false;
   try { hidden = localStorage.getItem(EVENTS_SHOWN) === 'hidden'; } catch { /* storage unavailable */ }
   showEvents(!hidden, { remember: false });
@@ -474,7 +560,10 @@ async function main() {
   setChoice('side', 'side', state.side);
   setChoice('range', 'range', state.range);
   $('helpThrough').textContent = `The market history runs through server day ${state.index.through}.`;
+  // Initial ranges use the settled font metrics and dock width, just like later range selections.
+  await document.fonts.ready;
   wire();
+  await new Promise(requestAnimationFrame);
   await select(asked ?? (names.includes('Antica') ? 'Antica' : names[0]));
   $('market').setAttribute('aria-busy', 'false');
 }
