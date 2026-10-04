@@ -170,6 +170,32 @@ export function bestOfferCloses(observations) {
   return [...days.values()];
 }
 
+/*
+ * A world's daily transaction counters as two arrays, one entry per server day
+ * from `first` to the last reported day, null where that side has no figure, so
+ * the Screener can sum any range without the world file. Raw counters, as the
+ * daily Statistics report them; never a traded TC quantity.
+ */
+export function dailyTransactionSeries(daily) {
+  if (!daily.length) return null;
+  const first = daily[0].serverDay, at = day => Math.round((Date.parse(`${day}T00:00:00Z`) - Date.parse(`${first}T00:00:00Z`)) / 86400000);
+  const length = at(daily.at(-1).serverDay) + 1, sell = Array(length).fill(null), buy = Array(length).fill(null);
+  for (const d of daily) {
+    if (d.sell) sell[at(d.serverDay)] = d.sell.transactions;
+    if (d.buy) buy[at(d.serverDay)] = d.buy.transactions;
+  }
+  return { first, sell, buy };
+}
+
+// The latest captured offer depth: Tibia Coins across every visible offer on
+// each side of the last screenshot that carried it. Offer depth, not traded volume.
+export function latestCapturedDepth(observations) {
+  const o = observations.findLast(x => 'sellVolume' in x || 'buyVolume' in x);
+  if (!o) return null;
+  return { capturedAtUtc: o.capturedAtUtc, serverDay: o.serverDay,
+    ...('sellVolume' in o ? { sell: o.sellVolume } : {}), ...('buyVolume' in o ? { buy: o.buyVolume } : {}) };
+}
+
 // Sources observe the same fields independently, including at the same instant.
 // Refuse duplicate source/instant records, but preserve cross-source observations.
 export function mergeObservations(observations) {

@@ -38,7 +38,9 @@ Buy switch, then holds two kinds of tool (`js/markets-dock.js`): panel tools,
 which open a panel beside the chart, and direct actions. **Worlds**
 opens a dense, separately scrolling watchlist (latest best offer and its
 absolute and percentage change over the selected range) and the selected
-world's details; **Events** shows or hides the event markers (below), a choice
+world's details; **Screener** sets every world side by side in the chart's
+place (below); **Events** opens a calendar, an agenda and each event's details,
+and its Chart markers switch shows or hides the event markers (below), a choice
 remembered in the browser rather than the address; **Projections** shows or
 hides the Research's offer scenario (below), off until shown and likewise
 remembered in the browser; **Help** explains how to read
@@ -57,7 +59,8 @@ worlds below it. The chart is built from layers (`js/market-chart.js`); a
 layer added there, such as events or projections, is drawn on the page and in
 every export alike.
 Selecting a world updates the chart and the address
-(`markets.html?world=Gentebra&side=sell&range=1Y`), so a view can be linked.
+(`markets.html?world=Gentebra&side=sell&range=1Y`), so a view can be linked;
+`&view=screener` opens the Screener.
 The page presents one market history; it does not label where each value came from.
 
 The watchlist lists every current Tibia world; a world without market data yet
@@ -65,6 +68,46 @@ shows N/A until captures provide it. Retired worlds with market history are kept
 for historical analysis: a search reaches them, they are labelled Retired
 wherever they appear, their history stays separate from the world they merged
 into, and their ranges end on their last observed day.
+
+### Screener
+
+The Screener (`js/market-screener.js`, `js/market-screener-panel.js`) is part of
+Markets, opened from the tool rail. It takes the chart's place, and the open
+panel gives its width to the grid until the chart is back. Every world is a
+card for the side and range the chart uses (one choice for both, in the rail
+and in the ranges under the grid):
+
+- the world, its latest best offer and its change over the range, by the
+  watchlist's rule; a current world whose latest best offer is more than seven
+  days old names its day;
+- a mini chart of its best offers over the range, drawn by the chart's rules:
+  time to scale, solid between consecutive server days, dotted across days not
+  observed, nothing added. A hairline marks the value the change is measured
+  from, and the latest point is marked;
+- **Sell**, **Buy** and **Spread**: the latest best offers and their difference;
+- **Tx/day**: the mean raw Number of Transactions per completed server day on
+  that side, over the range's days that have a daily figure (a day without one
+  is left out, never counted as zero; the tooltip gives the days). Actual traded
+  TC quantity is unknown, so the Screener has no traded volume;
+- **Depth**: the latest Captured Depth on that side, the Tibia Coins across
+  every visible offer of the last screenshot that recorded it, with its day in
+  the tooltip. It is offer depth, not traded volume, and only captured worlds
+  have it;
+- what the world is: PvP type, BattlEye and location.
+
+A search and filters narrow the grid: status (Active by default, Retired or
+All), PvP type, BattlEye, location (the values found among the worlds of that
+status) and data (any, with best offers, or observed in the last seven days).
+It sorts by world, latest best offer, change, change in percent, spread, Tx/day
+or Captured Depth, largest first; worlds without the figure always come last,
+and the arrow reverses the order. When only retired worlds match a search, the
+grid offers to show them. Filters and order are remembered in this browser, not
+the address; the search lasts the visit. A card is a link to the world's chart:
+selecting it opens the chart in place for the same side and range, as does
+choosing a world in the Worlds panel. Export and Projections act on the chart
+and wait while the Screener is shown. On narrow screens the filters fold behind
+a Filters button, which counts those in use, and the list under the rail is
+left out, since the grid already lists the worlds.
 
 The price pane shows two measures and never substitutes one for the other:
 
@@ -192,6 +235,12 @@ research do not read it.
   summary per world: status (`active` or `retired`, with `offline` and
   `mergedInto`; a successor lists `formedFrom`), type, BattlEye, location, and
   its complete daily best-offer closes for the watchlist.
+- `overview.json`: what the Screener compares and the index does not carry, per
+  world: its daily transaction counters as two arrays (`transactions.sell` and
+  `.buy`), one entry per server day from `transactions.first`, null where that
+  side has no daily figure; and its latest captured depth (`depth`: the
+  `sellVolume` and `buyVolume` of the last observation that has them, with its
+  `capturedAtUtc` and `serverDay`). It is loaded only when the Screener opens.
 - `worlds/<world>.json`: `observations` (`capturedAtUtc`, `serverDay`, `sell`,
   `buy`, the captured volumes and gold figures where they exist, and
   `statistics30d`) and `dailyStatistics` (per server day and side:
@@ -651,6 +700,7 @@ node tests/browser.mjs
 node tests/markets-browser.mjs
 node tests/market-events-browser.mjs
 node tests/market-projections-browser.mjs
+node tests/market-screener-browser.mjs
 node tests/trade-browser.mjs
 node tests/site-header-browser.mjs
 ```
