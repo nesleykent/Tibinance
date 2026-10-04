@@ -35,11 +35,6 @@ const state = { index: null, world: null, side: 'sell', range: '1Y', sort: { key
 const market = createMarketChart($('chart'));
 const chart = market.chart;
 chart.subscribeCrosshairMove(p => showLegend(p.time === undefined ? null : dayOf(p.time)));
-// The volume legend sits at the top of the volume pane, wherever the panes divide.
-new ResizeObserver(placeVolumeLegend).observe($('chart'));
-function placeVolumeLegend() {
-  $('volumeLegend').style.top = `calc(${chart.paneSize(0).height + 1}px + var(--space-1))`;
-}
 
 /* -------------------------------------------------------------- the world */
 const retired = summary => summary.status === 'retired';
@@ -64,7 +59,6 @@ function drawChart() {
   $('market').classList.toggle('side-sell', state.side === 'sell');
   $('market').classList.toggle('side-buy', state.side === 'buy');
   applyRange();
-  placeVolumeLegend();
 }
 
 function applyRange(attempt = 0) {
@@ -125,6 +119,11 @@ function showQuote() {
     summary.type && `<span>${esc(summary.type)}</span>`,
     summary.battleye && `<span>BattlEye <span class="be-${esc(summary.battleye)}">${esc(summary.battleye)}</span></span>`].filter(Boolean).join('');
   $('worldMeta').title = $('worldMeta').textContent.replace(/\s+/g, ' ').trim();   // the whole line where it is cut short
+  // The side picker carries both sides' latest best offers and the spread between them, as the chart's context.
+  $('sideSell').innerHTML = num(latest?.sell);
+  $('sideBuy').innerHTML = num(latest?.buy);
+  $('sideSpread').innerHTML = latest ? fmt(latest.sell - latest.buy) : '';
+  $('through').textContent = `Server days through ${state.view.end}`;
   $('lastPrice').innerHTML = num(latest?.[side]);
   $('lastPrice').title = SIDES[side].offer;
   $('lastChange').innerHTML = changeText;

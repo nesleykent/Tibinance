@@ -43,8 +43,17 @@
 
     <div class="chart-area">
       <div id="chart" class="chart" role="img"></div>
-      <div id="legend" class="legend" aria-hidden="true"></div>
-      <div id="volumeLegend" class="legend legend-volume" aria-hidden="true"></div>
+      <!-- The chart's status lines, over its top left: the market side shown (each with its latest best offer, the
+           spread between them), then the day's values under the crosshair, volume included. -->
+      <div class="chart-legend">
+        <div id="side" class="sides" role="radiogroup" aria-label="Market side">
+          <button type="button" class="side-pick" data-side="sell" role="radio" aria-checked="true"><b id="sideSell"></b><span>Sell</span></button>
+          <span id="sideSpread" class="side-spread" title="Spread"></span>
+          <button type="button" class="side-pick" data-side="buy" role="radio" aria-checked="false"><b id="sideBuy"></b><span>Buy</span></button>
+        </div>
+        <div id="legend" class="legend" aria-hidden="true"></div>
+        <div id="volumeLegend" class="legend legend-volume" aria-hidden="true"></div>
+      </div>
       <p id="status" class="chart-status">Loading…</p>
     </div>
 
@@ -57,6 +66,7 @@
         <button type="button" data-range="1Y" role="radio" aria-checked="true">1Y</button>
         <button type="button" data-range="All" role="radio" aria-checked="false">All</button>
       </div>
+      <span id="through" class="through"></span>
     </div>
   </section>
 
@@ -112,14 +122,9 @@
       </div>
     </section>
     <!-- The tool rail, in regions by meaning, top to bottom (a row on phones, start to end):
-         the chart's own state; tools that analyse or navigate the market (panel tools carry data-dock-target);
+         tools that analyse or navigate the market (panel tools carry data-dock-target);
          flexible space; then utilities. A tool to come joins the region it belongs to, not the end of the list. -->
     <div class="dock-rail" role="group" aria-label="Tools">
-      <div id="side" class="dock-group dock-side" role="radiogroup" aria-label="Market side">
-        <button type="button" class="tool dock-tool" data-side="sell" role="radio" aria-checked="true">Sell</button>
-        <button type="button" class="tool dock-tool" data-side="buy" role="radio" aria-checked="false">Buy</button>
-      </div>
-      <span class="dock-rule" aria-hidden="true"></span>
       <div class="dock-group">
         <button type="button" class="tool dock-tool" data-dock-target="worldsPanel" aria-label="Worlds">
           <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7.5 5.5h9M7.5 10h9M7.5 14.5h9M3.5 5.5h.01M3.5 10h.01M3.5 14.5h.01"/></svg>
