@@ -59,7 +59,10 @@ try {
     // No permanent navigation: the sections are listed only inside the closed menu.
     assert.deepEqual(await open(),[]);
     assert.equal(await menu.isVisible(),false);
-    assert.equal(await page.locator('header.site a:visible').count(),p.home ? 1 : 0,`${label}: no visible section links`);
+    const project=page.getByRole('link',{name:'Tibinance project on GitHub'});
+    assert.equal(await project.getAttribute('href'),'https://github.com/nesleykent/Tibinance');
+    assert.equal(await project.isVisible(),true);
+    assert.equal(await page.locator('header.site a:visible').count(),p.home ? 2 : 1,`${label}: home and project links`);
     assert.equal((await box('header.site')).bottom,HEADER,`${label}: the shared header height`);
     // The same margins as Capture, and room kept for a scrollbar whether the page scrolls or not, so they stay the
     // same where scrollbars take up width.

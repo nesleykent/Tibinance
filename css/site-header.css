@@ -88,3 +88,16 @@
   .site-crumb { padding:0; margin:0; }
   .site-slash { margin-inline:var(--space-1); }
 }
+
+/* The project link stays visible alongside each section's own controls. */
+.site-github { margin-inline-start:auto; color:var(--muted); flex:none; }
+.site-github svg { width:18px; height:18px; flex:none; }
+@media (max-width:600px) {
+  .site-github { padding-inline:var(--space-1); }
+  .site-github span { display:none; }
+}
+@media (max-width:480px) {
+  .site-crumb { padding-inline:var(--space-1); }
+  .site-github { padding-inline:0; }
+}
+@media print { .site-github { display:none; } }

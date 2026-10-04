@@ -1,11 +1,12 @@
 // Asset-specific presentation over the same Markets chart, range, dock, events and PNG export.
 import { esc } from './format.js';
 import { RANGES, changeOver, rangeStart, dayGrid } from './market-series.js';
-import { createMarketChart, dayOf } from './market-chart.js';
-import { marketImage } from './market-export.js';
+// Version the changed shared modules: GitHub Pages can retain pre-TIB code in browser caches.
+import { createMarketChart, dayOf } from './market-chart.js?v=20261004-tib';
+import { marketImage } from './market-export.js?v=20261004-tib';
 import { dock } from './markets-dock.js';
 import { EVENTS } from './market-events.js';
-import { eventsPanel } from './market-events-panel.js';
+import { eventsPanel } from './market-events-panel.js?v=20261004-tib';
 import { eventMarks } from './market-events-ui.js';
 import { TOKEN_PROFILE, tokenPrice, tokenView, CONTRACT } from './tibia-token.js';
 const $ = id => document.getElementById(id);
