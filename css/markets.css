@@ -20,6 +20,9 @@ body { display:flex; flex-direction:column; height:100dvh; overflow:hidden; }
 .site { position:static; flex:none; }
 /* The terminal sits in the page's own margins (.wrap), however wide the chart is. */
 .terminal { flex:1; width:100%; min-height:0; display:grid; grid-template-columns:minmax(0,1fr) auto; }
+/* The space every page leaves under the header rule (.hero in css/app.css). */
+.terminal:not(.expanded,:fullscreen) { padding-top:var(--space-5); }
+@media (max-width:760px) { .terminal:not(.expanded,:fullscreen) { padding-top:var(--space-4); } }
 
 /* ---- chart panel -------------------------------------------------------------- */
 /* The toolbar follows the chart's own width (below), which the open panel narrows as much as a small screen does. */
@@ -33,8 +36,8 @@ body { display:flex; flex-direction:column; height:100dvh; overflow:hidden; }
 .symbol-quote { display:flex; flex-wrap:wrap; align-items:baseline; gap:var(--space-2); font-variant-numeric:lining-nums tabular-nums; white-space:nowrap; }
 .symbol-last { font-size:var(--step-1); font-weight:var(--weight-strong); }
 .symbol-change { font-size:var(--step-n1); }
-/* World, quote and side read as three groups: a hairline after each of the first two, full toolbar height. */
-.toolbar-top > .symbol,.toolbar-top > .symbol-quote { align-self:stretch; align-content:center; padding-right:var(--space-4); border-right:var(--rule) solid var(--line); }
+/* World and quote read as two groups: a hairline after the first, full toolbar height. */
+.toolbar-top > .symbol { align-self:stretch; align-content:center; padding-right:var(--space-4); border-right:var(--rule) solid var(--line); }
 /* A tool button: an icon on the control track when hovered, pressed or open. */
 .tool { display:inline-grid; place-items:center; width:var(--control-height); height:var(--control-height); padding:0; border:0; border-radius:var(--control-radius); background:transparent; color:var(--muted); cursor:pointer; }
 .tool:hover,.tool[aria-pressed="true"],.tool[aria-expanded="true"] { background:var(--control-track); color:var(--ink); }
@@ -131,10 +134,14 @@ table.watch td.stale { color:var(--muted); }
 .dock-panel { width:var(--watch-width); border-right:var(--rule) solid var(--line); }
 .dock-panel:not(.is-open) { display:none; }
 /* The rail's buttons line up with the toolbar; the open panel's button holds the control track. Panel tools come
-   first, then a hairline, then the actions. */
+   first, then a hairline, then the actions. Above them all, the market side the chart shows, Sell or Buy, as a
+   compact stacked switch. */
 .dock-rail { flex:none; display:flex; flex-direction:column; align-items:center; gap:var(--space-1); width:var(--rail-width);
   padding-top:calc((var(--toolbar-height) - var(--space-6)) / 2); }
 .dock-tool { width:var(--space-6); height:var(--space-6); }
+.dock-side { grid-auto-flow:row; grid-auto-rows:var(--control-height); width:calc(var(--space-6) + var(--space-1)); }
+.dock-side button { padding:0; }
+.dock-side button:not([aria-checked="true"]) + button:not([aria-checked="true"]) { background:linear-gradient(var(--line-strong),var(--line-strong)) center top / 50% var(--rule) no-repeat; }
 .dock-rule { flex:none; width:var(--space-5); height:var(--rule); margin:var(--space-1) 0; background:var(--line); }
 
 /* ---- selected world -------------------------------------------------------------- */
@@ -165,6 +172,10 @@ table.watch td.stale { color:var(--muted); }
   .dock { display:flex; flex-direction:column; }
   .dock-rail { order:-1; flex-direction:row; justify-content:flex-end; width:auto; padding:var(--space-1) 0; border-bottom:var(--rule) solid var(--line); }
   .dock-rule { width:var(--rule); height:var(--space-5); margin:0 var(--space-1); }
+  /* The side leads the row; the tools keep to the end. */
+  .dock-side { grid-auto-flow:column; grid-auto-columns:1fr; width:fit-content; margin-right:auto; }
+  .dock-side button { padding:0 var(--control-pad); }
+  .dock-side + .dock-rule { display:none; }
   .dock-tool[data-dock-default] { display:none; }
   .dock-panel { width:auto; border-right:0; }
   .dock-panel:not([data-dock-default]) { border-bottom:var(--rule) solid var(--line); }
@@ -189,7 +200,7 @@ table.watch td.stale { color:var(--muted); }
 }
 @container chart (max-width:591.98px) {
   /* The toolbar wraps here; a divider would start a line. */
-  .toolbar-top > .symbol,.toolbar-top > .symbol-quote { padding-right:0; border-right:0; }
+  .toolbar-top > .symbol { padding-right:0; border-right:0; }
 }
 @container chart (max-width:471.98px) {
   .symbol-meta,.legend .meta { display:none; }

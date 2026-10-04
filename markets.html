@@ -39,10 +39,6 @@
         <span id="lastPrice" class="symbol-last"></span>
         <span id="lastChange" class="symbol-change"></span>
       </div>
-      <div id="side" class="segmented" role="radiogroup" aria-label="Market side">
-        <button type="button" data-side="sell" role="radio" aria-checked="true">Sell</button>
-        <button type="button" data-side="buy" role="radio" aria-checked="false">Buy</button>
-      </div>
     </div>
 
     <div class="chart-area">
@@ -115,8 +111,13 @@
         <p class="help-fine">Not affiliated with CipSoft. Tibia is a trademark of CipSoft GmbH.</p>
       </div>
     </section>
-    <!-- The tool rail: buttons that open a panel (data-dock-target), then direct actions. -->
+    <!-- The tool rail: the market side, buttons that open a panel (data-dock-target), then direct actions. -->
     <div class="dock-rail" role="group" aria-label="Tools">
+      <div id="side" class="segmented dock-side" role="radiogroup" aria-label="Market side">
+        <button type="button" data-side="sell" role="radio" aria-checked="true">Sell</button>
+        <button type="button" data-side="buy" role="radio" aria-checked="false">Buy</button>
+      </div>
+      <span class="dock-rule" aria-hidden="true"></span>
       <button type="button" class="tool dock-tool" data-dock-target="worldsPanel" aria-label="Worlds">
         <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7.5 5.5h9M7.5 10h9M7.5 14.5h9M3.5 5.5h.01M3.5 10h.01M3.5 14.5h.01"/></svg>
       </button>

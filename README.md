@@ -27,15 +27,15 @@ The analysis uses [TibiaMarket’s public API](https://api.tibiamarket.top/docs)
 ## Markets
 
 [Markets](markets.html) is a market terminal for the Tibia Coin history of every
-tracked world. The chart fills the viewport under the header: Sell / Buy, the
-state of the series shown, sits in its top toolbar, the 1M / 3M / 6M / YTD /
-1Y / All ranges in its bottom toolbar. Legends on the chart follow the crosshair
+tracked world. The chart fills the viewport under the header: the world and
+its quote head it, the 1M / 3M / 6M / YTD / 1Y / All ranges sit below it. Legends on the chart follow the crosshair
 (server day, best offer with its change from the previous observation, daily
 average, volume), and the latest best offer is marked on the price scale. The
 page keeps the same outer margins as Capture and Research.
 
-At its right edge, the tool rail holds two kinds of tool (`js/markets-dock.js`):
-panel tools, which open a panel beside the chart, and direct actions. **Worlds**
+At its right edge, the tool rail leads with the market side, a compact Sell /
+Buy switch, then holds two kinds of tool (`js/markets-dock.js`): panel tools,
+which open a panel beside the chart, and direct actions. **Worlds**
 opens a dense, separately scrolling watchlist (latest best offer and its
 absolute and percentage change over the selected range) and the selected
 world's details; **Help** explains how to read the chart. One panel is open at

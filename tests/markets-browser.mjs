@@ -59,12 +59,14 @@ try {
   // One market, not two sources: no source is named anywhere in the page.
   assert.doesNotMatch(await page.content(),/tibiamarket/i);
 
-  // Terminal layout: Sell/Buy and tools above the chart, ranges below it, the list beside it.
-  // Sell/Buy stays in the chart's toolbar, the state of the series shown; the tools are in the rail at the edge:
-  // panel tools first, then direct actions.
-  assert.ok(await page.$('.toolbar-top #side'));
-  assert.deepEqual(await page.$$eval('.toolbar-top button',bs=>bs.map(b=>b.textContent.trim())),['Sell','Buy']);
+  // Terminal layout: the world and quote above the chart, ranges below it, the rail and the list beside it.
+  // The chart's toolbar holds the world and its quote only; the rail holds the market side, Sell or Buy, then panel
+  // tools, then direct actions.
+  assert.equal(await page.$$eval('.toolbar-top button,.toolbar-top [role="radio"]',bs=>bs.length),0);
   const tools=page.getByRole('group',{name:'Tools'});
+  const sides=tools.getByRole('radiogroup',{name:'Market side'});
+  assert.deepEqual(await sides.getByRole('radio').evaluateAll(rs=>rs.map(r=>[r.textContent,r.getAttribute('aria-checked')])),[['Sell','true'],['Buy','false']]);
+  assert.ok(await page.evaluate(()=>{const s=document.getElementById('side').getBoundingClientRect(),t=document.querySelector('[data-dock-target="worldsPanel"]').getBoundingClientRect();return s.bottom<=t.top && s.width<=48;}),'the side leads the rail, compact');
   assert.deepEqual(await tools.getByRole('button').evaluateAll(bs=>bs.map(b=>[b.getAttribute('aria-label'),b.hasAttribute('data-dock-target') ? 'panel' : 'action'])),
     [['Worlds','panel'],['Help','panel'],['Export chart image','action'],['Full screen','action']]);
   assert.ok(await page.$('.toolbar-bottom #range'));
@@ -403,7 +405,7 @@ try {
     assert.equal(await view.isVisible('#worldsPanel'),expanded==='true');
     // Opened here anyway, the panel narrows the chart like a small screen: the toolbar wraps rather than overlap.
     if (expanded==='false') await view.click('.dock-tool');
-    assert.ok(await view.evaluate(()=>{const parts=['#world','.symbol-quote','#side'].map(s=>document.querySelector(s).getBoundingClientRect());
+    assert.ok(await view.evaluate(()=>{const parts=['#world','.symbol-quote'].map(s=>document.querySelector(s).getBoundingClientRect());
       return parts.every((a,i)=>parts.slice(i+1).every(b=>a.right<=b.left+1 || b.right<=a.left+1 || a.bottom<=b.top+1 || b.bottom<=a.top+1));}),`${width}px toolbar parts overlap`);
     await fresh.close();
   }
