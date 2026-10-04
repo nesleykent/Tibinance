@@ -60,15 +60,18 @@ try {
   assert.doesNotMatch(await page.content(),/tibiamarket/i);
 
   // Terminal layout: the world and quote above the chart, ranges below it, the rail and the list beside it.
-  // The market side is the chart's own state, on the chart under the world: Sell and Buy with their latest best
-  // offers and the spread between them. The rail only launches panels and actions.
+  // The chart's toolbar holds the world and its quote only; the rail holds the market side, Sell or Buy, then panel
+  // tools, then direct actions.
   assert.equal(await page.$$eval('.toolbar-top button,.toolbar-top [role="radio"]',bs=>bs.length),0);
   const tools=page.getByRole('group',{name:'Tools'});
-  assert.equal(await tools.getByRole('radio').count(),0,'no chart state in the rail');
-  const sides=page.locator('.chart-area').getByRole('radiogroup',{name:'Market side'});
-  assert.deepEqual(await sides.getByRole('radio').evaluateAll(rs=>rs.map(r=>[r.querySelector('span').textContent,r.getAttribute('aria-checked')])),[['Sell','true'],['Buy','false']]);
+  const sides=tools.getByRole('radiogroup',{name:'Market side'});
+  assert.deepEqual(await sides.getByRole('radio').evaluateAll(rs=>rs.map(r=>[r.textContent,r.getAttribute('aria-checked')])),[['Sell','true'],['Buy','false']]);
+  assert.ok(await page.evaluate(()=>{const s=document.getElementById('side').getBoundingClientRect(),t=document.querySelector('[data-dock-target="worldsPanel"]').getBoundingClientRect();return s.bottom<=t.top && s.width<=48;}),'the side leads the rail, compact');
+  // One left edge for the world, its readout and the ranges; one right edge for the quote and the price labels' column.
+  const lefts=await page.evaluate(()=>['#world','#legend .day','#legend .label'].map(s=>document.querySelector(s).getBoundingClientRect().left));
+  assert.ok(lefts.every(l=>Math.abs(l-lefts[0])<=1),`the world, the day and the series share a left edge: ${lefts}`);
   assert.deepEqual(await tools.getByRole('button').evaluateAll(bs=>bs.map(b=>[b.getAttribute('aria-label'),b.hasAttribute('data-dock-target') ? 'panel' : 'action'])),
-    [['Worlds','panel'],['Help','panel'],['Export chart image','action'],['Full screen','action']]);
+    [['Worlds','panel'],['Events','action'],['Help','panel'],['Export chart image','action'],['Full screen','action']]);
   assert.ok(await page.$('.toolbar-bottom #range'));
   // Inside Capture's margins, with or without the panel: the chart, then the Worlds panel, then the rail at the edge.
   const frame=()=>page.evaluate(()=>{
@@ -140,8 +143,10 @@ try {
   assert.deepEqual([await text('#detailSell'),await text('#detailBuy'),await text('#detailSpread')],
     [number.format(gentebra.sell),number.format(gentebra.buy),number.format(gentebra.sell-gentebra.buy)]);
   assert.equal(await text('#detailDaily'),'through 2026-09-11');
-  assert.deepEqual([await text('#sideSell'),await text('#sideBuy'),await text('#sideSpread')],
-    [number.format(gentebra.sell),number.format(gentebra.buy),number.format(gentebra.sell-gentebra.buy)]);
+  // The side choice names each side's latest best offer on hover; the quote names the range its change covers.
+  assert.deepEqual(await page.$$eval('#side button',bs=>bs.map(b=>b.title)),
+    [`Best Sell Offer: ${number.format(gentebra.sell)}`,`Best Buy Offer: ${number.format(gentebra.buy)}`]);
+  assert.equal(await text('#lastRange'),'1Y');
   // Copy rule: no middle dots anywhere, generated text included; the metadata is separate items instead.
   assert.doesNotMatch(await page.content(),/\u00b7|&middot;/);
   assert.deepEqual(await page.$$eval('#worldMeta > span',spans=>spans.map(s=>s.textContent)),['Optional PvP','BattlEye Yellow']);
@@ -268,6 +273,9 @@ try {
     return {width:image.width,height:image.height,sell:count(chart,near([180,83,42])),buy:count(chart,near([47,109,181])),probe:count(chart,near([0,255,0])),
       span:xs.length ? (Math.max(...xs)-Math.min(...xs))/(1136*r) : 0,title:count(box(32,32,600,90),dark),footer:count(box(32,708,400,750),dark)};
   },png);
+  // The series alone, in the image's fixed layout: events, shown by default, add notes under the chart and are
+  // covered by tests/market-events-browser.mjs.
+  await page.click('#eventsToggle');
   await page.click('#side button[data-side="sell"]');
   await page.click('#range button[data-range="1Y"]');
   let image=await exportImage(page);
@@ -291,6 +299,7 @@ try {
   pixels=await inspect((await exportImage(page)).png);
   assert.ok(pixels.probe>1000,`the probe layer is drawn: ${pixels.probe}`);
   await page.evaluate(async()=>{const {LAYERS}=await import('/js/market-chart.js');LAYERS.splice(LAYERS.indexOf(window.probeLayer),1);});
+  await page.click('#eventsToggle');
   await page.click('#side button[data-side="sell"]');
   await page.click('#range button[data-range="1Y"]');
   // A world without market data has nothing to export.
@@ -415,7 +424,7 @@ try {
   await page.setViewportSize({width:390,height:844});
   // On a phone the rail is a row under the chart, without the Worlds tool: the worlds are always listed.
   assert.equal(await page.isVisible('.dock-rail'),true);
-  assert.deepEqual(await tools.getByRole('button').filter({visible:true}).evaluateAll(bs=>bs.map(b=>b.getAttribute('aria-label'))),['Help','Export chart image','Full screen']);
+  assert.deepEqual(await tools.getByRole('button').filter({visible:true}).evaluateAll(bs=>bs.map(b=>b.getAttribute('aria-label'))),['Events','Help','Export chart image','Full screen']);
   assert.ok(await page.evaluate(()=>{const c=document.getElementById('chartPanel').getBoundingClientRect(),r=document.querySelector('.dock-rail').getBoundingClientRect();return r.top>=c.bottom && r.height<60;}),'the rail is a row under the chart');
   assert.equal(await page.isVisible('#worlds tr[data-world="Antica"]'),true,'phones list the worlds with the rail closed');
   // Help opens between the rail and the worlds.
@@ -423,14 +432,16 @@ try {
   assert.ok(await page.evaluate(()=>{const r=document.querySelector('.dock-rail').getBoundingClientRect(),h=document.getElementById('helpPanel').getBoundingClientRect(),d=document.querySelector('.details').getBoundingClientRect();
     return h.height>0 && h.top>=r.bottom && h.bottom<=d.top;}),'help opens under the rail, above the details');
   await helpTool.click();
-  // The same image from a phone.
+  // The same image from a phone (the series alone, as above).
+  await page.click('#eventsToggle');
   pixels=await inspect((await exportImage(page)).png);
+  await page.click('#eventsToggle');
   assert.deepEqual([pixels.width,pixels.height],[2400,1560]);
   assert.ok(pixels.sell>2000 && pixels.span>0.85,`phone export ${JSON.stringify(pixels)}`);
   // At full screen a phone shows the chart and the rail's actions.
   await page.evaluate(()=>Object.defineProperty(document,'fullscreenEnabled',{value:false,configurable:true}));
   await fullScreen.click();
-  assert.deepEqual(await tools.getByRole('button').filter({visible:true}).evaluateAll(bs=>bs.map(b=>b.getAttribute('aria-label'))),['Export chart image','Exit full screen']);
+  assert.deepEqual(await tools.getByRole('button').filter({visible:true}).evaluateAll(bs=>bs.map(b=>b.getAttribute('aria-label'))),['Events','Export chart image','Exit full screen']);
   assert.ok(await page.evaluate(()=>{const c=document.getElementById('chartPanel').getBoundingClientRect(),r=document.querySelector('.dock-rail').getBoundingClientRect();return c.height>innerHeight*0.8 && r.bottom<=innerHeight+1;}));
   await exitFullScreen.click();
   await page.evaluate(()=>delete document.fullscreenEnabled);

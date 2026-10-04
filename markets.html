@@ -31,6 +31,8 @@
   <h1 class="sr-only">Tibia Coin Markets</h1>
 
   <section id="chartPanel" class="chart-panel" aria-labelledby="world">
+    <!-- One line, read like the world's row in the list: the world and what it is at the start, its quote at the end,
+         over the price scale. -->
     <div class="toolbar toolbar-top">
       <div class="symbol">
         <h2 id="world">Markets</h2>
@@ -39,22 +41,21 @@
       <div class="symbol-quote" aria-live="polite">
         <span id="lastPrice" class="symbol-last"></span>
         <span id="lastChange" class="symbol-change"></span>
+        <span id="lastRange" class="symbol-range"></span>
       </div>
     </div>
 
     <div class="chart-area">
       <div id="chart" class="chart" role="img"></div>
-      <!-- The chart's status lines, over its top left: the market side shown (each with its latest best offer, the
-           spread between them), then the day's values under the crosshair, transaction activity included. -->
-      <div class="chart-legend">
-        <div id="side" class="sides" role="radiogroup" aria-label="Market side">
-          <button type="button" class="side-pick" data-side="sell" role="radio" aria-checked="true"><b id="sideSell"></b><span>Sell</span></button>
-          <span id="sideSpread" class="side-spread" title="Spread"></span>
-          <button type="button" class="side-pick" data-side="buy" role="radio" aria-checked="false"><b id="sideBuy"></b><span>Buy</span></button>
-        </div>
-        <div id="legend" class="legend" aria-hidden="true"></div>
-        <div id="volumeLegend" class="legend legend-volume" aria-hidden="true"></div>
+      <!-- The series readout over the chart's top left, one small table: the day, then a row per series with its key,
+           its name, its value and, for the best offer, its change from the previous observation. -->
+      <div class="chart-legend" aria-hidden="true">
+        <div id="legend" class="legend"></div>
+        <div id="volumeLegend" class="legend"></div>
       </div>
+      <!-- Over the event markers the chart draws at its foot (js/market-events-ui.js): one tab stop, arrows between. -->
+      <div id="eventMarks" class="event-marks" role="toolbar" aria-label="Events"></div>
+      <div id="eventTip" class="event-tip" aria-hidden="true" hidden></div>
       <p id="status" class="chart-status">Loading…</p>
     </div>
 
@@ -115,6 +116,7 @@
           <li><i class="key key-dotted" aria-hidden="true"></i>Dotted line: the days in between were not observed. Nothing is filled in.</li>
           <li><i class="key key-average" aria-hidden="true"></i>Daily average: the average price of the trades that filled this side's offers.</li>
           <li><i class="key key-volume" aria-hidden="true"></i>Transactions: the raw activity counter for this side during each completed server day. Rolling 30-day Statistics are not daily counts. Actual traded TC quantity is unknown.</li>
+          <li><i class="key key-event" aria-hidden="true">M</i>Events, along the foot of the chart: world openings, merges and retirements, updates, XP/Skill and Rapid Respawn events, and market and Store changes. Point at, focus or tap a marker for its days and details. The Events tool shows or hides them.</li>
         </ul>
         <p>Server days run from 10:00 to 10:00 CET/CEST. Change compares the latest best offer with the last one observed on or before the start of the range.</p>
         <p><span id="helpThrough"></span> <span id="helpWorld"></span></p>
@@ -123,12 +125,21 @@
       </div>
     </section>
     <!-- The tool rail, in regions by meaning, top to bottom (a row on phones, start to end):
-         tools that analyse or navigate the market (panel tools carry data-dock-target);
-         flexible space; then utilities. A tool to come joins the region it belongs to, not the end of the list. -->
+         the chart's own state, the market side; tools that analyse or navigate the market (panel tools carry
+         data-dock-target); flexible space; then utilities. A tool to come joins the region it belongs to, not the end
+         of the list. -->
     <div class="dock-rail" role="group" aria-label="Tools">
+      <div id="side" class="dock-side" role="radiogroup" aria-label="Market side">
+        <button type="button" data-side="sell" role="radio" aria-checked="true">Sell</button>
+        <button type="button" data-side="buy" role="radio" aria-checked="false">Buy</button>
+      </div>
+      <span class="dock-rule" aria-hidden="true"></span>
       <div class="dock-group">
         <button type="button" class="tool dock-tool" data-dock-target="worldsPanel" aria-label="Worlds">
           <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7.5 5.5h9M7.5 10h9M7.5 14.5h9M3.5 5.5h.01M3.5 10h.01M3.5 14.5h.01"/></svg>
+        </button>
+        <button type="button" id="eventsToggle" class="tool dock-tool" aria-pressed="true" aria-label="Events" title="Hide events">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 17V3.5M5 4h10l-2.5 3.5L15 11H5"/></svg>
         </button>
       </div>
       <span class="dock-space" aria-hidden="true"></span>

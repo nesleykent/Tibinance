@@ -5,8 +5,9 @@
  *
  * Price pane: best offers for the selected side (dots), joined solid between
  * consecutive server days and dotted across unobserved days; the daily average
- * trade price for the same side in grey, by the same rule. Activity pane: raw transaction counters
- * per completed server day on that side. Nothing is interpolated.
+ * trade price for the same side in grey, by the same rule. Activity: raw transaction counters per completed
+ * server day on that side. Nothing is interpolated. Events: markers along the foot of the chart, from
+ * their own dataset (js/market-events.js); they can be hidden without touching the market series.
  */
 import { fmt, esc, num } from './format.js';
 import { bestOfferCloses } from './market-history.js';
@@ -14,9 +15,12 @@ import { RANGES, changeOver, dayGrid, daysBetween, neighbours, rangeStart } from
 import { SIDES, createMarketChart, dayOf } from './market-chart.js';
 import { dock } from './markets-dock.js';
 import { marketImage } from './market-export.js';
+import { EVENTS, eventsFor, lifecycleSpan } from './market-events.js';
+import { eventMarks } from './market-events-ui.js';
 
 const ASSET = 'tibia-coin';
 const DATA = `data/market-history/${ASSET}/`;
+const EVENTS_SHOWN = 'tibinance.markets.events';   // 'hidden' while the viewer keeps events off
 const STALE_DAYS = 7;   // a world whose latest best offer is older than this is marked
 // Where the Worlds panel opens by default: from here up, the chart keeps at least 600px beside it
 // (the page's gutters and maximum width, css/app.css, less the panel and the rail, css/markets.css).
@@ -28,13 +32,15 @@ const tone = value => value > 0 ? 'up' : value < 0 ? 'down' : '';
 const signedRatio = ratio => ratio == null ? num(null) : `<span class="${tone(ratio)}">${percent.format(ratio)}</span>`;
 const signedDelta = delta => delta == null ? num(null) : `<span class="${tone(delta)}">${signedNumber.format(delta)}</span>`;
 
-const state = { index: null, world: null, side: 'sell', range: '1Y', sort: { key: 'world', dir: 1 }, filter: '', files: new Map(), view: null };
+const state = { index: null, events: null, world: null, side: 'sell', range: '1Y', sort: { key: 'world', dir: 1 }, filter: '', files: new Map(), view: null };
 
 /* ------------------------------------------------------------------ chart */
 // Built by js/market-chart.js, which also builds the chart an exported image is drawn from.
 const market = createMarketChart($('chart'));
 const chart = market.chart;
 chart.subscribeCrosshairMove(p => showLegend(p.time === undefined ? null : dayOf(p.time)));
+// The event markers the chart draws, made inspectable by pointer, touch and keyboard.
+const marks = eventMarks({ chart, part: market.part('events'), strip: $('eventMarks'), tip: $('eventTip') });
 
 
 /* -------------------------------------------------------------- the world */
@@ -44,15 +50,23 @@ const retired = summary => summary.status === 'retired';
 function endOf(summary) {
   return retired(summary) ? [summary.bestOfferDays.last, summary.dailyStatisticsDays.last].filter(Boolean).sort().at(-1) : state.index.through;
 }
+// The axis also spans the world's own lifecycle events within the history's years (opened, merged, retired), so they
+// are plotted where no price was observed: a retired world's merge after its last offer, a world's opening before its
+// first. Ranges still count back from the world's last market day.
 function worldView(summary, file) {
   const closes = bestOfferCloses(file.observations);
   const daily = file.dailyStatistics;
   const days = [closes[0]?.serverDay, daily[0]?.serverDay, closes.at(-1)?.serverDay, daily.at(-1)?.serverDay].filter(Boolean).sort();
   const end = endOf(summary);
-  return { summary, closes, daily, closeDays: closes.map(c => c.serverDay), end,
-    grid: days.length ? dayGrid(days[0], end) : [], latestDay: days.at(-1),
+  const events = eventsFor(state.events, summary.world);
+  const span = lifecycleSpan(events, summary.world, historyStart());
+  const first = [days[0], span?.first].filter(Boolean).sort()[0], last = [end, span?.last].filter(Boolean).sort().at(-1);
+  return { summary, closes, daily, closeDays: closes.map(c => c.serverDay), end, events,
+    grid: days.length ? dayGrid(first, last) : [], latestDay: days.at(-1),
     dailyByDay: new Map(daily.map(d => [d.serverDay, d])) };
 }
+// The first server day of any world's market history.
+const historyStart = () => state.index.worlds.flatMap(w => [w.bestOfferDays.first, w.dailyStatisticsDays.first]).filter(Boolean).sort()[0];
 
 function drawChart() {
   market.draw(state.view, state.side);
@@ -67,9 +81,9 @@ function applyRange(attempt = 0) {
   if (!grid.length) return;
   // The chart measures its container asynchronously; a range set at zero width is lost.
   if (chart.timeScale().width() === 0 && attempt < 30) { requestAnimationFrame(() => applyRange(attempt + 1)); return; }
+  // To the axis's last day, not the last value: a lifecycle event after the last market day stays in view.
   const start = rangeStart(state.view.end, state.range);
-  if (!start || start <= grid[0]) chart.timeScale().fitContent();
-  else chart.timeScale().setVisibleRange({ from: start, to: grid.at(-1) });
+  chart.timeScale().setVisibleRange({ from: !start || start <= grid[0] ? grid[0] : start, to: grid.at(-1) });
 }
 
 /*
@@ -85,24 +99,24 @@ function showLegend(day) {
   day ??= view.latestDay;
   const side = state.side, labels = SIDES[side], closes = view.closes;
   const { at, before, after } = neighbours(view.closeDays, day);
+  // Cells of one grid (css/markets.css), separated by spaces so the text also reads as a line.
   let best;
   if (at !== -1) {
     const close = closes[at], prior = closes[at - 1];
     const delta = prior ? close[side] - prior[side] : null;
-    best = `<b>${fmt(close[side])}</b>`
-      + (prior ? ` ${signedDelta(delta)} ${signedRatio(delta / prior[side])} <span class="meta">since ${esc(prior.serverDay)}</span>` : '')
-      + (close.observations > 1 ? ` <span class="meta">last of ${close.observations}</span>` : '');
+    best = `<b class="value">${fmt(close[side])}</b> <span class="rest">`
+      + (prior ? `${signedDelta(delta)} ${signedRatio(delta / prior[side])} <span class="meta">since ${esc(prior.serverDay)}</span>` : '')
+      + (close.observations > 1 ? ` <span class="meta">last of ${close.observations}</span>` : '') + '</span>';
   } else if (before !== -1 && after !== -1) {
-    best = `not observed between ${esc(closes[before].serverDay)} and ${esc(closes[after].serverDay)}`;
+    best = `<span class="note">not observed between ${esc(closes[before].serverDay)} and ${esc(closes[after].serverDay)}</span>`;
   } else if (before !== -1) {
-    best = `not observed since ${esc(closes[before].serverDay)}`;
-  } else best = 'not observed';
+    best = `<span class="note">not observed since ${esc(closes[before].serverDay)}</span>`;
+  } else best = '<span class="note">not observed</span>';
   const stats = view.dailyByDay.get(day)?.[side];
-  const average = !stats ? num(null) : stats.transactions ? `<b>${fmt(stats.averagePrice)}</b>` : 'no trades';
-  $('legend').innerHTML = `<div class="row"><span class="day">${esc(day)}</span>`
-    + `<span class="label"><i class="key key-dot"></i>${labels.offer}</span> ${best}</div>`
-    + `<div class="row"><span class="label"><i class="key key-average"></i>Daily average</span> ${average}</div>`;
-  $('volumeLegend').innerHTML = `<div class="row"><span class="label"><i class="key key-volume"></i>Transactions</span> ${stats ? `<b>${fmt(stats.transactions)}</b>` : num(null)}</div>`;
+  const average = !stats ? num(null) : stats.transactions ? fmt(stats.averagePrice) : 'no trades';
+  $('legend').innerHTML = `<span class="day">${esc(day)}</span> <span class="label"><i class="key key-dot"></i>${labels.offer}</span> ${best} `
+    + `<span class="label"><i class="key key-average"></i>Daily average</span> <b class="value">${average}</b>`;
+  $('volumeLegend').innerHTML = ` <span class="label"><i class="key key-volume"></i>Transactions</span> <b class="value">${stats ? fmt(stats.transactions) : num(null)}</b>`;
 }
 
 // The selected side's latest best offer against the last one on or before the start of the range.
@@ -120,15 +134,14 @@ function showQuote() {
     summary.type && `<span>${esc(summary.type)}</span>`,
     summary.battleye && `<span>BattlEye <span class="be-${esc(summary.battleye)}">${esc(summary.battleye)}</span></span>`].filter(Boolean).join('');
   $('worldMeta').title = $('worldMeta').textContent.replace(/\s+/g, ' ').trim();   // the whole line where it is cut short
-  // The side picker carries both sides' latest best offers and the spread between them, as the chart's context.
-  $('sideSell').innerHTML = num(latest?.sell);
-  $('sideBuy').innerHTML = num(latest?.buy);
-  $('sideSpread').innerHTML = latest ? fmt(latest.sell - latest.buy) : '';
+  // The rail's side choice names each side's latest best offer on hover, without competing with the quote.
+  for (const b of $('side').querySelectorAll('button')) b.title = `${SIDES[b.dataset.side].offer}: ${latest ? fmt(latest[b.dataset.side]) : 'N/A'}`;
   $('through').textContent = `Server days through ${state.view.end}`;
   $('lastPrice').innerHTML = num(latest?.[side]);
   $('lastPrice').title = SIDES[side].offer;
   $('lastChange').innerHTML = changeText;
   $('lastChange').title = changeTitle;
+  $('lastRange').textContent = change ? state.range : '';
 
   $('detailsWorld').innerHTML = esc(summary.world) + (retired(summary) ? ' <span class="tag">Retired</span>' : '');
   // Also in the details: narrow screens hide the toolbar metadata but show the details under the chart.
@@ -271,6 +284,17 @@ function dockChanged(open) {
   }));
 }
 
+/* ----------------------------------------------------------------- events */
+// Shown until the viewer hides them; the choice is remembered on this device, not in the address.
+function showEvents(on, { remember = true } = {}) {
+  market.setVisible('events', on);
+  if (!on) marks.hide();
+  const button = $('eventsToggle');
+  button.setAttribute('aria-pressed', String(on));
+  button.title = on ? 'Hide events' : 'Show events';
+  if (remember) try { on ? localStorage.removeItem(EVENTS_SHOWN) : localStorage.setItem(EVENTS_SHOWN, 'hidden'); } catch { /* this visit only */ }
+}
+
 /* ------------------------------------------------------------ full screen */
 // The whole terminal, so the rail and its way back stay on screen; the CSS fallback where element full screen is
 // unavailable (iPhone) or refused.
@@ -318,7 +342,8 @@ async function exportImage() {
   const { summary } = state.view;
   button.disabled = true;
   try {
-    const canvas = await marketImage({ view: state.view, side: state.side, logicalRange: chart.timeScale().getVisibleLogicalRange(), context: imageContext() });
+    const canvas = await marketImage({ view: state.view, side: state.side, logicalRange: chart.timeScale().getVisibleLogicalRange(), context: imageContext(),
+      hidden: market.visible('events') ? [] : ['events'] });
     const blob = await new Promise((resolve, reject) => canvas.toBlob(b => (b ? resolve(b) : reject(new Error('The image could not be encoded.'))), 'image/png'));
     const name = `tibinance-${summary.world.toLowerCase()}-${state.side}-${state.range.toLowerCase()}-${state.view.end}.png`;
     const link = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: name });
@@ -352,6 +377,7 @@ function wire() {
     saveUrl(); drawWatchlist(); applyRange(); showQuote();
   });
   $('expand').addEventListener('click', () => toggleExpanded().catch(failed));
+  $('eventsToggle').addEventListener('click', () => showEvents(!market.visible('events')));
   $('exportButton').addEventListener('click', exportImage);
   for (const host of [$('worldMeta'), $('detailStatus')]) host.addEventListener('click', e => {
     const world = e.target.closest('.world-link')?.dataset.world;
@@ -396,10 +422,28 @@ function failed(error) {
   $('market').setAttribute('aria-busy', 'false');
 }
 
+// Events are an optional layer: the market loads without them, and says nothing about their absence on the chart.
+async function loadEvents() {
+  try {
+    const response = await fetch(EVENTS);
+    if (!response.ok) throw new Error(`${EVENTS}: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.warn('Market events are unavailable.', error);
+    return null;
+  }
+}
+
 async function main() {
+  const events = loadEvents();
   const response = await fetch(`${DATA}index.json`);
   if (!response.ok) throw new Error(`index.json: ${response.status}`);
   state.index = await response.json();
+  state.events = await events;
+  let hidden = false;
+  try { hidden = localStorage.getItem(EVENTS_SHOWN) === 'hidden'; } catch { /* storage unavailable */ }
+  showEvents(!hidden, { remember: false });
+  $('eventsToggle').disabled = !state.events;
   const params = new URLSearchParams(location.search);
   const names = state.index.worlds.map(w => w.world);
   state.side = SIDES[params.get('side')] ? params.get('side') : 'sell';

@@ -2,15 +2,26 @@
  * The Markets chart: one builder for the chart on the page and for the image Export draws (js/market-export.js).
  * Lightweight Charts is loaded as a global by markets.html.
  *
- * The chart is a list of layers, in the order a legend reads them. Each layer adds its series to a chart (layers
- * of lower depth first, so beneath), draws them from a world's view for one side, names its keys for an exported
- * legend and may annotate the exported image. A layer added to LAYERS (events, projections, a comparison) is drawn
- * on the page and in every export alike; nothing else has to change.
+ * The chart is a list of layers, in the order a legend reads them. Each layer adds its series (or a primitive) to a
+ * chart (layers of lower depth first, so beneath), draws them from a world's view for one side, names its keys for an
+ * exported legend and may annotate the exported image or add notes under it. A layer added to LAYERS (events,
+ * projections, a comparison) is drawn on the page and in every export alike; nothing else has to change.
+ *
+ * A layer:
+ *   id                    names it, for visibility and for the page to reach what it added (`part`)
+ *   optional              it can be hidden; its draw is told `{ visible }` and the market series are untouched
+ *   depth                 drawing order
+ *   add(chart, tools, c)  what it puts on the chart, returned as its part
+ *   draw(part, view, side, c, { visible })
+ *   keys(side, c)         legend keys for an exported image
+ *   annotate?(ctx, geometry)   drawn over the exported chart
+ *   notes?(part)          what an exported image says under the chart about this layer's marks (js/market-export.js)
  *
  * `scale` multiplies type, line widths and marks, so an export drawn at twice the size keeps the page's proportions.
  */
 import { fmt } from './format.js';
 import { lineLayers } from './market-series.js';
+import { eventsLayer } from './market-events-layer.js';
 
 export const SIDES = {
   sell: { offer: 'Best Sell Offer', offers: 'Sell Offers' },
@@ -19,7 +30,9 @@ export const SIDES = {
 
 const token = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 export const colors = () => ({ sell: token('--sell'), buy: token('--buy'), average: token('--average'), text: token('--muted'),
-  grid: token('--line-faint'), rule: token('--line'), crosshair: token('--line-strong'), ink: token('--ink') });
+  grid: token('--line-faint'), rule: token('--line'), crosshair: token('--line-strong'), ink: token('--ink'),
+  canvas: token('--canvas') || '#fff', font: token('--font-ui'),
+  events: { world: token('--event-world'), game: token('--event-game'), market: token('--event-market') } });
 // Lightweight Charts reports a day as the string it was given or as {year, month, day}.
 export const dayOf = time => typeof time === 'string' ? time
   : typeof time === 'object' ? `${time.year}-${String(time.month).padStart(2, '0')}-${String(time.day).padStart(2, '0')}`
@@ -29,6 +42,7 @@ export const dayOf = time => typeof time === 'string' ? time
 // The best offer for the selected side: its observations (dots, the latest marked across the chart and on the price
 // scale), joined solid between consecutive server days and dotted across unobserved days.
 const bestOffer = {
+  id: 'best-offer',
   depth: 1,
   add(chart, { line, k, L }) {
     return {
@@ -53,6 +67,7 @@ const bestOffer = {
 
 // The daily average trade price for the same side, in grey, by the same rule. A day without trades has no average.
 const dailyAverage = {
+  id: 'daily-average',
   depth: 0,
   add: (chart, { line, k, L }, c) => ({
     solid: line({ color: c.average, lineWidth: k }),
@@ -69,6 +84,7 @@ const dailyAverage = {
 // Raw transaction activity per completed server day, on a separate hidden scale below prices.
 // Missing observations remain gaps; an observed zero counter remains zero.
 const activity = {
+  id: 'activity',
   depth: -1,
   add(chart, { L }) {
     const s = chart.addSeries(L.HistogramSeries, { priceScaleId: 'volume', priceLineVisible: false, lastValueVisible: false,
@@ -86,8 +102,8 @@ const activity = {
   keys: (side, c) => [{ mark: 'bar', color: c[side], label: 'Transactions (count)' }]
 };
 
-// Read in this order; drawn by depth: activity behind the price series.
-export const LAYERS = [bestOffer, dailyAverage, activity];
+// Read in this order; drawn by depth: activity behind the price series, the events on top.
+export const LAYERS = [bestOffer, dailyAverage, activity, eventsLayer];
 
 /* ---------------------------------------------------------------- chart */
 export function createMarketChart(container, { scale: k = 1, width, height } = {}) {
@@ -97,8 +113,8 @@ export function createMarketChart(container, { scale: k = 1, width, height } = {
     layout: { background: { type: 'solid', color: 'transparent' }, textColor: c.text, fontFamily: token('--font-ui'), fontSize: 11 * k,
       panes: { separatorColor: c.rule, separatorHoverColor: c.crosshair }, attributionLogo: !width },
     grid: { vertLines: { visible: false }, horzLines: { color: c.grid } },
-    // Room above the highest price for the status lines, and below the lowest for transaction activity.
-    rightPriceScale: { borderVisible: false, scaleMargins: { top: 0.18, bottom: 0.22 } },
+    // Room above the highest price for the status lines, and below the lowest for the volume.
+    rightPriceScale: { borderVisible: false, scaleMargins: { top: 0.16, bottom: 0.22 } },
     timeScale: { borderVisible: false, rightOffset: 4 },
     crosshair: { mode: L.CrosshairMode.Normal,
       vertLine: { color: c.crosshair, labelBackgroundColor: c.ink },
@@ -114,10 +130,24 @@ export function createMarketChart(container, { scale: k = 1, width, height } = {
     const spacing = chart.timeScale().width() / Math.max(1, range.to - range.from) / k;
     series.get(bestOffer).points.applyOptions({ pointMarkersVisible: spacing >= 2, pointMarkersRadius: k * Math.min(3, Math.max(1.5, spacing / 2)) });
   });
+  // Optional layers start shown; hiding one redraws only that layer.
+  const hidden = new Set();
+  const shown = layer => !(layer.optional && hidden.has(layer.id));
+  let last = null;
+  const drawLayer = layer => layer.draw(series.get(layer), last.view, last.side, c, { visible: shown(layer) });
   return {
     chart,
-    draw(view, side) { LAYERS.forEach(layer => layer.draw(series.get(layer), view, side, c)); },
-    keys: side => LAYERS.flatMap(layer => layer.keys(side, c)),
-    annotate: (ctx, geometry) => LAYERS.forEach(layer => layer.annotate?.(ctx, { ...geometry, chart, k, c })),
+    draw(view, side) { last = { view, side }; LAYERS.forEach(drawLayer); },
+    setVisible(id, on) {
+      const layer = LAYERS.find(l => l.id === id && l.optional);
+      if (!layer || on === !hidden.has(id)) return;
+      on ? hidden.delete(id) : hidden.add(id);
+      if (last) drawLayer(layer);
+    },
+    visible: id => !hidden.has(id),
+    part: id => series.get(LAYERS.find(l => l.id === id)),
+    keys: side => LAYERS.filter(shown).flatMap(layer => layer.keys(side, c)),
+    annotate: (ctx, geometry) => LAYERS.filter(shown).forEach(layer => layer.annotate?.(ctx, { ...geometry, chart, k, c })),
+    notes: () => LAYERS.filter(shown).map(layer => layer.notes?.(series.get(layer), c)).filter(Boolean),
   };
 }

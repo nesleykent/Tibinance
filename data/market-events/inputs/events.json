@@ -1,0 +1,72 @@
+{
+ "note": "Curated inputs for the Markets event dataset (tools/build_market_events.mjs). Categories define the model; `research` classifies events the research report already records (reports/tc-cycle); `events` holds facts found only in prose, each with the official source the repository already cites. Dates are server days (opening at the 10:00 Europe/Berlin server save).",
+ "categories": [
+  { "id": "world-created", "label": "World opened", "mark": "N", "group": "world", "lifecycle": true, "recurring": false },
+  { "id": "world-retired", "label": "World retired", "mark": "R", "group": "world", "lifecycle": true, "recurring": false },
+  { "id": "world-merge", "label": "World merge", "mark": "M", "group": "world", "lifecycle": true, "recurring": false },
+  { "id": "update", "label": "Major update", "mark": "U", "group": "game", "lifecycle": false, "recurring": false },
+  { "id": "xp-skill", "label": "XP/Skill Event", "mark": "XP", "group": "game", "lifecycle": false, "recurring": true },
+  { "id": "rapid-respawn", "label": "Rapid Respawn", "mark": "RR", "group": "game", "lifecycle": false, "recurring": true },
+  { "id": "economy", "label": "Economy", "mark": "E", "group": "market", "lifecycle": false, "recurring": false },
+  { "id": "store", "label": "Store, Premium and Tibia Coin", "mark": "S", "group": "market", "lifecycle": false, "recurring": false }
+ ],
+ "otherWorlds": [
+  { "world": "Sonera", "note": "Named in tibia.com news 8475 (2025-07-30); neither in the TibiaData snapshot nor among the retired worlds with market history." }
+ ],
+ "research": {
+  "intervals": {
+   "file": "reports/tc-cycle/source-package/events_intervals.json",
+   "note": "TibiaMarket /events dumps parsed by reports/tc-cycle/source-package/parse_events.py (calendar days, short gaps filled). An event runs from one server save to another, so its last listed calendar day holds only the morning before the save: the last server day is the day before (checked against the official schedule, reports/tc-cycle/inputs/eventschedule.json, 2026-07-03 to 2026-07-06 08:00 UTC).",
+   "events": {
+    "XP/Skill Event": { "category": "xp-skill", "title": "XP/Skill Event", "description": "More experience and skill points from hunting, offline training and exercise weapons." },
+    "Skill Event": { "category": "xp-skill", "title": "Skill Event", "description": "More skill points for the event's duration." },
+    "Rapid Respawn": { "category": "rapid-respawn", "title": "Rapid Respawn", "description": "Monsters respawn at a faster rate." }
+   }
+  },
+  "dated": {
+   "file": "reports/tc-cycle/source-package/extra_events.json",
+   "events": {
+    "Summer Update": { "category": "update", "title": "Summer Update {year}", "description": "Tibia's Summer Update {year} went live." },
+    "Winter Update": { "category": "update", "title": "Winter Update {year}", "description": "Tibia's Winter Update {year} went live." },
+    "Monk release": { "category": "update", "title": "Monk released", "description": "The Monk vocation became playable." },
+    "Tibia Token launch": { "category": "economy", "title": "Tibia Token launched", "description": "Tibia Tokens were introduced." },
+    "Tibia Token fee 6%->8%": { "category": "economy", "title": "Tibia Token fee raised to 8%", "description": "The Tibia Token fee rose from 6% to 8%." }
+   }
+  },
+  "mergers": {
+   "file": "reports/tc-cycle/mergers.json"
+  }
+ },
+ "events": [
+  {
+   "category": "world-created", "start": "2025-05-21", "worlds": ["Luzibra"],
+   "title": "Luzibra opened", "description": "Luzibra opened as a new game world.",
+   "source": { "url": "https://www.tibia.com/news/?id=8385&subtopic=newsarchive", "via": "reports/tc-cycle/README.md, lifecycle.py" }
+  },
+  {
+   "category": "world-created", "start": "2025-11-06", "worlds": ["Terribra"],
+   "title": "Terribra opened", "description": "Terribra opened as a new game world, formed by the merge of Jacabra and Obscubra.",
+   "source": { "url": "https://www.tibia.com/news/?id=8515&subtopic=newsarchive", "via": "reports/tc-cycle/README.md, lifecycle.py" }
+  },
+  {
+   "category": "world-created", "start": "2026-05-20", "worlds": ["Floribra"],
+   "title": "Floribra opened", "description": "Floribra opened as a new game world.",
+   "source": { "url": "https://www.tibia.com/news/?id=8767&subtopic=newsarchive", "via": "reports/tc-cycle/README.md, lifecycle.py" }
+  },
+  {
+   "category": "store", "start": "2025-07-29", "worlds": ["Kalimera", "Luzibra", "Sonera"],
+   "title": "Premium restriction lifted", "description": "Kalimera, Luzibra and Sonera opened to free accounts at the server save.",
+   "source": { "url": "https://www.tibia.com/news/?subtopic=newsarchive&id=8475", "via": "reports/tc-cycle/review/source-evidence.json", "note": "News of 2025-07-30: 'with yesterday's server save'." }
+  },
+  {
+   "category": "economy", "start": "2025-07-29", "worlds": ["Ambra", "Flamera", "Wadira"],
+   "title": "Transfer block lifted", "description": "Ambra, Flamera and Wadira accepted character transfers again from the server save.",
+   "source": { "url": "https://www.tibia.com/news/?subtopic=newsarchive&id=8475", "via": "reports/tc-cycle/review/source-evidence.json", "note": "News of 2025-07-30: 'with yesterday's server save'." }
+  },
+  {
+   "category": "economy", "start": "2026-06-30", "worlds": ["Luzibra"],
+   "title": "Transfers opened", "description": "Luzibra opened to character transfers.",
+   "source": { "url": "https://www.tibia.com/news/?id=8866&subtopic=newsarchive", "via": "reports/tc-cycle/README.md, lifecycle.py" }
+  }
+ ]
+}
