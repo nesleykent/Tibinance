@@ -12,7 +12,7 @@ import { gunzipSync } from 'node:zlib';
 import { mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { join, relative } from 'node:path';
-import { ASSETS, addDays, bestOfferCloses, fromCapture, fromTibiaMarket, mergeDaily, mergeObservations } from '../js/market-history.js';
+import { ASSETS, addDays, bestOfferCloses, fromCapture, fromTibiaMarket, latestDailyStatistics, mergeDaily, mergeObservations } from '../js/market-history.js';
 import { battleyeColour } from '../js/tibiadata.js';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
@@ -125,13 +125,14 @@ export function buildMarketHistory({ captures, tibiaMarket, registry, inputs, ex
   }
   const worlds = new Map(), summaries = [];
   let through = ''; // the latest server day anything in the dataset describes
-  const dailyTotals = { days: 0, conflictingDaysDropped: 0, checked30dTotals: 0, matching30dTotals: 0 };
+  const dailyTotals = { days: 0, conflictingDaysDropped: 0, conflictingDaysResolved: 0, checked30dTotals: 0, matching30dTotals: 0 };
   for (const key of [...perWorld.keys()].sort()) {
     const world = names.get(key), entry = perWorld.get(key);
     const observations = mergeObservations(entry.observations);
-    const { daily, conflicts } = mergeDaily(entry.daily);
+    const { conflicts } = mergeDaily(entry.daily);
+    const daily = latestDailyStatistics(entry.dailyObservations);
     dailyTotals.days += daily.length;
-    dailyTotals.conflictingDaysDropped += conflicts.length;
+    dailyTotals.conflictingDaysResolved += conflicts.length;
 
     // Evidence for the day alignment: the 30 completed days before a snapshot's
     // server day sum to that snapshot's 30-day transaction counts.

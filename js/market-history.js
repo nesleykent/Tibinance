@@ -10,7 +10,7 @@
  *
  * Nothing is interpolated. A field absent from a record was not observed.
  */
-import { statisticsIssues, validatedStatistics } from './statistics.js';
+import { STATISTICS_FIELDS, statisticsIssues, validatedStatistics } from './statistics.js';
 
 // Every asset the history can describe. Only Tibia Coin is built today. The
 // Statistics retains raw activity counters; actual traded TC quantity is unknown.
@@ -129,6 +129,33 @@ export function mergeDaily(reports) {
   }
   return { daily: [...days.values()].sort((a, b) => a.serverDay.localeCompare(b.serverDay)), conflicts: [...conflicts].sort() };
 }
+
+// Select each side independently by acquisition time within its reference day.
+// Source never changes the meaning or precedence of a Statistics field. All
+// reports stay in dailyStatisticsObservations; this is only a chart projection.
+export function latestDailyStatistics(reports) {
+  const days = new Map();
+  for (const report of [...reports].sort((a, b) => Date.parse(a.capturedAtUtc) - Date.parse(b.capturedAtUtc))) {
+    const day = days.get(report.serverDay) ?? { serverDay: report.serverDay, provenance: {} };
+    for (const side of ['buy', 'sell']) if (report[side]) {
+      const value = validatedStatistics({ buy: report[side], sell: report[side] })[side];
+      if (Date.parse(day.provenance[side]?.capturedAtUtc) === Date.parse(report.capturedAtUtc) &&
+          STATISTICS_FIELDS.some(field => day[side][field] !== value[field])) {
+        throw new Error(`Ambiguous daily ${side} Statistics at ${report.capturedAtUtc} for ${report.serverDay}`);
+      }
+      day[side] = value;
+      day.provenance[side] = { source: report.source, capturedAtUtc: report.capturedAtUtc,
+        ...(report.sourceTimestamp !== undefined ? { sourceTimestamp: report.sourceTimestamp } : {}) };
+    }
+    days.set(report.serverDay, day);
+  }
+  return [...days.values()].sort((a, b) => a.serverDay.localeCompare(b.serverDay));
+}
+
+// Daily acquisition reports are authoritative. A rolling Statistics observation
+// cannot supply a daily value, regardless of its acquisition source.
+export const marketDailyStatistics = file => file.dailyStatisticsObservations
+  ? latestDailyStatistics(file.dailyStatisticsObservations) : file.dailyStatistics;
 
 // One point per server day with best offers: the day's last observation and how
 // many the day had. Expects observations in time order, as mergeObservations

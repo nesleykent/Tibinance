@@ -20,7 +20,7 @@
  * `scale` multiplies type, line widths and marks, so an export drawn at twice the size keeps the page's proportions.
  */
 import { fmt } from './format.js';
-import { lineLayers } from './market-series.js';
+import { lineLayers, statisticsAt } from './market-series.js';
 import { eventsLayer } from './market-events-layer.js';
 
 export const SIDES = {
@@ -95,7 +95,7 @@ const activity = {
   draw(s, view, side, c) {
     s.applyOptions({ color: `${c[side]}40` });
     s.setData(view.grid.map(day => {
-      const value = view.dailyByDay.get(day)?.[side]?.transactions;
+      const value = statisticsAt(view, day, side)?.transactions;
       return value === undefined ? { time: day } : { time: day, value };
     }));
   },

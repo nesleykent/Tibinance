@@ -10,8 +10,7 @@
  * their own dataset (js/market-events.js); they can be hidden without touching the market series.
  */
 import { fmt, esc, num } from './format.js';
-import { bestOfferCloses } from './market-history.js';
-import { RANGES, changeOver, dayGrid, daysBetween, neighbours, rangeStart } from './market-series.js';
+import { RANGES, changeOver, dayGrid, daysBetween, marketValues, neighbours, rangeStart, statisticsAt } from './market-series.js';
 import { SIDES, createMarketChart, dayOf } from './market-chart.js';
 import { dock } from './markets-dock.js';
 import { marketImage } from './market-export.js';
@@ -80,16 +79,14 @@ function endOf(summary) {
 // are plotted where no price was observed: a retired world's merge after its last offer, a world's opening before its
 // first. Ranges still count back from the world's last market day.
 function worldView(summary, file) {
-  const closes = bestOfferCloses(file.observations);
-  const daily = file.dailyStatistics;
+  const values = marketValues(file), { closes, daily } = values;
   const days = [closes[0]?.serverDay, daily[0]?.serverDay, closes.at(-1)?.serverDay, daily.at(-1)?.serverDay].filter(Boolean).sort();
   const end = endOf(summary);
   const events = eventsFor(state.events, summary.world);
   const span = lifecycleSpan(events, summary.world, historyStart());
   const first = [days[0], span?.first].filter(Boolean).sort()[0], last = [end, span?.last].filter(Boolean).sort().at(-1);
-  return { summary, closes, daily, closeDays: closes.map(c => c.serverDay), end, events,
-    grid: days.length ? dayGrid(first, last) : [], latestDay: days.at(-1),
-    dailyByDay: new Map(daily.map(d => [d.serverDay, d])) };
+  return { ...values, summary, end, events,
+    grid: days.length ? dayGrid(first, last) : [], latestDay: days.at(-1) };
 }
 // The first server day of any world's market history.
 const historyStart = () => state.index.worlds.flatMap(w => [w.bestOfferDays.first, w.dailyStatisticsDays.first]).filter(Boolean).sort()[0];
@@ -138,7 +135,7 @@ function showLegend(day) {
   } else if (before !== -1) {
     best = `<span class="note">not observed since ${esc(closes[before].serverDay)}</span>`;
   } else best = '<span class="note">not observed</span>';
-  const stats = view.dailyByDay.get(day)?.[side];
+  const stats = statisticsAt(view, day, side);
   const average = !stats ? num(null) : stats.transactions ? fmt(stats.averagePrice) : 'no trades';
   $('legend').innerHTML = `<span class="day">${esc(day)}</span> <span class="label"><i class="key key-dot"></i>${labels.offer}</span> ${best} `
     + `<span class="label"><i class="key key-average"></i>Daily average</span> <b class="value">${average}</b>`;

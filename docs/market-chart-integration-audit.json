@@ -1,0 +1,165 @@
+{
+  "worlds": 116,
+  "observations": 13240,
+  "dailyAcquisitionReports": 45968,
+  "rollingStatisticsObservations": 12295,
+  "sourceCounts": {
+    "tibiamarket": 12775,
+    "screenshot": 465
+  },
+  "qualification": "Daily reports only. Rolling last-30-days Statistics are not eligible for daily series, independent of source.",
+  "selection": "Latest acquisition timestamp per side and completed reference day; conflicting equal timestamps fail explicitly.",
+  "availability": {
+    "before": {
+      "transactions": 90706,
+      "averagePrice": 90706,
+      "highestPrice": 90706,
+      "lowestPrice": 90706,
+      "dailyAveragePoints": 90326,
+      "bestSell": 12720,
+      "bestBuy": 12720
+    },
+    "after": {
+      "transactions": 90750,
+      "averagePrice": 90750,
+      "highestPrice": 90750,
+      "lowestPrice": 90750,
+      "dailyAveragePoints": 90370,
+      "bestSell": 12720,
+      "bestBuy": 12720
+    }
+  },
+  "affectedWorlds": 5,
+  "affectedWorldDays": 22,
+  "canonicalValuesMissing": {
+    "before": 176,
+    "after": 0
+  },
+  "marketsValuesWithoutCanonicalSource": 0,
+  "plottedBarsWithMissingLegendValue": 0,
+  "validStatisticsDroppedBySource": 0,
+  "serverDayMisalignments": 0,
+  "observationsIncorrectlyCollapsed": 0,
+  "screenshotsIncorrectlyExcluded": 0,
+  "tibiaMarketObservationsIncorrectlyExcluded": 0,
+  "legacyChartFieldDependencies": 0,
+  "affected": [
+    {
+      "world": "Gentebra",
+      "serverDay": "2025-10-24",
+      "missingFieldsBefore": 8
+    },
+    {
+      "world": "Jadebra",
+      "serverDay": "2026-05-15",
+      "missingFieldsBefore": 8
+    },
+    {
+      "world": "Nevia",
+      "serverDay": "2025-01-02",
+      "missingFieldsBefore": 8
+    },
+    {
+      "world": "Nevia",
+      "serverDay": "2025-01-04",
+      "missingFieldsBefore": 8
+    },
+    {
+      "world": "Nevia",
+      "serverDay": "2025-01-06",
+      "missingFieldsBefore": 8
+    },
+    {
+      "world": "Nevia",
+      "serverDay": "2025-01-08",
+      "missingFieldsBefore": 8
+    },
+    {
+      "world": "Nevia",
+      "serverDay": "2025-01-09",
+      "missingFieldsBefore": 8
+    },
+    {
+      "world": "Nevia",
+      "serverDay": "2025-01-10",
+      "missingFieldsBefore": 8
+    },
+    {
+      "world": "Nevia",
+      "serverDay": "2025-01-13",
+      "missingFieldsBefore": 8
+    },
+    {
+      "world": "Nevia",
+      "serverDay": "2025-01-14",
+      "missingFieldsBefore": 8
+    },
+    {
+      "world": "Nevia",
+      "serverDay": "2025-01-15",
+      "missingFieldsBefore": 8
+    },
+    {
+      "world": "Nevia",
+      "serverDay": "2025-01-16",
+      "missingFieldsBefore": 8
+    },
+    {
+      "world": "Nevia",
+      "serverDay": "2025-01-17",
+      "missingFieldsBefore": 8
+    },
+    {
+      "world": "Nevia",
+      "serverDay": "2025-01-18",
+      "missingFieldsBefore": 8
+    },
+    {
+      "world": "Nevia",
+      "serverDay": "2025-01-19",
+      "missingFieldsBefore": 8
+    },
+    {
+      "world": "Nevia",
+      "serverDay": "2025-01-21",
+      "missingFieldsBefore": 8
+    },
+    {
+      "world": "Nevia",
+      "serverDay": "2025-01-22",
+      "missingFieldsBefore": 8
+    },
+    {
+      "world": "Nevia",
+      "serverDay": "2025-01-23",
+      "missingFieldsBefore": 8
+    },
+    {
+      "world": "Nevia",
+      "serverDay": "2025-01-28",
+      "missingFieldsBefore": 8
+    },
+    {
+      "world": "Nevia",
+      "serverDay": "2025-01-29",
+      "missingFieldsBefore": 8
+    },
+    {
+      "world": "Quintera",
+      "serverDay": "2025-10-24",
+      "missingFieldsBefore": 8
+    },
+    {
+      "world": "Yonabra",
+      "serverDay": "2025-10-24",
+      "missingFieldsBefore": 8
+    }
+  ],
+  "gentebraExample": {
+    "serverDay": "2026-10-03",
+    "bestSell": 46794,
+    "dailyAverage": null,
+    "dailyTransactions": null,
+    "reason": "Only rolling Statistics exist for this reference date; daily N/A is correct."
+  }
+}

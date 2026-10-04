@@ -110,11 +110,12 @@ test('merging never guesses: repeated days must agree and instants must be uniqu
 const current = (name, extra = {}) => ({name, location:'Europe', pvp_type:'Open PvP', battleye_protected:true, battleye_date:'release', ...extra});
 const registry = {active:[current('Antica', {battleye_date:'2017-08-29'})], retired:[]};
 
-test('conflicting daily values remain timestamped source observations when the chart withholds the day', () => {
+test('updated daily values select the latest timestamp without discarding source observations', () => {
   const later = {...full, time:full.time + 60, day_bought:full.day_bought + 1};
   const {worlds} = buildMarketHistory({captures:[], tibiaMarket:[{world:'Antica', rows:[full,later]}], registry, inputs:[]});
   const data = worlds.get('Antica');
-  assert.equal(data.dailyStatistics.length, 0);
+  assert.equal(data.dailyStatistics.length, 1);
+  assert.equal(data.dailyStatistics[0].buy.transactions, later.day_bought);
   assert.equal(data.dailyStatisticsObservations.length, 2);
   assert.deepEqual(data.dailyStatisticsObservations.map(d=>d.buy.transactions),[full.day_bought,later.day_bought]);
   assert.equal(data.observations.length, 2);
@@ -134,7 +135,7 @@ test('both sources merge in time order per world; inputs are checked', () => {
   assert.equal(antica.dailyStatistics.length, 31);
   assert.equal(antica.dailyStatisticsObservations.length, 31);
   assert.ok(antica.dailyStatisticsObservations.every(d => d.source === 'tibiamarket' && Number.isFinite(d.sourceTimestamp) && d.capturedAtUtc));
-  assert.deepEqual(index.dailyStatistics, {days:31, conflictingDaysDropped:0, checked30dTotals:1, matching30dTotals:1});
+  assert.deepEqual(index.dailyStatistics, {days:31, conflictingDaysDropped:0, conflictingDaysResolved:0, checked30dTotals:1, matching30dTotals:1});
   assert.deepEqual(index.worlds[0].latestBestOffer, {capturedAtUtc:'2026-09-21T12:00:00.000Z',serverDay:'2026-09-21',sell:41000,buy:40000});
   assert.equal(index.worlds[0].type, 'Open PvP');
   assert.throws(() => buildMarketHistory({captures:[{...capture, world:'antica'}], tibiaMarket:[{world:'Antica', rows:[]}], registry, inputs:[]}), /spelled two ways/);

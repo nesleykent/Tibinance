@@ -174,8 +174,8 @@ uncrossed book (Buy below Sell). The research's 80% floor (Buy at least 80% of
 Sell) applies to screenshot captures only, where an extreme spread usually means
 a misread price; TibiaMarket history keeps genuinely wide spreads, which are real
 on thin worlds. Server days open at the 10:00 Europe/Berlin save and are labelled by its
-date. Conflicting daily reports are withheld from the chart projection rather
-than resolved by guessing; every usable report is retained in
+date. Daily chart values select the latest timestamped observation separately
+for Buy and Sell within each completed reference day; every usable report is retained in
 `dailyStatisticsObservations` with its observation timestamp and provenance.
 
 Screenshot and TibiaMarket observations use the same canonical Buy/Sell

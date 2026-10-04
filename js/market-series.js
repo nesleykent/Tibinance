@@ -7,7 +7,16 @@
  * are joined by a dotted segment, so the interval reads as not observed.
  * Nothing is added inside a gap.
  */
-import { addDays } from './market-history.js';
+import { addDays, bestOfferCloses, marketDailyStatistics } from './market-history.js';
+
+// One shared canonical dataset for lines, histogram, legend and image exports.
+export function marketValues(file) {
+  const closes = bestOfferCloses(file.observations);
+  const daily = marketDailyStatistics(file);
+  return { closes, closeDays: closes.map(c => c.serverDay), daily,
+    dailyByDay: new Map(daily.map(d => [d.serverDay, d])) };
+}
+export const statisticsAt = (view, day, side) => view.dailyByDay.get(day)?.[side];
 
 // Lightweight Charts colours the segment from a point to the next one with
 // that point's colour (checked against 5.2.1); this colour is never drawn.
