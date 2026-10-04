@@ -255,21 +255,8 @@ function showPerformance() {
   }).join('');
 }
 
-/*
- * The status block stands over the top of the chart: the price scale starts below it, so the highest price is never
- * drawn under the world, its quote or the readout. Fitted when the block or the chart changes size for a reason other
- * than the crosshair, so moving the pointer never rescales the chart.
- */
-let headFraction = null;
-function fitHead() {
-  const area = $('chart').getBoundingClientRect(), head = $('chartHead').getBoundingClientRect();
-  const pane = area.height - chart.timeScale().height();
-  if (pane <= 0 || !head.height) return;
-  const top = Math.min(0.5, Math.max(0.08, (head.bottom - area.top + 12) / pane));
-  if (headFraction !== null && Math.abs(top - headFraction) < 0.004) return;
-  headFraction = top;
-  chart.priceScale('right').applyOptions({ scaleMargins: { top, bottom: 0.22 } });
-}
+// The status stands over the chart's top; the price scale starts below it (js/market-chart.js fitTop).
+const fitHead = () => market.fitTop($('chartHead'));
 new ResizeObserver(() => requestAnimationFrame(fitHead)).observe($('chart'));
 
 // The chart's accessible description: the history, and the projection when it is shown.

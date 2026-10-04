@@ -1,16 +1,16 @@
 // The Events dock browses the same resolved, world-scoped events that feed the chart.
 import { dateText, eventsFor } from './market-events.js';
 import { esc } from './format.js';
-export function eventsPanel(root, { onFilter, onFocus }) {
+export function eventsPanel(root, { onFilter, onFocus, contextText, scopeText: customScopeText }) {
   const today = new Date().toISOString().slice(0, 10);
   let month = today.slice(0, 7), day = null, selected = null, events = [], world = '', available = false, categories = [], category = '', period = 'all', scope = '', initialized = false;
   const $ = id => root.querySelector(`#${id}`);
   const filtered = () => events.filter(e => (!category || e.category.id === category) && (!scope || (scope === 'global' ? e.worlds === 'all' : e.worlds !== 'all')));
-  const scopeText = e => e.worlds === 'all' ? 'Global: all worlds' : `Worlds: ${e.worlds.join(', ')}`;
+  const scopeText = e => customScopeText ? customScopeText(e) : e.worlds === 'all' ? 'Global: all worlds' : `Worlds: ${e.worlds.join(', ')}`;
   const row = e => `<button type="button" class="event-row" data-event="${esc(e.id)}" aria-pressed="${e.id === selected}"><small>${esc(dateText(e))} / ${esc(e.category.label)}</small><strong>${esc(e.title)}</strong><small>${esc(scopeText(e))}</small></button>`;
   function render() {
     const list = filtered();
-    $('eventsContext').textContent = available ? `Global events and events concerning ${world}. Dates are inclusive server days. ${events.length} recorded events, ${events[0]?.start ?? 'no start date'} to ${events.reduce((last, e) => e.end > last ? e.end : last, '') || 'no end date'}. Game calendar types and market events share these filters.` : 'Event data is unavailable. Reload to try again.';
+    $('eventsContext').textContent = available ? contextText ? contextText(events) : `Global events and events concerning ${world}. Dates are inclusive server days. ${events.length} recorded events, ${events[0]?.start ?? 'no start date'} to ${events.reduce((last, e) => e.end > last ? e.end : last, '') || 'no end date'}. Game calendar types and market events share these filters.` : 'Event data is unavailable. Reload to try again.';
     $('eventCategory').innerHTML = '<option value="">All categories</option>' + categories.map(c => `<option value="${esc(c.id)}">${esc(c.label)} (${events.filter(e => e.category.id === c.id).length})</option>`).join('');
     $('eventCategory').value = category;
     $('eventMonth').value = month;

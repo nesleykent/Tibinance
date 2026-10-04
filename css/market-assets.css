@@ -1,0 +1,17 @@
+/* The asset picker identifies the market independently of its world or token name and remains usable on phones. */
+#asset {
+  max-width: 10rem;
+  min-height: 2rem;
+  padding: .25rem 1.4rem .25rem .5rem;
+  border: 1px solid var(--line);
+  border-radius: .3rem;
+  background-color: var(--canvas);
+  color: var(--muted);
+  font: inherit;
+  font-size: var(--step-n1);
+  cursor: pointer;
+}
+#asset:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+@media (max-width: 760px) {
+  #asset { max-width: 9rem; }
+}

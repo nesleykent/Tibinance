@@ -4,9 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tibinance Markets</title>
-<meta name="description" content="Tibia Coin best offers and daily trading history for every tracked world.">
+<meta name="description" content="Tibia Coin offers by world and Tibia Token daily USD price history.">
 <link rel="stylesheet" href="css/app.css">
 <link rel="stylesheet" href="css/markets.css">
+<link rel="stylesheet" href="css/market-assets.css">
 <link rel="stylesheet" href="css/site-header.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪙</text></svg>">
 </head>
@@ -24,11 +25,15 @@
         <li><a href="reports/tc-cycle/">Research</a></li>
       </ul>
     </nav>
+    <div class="site-controls">
+      <label class="sr-only" for="asset">Asset</label>
+      <select id="asset" aria-label="Asset"><option value="tibia-coin">Tibia Coin</option><option value="tibia-token">Tibia Token</option></select>
+    </div>
   </div>
 </header>
 
 <main id="market" class="wrap terminal" aria-busy="true">
-  <h1 class="sr-only">Tibia Coin Markets</h1>
+  <h1 class="sr-only">Tibia Coin and Tibia Token Markets</h1>
 
   <section id="chartPanel" class="chart-panel" aria-labelledby="world">
     <div class="chart-area">
@@ -242,6 +247,6 @@
 <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.1/dist/lightweight-charts.standalone.production.js"
         integrity="sha384-KkYqTZlM13Zya6fVUF3IGCBOQ1ehFeJVVgxaVvD/0MebineF9EI8Jkd3NnWNChqN" crossorigin="anonymous"></script>
 <script type="module" src="js/site-header.js"></script>
-<script type="module" src="js/markets.js"></script>
+<script type="module" src="js/markets-entry.js"></script>
 </body>
 </html>
