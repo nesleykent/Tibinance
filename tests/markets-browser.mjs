@@ -315,13 +315,15 @@ try {
   assert.equal(image.name,`tibinance-${next.toLowerCase()}-buy-3m-${index.through}.png`);
   pixels=await inspect(image.png);
   assert.ok(pixels.buy>2000 && pixels.sell<50,`the Buy series ${JSON.stringify(pixels)}`);
-  // A layer added to the chart takes part in the image with its key and annotation, with no change to the export.
-  await page.evaluate(async()=>{const {LAYERS}=await import('/js/market-chart.js');
+  // A layer added to the chart takes part in the image with its key and annotation, with no change to the export. The
+  // probe reaches the very module the page loaded, whatever version its address carries.
+  await page.evaluate(()=>{window.chartModule=()=>performance.getEntriesByType('resource').map(e=>e.name).find(n=>/\/js\/market-chart\.js(\?|$)/.test(n));});
+  await page.evaluate(async()=>{const {LAYERS}=await import(chartModule());
     window.probeLayer={depth:9,add:()=>null,draw(){},keys:()=>[{mark:'bar',color:'#00ff00',label:'Probe'}],annotate(ctx){ctx.fillStyle='#00ff00';ctx.fillRect(200,200,60,60);}};
     LAYERS.push(window.probeLayer);});
   pixels=await inspect((await exportImage(page)).png);
   assert.ok(pixels.probe>1000,`the probe layer is drawn: ${pixels.probe}`);
-  await page.evaluate(async()=>{const {LAYERS}=await import('/js/market-chart.js');LAYERS.splice(LAYERS.indexOf(window.probeLayer),1);});
+  await page.evaluate(async()=>{const {LAYERS}=await import(chartModule());LAYERS.splice(LAYERS.indexOf(window.probeLayer),1);});
   await page.check('#eventMarkers');
   await page.click('#eventsToggle');
   await page.click('#side button[data-side="sell"]');

@@ -2,8 +2,8 @@
 import { esc } from './format.js';
 import { RANGES, changeOver, rangeStart, dayGrid } from './market-series.js';
 // Version the changed shared modules: GitHub Pages can retain pre-TIB code in browser caches.
-import { createMarketChart, dayOf } from './market-chart.js?v=20261004-tib';
-import { marketImage } from './market-export.js?v=20261004-tib';
+import { createMarketChart, dayOf } from './market-chart.js?v=20261004-chart-first';
+import { marketImage } from './market-export.js?v=20261004-chart-first';
 import { dock } from './markets-dock.js';
 import { EVENTS } from './market-events.js';
 import { eventsPanel } from './market-events-panel.js?v=20261004-tib';
@@ -55,9 +55,9 @@ function legend(day) {
   $('legend').innerHTML = `<span class="day">${esc(day ?? '')} UTC</span> <span class="label"><i class="key key-dot"></i>Daily close</span> <b class="value">${p ? tokenPrice(p.close) : 'N/A'}</b>${ohl}`;
   $('volumeLegend').innerHTML = `<span class="day"></span> <span class="label"><i class="key key-volume"></i>Pool volume</span> <b class="value">${p ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(p.volumeUsd) : 'N/A'}</b>`;
   // The chart's status stands over its top: the price scale starts below it (js/market-chart.js fitTop).
-  if (rest) market.fitTop($('chartHead'));
+  if (rest) market.fitTop?.($('chartHead'));
 }
-new ResizeObserver(() => requestAnimationFrame(() => market.fitTop($('chartHead')))).observe($('chart'));
+new ResizeObserver(() => requestAnimationFrame(() => market.fitTop?.($('chartHead')))).observe($('chart'));
 function applyRange() {
   $('range').querySelectorAll('button').forEach(b => b.setAttribute('aria-checked', String(b.dataset.range === range)));
   if (view.grid.length) {

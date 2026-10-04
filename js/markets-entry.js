@@ -10,4 +10,4 @@ picker.addEventListener('change', () => {
   url.searchParams.delete('view');
   location.assign(url);
 });
-await import(asset === 'tibia-token' ? './tibia-token-markets.js?v=20261004-tib' : './markets.js');
+await import(asset === 'tibia-token' ? './tibia-token-markets.js?v=20261004-chart-first' : './markets.js?v=20261004-chart-first');

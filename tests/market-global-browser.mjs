@@ -10,7 +10,7 @@ const browser=await(process.env.TIBINANCE_BROWSER==='webkit'?webkit.launch({head
 try{
  const page=await browser.newPage({viewport:{width:1440,height:900}});const errors=[];
  page.on('pageerror',e=>errors.push(e.message));
- await page.route('**/js/markets.js',async route=>{
+ await page.route('**/js/markets.js*',async route=>{
   const response=await route.fetch();await route.fulfill({response,body:await response.text()+'\nwindow.__marketAudit={state,showLegend,select};\n'});
  });
  const audit=JSON.parse(await readFile(new URL('../docs/market-chart-integration-audit.json',import.meta.url)));
