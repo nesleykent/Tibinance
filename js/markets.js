@@ -11,10 +11,14 @@
 import { fmt, esc, num } from './format.js';
 import { bestOfferCloses } from './market-history.js';
 import { RANGES, changeOver, dayGrid, daysBetween, lineLayers, neighbours, rangeStart } from './market-series.js';
+import { dock } from './markets-dock.js';
 
 const ASSET = 'tibia-coin';
 const DATA = `data/market-history/${ASSET}/`;
 const STALE_DAYS = 7;   // a world whose latest best offer is older than this is marked
+// Where the Worlds panel opens by default: from here up, the chart keeps at least 600px beside it
+// (the page's gutters and maximum width, css/app.css, less the panel and the rail, css/markets.css).
+const ROOMY = '(min-width: 1280px)';
 const SIDES = {
   sell: { offer: 'Best Sell Offer', offers: 'Sell Offers' },
   buy: { offer: 'Best Buy Offer', offers: 'Buy Offers' }
@@ -312,6 +316,17 @@ function saveUrl() {
   history.replaceState(null, '', url);
 }
 
+/* ------------------------------------------------------------- the dock */
+// Opening or closing a panel changes the chart's width: it keeps showing the same days, wider or narrower.
+// The Worlds panel reopens at the selected world.
+function dockChanged(open) {
+  const days = chart.timeScale().getVisibleLogicalRange();
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    if (days) chart.timeScale().setVisibleLogicalRange(days);
+    if (open === 'worldsPanel') document.querySelector('#worlds tr[aria-selected="true"]')?.scrollIntoView({ block: 'nearest' });
+  }));
+}
+
 /* ------------------------------------------------------- expand and help */
 const panel = $('chartPanel');
 function showExpanded(on) {
@@ -356,6 +371,7 @@ if ('popover' in HTMLElement.prototype) {
 }
 
 function wire() {
+  dock($('dock'), { key: 'tibinance.markets.dock', roomy: () => matchMedia(ROOMY).matches, onChange: dockChanged });
   $('side').addEventListener('click', e => {
     const side = e.target.closest('button')?.dataset.side;
     if (!side || side === state.side) return;

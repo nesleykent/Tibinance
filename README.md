@@ -32,9 +32,15 @@ an expand (full screen) control sit in its top toolbar, the 1M / 3M / 6M / YTD /
 1Y / All ranges in its bottom toolbar. Legends on the chart follow the crosshair
 (server day, best offer with its change from the previous observation, daily
 average, volume), and the latest best offer is marked on the price scale. The
-side panel holds a dense, separately scrolling watchlist (latest best offer and
-its absolute and percentage change over the selected range) and the selected
-world's details. Selecting a world updates the chart and the address
+page keeps the same outer margins as Capture and Research. At its right edge, a
+narrow rail opens and closes the Worlds panel: a dense, separately scrolling
+watchlist (latest best offer and its absolute and percentage change over the
+selected range) and the selected world's details. Closed, the panel gives its
+width back to the chart, which keeps showing the same days; the choice is
+remembered in the browser. Until then, the panel starts open on screens wide
+enough to keep the chart roomy beside it. Phones list the worlds under the chart.
+Later Markets tools join the rail as panels of their own (`js/markets-dock.js`).
+Selecting a world updates the chart and the address
 (`markets.html?world=Gentebra&side=sell&range=1Y`), so a view can be linked.
 The page presents one market history; it does not label where each value came from.
 

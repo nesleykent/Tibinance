@@ -26,7 +26,7 @@
   </div>
 </header>
 
-<main id="market" class="terminal" aria-busy="true">
+<main id="market" class="wrap terminal" aria-busy="true">
   <h1 class="sr-only">Tibia Coin Markets</h1>
 
   <section id="chartPanel" class="chart-panel" aria-labelledby="world">
@@ -88,39 +88,47 @@
     </div>
   </section>
 
-  <aside class="watchlist" aria-label="Worlds">
-    <div class="watch-head">
-      <span class="watch-title">Worlds <span id="worldCount" class="watch-count"></span></span>
-      <input type="search" id="filter" class="filter" placeholder="Filter World…" aria-label="Filter worlds">
+  <!-- The dock: the panel open beside the chart, and the rail of buttons that opens and closes each panel. -->
+  <div id="dock" class="dock">
+    <aside id="worldsPanel" class="dock-panel watchlist" aria-label="Worlds" data-dock-default>
+      <div class="watch-head">
+        <span class="watch-title">Worlds <span id="worldCount" class="watch-count"></span></span>
+        <input type="search" id="filter" class="filter" placeholder="Filter World…" aria-label="Filter worlds">
+      </div>
+      <div class="watch-scroll">
+        <table class="watch">
+          <thead>
+            <tr>
+              <th aria-sort="ascending"><button type="button" data-sort="world">World</button></th>
+              <th class="num" aria-sort="none"><button type="button" data-sort="last">Last</button></th>
+              <th class="num" aria-sort="none"><button type="button" data-sort="delta" title="Change over the selected range">Chg</button></th>
+              <th class="num" aria-sort="none"><button type="button" data-sort="ratio" title="Change over the selected range, in percent">Chg%</button></th>
+            </tr>
+          </thead>
+          <tbody id="worlds"></tbody>
+        </table>
+        <p id="noWorlds" class="empty" hidden>No world matches.</p>
+      </div>
+      <section class="details" aria-labelledby="detailsWorld">
+        <h3 id="detailsWorld" class="details-title"></h3>
+        <p id="detailStatus" class="details-status" hidden></p>
+        <dl class="details-grid">
+          <div><dt>Best Sell Offer</dt><dd id="detailSell"></dd></div>
+          <div><dt>Best Buy Offer</dt><dd id="detailBuy"></dd></div>
+          <div><dt>Spread</dt><dd id="detailSpread"></dd></div>
+          <div><dt id="detailChangeLabel">Change</dt><dd id="detailChange"></dd></div>
+          <div><dt>Observed</dt><dd id="detailObserved"></dd></div>
+          <div><dt>Daily figures</dt><dd id="detailDaily"></dd></div>
+        </dl>
+      </section>
+      <div id="watchTip" class="watch-tip" role="tooltip" hidden></div>
+    </aside>
+    <div class="dock-rail" role="group" aria-label="Panels">
+      <button type="button" class="tool dock-tool" data-dock-target="worldsPanel" aria-label="Worlds">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7.5 5.5h9M7.5 10h9M7.5 14.5h9M3.5 5.5h.01M3.5 10h.01M3.5 14.5h.01"/></svg>
+      </button>
     </div>
-    <div class="watch-scroll">
-      <table class="watch">
-        <thead>
-          <tr>
-            <th aria-sort="ascending"><button type="button" data-sort="world">World</button></th>
-            <th class="num" aria-sort="none"><button type="button" data-sort="last">Last</button></th>
-            <th class="num" aria-sort="none"><button type="button" data-sort="delta" title="Change over the selected range">Chg</button></th>
-            <th class="num" aria-sort="none"><button type="button" data-sort="ratio" title="Change over the selected range, in percent">Chg%</button></th>
-          </tr>
-        </thead>
-        <tbody id="worlds"></tbody>
-      </table>
-      <p id="noWorlds" class="empty" hidden>No world matches.</p>
-    </div>
-    <section class="details" aria-labelledby="detailsWorld">
-      <h3 id="detailsWorld" class="details-title"></h3>
-      <p id="detailStatus" class="details-status" hidden></p>
-      <dl class="details-grid">
-        <div><dt>Best Sell Offer</dt><dd id="detailSell"></dd></div>
-        <div><dt>Best Buy Offer</dt><dd id="detailBuy"></dd></div>
-        <div><dt>Spread</dt><dd id="detailSpread"></dd></div>
-        <div><dt id="detailChangeLabel">Change</dt><dd id="detailChange"></dd></div>
-        <div><dt>Observed</dt><dd id="detailObserved"></dd></div>
-        <div><dt>Daily figures</dt><dd id="detailDaily"></dd></div>
-      </dl>
-    </section>
-    <div id="watchTip" class="watch-tip" role="tooltip" hidden></div>
-  </aside>
+  </div>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.1/dist/lightweight-charts.standalone.production.js"
