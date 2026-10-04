@@ -11,6 +11,11 @@ const {chromium,webkit}=require(process.env.TIBINANCE_NODE_MODULES?`${process.en
 const archive=process.env.TIBINANCE_SCREENSHOT_DIR;
 assert.ok(archive,'Set TIBINANCE_SCREENSHOT_DIR to the private local screenshot archive');
 const fixtures=JSON.parse(await readFile(process.env.TIBINANCE_OCR_FIXTURES??new URL('./fixtures/ocr-review.json',import.meta.url),'utf8'));
+// Default coverage mixes the eleven reviewed originals with historical controls
+// and repeats the first image after both views have used the same reader queue.
+if(!process.env.TIBINANCE_OCR_FIXTURES) {
+  fixtures.push(...JSON.parse(await readFile(new URL('./fixtures/ocr-controls.json',import.meta.url),'utf8')),fixtures[0]);
+}
 const wanted=new Set(fixtures.map(f=>f.hash)),sources=new Map();
 const walk=async path=>{
   for(const entry of await readdir(path,{withFileTypes:true})) {
@@ -45,14 +50,27 @@ try {
       const name=`${date}_${time.replaceAll(':','').replace('.','')}_Synthetic Character_Hotkey.png`;
       const file=new File([data],name,{type:'image/png'});
       let checkpoint;
-      const result=await ingestScreenshot(file,{reprocess:true,getExisting:async()=>fixture.context,
-        onContext:async value=>{checkpoint=value;}});
-      return {result,checkpoint};
+      const createWorker=window.Tesseract.createWorker, lifetimes=[];
+      window.Tesseract.createWorker=async(...args)=>{
+        const worker=await createWorker(...args), lifetime={terminated:false};
+        lifetimes.push(lifetime);
+        const terminate=worker.terminate.bind(worker);
+        worker.terminate=async()=>{await terminate();lifetime.terminated=true;};
+        return worker;
+      };
+      try {
+        const result=await ingestScreenshot(file,{reprocess:true,getExisting:async()=>fixture.context,
+          onContext:async value=>{checkpoint=value;}});
+        return {result,checkpoint,lifetimes};
+      } finally { window.Tesseract.createWorker=createWorker; }
     },{fixture,bytes:sources.get(fixture.hash).toString('base64')});
     const label=`${fixture.provenance?'Control':'Review'} case ${index+1}`;
     assert.equal(result.result.status,'ready',`${label}: ${JSON.stringify(result.result.issues)}`);
-    assert.equal(result.checkpoint.world,fixture.context.world,`${label}: retained world`);
-    assert.equal(result.result.capture.world,fixture.context.world,`${label}: capture world`);
+    assert.deepEqual(result.lifetimes,[{terminated:true}],`${label}: fresh OCR worker disposed before return`);
+    for(const key of ['hash','world','type','battleye','capturedAt','captureTimeZone']) {
+      assert.equal(result.checkpoint[key],fixture.context[key],`${label}: checkpoint ${key}`);
+      assert.equal(result.result.capture[key],fixture.context[key],`${label}: capture ${key}`);
+    }
     if(fixture.viewType==='statistics') {
       const actual=Object.fromEntries(['buy','sell'].map(side=>[side,Object.fromEntries(
         ['transactions','highestPrice','averagePrice','lowestPrice'].map(k=>[k,result.result.capture.statistics30d[side][k]]))]));

@@ -684,9 +684,13 @@ conflicting readings remain review cases.
 
 Anonymous world/time context is checkpointed after canonical world resolution
 and before value extraction. Worker cleanup releases the queue on success or
-failure. This machine's reused Chrome OCR sessions can still close unexpectedly;
-`--isolate-browser` completed the batch, while WebKit passed the full eleven-image
-queue. Runtime failures remain explicit review evidence and require retry.
+failure. Each screenshot gets a fresh OCR worker, bitmap, geometry and result;
+queued readers wait for worker disposal. No cross-image contamination was found.
+The earlier batch limitation was a Chrome process lifetime issue: on this machine,
+automated Chrome also exits after about 32 seconds with a blank page and no OCR.
+Fresh pages and contexts do not prevent it. `--isolate-browser` remains an operational
+workaround, and runtime failures require review/retry. The native shutdown cause
+remains unresolved; see the [batch isolation investigation](docs/ocr-batch-isolation.md).
 
 [Archive validation](data/market-update-validation.json),
 [rejections](data/market-update-rejections.json) and

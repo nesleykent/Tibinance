@@ -129,6 +129,42 @@ test('a synchronous worker cleanup failure cannot strand the reader queue',async
   assert.equal((await ingestScreenshot(source('Hotkey'),{},h.services)).status,'ready');
 });
 
+test('queued images wait for cleanup and retain their own context after success or failure',async()=>{
+  for (const fails of [false,true]) {
+    let releaseCleanup, enteredCleanup;
+    const cleanupEntered=new Promise(resolve=>{enteredCleanup=resolve;});
+    const cleanupPending=new Promise(resolve=>{releaseCleanup=resolve;});
+    const firstContext={image:1},secondContext={image:2};
+    const secondRows=rows();
+    for(const side of ['sell','buy']) for(const row of secondRows[side]) { row.amount*=2;row.total*=2; }
+    const first=harness({verifyMarket:async()=>firstContext,
+      extractMarketOffers:async context=>{assert.equal(context,firstContext);if(fails)throw new Error();return rows();},
+      disposeOcr:async()=>{enteredCleanup();await cleanupPending;}});
+    const second=harness({sha256:async()=> 'b'.repeat(64),verifyMarket:async()=>secondContext,
+      extractMarketOffers:async context=>{assert.equal(context,secondContext);return secondRows;}});
+    const original=ingestScreenshot(source('Hotkey'),{},first.services);
+    await cleanupEntered;
+    let preflightDone;
+    const preflight=new Promise(resolve=>{preflightDone=resolve;});
+    const next=ingestScreenshot(source('Hotkey'),{reprocess:true,getExisting:async()=>{
+      preflightDone();return {world:'Secura',type:'Optional PvP',battleye:'Green',capturedAt:'2026-10-02T13:00:00.000'};
+    }},second.services);
+    await preflight;
+    await new Promise(resolve=>setImmediate(resolve));
+    try { assert.ok(!second.calls.includes('decode'),'No second bitmap while the first worker is being disposed'); }
+    finally { releaseCleanup(); }
+    const [a,b]=await Promise.all([original,next]);
+    assert.equal(a.status,fails?'needs_review':'ready');
+    assert.equal(b.status,'ready');
+    assert.equal(b.capture.hash,'b'.repeat(64));
+    assert.equal(b.capture.world,'Secura');
+    assert.equal(b.capture.capturedAt,'2026-10-02T13:00:00.000');
+    assert.deepEqual(b.rows,Object.fromEntries(['sell','buy'].map(side=>
+      [side,secondRows[side].map(row=>({...row,bad:false}))])));
+    assert.notEqual(a.rows,b.rows);
+  }
+});
+
 test('invalid observations cannot produce a persistable canonical capture', async () => {
   const invalid = rows(); invalid.sell[0].total = 1;
   const h = harness({ extractMarketOffers: async () => invalid });
