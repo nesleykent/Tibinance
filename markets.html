@@ -109,12 +109,13 @@
     </aside>
     <section id="eventsPanel" class="dock-panel events-panel" aria-labelledby="eventsTitle">
       <div class="panel-head"><h2 id="eventsTitle" class="panel-title">Events</h2><label><input id="eventMarkers" type="checkbox" checked> Chart markers</label></div>
+      <nav class="event-section-nav" aria-label="Events views"><button type="button" data-event-section="eventCalendarSection">Calendar</button><button type="button" data-event-section="eventAgendaSection">Full agenda</button></nav>
       <div class="panel-body">
         <p id="eventsContext"></p>
         <div class="event-filters"><label>Category<select id="eventCategory"></select></label><label>Scope<select id="eventScope"><option value="">Global and world</option><option value="global">Global</option><option value="world">World-specific</option></select></label></div>
-        <section aria-label="Event calendar"><div class="event-month-nav"><button type="button" data-month-step="-1" aria-label="Previous month">‹</button><input id="eventMonth" type="month" aria-label="Calendar month"><button type="button" data-month-step="1" aria-label="Next month">›</button><button type="button" id="eventToday">Today</button></div><div id="eventCalendar" class="event-calendar"></div><p class="event-calendar-key">Counts show all events that day. Underlines show multi-day events.</p><h3 id="eventDayTitle"></h3><div id="eventDayList"></div></section>
+        <section id="eventCalendarSection" aria-label="Event calendar"><div class="event-month-nav"><button type="button" data-month-step="-1" aria-label="Previous month">‹</button><input id="eventMonth" type="month" aria-label="Calendar month"><button type="button" data-month-step="1" aria-label="Next month">›</button><button type="button" id="eventToday">Today</button></div><div id="eventCalendar" class="event-calendar"></div><p class="event-calendar-key">Counts show all events that day. Underlines show multi-day events.</p><h3 id="eventDayTitle"></h3><div id="eventDayList"></div></section>
         <section id="eventDetails" class="event-details" aria-label="Selected event" aria-live="polite"></section>
-        <section aria-label="Event agenda"><div class="event-agenda-head"><h3>Agenda</h3><select id="eventPeriod" aria-label="Agenda period"><option value="upcoming">Upcoming and ongoing</option><option value="recent">Recent 90 days</option><option value="historical">Historical</option><option value="all">All dates</option></select></div><p id="eventCount"></p><div id="eventAgenda"></div><button type="button" id="eventMore">Show more events</button></section>
+        <section id="eventAgendaSection" aria-label="Event agenda"><div class="event-agenda-head"><h3>Agenda</h3><select id="eventPeriod" aria-label="Agenda period"><option value="upcoming">Upcoming and ongoing</option><option value="recent">Recent 90 days</option><option value="historical">Historical</option><option value="all" selected>All dates</option></select></div><p id="eventCount"></p><div id="eventAgenda"></div></section>
       </div>
     </section>
     <section id="helpPanel" class="dock-panel help-panel" aria-labelledby="helpTitle">

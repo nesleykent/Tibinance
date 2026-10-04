@@ -3,15 +3,15 @@ import { dateText, eventsFor } from './market-events.js';
 import { esc } from './format.js';
 export function eventsPanel(root, { onFilter, onFocus }) {
   const today = new Date().toISOString().slice(0, 10);
-  let month = today.slice(0, 7), day = null, selected = null, events = [], world = '', available = false, categories = [], category = '', period = 'upcoming', scope = '', limit = 30;
+  let month = today.slice(0, 7), day = null, selected = null, events = [], world = '', available = false, categories = [], category = '', period = 'all', scope = '', initialized = false;
   const $ = id => root.querySelector(`#${id}`);
   const filtered = () => events.filter(e => (!category || e.category.id === category) && (!scope || (scope === 'global' ? e.worlds === 'all' : e.worlds !== 'all')));
   const scopeText = e => e.worlds === 'all' ? 'Global: all worlds' : `Worlds: ${e.worlds.join(', ')}`;
   const row = e => `<button type="button" class="event-row" data-event="${esc(e.id)}" aria-pressed="${e.id === selected}"><small>${esc(dateText(e))} / ${esc(e.category.label)}</small><strong>${esc(e.title)}</strong><small>${esc(scopeText(e))}</small></button>`;
   function render() {
     const list = filtered();
-    $('eventsContext').textContent = available ? `Global events and events concerning ${world}. Dates are inclusive server days.` : 'Event data is unavailable. Reload to try again.';
-    $('eventCategory').innerHTML = '<option value="">All categories</option>' + categories.map(c => `<option value="${esc(c.id)}">${esc(c.label)}</option>`).join('');
+    $('eventsContext').textContent = available ? `Global events and events concerning ${world}. Dates are inclusive server days. ${events.length} recorded events, ${events[0]?.start ?? 'no start date'} to ${events.at(-1)?.end ?? 'no end date'}. Categories show recorded counts.` : 'Event data is unavailable. Reload to try again.';
+    $('eventCategory').innerHTML = '<option value="">All categories</option>' + categories.map(c => `<option value="${esc(c.id)}">${esc(c.label)} (${events.filter(e => e.category.id === c.id).length})</option>`).join('');
     $('eventCategory').value = category;
     $('eventMonth').value = month;
     const first = new Date(`${month}-01T00:00:00Z`), offset = (first.getUTCDay() + 6) % 7;
@@ -24,21 +24,21 @@ export function eventsPanel(root, { onFilter, onFocus }) {
     const hits = day ? list.filter(e => e.start <= day && e.end >= day) : [];
     $('eventDayList').innerHTML = hits.map(row).join('') || (day ? '<p>No events on this day.</p>' : '');
     const agenda = list.filter(e => period === 'all' || (period === 'upcoming' ? e.end >= today : period === 'recent' ? e.end < today && e.end >= new Date(Date.parse(today) - 90 * 86400000).toISOString().slice(0, 10) : e.end < today));
-    $('eventAgenda').innerHTML = agenda.slice(0, limit).map(row).join('') || '<p>No events match these filters.</p>';
-    $('eventMore').hidden = agenda.length <= limit;
+    $('eventAgenda').innerHTML = agenda.map(row).join('') || '<p>No events match these filters.</p>';
     $('eventCount').textContent = `${agenda.length} events in chronological order`;
     const e = list.find(e => e.id === selected);
     $('eventDetails').innerHTML = e ? `<small>${esc(dateText(e))} / ${esc(e.category.label)}</small><h3>${esc(e.title)}</h3><p>${esc(e.description)}</p><p>${esc(scopeText(e))}</p>${e.merge ? `<p>${esc(e.merge.from.join(', '))} into ${esc(e.merge.into)}. ${esc(e.merge.status)}${e.merge.notBefore ? `. Not before ${esc(e.merge.notBefore)}` : ''}.</p>` : ''}<button type="button" id="eventFocus">Focus on chart</button><p id="eventFocusStatus" role="status"></p>` : '<p>Select an event for details and chart navigation.</p>';
   }
   root.addEventListener('click', e => {
+    const section = e.target.closest('[data-event-section]');
+    if (section) $(section.dataset.eventSection).scrollIntoView({ block: 'start' });
     const event = e.target.closest('[data-event]');
-    if (event) { selected = event.dataset.event; const container = event.parentElement.id; render(); root.querySelector(`#${container} [data-event="${CSS.escape(selected)}"]`)?.focus({ preventScroll: true }); }
+    if (event) { selected = event.dataset.event; const container = event.parentElement.id; render(); root.querySelector(`#${container} [data-event="${CSS.escape(selected)}"]`)?.focus({ preventScroll: true }); if (container === 'eventAgenda') $('eventDetails').scrollIntoView({ block: 'nearest' }); }
     const cell = e.target.closest('[data-day]');
     if (cell) { day = cell.dataset.day; render(); root.querySelector(`[data-day="${day}"]`)?.focus({ preventScroll: true }); }
     const move = e.target.closest('[data-month-step]');
     if (move) { const d = new Date(`${month}-01T00:00:00Z`); d.setUTCMonth(d.getUTCMonth() + Number(move.dataset.monthStep)); month = d.toISOString().slice(0, 7); day = null; render(); }
     if (e.target.id === 'eventToday') { month = today.slice(0, 7); day = today; render(); }
-    if (e.target.id === 'eventMore') { limit += 30; render(); }
     if (e.target.id === 'eventFocus') { const chosen = filtered().find(e => e.id === selected); $('eventFocusStatus').textContent = onFocus(chosen); }
   });
   root.addEventListener('input', e => {
@@ -46,8 +46,16 @@ export function eventsPanel(root, { onFilter, onFocus }) {
   });
   root.addEventListener('change', e => {
     if (e.target.id === 'eventMonth' && e.target.value !== month && /^\d{4}-\d{2}$/.test(e.target.value)) { month = e.target.value; day = null; render(); }
-    if (e.target.id === 'eventPeriod') { period = e.target.value; limit = 30; render(); }
-    if (e.target.id === 'eventCategory' || e.target.id === 'eventScope') { category = $('eventCategory').value; scope = $('eventScope').value; selected = null; limit = 30; onFilter(filtered()); render(); }
+    if (e.target.id === 'eventPeriod') { period = e.target.value; render(); }
+    if (e.target.id === 'eventCategory' || e.target.id === 'eventScope') { category = $('eventCategory').value; scope = $('eventScope').value; selected = null; onFilter(filtered()); render(); }
   });
-  return { update(dataset, nextWorld) { world = nextWorld; available = !!dataset; categories = dataset?.categories ?? []; events = eventsFor(dataset, world); selected = null; onFilter(filtered()); render(); } };
+  return { update(dataset, nextWorld) { world = nextWorld; available = !!dataset; categories = dataset?.categories ?? []; events = eventsFor(dataset, world); selected = null;
+    if (!initialized && events.length) {
+      initialized = true;
+      if (!events.some(e => e.end >= today)) {
+        const latest = events.at(-1);
+        month = latest.start.slice(0, 7);
+      }
+    }
+    onFilter(filtered()); render(); } };
 }

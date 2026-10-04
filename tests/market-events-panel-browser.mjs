@@ -13,7 +13,9 @@ try {
   await page.waitForFunction(() => document.querySelector('#market').getAttribute('aria-busy') === 'false');
   await page.click('#eventsToggle');
   assert.equal(await page.getAttribute('#eventsToggle', 'aria-expanded'), 'true');
-  assert.ok(await page.locator('#eventAgenda [data-event]').count() > 0);
+  assert.equal(await page.locator('#eventAgenda [data-event]').count(), 54, 'the complete world-scoped event history is available by default');
+  await page.click('[data-event-section="eventAgendaSection"]');
+  await page.click('[data-event-section="eventCalendarSection"]');
   const url = page.url();
   await page.waitForTimeout(250);
   const markerState = () => page.locator('#eventMarks button').evaluateAll(bs => bs.map(b => [b.dataset.events, Math.round(parseFloat(b.style.left))]));
@@ -31,8 +33,10 @@ try {
   assert.deepEqual(await markerState(), markersBefore);
   await page.selectOption('#eventPeriod', 'historical');
   const before = await page.locator('#eventAgenda [data-event]').count();
-  await page.click('#eventMore');
+  await page.selectOption('#eventPeriod', 'all');
   assert.ok(await page.locator('#eventAgenda [data-event]').count() > before);
+  await page.selectOption('#eventPeriod', 'upcoming');
+  assert.ok(await page.locator('#eventAgenda [data-event]').count() > 0);
   await page.selectOption('#eventPeriod', 'recent');
   assert.ok(await page.locator('#eventAgenda [data-event]').count() > 0);
   await page.selectOption('#eventPeriod', 'all');
