@@ -6,13 +6,20 @@
 <title>Tibinance</title>
 <meta name="description" content="Drag in Tibia market screenshots; prices are extracted in your browser and only anonymous market data is stored.">
 <link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/site-header.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪙</text></svg>">
 </head>
 <body>
 <header class="site">
   <div class="wrap">
-    <a class="wordmark" href="./">Tibinance</a>
-    <nav aria-label="Site"><a class="nav-link" href="markets.html">Markets</a><a class="nav-link" href="reports/tc-cycle/">Research</a></nav>
+    <nav class="site-nav" aria-label="Site">
+      <button type="button" class="site-crumb site-home" popovertarget="site-menu" data-site-menu>Tibinance<svg class="site-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg></button>
+      <ul id="site-menu" class="site-panel site-menu" popover>
+        <li><a href="./" aria-current="page">Capture</a></li>
+        <li><a href="markets.html">Markets</a></li>
+        <li><a href="reports/tc-cycle/">Research</a></li>
+      </ul>
+    </nav>
   </div>
 </header>
 
@@ -152,6 +159,7 @@
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
+<script type="module" src="js/site-header.js"></script>
 <script type="module" src="js/app.js"></script>
 </body>
 </html>

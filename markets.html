@@ -7,15 +7,21 @@
 <meta name="description" content="Tibia Coin best offers and daily trading history for every tracked world.">
 <link rel="stylesheet" href="css/app.css">
 <link rel="stylesheet" href="css/markets.css">
+<link rel="stylesheet" href="css/site-header.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪙</text></svg>">
 </head>
 <body>
 <header class="site">
   <div class="wrap">
-    <a class="wordmark" href="./">Tibinance</a>
-    <nav aria-label="Site">
-      <a class="nav-link" href="markets.html" aria-current="page">Markets</a>
-      <a class="nav-link" href="reports/tc-cycle/">Research</a>
+    <nav class="site-nav" aria-label="Site">
+      <a class="site-crumb site-home" href="./">Tibinance</a>
+      <span class="site-slash" aria-hidden="true">/</span>
+      <button type="button" class="site-crumb site-section" popovertarget="site-menu" data-site-menu>Markets<svg class="site-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg></button>
+      <ul id="site-menu" class="site-panel site-menu" popover>
+        <li><a href="./">Capture</a></li>
+        <li><a href="markets.html" aria-current="page">Markets</a></li>
+        <li><a href="reports/tc-cycle/">Research</a></li>
+      </ul>
     </nav>
   </div>
 </header>
@@ -119,6 +125,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.1/dist/lightweight-charts.standalone.production.js"
         integrity="sha384-KkYqTZlM13Zya6fVUF3IGCBOQ1ehFeJVVgxaVvD/0MebineF9EI8Jkd3NnWNChqN" crossorigin="anonymous"></script>
+<script type="module" src="js/site-header.js"></script>
 <script type="module" src="js/markets.js"></script>
 </body>
 </html>

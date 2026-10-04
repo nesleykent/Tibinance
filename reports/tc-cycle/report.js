@@ -990,8 +990,8 @@ async function main() {
   // Every world picker is this one control over the one selection, listing the analysed universe
   // (market-update.json) in one order. `all` adds the no-selection option where the page can show every
   // world at once; `value` is the world a card shows when it falls back from an empty selection.
-  const worldControl = ({all = false, value = state.world} = {}) => pickerControl({label: 'World', key: 'world', value,
-    options: [...(all ? [{value: '', label: 'All Worlds'}] : []), ...updates.map(w => ({value: w.world, label: w.world}))]});
+  const worldOptions = all => [...(all ? [{value: '', label: 'All Worlds'}] : []), ...updates.map(w => ({value: w.world, label: w.world}))];
+  const worldControl = ({all = false, value = state.world} = {}) => pickerControl({label: 'World', key: 'world', value, options: worldOptions(all)});
   const marketRows = updates.map(w => ({
     ...w, date: w.latest.capturedAt.slice(0, 10), priorDate: w.prior?.capturedAt.slice(0, 10),
     sell: w.latest.sell, buy: w.latest.buy,
@@ -2991,8 +2991,12 @@ async function main() {
       series: predecessors.map((p, i) => ({label: p.world, cls: i ? 'c-bid' : 'c-ask', points: hist(p.world).map(x => [x.date, x[side]])}))}));
   }, ['side'], ['card-precursor-test', 'card-age-test', 'lifecycle-findings', 'card-precursor-scenario', 'card-age-scenario', 'card-age-curve', 'card-predecessor']);
 
-  // 09: world blocks. The header carries the world picker and the link to the other edition.
-  document.querySelector('.site nav').innerHTML = `<a class="icon-button" href="${t('pt-br.html', './')}" hreflang="${t('pt-BR', 'en')}" lang="${t('pt-BR', 'en')}" aria-label="${t('Português', 'English')}" title="${t('Português', 'English')}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18M4.6 7.5h14.8M4.6 16.5h14.8"/></svg></a>${worldControl({all: true})}`;
+  // 09: world blocks. The header carries the world picker, beside the language menu written in each edition's markup:
+  // the choices of every other world picker, searchable (js/site-header.js).
+  const {searchPicker} = await import('../../js/site-header.js');
+  const headerWorld = searchPicker(document.getElementById('site-world'), {id: 'world-picker', name: 'World', value: state.world, options: worldOptions(true),
+    search: t('Search worlds', 'Buscar worlds'), empty: t('No world matches.', 'Nenhum world encontrado.'), onPick: world => set('world', world)});
+  on(() => headerWorld.set(state.world), ['world']);
   on(() => {
     // Any world of the universe can be selected; one the research does not model keeps its captures and says why the rest is absent.
     const w = state.world, s = state.side, sel = W[w], u = UW[w];
@@ -3283,7 +3287,7 @@ async function main() {
   on(renderInflation, ['side', 'world'], ['inflation-reading', 'inflation-decomposition', 'card-inflation-prices', 'card-inflation-rates', 'card-inflation-monthly', 'card-inflation-annual', 'card-inflation-trend', 'card-inflation-attribution']);
   on(renderInflationWorlds, ['side', 'inflationMonth'], ['card-inflation-worlds']);
 
-  // Pickers inside cards re-render with their card; the header and chapter pickers only follow the selection.
+  // Pickers inside cards re-render with their card; the chapter pickers only follow the selection, as the header's does above.
   // Cards that fall back to the benchmark for a world the research does not model keep their picker on the benchmark.
   on(() => document.querySelectorAll('[data-picker="world"]').forEach(p => { if (!W[state.world] && p.closest('#card-roundtrip, #card-maker')) return; if ([...p.options].some(o => o.value === state.world)) p.value = state.world; }), ['world']);
   normalizeReport();

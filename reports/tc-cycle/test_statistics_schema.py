@@ -58,7 +58,8 @@ class StatisticsDatasetTests(unittest.TestCase):
             output=Path(d)
             with patch.object(prepare_site,'OUTPUT',output), patch.object(prepare_site,'REPORT',output/'reports'/'tc-cycle'):
                 prepare_site.main()
-            self.assertEqual((output/'js'/'statistics.js').read_text(),(market.ROOT.parents[1]/'js'/'statistics.js').read_text())
+            for shared in ('js/statistics.js','js/site-header.js','css/site-header.css'):
+                self.assertEqual((output/shared).read_text(),(market.ROOT.parents[1]/shared).read_text())
             self.assertTrue((output/'reports'/'tc-cycle'/'export.js').exists())
 
     def test_no_live_order_book_required_or_applied_to_statistics(self):
