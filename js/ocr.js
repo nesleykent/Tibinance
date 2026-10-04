@@ -1,4 +1,5 @@
 import { parseStatisticsText } from './statistics.js';
+import { clusterTextRows, numericTextBands, dateTextRight, integerToken, removeVerticalRules } from './ocr-layout.js';
 import { extractEndsAt } from './offers.js';
 import { itemRegion, selectedItem, selectionBand } from './market-item.js';
 /*
@@ -9,7 +10,7 @@ import { itemRegion, selectedItem, selectionBand } from './market-item.js';
  * crop is derived from those positions. Works at any client size or UI scale.
  *
  * Pass 1  sparse-text OCR over the whole image -> anchor words
- * Pass 2  digit-only OCR over each table body  -> numbers with positions
+ * Pass 2  detect physical numeric rows, then read each row and expiry twice
  *
  * The three columns are mutually redundant (amount x price == total), which
  * gives every row a free checksum. Rows that fail it are surfaced for the
@@ -23,7 +24,7 @@ import { itemRegion, selectedItem, selectionBand } from './market-item.js';
  * lands the text either too small for Tesseract or so large it smears.
  *
  * So the crop is scaled to bring glyphs to roughly TARGET_GLYPH pixels tall,
- * measured from the column header actually found in this image.
+ * measured from the visible text bands and labels actually found in this image.
  */
 const TARGET_GLYPH = 42;
 const scaleFor = h => {
@@ -173,31 +174,22 @@ function reuseGeometry(donor, donorTableY, tableY) {
 }
 
 /** Group tokens into visual rows by vertical proximity. */
-function clusterRows(ws) {
-  const rows = [];
-  let cur = [];
-  for (const w of [...ws].sort((p, q) => p.cy - q.cy)) {
-    if (cur.length && w.cy - cur[cur.length - 1].cy > Math.max(w.h, cur[cur.length - 1].h) * 0.8) {
-      rows.push(cur); cur = [];
-    }
-    cur.push(w);
-  }
-  if (cur.length) rows.push(cur);
-  return rows;
-}
+const clusterRows = clusterTextRows;
 
-function cropCanvas(src, x0, y0, x1, y1, scale, adjustContrast = true) {
+function cropCanvas(src, x0, y0, x1, y1, scale, adjustContrast = true, smoothing = true) {
   const w = Math.max(1, Math.round(x1 - x0)), h = Math.max(1, Math.round(y1 - y0));
   const c = document.createElement('canvas');
   c.width = w * scale; c.height = h * scale;
   const ctx = c.getContext('2d', { willReadFrequently: true });
   ctx.imageSmoothingQuality = 'high';
+  ctx.imageSmoothingEnabled = smoothing;
   ctx.drawImage(src, x0, y0, w, h, 0, 0, c.width, c.height);
-  if (!adjustContrast) return c;
+  if (!adjustContrast && smoothing) return c;
   // grayscale + mild contrast: keeps coloured (red/orange) offer rows readable
   const img = ctx.getImageData(0, 0, c.width, c.height);
+  if (!smoothing) removeVerticalRules(img);
   const d = img.data;
-  for (let i = 0; i < d.length; i += 4) {
+  for (let i = 0; adjustContrast && i < d.length; i += 4) {
     let v = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
     v = Math.max(0, Math.min(255, (v - 128) * 1.35 + 128));
     d[i] = d[i + 1] = d[i + 2] = v;
@@ -367,210 +359,98 @@ export async function verifyTibiaCoins(context, onStep = () => {}) {
 }
 
 export async function extractMarketOffers(context, onStep = () => {}) {
-  const { full, worker, tables, stops, heads } = context;
-  const result = {};
-  const warnings = [];   // blocking
-  const notices = [];    // informational
-  for (let i = 0; i < tables.length; i++) {
-    const tbl = tables[i], stop = stops[i];
-    onStep(`reading ${tbl.side} offers`);
-    const h = heads[i];
-    const a = h.amount;
-
-    // Integer pixel bounds: fractional ones make drawImage resample, which
-    // blurs the top row just enough for Tesseract to drop it.
-    const x0 = Math.floor(a.x - (a.r - a.x) * 2.5);
-    // The Ends At date starts only a few px right of the Total column, so the
-    // crop stops at the Total column itself - never at the Ends At header.
-    const x1 = Math.ceil(h.totalR + a.h * 0.25);
-    // Just under the header. Including the header changes how Tesseract
-    // segments the block and costs a row at the far end, so the first row is
-    // protected by reading confidence instead (see MIN_CONF_BODY).
-    const headerBottom = h.bottom ?? Math.max(a.b, h.total.b);
-    const y0 = Math.floor(headerBottom + 1);
-    const y1 = Math.floor(stop - a.h * 0.8);
-    if (y1 <= y0) { result[tbl.side] = []; continue; }
-
-    const SCALE = scaleFor(a.h);
-    const crop = cropCanvas(full, x0, y0, x1, y1, SCALE);
-    /*
-     * One segmentation mode is not reliable enough for the market grid. In real
-     * captures SINGLE_BLOCK can silently drop an otherwise perfectly readable
-     * first or middle row. Read the same crop twice with complementary layouts
-     * and merge the parsed rows below. This costs one extra body OCR pass, but
-     * avoids saving incomplete order books.
-     */
-    const readBody = async psm => {
-      await worker.setParameters({
-        tessedit_pageseg_mode: psm,
-        tessedit_char_whitelist: '0123456789,'
-      });
-      return words(await worker.recognize(crop), MIN_CONF_BODY);
+  const {full,worker,tables,stops,heads}=context;
+  const result={warnings:[],notices:[]};
+  const pixels=full.getContext('2d',{willReadFrequently:true}).getImageData(0,0,full.width,full.height);
+  const keys=['amount','price','total'];
+  for(let i=0;i<tables.length;i++) {
+    const table=tables[i],head=heads[i],a=head.amount;
+    onStep(`reading ${table.side} offers`);
+    const x0=Math.floor(a.x-(a.r-a.x)*2.5),x1=Math.ceil(head.totalR+a.h*0.25);
+    const y0=Math.floor((head.bottom??Math.max(a.b,head.total.b))+1);
+    const y1=Math.floor(stops[i]-a.h*0.8);
+    const edges=[x0,a.r,head.pieceR,head.totalR];
+    const bands=numericTextBands(pixels,edges,y0,y1,a.h);
+    const rows=[];
+    if(!bands.length)result.warnings.push(`${table.side}: visible numeric rows could not be located`);
+    const recognize=async(canvas,psm,whitelist)=>{
+      await worker.setParameters({tessedit_pageseg_mode:psm,tessedit_char_whitelist:whitelist});
+      return worker.recognize(canvas);
     };
-    const bodyPasses = [
-      await readBody(Tesseract.PSM.SINGLE_BLOCK),
-      await readBody(Tesseract.PSM.SPARSE_TEXT),
-    ];
-
-    // numbers are right-aligned, so match each token to the nearest column edge
-    const edges = {
-      amount: (a.r - x0) * SCALE,
-      price:  (h.pieceR - x0) * SCALE,
-      total:  (h.totalR - x0) * SCALE
-    };
-    const guard = edges.total + a.h * SCALE;
-
-    const parseRows = body => {
-      const parsed = [];
-      for (const row of clusterRows(body)) {
-        const cell = {};
-        for (const w of row) {
-          const txt = w.t.replace(/[^0-9,]/g, '');
-          if (!txt || w.r > guard) continue;
-          const col = Object.keys(edges).reduce((best, c) =>
-            Math.abs(edges[c] - w.r) < Math.abs(edges[best] - w.r) ? c : best);
-          cell[col] = (cell[col] ?? '') + txt;
-        }
-        const keys = ['amount', 'price', 'total'];
-        if (!keys.every(k => cell[k] && /^[\d,]+$/.test(cell[k]))) continue;
-        const v = Object.fromEntries(keys.map(k => [k, parseInt(cell[k].replace(/,/g, ''), 10)]));
-        if (keys.some(k => !Number.isFinite(v[k]) || v[k] <= 0)) continue;
-        v.ok = v.amount * v.price === v.total;
-        v._cy = row.reduce((t, w) => t + w.cy, 0) / row.length;
-        v._top = Math.min(...row.map(w => w.y));
-        parsed.push(v);
+    const numericReading=async(top,bottom,glyph,target,contrast)=>{
+      const scale=target/Math.max(1,glyph);
+      const crop=cropCanvas(full,x0,top,x1,bottom,scale,contrast,false);
+      const read=await recognize(crop,Tesseract.PSM.SINGLE_LINE,'0123456789,');
+      const tokens=read.data.text.trim().split(/\s+/);
+      if(tokens.length===3) {
+        const values=Object.fromEntries(keys.map((k,j)=>[k,integerToken(tokens[j])]));
+        if(keys.every(k=>values[k]>0) && values.amount*values.price===values.total)
+          return {...values,ok:true};
       }
-      return parsed;
+      const cell={};
+      const right=Object.fromEntries(keys.map((k,j)=>[k,(edges[j+1]-x0)*scale]));
+      for(const w of words(read,MIN_CONF_BODY).sort((a,b)=>a.x-b.x)) {
+        if(w.r>right.total+glyph*scale)continue;
+        const col=keys.reduce((best,k)=>Math.abs(right[k]-w.r)<Math.abs(right[best]-w.r)?k:best);
+        cell[col]=(cell[col]??'')+w.t;
+      }
+      const values=Object.fromEntries(keys.map(k=>[k,integerToken(cell[k]??'')]));
+      return {...values,ok:keys.every(k=>values[k]>0)&&values.amount*values.price===values.total};
     };
-
-    /*
-     * Merge the two OCR passes by visual row. Prefer a checksum-valid reading
-     * when both passes saw the same row differently. Rows found by only one pass
-     * are retained, which is what recovers lines dropped by SINGLE_BLOCK.
-     */
-    const candidates = bodyPasses.flatMap(parseRows).sort((p, q) => p._cy - q._cy);
-    const rows = [];
-    const rowTol = Math.max(3, a.h * SCALE * 0.55);
-    for (const v of candidates) {
-      const j = rows.findIndex(r => Math.abs(r._cy - v._cy) <= rowTol);
-      if (j < 0) rows.push(v);
-      else if (!rows[j].ok && v.ok) rows[j] = v;
-    }
-    rows.sort((p, q) => p._cy - q._cy);
-
-    /*
-     * If both full-table passes miss a row, the regular row pitch still tells
-     * us exactly where that row should be. Re-read only that narrow horizontal
-     * band as SINGLE_LINE. This is deliberately a rescue pass, not a third
-     * full-table interpretation: it runs only inside a gap large enough to hold
-     * one or more missing offers, and a recovered row still has to parse into
-     * all three numeric columns.
-     */
-    const rescueMissingRows = async () => {
-      if (rows.length < 3) return;
-      const gs = rows.slice(1).map((r, j) => r._cy - rows[j]._cy);
-      const normal = [...gs].sort((x, y) => x - y)[Math.floor(gs.length / 2)];
-      if (!(normal > 0)) return;
-
-      const rescued = [];
-      for (let j = 0; j < rows.length - 1; j++) {
-        const left = rows[j], right = rows[j + 1];
-        const missing = Math.max(0, Math.round((right._cy - left._cy) / normal) - 1);
-        for (let m = 1; m <= missing; m++) {
-          const expected = left._cy + normal * m;
-          const half = Math.max(a.h * SCALE * 0.65, normal * 0.38);
-          const sy0 = Math.max(0, Math.floor(expected - half));
-          const sy1 = Math.min(crop.height, Math.ceil(expected + half));
-          if (sy1 <= sy0) continue;
-
-          const stripe = cropCanvas(crop, 0, sy0, crop.width, sy1, 1);
-          await worker.setParameters({
-            tessedit_pageseg_mode: Tesseract.PSM.SINGLE_LINE,
-            tessedit_char_whitelist: '0123456789,'
-          });
-          const found = parseRows(words(await worker.recognize(stripe), 0));
-          for (const v of found) {
-            v._cy += sy0;
-            v._top += sy0;
-            // A rescue is useful only near the row position predicted by pitch.
-            if (Math.abs(v._cy - expected) <= half) rescued.push(v);
-          }
+    for(let j=0;j<bands.length;j++) {
+      const band=bands[j],glyph=band.bottom-band.top;
+      const padding=Math.max(2,Math.ceil(glyph*0.3));
+      const top=Math.max(y0,Math.floor(Math.max(band.top-padding,j?(bands[j-1].bottom+band.top)/2:y0)));
+      const bottom=Math.min(y1,Math.ceil(Math.min(band.bottom+padding,j+1<bands.length?(band.bottom+bands[j+1].top)/2:y1)));
+      // Each image band is a physical row. OCR cannot merge adjacent rows,
+      // fabricate an intermediate row, or shift subsequent row indices.
+      const reads=[await numericReading(top,bottom,glyph,42,true),
+        await numericReading(top,bottom,glyph,56,false)];
+      const valid=reads.filter(r=>r.ok);
+      const fingerprints=new Set(valid.map(r=>JSON.stringify(keys.map(k=>r[k]))));
+      let row=fingerprints.size===1?valid[0]:null;
+      if(!row) {
+        // Independently read the individual cells when a whole-row pass is
+        // incomplete or checksum-valid readings disagree. No digit repairs.
+        const cells={};
+        for(let k=0;k<keys.length;k++) {
+          const left=k===0?x0:edges[k]+glyph*0.25;
+          const right=edges[k+1]+glyph*0.25;
+          const crop=cropCanvas(full,left,top,right,bottom,56/Math.max(1,glyph),true,false);
+          const read=await recognize(crop,Tesseract.PSM.SINGLE_LINE,'0123456789,');
+          cells[keys[k]]=integerToken(read.data.text);
+        }
+        const ok=keys.every(k=>cells[k]>0)&&cells.amount*cells.price===cells.total;
+        // A third reading must confirm a conflicting candidate; it cannot
+        // overrule two complete, incompatible readings with a new guess.
+        row=ok && (!valid.length || valid.some(r=>keys.every(k=>r[k]===cells[k])))?{...cells,ok:true}:null;
+      }
+      if(!row) {
+        row={...(reads.find(r=>keys.some(k=>r[k]!=null))??reads[0]),ok:false};
+        result.warnings.push(`${table.side}: numeric values in row ${j+1} require review`);
+      }
+      const dateLeft=Math.ceil(head.totalR+a.h*0.5);
+      const dateRight=dateTextRight(pixels,dateLeft,top,bottom,glyph);
+      const dates=[];
+      if(dateRight!==null) {
+        for(const [target,contrast] of [[42,true],[56,false]]) {
+          const crop=cropCanvas(full,dateLeft,top,dateRight,bottom,target/Math.max(1,glyph),contrast,false);
+          const read=await recognize(crop,Tesseract.PSM.SINGLE_LINE,'0123456789-:, ');
+          dates.push(extractEndsAt(read.data.text));
+        }
+        if(!dates[0] || dates[0]!==dates[1]) {
+          const crop=cropCanvas(full,dateLeft,top,dateRight,bottom,48/Math.max(1,glyph),true,false);
+          const read=await recognize(crop,Tesseract.PSM.SINGLE_BLOCK,'0123456789-:, ');
+          dates.push(extractEndsAt(read.data.text));
         }
       }
-
-      for (const v of rescued.sort((p, q) => p._cy - q._cy)) {
-        const j = rows.findIndex(r => Math.abs(r._cy - v._cy) <= rowTol);
-        if (j < 0) rows.push(v);
-        else if (!rows[j].ok && v.ok) rows[j] = v;
-      }
-      rows.sort((p, q) => p._cy - q._cy);
-    };
-    await rescueMissingRows();
-
-    /*
-     * Offer rows are evenly spaced. A row that OCR missed entirely leaves no
-     * numbers to checksum, so the only trace it leaves is a double-height gap
-     * between the rows that did survive. Without this, a dropped row silently
-     * lowers the volume and can hide the best price.
-     */
-    if (rows.length === 1) {
-      warnings.push(`${tbl.side}: only one offer was read. With a single row there is ` +
-        `no spacing to check the rest against, so confirm it against the screenshot`);
+      const agreed=dates.filter(v=>v && dates.filter(d=>d===v).length>=2);
+      row.endsAt=agreed[0]??null;
+      if(!row.endsAt)result.warnings.push(`${table.side}: expiry in row ${j+1} requires review`);
+      rows.push(row);
     }
-    const gaps = rows.slice(1).map((r, j) => r._cy - rows[j]._cy);
-    if (gaps.length >= 2) {
-      const sorted = [...gaps].sort((x, y) => x - y);
-      const median = sorted[Math.floor(sorted.length / 2)];
-      const missed = gaps.reduce((n, g) => n + Math.max(0, Math.round(g / median) - 1), 0);
-      /*
-       * A gap only betrays a row missed BETWEEN two that were read. The first
-       * row leaves no such gap - and it is the costly one, because it holds the
-       * best price. It is caught instead by its distance from the top of the
-       * crop, which starts immediately below the column header.
-       */
-      if (median > 0 && missed > 0) {
-        warnings.push(`${tbl.side}: a gap between rows means ${missed} offer` +
-          `${missed === 1 ? '' : 's'} in the middle of the list could not be read; ` +
-          `add ${missed === 1 ? 'it' : 'them'} before saving`);
-      }
-
-      /*
-       * Do not infer a missing first row from the blank band above the first OCR
-       * box. Tesseract's glyph boxes do not start at a stable offset from the
-       * header, so that test produced systematic false positives. Missing rows
-       * are instead recovered by the complementary OCR pass above; unresolved
-       * omissions between surviving rows are still caught by the gap check.
-       */
-    }
-    // Read expiration separately so its digits cannot contaminate Total Price.
-    // The date column shares the numeric crop's vertical coordinates and scale.
-    const dx0 = Math.ceil(h.totalR + a.h * 0.5);
-    const dx1 = Math.min(full.width, Math.ceil((h.endsX ?? dx0) + a.h * 22));
-    const dates = cropCanvas(full, dx0, y0, dx1, y1, SCALE);
-    await worker.setParameters({ tessedit_pageseg_mode: Tesseract.PSM.SINGLE_BLOCK,
-      tessedit_char_whitelist: '0123456789-:, ' });
-    const dateRows = clusterRows(words(await worker.recognize(dates), 0)).map(line => ({
-      cy: line.reduce((s, w) => s + w.cy, 0) / line.length,
-      value: extractEndsAt(line.sort((a, b) => a.x - b.x).map(w => w.t).join(' '))
-    }));
-    for (const r of rows) {
-      const nearby = dateRows.filter(d => d.value && Math.abs(d.cy - r._cy) <= rowTol);
-      r.endsAt = nearby.length === 1 ? nearby[0].value : null;
-      if (!r.endsAt) {
-        const half = a.h * SCALE * 0.85;
-        const top = Math.max(0, Math.floor(r._cy - half));
-        const bottom = Math.min(dates.height, Math.ceil(r._cy + half));
-        const stripe = cropCanvas(dates, 0, top, dates.width, bottom, 1);
-        await worker.setParameters({ tessedit_pageseg_mode: Tesseract.PSM.SINGLE_LINE });
-        const read = await worker.recognize(stripe);
-        r.endsAt = extractEndsAt(read.data.text);
-      }
-      delete r._cy; delete r._top;
-    }
-    result[tbl.side] = rows;
+    result[table.side]=rows;
   }
-  result.warnings = warnings;
-  result.notices = notices;
   return result;
 }
 
@@ -580,14 +460,39 @@ export async function extractMarketOffers(context, onStep = () => {}) {
 export async function extractMarketStatistics(context, onStep = () => {}) {
   const { full, worker, anchors } = context;
   onStep('reading 30-day Statistics');
-  const titles = anchors.filter(w => norm(w.t) === 'statistics');
+  const pane = context.tables[0];
+  let titles = anchors.filter(w => norm(w.t) === 'statistics' &&
+    Math.abs(w.x-pane.x)<pane.glyph*4 && w.y>pane.y);
+  if (!titles.length) {
+    // Details can be verified while the whole-image pass misses its Statistics
+    // heading. Re-read the heading above the first labelled side in this pane.
+    const firstSide = locateTables(anchors).filter(w => w.y>pane.y &&
+      Math.abs(w.x-pane.x)<pane.glyph*4).sort((a,b)=>a.y-b.y)[0];
+    if (firstSide) {
+      const x0=Math.max(0,Math.floor(pane.x-pane.glyph));
+      const y0=Math.max(pane.y,Math.floor(firstSide.y-pane.glyph*6));
+      const scale=scaleFor(pane.glyph);
+      const crop=cropCanvas(full,x0,y0,Math.min(full.width,pane.x+pane.glyph*24),firstSide.y,scale);
+      await worker.setParameters({tessedit_pageseg_mode:Tesseract.PSM.SPARSE_TEXT,tessedit_char_whitelist:''});
+      titles=words(await worker.recognize(crop)).filter(w=>norm(w.t)==='statistics').map(w=>({...w,
+        x:x0+w.x/scale,r:x0+w.r/scale,y:y0+w.y/scale,b:y0+w.b/scale,h:w.h/scale}));
+    }
+  }
   if (titles.length !== 1) return null;
-  const title = titles[0], scale = scaleFor(title.h);
+  const title = titles[0];
+  // A divider attached to the heading can double its OCR box height. Measure
+  // the font from nearby field/side labels, so the crop stays inside the pane.
+  const labels=new Set(['buy','sell','offers','number','transactions','highest','average','lowest','price']);
+  const heights=anchors.filter(w=>labels.has(norm(w.t)) && w.y>title.y &&
+    w.y<title.y+pane.glyph*24 && w.x>=title.x-pane.glyph &&
+    w.x<title.x+pane.glyph*24).map(w=>w.h).sort((a,b)=>a-b);
+  const glyph=heights[Math.floor(heights.length/2)] ?? pane.glyph;
+  const scale = scaleFor(glyph);
   const x0 = Math.floor(title.x), y0 = Math.floor(title.y);
   // The two stacked groups each have a heading and four fixed text rows.
   // Bounds scale with the measured font, never screenshot resolution.
-  const x1 = Math.min(full.width, Math.ceil(x0 + title.h * 48));
-  const y1 = Math.min(full.height, Math.ceil(y0 + title.h * 22));
+  const x1 = Math.min(full.width, Math.ceil(x0 + glyph * 48));
+  const y1 = Math.min(full.height, Math.ceil(y0 + glyph * 24));
   const panel = cropCanvas(full, x0, y0, x1, y1, scale);
   const readings = [];
   for (const psm of [Tesseract.PSM.SINGLE_BLOCK, Tesseract.PSM.SPARSE_TEXT]) {
@@ -614,8 +519,9 @@ export async function extractMarketStatistics(context, onStep = () => {}) {
 }
 
 export async function disposeOcr() {
-  if (!workerPromise) return;
-  const w = await workerPromise;
-  await w.terminate();
+  const pending=workerPromise;
   workerPromise = null;
+  if (!pending) return;
+  const w = await pending;
+  await w.terminate();
 }

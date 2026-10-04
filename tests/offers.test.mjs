@@ -22,6 +22,14 @@ test('date OCR requires seconds and a single valid timestamp while ignoring scro
   assert.equal(extractEndsAt('2026-10-21, 09:29:21 2026-10-21, 10:29:21'), null);
 });
 
+test('date OCR normalizes only whitespace between intact digits and retains strict calendar checks',()=>{
+  assert.equal(extractEndsAt('2026-1 1-02, 15:00:38'),'2026-11-02T15:00:38');
+  assert.equal(extractEndsAt('2026-11-0 1, 19:2 1:44'),'2026-11-01T19:21:44');
+  for(const value of ['2026-1-02, 15:00:38','2026-1 11-02, 15:00:38',
+    '2026-1 O-02, 15:00:38','2026-02-3 0, 15:00:38','2026-11-02, 15:00:3'])
+    assert.equal(extractEndsAt(value),null);
+});
+
 test('imported datasets reuse local canonical IDs for already recognized offers', () => {
   const local = match('Ustebra', [row()]);
   const foreign = match('Ustebra', [row(25)]);

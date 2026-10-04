@@ -1,6 +1,6 @@
 import { cleanStatistics, validatedStatistics, statisticsIssues, statisticsExtractionIssues, statisticsReferenceDate, validTimeZone, captureInstant } from './statistics.js';
 import { acceptsScreenshotName, parseFilename } from './filename.js';
-import { verifyMarket, verifyTibiaCoins, extractMarketOffers, extractMarketStatistics } from './ocr.js';
+import { verifyMarket, verifyTibiaCoins, extractMarketOffers, extractMarketStatistics, disposeOcr } from './ocr.js';
 import { lookupWorld, worldInfo } from './tibiadata.js';
 import { sha256 } from './hash.js';
 import { analyse } from './validation.js';
@@ -90,7 +90,7 @@ export async function preflightScreenshot(file, options = {}, services = {}) {
 // Transport/storage injection never supplies another filtering policy.
 export async function ingestScreenshot(file, options = {}, services = {}) {
   const api = { parseFilename, verifyMarket, verifyTibiaCoins, extractMarketOffers, extractMarketStatistics,
-    lookupWorld, worldInfo, createBitmap: f => createImageBitmap(f), ...services };
+    disposeOcr, lookupWorld, worldInfo, createBitmap: f => createImageBitmap(f), ...services };
   const { result, existing, blocked } = await preflightScreenshot(file, options, services);
   if (blocked) return result;
   let phase = 'deduplication', bitmap, releaseReader;
@@ -127,6 +127,10 @@ export async function ingestScreenshot(file, options = {}, services = {}) {
     result.capturedAt = existing?.capturedAt ?? capturedAt;
     result.captureTimeZone = existing?.captureTimeZone ?? options.captureTimeZone ?? Intl.DateTimeFormat().resolvedOptions().timeZone ?? null;
     pass();
+    // Persist anonymous identity before expensive OCR. A browser failure must
+    // not erase a world that the canonical API workflow already resolved.
+    await options.onContext?.({hash:result.hash,...result.world,capturedAt:result.capturedAt,
+      captureTimeZone:result.captureTimeZone});
     if (result.viewType === 'offers') {
       enter('extraction');
       const reading = await api.extractMarketOffers(context, options.onStep);
@@ -184,6 +188,9 @@ export async function ingestScreenshot(file, options = {}, services = {}) {
     return result;
   } finally {
     bitmap?.close?.();
-    releaseReader?.();
+    // Tesseract's WASM heap retains its peak allocations. A fresh worker per
+    // image bounds memory across long queues and clears failed worker state.
+    try { await api.disposeOcr(); } catch { /* A failed worker must not block the queue. */ }
+    finally { releaseReader?.(); }
   }
 }
