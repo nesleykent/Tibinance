@@ -485,15 +485,13 @@
             "transactions": 2657,
             "highestPrice": 45123,
             "averagePrice": 41814,
-            "lowestPrice": 1,
-            "tcVolume": null
+            "lowestPrice": 1
           },
           "sell": {
             "transactions": 4425,
             "highestPrice": 49999,
             "averagePrice": 43422,
-            "lowestPrice": 40600,
-            "tcVolume": null
+            "lowestPrice": 40600
           }
         },
         "viewType": "statistics",
@@ -3335,15 +3333,13 @@
             "transactions": null,
             "highestPrice": null,
             "averagePrice": null,
-            "lowestPrice": null,
-            "tcVolume": null
+            "lowestPrice": null
           },
           "sell": {
             "transactions": null,
             "highestPrice": null,
             "averagePrice": null,
-            "lowestPrice": null,
-            "tcVolume": null
+            "lowestPrice": null
           }
         },
         "viewType": "statistics",

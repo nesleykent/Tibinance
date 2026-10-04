@@ -123,7 +123,20 @@ uncrossed book (Buy below Sell). The research's 80% floor (Buy at least 80% of
 Sell) applies to screenshot captures only, where an extreme spread usually means
 a misread price; TibiaMarket history keeps genuinely wide spreads, which are real
 on thin worlds. Server days open at the 10:00 Europe/Berlin save and are labelled by its
-date. Days reported two different ways are dropped rather than resolved.
+date. Conflicting daily reports are withheld from the chart projection rather
+than resolved by guessing; every usable report is retained in
+`dailyStatisticsObservations` with its observation timestamp and provenance.
+
+Screenshot and TibiaMarket observations use the same canonical Buy/Sell
+Statistics fields: `transactions` (Number of Transactions), `highestPrice`,
+`averagePrice`, and `lowestPrice`. Source is acquisition provenance, not a
+different economic variable. Each compiled observation records `source`
+(`screenshot` or `tibiamarket`), `capturedAtUtc`, and `serverDay`; tracker records
+also preserve the original numeric `sourceTimestamp`. Rolling Statistics refer
+to the last-30-days window; daily reports retain their completed `serverDay`.
+Independent sources at the same timestamp remain separate observations. No
+Statistics counter is converted into TC quantity. Active offer Amount remains
+TC quantity; captured depth and quoted gold notional remain separate metrics.
 
 Freeze more inputs, then rebuild after them or after installing a new
 `data/observations.json`, and commit the result:

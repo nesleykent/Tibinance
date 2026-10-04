@@ -51,7 +51,7 @@ export function buildMarketHistory({ captures, tibiaMarket, registry, inputs, ex
   const perWorld = new Map();
   const of = world => {
     const key = canonical(world);
-    if (!perWorld.has(key)) perWorld.set(key, { observations: [], daily: [] });
+    if (!perWorld.has(key)) perWorld.set(key, { observations: [], daily: [], dailyObservations: [] });
     return perWorld.get(key);
   };
   const conversion = {
@@ -97,7 +97,12 @@ export function buildMarketHistory({ captures, tibiaMarket, registry, inputs, ex
       }
       for (const reason of excluded) count(conversion.tibiaMarket.notConverted, reason);
       if (observation) { target.observations.push(observation); conversion.tibiaMarket.observations++; }
-      if (daily) { target.daily.push(daily); conversion.tibiaMarket.dailyReports++; }
+      if (daily) {
+        target.daily.push(daily);
+        target.dailyObservations.push({ ...daily, source: 'tibiamarket', sourceTimestamp: row.time,
+          capturedAtUtc: new Date(Math.round(row.time * 1000)).toISOString() });
+        conversion.tibiaMarket.dailyReports++;
+      }
       if (!observation && !daily) count(conversion.tibiaMarket.notConverted, 'noUsableFields');
     }
   }
@@ -159,7 +164,10 @@ export function buildMarketHistory({ captures, tibiaMarket, registry, inputs, ex
       // [serverDay, sell, buy] per observed day, so the watchlist needs no world file.
       bestOfferCloses: closes.map(c => [c.serverDay, c.sell, c.buy])
     });
-    worlds.set(world, { asset: asset.id, world, observations, dailyStatistics: daily });
+    // Keep acquisition-level daily reports even when the derived chart projection
+    // cannot choose a unique value for a server day. Never discard source evidence.
+    worlds.set(world, { asset: asset.id, world, observations, dailyStatistics: daily,
+      dailyStatisticsObservations: mergeObservations(entry.dailyObservations) });
   }
   for (const source of Object.values(conversion)) source.notConverted = sorted(source.notConverted);
   return {

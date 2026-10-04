@@ -2,5 +2,6 @@
   "asset": "tibia-coin",
   "world": "Sinistra",
   "observations": [],
-  "dailyStatistics": []
+  "dailyStatistics": [],
+  "dailyStatisticsObservations": []
 }
