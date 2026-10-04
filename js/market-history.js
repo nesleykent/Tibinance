@@ -65,7 +65,7 @@ export function fromTibiaMarket(row) {
   const capturedAtUtc = new Date(Math.round(row.time * 1000)).toISOString();
   const day = serverDay(Date.parse(capturedAtUtc));
   const excluded = [];
-  const observation = { capturedAtUtc, serverDay: day };
+  const observation = { capturedAtUtc, serverDay: day, source: 'tibiamarket', sourceTimestamp: row.time };
 
   if (row.sell_offer === -1 && row.buy_offer === -1) excluded.push('missingBestOffers');
   else if (validBook(row.sell_offer, row.buy_offer)) Object.assign(observation, { sell: row.sell_offer, buy: row.buy_offer });
@@ -103,7 +103,7 @@ const OFFER_FIELDS = ['sell', 'sellVolume', 'sellTopAmount', 'goldDemand', 'buy'
 // rows, hashes and capture context stay in the capture dataset.
 export function fromCapture(capture) {
   if (!capture.capturedAtUtc) return { observation: null, excluded: ['unresolvedInstant'] };
-  const observation = { capturedAtUtc: capture.capturedAtUtc, serverDay: serverDay(Date.parse(capture.capturedAtUtc)) };
+  const observation = { capturedAtUtc: capture.capturedAtUtc, serverDay: serverDay(Date.parse(capture.capturedAtUtc)), source: 'screenshot' };
   if (capture.viewType === 'statistics') {
     if (statisticsIssues(capture.statistics30d).length) return { observation: null, excluded: ['invalidStatistics30d'] };
     // The capture's own reference date must be the server day: one day convention.
@@ -143,12 +143,12 @@ export function bestOfferCloses(observations) {
   return [...days.values()];
 }
 
-// Every observation is a distinct instant; two records of one world at the same
-// instant would be ambiguous, so the build refuses them.
+// Sources observe the same fields independently, including at the same instant.
+// Refuse duplicate source/instant records, but preserve cross-source observations.
 export function mergeObservations(observations) {
-  const sorted = [...observations].sort((a, b) => a.capturedAtUtc.localeCompare(b.capturedAtUtc));
+  const sorted = [...observations].sort((a, b) => a.capturedAtUtc.localeCompare(b.capturedAtUtc) || (a.source ?? '').localeCompare(b.source ?? ''));
   for (let i = 1; i < sorted.length; i++) {
-    if (sorted[i].capturedAtUtc === sorted[i - 1].capturedAtUtc) throw new Error(`Two observations at ${sorted[i].capturedAtUtc}`);
+    if (sorted[i].capturedAtUtc === sorted[i - 1].capturedAtUtc && sorted[i].source === sorted[i - 1].source) throw new Error(`Two observations at ${sorted[i].capturedAtUtc} from ${sorted[i].source ?? 'unknown source'}`);
   }
   return sorted;
 }

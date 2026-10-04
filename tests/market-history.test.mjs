@@ -29,7 +29,7 @@ test('server days open at the 10:00 Berlin save in CET and CEST', () => {
 test('a complete TibiaMarket row maps to Tibinance fields and reports the previous server day', () => {
   const {observation, daily, excluded} = fromTibiaMarket(full);
   assert.deepEqual(excluded, []);
-  assert.deepEqual(observation, {capturedAtUtc:'2026-09-06T01:16:26.266Z', serverDay:'2026-09-05', sell:41900, buy:41103,
+  assert.deepEqual(observation, {capturedAtUtc:'2026-09-06T01:16:26.266Z', serverDay:'2026-09-05', source:'tibiamarket', sourceTimestamp:full.time, sell:41900, buy:41103,
     statistics30d:{buy:{transactions:20512,highestPrice:41900,averagePrice:40432,lowestPrice:1},
       sell:{transactions:13336,highestPrice:56000,averagePrice:41373,lowestPrice:39390}}});
   assert.deepEqual(daily, {serverDay:'2026-09-04',
@@ -83,7 +83,7 @@ test('captures keep their measured fields and nothing identifying', () => {
     capturedAt:'2024-10-10T21:23:56.092',hash:'h',viewType:'offers',processingVersion:6,goldSupply:2954360500,goldDemand:2613999500,
     sellTopAmount:30025,buyTopAmount:15675,captureDate:'2024-10-10',captureTimeZone:'America/Sao_Paulo',
     capturedAtUtc:'2024-10-11T00:23:56.092Z',offers:[{side:'sell',offerId:'x'}]};
-  assert.deepEqual(fromCapture(capture).observation, {capturedAtUtc:'2024-10-11T00:23:56.092Z',serverDay:'2024-10-10',
+  assert.deepEqual(fromCapture(capture).observation, {capturedAtUtc:'2024-10-11T00:23:56.092Z',serverDay:'2024-10-10',source:'screenshot',
     sell:45279,sellVolume:57275,sellTopAmount:30025,goldDemand:2613999500,buy:43793,buyVolume:67475,buyTopAmount:15675,goldSupply:2954360500});
   assert.deepEqual(fromCapture({...capture, sell:1200000}).excluded, ['implausibleCaptureSpread']);
   assert.deepEqual(fromCapture({...capture, buy:45279}).excluded, ['invalidBestOffers'], 'crossed');
@@ -92,7 +92,7 @@ test('captures keep their measured fields and nothing identifying', () => {
     sell:{transactions:6386,highestPrice:47000,averagePrice:45283,lowestPrice:44000}};
   const statistics = {world:'Gentebra',viewType:'statistics',hash:'s',capturedAt:'2026-09-24T05:27:49.481',
     captureTimeZone:'America/Sao_Paulo',capturedAtUtc:'2026-09-24T08:27:49.481Z',statisticsReferenceDate:'2026-09-24',statistics30d:stats};
-  assert.deepEqual(fromCapture(statistics).observation, {capturedAtUtc:'2026-09-24T08:27:49.481Z',serverDay:'2026-09-24',statistics30d:stats});
+  assert.deepEqual(fromCapture(statistics).observation, {capturedAtUtc:'2026-09-24T08:27:49.481Z',serverDay:'2026-09-24',source:'screenshot',statistics30d:stats});
   assert.throws(() => fromCapture({...statistics, statisticsReferenceDate:'2026-09-23'}), /Reference date/);
 });
 
@@ -110,6 +110,16 @@ test('merging never guesses: repeated days must agree and instants must be uniqu
 const current = (name, extra = {}) => ({name, location:'Europe', pvp_type:'Open PvP', battleye_protected:true, battleye_date:'release', ...extra});
 const registry = {active:[current('Antica', {battleye_date:'2017-08-29'})], retired:[]};
 
+test('conflicting daily values remain timestamped source observations when the chart withholds the day', () => {
+  const later = {...full, time:full.time + 60, day_bought:full.day_bought + 1};
+  const {worlds} = buildMarketHistory({captures:[], tibiaMarket:[{world:'Antica', rows:[full,later]}], registry, inputs:[]});
+  const data = worlds.get('Antica');
+  assert.equal(data.dailyStatistics.length, 0);
+  assert.equal(data.dailyStatisticsObservations.length, 2);
+  assert.deepEqual(data.dailyStatisticsObservations.map(d=>d.buy.transactions),[full.day_bought,later.day_bought]);
+  assert.equal(data.observations.length, 2);
+});
+
 test('both sources merge in time order per world; inputs are checked', () => {
   const capture = {world:'Antica',type:'Open PvP',battleye:'Yellow',viewType:'offers',sell:41000,buy:40000,
     capturedAtUtc:'2026-09-21T12:00:00.000Z'};
@@ -122,6 +132,8 @@ test('both sources merge in time order per world; inputs are checked', () => {
   const antica = worlds.get('Antica');
   assert.deepEqual(antica.observations.map(o => o.capturedAtUtc), ['2026-09-06T01:16:26.266Z','2026-09-21T12:00:00.000Z']);
   assert.equal(antica.dailyStatistics.length, 31);
+  assert.equal(antica.dailyStatisticsObservations.length, 31);
+  assert.ok(antica.dailyStatisticsObservations.every(d => d.source === 'tibiamarket' && Number.isFinite(d.sourceTimestamp) && d.capturedAtUtc));
   assert.deepEqual(index.dailyStatistics, {days:31, conflictingDaysDropped:0, checked30dTotals:1, matching30dTotals:1});
   assert.deepEqual(index.worlds[0].latestBestOffer, {capturedAtUtc:'2026-09-21T12:00:00.000Z',serverDay:'2026-09-21',sell:41000,buy:40000});
   assert.equal(index.worlds[0].type, 'Open PvP');
@@ -218,7 +230,7 @@ test('every current world is listed; retired worlds keep separate histories; cop
   assert.deepEqual([of('Ambra').status, of('Ambra').offline, of('Ambra').mergedInto, of('Ambra').battleye], ['retired', '2025-11-06', 'Sombra', 'Green']);
   assert.equal(worlds.get('Sombra').observations.length, 0, 'a successor never absorbs its predecessor');
   assert.deepEqual([of('Jinxibra').observations, of('Jinxibra').bestOfferCloses, of('Jinxibra').latestBestOffer], [0, [], undefined]);
-  assert.deepEqual(worlds.get('Jinxibra'), {asset:'tibia-coin', world:'Jinxibra', observations:[], dailyStatistics:[]});
+  assert.deepEqual(worlds.get('Jinxibra'), {asset:'tibia-coin', world:'Jinxibra', observations:[], dailyStatistics:[], dailyStatisticsObservations:[]});
   const build = changes => () => buildMarketHistory({captures:[], tibiaMarket, registry, inputs:[], ...changes});
   assert.throws(build({tibiaMarket:[...tibiaMarket, {world:'Antica', rows:[{...later, sell_offer:42001}]}]}), /two different rows/);
   assert.throws(build({tibiaMarket:[...tibiaMarket, {world:'Yonabra', rows:[later]}]}), /neither a current world nor a known retired one/);

@@ -2,5 +2,6 @@
   "asset": "tibia-coin",
   "world": "Jinxibra",
   "observations": [],
-  "dailyStatistics": []
+  "dailyStatistics": [],
+  "dailyStatisticsObservations": []
 }
