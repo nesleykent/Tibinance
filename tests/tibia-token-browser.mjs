@@ -1,6 +1,9 @@
 import { createRequire } from 'node:module';
 import { readFile, mkdir } from 'node:fs/promises';
 import assert from 'node:assert/strict';
+const history = JSON.parse(await readFile(new URL('../data/market-history/tibia-token/history.json', import.meta.url), 'utf8'));
+const last = history.prices.at(-1);
+const expectedPrice = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 5, maximumFractionDigits: 5 }).format(last.close);
 const require = createRequire(import.meta.url);
 const { chromium, webkit } = require(`${process.env.TIBINANCE_NODE_MODULES}/playwright`);
 const engine = process.env.TIBINANCE_BROWSER === 'webkit' ? webkit : chromium;
@@ -10,15 +13,21 @@ const shots = process.env.TIBINANCE_SCREENSHOTS ?? '/tmp/tib-shots';
 await mkdir(shots, { recursive: true });
 try {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, locale: 'en-US' });
+  if (process.env.TIBINANCE_CHART_LIBRARY) {
+    const library = await readFile(process.env.TIBINANCE_CHART_LIBRARY, 'utf8');
+    await page.route('https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.1/**', route => route.fulfill({ body: library, contentType: 'text/javascript', headers: { 'access-control-allow-origin': '*' } }));
+  }
   const errors = []; page.on('pageerror', e => errors.push(e.message));
   await page.goto(`${root}/markets.html?asset=tibia-token&world=Antica&side=buy&range=All`);
   await page.waitForFunction(() => document.getElementById('market').getAttribute('aria-busy') === 'false');
   assert.equal(await page.title(), 'Tibinance Markets');
   assert.equal(await page.locator('#world').textContent(), 'Tibia Token (TIB)');
-  assert.equal(await page.locator('#lastPrice').textContent(), '$0.03610');
-  assert.match(await page.locator('#legend').textContent(), /2026-10-03 UTC.*Daily close.*\$0.03610/);
+  assert.equal(await page.locator('#lastPrice').textContent(), expectedPrice);
+  assert.ok((await page.locator('#legend').textContent()).includes(`${last.day} UTC`));
+  assert.ok((await page.locator('#legend').textContent()).includes(expectedPrice));
   assert.equal(await page.locator('#side').isVisible(), false);
   assert.equal(await page.locator('#projectionsToggle').isVisible(), false);
+  if (await page.locator('#screenerToggle').count()) assert.equal(await page.locator('#screenerToggle').isVisible(), false);
   assert.equal(new URL(page.url()).searchParams.has('world'), false);
   assert.equal(new URL(page.url()).searchParams.has('side'), false);
   assert.equal(await page.locator('#worlds tr').count(), 0);
@@ -41,7 +50,7 @@ try {
   const downloadPromise = page.waitForEvent('download');
   await page.locator('#exportButton').click();
   const download = await downloadPromise;
-  assert.equal(download.suggestedFilename(), 'tibinance-tib-usd-all-2026-10-03.png');
+  assert.equal(download.suggestedFilename(), `tibinance-tib-usd-all-${last.day}.png`);
   await download.saveAs(`${shots}/tib-export.png`);
   assert.ok((await readFile(`${shots}/tib-export.png`)).length > 10000);
   await page.locator('#asset').selectOption('tibia-coin');

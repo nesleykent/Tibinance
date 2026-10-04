@@ -8,11 +8,11 @@ const file = JSON.parse(readFileSync(new URL('../data/market-history/tibia-token
 test('TIB history reproduces frozen contract-verified candles', () => {
   execFileSync(process.execPath, ['tools/build_tibia_token.mjs', '--check']);
   const view = tokenView(file, null);
-  assert.equal(view.prices.length, 363);
+  assert.ok(view.prices.length >= 363);
   assert.equal(view.prices[0].day, '2025-10-06');
-  assert.equal(view.end, '2026-10-03');
+  assert.equal(view.end, file.prices.at(-1).day);
   assert.ok(view.prices.every(p => p.day < file.asOf));
-  assert.equal(tokenPrice(view.prices.at(-1).close), '$0.03610');
+  assert.equal(tokenPrice(view.byDay.get('2026-10-03').close), '$0.03610');
   assert.equal(view.profile.layers.some(l => l.id === 'activity'), false);
   assert.equal(view.profile.layers.some(l => l.id === 'best-offer'), false);
 });
@@ -31,7 +31,7 @@ test('token events exclude world and unrelated global events', () => {
 test('TIB range change compares actual USD closes', () => {
   const view=tokenView(file,null), closes=view.prices.map(p=>({day:p.day,value:p.close}));
   const change=changeOver(closes,rangeStart(view.end,'1M'));
-  assert.ok(change.from.day <= '2026-09-03');
+  assert.ok(change.from.day <= rangeStart(view.end,'1M'));
   assert.equal(change.ratio,change.to.value/change.from.value-1);
   assert.equal(tokenView({...file,prices:[]},null).grid.length,0);
 });

@@ -57,6 +57,8 @@ Playwright runtime convention as the existing Markets tests. It checks token
 prices and UTC labels, ranges, TC/TIB switching, absence of worlds/sides/TC
 forecasts for TIB, token event focus/visibility, PNG downloads, mobile overflow,
 and history loading failures. Chrome and WebKit are supported.
+`TIBINANCE_CHART_LIBRARY` can supply a local copy of the exact pinned production
+chart library for testing; the page retains its integrity check.
 
 ## Later TIB versus TC comparison
 
