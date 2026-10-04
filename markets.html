@@ -52,6 +52,7 @@
       <div class="chart-legend" aria-hidden="true">
         <div id="legend" class="legend"></div>
         <div id="volumeLegend" class="legend"></div>
+        <div id="projectionLegend" class="legend"></div>
       </div>
       <!-- Over the event markers the chart draws at its foot (js/market-events-ui.js): one tab stop, arrows between. -->
       <div id="eventMarks" class="event-marks" role="toolbar" aria-label="Events"></div>
@@ -127,6 +128,8 @@
           <li><i class="key key-average" aria-hidden="true"></i>Daily average: the average price of the trades that filled this side's offers.</li>
           <li><i class="key key-volume" aria-hidden="true"></i>Transactions: the raw activity counter for this side during each completed server day. Rolling 30-day Statistics are not daily counts. Actual traded TC quantity is unknown.</li>
           <li><i class="key key-event" aria-hidden="true">M</i>Events, along the foot of the chart: world openings, merges and retirements, updates, XP/Skill and Rapid Respawn events, and market and Store changes. Point at, focus or tap a marker for its days and details. The Events tool opens a calendar, agenda and event details, with a chart marker visibility control.</li>
+          <li><i class="key key-projection" aria-hidden="true"></i>Projection, off until shown: the Research report's offer scenario for this world and side, never an observation. It starts on the last observed best offer, in the tinted days after it. The dashed line is the central path, an equal-weight ensemble of three models for Antica moved to this world's own last best offer, weekly for up to 52 weeks; the faint band is a heuristic stress band, not a confidence interval. It stops where the Research suspends it before an announced merge. Worlds outside the Research's captures, retired worlds and worlds observed after the Research's cutoff have none.</li>
+
         </ul>
         <p>Server days run from 10:00 to 10:00 CET/CEST. Change compares the latest best offer with the last one observed on or before the start of the range.</p>
         <p><span id="helpThrough"></span> <span id="helpWorld"></span></p>
@@ -150,6 +153,9 @@
         </button>
         <button type="button" id="eventsToggle" class="tool dock-tool" data-dock-target="eventsPanel" aria-label="Events">
           <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 17V3.5M5 4h10l-2.5 3.5L15 11H5"/></svg>
+        </button>
+        <button type="button" id="projectionsToggle" class="tool dock-tool" aria-pressed="false" aria-label="Projections" title="Show projections">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 14.5l3.5-3.5 3 2L11 11"/><path d="M11 11l6-5.5" stroke-dasharray="1.6 2.2"/><path d="M11 3.5v13"/></svg>
         </button>
       </div>
       <span class="dock-space" aria-hidden="true"></span>
