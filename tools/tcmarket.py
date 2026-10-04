@@ -364,8 +364,8 @@ def find_capture(conn, screenshot_hash, captured_at, source_file, world=None):
 # --------------------------------------------------------------------------
 # output
 # --------------------------------------------------------------------------
-HEADER = ("| World | Type | BattlEye | Sell (gp/TC) | Sell Volume (TC) | "
-          "Buy (gp/TC) | Buy Volume (TC) | Capture |\n"
+HEADER = ("| World | Type | BattlEye | Sell (gp/TC) | Captured Sell Depth (TC) | "
+          "Buy (gp/TC) | Captured Buy Depth (TC) | Capture |\n"
           "|---|---|---|---:|---:|---:|---:|---|")
 
 SI_GROUP = "\u202f"  # ISO 80000-1: groups of three, thin space, never a comma
@@ -542,8 +542,8 @@ def cmd_table(args):
     if args.csv:
         import csv
         w = csv.writer(sys.stdout)
-        w.writerow(["World", "Type", "BattlEye", "Sell", "Sell Volume", "Buy",
-                    "Buy Volume", "Capture"])
+        w.writerow(["World", "Type", "BattlEye", "Sell", "Captured Sell Depth", "Buy",
+                    "Captured Buy Depth", "Capture"])
         for r in rows:
             w.writerow([r["world"], r["pvp_type"], r["battleye"], r["sell"],
                         r["sell_volume"], r["buy"], r["buy_volume"],

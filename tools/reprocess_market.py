@@ -42,7 +42,7 @@ def safe_statistics(value):
     if not isinstance(value, dict):
         return None
     return {side: {key: v if type(v := (value.get(side) or {}).get(key)) is int else None
-                   for key in ('transactions', 'highestPrice', 'averagePrice', 'lowestPrice', 'tcVolume')}
+                   for key in ('transactions', 'highestPrice', 'averagePrice', 'lowestPrice')}
             for side in ('buy', 'sell') if isinstance(value.get(side), dict)}
 
 

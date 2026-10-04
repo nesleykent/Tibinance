@@ -25,10 +25,10 @@ function services(overrides={}) {
     extractMarketOffers:async()=>{throw Error('Details must not extract offers');},
     extractMarketStatistics:async()=>stats(),...overrides};
 }
-test('eight labelled fields retain Buy/Sell values and derive distinct 25-TC lot volumes',()=>{
+test('eight labelled fields retain raw Buy/Sell counters without deriving TC quantity',()=>{
   const s=stats();
-  assert.deepEqual(s.buy,{transactions:3396,highestPrice:49985,averagePrice:44155,lowestPrice:1,tcVolume:84900});
-  assert.deepEqual(s.sell,{transactions:6082,highestPrice:49998,averagePrice:45942,lowestPrice:44000,tcVolume:152050});
+  assert.deepEqual(s.buy,{transactions:3396,highestPrice:49985,averagePrice:44155,lowestPrice:1});
+  assert.deepEqual(s.sell,{transactions:6082,highestPrice:49998,averagePrice:45942,lowestPrice:44000});
   const low=structuredClone(s); low.buy.averagePrice=low.sell.averagePrice+100;
   assert.deepEqual(statisticsIssues(low),[],'Historical side averages can cross');
 });
@@ -46,12 +46,12 @@ test('verified Statistics panes retain labelled values when the cropped title is
 test('missing, partial, malformed, duplicate, inconsistent and unsafe readings require review',()=>{
   for(const t of ['',text.replace('Statistics:','Details:'),text.replace('Lowest Price: 1 gold',''),
     text.replace('49,985','49,98'),text.replace('3396','3O96'),text.replace('44,155','50,000'),
-    text.replace('3396','-1'),text.replace('3396','9007199254740991'),text+'\nLowest Price: 44,000 gold']){
+    text.replace('3396','-1'),text.replace('3396','9007199254740992'),text+'\nLowest Price: 44,000 gold']){
     assert.ok(statisticsIssues(parseStatisticsText(t)).length);
   }
   const s=stats(); s.buy.tcVolume=1;
-  assert.throws(()=>validatedStatistics(s),/Statistics/);
-  const zero=structuredClone(s); zero.buy={transactions:0,highestPrice:0,averagePrice:0,lowestPrice:0,tcVolume:0};
+  assert.deepEqual(validatedStatistics(s),stats(), 'legacy derived fields are ignored');
+  const zero=structuredClone(s); zero.buy={transactions:0,highestPrice:0,averagePrice:0,lowestPrice:0};
   assert.equal(statisticsIssues(zero).length,0);
 });
 test('each side validates independently, without live crossed-book checks',()=>{
@@ -159,7 +159,7 @@ test('old Offers records import unchanged; rolling report samples do not sum ove
   const later={...c,hash:'later',capturedAt:'2026-10-03T00:00:00',capturedAtUtc:'2026-10-03T03:00:00.000Z',statistics30d:stats()};
   later.statistics30d.buy.averagePrice=45000;
   const rows=statisticsObservations([later,c,old,c]);
-  assert.equal(rows.length,4);assert.equal(rows[2].tcVolume,84900);
+  assert.equal(rows.length,4);assert.equal(rows[2].transactions,3396);assert.ok(!('tcVolume' in rows[2]));
   assert.ok(rows[2].averageChangePct>0);assert.equal(rows[2].quoteVsAveragePct,null);
   assert.equal(statisticsObservations([{...c,captureTimeZone:null}],{bucket:'reference'}).length,0);
 });

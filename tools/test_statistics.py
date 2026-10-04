@@ -61,7 +61,8 @@ class StatisticsParityTests(unittest.TestCase):
             output = Path(d)
             write_outputs(output, [], [entry])
             saved = json.loads((output / 'captures-extracted.json').read_text())[0]
-            self.assertEqual(saved['statistics30d']['buy']['tcVolume'], 100)
+            self.assertEqual(saved['statistics30d']['buy']['transactions'], 4)
+            self.assertNotIn('tcVolume', saved['statistics30d']['buy'])
             self.assertNotIn('offers', saved)
             self.assertNotIn('private marker', json.dumps(saved))
             entry['status'] = 'needs_review'
@@ -109,8 +110,8 @@ class StatisticsParityTests(unittest.TestCase):
         capture = result['capture']
         self.assertEqual(capture['viewType'], 'statistics')
         self.assertEqual(capture['capturedAtUtc'], '2026-10-02T03:36:37.332Z')
-        self.assertEqual(capture['statistics30d']['buy']['tcVolume'], 84900)
-        self.assertEqual(capture['statistics30d']['sell']['tcVolume'], 152050)
+        self.assertEqual(capture['statistics30d']['buy']['transactions'], 3396)
+        self.assertEqual(capture['statistics30d']['sell']['transactions'], 6082)
         self.assertNotIn('extraction', result['attemptedStages'])
         self.assertNotIn(file.name, json.dumps(safe_result(result)))
         # Export/finalization uses the same persistent website record contract.
@@ -123,7 +124,7 @@ class StatisticsParityTests(unittest.TestCase):
                            check=True, capture_output=True)
             saved = json.loads((output / 'observations-enriched.json').read_text())[0]
             self.assertEqual(saved, capture)
-            self.assertIn('30d buy tcVolume (TC)', (output / 'observations.csv').read_text())
+            self.assertIn('30d buy transactions (count)', (output / 'observations.csv').read_text())
 
 
 if __name__ == '__main__':

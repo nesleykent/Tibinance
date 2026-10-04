@@ -13,12 +13,12 @@
  *   - A new offer priced to meet an existing one on the other side is matched against it at once.
  *   - 999,999,999,999 is the highest price an offer can carry.
  * The manual does not say how 2% is rounded to whole gold. Here it is rounded up, so a fee is never understated;
- * the difference is at most 1 gold. Tibia Coins trade in lots of 25 (ASSETS, js/market-history.js).
+ * the difference is at most 1 gold. Tibia Coin offer quantities use increments of 25 TC; this is not a Statistics-counter unit.
  *
  * Every gold figure is a BigInt: amount × price for a large order passes the range Number holds exactly. Amounts and
  * prices themselves are validated as safe integers first.
  */
-import { ASSETS, validBook } from './market-history.js';
+import { validBook } from './market-history.js';
 import { fmt } from './format.js';
 
 export const RULES = Object.freeze({
@@ -26,7 +26,7 @@ export const RULES = Object.freeze({
   maxOfferAmount: 64_000,
   maxOffers: 100,            // offers one character can hold at a time
   maxPrice: 999_999_999_999,
-  lot: ASSETS['tibia-coin'].lotSize
+  lot: 25 // Active-offer quantity increment, never a Statistics multiplier.
 });
 // The most one character can have on offer at once; also the bound on an amount entered anywhere.
 export const MAX_AMOUNT = RULES.maxOfferAmount * RULES.maxOffers;

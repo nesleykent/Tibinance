@@ -227,9 +227,9 @@ not determine canonical screenshot eligibility or extraction.
 ### Details / Statistics in the canonical Python batch
 
 The website bridge accepts Details captures independently of Offers tables. It
-uses the same view detection, OCR, side validation, 25-TC lot conversion and
-privacy-whitelisted schema as the website. `transactions` counts 25-TC lots;
-`tcVolume` is persisted separately for Buy and Sell as `transactions * 25`.
+uses the same view detection, OCR, side validation and
+privacy-whitelisted schema as the website. `transactions` preserves raw Buy/Sell activity counters for the last 30 days.
+Actual traded TC quantity is unknown; legacy `tcVolume` is ignored.
 Prices are gold per TC. Invalid or missing fields stay in `needs_review`, with
 anonymous `statistics30d` values in the correction template. Correct both sides
 completely; corrections cannot bypass filename, Market, selected-item or world

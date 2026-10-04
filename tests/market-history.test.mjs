@@ -30,11 +30,11 @@ test('a complete TibiaMarket row maps to Tibinance fields and reports the previo
   const {observation, daily, excluded} = fromTibiaMarket(full);
   assert.deepEqual(excluded, []);
   assert.deepEqual(observation, {capturedAtUtc:'2026-09-06T01:16:26.266Z', serverDay:'2026-09-05', sell:41900, buy:41103,
-    statistics30d:{buy:{transactions:20512,highestPrice:41900,averagePrice:40432,lowestPrice:1,tcVolume:512800},
-      sell:{transactions:13336,highestPrice:56000,averagePrice:41373,lowestPrice:39390,tcVolume:333400}}});
+    statistics30d:{buy:{transactions:20512,highestPrice:41900,averagePrice:40432,lowestPrice:1},
+      sell:{transactions:13336,highestPrice:56000,averagePrice:41373,lowestPrice:39390}}});
   assert.deepEqual(daily, {serverDay:'2026-09-04',
-    sell:{transactions:521,highestPrice:41499,averagePrice:40966,lowestPrice:40295,tcVolume:13025},
-    buy:{transactions:1099,highestPrice:40700,averagePrice:40097,lowestPrice:1,tcVolume:27475}});
+    sell:{transactions:521,highestPrice:41499,averagePrice:40966,lowestPrice:40295},
+    buy:{transactions:1099,highestPrice:40700,averagePrice:40097,lowestPrice:1}});
   for (const k of ['active_traders','sell_offers','buy_offers','total_immediate_profit','is_full_data','id']) {
     assert.ok(!JSON.stringify(observation).includes(k));
   }
@@ -75,7 +75,7 @@ test('every book must be uncrossed with positive prices; the 80% floor is a scre
   assert.equal(zero.daily.sell, undefined);
   assert.equal(zero.daily.buy.transactions, 1099);
   const quiet = fromTibiaMarket({...full, day_sold:0, day_average_sell:0, day_lowest_sell:0, day_highest_sell:0});
-  assert.deepEqual(quiet.daily.sell, {transactions:0,highestPrice:0,averagePrice:0,lowestPrice:0,tcVolume:0});
+  assert.deepEqual(quiet.daily.sell, {transactions:0,highestPrice:0,averagePrice:0,lowestPrice:0});
 });
 
 test('captures keep their measured fields and nothing identifying', () => {
@@ -88,8 +88,8 @@ test('captures keep their measured fields and nothing identifying', () => {
   assert.deepEqual(fromCapture({...capture, sell:1200000}).excluded, ['implausibleCaptureSpread']);
   assert.deepEqual(fromCapture({...capture, buy:45279}).excluded, ['invalidBestOffers'], 'crossed');
   assert.deepEqual(fromCapture({...capture, capturedAtUtc:null}).excluded, ['unresolvedInstant']);
-  const stats = {buy:{transactions:3651,highestPrice:46001,averagePrice:43744,lowestPrice:1,tcVolume:91275},
-    sell:{transactions:6386,highestPrice:47000,averagePrice:45283,lowestPrice:44000,tcVolume:159650}};
+  const stats = {buy:{transactions:3651,highestPrice:46001,averagePrice:43744,lowestPrice:1},
+    sell:{transactions:6386,highestPrice:47000,averagePrice:45283,lowestPrice:44000}};
   const statistics = {world:'Gentebra',viewType:'statistics',hash:'s',capturedAt:'2026-09-24T05:27:49.481',
     captureTimeZone:'America/Sao_Paulo',capturedAtUtc:'2026-09-24T08:27:49.481Z',statisticsReferenceDate:'2026-09-24',statistics30d:stats};
   assert.deepEqual(fromCapture(statistics).observation, {capturedAtUtc:'2026-09-24T08:27:49.481Z',serverDay:'2026-09-24',statistics30d:stats});

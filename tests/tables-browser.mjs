@@ -27,36 +27,36 @@ try {
   const stored=()=>page.evaluate(async()=> (await (await import('/js/store.js')).all()));
   const original=await stored();
   assert.equal(original.length,fixture.length);
-  const metricOrder=['transactions','tcVolume','highestPrice','averagePrice','lowestPrice'];
-  const expectedHead=['World','Tx','Volume','High','Avg','Low','Tx','Volume','High','Avg','Low','Capture','Hash','×'];
+  const metricOrder=['transactions','highestPrice','averagePrice','lowestPrice'];
+  const expectedHead=['World','Tx','High','Avg','Low','Tx','High','Avg','Low','Capture','Hash','×'];
   const statTable=page.locator('#statisticsSaved table');
   assert.equal(await page.locator('#statisticsSaved details').count(),0);
   assert.equal(await statTable.locator('tbody tr').count(),statistics.length);
   assert.deepEqual(await statTable.locator('thead tr:last-child th').allTextContents(),expectedHead);
-  assert.deepEqual(await statTable.locator('.grp th').evaluateAll(a=>a.map(t=>[t.textContent,t.colSpan])),[['',1],['Sell Side',5],['Buy Side',5],['Data',3]]);
+  assert.deepEqual(await statTable.locator('.grp th').evaluateAll(a=>a.map(t=>[t.textContent,t.colSpan])),[['',1],['Sell Side',4],['Buy Side',4],['Data',3]]);
   for(const snapshot of statistics){
     const row=statTable.locator('tbody tr').filter({has:page.locator(`[data-del="${snapshot.hash}"]`)});
     const values=await row.locator('td').allTextContents();
-    const metrics=values.slice(1,11).map(v=>Number(v.replace(/[^\d]/g,'')));
+    const metrics=values.slice(1,9).map(v=>Number(v.replace(/[^\d]/g,'')));
     assert.deepEqual(metrics,['sell','buy'].flatMap(side=>metricOrder.map(k=>snapshot.statistics30d[side][k])));
-    assert.equal(values[0],snapshot.world);assert.equal(values[11],snapshot.capturedAt.replace('T',', '));
+    assert.equal(values[0],snapshot.world);assert.equal(values[9],snapshot.capturedAt.replace('T',', '));
     assert.equal(await row.locator('time').getAttribute('datetime'),snapshot.capturedAt);
     assert.ok((await row.locator('time').getAttribute('title')).includes(snapshot.captureTimeZone));
     assert.ok((await row.locator('time').getAttribute('title')).includes(snapshot.capturedAtUtc));
-    assert.equal(values[12],snapshot.hash.slice(0,10));assert.equal(await row.locator('.hash').getAttribute('title'),snapshot.hash);
+    assert.equal(values[10],snapshot.hash.slice(0,10));assert.equal(await row.locator('.hash').getAttribute('title'),snapshot.hash);
   }
-  assert.match(await statTable.locator('thead th').nth(5).getAttribute('title'),/25-TC lots/);
+  assert.match(await statTable.locator('thead th').nth(5).getAttribute('title'),/last 30 days/);
   const visibleHeaders=()=>page.locator('#table thead tr:last-child th:visible').allTextContents();
-  assert.deepEqual(await visibleHeaders(),['World','Sell Price','Sell Volume','Gold Demand','Buy Price','Buy Volume','Gold Supply','Spread','Capture','Hash','']);
+  assert.deepEqual(await visibleHeaders(),['World','Sell Price','Captured Sell Depth','Quoted Sell Gold Notional','Buy Price','Captured Buy Depth','Quoted Buy Gold Notional','Spread','Capture','Hash','']);
   await page.locator('#columnPicker summary').click();
   await page.locator('#columnList input[value="type"]').check();
   await page.locator('#columnList input[value="battleye"]').check();
-  assert.deepEqual(await visibleHeaders(),['World','Sell Price','Sell Volume','Gold Demand','Buy Price','Buy Volume','Gold Supply','Spread','Type','BattlEye','Capture','Hash','']);
+  assert.deepEqual(await visibleHeaders(),['World','Sell Price','Captured Sell Depth','Quoted Sell Gold Notional','Buy Price','Captured Buy Depth','Quoted Buy Gold Notional','Spread','Type','BattlEye','Capture','Hash','']);
   assert.equal(await page.locator('#table .g-data').getAttribute('colspan'),'5');
   // Hiding a side removes its group label without hiding Statistics columns.
   for(const key of ['sell','sellVolume','goldDemand']) await page.locator(`#columnList input[value="${key}"]`).uncheck();
   assert.equal(await page.locator('#table .g-sell').isVisible(),false);
-  assert.equal(await statTable.locator('thead tr:last-child th:visible').count(),14);
+  assert.equal(await statTable.locator('thead tr:last-child th:visible').count(),12);
   await page.reload();await page.waitForFunction(()=>document.getElementById('capturesLoading').hidden);
   assert.equal(await page.locator('#table .g-sell').isVisible(),false,'Column preference persists after reload');
   await page.locator('#columnPicker summary').click();

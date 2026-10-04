@@ -81,11 +81,10 @@ const dailyAverage = {
   keys: (side, c) => [{ mark: 'line', color: c.average, label: 'Daily average' }]
 };
 
-// Coins traded per server day on that side, as bars along the foot of the price pane on their own hidden scale, as
-// part of the chart. Every server day is on the axis, so a gap takes the width of its missing days; a day without
-// trades is a real zero.
-const volume = {
-  id: 'volume',
+// Raw transaction activity per completed server day, on a separate hidden scale below prices.
+// Missing observations remain gaps; an observed zero counter remains zero.
+const activity = {
+  id: 'activity',
   depth: -1,
   add(chart, { L }) {
     const s = chart.addSeries(L.HistogramSeries, { priceScaleId: 'volume', priceLineVisible: false, lastValueVisible: false,
@@ -96,15 +95,15 @@ const volume = {
   draw(s, view, side, c) {
     s.applyOptions({ color: `${c[side]}40` });
     s.setData(view.grid.map(day => {
-      const value = view.dailyByDay.get(day)?.[side]?.tcVolume;
+      const value = view.dailyByDay.get(day)?.[side]?.transactions;
       return value === undefined ? { time: day } : { time: day, value };
     }));
   },
-  keys: (side, c) => [{ mark: 'bar', color: c[side], label: 'Volume (TC)' }]
+  keys: (side, c) => [{ mark: 'bar', color: c[side], label: 'Transactions (count)' }]
 };
 
-// Read in this order; drawn by depth: the volume at the back, the average beneath the best offer, the events on top.
-export const LAYERS = [bestOffer, dailyAverage, volume, eventsLayer];
+// Read in this order; drawn by depth: activity behind the price series, the events on top.
+export const LAYERS = [bestOffer, dailyAverage, activity, eventsLayer];
 
 /* ---------------------------------------------------------------- chart */
 export function createMarketChart(container, { scale: k = 1, width, height } = {}) {

@@ -8708,23 +8708,23 @@
  "sources": [
   {
    "file": "results.json",
-   "sha256": "0dbbed2d7ccaee1c96fa09f626628554fd5308ed6c61fd2954167d80245f8246"
+   "sha256": "f68a6b2e50c517f84eaf27ffe5a930bcb7134b4cddc3f70efb064cf4c8cb59de"
   },
   {
    "file": "complement.json",
-   "sha256": "dca1a9554e11b1a072e80dac5cb1f8e6b7e78125722be1ab503775bd52d084d9"
+   "sha256": "e9243d1e2e7d4903d66bd02545b8bd04c7d2d8f1df224bd17fbd6ac034173224"
   },
   {
    "file": "inflation.json",
-   "sha256": "e66fdff6b96d6e6b905a7b21fc162e90963cef2c3233ed63072c132de3c705a6"
+   "sha256": "7bfee1278609bf3c053bc42f7e3e27520b451cfd42de788b68ac0ba647f5799e"
   },
   {
    "file": "lifecycle.json",
-   "sha256": "88705c4fec3c4ae1583a10e78fdd0626f1e6b0f2cb984b7bc2aa46ef3117ff56"
+   "sha256": "e4eff1c0c66ddda3ca2e532624f20f64abfa53c3f1944be40a095d6c644b0e03"
   },
   {
    "file": "market-update.json",
-   "sha256": "e85dde71be6c026a2fccc6d1d1d11c99859cdc5ee57a619f148035a885fbc37c"
+   "sha256": "a63912642f540cc997a07228cb6108c68648ea267ee4d9c2e6ec393afeee9521"
   },
   {
    "file": "research_data.py",

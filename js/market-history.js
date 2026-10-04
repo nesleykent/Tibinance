@@ -13,9 +13,9 @@
 import { statisticsIssues, validatedStatistics } from './statistics.js';
 
 // Every asset the history can describe. Only Tibia Coin is built today. The
-// Statistics contract counts Tibia Coin transactions in 25-TC lots.
+// Statistics retains raw activity counters; actual traded TC quantity is unknown.
 export const ASSETS = {
-  'tibia-coin': { id: 'tibia-coin', name: 'Tibia Coin', tibiaMarketItemId: 22118, lotSize: 25 }
+  'tibia-coin': { id: 'tibia-coin', name: 'Tibia Coin', tibiaMarketItemId: 22118 }
 };
 
 // Every best-offer pair, from any source: both prices are positive whole gold

@@ -1,3 +1,4 @@
+# Activity fields with legacy volume names contain raw transaction counters, not traded TC quantity.
 """Market index from all worlds via a two-way median polish on log prices:
    log p[w,t] = a[w] (world premium) + b[t] (market level) + e.
    p_sell = average price of executed Sell Offers that server day (cleaned).
