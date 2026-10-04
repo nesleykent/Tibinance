@@ -144,6 +144,7 @@ export function createMarketChart(container, { scale: k = 1, width, height } = {
       on ? hidden.delete(id) : hidden.add(id);
       if (last) drawLayer(layer);
     },
+    refresh(id) { const layer = LAYERS.find(l => l.id === id); if (last && layer) drawLayer(layer); },
     visible: id => !hidden.has(id),
     part: id => series.get(LAYERS.find(l => l.id === id)),
     keys: side => LAYERS.filter(shown).flatMap(layer => layer.keys(side, c)),

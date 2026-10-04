@@ -16,6 +16,7 @@ import { SIDES, createMarketChart, dayOf } from './market-chart.js';
 import { dock } from './markets-dock.js';
 import { marketImage } from './market-export.js';
 import { EVENTS, eventsFor, lifecycleSpan } from './market-events.js';
+import { eventsPanel } from './market-events-panel.js';
 import { eventMarks } from './market-events-ui.js';
 
 const ASSET = 'tibia-coin';
@@ -41,6 +42,31 @@ const chart = market.chart;
 chart.subscribeCrosshairMove(p => showLegend(p.time === undefined ? null : dayOf(p.time)));
 // The event markers the chart draws, made inspectable by pointer, touch and keyboard.
 const marks = eventMarks({ chart, part: market.part('events'), strip: $('eventMarks'), tip: $('eventTip') });
+
+
+const eventBrowser = eventsPanel($('eventsPanel'), {
+  onFilter(events) {
+    if (!state.view) return;
+    state.view.events = events;
+    market.refresh('events');
+  },
+  onFocus(event) {
+    if (!event || !state.view?.grid.length) return 'No market chart is available for this world.';
+    // Extend only the whitespace time grid when an event precedes or follows observed history.
+    const grid = state.view.grid;
+    state.view.grid = dayGrid([grid[0], event.start].sort()[0], [grid.at(-1), event.end].sort().at(-1));
+    market.draw(state.view, state.side);
+    showEvents(true);
+    const shift = (day, n) => new Date(Date.parse(`${day}T00:00:00Z`) + n * 86400000).toISOString().slice(0, 10);
+    const from = [state.view.grid[0], shift(event.start, -7)].sort().at(-1);
+    const to = [state.view.grid.at(-1), shift(event.end, 7)].sort()[0];
+    chart.timeScale().setVisibleRange({ from, to });
+    document.querySelectorAll('#range [aria-checked]').forEach(b => b.setAttribute('aria-checked', 'false'));
+    requestAnimationFrame(() => requestAnimationFrame(() => marks.focusEvent(event.id)));
+    if (matchMedia('(max-width:760px)').matches) $('chartPanel').scrollIntoView({ block: 'start', behavior: 'smooth' });
+    return `Chart focused on ${event.start}${event.end !== event.start ? ` to ${event.end}` : ''}. Markers are visible.`;
+  }
+});
 
 
 /* -------------------------------------------------------------- the world */
@@ -228,6 +254,7 @@ async function select(world, { focus = false } = {}) {
   if (state.world !== world) return;   // a later click won while this file loaded
   state.view = worldView(summary, state.files.get(world));
   drawChart();
+  eventBrowser.update(state.events, world);
   showQuote();
   showLegend(null);
   // A current world without market data yet says so instead of drawing an empty chart.
@@ -289,9 +316,7 @@ function dockChanged(open) {
 function showEvents(on, { remember = true } = {}) {
   market.setVisible('events', on);
   if (!on) marks.hide();
-  const button = $('eventsToggle');
-  button.setAttribute('aria-pressed', String(on));
-  button.title = on ? 'Hide events' : 'Show events';
+  $('eventMarkers').checked = on;
   if (remember) try { on ? localStorage.removeItem(EVENTS_SHOWN) : localStorage.setItem(EVENTS_SHOWN, 'hidden'); } catch { /* this visit only */ }
 }
 
@@ -377,7 +402,7 @@ function wire() {
     saveUrl(); drawWatchlist(); applyRange(); showQuote();
   });
   $('expand').addEventListener('click', () => toggleExpanded().catch(failed));
-  $('eventsToggle').addEventListener('click', () => showEvents(!market.visible('events')));
+  $('eventMarkers').addEventListener('change', e => showEvents(e.target.checked));
   $('exportButton').addEventListener('click', exportImage);
   for (const host of [$('worldMeta'), $('detailStatus')]) host.addEventListener('click', e => {
     const world = e.target.closest('.world-link')?.dataset.world;
@@ -443,7 +468,7 @@ async function main() {
   let hidden = false;
   try { hidden = localStorage.getItem(EVENTS_SHOWN) === 'hidden'; } catch { /* storage unavailable */ }
   showEvents(!hidden, { remember: false });
-  $('eventsToggle').disabled = !state.events;
+  $('eventMarkers').disabled = !state.events;
   const params = new URLSearchParams(location.search);
   const names = state.index.worlds.map(w => w.world);
   state.side = SIDES[params.get('side')] ? params.get('side') : 'sell';

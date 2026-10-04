@@ -107,6 +107,16 @@
       </section>
       <div id="watchTip" class="watch-tip" role="tooltip" hidden></div>
     </aside>
+    <section id="eventsPanel" class="dock-panel events-panel" aria-labelledby="eventsTitle">
+      <div class="panel-head"><h2 id="eventsTitle" class="panel-title">Events</h2><label><input id="eventMarkers" type="checkbox" checked> Chart markers</label></div>
+      <div class="panel-body">
+        <p id="eventsContext"></p>
+        <div class="event-filters"><label>Category<select id="eventCategory"></select></label><label>Scope<select id="eventScope"><option value="">Global and world</option><option value="global">Global</option><option value="world">World-specific</option></select></label></div>
+        <section aria-label="Event calendar"><div class="event-month-nav"><button type="button" data-month-step="-1" aria-label="Previous month">‹</button><input id="eventMonth" type="month" aria-label="Calendar month"><button type="button" data-month-step="1" aria-label="Next month">›</button><button type="button" id="eventToday">Today</button></div><div id="eventCalendar" class="event-calendar"></div><p class="event-calendar-key">Counts show all events that day. Underlines show multi-day events.</p><h3 id="eventDayTitle"></h3><div id="eventDayList"></div></section>
+        <section id="eventDetails" class="event-details" aria-label="Selected event" aria-live="polite"></section>
+        <section aria-label="Event agenda"><div class="event-agenda-head"><h3>Agenda</h3><select id="eventPeriod" aria-label="Agenda period"><option value="upcoming">Upcoming and ongoing</option><option value="recent">Recent 90 days</option><option value="historical">Historical</option><option value="all">All dates</option></select></div><p id="eventCount"></p><div id="eventAgenda"></div><button type="button" id="eventMore">Show more events</button></section>
+      </div>
+    </section>
     <section id="helpPanel" class="dock-panel help-panel" aria-labelledby="helpTitle">
       <div class="panel-head"><h2 id="helpTitle" class="panel-title">Reading the chart</h2></div>
       <div class="panel-body">
@@ -116,7 +126,7 @@
           <li><i class="key key-dotted" aria-hidden="true"></i>Dotted line: the days in between were not observed. Nothing is filled in.</li>
           <li><i class="key key-average" aria-hidden="true"></i>Daily average: the average price of the trades that filled this side's offers.</li>
           <li><i class="key key-volume" aria-hidden="true"></i>Transactions: the raw activity counter for this side during each completed server day. Rolling 30-day Statistics are not daily counts. Actual traded TC quantity is unknown.</li>
-          <li><i class="key key-event" aria-hidden="true">M</i>Events, along the foot of the chart: world openings, merges and retirements, updates, XP/Skill and Rapid Respawn events, and market and Store changes. Point at, focus or tap a marker for its days and details. The Events tool shows or hides them.</li>
+          <li><i class="key key-event" aria-hidden="true">M</i>Events, along the foot of the chart: world openings, merges and retirements, updates, XP/Skill and Rapid Respawn events, and market and Store changes. Point at, focus or tap a marker for its days and details. The Events tool opens a calendar, agenda and event details, with a chart marker visibility control.</li>
         </ul>
         <p>Server days run from 10:00 to 10:00 CET/CEST. Change compares the latest best offer with the last one observed on or before the start of the range.</p>
         <p><span id="helpThrough"></span> <span id="helpWorld"></span></p>
@@ -138,7 +148,7 @@
         <button type="button" class="tool dock-tool" data-dock-target="worldsPanel" aria-label="Worlds">
           <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7.5 5.5h9M7.5 10h9M7.5 14.5h9M3.5 5.5h.01M3.5 10h.01M3.5 14.5h.01"/></svg>
         </button>
-        <button type="button" id="eventsToggle" class="tool dock-tool" aria-pressed="true" aria-label="Events" title="Hide events">
+        <button type="button" id="eventsToggle" class="tool dock-tool" data-dock-target="eventsPanel" aria-label="Events">
           <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 17V3.5M5 4h10l-2.5 3.5L15 11H5"/></svg>
         </button>
       </div>

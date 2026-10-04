@@ -168,8 +168,10 @@ try {
 
   // ---- Hidden and shown again: the market series, the address and the ranges stay as they were.
   await open('Antica','1Y');
-  const toggle=page.locator('#eventsToggle');
-  assert.deepEqual([await toggle.getAttribute('aria-pressed'),await toggle.getAttribute('title')],['true','Hide events']);
+  await page.click('#eventsToggle');
+  await page.waitForTimeout(200);
+  const toggle=page.locator('#eventMarkers');
+  assert.equal(await toggle.isChecked(),true);
   const seriesState=()=>page.evaluate(()=>({url:location.search,last:document.getElementById('lastPrice').textContent,change:document.getElementById('lastChange').textContent,
     legend:document.getElementById('legend').innerText,range:document.querySelector('#range [aria-checked="true"]').dataset.range}));
   const withEvents=await seriesState();
@@ -177,7 +179,7 @@ try {
     const d=c.getContext('2d').getImageData(0,0,c.width,Math.round(c.height*0.7)).data;let n=0;for(let i=0;i<d.length;i+=4) if(Math.abs(d[i]-180)+Math.abs(d[i+1]-83)+Math.abs(d[i+2]-42)<60) n++;return n;});
   const sellBefore=await sellPixels();
   await toggle.click();
-  assert.deepEqual([await toggle.getAttribute('aria-pressed'),await toggle.getAttribute('title')],['false','Show events']);
+  assert.equal(await toggle.isChecked(),false);
   assert.equal((await marks()).length,0,'no markers while hidden');
   assert.deepEqual(await seriesState(),withEvents,'the market is untouched');
   assert.ok(Math.abs(await sellPixels()-sellBefore)<=sellBefore*0.01,'the series draw the same');
@@ -185,7 +187,8 @@ try {
   await page.reload();
   await page.waitForFunction(()=>document.getElementById('market').getAttribute('aria-busy')==='false');
   await page.waitForTimeout(150);
-  assert.equal(await toggle.getAttribute('aria-pressed'),'false');
+  assert.equal(await toggle.isChecked(),false);
+  if (!await toggle.isVisible()) await page.click('#eventsToggle');
   assert.equal((await marks()).length,0);
   await toggle.click();
   await page.waitForTimeout(100);
@@ -219,6 +222,7 @@ try {
   // Terribra's opening and merge share a marker with the next day's XP/Skill Event: a mixed marker is drawn in ink.
   assert.ok(image.game>40,`markers drawn at the chart's foot ${JSON.stringify(image)}`);
   assert.ok(image.notesGame>40 && image.notesWorld>20 && image.notesInk>500,`keys and lines under the chart ${JSON.stringify(image)}`);
+  if (!await toggle.isVisible()) await page.click('#eventsToggle');
   await toggle.click();
   image=await inspect(await exportPng());
   assert.equal(image.height,780,'hidden on the page, absent from the image');
@@ -260,7 +264,8 @@ try {
   await plain.goto(`${root}/markets.html?world=Antica`);
   await plain.waitForFunction(()=>document.getElementById('market').getAttribute('aria-busy')==='false');
   assert.equal(await plain.$eval('#status',s=>s.hidden),true,'the chart is drawn');
-  assert.equal(await plain.isDisabled('#eventsToggle'),true);
+  await plain.click('#eventsToggle');
+  assert.equal(await plain.isDisabled('#eventMarkers'),true);
   assert.equal(await plain.$$eval('#eventMarks .event-mark',b=>b.length),0);
   assert.deepEqual(pageErrors,[]);
   await bare.close();

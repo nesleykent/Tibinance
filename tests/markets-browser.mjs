@@ -71,7 +71,7 @@ try {
   const lefts=await page.evaluate(()=>['#world','#legend .day','#legend .label'].map(s=>document.querySelector(s).getBoundingClientRect().left));
   assert.ok(lefts.every(l=>Math.abs(l-lefts[0])<=1),`the world, the day and the series share a left edge: ${lefts}`);
   assert.deepEqual(await tools.getByRole('button').evaluateAll(bs=>bs.map(b=>[b.getAttribute('aria-label'),b.hasAttribute('data-dock-target') ? 'panel' : 'action'])),
-    [['Worlds','panel'],['Events','action'],['Help','panel'],['Export chart image','action'],['Full screen','action']]);
+    [['Worlds','panel'],['Events','panel'],['Help','panel'],['Export chart image','action'],['Full screen','action']]);
   assert.ok(await page.$('.toolbar-bottom #range'));
   // Inside Capture's margins, with or without the panel: the chart, then the Worlds panel, then the rail at the edge.
   const frame=()=>page.evaluate(()=>{
@@ -276,6 +276,7 @@ try {
   // The series alone, in the image's fixed layout: events, shown by default, add notes under the chart and are
   // covered by tests/market-events-browser.mjs.
   await page.click('#eventsToggle');
+  await page.uncheck('#eventMarkers');
   await page.click('#side button[data-side="sell"]');
   await page.click('#range button[data-range="1Y"]');
   let image=await exportImage(page);
@@ -299,9 +300,11 @@ try {
   pixels=await inspect((await exportImage(page)).png);
   assert.ok(pixels.probe>1000,`the probe layer is drawn: ${pixels.probe}`);
   await page.evaluate(async()=>{const {LAYERS}=await import('/js/market-chart.js');LAYERS.splice(LAYERS.indexOf(window.probeLayer),1);});
+  await page.check('#eventMarkers');
   await page.click('#eventsToggle');
   await page.click('#side button[data-side="sell"]');
   await page.click('#range button[data-range="1Y"]');
+  await page.click('[data-dock-target="worldsPanel"]');
   // A world without market data has nothing to export.
   await page.fill('#filter','jinx');
   await page.click('#worlds tr[data-world="Jinxibra"]');
@@ -434,14 +437,16 @@ try {
   await helpTool.click();
   // The same image from a phone (the series alone, as above).
   await page.click('#eventsToggle');
+  await page.uncheck('#eventMarkers');
   pixels=await inspect((await exportImage(page)).png);
+  await page.check('#eventMarkers');
   await page.click('#eventsToggle');
   assert.deepEqual([pixels.width,pixels.height],[2400,1560]);
   assert.ok(pixels.sell>2000 && pixels.span>0.85,`phone export ${JSON.stringify(pixels)}`);
   // At full screen a phone shows the chart and the rail's actions.
   await page.evaluate(()=>Object.defineProperty(document,'fullscreenEnabled',{value:false,configurable:true}));
   await fullScreen.click();
-  assert.deepEqual(await tools.getByRole('button').filter({visible:true}).evaluateAll(bs=>bs.map(b=>b.getAttribute('aria-label'))),['Events','Export chart image','Exit full screen']);
+  assert.deepEqual(await tools.getByRole('button').filter({visible:true}).evaluateAll(bs=>bs.map(b=>b.getAttribute('aria-label'))),['Export chart image','Exit full screen']);
   assert.ok(await page.evaluate(()=>{const c=document.getElementById('chartPanel').getBoundingClientRect(),r=document.querySelector('.dock-rail').getBoundingClientRect();return c.height>innerHeight*0.8 && r.bottom<=innerHeight+1;}));
   await exitFullScreen.click();
   await page.evaluate(()=>delete document.fullscreenEnabled);

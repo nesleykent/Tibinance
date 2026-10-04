@@ -71,6 +71,7 @@ export function eventMarks({ chart, part, strip, tip }) {
   // Fixed to the viewport, above the marker, kept on screen.
   function position(button) {
     const anchor = button.getBoundingClientRect(), box = tip.getBoundingClientRect();
+    if (anchor.bottom < 0 || anchor.top > innerHeight) { hide(); return; }
     tip.style.left = `${Math.min(Math.max(8, anchor.left + anchor.width / 2 - box.width / 2), innerWidth - box.width - 8)}px`;
     const above = anchor.top - box.height - 8;
     tip.style.top = `${above >= 8 ? above : anchor.bottom + 8}px`;
@@ -103,5 +104,5 @@ export function eventMarks({ chart, part, strip, tip }) {
   new ResizeObserver(place).observe(strip.parentElement);
   addEventListener('scroll', () => shown && position(buttons.get(shown)), { passive: true });
   part.onLayout(render);
-  return { hide };
+  return { hide, focusEvent(id) { const group = groups.find(g => g.events.some(e => e.id === id)); if (group) { chosen = group.key; setCurrent(chosen); show(chosen, { pin: true }); } } };
 }

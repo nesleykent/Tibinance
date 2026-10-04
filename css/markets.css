@@ -260,3 +260,32 @@ table.watch td.stale { color:var(--muted); }
   .chart-legend { max-width:calc(100% - var(--space-8)); column-gap:var(--space-2); }
   .legend .rest { flex-wrap:nowrap; white-space:nowrap; }
 }
+
+/* Events shares the dock's width and independent scrolling, leaving the chart visible. */
+.events-panel { display:flex; flex-direction:column; min-height:0; }
+.events-panel .panel-head { justify-content:space-between; }
+.events-panel label,.events-panel small,.event-calendar-key { font-size:var(--step-n2); color:var(--muted); }
+.events-panel .panel-body > p:first-child { margin-top:0; }
+.events-panel h3 { font-size:var(--step-n1); margin:var(--space-3) 0 var(--space-2); }
+.events-panel button,.events-panel select,.events-panel input[type="month"] { font:inherit; color:var(--ink); background:var(--surface); border:var(--rule) solid var(--line); border-radius:var(--control-radius); padding:var(--space-1); min-height:32px; }
+.events-panel button { cursor:pointer; }
+.events-panel button:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+.event-filters { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-2); margin-block:var(--space-3); }
+.event-filters label { display:grid; gap:var(--space-1); min-width:0; }
+.event-filters select { width:100%; }
+.event-month-nav { display:flex; gap:var(--space-1); align-items:center; }
+.event-month-nav input { min-width:0; flex:1; width:100px; }
+.event-calendar { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:3px; margin-top:var(--space-2); text-align:center; }
+.event-calendar > span { font-size:10px; color:var(--muted); }
+.event-calendar button { position:relative; display:grid; padding:2px; min-height:36px; }
+.event-calendar small { font-size:10px; color:var(--accent); min-height:12px; }
+.event-calendar button[aria-current] { border-color:var(--accent); }
+.events-panel button[aria-pressed="true"] { background:var(--control-track); border-color:var(--accent); }
+.event-span { position:absolute; inset:auto 2px 1px; height:2px; background:var(--accent); }
+.event-row { display:grid; text-align:left; gap:3px; width:100%; margin-bottom:var(--space-1); }
+.event-row strong { font-weight:var(--weight-strong); }
+.event-details { border-block:var(--rule) solid var(--line); padding-block:var(--space-2); margin-block:var(--space-3); }
+.event-details p { margin-top:var(--space-2); }
+.event-agenda-head { display:flex; justify-content:space-between; gap:var(--space-2); align-items:center; }
+.event-agenda-head select { min-width:0; max-width:70%; }
+@media(max-width:760px) { .events-panel .panel-body { overflow:visible; } .events-panel button { min-height:44px; } }
