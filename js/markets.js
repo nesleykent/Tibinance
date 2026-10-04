@@ -163,7 +163,7 @@ function showLegend(day) {
   const average = !stats ? num(null) : stats.transactions ? fmt(stats.averagePrice) : 'no trades';
   // The day's traded range beside its average, as a terminal reads a bar: the highest and lowest prices of the trades
   // that filled this side's offers. Read out only; never drawn, since a Buy low of 1 is common.
-  const range = stats?.transactions ? ` <span class="rest"><span class="meta-label">High</span> ${fmt(stats.highestPrice)} <span class="meta-label">Low</span> ${fmt(stats.lowestPrice)}</span>` : '';
+  const range = stats?.transactions ? ` <span class="rest ohlc"><span><span class="meta-label">High</span> ${fmt(stats.highestPrice)}</span> <span><span class="meta-label">Low</span> ${fmt(stats.lowestPrice)}</span></span>` : '';
   $('legend').innerHTML = `<span class="day">${esc(day)}</span> <span class="label"><i class="key key-dot"></i>${labels.offer}</span> ${best} `
     + `<span class="label"><i class="key key-average"></i>Daily average</span> <b class="value">${average}</b>${range}`;
   $('volumeLegend').innerHTML = ` <span class="label"><i class="key key-volume"></i>Transactions</span> <b class="value">${stats ? fmt(stats.transactions) : num(null)}</b>`;

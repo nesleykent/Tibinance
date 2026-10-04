@@ -937,15 +937,29 @@ node tests/tables-browser.mjs
 `TIBINANCE_OFFERS_SAMPLE` enables the paired real Offers regression. These checks
 use isolated browser storage and API fixtures. No test state is imported into
 canonical data. The historical rebuild and subsequent Apple Vision review are
-complete: its 390 accepted captures are preserved; the latest screenshot update has 467 accepted captures across 40 worlds, with no unresolved review cases.
+complete: its 390 accepted captures are preserved; the latest screenshot update has 492 accepted captures across 40 worlds, with no unresolved review cases.
 The anonymous [review audit](../data/rebuild-vision-review.json) records recoveries and
 per-world coverage; [validation](../data/rebuild-validation.json) reconciles the archive.
 The progress ledger is in `PROGRESS.md`.
 
 
+### October 4 screenshot update
+
+The current canonical data contains 492 captures (440 Offers and 52 Statistics),
+7,678 offer observations and 5,525 offer identities across 40 worlds. The update
+adds the 25 Tibia Coins captures of 2026-10-04 (13 Offers, 12 Statistics) and
+leaves every one of the 467 earlier captures byte-identical, offer identities
+included: the run reused the 503 checkpointed results and finalized against the
+previous canonical dataset, which is what keeps identities stable. The archive
+now reconciles to 528 unique eligible images plus 40 duplicate copies: 492 ready,
+28 no-Market, three other items and five historical manual exclusions; no review
+or runtime failures. The rebuilt Markets history, its audits, the Research
+(`market-update.json` equals `data/observations.json` byte for byte) and the
+Markets projections follow from it; the Research froze its 2026-10-04 cutoff.
+
 ### October 3 screenshot update and independent review
 
-The current canonical data contains 467 captures (427 Offers and 40 Statistics),
+That update brought the data to 467 captures (427 Offers and 40 Statistics),
 7,419 offer observations and 5,433 offer identities across 40 worlds. The update
 adds 77 captures and preserves every previously accepted capture, timestamp,
 world and offer identity. The complete local archive reconciles to 503 unique

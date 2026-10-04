@@ -62,22 +62,22 @@ test('the builder refuses what it cannot carry over faithfully', async () => {
   assert.throws(build(i => { const r = i.results.worldForecast.find(x => x.status === 'Suspenso: fusão anunciada'); r.base = 1; return i; }), /suspended week has a value/);
   assert.throws(build(i => { i.results.worldForecast.pop(); return i; }), /weeks differ/);
   assert.throws(build(i => { i.index.worlds = i.index.worlds.filter(w => w.world !== 'Floribra'); return i; }), /Floribra is projected by the Research but is not a Markets world/);
-  assert.throws(build(i => { i.results.forecast[0].date = '2026-10-11'; return i; }), /a week after the cutoff|7 days apart/);
+  assert.throws(build(i => { i.results.forecast[0].date = addDays(i.results.asOf, 1); return i; }), /a week after the cutoff|7 days apart/);
 });
 
 test('a projection is placed only on its own anchor, and says why when it is not', () => {
   const antica = projectionFor(dataset, summary('Antica'), last('Antica'));
   assert.equal(antica.sell.available, true);
-  assert.deepEqual(antica.sell.anchor, {day: '2026-10-03', value: 43114});
-  assert.deepEqual(antica.buy.anchor, {day: '2026-10-03', value: 41608});
+  assert.deepEqual(antica.sell.anchor, {day: '2026-10-04', value: 43255});
+  assert.deepEqual(antica.buy.anchor, {day: '2026-10-04', value: 41704});
   assert.equal(antica.sell.points.length, 52);
   assert.equal(antica.sell.confidence, 'moderate');
   // A newer observation than the Research's anchor: never moved to it, unavailable until the Research is rebuilt.
-  const newer = projectionFor(dataset, summary('Antica'), {...last('Antica'), serverDay: '2026-10-04'});
+  const newer = projectionFor(dataset, summary('Antica'), {...last('Antica'), serverDay: '2026-10-05'});
   assert.equal(newer.sell.available, false);
-  assert.match(newer.sell.reason, /starts from the best offer of 2026-10-03; Antica was observed later, on 2026-10-04/);
+  assert.match(newer.sell.reason, /starts from the best offer of 2026-10-04; Antica was observed later, on 2026-10-05/);
   // The same day but another price (one side only) is not the same anchor either.
-  const moved = projectionFor(dataset, summary('Antica'), {...last('Antica'), buy: 41609});
+  const moved = projectionFor(dataset, summary('Antica'), {...last('Antica'), buy: 41705});
   assert.deepEqual([moved.sell.available, moved.buy.available], [true, false]);
   for (const [world, reason] of [['Aethera', /not among them/], ['Jacabra', /retired world/]]) {
     const p = projectionFor(dataset, summary(world), last(world));
@@ -90,26 +90,26 @@ test('a projection is placed only on its own anchor, and says why when it is not
 
 test('conditions and limits come from the Research: merges suspend, stale quotes and few tests limit confidence', () => {
   const luzibra = projectionFor(dataset, summary('Luzibra'), last('Luzibra')).sell;
-  assert.deepEqual([luzibra.points.map(p => p.day), luzibra.suspendedFrom, luzibra.end], [['2026-10-10', '2026-10-17'], '2026-10-24', '2026-10-17']);
+  assert.deepEqual([luzibra.points.map(p => p.day), luzibra.suspendedFrom, luzibra.end], [['2026-10-11', '2026-10-18'], '2026-10-25', '2026-10-18']);
   assert.deepEqual(luzibra.limits, ['announced merge, not before 2026-10-22']);
   const cantabra = projectionFor(dataset, summary('Cantabra'), last('Cantabra')).buy;
   assert.ok(cantabra.available && cantabra.points.every(p => p.condition === 'stale'));
   assert.deepEqual([cantabra.anchor.day, cantabra.limits], ['2026-09-02', ['stale quote']]);
   const floribra = projectionFor(dataset, summary('Floribra'), last('Floribra')).sell;
-  assert.deepEqual([floribra.confidence, floribra.limits], ['limited', ['2 transfer tests, fewer than ten']]);
+  assert.deepEqual([floribra.confidence, floribra.limits], ['limited', ['stale quote', '4 transfer tests, fewer than ten']]);
   assert.deepEqual(limits({testN: 1, stale: false, mergerDate: null}), ['1 transfer test, fewer than ten']);
   assert.equal(CONDITIONS.crossed, 'Conditional: crossed sides');
 });
 
 test('a day after the anchor reads the projected week that holds it, never an interpolation', () => {
   const p = projectionFor(dataset, summary('Antica'), last('Antica')).sell;
-  assert.equal(weekOf(p, '2026-10-03'), null, 'the anchor day is an observation');
-  assert.equal(weekOf(p, '2026-10-04').day, '2026-10-10');
-  assert.equal(weekOf(p, '2026-10-10').day, '2026-10-10');
-  assert.equal(weekOf(p, '2026-10-11').day, '2026-10-17');
-  assert.equal(weekOf(p, '2027-10-03'), null, 'past the horizon');
+  assert.equal(weekOf(p, '2026-10-04'), null, 'the anchor day is an observation');
+  assert.equal(weekOf(p, '2026-10-05').day, '2026-10-11');
+  assert.equal(weekOf(p, '2026-10-11').day, '2026-10-11');
+  assert.equal(weekOf(p, '2026-10-12').day, '2026-10-18');
+  assert.equal(weekOf(p, '2027-10-04'), null, 'past the horizon');
   const luzibra = projectionFor(dataset, summary('Luzibra'), last('Luzibra')).sell;
-  assert.equal(weekOf(luzibra, '2026-10-20'), null, 'suspended weeks have no value');
+  assert.equal(weekOf(luzibra, '2026-10-21'), null, 'suspended weeks have no value');
 });
 
 test('the window ahead matches the range behind, up to the horizon; the axis is every day', () => {
@@ -118,24 +118,24 @@ test('the window ahead matches the range behind, up to the horizon; the axis is 
   assert.equal(forwardDays(p, 365), 364);
   assert.equal(forwardDays(p, 2000), 364, 'never past the scenario');
   assert.equal(forwardDays(p, 2), 7, 'at least one week');
-  assert.equal(forwardEnd(p, 91), '2027-01-02');
+  assert.equal(forwardEnd(p, 91), '2027-01-03');
   const luzibra = projectionFor(dataset, summary('Luzibra'), last('Luzibra')).sell;
-  assert.equal(forwardEnd(luzibra, 365), '2026-10-17');
+  assert.equal(forwardEnd(luzibra, 365), '2026-10-18');
   const days = axisDays(p);
-  assert.deepEqual([days[0], days.at(-1), days.length], ['2026-10-04', '2027-10-02', 364]);
+  assert.deepEqual([days[0], days.at(-1), days.length], ['2026-10-05', '2027-10-03', 364]);
   assert.deepEqual(axisDays({available: false}), []);
 });
 
 test('an exported image names the scenario, its start, the band\'s nature and what it shows', () => {
   const p = projectionFor(dataset, summary('Antica'), last('Antica')).sell;
   const full = exportLines(p, {fmt, world: 'Antica', side: 'Best Sell Offer'});
-  assert.match(full.lines[0].text, /^Projection, Research offer scenario \(C\+S\+H ensemble\), weekly, 52 weeks to 2027-10-02: starts at the Best Sell Offer of 2026-10-03, 43,114; central 45,545 on 2027-10-02\.$/);
-  assert.match(full.lines[1].text, /^Heuristic stress band, not a confidence interval: 42,447 to 48,870 on 2027-10-02\.$/);
+  assert.match(full.lines[0].text, /^Projection, Research offer scenario \(C\+S\+H ensemble\), weekly, 52 weeks to 2027-10-03: starts at the Best Sell Offer of 2026-10-04, 43,255; central 45,745 on 2027-10-03\.$/);
+  assert.match(full.lines[1].text, /^Heuristic stress band, not a confidence interval: 41,353 to 50,604 on 2027-10-03\.$/);
   const part = exportLines(p, {fmt, world: 'Antica', side: 'Best Sell Offer', through: '2027-01-05'});
-  assert.match(part.lines[0].text, /shown to 2027-01-02 of 52 weeks to 2027-10-02/);
-  assert.match(part.lines[1].text, /on 2027-01-02\.$/);
+  assert.match(part.lines[0].text, /shown to 2027-01-03 of 52 weeks to 2027-10-03/);
+  assert.match(part.lines[1].text, /on 2027-01-03\.$/);
   const luzibra = exportLines(projectionFor(dataset, summary('Luzibra'), last('Luzibra')).sell, {fmt, world: 'Luzibra', side: 'Best Sell Offer'});
-  assert.match(luzibra.lines[1].text, /Limited confidence: announced merge, not before 2026-10-22\. Suspended from 2026-10-24\.$/);
+  assert.match(luzibra.lines[1].text, /Limited confidence: announced merge, not before 2026-10-22\. Suspended from 2026-10-25\.$/);
   const none = exportLines(projectionFor(dataset, summary('Aethera'), last('Aethera')).sell, {fmt, world: 'Aethera'});
   assert.deepEqual(none.lines.map(l => l.mark), ['none']);
   assert.match(none.lines[0].text, /^Projection unavailable for Aethera: /);

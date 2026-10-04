@@ -51,7 +51,7 @@ function legend(day) {
   day ??= view?.end;
   const p = view?.byDay.get(day);
   // The candle's open, high and low beside its close, as a terminal reads a bar.
-  const ohl = p ? ` <span class="rest"><span class="meta-label">O</span> ${tokenPrice(p.open)} <span class="meta-label">H</span> ${tokenPrice(p.high)} <span class="meta-label">L</span> ${tokenPrice(p.low)}</span>` : '';
+  const ohl = p ? ` <span class="rest ohlc">${[['O', p.open], ['H', p.high], ['L', p.low]].map(([k, v]) => `<span><span class="meta-label">${k}</span> ${tokenPrice(v)}</span>`).join(' ')}</span>` : '';
   $('legend').innerHTML = `<span class="day">${esc(day ?? '')} UTC</span> <span class="label"><i class="key key-dot"></i>Daily close</span> <b class="value">${p ? tokenPrice(p.close) : 'N/A'}</b>${ohl}`;
   $('volumeLegend').innerHTML = `<span class="day"></span> <span class="label"><i class="key key-volume"></i>Pool volume</span> <b class="value">${p ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(p.volumeUsd) : 'N/A'}</b>`;
   // The chart's status stands over its top: the price scale starts below it (js/market-chart.js fitTop).
