@@ -3,16 +3,20 @@
  * page. A second chart is built offscreen by js/market-chart.js, from the same world, side and visible days, so its
  * layers draw exactly as they do on the page; each layer also names its key for the legend and may annotate the
  * image. Around the chart go the world, its latest best offer and change, the legend, the days shown and a discreet
- * Tibinance mark, all drawn on one canvas.
+ * Tibinance mark, all drawn on one canvas. A layer with marks to explain (events) adds notes under the chart: a key
+ * per kind of mark and a line per mark, so the image grows by as many lines as it has to say.
  *
  * The image has the same layout from any window or phone (WIDTH by the height of its parts, in image pixels) and at
  * least twice as many device pixels: on a screen of lower density the offscreen chart is drawn larger instead.
  */
 import { createMarketChart } from './market-chart.js';
+import { dateText } from './market-events.js';
+import { drawMarker } from './market-events-layer.js';
 
 const WIDTH = 1200, PAD = 32, CHART_HEIGHT = 560;
 const HEAD = 104;     // title, quote, legend and rule above the chart
 const FOOT = 52;      // rule and footer below it
+const LINE = 20;      // a line of notes under the chart
 
 const token = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 const frames = n => new Promise(resolve => { const step = () => (n-- > 0 ? requestAnimationFrame(step) : resolve()); step(); });
@@ -20,9 +24,10 @@ const frames = n => new Promise(resolve => { const step = () => (n-- > 0 ? reque
 /*
  * context: { world, tag, meta: [text], value, valueNote, change: {text, tone, note} | null, shown, footer }
  * logicalRange: the page chart's visible logical range, so the image shows the same days.
+ * hidden: ids of the optional layers hidden on the page, hidden in the image too.
  * Returns the image as a canvas.
  */
-export async function marketImage({ view, side, logicalRange, context }) {
+export async function marketImage({ view, side, logicalRange, context, hidden = [] }) {
   const dpr = window.devicePixelRatio || 1;
   const k = Math.max(1, Math.ceil(2 / dpr));   // 2 on a 1x or 1.5x screen, 1 from 2x up
   const plotWidth = WIDTH - 2 * PAD;
@@ -32,23 +37,27 @@ export async function marketImage({ view, side, logicalRange, context }) {
   document.body.append(host);
   const market = createMarketChart(host, { scale: k, width: plotWidth * k, height: CHART_HEIGHT * k });
   try {
+    for (const id of hidden) market.setVisible(id, false);
     market.draw(view, side);
     if (logicalRange) market.chart.timeScale().setVisibleLogicalRange(logicalRange);
     else market.chart.timeScale().fitContent();
     await frames(2);
-    const shot = market.chart.takeScreenshot();
-    return compose({ shot, ratio: dpr * k, k, plotWidth, market, keys: market.keys(side), context });
+    // With the top layer, where layers draw their primitives; without the crosshair.
+    const shot = market.chart.takeScreenshot(true, false);
+    return compose({ shot, ratio: dpr * k, k, plotWidth, market, keys: market.keys(side), notes: market.notes(), context });
   } finally {
     market.chart.remove();
     host.remove();
   }
 }
 
-function compose({ shot, ratio, k, plotWidth, market, keys, context }) {
+function compose({ shot, ratio, k, plotWidth, market, keys, notes, context }) {
   const c = { canvas: token('--canvas') || '#fff', ink: token('--ink'), muted: token('--muted'), line: token('--line'), lineStrong: token('--line-strong'),
-    up: token('--positive'), down: token('--negative') };
+    up: token('--positive'), down: token('--negative'),
+    events: { world: token('--event-world'), game: token('--event-game'), market: token('--event-market') } };
   const ui = token('--font-ui'), serif = token('--font-editorial');
-  const height = HEAD + CHART_HEIGHT + FOOT + PAD * 2;
+  const noteLines = notes.reduce((n, note) => n + 1 + note.rows.length + (note.more ? 1 : 0), 0);
+  const height = HEAD + CHART_HEIGHT + (noteLines ? 12 + noteLines * LINE : 0) + FOOT + PAD * 2;
   const canvas = document.createElement('canvas');
   canvas.width = Math.round(WIDTH * ratio);
   canvas.height = Math.round(height * ratio);
@@ -102,6 +111,7 @@ function compose({ shot, ratio, k, plotWidth, market, keys, context }) {
   market.annotate(ctx, { x: 0, y: 0, font: size => `400 ${size}px ${ui}` });
   ctx.restore();
   y += CHART_HEIGHT;
+  if (noteLines) y = drawNotes(ctx, notes, { x: PAD, y: y + 12, right, c, ui, text });
 
   // A discreet mark, as in the site header, and the conventions the chart follows.
   rule(ctx, PAD, right, y + 12, c.line);
@@ -110,6 +120,45 @@ function compose({ shot, ratio, k, plotWidth, market, keys, context }) {
   text('/ Markets', PAD + brand + 6, fy, { font: `400 13px ${serif}`, color: c.muted });
   text(context.footer, right, fy, { font: `400 11px ${ui}`, color: c.muted, align: 'right' });
   return canvas;
+}
+
+/*
+ * The notes of the chart's marks (js/market-events.js exportNotes): a line of keys, each kind of mark with its name
+ * and, where it recurs, how many are shown; then one line per other mark, its days, its mark and its title.
+ */
+function drawNotes(ctx, notes, { x, y, right, c, ui, text }) {
+  const font = `400 13px ${ui}`;
+  const colorOf = category => c.events[category.group] ?? c.ink;
+  for (const note of notes) {
+    let kx = x;
+    for (const { category, count } of note.keys) {
+      const w = drawMarker(ctx, { x: kx + 10, y: y + 10, label: category.mark, color: colorOf(category), background: c.canvas, font: ui });
+      const label = category.recurring ? `${category.label} (${count})` : category.label;
+      kx += 10 + w / 2 + 6 + text(label, kx + 10 + w / 2 + 6, y + 14, { font, color: c.ink }) + 18;
+    }
+    y += LINE;
+    // The days in a column as wide as the longest, then the mark, then what happened.
+    ctx.font = font;
+    const column = Math.max(0, ...note.rows.map(e => ctx.measureText(dateText(e)).width)) + 16;
+    for (const event of note.rows) {
+      text(dateText(event), x, y + 14, { font, color: c.muted });
+      const w = drawMarker(ctx, { x: x + column + 10, y: y + 10, label: event.category.mark, color: colorOf(event.category), background: c.canvas, font: ui });
+      const tx = x + column + 10 + w / 2 + 8;
+      text(fit(ctx, `${event.title}. ${event.description}`, right - tx, font), tx, y + 14, { font, color: c.ink });
+      y += LINE;
+    }
+    if (note.more) { text(`and ${note.more} more`, x, y + 14, { font, color: c.muted }); y += LINE; }
+  }
+  return y;
+}
+
+// The text, cut short with an ellipsis where it would pass `width`.
+function fit(ctx, value, width, font) {
+  ctx.font = font;
+  if (ctx.measureText(value).width <= width) return value;
+  let end = value.length;
+  while (end > 0 && ctx.measureText(`${value.slice(0, end)}…`).width > width) end--;
+  return `${value.slice(0, end).trimEnd()}…`;
 }
 
 function rule(ctx, from, to, y, color) {

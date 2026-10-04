@@ -7,7 +7,10 @@
  * the panels, and scroll the page.
  */
 :root {
+  --scale-inset:calc(var(--unit) * 3);   /* from the chart's right edge to the end of its price labels */
   --average:#a9a8b3;   /* the daily average: context for the best offer, never competing with it */
+  /* Event markers by group: a world's own lifecycle, the game's events and updates, the market and the Store. */
+  --event-world:var(--accent); --event-game:var(--caution); --event-market:var(--ink);
   --watch-width:calc(var(--unit) * 92);
   --rail-width:calc(var(--unit) * 10);
   --toolbar-height:calc(var(--unit) * 11);
@@ -28,18 +31,20 @@ body { display:flex; flex-direction:column; height:100dvh; overflow:hidden; }
 .chart-panel { container:chart / inline-size; display:flex; flex-direction:column; min-width:0; min-height:0; border-right:var(--rule) solid var(--line); background:var(--canvas); }
 .toolbar { flex:none; display:flex; align-items:center; gap:var(--space-2) var(--space-4); min-height:var(--toolbar-height); padding:var(--space-1) var(--space-4); font-family:var(--font-ui); }
 /* No rule under the first row: a second rule parallel to the header's would join the row to the navigation above.
-   The row belongs to the chart beneath it, and the world's name, a step larger, opens the content. */
-.toolbar-top { flex-wrap:wrap; }
-.toolbar-bottom { justify-content:space-between; min-height:calc(var(--toolbar-height) - var(--space-3)); padding-block:0; border-top:var(--rule) solid var(--line); }
+   The row belongs to the chart beneath it. It reads like the world's row in the list: the world, a step larger, and
+   what it is at the start; its quote at the end, over the price scale. One baseline runs through both groups;
+   space, not a rule, divides them. The quote's right edge is the price labels' (--scale-inset). */
+.toolbar-top { flex-wrap:wrap; align-items:baseline; align-content:center; justify-content:space-between; gap:0 var(--space-5); padding-right:var(--scale-inset); }
+.toolbar-bottom { justify-content:space-between; min-height:calc(var(--toolbar-height) - var(--space-3)); padding-block:0; padding-right:var(--scale-inset); border-top:var(--rule) solid var(--line); }
 .through { color:var(--muted); font-size:var(--step-n2); font-variant-numeric:lining-nums tabular-nums; white-space:nowrap; }
-.symbol { display:flex; align-items:baseline; gap:var(--space-2) var(--space-3); flex-wrap:wrap; min-width:0; }
+.symbol { display:flex; align-items:baseline; gap:var(--space-1) var(--space-3); flex-wrap:wrap; min-width:0; }
 .symbol h2 { font-size:var(--step-3); white-space:nowrap; }
 .symbol-meta { display:inline-flex; gap:var(--space-3); color:var(--muted); font-size:var(--step-n2); white-space:nowrap; }
-.symbol-quote { display:flex; flex-wrap:wrap; align-items:baseline; gap:var(--space-2); font-variant-numeric:lining-nums tabular-nums; white-space:nowrap; }
+.symbol-quote { display:flex; align-items:baseline; gap:var(--space-2); margin-left:auto; font-variant-numeric:lining-nums tabular-nums; white-space:nowrap; }
 .symbol-last { font-size:var(--step-1); font-weight:var(--weight-strong); }
 .symbol-change { font-size:var(--step-n1); }
-/* World and quote read as two groups: a hairline after the first, full toolbar height. */
-.toolbar-top > .symbol { align-self:stretch; align-content:center; padding-right:var(--space-4); border-right:var(--rule) solid var(--line); }
+/* The range the change is measured over: the readout below carries a different change, since the previous observation. */
+.symbol-range { color:var(--muted); font-size:var(--step-n2); font-weight:var(--weight-strong); letter-spacing:var(--tracking-caps); }
 /* A tool button: an icon on the control track when hovered, pressed or open. */
 .tool { display:inline-grid; place-items:center; width:var(--control-height); height:var(--control-height); padding:0; border:0; border-radius:var(--control-radius); background:transparent; color:var(--muted); cursor:pointer; }
 .tool:hover,.tool[aria-pressed="true"],.tool[aria-expanded="true"] { background:var(--control-track); color:var(--ink); }
@@ -49,7 +54,8 @@ body { display:flex; flex-direction:column; height:100dvh; overflow:hidden; }
 .tool .icon-collapse,.tool[aria-pressed="true"] .icon-expand { display:none; }
 .tool[aria-pressed="true"] .icon-collapse { display:block; }
 
-.ranges { display:flex; gap:var(--space-0); }
+/* The first range's label starts on the content edge, under the world and the readout. */
+.ranges { display:flex; gap:var(--space-0); margin-left:calc(var(--space-2) * -1); }
 .ranges button { min-height:calc(var(--control-height) - var(--space-1)); padding:0 var(--space-2); font-variant-numeric:lining-nums; border:0; border-radius:var(--radius-sm); background:transparent; color:var(--muted); font-family:var(--font-ui); font-size:var(--control-type); cursor:pointer; }
 .ranges button:hover { background:var(--control-track); color:var(--ink); }
 .ranges button[aria-checked="true"] { background:var(--control-track); color:var(--ink); font-weight:var(--weight-strong); }
@@ -57,28 +63,48 @@ body { display:flex; flex-direction:column; height:100dvh; overflow:hidden; }
 /* ---- chart and its legends ------------------------------------------------------ */
 .chart-area { position:relative; flex:1; min-height:0; }
 .chart { position:absolute; inset:0; }
-.chart-legend { position:absolute; z-index:2; left:var(--space-4); top:var(--space-1); max-width:calc(100% - var(--space-8) * 2); display:flex; flex-direction:column; align-items:flex-start; gap:var(--space-1); pointer-events:none; }
-.legend { display:flex; flex-direction:column; gap:var(--space-0);
+/* The readout: one small table over the chart's top left, on the world's left edge. The day heads it; under it a row
+   per series: key and name, value (right-aligned, so figures line up), and the best offer's change. Values are the
+   chart's, set lighter than the quote above. Rows sit closer to each other than to the world's line. */
+.chart-legend { position:absolute; z-index:2; left:var(--space-4); top:var(--space-2); max-width:calc(100% - var(--space-8) * 2);
+  display:grid; grid-template-columns:auto auto minmax(0,auto); align-items:center; gap:var(--space-1) var(--space-3); pointer-events:none;
   color:var(--muted); font-family:var(--font-ui); font-size:var(--step-n1); font-variant-numeric:lining-nums tabular-nums; line-height:var(--leading-tight); }
-.legend .row { display:flex; flex-wrap:wrap; align-items:center; gap:0 var(--space-2); }
-.legend .day { color:var(--ink); font-weight:var(--weight-strong); }
-.legend b { color:var(--ink); font-weight:var(--weight-strong); }
-.legend .label { display:inline-flex; align-items:center; gap:var(--space-1); }
-.legend-volume { margin-top:calc(var(--space-0) * -1); }
-/* The market side: both sides' latest best offers, the spread between them, the one shown outlined in its colour.
-   Quiet outlines, not filled buttons: they choose the series, they place nothing. */
-.sides { display:flex; align-items:center; gap:var(--space-1); pointer-events:auto; font-family:var(--font-ui); font-variant-numeric:lining-nums tabular-nums; }
-.side-pick { --side-color:var(--sell); display:grid; justify-items:center; min-width:calc(var(--unit) * 17); padding:var(--space-0) var(--space-2); border:var(--rule) solid var(--line); border-radius:var(--radius-sm);
-  background:var(--canvas); color:var(--muted); font-family:var(--font-ui); line-height:var(--leading-tight); cursor:pointer; }
-.side-pick[data-side="buy"] { --side-color:var(--buy); }
-.side-pick b { font-size:var(--step-n1); font-weight:var(--weight-strong); }
-.side-pick span { font-size:var(--step-n2); font-weight:var(--weight-strong); letter-spacing:var(--tracking-caps); text-transform:uppercase; }
-.side-pick:hover { border-color:var(--line-strong); color:var(--ink); }
-.side-pick[aria-checked="true"] { border-color:var(--side-color); background:color-mix(in srgb, var(--side-color) 7%, var(--canvas)); color:var(--side-color); }
-.side-pick:focus-visible { outline:var(--rule-strong) solid var(--side-color); outline-offset:var(--rule); }
-.side-spread { min-width:calc(var(--unit) * 8); color:var(--muted); font-size:var(--step-n2); text-align:center; }
-/* Above the chart's canvases (z-index 1 and 2), so a message hides a stale price scale. */
-.chart-status { position:absolute; z-index:3; inset:0; display:grid; place-items:center; margin:0; color:var(--muted); font-family:var(--font-ui); font-size:var(--step-n1); background:var(--canvas); }
+.legend { display:contents; }
+.legend .day { grid-column:1 / -1; color:var(--ink); font-weight:var(--weight-strong); }
+.legend .label { grid-column:1; display:grid; grid-template-columns:var(--space-4) auto; align-items:center; gap:var(--space-1); white-space:nowrap; }
+.legend .label .key { justify-self:center; }
+.legend .value { color:var(--ink); font-weight:var(--weight-regular); text-align:right; white-space:nowrap; }
+.legend .rest { display:flex; flex-wrap:wrap; gap:0 var(--space-2); }
+.legend .note { grid-column:span 2; }
+/* ---- events: buttons over the markers the chart draws (js/market-events-ui.js) ------- */
+/* The strip is placed by script at the foot of the price pane; only its buttons take the pointer, so the chart still
+   pans and shows its crosshair everywhere else. A button is the marker's size; its target is taller for a finger. It
+   lies above the chart library's attribution logo (z-index 3), which shares the pane's bottom left corner. */
+/* Clipped sideways to the chart: while the chart catches up with a resize, a marker laid out for the old width must
+   not widen the page. */
+.event-marks { position:absolute; z-index:4; inset-inline:0; height:calc(var(--unit) * 3.5); overflow-x:clip; pointer-events:none; }
+.event-mark { position:absolute; top:0; height:100%; padding:0; border:0; border-radius:calc(var(--unit) * 1.75); background:transparent; cursor:pointer; pointer-events:auto; }
+.event-mark::before { content:""; position:absolute; inset:calc(var(--space-1) * -1) calc(var(--space-0) * -1); }
+.event-mark:focus-visible { outline:var(--rule-strong) solid var(--accent); outline-offset:var(--rule-strong); }
+.event-tip { position:fixed; z-index:var(--layer-header); display:grid; gap:var(--space-2); max-width:calc(var(--unit) * 80); padding:var(--space-2) var(--space-3);
+  border:var(--rule) solid var(--line); border-radius:var(--radius-sm); background:var(--surface); box-shadow:var(--control-thumb-shadow);
+  color:var(--ink); font-family:var(--font-ui); font-size:var(--step-n1); line-height:var(--leading-text); pointer-events:none; }
+.event-tip[hidden] { display:none; }
+.event-tip-item { display:grid; }
+.event-tip-days { color:var(--muted); font-size:var(--step-n2); font-variant-numeric:lining-nums tabular-nums; }
+.event-tip-title { display:flex; align-items:center; gap:var(--space-1); font-weight:var(--weight-strong); }
+.event-tip-text { color:var(--muted); }
+/* The marker itself, as the chart draws it: its category's mark, outlined in its group's colour. */
+.event-tip-mark,.key-event { --event:var(--event-world); display:inline-grid; place-items:center; flex:none; min-width:calc(var(--unit) * 3.5); height:calc(var(--unit) * 3.5);
+  padding:0 var(--space-1); border:var(--rule) solid var(--event); border-radius:calc(var(--unit) * 1.75); color:var(--event);
+  font-size:calc(var(--step-n2) * .85); font-style:normal; font-weight:var(--weight-strong); line-height:1; }
+.event-tip-mark[data-group="game"] { --event:var(--event-game); }
+.event-tip-mark[data-group="market"] { --event:var(--event-market); }
+.key-event { width:fit-content; justify-self:center; }
+
+/* Above the chart's canvases (z-index 1 and 2), its logo (3) and the event markers (4), so a message hides a stale
+   price scale. */
+.chart-status { position:absolute; z-index:5; inset:0; display:grid; place-items:center; margin:0; color:var(--muted); font-family:var(--font-ui); font-size:var(--step-n1); background:var(--canvas); }
 .chart-status[hidden] { display:none; }
 
 /* Line keys, shared by the legends and the help. currentColor is the side colour. */
@@ -148,13 +174,27 @@ table.watch td.stale { color:var(--muted); }
 .dock { display:flex; min-width:0; min-height:0; }
 .dock-panel { width:var(--watch-width); border-right:var(--rule) solid var(--line); }
 .dock-panel:not(.is-open) { display:none; }
-/* The rail launches panels and tools; the chart's own state lives on the chart. In regions by meaning (markets.html):
-   the tools that analyse or navigate the market, flexible space, and the utilities at the bottom. Every tool is
+/* The rail is regions by meaning (markets.html): the chart's own state at the top, then the tools that analyse or
+   navigate the market, flexible space, and the utilities at the bottom, level with the ranges row. The first slot
+   is centred on the toolbar's row. Every tool is
    one square slot; on, open or pressed, a slot holds the control track. */
 .dock-rail { flex:none; display:flex; flex-direction:column; align-items:center; width:var(--rail-width);
-  padding-block:calc((var(--toolbar-height) - var(--space-6)) / 2) calc((var(--toolbar-height) - var(--space-3) - var(--space-6)) / 2); }
+  padding-block:calc((var(--toolbar-height) - var(--space-6)) / 2 + var(--control-inset)) calc((var(--toolbar-height) - var(--space-3) - var(--space-6)) / 2); }
 .dock-group { display:flex; flex-direction:column; align-items:center; gap:var(--space-1); }
 .dock-space { flex:1; }
+/* Regions are divided by a hairline, the width of a slot. */
+.dock-rule { flex:none; width:var(--space-6); height:var(--rule); margin:var(--space-2) 0; background:var(--line); }
+/* The market side, the chart's own state, leads the rail: one choice of two, so the segmented control every Tibinance
+   page uses, standing on end and a slot wide. The side shown is the thumb, written in its side's colour, as the chart
+   draws it. */
+.dock-side { display:grid; gap:0; width:var(--space-6); padding:var(--control-inset); border-radius:var(--control-radius); background:var(--control-track); }
+.dock-side button { height:calc(var(--space-6) - var(--control-inset) * 2); padding:0; border:0; border-radius:calc(var(--control-radius) - var(--control-inset));
+  background:transparent; color:var(--muted); font-family:var(--font-ui); font-size:var(--control-type); line-height:1; cursor:pointer; }
+.dock-side button:hover { color:var(--ink); }
+.dock-side button[aria-checked="true"] { background:var(--surface); box-shadow:var(--control-thumb-shadow); font-weight:var(--weight-strong); }
+.dock-side button[data-side="sell"][aria-checked="true"] { color:var(--sell); }
+.dock-side button[data-side="buy"][aria-checked="true"] { color:var(--buy); }
+.dock-side button:focus-visible { outline-offset:0; }
 .dock-tool { width:var(--space-6); height:var(--space-6); }
 
 /* ---- selected world: under the list, like an instrument's key facts ------------------ */
@@ -187,8 +227,11 @@ table.watch td.stale { color:var(--muted); }
   /* The same regions, start to end: the side, the market tools, space, the utilities. */
   .dock-rail { order:-1; flex-direction:row; width:auto; padding:var(--space-1) 0; border-bottom:var(--rule) solid var(--line); }
   .dock-group { flex-direction:row; }
-  /* With Worlds always listed below, its region is empty here. */
-  .dock-group:has(> [data-dock-default]:only-child) { display:none; }
+  .dock-side { display:flex; width:auto; }
+  .dock-side button { width:calc(var(--unit) * 11); }
+  .dock-rule { width:var(--rule); height:var(--space-5); margin:0 var(--space-2); }
+  /* With Worlds always listed below, its region is empty here, and so is the rule before it. */
+  .dock-group:has(> [data-dock-default]:only-child),.dock-rule:has(+ .dock-group > [data-dock-default]:only-child) { display:none; }
   .dock-tool[data-dock-default] { display:none; }
   .dock-panel { width:auto; border-right:0; }
   .dock-panel:not([data-dock-default]) { border-bottom:var(--rule) solid var(--line); }
@@ -196,7 +239,7 @@ table.watch td.stale { color:var(--muted); }
   /* At full screen a phone shows the chart and the rail's actions. */
   .terminal:is(.expanded,:fullscreen) { display:flex; flex-direction:column; overflow:hidden; }
   .terminal:is(.expanded,:fullscreen) .chart-panel { flex:1; height:auto; border-bottom:0; }
-  .terminal:is(.expanded,:fullscreen) :is(.dock-panel,[data-dock-target]) { display:none; }
+  .terminal:is(.expanded,:fullscreen) :is(.dock-panel,[data-dock-target],.dock-rule) { display:none; }
   .terminal:is(.expanded,:fullscreen) .dock-rail { padding-inline:var(--space-2); border-top:var(--rule) solid var(--line); border-bottom:0; }
 }
 /* A wide chart keeps the toolbar on one row at its fixed height: the world's
@@ -211,10 +254,9 @@ table.watch td.stale { color:var(--muted); }
   .symbol-meta { display:block; min-width:0; overflow:hidden; text-overflow:ellipsis; }
   .symbol-meta > * + * { margin-left:var(--space-3); }
 }
-@container chart (max-width:591.98px) {
-  /* The toolbar wraps here; a divider would start a line. */
-  .toolbar-top > .symbol { padding-right:0; border-right:0; }
-}
 @container chart (max-width:471.98px) {
   .symbol-meta,.legend .meta,.through { display:none; }
+  /* The readout may run up to the price scale, so the change keeps to one line. */
+  .chart-legend { max-width:calc(100% - var(--space-8)); column-gap:var(--space-2); }
+  .legend .rest { flex-wrap:nowrap; white-space:nowrap; }
 }

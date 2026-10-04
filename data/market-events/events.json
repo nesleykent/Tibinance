@@ -1,0 +1,1333 @@
+{
+ "format": 1,
+ "note": "Events plotted over the Markets chart, separate from the market history. Dates are server days, inclusive. Built by tools/build_market_events.mjs; source is provenance, never shown on the chart.",
+ "inputs": [
+  {
+   "path": "data/market-events/inputs/events.json",
+   "sha256": "76b36abfc77791835ec39063d7a315bab4e9866a7539fdd4bc9e703f8bdb47ba"
+  },
+  {
+   "path": "data/market-history/inputs/retired-worlds.json",
+   "sha256": "f40d512d2664e70f8f96c250ab8f103aa5b171e0d751b7f45ffd7e16b5f7f5eb"
+  },
+  {
+   "path": "data/market-history/inputs/worlds.json",
+   "sha256": "cf144c59a1cabdaa767b418362f676d8a674e85452e951d41bbe5ae2c99443cf"
+  },
+  {
+   "path": "reports/tc-cycle/mergers.json",
+   "sha256": "16d366cd52d5e10ad81f83c60300e9dc45d9c0f7b1accb37bb477686b08941c6"
+  },
+  {
+   "path": "reports/tc-cycle/source-package/events_intervals.json",
+   "sha256": "fb574a2470bf34379296703fcc56d3e2b0c87693a1ab0b9f45b9d2fb214a1c0a"
+  },
+  {
+   "path": "reports/tc-cycle/source-package/extra_events.json",
+   "sha256": "ca438fc1551d258df7401e0ec22489a5f1ef9a6ae32cda16e18ff0e6fc6dc8e3"
+  }
+ ],
+ "categories": [
+  {
+   "id": "world-created",
+   "label": "World opened",
+   "mark": "N",
+   "group": "world",
+   "lifecycle": true,
+   "recurring": false
+  },
+  {
+   "id": "world-retired",
+   "label": "World retired",
+   "mark": "R",
+   "group": "world",
+   "lifecycle": true,
+   "recurring": false
+  },
+  {
+   "id": "world-merge",
+   "label": "World merge",
+   "mark": "M",
+   "group": "world",
+   "lifecycle": true,
+   "recurring": false
+  },
+  {
+   "id": "update",
+   "label": "Major update",
+   "mark": "U",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": false
+  },
+  {
+   "id": "xp-skill",
+   "label": "XP/Skill Event",
+   "mark": "XP",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "rapid-respawn",
+   "label": "Rapid Respawn",
+   "mark": "RR",
+   "group": "game",
+   "lifecycle": false,
+   "recurring": true
+  },
+  {
+   "id": "economy",
+   "label": "Economy",
+   "mark": "E",
+   "group": "market",
+   "lifecycle": false,
+   "recurring": false
+  },
+  {
+   "id": "store",
+   "label": "Store, Premium and Tibia Coin",
+   "mark": "S",
+   "group": "market",
+   "lifecycle": false,
+   "recurring": false
+  }
+ ],
+ "events": [
+  {
+   "id": "rapid-respawn-2023-02-03-rapid-respawn",
+   "category": "rapid-respawn",
+   "start": "2023-02-03",
+   "end": "2023-02-05",
+   "worlds": "all",
+   "title": "Rapid Respawn",
+   "description": "Monsters respawn at a faster rate.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "Rapid Respawn",
+    "calendarDays": [
+     "2023-02-03",
+     "2023-02-06"
+    ]
+   }
+  },
+  {
+   "id": "xp-skill-2023-03-03-xp-skill-event",
+   "category": "xp-skill",
+   "start": "2023-03-03",
+   "end": "2023-03-05",
+   "worlds": "all",
+   "title": "XP/Skill Event",
+   "description": "More experience and skill points from hunting, offline training and exercise weapons.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "XP/Skill Event",
+    "calendarDays": [
+     "2023-03-03",
+     "2023-03-06"
+    ]
+   }
+  },
+  {
+   "id": "xp-skill-2023-05-05-xp-skill-event",
+   "category": "xp-skill",
+   "start": "2023-05-05",
+   "end": "2023-05-07",
+   "worlds": "all",
+   "title": "XP/Skill Event",
+   "description": "More experience and skill points from hunting, offline training and exercise weapons.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "XP/Skill Event",
+    "calendarDays": [
+     "2023-05-05",
+     "2023-05-08"
+    ]
+   }
+  },
+  {
+   "id": "xp-skill-2023-06-02-xp-skill-event",
+   "category": "xp-skill",
+   "start": "2023-06-02",
+   "end": "2023-06-04",
+   "worlds": "all",
+   "title": "XP/Skill Event",
+   "description": "More experience and skill points from hunting, offline training and exercise weapons.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "XP/Skill Event",
+    "calendarDays": [
+     "2023-06-02",
+     "2023-06-05"
+    ]
+   }
+  },
+  {
+   "id": "xp-skill-2023-07-07-xp-skill-event",
+   "category": "xp-skill",
+   "start": "2023-07-07",
+   "end": "2023-07-09",
+   "worlds": "all",
+   "title": "XP/Skill Event",
+   "description": "More experience and skill points from hunting, offline training and exercise weapons.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "XP/Skill Event",
+    "calendarDays": [
+     "2023-07-07",
+     "2023-07-10"
+    ]
+   }
+  },
+  {
+   "id": "update-2023-07-10-summer-update-2023",
+   "category": "update",
+   "start": "2023-07-10",
+   "end": "2023-07-10",
+   "worlds": "all",
+   "title": "Summer Update 2023",
+   "description": "Tibia's Summer Update 2023 went live.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/extra_events.json",
+    "note": "tibiamaps.io blog post date (Tibia Summer Update 2023)",
+    "confidence": "medium"
+   }
+  },
+  {
+   "id": "rapid-respawn-2023-08-04-rapid-respawn",
+   "category": "rapid-respawn",
+   "start": "2023-08-04",
+   "end": "2023-08-06",
+   "worlds": "all",
+   "title": "Rapid Respawn",
+   "description": "Monsters respawn at a faster rate.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "Rapid Respawn",
+    "calendarDays": [
+     "2023-08-04",
+     "2023-08-07"
+    ]
+   }
+  },
+  {
+   "id": "xp-skill-2023-09-08-xp-skill-event",
+   "category": "xp-skill",
+   "start": "2023-09-08",
+   "end": "2023-09-10",
+   "worlds": "all",
+   "title": "XP/Skill Event",
+   "description": "More experience and skill points from hunting, offline training and exercise weapons.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "XP/Skill Event",
+    "calendarDays": [
+     "2023-09-08",
+     "2023-09-11"
+    ]
+   }
+  },
+  {
+   "id": "xp-skill-2023-11-03-xp-skill-event",
+   "category": "xp-skill",
+   "start": "2023-11-03",
+   "end": "2023-11-05",
+   "worlds": "all",
+   "title": "XP/Skill Event",
+   "description": "More experience and skill points from hunting, offline training and exercise weapons.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "XP/Skill Event",
+    "calendarDays": [
+     "2023-11-03",
+     "2023-11-06"
+    ]
+   }
+  },
+  {
+   "id": "rapid-respawn-2023-12-02-rapid-respawn",
+   "category": "rapid-respawn",
+   "start": "2023-12-02",
+   "end": "2023-12-03",
+   "worlds": "all",
+   "title": "Rapid Respawn",
+   "description": "Monsters respawn at a faster rate.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "Rapid Respawn",
+    "calendarDays": [
+     "2023-12-02",
+     "2023-12-04"
+    ]
+   }
+  },
+  {
+   "id": "update-2023-12-04-winter-update-2023",
+   "category": "update",
+   "start": "2023-12-04",
+   "end": "2023-12-04",
+   "worlds": "all",
+   "title": "Winter Update 2023",
+   "description": "Tibia's Winter Update 2023 went live.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/extra_events.json",
+    "note": "tibiamaps.io blog post date (Tibia Winter Update 2023)",
+    "confidence": "medium"
+   }
+  },
+  {
+   "id": "xp-skill-2023-12-22-xp-skill-event",
+   "category": "xp-skill",
+   "start": "2023-12-22",
+   "end": "2023-12-26",
+   "worlds": "all",
+   "title": "XP/Skill Event",
+   "description": "More experience and skill points from hunting, offline training and exercise weapons.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "XP/Skill Event",
+    "calendarDays": [
+     "2023-12-22",
+     "2023-12-27"
+    ]
+   }
+  },
+  {
+   "id": "rapid-respawn-2024-02-02-rapid-respawn",
+   "category": "rapid-respawn",
+   "start": "2024-02-02",
+   "end": "2024-02-04",
+   "worlds": "all",
+   "title": "Rapid Respawn",
+   "description": "Monsters respawn at a faster rate.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "Rapid Respawn",
+    "calendarDays": [
+     "2024-02-02",
+     "2024-02-05"
+    ]
+   }
+  },
+  {
+   "id": "xp-skill-2024-03-01-xp-skill-event",
+   "category": "xp-skill",
+   "start": "2024-03-01",
+   "end": "2024-03-03",
+   "worlds": "all",
+   "title": "XP/Skill Event",
+   "description": "More experience and skill points from hunting, offline training and exercise weapons.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "XP/Skill Event",
+    "calendarDays": [
+     "2024-03-01",
+     "2024-03-04"
+    ]
+   }
+  },
+  {
+   "id": "xp-skill-2024-03-08-xp-skill-event",
+   "category": "xp-skill",
+   "start": "2024-03-08",
+   "end": "2024-03-10",
+   "worlds": "all",
+   "title": "XP/Skill Event",
+   "description": "More experience and skill points from hunting, offline training and exercise weapons.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "XP/Skill Event",
+    "calendarDays": [
+     "2024-03-08",
+     "2024-03-11"
+    ]
+   }
+  },
+  {
+   "id": "rapid-respawn-2024-04-05-rapid-respawn",
+   "category": "rapid-respawn",
+   "start": "2024-04-05",
+   "end": "2024-04-07",
+   "worlds": "all",
+   "title": "Rapid Respawn",
+   "description": "Monsters respawn at a faster rate.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "Rapid Respawn",
+    "calendarDays": [
+     "2024-04-05",
+     "2024-04-08"
+    ]
+   }
+  },
+  {
+   "id": "xp-skill-2024-05-03-xp-skill-event",
+   "category": "xp-skill",
+   "start": "2024-05-03",
+   "end": "2024-05-05",
+   "worlds": "all",
+   "title": "XP/Skill Event",
+   "description": "More experience and skill points from hunting, offline training and exercise weapons.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "XP/Skill Event",
+    "calendarDays": [
+     "2024-05-03",
+     "2024-05-06"
+    ]
+   }
+  },
+  {
+   "id": "xp-skill-2024-06-07-skill-event",
+   "category": "xp-skill",
+   "start": "2024-06-07",
+   "end": "2024-06-09",
+   "worlds": "all",
+   "title": "Skill Event",
+   "description": "More skill points for the event's duration.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "Skill Event",
+    "calendarDays": [
+     "2024-06-07",
+     "2024-06-10"
+    ]
+   }
+  },
+  {
+   "id": "rapid-respawn-2024-06-07-rapid-respawn",
+   "category": "rapid-respawn",
+   "start": "2024-06-07",
+   "end": "2024-06-09",
+   "worlds": "all",
+   "title": "Rapid Respawn",
+   "description": "Monsters respawn at a faster rate.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "Rapid Respawn",
+    "calendarDays": [
+     "2024-06-07",
+     "2024-06-10"
+    ]
+   }
+  },
+  {
+   "id": "update-2024-07-01-summer-update-2024",
+   "category": "update",
+   "start": "2024-07-01",
+   "end": "2024-07-01",
+   "worlds": "all",
+   "title": "Summer Update 2024",
+   "description": "Tibia's Summer Update 2024 went live.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/extra_events.json",
+    "note": "tibiamaps.io blog post date (Tibia Summer Update 2024)",
+    "confidence": "medium"
+   }
+  },
+  {
+   "id": "xp-skill-2024-07-12-xp-skill-event",
+   "category": "xp-skill",
+   "start": "2024-07-12",
+   "end": "2024-07-14",
+   "worlds": "all",
+   "title": "XP/Skill Event",
+   "description": "More experience and skill points from hunting, offline training and exercise weapons.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "XP/Skill Event",
+    "calendarDays": [
+     "2024-07-12",
+     "2024-07-15"
+    ]
+   }
+  },
+  {
+   "id": "rapid-respawn-2024-08-02-rapid-respawn",
+   "category": "rapid-respawn",
+   "start": "2024-08-02",
+   "end": "2024-08-04",
+   "worlds": "all",
+   "title": "Rapid Respawn",
+   "description": "Monsters respawn at a faster rate.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "Rapid Respawn",
+    "calendarDays": [
+     "2024-08-02",
+     "2024-08-05"
+    ]
+   }
+  },
+  {
+   "id": "xp-skill-2024-09-06-xp-skill-event",
+   "category": "xp-skill",
+   "start": "2024-09-06",
+   "end": "2024-09-08",
+   "worlds": "all",
+   "title": "XP/Skill Event",
+   "description": "More experience and skill points from hunting, offline training and exercise weapons.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "XP/Skill Event",
+    "calendarDays": [
+     "2024-09-06",
+     "2024-09-09"
+    ]
+   }
+  },
+  {
+   "id": "xp-skill-2024-10-25-xp-skill-event",
+   "category": "xp-skill",
+   "start": "2024-10-25",
+   "end": "2024-10-27",
+   "worlds": "all",
+   "title": "XP/Skill Event",
+   "description": "More experience and skill points from hunting, offline training and exercise weapons.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "XP/Skill Event",
+    "calendarDays": [
+     "2024-10-25",
+     "2024-10-28"
+    ]
+   }
+  },
+  {
+   "id": "update-2024-11-25-winter-update-2024",
+   "category": "update",
+   "start": "2024-11-25",
+   "end": "2024-11-25",
+   "worlds": "all",
+   "title": "Winter Update 2024",
+   "description": "Tibia's Winter Update 2024 went live.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/extra_events.json",
+    "note": "tibiamaps.io blog post date (Tibia Winter Update 2024)",
+    "confidence": "medium"
+   }
+  },
+  {
+   "id": "rapid-respawn-2024-12-06-rapid-respawn",
+   "category": "rapid-respawn",
+   "start": "2024-12-06",
+   "end": "2024-12-08",
+   "worlds": "all",
+   "title": "Rapid Respawn",
+   "description": "Monsters respawn at a faster rate.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "Rapid Respawn",
+    "calendarDays": [
+     "2024-12-06",
+     "2024-12-09"
+    ]
+   }
+  },
+  {
+   "id": "xp-skill-2024-12-23-xp-skill-event",
+   "category": "xp-skill",
+   "start": "2024-12-23",
+   "end": "2024-12-26",
+   "worlds": "all",
+   "title": "XP/Skill Event",
+   "description": "More experience and skill points from hunting, offline training and exercise weapons.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "XP/Skill Event",
+    "calendarDays": [
+     "2024-12-23",
+     "2024-12-27"
+    ]
+   }
+  },
+  {
+   "id": "economy-2025-01-14-tibia-token-launched",
+   "category": "economy",
+   "start": "2025-01-14",
+   "end": "2025-01-14",
+   "worlds": "all",
+   "title": "Tibia Token launched",
+   "description": "Tibia Tokens were introduced.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/extra_events.json",
+    "note": "tibia.com news id 8205 (via research report)",
+    "confidence": "high"
+   }
+  },
+  {
+   "id": "rapid-respawn-2025-02-07-rapid-respawn",
+   "category": "rapid-respawn",
+   "start": "2025-02-07",
+   "end": "2025-02-09",
+   "worlds": "all",
+   "title": "Rapid Respawn",
+   "description": "Monsters respawn at a faster rate.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "Rapid Respawn",
+    "calendarDays": [
+     "2025-02-07",
+     "2025-02-10"
+    ]
+   }
+  },
+  {
+   "id": "xp-skill-2025-03-07-xp-skill-event",
+   "category": "xp-skill",
+   "start": "2025-03-07",
+   "end": "2025-03-09",
+   "worlds": "all",
+   "title": "XP/Skill Event",
+   "description": "More experience and skill points from hunting, offline training and exercise weapons.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "XP/Skill Event",
+    "calendarDays": [
+     "2025-03-07",
+     "2025-03-10"
+    ]
+   }
+  },
+  {
+   "id": "update-2025-04-08-monk-released",
+   "category": "update",
+   "start": "2025-04-08",
+   "end": "2025-04-08",
+   "worlds": "all",
+   "title": "Monk released",
+   "description": "The Monk vocation became playable.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/extra_events.json",
+    "note": "cipsoft.com press: Tibia New Vocation Monk Now Playable (April 8, 2025)",
+    "confidence": "high"
+   }
+  },
+  {
+   "id": "economy-2025-04-15-tibia-token-fee-raised-to-8",
+   "category": "economy",
+   "start": "2025-04-15",
+   "end": "2025-04-15",
+   "worlds": "all",
+   "title": "Tibia Token fee raised to 8%",
+   "description": "The Tibia Token fee rose from 6% to 8%.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/extra_events.json",
+    "note": "tibia.com news id 8205 (via research report)",
+    "confidence": "high"
+   }
+  },
+  {
+   "id": "xp-skill-2025-05-02-xp-skill-event",
+   "category": "xp-skill",
+   "start": "2025-05-02",
+   "end": "2025-05-04",
+   "worlds": "all",
+   "title": "XP/Skill Event",
+   "description": "More experience and skill points from hunting, offline training and exercise weapons.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "XP/Skill Event",
+    "calendarDays": [
+     "2025-05-02",
+     "2025-05-05"
+    ]
+   }
+  },
+  {
+   "id": "world-created-2025-05-21-luzibra-opened",
+   "category": "world-created",
+   "start": "2025-05-21",
+   "end": "2025-05-21",
+   "worlds": [
+    "Luzibra"
+   ],
+   "title": "Luzibra opened",
+   "description": "Luzibra opened as a new game world.",
+   "source": {
+    "url": "https://www.tibia.com/news/?id=8385&subtopic=newsarchive",
+    "via": "reports/tc-cycle/README.md, lifecycle.py"
+   }
+  },
+  {
+   "id": "xp-skill-2025-06-06-skill-event",
+   "category": "xp-skill",
+   "start": "2025-06-06",
+   "end": "2025-06-08",
+   "worlds": "all",
+   "title": "Skill Event",
+   "description": "More skill points for the event's duration.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "Skill Event",
+    "calendarDays": [
+     "2025-06-06",
+     "2025-06-09"
+    ]
+   }
+  },
+  {
+   "id": "rapid-respawn-2025-06-06-rapid-respawn",
+   "category": "rapid-respawn",
+   "start": "2025-06-06",
+   "end": "2025-06-08",
+   "worlds": "all",
+   "title": "Rapid Respawn",
+   "description": "Monsters respawn at a faster rate.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "Rapid Respawn",
+    "calendarDays": [
+     "2025-06-06",
+     "2025-06-09"
+    ]
+   }
+  },
+  {
+   "id": "xp-skill-2025-07-04-xp-skill-event",
+   "category": "xp-skill",
+   "start": "2025-07-04",
+   "end": "2025-07-06",
+   "worlds": "all",
+   "title": "XP/Skill Event",
+   "description": "More experience and skill points from hunting, offline training and exercise weapons.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "XP/Skill Event",
+    "calendarDays": [
+     "2025-07-04",
+     "2025-07-07"
+    ]
+   }
+  },
+  {
+   "id": "update-2025-07-21-summer-update-2025",
+   "category": "update",
+   "start": "2025-07-21",
+   "end": "2025-07-21",
+   "worlds": "all",
+   "title": "Summer Update 2025",
+   "description": "Tibia's Summer Update 2025 went live.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/extra_events.json",
+    "note": "cipsoft.com: Tibia Summer Update 2025 Now Available (July 21, 2025)",
+    "confidence": "high"
+   }
+  },
+  {
+   "id": "economy-2025-07-29-transfer-block-lifted",
+   "category": "economy",
+   "start": "2025-07-29",
+   "end": "2025-07-29",
+   "worlds": [
+    "Ambra",
+    "Flamera",
+    "Wadira"
+   ],
+   "title": "Transfer block lifted",
+   "description": "Ambra, Flamera and Wadira accepted character transfers again from the server save.",
+   "source": {
+    "url": "https://www.tibia.com/news/?subtopic=newsarchive&id=8475",
+    "via": "reports/tc-cycle/review/source-evidence.json",
+    "note": "News of 2025-07-30: 'with yesterday's server save'."
+   }
+  },
+  {
+   "id": "store-2025-07-29-premium-restriction-lifted",
+   "category": "store",
+   "start": "2025-07-29",
+   "end": "2025-07-29",
+   "worlds": [
+    "Kalimera",
+    "Luzibra",
+    "Sonera"
+   ],
+   "title": "Premium restriction lifted",
+   "description": "Kalimera, Luzibra and Sonera opened to free accounts at the server save.",
+   "source": {
+    "url": "https://www.tibia.com/news/?subtopic=newsarchive&id=8475",
+    "via": "reports/tc-cycle/review/source-evidence.json",
+    "note": "News of 2025-07-30: 'with yesterday's server save'."
+   }
+  },
+  {
+   "id": "rapid-respawn-2025-08-01-rapid-respawn",
+   "category": "rapid-respawn",
+   "start": "2025-08-01",
+   "end": "2025-08-03",
+   "worlds": "all",
+   "title": "Rapid Respawn",
+   "description": "Monsters respawn at a faster rate.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "Rapid Respawn",
+    "calendarDays": [
+     "2025-08-01",
+     "2025-08-04"
+    ]
+   }
+  },
+  {
+   "id": "xp-skill-2025-09-05-xp-skill-event",
+   "category": "xp-skill",
+   "start": "2025-09-05",
+   "end": "2025-09-07",
+   "worlds": "all",
+   "title": "XP/Skill Event",
+   "description": "More experience and skill points from hunting, offline training and exercise weapons.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "XP/Skill Event",
+    "calendarDays": [
+     "2025-09-05",
+     "2025-09-08"
+    ]
+   }
+  },
+  {
+   "id": "world-created-2025-11-06-terribra-opened",
+   "category": "world-created",
+   "start": "2025-11-06",
+   "end": "2025-11-06",
+   "worlds": [
+    "Terribra"
+   ],
+   "title": "Terribra opened",
+   "description": "Terribra opened as a new game world, formed by the merge of Jacabra and Obscubra.",
+   "source": {
+    "url": "https://www.tibia.com/news/?id=8515&subtopic=newsarchive",
+    "via": "reports/tc-cycle/README.md, lifecycle.py"
+   }
+  },
+  {
+   "id": "world-merge-2025-11-06-blumera",
+   "category": "world-merge",
+   "start": "2025-11-06",
+   "end": "2025-11-06",
+   "worlds": [
+    "Blumera",
+    "Esmera",
+    "Ulera",
+    "Vitera"
+   ],
+   "title": "Esmera, Ulera and Vitera merged into Blumera",
+   "description": "Esmera, Ulera and Vitera went offline at the server save and joined Blumera.",
+   "merge": {
+    "from": [
+     "Esmera",
+     "Ulera",
+     "Vitera"
+    ],
+    "into": "Blumera",
+    "status": "completed"
+   },
+   "source": {
+    "file": "data/market-history/inputs/retired-worlds.json",
+    "urls": [
+     "https://tibia.fandom.com/wiki/Esmera",
+     "https://tibia.fandom.com/wiki/Ulera",
+     "https://tibia.fandom.com/wiki/Vitera"
+    ]
+   }
+  },
+  {
+   "id": "world-merge-2025-11-06-citra",
+   "category": "world-merge",
+   "start": "2025-11-06",
+   "end": "2025-11-06",
+   "worlds": [
+    "Citra",
+    "Jaguna",
+    "Yara"
+   ],
+   "title": "Jaguna and Yara merged into Citra",
+   "description": "Jaguna and Yara went offline at the server save and joined Citra.",
+   "merge": {
+    "from": [
+     "Jaguna",
+     "Yara"
+    ],
+    "into": "Citra",
+    "status": "completed"
+   },
+   "source": {
+    "file": "data/market-history/inputs/retired-worlds.json",
+    "urls": [
+     "https://tibia.fandom.com/wiki/Jaguna",
+     "https://tibia.fandom.com/wiki/Yara"
+    ]
+   }
+  },
+  {
+   "id": "world-merge-2025-11-06-eclipta",
+   "category": "world-merge",
+   "start": "2025-11-06",
+   "end": "2025-11-06",
+   "worlds": [
+    "Divina",
+    "Eclipta",
+    "Malivora"
+   ],
+   "title": "Divina and Malivora merged into Eclipta",
+   "description": "Divina and Malivora went offline at the server save and joined Eclipta.",
+   "merge": {
+    "from": [
+     "Divina",
+     "Malivora"
+    ],
+    "into": "Eclipta",
+    "status": "completed"
+   },
+   "source": {
+    "file": "data/market-history/inputs/retired-worlds.json",
+    "urls": [
+     "https://tibia.fandom.com/wiki/Divina",
+     "https://tibia.fandom.com/wiki/Malivora"
+    ]
+   }
+  },
+  {
+   "id": "world-merge-2025-11-06-kalanta",
+   "category": "world-merge",
+   "start": "2025-11-06",
+   "end": "2025-11-06",
+   "worlds": [
+    "Kalanta",
+    "Wadira",
+    "Zephyra"
+   ],
+   "title": "Wadira and Zephyra merged into Kalanta",
+   "description": "Wadira and Zephyra went offline at the server save and joined Kalanta.",
+   "merge": {
+    "from": [
+     "Wadira",
+     "Zephyra"
+    ],
+    "into": "Kalanta",
+    "status": "completed"
+   },
+   "source": {
+    "file": "data/market-history/inputs/retired-worlds.json",
+    "urls": [
+     "https://tibia.fandom.com/wiki/Wadira",
+     "https://tibia.fandom.com/wiki/Zephyra"
+    ]
+   }
+  },
+  {
+   "id": "world-merge-2025-11-06-monstera",
+   "category": "world-merge",
+   "start": "2025-11-06",
+   "end": "2025-11-06",
+   "worlds": [
+    "Gravitera",
+    "Monstera",
+    "Wildera"
+   ],
+   "title": "Gravitera and Wildera merged into Monstera",
+   "description": "Gravitera and Wildera went offline at the server save and joined Monstera.",
+   "merge": {
+    "from": [
+     "Gravitera",
+     "Wildera"
+    ],
+    "into": "Monstera",
+    "status": "completed"
+   },
+   "source": {
+    "file": "data/market-history/inputs/retired-worlds.json",
+    "urls": [
+     "https://tibia.fandom.com/wiki/Gravitera",
+     "https://tibia.fandom.com/wiki/Wildera"
+    ]
+   }
+  },
+  {
+   "id": "world-merge-2025-11-06-sombra",
+   "category": "world-merge",
+   "start": "2025-11-06",
+   "end": "2025-11-06",
+   "worlds": [
+    "Ambra",
+    "Quebra",
+    "Sombra"
+   ],
+   "title": "Ambra and Quebra merged into Sombra",
+   "description": "Ambra and Quebra went offline at the server save and joined Sombra.",
+   "merge": {
+    "from": [
+     "Ambra",
+     "Quebra"
+    ],
+    "into": "Sombra",
+    "status": "completed"
+   },
+   "source": {
+    "file": "data/market-history/inputs/retired-worlds.json",
+    "urls": [
+     "https://tibia.fandom.com/wiki/Ambra",
+     "https://tibia.fandom.com/wiki/Quebra"
+    ]
+   }
+  },
+  {
+   "id": "world-merge-2025-11-06-tempestera",
+   "category": "world-merge",
+   "start": "2025-11-06",
+   "end": "2025-11-06",
+   "worlds": [
+    "Fibera",
+    "Flamera",
+    "Temera",
+    "Tempestera"
+   ],
+   "title": "Fibera, Flamera and Temera merged into Tempestera",
+   "description": "Fibera, Flamera and Temera went offline at the server save and joined Tempestera.",
+   "merge": {
+    "from": [
+     "Fibera",
+     "Flamera",
+     "Temera"
+    ],
+    "into": "Tempestera",
+    "status": "completed"
+   },
+   "source": {
+    "file": "data/market-history/inputs/retired-worlds.json",
+    "urls": [
+     "https://tibia.fandom.com/wiki/Fibera",
+     "https://tibia.fandom.com/wiki/Flamera",
+     "https://tibia.fandom.com/wiki/Temera"
+    ]
+   }
+  },
+  {
+   "id": "world-merge-2025-11-06-terribra",
+   "category": "world-merge",
+   "start": "2025-11-06",
+   "end": "2025-11-06",
+   "worlds": [
+    "Jacabra",
+    "Obscubra",
+    "Terribra"
+   ],
+   "title": "Jacabra and Obscubra merged into Terribra",
+   "description": "Jacabra and Obscubra went offline at the server save and joined Terribra.",
+   "merge": {
+    "from": [
+     "Jacabra",
+     "Obscubra"
+    ],
+    "into": "Terribra",
+    "status": "completed"
+   },
+   "source": {
+    "file": "data/market-history/inputs/retired-worlds.json",
+    "urls": [
+     "https://tibia.fandom.com/wiki/Jacabra",
+     "https://tibia.fandom.com/wiki/Obscubra"
+    ]
+   }
+  },
+  {
+   "id": "world-merge-2025-11-06-xymera",
+   "category": "world-merge",
+   "start": "2025-11-06",
+   "end": "2025-11-06",
+   "worlds": [
+    "Runera",
+    "Vandera",
+    "Xymera"
+   ],
+   "title": "Runera and Vandera merged into Xymera",
+   "description": "Runera and Vandera went offline at the server save and joined Xymera.",
+   "merge": {
+    "from": [
+     "Runera",
+     "Vandera"
+    ],
+    "into": "Xymera",
+    "status": "completed"
+   },
+   "source": {
+    "file": "data/market-history/inputs/retired-worlds.json",
+    "urls": [
+     "https://tibia.fandom.com/wiki/Runera",
+     "https://tibia.fandom.com/wiki/Vandera"
+    ]
+   }
+  },
+  {
+   "id": "xp-skill-2025-11-07-xp-skill-event",
+   "category": "xp-skill",
+   "start": "2025-11-07",
+   "end": "2025-11-09",
+   "worlds": "all",
+   "title": "XP/Skill Event",
+   "description": "More experience and skill points from hunting, offline training and exercise weapons.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "XP/Skill Event",
+    "calendarDays": [
+     "2025-11-07",
+     "2025-11-10"
+    ]
+   }
+  },
+  {
+   "id": "update-2025-11-24-winter-update-2025",
+   "category": "update",
+   "start": "2025-11-24",
+   "end": "2025-11-24",
+   "worlds": "all",
+   "title": "Winter Update 2025",
+   "description": "Tibia's Winter Update 2025 went live.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/extra_events.json",
+    "note": "cipsoft.com: Tibia Winter Update 2025 Now Available (November 24, 2025)",
+    "confidence": "high"
+   }
+  },
+  {
+   "id": "rapid-respawn-2025-12-05-rapid-respawn",
+   "category": "rapid-respawn",
+   "start": "2025-12-05",
+   "end": "2025-12-07",
+   "worlds": "all",
+   "title": "Rapid Respawn",
+   "description": "Monsters respawn at a faster rate.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "Rapid Respawn",
+    "calendarDays": [
+     "2025-12-05",
+     "2025-12-08"
+    ]
+   }
+  },
+  {
+   "id": "xp-skill-2025-12-23-xp-skill-event",
+   "category": "xp-skill",
+   "start": "2025-12-23",
+   "end": "2025-12-28",
+   "worlds": "all",
+   "title": "XP/Skill Event",
+   "description": "More experience and skill points from hunting, offline training and exercise weapons.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "XP/Skill Event",
+    "calendarDays": [
+     "2025-12-23",
+     "2025-12-29"
+    ]
+   }
+  },
+  {
+   "id": "rapid-respawn-2026-02-06-rapid-respawn",
+   "category": "rapid-respawn",
+   "start": "2026-02-06",
+   "end": "2026-02-08",
+   "worlds": "all",
+   "title": "Rapid Respawn",
+   "description": "Monsters respawn at a faster rate.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "Rapid Respawn",
+    "calendarDays": [
+     "2026-02-06",
+     "2026-02-09"
+    ]
+   }
+  },
+  {
+   "id": "xp-skill-2026-03-06-xp-skill-event",
+   "category": "xp-skill",
+   "start": "2026-03-06",
+   "end": "2026-03-08",
+   "worlds": "all",
+   "title": "XP/Skill Event",
+   "description": "More experience and skill points from hunting, offline training and exercise weapons.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "XP/Skill Event",
+    "calendarDays": [
+     "2026-03-06",
+     "2026-03-09"
+    ]
+   }
+  },
+  {
+   "id": "xp-skill-2026-05-01-xp-skill-event",
+   "category": "xp-skill",
+   "start": "2026-05-01",
+   "end": "2026-05-03",
+   "worlds": "all",
+   "title": "XP/Skill Event",
+   "description": "More experience and skill points from hunting, offline training and exercise weapons.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "XP/Skill Event",
+    "calendarDays": [
+     "2026-05-01",
+     "2026-05-04"
+    ]
+   }
+  },
+  {
+   "id": "world-created-2026-05-20-floribra-opened",
+   "category": "world-created",
+   "start": "2026-05-20",
+   "end": "2026-05-20",
+   "worlds": [
+    "Floribra"
+   ],
+   "title": "Floribra opened",
+   "description": "Floribra opened as a new game world.",
+   "source": {
+    "url": "https://www.tibia.com/news/?id=8767&subtopic=newsarchive",
+    "via": "reports/tc-cycle/README.md, lifecycle.py"
+   }
+  },
+  {
+   "id": "xp-skill-2026-06-05-skill-event",
+   "category": "xp-skill",
+   "start": "2026-06-05",
+   "end": "2026-06-07",
+   "worlds": "all",
+   "title": "Skill Event",
+   "description": "More skill points for the event's duration.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "Skill Event",
+    "calendarDays": [
+     "2026-06-05",
+     "2026-06-08"
+    ]
+   }
+  },
+  {
+   "id": "rapid-respawn-2026-06-05-rapid-respawn",
+   "category": "rapid-respawn",
+   "start": "2026-06-05",
+   "end": "2026-06-07",
+   "worlds": "all",
+   "title": "Rapid Respawn",
+   "description": "Monsters respawn at a faster rate.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "Rapid Respawn",
+    "calendarDays": [
+     "2026-06-05",
+     "2026-06-08"
+    ]
+   }
+  },
+  {
+   "id": "economy-2026-06-30-transfers-opened",
+   "category": "economy",
+   "start": "2026-06-30",
+   "end": "2026-06-30",
+   "worlds": [
+    "Luzibra"
+   ],
+   "title": "Transfers opened",
+   "description": "Luzibra opened to character transfers.",
+   "source": {
+    "url": "https://www.tibia.com/news/?id=8866&subtopic=newsarchive",
+    "via": "reports/tc-cycle/README.md, lifecycle.py"
+   }
+  },
+  {
+   "id": "xp-skill-2026-07-03-xp-skill-event",
+   "category": "xp-skill",
+   "start": "2026-07-03",
+   "end": "2026-07-05",
+   "worlds": "all",
+   "title": "XP/Skill Event",
+   "description": "More experience and skill points from hunting, offline training and exercise weapons.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "XP/Skill Event",
+    "calendarDays": [
+     "2026-07-03",
+     "2026-07-06"
+    ]
+   }
+  },
+  {
+   "id": "update-2026-07-13-summer-update-2026",
+   "category": "update",
+   "start": "2026-07-13",
+   "end": "2026-07-13",
+   "worlds": "all",
+   "title": "Summer Update 2026",
+   "description": "Tibia's Summer Update 2026 went live.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/extra_events.json",
+    "note": "cipsoft.com: Tibia Summer Update 2026 Now Available (13 July 2026)",
+    "confidence": "high"
+   }
+  },
+  {
+   "id": "rapid-respawn-2026-08-07-rapid-respawn",
+   "category": "rapid-respawn",
+   "start": "2026-08-07",
+   "end": "2026-08-09",
+   "worlds": "all",
+   "title": "Rapid Respawn",
+   "description": "Monsters respawn at a faster rate.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "Rapid Respawn",
+    "calendarDays": [
+     "2026-08-07",
+     "2026-08-10"
+    ]
+   }
+  },
+  {
+   "id": "xp-skill-2026-09-04-xp-skill-event",
+   "category": "xp-skill",
+   "start": "2026-09-04",
+   "end": "2026-09-06",
+   "worlds": "all",
+   "title": "XP/Skill Event",
+   "description": "More experience and skill points from hunting, offline training and exercise weapons.",
+   "source": {
+    "file": "reports/tc-cycle/source-package/events_intervals.json",
+    "event": "XP/Skill Event",
+    "calendarDays": [
+     "2026-09-04",
+     "2026-09-07"
+    ]
+   }
+  },
+  {
+   "id": "world-merge-2026-09-21-deslumbra-announced",
+   "category": "world-merge",
+   "start": "2026-09-21",
+   "end": "2026-09-21",
+   "worlds": [
+    "Etebra",
+    "Luzibra",
+    "Yubra"
+   ],
+   "title": "Merge announced: Etebra, Luzibra and Yubra into Deslumbra",
+   "description": "Etebra, Luzibra and Yubra will join Deslumbra, no earlier than 2026-10-22; the date was not yet confirmed.",
+   "merge": {
+    "from": [
+     "Etebra",
+     "Luzibra",
+     "Yubra"
+    ],
+    "into": "Deslumbra",
+    "status": "announced",
+    "notBefore": "2026-10-22"
+   },
+   "source": {
+    "url": "https://www.tibia.com/news/?subtopic=newsarchive&id=8968",
+    "file": "reports/tc-cycle/mergers.json"
+   }
+  }
+ ]
+}
