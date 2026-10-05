@@ -190,9 +190,21 @@ Verification: 47 JavaScript tests passed; 58 Python tools tests passed, includin
 All 34 report Python tests passed. `validate.py --reproduce` verified 40 worlds, 386 research Offers captures, 4,160 world/side/week forecasts, source hashes/reconciliation, temporal bounds, model/fee arithmetic, robust sensitivity results, append-only forecasts and byte-identical complementary output. Node premium checks passed 204 comparisons; findings and runtime compatibility checks passed. Actual EN/PT reports render all 40 worlds, including Unebra, and four Statistics side rows with raw transaction counters, functional controls and responsive layouts. All 71 exhibits per language rasterized and exported at 2x, including complete table contents and actual PNG download. The site package was regenerated; all 16 generated/public outputs passed the source-identifier/privacy scan, while frozen historical inputs and the two-entry forecast ledger remain unchanged.
 
 
+### October 5 screenshot update
+
+The canonical export now contains 544 captures across 40 worlds: 466 Offers,
+78 Statistics snapshots and 8,193 individual offer observations. Its bytes match
+`data/observations.json`. The 52 new captures are the 2026-10-04 and 2026-10-05
+screenshots; all 492 previous captures, clocks, worlds and offer identities are
+preserved. The analysis was regenerated under the pinned `requirements.txt`
+versions: 38 Python tests, `validate.py --reproduce` (40 worlds, 464 research
+captures, 4,160 world/side/week forecasts) and the report checks pass, after which
+`ledger.py` froze the 2026-10-05 cutoff (five frozen forecasts, no scored weeks)
+and `validate.py` confirmed the append-only chain.
+
 ### October 4 screenshot update
 
-The canonical export now contains 492 captures across 40 worlds: 440 Offers,
+That export contained 492 captures across 40 worlds: 440 Offers,
 52 Statistics snapshots and 7,678 individual offer observations. Its bytes match
 `data/observations.json`. The 25 new captures are the 2026-10-04 screenshots; all
 467 previous captures, clocks, worlds and offer identities are preserved. The

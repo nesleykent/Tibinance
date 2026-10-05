@@ -55,16 +55,20 @@ try {
   const sell=scenario('Antica','sell'),buy=scenario('Antica','buy');
   await page.mouse.move(5,5);
   const [lastDay,central,low,high]=sell.at(-1);
-  assert.equal(await text('#projectionLegend'),`Projection ${n.format(central)} band ${n.format(low)} to ${n.format(high)} on ${lastDay}`);
-  assert.match(await page.getAttribute('#chart','aria-label'),new RegExp(`Projection from the last observation: Research offer scenario to ${lastDay}, central ${n.format(central)}, heuristic stress band ${n.format(low)} to ${n.format(high)}\\.$`));
+  // A stale Antica quote limits its confidence; the legend and label then say so.
+  const limited=dataset.worlds.find(w=>w.world==='Antica').stale;
+  assert.equal(await text('#projectionLegend'),`Projection ${n.format(central)} band ${n.format(low)} to ${n.format(high)} on ${lastDay}${limited?' limited confidence':''}`);
+  assert.match(await page.getAttribute('#chart','aria-label'),new RegExp(`Projection from the last observation: Research offer scenario to ${lastDay}, central ${n.format(central)}, heuristic stress band ${n.format(low)} to ${n.format(high)}${limited?', limited confidence \\(stale quote\\)':''}\\.$`));
 
   // ---- The boundary: the last observed day reads the observation; the next day reads the first projected week.
   let seen=new Map();
-  for (let f=0.40;f<=0.60;f+=0.002) { const d=await dayAt(f); if (!seen.has(d)) seen.set(d,await legend()); }
+  for (let f=0.40;f<=0.60;f+=0.0005) { const d=await dayAt(f); if (!seen.has(d)) seen.set(d,await legend()); }
   assert.ok(seen.get(anchorDay).startsWith(`${anchorDay} Best Sell Offer ${n.format(antica.sell)} `),'the anchor day is the last observation');
-  const next=[...seen.keys()].filter(d=>d>anchorDay).sort()[0];
   const [w1,c1,l1,h1]=sell[0];
-  assert.equal(seen.get(next),`${next} Projection ${n.format(c1)} band ${n.format(l1)} to ${n.format(h1)} week to ${w1}`);
+  // When the Research cutoff falls after the anchor, the days up to it are in no projected week.
+  for (const d of [...seen.keys()].filter(d=>d>anchorDay && d<addDays(w1,-6))) assert.ok(!seen.get(d).includes(' week to '),`${d} reads no week`);
+  const next=[...seen.keys()].filter(d=>d>=addDays(w1,-6)).sort()[0];
+  assert.equal(seen.get(next),`${next} Projection ${n.format(c1)} band ${n.format(l1)} to ${n.format(h1)} week to ${w1}${limited?" Conditional: stale quote":""}`);
   assert.ok(next<=w1,'the first days after the anchor belong to the first projected week');
 
   // ---- Horizon and range: the window ahead matches the range behind, up to the 52 weeks.
@@ -84,7 +88,7 @@ try {
   await page.click('#side button[data-side="buy"]');
   await page.mouse.move(5,5);
   await page.waitForTimeout(100);
-  assert.equal(await text('#projectionLegend'),`Projection ${n.format(buy.at(-1)[1])} band ${n.format(buy.at(-1)[2])} to ${n.format(buy.at(-1)[3])} on ${lastDay}`);
+  assert.equal(await text('#projectionLegend'),`Projection ${n.format(buy.at(-1)[1])} band ${n.format(buy.at(-1)[2])} to ${n.format(buy.at(-1)[3])} on ${lastDay}${limited?" limited confidence":""}`);
   await page.click('#side button[data-side="sell"]');
 
   // ---- Hidden again: the market series, the range and the address are as they were; the window ends with history.
@@ -182,7 +186,7 @@ try {
   await open('Antica','3M');
   assert.equal(await toggle.isVisible(),true);
   assert.equal(await toggle.getAttribute('aria-pressed'),'true');
-  assert.match(await text('#projectionLegend'),new RegExp(`^Projection [\\d,]+ band [\\d,]+ to [\\d,]+ on ${horizonEnd}$`));
+  assert.match(await text('#projectionLegend'),new RegExp(`^Projection [\\d,]+ band [\\d,]+ to [\\d,]+ on ${horizonEnd}( limited confidence)?$`));
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth),0);
   await page.setViewportSize({width:1440,height:900});
 

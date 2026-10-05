@@ -924,15 +924,28 @@ node tests/tables-browser.mjs
 `TIBINANCE_OFFERS_SAMPLE` enables the paired real Offers regression. These checks
 use isolated browser storage and API fixtures. No test state is imported into
 canonical data. The historical rebuild and subsequent Apple Vision review are
-complete: its 390 accepted captures are preserved; the latest screenshot update has 492 accepted captures across 40 worlds, with no unresolved review cases.
+complete: its 390 accepted captures are preserved; the latest screenshot update has 544 accepted captures across 40 worlds, with no unresolved review cases.
 The anonymous [review audit](../data/rebuild-vision-review.json) records recoveries and
 per-world coverage; [validation](../data/rebuild-validation.json) reconciles the archive.
 The progress ledger is in `PROGRESS.md`.
 
 
+### October 5 screenshot update
+
+The current canonical data contains 544 captures (466 Offers and 78 Statistics),
+8,193 offer observations and 5,945 offer identities across 40 worlds. The update
+adds the 52 new Tibia Coins captures (26 Offers, 26 Statistics), two from
+2026-10-04 and 50 from 2026-10-05, and leaves every one of the 492 earlier
+captures byte-identical, offer identities included: the run reused the 528
+checkpointed results and finalized against the previous canonical dataset. The
+archive now reconciles to 581 unique eligible images plus 40 duplicate copies:
+544 ready, 29 no-Market, three other items and five historical manual
+exclusions; no review or runtime failures. The Markets history, its audits, the
+Research and the Markets projections were rebuilt from it.
+
 ### October 4 screenshot update
 
-The current canonical data contains 492 captures (440 Offers and 52 Statistics),
+The 2026-10-04 update brought the data to 492 captures (440 Offers and 52 Statistics),
 7,678 offer observations and 5,525 offer identities across 40 worlds. The update
 adds the 25 Tibia Coins captures of 2026-10-04 (13 Offers, 12 Statistics) and
 leaves every one of the 467 earlier captures byte-identical, offer identities

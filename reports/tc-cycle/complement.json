@@ -1,5 +1,5 @@
 {
- "asOf": "2026-10-04",
+ "asOf": "2026-10-05",
  "context": {
   "captureVsYearAgo": [
    {
@@ -1256,9 +1256,9 @@
     "world": "Gentebra",
     "side": "ask",
     "n": 85,
-    "weeklyStdPct": 1.885926135474808,
+    "weeklyStdPct": 1.884394178104519,
     "anticaSameWeeksStdPct": 1.616726329355335,
-    "ratio": 1.1665091990100858,
+    "ratio": 1.1655616314827482,
     "medianDaysPerWeek": 2.0
    },
    {
@@ -1607,9 +1607,9 @@
     "world": "Gentebra",
     "side": "bid",
     "n": 85,
-    "weeklyStdPct": 1.8261923588227515,
+    "weeklyStdPct": 1.909955775660583,
     "anticaSameWeeksStdPct": 2.297285886662337,
-    "ratio": 0.7949347399143151,
+    "ratio": 0.8313966436434713,
     "medianDaysPerWeek": 2.0
    },
    {
@@ -2491,22 +2491,22 @@
    {
     "world": "Antica",
     "historyMedianPct": 1.635200162165068,
-    "recentMedianPct": 1.3273287508888343,
-    "shareRecentAtLeastNow": 0.020134228187919462,
-    "recentN": 149,
+    "recentMedianPct": 1.3276714439067583,
+    "shareRecentAtLeastNow": 0.02027027027027027,
+    "recentN": 148,
     "nowPct": 3.5857126343775247,
     "nowDate": "2026-10-04",
     "n": 1208
    },
    {
     "world": "Astera",
-    "historyMedianPct": 3.4970465723766275,
-    "recentMedianPct": 2.744050509956286,
-    "shareRecentAtLeastNow": 0.025974025974025976,
-    "recentN": 77,
-    "nowPct": 9.390852124984017,
-    "nowDate": "2026-10-03",
-    "n": 305
+    "historyMedianPct": 3.4789232676813606,
+    "recentMedianPct": 2.764304871134388,
+    "shareRecentAtLeastNow": 0.46153846153846156,
+    "recentN": 78,
+    "nowPct": 2.831032301685965,
+    "nowDate": "2026-10-05",
+    "n": 306
    },
    {
     "world": "Belobra",
@@ -2530,13 +2530,13 @@
    },
    {
     "world": "Celebra",
-    "historyMedianPct": 2.8419526341227686,
-    "recentMedianPct": 2.755528842641275,
-    "shareRecentAtLeastNow": 0.38095238095238093,
-    "recentN": 42,
-    "nowPct": 3.1847545219638285,
-    "nowDate": "2026-10-03",
-    "n": 81
+    "historyMedianPct": 2.8293431829391427,
+    "recentMedianPct": 2.6691050511597814,
+    "shareRecentAtLeastNow": 0.9767441860465116,
+    "recentN": 43,
+    "nowPct": 1.3164458131818102,
+    "nowDate": "2026-10-05",
+    "n": 82
    },
    {
     "world": "Collabra",
@@ -2560,13 +2560,13 @@
    },
    {
     "world": "Dracobra",
-    "historyMedianPct": 8.207528575490858,
-    "recentMedianPct": 7.701362602560358,
-    "shareRecentAtLeastNow": 0.9615384615384616,
-    "recentN": 26,
-    "nowPct": 4.352623835213343,
-    "nowDate": "2026-10-03",
-    "n": 32
+    "historyMedianPct": 8.032737889969422,
+    "recentMedianPct": 7.643906407005119,
+    "shareRecentAtLeastNow": 0.5925925925925926,
+    "recentN": 27,
+    "nowPct": 7.417457077680389,
+    "nowDate": "2026-10-05",
+    "n": 33
    },
    {
     "world": "Etebra",
@@ -2580,93 +2580,93 @@
    },
    {
     "world": "Ferobra",
-    "historyMedianPct": 3.2004324908771475,
-    "recentMedianPct": 3.368696468405008,
-    "shareRecentAtLeastNow": 0.2826086956521739,
+    "historyMedianPct": 3.1972315103565627,
+    "recentMedianPct": 3.2766604563408688,
+    "shareRecentAtLeastNow": 0.5652173913043478,
     "recentN": 46,
-    "nowPct": 4.478155063794942,
-    "nowDate": "2026-10-03",
-    "n": 97
+    "nowPct": 3.1940305298359783,
+    "nowDate": "2026-10-05",
+    "n": 98
    },
    {
     "world": "Floribra",
-    "historyMedianPct": 9.395973154362414,
-    "recentMedianPct": 9.395973154362414,
-    "shareRecentAtLeastNow": 0.6363636363636364,
-    "recentN": 33,
-    "nowPct": 8.727272727272728,
-    "nowDate": "2026-10-03",
-    "n": 33
+    "historyMedianPct": 9.40440958756183,
+    "recentMedianPct": 9.40440958756183,
+    "shareRecentAtLeastNow": 0.17647058823529413,
+    "recentN": 34,
+    "nowPct": 12.213538216982379,
+    "nowDate": "2026-10-05",
+    "n": 34
    },
    {
     "world": "Gentebra",
-    "historyMedianPct": 2.5755527662450484,
-    "recentMedianPct": 2.668077238332023,
-    "shareRecentAtLeastNow": 0.2413793103448276,
-    "recentN": 58,
-    "nowPct": 3.8295507971107368,
-    "nowDate": "2026-10-03",
-    "n": 181
+    "historyMedianPct": 2.5842855053750724,
+    "recentMedianPct": 2.743136232158949,
+    "shareRecentAtLeastNow": 0.03389830508474576,
+    "recentN": 59,
+    "nowPct": 6.2406240624062415,
+    "nowDate": "2026-10-04",
+    "n": 182
    },
    {
     "world": "Honbra",
-    "historyMedianPct": 3.3130357436836233,
-    "recentMedianPct": 3.511837789960026,
-    "shareRecentAtLeastNow": 0.05454545454545454,
-    "recentN": 55,
-    "nowPct": 5.841010970198002,
-    "nowDate": "2026-10-03",
-    "n": 162
+    "historyMedianPct": 3.3074019517584263,
+    "recentMedianPct": 3.467694961863627,
+    "shareRecentAtLeastNow": 0.5892857142857143,
+    "recentN": 56,
+    "nowPct": 3.3074019517584263,
+    "nowDate": "2026-10-05",
+    "n": 163
    },
    {
     "world": "Inabra",
-    "historyMedianPct": 2.632609806728209,
-    "recentMedianPct": 3.051928743275756,
-    "shareRecentAtLeastNow": 0.06349206349206349,
-    "recentN": 63,
-    "nowPct": 6.500425792082454,
-    "nowDate": "2026-10-03",
-    "n": 342
+    "historyMedianPct": 2.636706065722816,
+    "recentMedianPct": 3.122535746384736,
+    "shareRecentAtLeastNow": 0.140625,
+    "recentN": 64,
+    "nowPct": 4.854346990892444,
+    "nowDate": "2026-10-05",
+    "n": 343
    },
    {
     "world": "Issobra",
-    "historyMedianPct": 4.213241514414068,
-    "recentMedianPct": 4.280590497972758,
-    "shareRecentAtLeastNow": 0.03225806451612903,
-    "recentN": 31,
-    "nowPct": 8.331861533027196,
-    "nowDate": "2026-10-03",
-    "n": 64
+    "historyMedianPct": 4.246226586652114,
+    "recentMedianPct": 4.361373719174044,
+    "shareRecentAtLeastNow": 0.3125,
+    "recentN": 32,
+    "nowPct": 5.1170117011701155,
+    "nowDate": "2026-10-05",
+    "n": 65
    },
    {
     "world": "Kalanta",
-    "historyMedianPct": 5.124270936535457,
-    "recentMedianPct": 4.048758074542558,
-    "shareRecentAtLeastNow": 0.18518518518518517,
-    "recentN": 27,
-    "nowPct": 6.054829979997645,
-    "nowDate": "2026-10-03",
-    "n": 46
+    "historyMedianPct": 5.134702587356632,
+    "recentMedianPct": 4.134036358143556,
+    "shareRecentAtLeastNow": 0.10714285714285714,
+    "recentN": 28,
+    "nowPct": 7.765889605328424,
+    "nowDate": "2026-10-05",
+    "n": 47
    },
    {
     "world": "Kalibra",
-    "historyMedianPct": 2.4822240437460454,
+    "historyMedianPct": 2.4764204674898593,
     "recentMedianPct": 2.567580660788682,
-    "shareRecentAtLeastNow": 0.28,
+    "shareRecentAtLeastNow": 0.6,
     "recentN": 75,
-    "nowPct": 3.196625059800806,
-    "nowDate": "2026-10-03",
-    "n": 120
+    "nowPct": 2.112155224919521,
+    "nowDate": "2026-10-05",
+    "n": 121
    },
    {
     "world": "Lobera",
-    "historyMedianPct": 3.2390406969382335,
+    "historyMedianPct": 3.24378443593758,
     "recentMedianPct": 3.468007165967002,
-    "shareRecentAtLeastNow": 0.12727272727272726,
+    "shareRecentAtLeastNow": 0.18181818181818182,
     "recentN": 55,
-    "nowPct": 5.762488529141862,
-    "nowDate": "2026-10-03",
-    "n": 249
+    "nowPct": 4.864396458850528,
+    "nowDate": "2026-10-05",
+    "n": 250
    },
    {
     "world": "Luminera",
@@ -2690,23 +2690,23 @@
    },
    {
     "world": "Nefera",
-    "historyMedianPct": 2.803827751196175,
-    "recentMedianPct": 2.467985474006118,
-    "shareRecentAtLeastNow": 0.22641509433962265,
-    "recentN": 53,
-    "nowPct": 3.728448275862073,
-    "nowDate": "2026-10-03",
-    "n": 417
+    "historyMedianPct": 2.80705520396845,
+    "recentMedianPct": 2.4792403427588705,
+    "shareRecentAtLeastNow": 0.2222222222222222,
+    "recentN": 54,
+    "nowPct": 3.8055286651608067,
+    "nowDate": "2026-10-05",
+    "n": 418
    },
    {
     "world": "Nevia",
-    "historyMedianPct": 2.806690115569588,
+    "historyMedianPct": 2.808497282609151,
     "recentMedianPct": 2.684112657306159,
-    "shareRecentAtLeastNow": 0.021739130434782608,
+    "shareRecentAtLeastNow": 0.06521739130434782,
     "recentN": 92,
-    "nowPct": 6.4517629546934625,
-    "nowDate": "2026-10-03",
-    "n": 305
+    "nowPct": 5.1628388554216915,
+    "nowDate": "2026-10-05",
+    "n": 306
    },
    {
     "world": "Ombra",
@@ -2721,39 +2721,39 @@
    {
     "world": "Ourobra",
     "historyMedianPct": 3.084139436956801,
-    "recentMedianPct": 3.662963966404764,
-    "shareRecentAtLeastNow": 0.10344827586206896,
-    "recentN": 87,
+    "recentMedianPct": 3.6483958921665005,
+    "shareRecentAtLeastNow": 0.10465116279069768,
+    "recentN": 86,
     "nowPct": 5.696526834049953,
     "nowDate": "2026-10-04",
     "n": 204
    },
    {
     "world": "Pacera",
-    "historyMedianPct": 3.296089385474865,
-    "recentMedianPct": 3.25968217325886,
-    "shareRecentAtLeastNow": 0.7959183673469388,
-    "recentN": 49,
-    "nowPct": 2.1727286595331963,
-    "nowDate": "2026-10-03",
-    "n": 143
+    "historyMedianPct": 3.2778857793668625,
+    "recentMedianPct": 3.2499589133804685,
+    "shareRecentAtLeastNow": 0.58,
+    "recentN": 50,
+    "nowPct": 2.8612515067566124,
+    "nowDate": "2026-10-05",
+    "n": 144
    },
    {
     "world": "Peloria",
-    "historyMedianPct": 3.4104920321042176,
-    "recentMedianPct": 3.8084470939751256,
-    "shareRecentAtLeastNow": 0.8478260869565217,
-    "recentN": 46,
-    "nowPct": 2.318766425564578,
-    "nowDate": "2026-10-03",
-    "n": 447
+    "historyMedianPct": 3.4129660520989704,
+    "recentMedianPct": 3.8961038961038974,
+    "shareRecentAtLeastNow": 0.44680851063829785,
+    "recentN": 47,
+    "nowPct": 3.9584535487593775,
+    "nowDate": "2026-10-05",
+    "n": 448
    },
    {
     "world": "Quelibra",
     "historyMedianPct": 3.1791553300487774,
-    "recentMedianPct": 3.5441630011628478,
-    "shareRecentAtLeastNow": 0.08387096774193549,
-    "recentN": 155,
+    "recentMedianPct": 3.5708766813043136,
+    "shareRecentAtLeastNow": 0.08441558441558442,
+    "recentN": 154,
     "nowPct": 6.327170647191704,
     "nowDate": "2026-10-04",
     "n": 245
@@ -2761,62 +2761,62 @@
    {
     "world": "Rasteibra",
     "historyMedianPct": 2.6117503309235346,
-    "recentMedianPct": 3.2580529652623094,
-    "shareRecentAtLeastNow": 0.6555555555555556,
-    "recentN": 90,
+    "recentMedianPct": 3.2616609231665317,
+    "shareRecentAtLeastNow": 0.6629213483146067,
+    "recentN": 89,
     "nowPct": 2.879184460669515,
     "nowDate": "2026-10-04",
     "n": 225
    },
    {
     "world": "Refugia",
-    "historyMedianPct": 3.003752693251421,
+    "historyMedianPct": 3.0073534800772017,
     "recentMedianPct": 2.719156363982683,
-    "shareRecentAtLeastNow": 0.30434782608695654,
+    "shareRecentAtLeastNow": 0.32608695652173914,
     "recentN": 46,
-    "nowPct": 3.281390799797801,
-    "nowDate": "2026-10-03",
-    "n": 192
+    "nowPct": 3.1549197029117293,
+    "nowDate": "2026-10-05",
+    "n": 193
    },
    {
     "world": "Secura",
-    "historyMedianPct": 1.6810921367055254,
-    "recentMedianPct": 1.5750035814684205,
-    "shareRecentAtLeastNow": 0.5633802816901409,
+    "historyMedianPct": 1.682220909627874,
+    "recentMedianPct": 1.5939380183765173,
+    "shareRecentAtLeastNow": 0.2112676056338028,
     "recentN": 142,
-    "nowPct": 1.4565534033348593,
-    "nowDate": "2026-10-03",
-    "n": 818
+    "nowPct": 2.12557713993915,
+    "nowDate": "2026-10-05",
+    "n": 819
    },
    {
     "world": "Serdebra",
-    "historyMedianPct": 3.4827806654251336,
-    "recentMedianPct": 4.078378934375648,
-    "shareRecentAtLeastNow": 0.47368421052631576,
+    "historyMedianPct": 3.439057501622006,
+    "recentMedianPct": 3.983608119698845,
+    "shareRecentAtLeastNow": 0.8421052631578947,
     "recentN": 57,
-    "nowPct": 4.129663500738223,
-    "nowDate": "2026-10-03",
-    "n": 187
+    "nowPct": 2.6690675358420846,
+    "nowDate": "2026-10-05",
+    "n": 188
    },
    {
     "world": "Talera",
-    "historyMedianPct": 3.464282876868668,
-    "recentMedianPct": 3.740786333528817,
-    "shareRecentAtLeastNow": 0.13636363636363635,
-    "recentN": 66,
-    "nowPct": 6.127861529871581,
-    "nowDate": "2026-10-03",
-    "n": 200
+    "historyMedianPct": 3.472351270275298,
+    "recentMedianPct": 3.806766521510263,
+    "shareRecentAtLeastNow": 0.208955223880597,
+    "recentN": 67,
+    "nowPct": 5.4006808354034375,
+    "nowDate": "2026-10-05",
+    "n": 201
    },
    {
     "world": "Terribra",
-    "historyMedianPct": 3.199286159781778,
-    "recentMedianPct": 3.35389258014136,
-    "shareRecentAtLeastNow": 0.1282051282051282,
-    "recentN": 39,
-    "nowPct": 6.676906607088828,
-    "nowDate": "2026-10-03",
-    "n": 62
+    "historyMedianPct": 3.181102362204724,
+    "recentMedianPct": 3.3309770883602488,
+    "shareRecentAtLeastNow": 0.75,
+    "recentN": 40,
+    "nowPct": 2.680487804878051,
+    "nowDate": "2026-10-05",
+    "n": 63
    },
    {
     "world": "Tornabra",
@@ -2830,63 +2830,63 @@
    },
    {
     "world": "Unebra",
-    "historyMedianPct": 4.262303692420821,
+    "historyMedianPct": 4.255924817172573,
     "recentMedianPct": 3.4482758620689613,
-    "shareRecentAtLeastNow": 0.5172413793103449,
+    "shareRecentAtLeastNow": 0.7586206896551724,
     "recentN": 29,
-    "nowPct": 3.4482758620689613,
-    "nowDate": "2026-10-03",
-    "n": 55
+    "nowPct": 2.5825471698113223,
+    "nowDate": "2026-10-05",
+    "n": 56
    },
    {
     "world": "Ustebra",
-    "historyMedianPct": 3.0063055459014,
-    "recentMedianPct": 2.757918716525698,
-    "shareRecentAtLeastNow": 0.09836065573770492,
-    "recentN": 61,
-    "nowPct": 4.757426310356694,
-    "nowDate": "2026-10-03",
-    "n": 139
+    "historyMedianPct": 3.0151391179434386,
+    "recentMedianPct": 2.7601601951937504,
+    "shareRecentAtLeastNow": 0.24193548387096775,
+    "recentN": 62,
+    "nowPct": 3.6921296296296258,
+    "nowDate": "2026-10-05",
+    "n": 140
    },
    {
     "world": "Venebra",
     "historyMedianPct": 3.3040929127582217,
-    "recentMedianPct": 3.133849095137159,
-    "shareRecentAtLeastNow": 0.7380952380952381,
-    "recentN": 42,
+    "recentMedianPct": 3.119732080645521,
+    "shareRecentAtLeastNow": 0.7317073170731707,
+    "recentN": 41,
     "nowPct": 2.630126908221442,
     "nowDate": "2026-10-04",
     "n": 72
    },
    {
     "world": "Vunira",
-    "historyMedianPct": 3.2628320866649463,
-    "recentMedianPct": 3.2570869958842454,
-    "shareRecentAtLeastNow": 0.041666666666666664,
-    "recentN": 48,
-    "nowPct": 5.866211635575436,
-    "nowDate": "2026-10-03",
-    "n": 559
+    "historyMedianPct": 3.2646206765371053,
+    "recentMedianPct": 3.3036476759790157,
+    "shareRecentAtLeastNow": 0.3469387755102041,
+    "recentN": 49,
+    "nowPct": 3.569132598395197,
+    "nowDate": "2026-10-05",
+    "n": 560
    },
    {
     "world": "Xybra",
-    "historyMedianPct": 8.515458790373831,
-    "recentMedianPct": 7.474999999999998,
-    "shareRecentAtLeastNow": 0.7037037037037037,
-    "recentN": 27,
-    "nowPct": 6.5398724269258635,
-    "nowDate": "2026-10-03",
-    "n": 67
+    "historyMedianPct": 8.489174221236256,
+    "recentMedianPct": 7.8582792207792185,
+    "shareRecentAtLeastNow": 0.4642857142857143,
+    "recentN": 28,
+    "nowPct": 8.453345836961624,
+    "nowDate": "2026-10-05",
+    "n": 68
    },
    {
     "world": "Yonabra",
-    "historyMedianPct": 2.3310233102331046,
+    "historyMedianPct": 2.3453297416921037,
     "recentMedianPct": 2.2567678822218995,
-    "shareRecentAtLeastNow": 0.7555555555555555,
+    "shareRecentAtLeastNow": 0.17777777777777778,
     "recentN": 45,
-    "nowPct": 1.5284934663970628,
-    "nowDate": "2026-10-03",
-    "n": 85
+    "nowPct": 4.02213236858906,
+    "nowDate": "2026-10-05",
+    "n": 86
    }
   ]
  },
@@ -2967,10 +2967,10 @@
     "side": "ask",
     "weekday": "seg",
     "order": 0,
-    "n": 640,
-    "devPct": 0.05006436929766761,
-    "ciLowPct": -0.019646599858458146,
-    "ciHighPct": 0.1209571936252982
+    "n": 665,
+    "devPct": 0.03397104263978098,
+    "ciLowPct": -0.04086035467174107,
+    "ciHighPct": 0.11209570523466386
    },
    {
     "scope": "Demais mundos",
@@ -2979,8 +2979,8 @@
     "order": 1,
     "n": 581,
     "devPct": 0.08738555161361765,
-    "ciLowPct": 0.022527677369399653,
-    "ciHighPct": 0.16327663451774685
+    "ciLowPct": 0.0202052071601344,
+    "ciHighPct": 0.1664739588367119
    },
    {
     "scope": "Demais mundos",
@@ -2989,8 +2989,8 @@
     "order": 2,
     "n": 629,
     "devPct": 0.18868068007652528,
-    "ciLowPct": 0.0977592728646866,
-    "ciHighPct": 0.2740970528497355
+    "ciLowPct": 0.09789503689175053,
+    "ciHighPct": 0.271496692687076
    },
    {
     "scope": "Demais mundos",
@@ -2998,9 +2998,9 @@
     "weekday": "qui",
     "order": 3,
     "n": 619,
-    "devPct": 0.11813927232014149,
-    "ciLowPct": 0.0326376296707603,
-    "ciHighPct": 0.20392583698183847
+    "devPct": 0.12054047279293909,
+    "ciLowPct": 0.03742014766038828,
+    "ciHighPct": 0.20281979468225148
    },
    {
     "scope": "Demais mundos",
@@ -3008,9 +3008,9 @@
     "weekday": "sex",
     "order": 4,
     "n": 614,
-    "devPct": -0.13600822786511557,
-    "ciLowPct": -0.23402140703338306,
-    "ciHighPct": -0.03792566978153365
+    "devPct": -0.09101593487324466,
+    "ciLowPct": -0.19384750224715708,
+    "ciHighPct": 0.005623251536023995
    },
    {
     "scope": "Demais mundos",
@@ -3018,19 +3018,19 @@
     "weekday": "sáb",
     "order": 5,
     "n": 633,
-    "devPct": -0.2625122934802776,
-    "ciLowPct": -0.3621886019365188,
-    "ciHighPct": -0.1728096924134622
+    "devPct": -0.21892605858461486,
+    "ciLowPct": -0.30651501337942255,
+    "ciHighPct": -0.1271935571236479
    },
    {
     "scope": "Demais mundos",
     "side": "ask",
     "weekday": "dom",
     "order": 6,
-    "n": 633,
-    "devPct": -0.05089843969341543,
-    "ciLowPct": -0.12850715729776993,
-    "ciHighPct": 0.026966147028597665
+    "n": 634,
+    "devPct": -0.05271582274139678,
+    "ciLowPct": -0.1329399901100496,
+    "ciHighPct": 0.018279774509862304
    },
    {
     "scope": "Antica",
@@ -3107,10 +3107,10 @@
     "side": "bid",
     "weekday": "seg",
     "order": 0,
-    "n": 640,
-    "devPct": -0.08254981910283143,
-    "ciLowPct": -0.1727881213873229,
-    "ciHighPct": 0.011621930806263057
+    "n": 665,
+    "devPct": -0.07244154891901376,
+    "ciLowPct": -0.16468019582628687,
+    "ciHighPct": 0.017448448858471032
    },
    {
     "scope": "Demais mundos",
@@ -3119,8 +3119,8 @@
     "order": 1,
     "n": 581,
     "devPct": 0.03855653334496188,
-    "ciLowPct": -0.08114095485507869,
-    "ciHighPct": 0.1521440311523419
+    "ciLowPct": -0.08359090517516406,
+    "ciHighPct": 0.14672619807694026
    },
    {
     "scope": "Demais mundos",
@@ -3129,8 +3129,8 @@
     "order": 2,
     "n": 629,
     "devPct": 0.051370797524651804,
-    "ciLowPct": -0.05782848784531997,
-    "ciHighPct": 0.15840744128268724
+    "ciLowPct": -0.0590959374205825,
+    "ciHighPct": 0.1605786361409032
    },
    {
     "scope": "Demais mundos",
@@ -3138,9 +3138,9 @@
     "weekday": "qui",
     "order": 3,
     "n": 619,
-    "devPct": 0.03715562670751726,
-    "ciLowPct": -0.07773195216305917,
-    "ciHighPct": 0.15342377014126224
+    "devPct": 0.03966243226505507,
+    "ciLowPct": -0.07240187020565766,
+    "ciHighPct": 0.15476786110868535
    },
    {
     "scope": "Demais mundos",
@@ -3148,9 +3148,9 @@
     "weekday": "sex",
     "order": 4,
     "n": 614,
-    "devPct": -0.36190268150084004,
-    "ciLowPct": -0.5033030137388702,
-    "ciHighPct": -0.23114709978926232
+    "devPct": -0.31057138444833476,
+    "ciLowPct": -0.43906008673015445,
+    "ciHighPct": -0.18747581487950565
    },
    {
     "scope": "Demais mundos",
@@ -3158,19 +3158,19 @@
     "weekday": "sáb",
     "order": 5,
     "n": 633,
-    "devPct": -0.39308100731128987,
-    "ciLowPct": -0.5166737587220949,
-    "ciHighPct": -0.28156644467380326
+    "devPct": -0.34330642511425785,
+    "ciLowPct": -0.45453971923190256,
+    "ciHighPct": -0.23442073311044231
    },
    {
     "scope": "Demais mundos",
     "side": "bid",
     "weekday": "dom",
     "order": 6,
-    "n": 633,
-    "devPct": -0.2547029657717588,
-    "ciLowPct": -0.35167816468373747,
-    "ciHighPct": -0.16391890652160013
+    "n": 634,
+    "devPct": -0.26103241206695105,
+    "ciLowPct": -0.35623019592390015,
+    "ciHighPct": -0.1676011862300948
    }
   ],
   "tests": [
@@ -3192,51 +3192,51 @@
    {
     "scope": "Demais mundos",
     "side": "ask",
-    "n": 4349,
+    "n": 4375,
     "pIid": 0.00024993751562109475,
     "pBlock": 0.00024993751562109475,
     "window": "3 de 7 dias",
     "contributors": {
-     "Secura": 812,
-     "Vunira": 444,
-     "Peloria": 327,
-     "Nefera": 320,
-     "Inabra": 253,
-     "Nevia": 240,
+     "Secura": 813,
+     "Vunira": 445,
+     "Peloria": 328,
+     "Nefera": 321,
+     "Inabra": 254,
+     "Nevia": 241,
      "Quelibra": 228,
-     "Astera": 224,
+     "Astera": 225,
      "Rasteibra": 152,
      "Ourobra": 124,
-     "Talera": 121,
+     "Talera": 122,
      "Descubra": 114,
+     "Lobera": 106,
+     "Serdebra": 106,
      "Belobra": 106,
-     "Lobera": 105,
-     "Serdebra": 105,
-     "Refugia": 100,
-     "Gentebra": 91,
-     "Honbra": 88,
-     "Kalibra": 67,
-     "Ferobra": 55,
+     "Refugia": 101,
+     "Gentebra": 92,
+     "Honbra": 89,
+     "Kalibra": 68,
+     "Ferobra": 56,
      "Ombra": 46,
-     "Ustebra": 39,
-     "Pacera": 30,
-     "Floribra": 27,
-     "Yonabra": 26,
+     "Ustebra": 40,
+     "Pacera": 31,
+     "Floribra": 28,
+     "Yonabra": 27,
      "Luminera": 14,
      "Luzibra": 12,
      "Collabra": 11,
      "Tornabra": 11,
      "Venebra": 11,
-     "Terribra": 8,
-     "Celebra": 7,
-     "Dracobra": 6,
-     "Kalanta": 6,
-     "Unebra": 6,
-     "Issobra": 6,
-     "Xybra": 6,
+     "Terribra": 9,
+     "Celebra": 8,
+     "Dracobra": 7,
+     "Kalanta": 7,
+     "Unebra": 7,
+     "Issobra": 7,
+     "Xybra": 7,
      "Cantabra": 1
     },
-    "rangePct": 0.4523805280562616,
+    "rangePct": 0.40850105391775887,
     "high": "qua",
     "low": "sáb",
     "pHolm": 0.000999750062484379
@@ -3259,51 +3259,51 @@
    {
     "scope": "Demais mundos",
     "side": "bid",
-    "n": 4349,
+    "n": 4375,
     "pIid": 0.00024993751562109475,
     "pBlock": 0.00024993751562109475,
     "window": "3 de 7 dias",
     "contributors": {
-     "Secura": 812,
-     "Vunira": 444,
-     "Peloria": 327,
-     "Nefera": 320,
-     "Inabra": 253,
-     "Nevia": 240,
+     "Secura": 813,
+     "Vunira": 445,
+     "Peloria": 328,
+     "Nefera": 321,
+     "Inabra": 254,
+     "Nevia": 241,
      "Quelibra": 228,
-     "Astera": 224,
+     "Astera": 225,
      "Rasteibra": 152,
      "Ourobra": 124,
-     "Talera": 121,
+     "Talera": 122,
      "Descubra": 114,
+     "Lobera": 106,
+     "Serdebra": 106,
      "Belobra": 106,
-     "Lobera": 105,
-     "Serdebra": 105,
-     "Refugia": 100,
-     "Gentebra": 91,
-     "Honbra": 88,
-     "Kalibra": 67,
-     "Ferobra": 55,
+     "Refugia": 101,
+     "Gentebra": 92,
+     "Honbra": 89,
+     "Kalibra": 68,
+     "Ferobra": 56,
      "Ombra": 46,
-     "Ustebra": 39,
-     "Pacera": 30,
-     "Floribra": 27,
-     "Yonabra": 26,
+     "Ustebra": 40,
+     "Pacera": 31,
+     "Floribra": 28,
+     "Yonabra": 27,
      "Luminera": 14,
      "Luzibra": 12,
      "Collabra": 11,
      "Tornabra": 11,
      "Venebra": 11,
-     "Terribra": 8,
-     "Celebra": 7,
-     "Dracobra": 6,
-     "Kalanta": 6,
-     "Unebra": 6,
-     "Issobra": 6,
-     "Xybra": 6,
+     "Terribra": 9,
+     "Celebra": 8,
+     "Dracobra": 7,
+     "Kalanta": 7,
+     "Unebra": 7,
+     "Issobra": 7,
+     "Xybra": 7,
      "Cantabra": 1
     },
-    "rangePct": 0.44620575491203074,
+    "rangePct": 0.3960368425652558,
     "high": "qua",
     "low": "sáb",
     "pHolm": 0.000999750062484379
@@ -3313,8 +3313,8 @@
    {
     "world": "Astera",
     "medianDaysPerWeek": 3.0,
-    "usableDays": 2,
-    "usableDaysFlexible": 224
+    "usableDays": 4,
+    "usableDaysFlexible": 225
    },
    {
     "world": "Belobra",
@@ -3331,8 +3331,8 @@
    {
     "world": "Celebra",
     "medianDaysPerWeek": 2.0,
-    "usableDays": 3,
-    "usableDaysFlexible": 7
+    "usableDays": 5,
+    "usableDaysFlexible": 8
    },
    {
     "world": "Collabra",
@@ -3349,8 +3349,8 @@
    {
     "world": "Dracobra",
     "medianDaysPerWeek": 1.0,
-    "usableDays": 2,
-    "usableDaysFlexible": 6
+    "usableDays": 4,
+    "usableDaysFlexible": 7
    },
    {
     "world": "Etebra",
@@ -3361,56 +3361,56 @@
    {
     "world": "Ferobra",
     "medianDaysPerWeek": 2.0,
-    "usableDays": 3,
-    "usableDaysFlexible": 55
+    "usableDays": 5,
+    "usableDaysFlexible": 56
    },
    {
     "world": "Floribra",
     "medianDaysPerWeek": 2.0,
-    "usableDays": 3,
-    "usableDaysFlexible": 27
+    "usableDays": 5,
+    "usableDaysFlexible": 28
    },
    {
     "world": "Gentebra",
     "medianDaysPerWeek": 2.0,
-    "usableDays": 9,
-    "usableDaysFlexible": 91
+    "usableDays": 11,
+    "usableDaysFlexible": 92
    },
    {
     "world": "Honbra",
     "medianDaysPerWeek": 2.0,
-    "usableDays": 2,
-    "usableDaysFlexible": 88
+    "usableDays": 4,
+    "usableDaysFlexible": 89
    },
    {
     "world": "Inabra",
     "medianDaysPerWeek": 2.0,
-    "usableDays": 127,
-    "usableDaysFlexible": 253
+    "usableDays": 129,
+    "usableDaysFlexible": 254
    },
    {
     "world": "Issobra",
     "medianDaysPerWeek": 1.0,
-    "usableDays": 2,
-    "usableDaysFlexible": 6
+    "usableDays": 4,
+    "usableDaysFlexible": 7
    },
    {
     "world": "Kalanta",
     "medianDaysPerWeek": 1.0,
-    "usableDays": 2,
-    "usableDaysFlexible": 6
+    "usableDays": 4,
+    "usableDaysFlexible": 7
    },
    {
     "world": "Kalibra",
     "medianDaysPerWeek": 2.0,
-    "usableDays": 2,
-    "usableDaysFlexible": 67
+    "usableDays": 4,
+    "usableDaysFlexible": 68
    },
    {
     "world": "Lobera",
     "medianDaysPerWeek": 2.0,
-    "usableDays": 2,
-    "usableDaysFlexible": 105
+    "usableDays": 4,
+    "usableDaysFlexible": 106
    },
    {
     "world": "Luminera",
@@ -3427,14 +3427,14 @@
    {
     "world": "Nefera",
     "medianDaysPerWeek": 2.0,
-    "usableDays": 166,
-    "usableDaysFlexible": 320
+    "usableDays": 168,
+    "usableDaysFlexible": 321
    },
    {
     "world": "Nevia",
     "medianDaysPerWeek": 3.0,
-    "usableDays": 170,
-    "usableDaysFlexible": 240
+    "usableDays": 172,
+    "usableDaysFlexible": 241
    },
    {
     "world": "Ombra",
@@ -3451,14 +3451,14 @@
    {
     "world": "Pacera",
     "medianDaysPerWeek": 2.0,
-    "usableDays": 2,
-    "usableDaysFlexible": 30
+    "usableDays": 4,
+    "usableDaysFlexible": 31
    },
    {
     "world": "Peloria",
     "medianDaysPerWeek": 2.0,
-    "usableDays": 300,
-    "usableDaysFlexible": 327
+    "usableDays": 302,
+    "usableDaysFlexible": 328
    },
    {
     "world": "Quelibra",
@@ -3475,32 +3475,32 @@
    {
     "world": "Refugia",
     "medianDaysPerWeek": 2.0,
-    "usableDays": 2,
-    "usableDaysFlexible": 100
+    "usableDays": 4,
+    "usableDaysFlexible": 101
    },
    {
     "world": "Secura",
     "medianDaysPerWeek": 7.0,
-    "usableDays": 765,
-    "usableDaysFlexible": 812
+    "usableDays": 767,
+    "usableDaysFlexible": 813
    },
    {
     "world": "Serdebra",
     "medianDaysPerWeek": 2.0,
-    "usableDays": 3,
-    "usableDaysFlexible": 105
+    "usableDays": 5,
+    "usableDaysFlexible": 106
    },
    {
     "world": "Talera",
     "medianDaysPerWeek": 2.0,
-    "usableDays": 2,
-    "usableDaysFlexible": 121
+    "usableDays": 4,
+    "usableDaysFlexible": 122
    },
    {
     "world": "Terribra",
     "medianDaysPerWeek": 1.0,
-    "usableDays": 3,
-    "usableDaysFlexible": 8
+    "usableDays": 5,
+    "usableDaysFlexible": 9
    },
    {
     "world": "Tornabra",
@@ -3511,14 +3511,14 @@
    {
     "world": "Unebra",
     "medianDaysPerWeek": 1.0,
-    "usableDays": 2,
-    "usableDaysFlexible": 6
+    "usableDays": 4,
+    "usableDaysFlexible": 7
    },
    {
     "world": "Ustebra",
     "medianDaysPerWeek": 2.0,
-    "usableDays": 3,
-    "usableDaysFlexible": 39
+    "usableDays": 5,
+    "usableDaysFlexible": 40
    },
    {
     "world": "Venebra",
@@ -3529,20 +3529,20 @@
    {
     "world": "Vunira",
     "medianDaysPerWeek": 2.0,
-    "usableDays": 401,
-    "usableDaysFlexible": 444
+    "usableDays": 403,
+    "usableDaysFlexible": 445
    },
    {
     "world": "Xybra",
     "medianDaysPerWeek": 1.0,
-    "usableDays": 2,
-    "usableDaysFlexible": 6
+    "usableDays": 4,
+    "usableDaysFlexible": 7
    },
    {
     "world": "Yonabra",
     "medianDaysPerWeek": 2.0,
-    "usableDays": 3,
-    "usableDaysFlexible": 26
+    "usableDays": 5,
+    "usableDaysFlexible": 27
    }
   ]
  },
@@ -4874,7 +4874,7 @@
     "first": "2024-10-13",
     "last": "2026-10-04",
     "medianPremiumPct": 12.134068731438274,
-    "recentPremiumPct": 11.257382727160074,
+    "recentPremiumPct": 11.139999929591735,
     "recentWeeks": 24,
     "last8PremiumPct": 8.578058560231112,
     "last8Weeks": 6,
@@ -4972,9 +4972,13 @@
      {
       "date": "2026-10-03",
       "premiumPct": 8.535510507027876
+     },
+     {
+      "date": "2026-10-04",
+      "premiumPct": 7.876546064038847
      }
     ],
-    "corrWeekly": 0.4200069077097186,
+    "corrWeekly": 0.4296838358776078,
     "corrN": 85,
     "currentVsLast8Pp": -0.7957699756305399
    },
@@ -4990,11 +4994,11 @@
     "first": "2024-10-13",
     "last": "2026-10-04",
     "medianPremiumPct": 10.939695162359175,
-    "recentPremiumPct": 10.013351313390478,
+    "recentPremiumPct": 10.003238679856448,
     "recentWeeks": 24,
     "last8PremiumPct": 6.854727469229524,
     "last8Weeks": 6,
-    "currentPremiumPct": 6.0948183821357915,
+    "currentPremiumPct": 5.842211273921216,
     "currentBasis": "capturas no mesmo dia",
     "currentPairs": [
      {
@@ -5088,11 +5092,15 @@
      {
       "date": "2026-10-03",
       "premiumPct": 8.157085175927703
+     },
+     {
+      "date": "2026-10-04",
+      "premiumPct": 4.906004220218674
      }
     ],
-    "corrWeekly": 0.5707653210594338,
+    "corrWeekly": 0.5865918093362763,
     "corrN": 85,
-    "currentVsLast8Pp": -0.7599090870937326
+    "currentVsLast8Pp": -1.012516195308308
    },
    {
     "world": "Honbra",
@@ -8845,7 +8853,7 @@
    {
     "side": "bid",
     "lag": 0,
-    "r": 0.47345825109517525,
+    "r": 0.4735423941963634,
     "n": 85,
     "band": 0.21259184866228306
    },
@@ -11849,7 +11857,7 @@
    "mainSample": "desde a primeira semana válida (2023-01-15)",
    "sensitivitySample": "desde 2024-01-15, como o M1_2024 do pacote",
    "anchor": "captura de Antica em 2026-10-04, na semana encerrada em 2026-10-04",
-   "calibration": "origens quinzenais de 2025-01-05 até 2026-09-06, amostra expansiva desde 2023, 100 × 20 trajetórias por origem, semente por origem",
+   "calibration": "origens quinzenais de 2025-01-05 até 2026-09-07, amostra expansiva desde 2023, 100 × 20 trajetórias por origem, semente por origem",
    "packageWeeks": {
     "nov30": "2026-12-06",
     "mar29": "2027-04-04",
@@ -22647,11 +22655,11 @@
  "sources": [
   {
    "file": "results.json",
-   "sha256": "d59e394897e6b0bbe07cbf25e9595cdcacc68dc159a15b2e279ed99b49460e62"
+   "sha256": "2eacd6aa704203db0e7da1bd74261eea79ebba9fc2075ddbb042e5e40db77f3a"
   },
   {
    "file": "market-update.json",
-   "sha256": "452c8eaa773f51732dbc0af48d17c656164a89065d62b5cc5ed0c6820ae67580"
+   "sha256": "763d58b5ff1b49e79eac846e1ca10651a05638b6dae92b7a0c6572dc53c4f3b1"
   },
   {
    "file": "source-package/forecast.json",

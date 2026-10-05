@@ -5,8 +5,8 @@
     "Counters for the shared portion of the two windows have not been revised."
   ],
   "worlds": 116,
-  "candidateSidePairs": 24072,
-  "calculableSideIntervals": 23059,
+  "candidateSidePairs": 24124,
+  "calculableSideIntervals": 23091,
   "independentlyChecked": 22848,
   "mismatches": [
     {
@@ -192,6 +192,46 @@
       "observed": null
     },
     {
+      "world": "Celebra",
+      "side": "buy",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:22:27.188Z",
+        "source": "screenshot",
+        "counter": 2485
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:08:05.715Z",
+        "source": "screenshot",
+        "counter": 2471
+      },
+      "expired": 105,
+      "calculated": 91,
+      "observed": null
+    },
+    {
+      "world": "Celebra",
+      "side": "sell",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:22:27.188Z",
+        "source": "screenshot",
+        "counter": 4416
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:08:05.715Z",
+        "source": "screenshot",
+        "counter": 4356
+      },
+      "expired": 182,
+      "calculated": 122,
+      "observed": null
+    },
+    {
       "world": "Collabra",
       "side": "buy",
       "firstDay": "2026-10-03",
@@ -272,6 +312,326 @@
       "observed": null
     },
     {
+      "world": "Ferobra",
+      "side": "buy",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:23:03.056Z",
+        "source": "screenshot",
+        "counter": 8068
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:08:41.315Z",
+        "source": "screenshot",
+        "counter": 7997
+      },
+      "expired": 339,
+      "calculated": 268,
+      "observed": null
+    },
+    {
+      "world": "Ferobra",
+      "side": "sell",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:23:03.056Z",
+        "source": "screenshot",
+        "counter": 6889
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:08:41.315Z",
+        "source": "screenshot",
+        "counter": 6785
+      },
+      "expired": 336,
+      "calculated": 232,
+      "observed": null
+    },
+    {
+      "world": "Gentebra",
+      "side": "buy",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:20:59.957Z",
+        "source": "screenshot",
+        "counter": 3412
+      },
+      "later": {
+        "timestamp": "2026-10-04T23:03:27.977Z",
+        "source": "screenshot",
+        "counter": 3384
+      },
+      "expired": 112,
+      "calculated": 84,
+      "observed": null
+    },
+    {
+      "world": "Gentebra",
+      "side": "sell",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:20:59.957Z",
+        "source": "screenshot",
+        "counter": 6137
+      },
+      "later": {
+        "timestamp": "2026-10-04T23:03:27.977Z",
+        "source": "screenshot",
+        "counter": 6051
+      },
+      "expired": 267,
+      "calculated": 181,
+      "observed": null
+    },
+    {
+      "world": "Honbra",
+      "side": "buy",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:23:40.041Z",
+        "source": "screenshot",
+        "counter": 4524
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:09:15.951Z",
+        "source": "screenshot",
+        "counter": 4478
+      },
+      "expired": 175,
+      "calculated": 129,
+      "observed": null
+    },
+    {
+      "world": "Honbra",
+      "side": "sell",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:23:40.041Z",
+        "source": "screenshot",
+        "counter": 5489
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:09:15.951Z",
+        "source": "screenshot",
+        "counter": 5367
+      },
+      "expired": 276,
+      "calculated": 154,
+      "observed": null
+    },
+    {
+      "world": "Inabra",
+      "side": "buy",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:23:56.957Z",
+        "source": "screenshot",
+        "counter": 5466
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:09:31.447Z",
+        "source": "screenshot",
+        "counter": 5416
+      },
+      "expired": 240,
+      "calculated": 190,
+      "observed": null
+    },
+    {
+      "world": "Inabra",
+      "side": "sell",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:23:56.957Z",
+        "source": "screenshot",
+        "counter": 9202
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:09:31.447Z",
+        "source": "screenshot",
+        "counter": 9124
+      },
+      "expired": 377,
+      "calculated": 299,
+      "observed": null
+    },
+    {
+      "world": "Issobra",
+      "side": "buy",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:24:14.806Z",
+        "source": "screenshot",
+        "counter": 2005
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:09:47.475Z",
+        "source": "screenshot",
+        "counter": 1995
+      },
+      "expired": 101,
+      "calculated": 91,
+      "observed": null
+    },
+    {
+      "world": "Issobra",
+      "side": "sell",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:24:14.806Z",
+        "source": "screenshot",
+        "counter": 3223
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:09:47.475Z",
+        "source": "screenshot",
+        "counter": 3156
+      },
+      "expired": 135,
+      "calculated": 68,
+      "observed": null
+    },
+    {
+      "world": "Kalibra",
+      "side": "buy",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:24:52.762Z",
+        "source": "screenshot",
+        "counter": 3712
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:10:21.193Z",
+        "source": "screenshot",
+        "counter": 3701
+      },
+      "expired": 125,
+      "calculated": 114,
+      "observed": null
+    },
+    {
+      "world": "Kalibra",
+      "side": "sell",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:24:52.762Z",
+        "source": "screenshot",
+        "counter": 5661
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:10:21.193Z",
+        "source": "screenshot",
+        "counter": 5657
+      },
+      "expired": 220,
+      "calculated": 216,
+      "observed": null
+    },
+    {
+      "world": "Lobera",
+      "side": "buy",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:25:12.124Z",
+        "source": "screenshot",
+        "counter": 6758
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:10:38.125Z",
+        "source": "screenshot",
+        "counter": 6761
+      },
+      "expired": 241,
+      "calculated": 244,
+      "observed": null
+    },
+    {
+      "world": "Lobera",
+      "side": "sell",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:25:12.124Z",
+        "source": "screenshot",
+        "counter": 6997
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:10:38.125Z",
+        "source": "screenshot",
+        "counter": 6971
+      },
+      "expired": 256,
+      "calculated": 230,
+      "observed": null
+    },
+    {
+      "world": "Nevia",
+      "side": "buy",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:25:57.355Z",
+        "source": "screenshot",
+        "counter": 8100
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:11:09.229Z",
+        "source": "screenshot",
+        "counter": 8112
+      },
+      "expired": 269,
+      "calculated": 281,
+      "observed": null
+    },
+    {
+      "world": "Nevia",
+      "side": "sell",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:25:57.355Z",
+        "source": "screenshot",
+        "counter": 4543
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:11:09.229Z",
+        "source": "screenshot",
+        "counter": 4517
+      },
+      "expired": 188,
+      "calculated": 162,
+      "observed": null
+    },
+    {
       "world": "Ourobra",
       "side": "buy",
       "firstDay": "2026-10-03",
@@ -309,6 +669,46 @@
       },
       "expired": 264,
       "calculated": 175,
+      "observed": null
+    },
+    {
+      "world": "Pacera",
+      "side": "buy",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:26:15.669Z",
+        "source": "screenshot",
+        "counter": 3831
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:11:25.848Z",
+        "source": "screenshot",
+        "counter": 3826
+      },
+      "expired": 151,
+      "calculated": 146,
+      "observed": null
+    },
+    {
+      "world": "Pacera",
+      "side": "sell",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:26:15.669Z",
+        "source": "screenshot",
+        "counter": 4627
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:11:25.848Z",
+        "source": "screenshot",
+        "counter": 4611
+      },
+      "expired": 172,
+      "calculated": 156,
       "observed": null
     },
     {
@@ -392,6 +792,206 @@
       "observed": null
     },
     {
+      "world": "Refugia",
+      "side": "buy",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:26:51.939Z",
+        "source": "screenshot",
+        "counter": 4735
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:11:59.842Z",
+        "source": "screenshot",
+        "counter": 4720
+      },
+      "expired": 186,
+      "calculated": 171,
+      "observed": null
+    },
+    {
+      "world": "Refugia",
+      "side": "sell",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:26:51.939Z",
+        "source": "screenshot",
+        "counter": 4304
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:11:59.842Z",
+        "source": "screenshot",
+        "counter": 4268
+      },
+      "expired": 204,
+      "calculated": 168,
+      "observed": null
+    },
+    {
+      "world": "Serdebra",
+      "side": "buy",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:27:28.705Z",
+        "source": "screenshot",
+        "counter": 4450
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:12:30.263Z",
+        "source": "screenshot",
+        "counter": 4402
+      },
+      "expired": 209,
+      "calculated": 161,
+      "observed": null
+    },
+    {
+      "world": "Serdebra",
+      "side": "sell",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:27:28.705Z",
+        "source": "screenshot",
+        "counter": 6618
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:12:30.263Z",
+        "source": "screenshot",
+        "counter": 6540
+      },
+      "expired": 281,
+      "calculated": 203,
+      "observed": null
+    },
+    {
+      "world": "Talera",
+      "side": "buy",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:27:48.259Z",
+        "source": "screenshot",
+        "counter": 9561
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:12:47.261Z",
+        "source": "screenshot",
+        "counter": 9444
+      },
+      "expired": 350,
+      "calculated": 233,
+      "observed": null
+    },
+    {
+      "world": "Talera",
+      "side": "sell",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:27:48.259Z",
+        "source": "screenshot",
+        "counter": 7030
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:12:47.261Z",
+        "source": "screenshot",
+        "counter": 6983
+      },
+      "expired": 304,
+      "calculated": 257,
+      "observed": null
+    },
+    {
+      "world": "Unebra",
+      "side": "buy",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:28:45.369Z",
+        "source": "screenshot",
+        "counter": 2961
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:13:18.010Z",
+        "source": "screenshot",
+        "counter": 2930
+      },
+      "expired": 135,
+      "calculated": 104,
+      "observed": null
+    },
+    {
+      "world": "Unebra",
+      "side": "sell",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:28:45.369Z",
+        "source": "screenshot",
+        "counter": 4217
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:13:18.010Z",
+        "source": "screenshot",
+        "counter": 4209
+      },
+      "expired": 150,
+      "calculated": 142,
+      "observed": null
+    },
+    {
+      "world": "Ustebra",
+      "side": "buy",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:21:52.874Z",
+        "source": "screenshot",
+        "counter": 5530
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:07:30.232Z",
+        "source": "screenshot",
+        "counter": 5446
+      },
+      "expired": 260,
+      "calculated": 176,
+      "observed": null
+    },
+    {
+      "world": "Ustebra",
+      "side": "sell",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:21:52.874Z",
+        "source": "screenshot",
+        "counter": 6606
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:07:30.232Z",
+        "source": "screenshot",
+        "counter": 6535
+      },
+      "expired": 266,
+      "calculated": 195,
+      "observed": null
+    },
+    {
       "world": "Venebra",
       "side": "buy",
       "firstDay": "2026-10-03",
@@ -449,6 +1049,46 @@
       },
       "expired": 88,
       "calculated": 0,
+      "observed": null
+    },
+    {
+      "world": "Vunira",
+      "side": "buy",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:29:02.990Z",
+        "source": "screenshot",
+        "counter": 6370
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:13:33.413Z",
+        "source": "screenshot",
+        "counter": 6343
+      },
+      "expired": 247,
+      "calculated": 220,
+      "observed": null
+    },
+    {
+      "world": "Vunira",
+      "side": "sell",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:29:02.990Z",
+        "source": "screenshot",
+        "counter": 5323
+      },
+      "later": {
+        "timestamp": "2026-10-05T03:13:33.413Z",
+        "source": "screenshot",
+        "counter": 5295
+      },
+      "expired": 216,
+      "calculated": 188,
       "observed": null
     }
   ],
@@ -571,6 +1211,46 @@
       },
       "expired": 427,
       "calculated": 482,
+      "observed": null
+    },
+    {
+      "world": "Gentebra",
+      "side": "buy",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:20:59.957Z",
+        "source": "screenshot",
+        "counter": 3412
+      },
+      "later": {
+        "timestamp": "2026-10-04T23:03:27.977Z",
+        "source": "screenshot",
+        "counter": 3384
+      },
+      "expired": 112,
+      "calculated": 84,
+      "observed": null
+    },
+    {
+      "world": "Gentebra",
+      "side": "sell",
+      "firstDay": "2026-10-03",
+      "lastDay": "2026-10-03",
+      "days": 1,
+      "earlier": {
+        "timestamp": "2026-10-04T02:20:59.957Z",
+        "source": "screenshot",
+        "counter": 6137
+      },
+      "later": {
+        "timestamp": "2026-10-04T23:03:27.977Z",
+        "source": "screenshot",
+        "counter": 6051
+      },
+      "expired": 267,
+      "calculated": 181,
       "observed": null
     }
   ]

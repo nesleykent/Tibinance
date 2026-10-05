@@ -67,3 +67,15 @@ IDENTITIES: a first finalize without the previous enriched dataset reallocated 3
 INSTALLED: data/observations.json, observations.csv, offer-observations.csv, market-update-processing-order.json, market-update-validation.json (rejections unchanged, review unchanged); reports/tc-cycle/market-update.json via market_update.py (byte-identical). Rebuilt Markets history, overview, rolling-activity and chart-integration audits, projections (40/40 anchors equal Markets' latest offers). Research regenerated with the pinned .venv: 38 tests, validate.py --reproduce, ledger.py froze cutoff 2026-10-04 (4 forecasts), validate.py, node report checks. Archive and pre-install backup: data/rebuilt-market/20261004-update (ignored).
 
 VERIFIED: 141 JavaScript tests and 11 Chrome browser suites, all first run, against a threaded local server with a large connection queue: Python http.server's queue of 5 reset module requests and caused the day's intermittent first-load timeouts. The Markets entry now reports a failed module load instead of loading forever. WebKit not run (installed Playwright expects an absent WebKit build).
+
+## October 5 screenshot update
+
+COMPLETE: 1786 files/1785 images; 621 eligible copies, 581 unique, 40 duplicates. The canonical runner reused the 528 version-6 checkpoints and read the 53 new Hotkey captures in isolated browsers: 52 Tibia Coins captures (26 Offers, 26 Statistics; two of 2026-10-04, 50 of 2026-10-05) ready and one no-Market, no review, no runtime failures. 544 captures (466 Offers/78 Statistics), 8193 offer rows/5945 identities, 40 worlds.
+
+IDENTITIES: finalized with data/observations.json as observations-enriched.json; all 492 earlier records are byte-identical. validate_rebuild.mjs with the previous dataset and review decisions passed every check; outputs passed a scan for all screenshot character names.
+
+INSTALLED: data/observations.json, observations.csv, offer-observations.csv, market-update-processing-order.json, market-update-validation.json; reports/tc-cycle/market-update.json via market_update.py. Rebuilt Markets history, overview, rolling-activity and chart-integration audits and projections. Research regenerated with the pinned .venv: 38 tests, validate.py --reproduce (464 research captures), ledger.py froze cutoff 2026-10-05 (5 forecasts), validate.py, node report checks. Archive: data/rebuilt-market/20261005-update (ignored).
+
+PROJECTIONS: the Research cutoff (2026-10-05) is now a day after Antica's last observation (2026-10-04), so Antica's quote is stale and its confidence limited, the first projected week ends 2026-10-12, and 2026-10-05 falls in no projected week. Tests were updated to these values; the browser test reads Antica's stale flag from the data.
+
+VERIFIED: 138 JavaScript tests; Chrome browser suites (Markets, Screener, Events, Events panel, Global, Projections, Canonical Events, Statistics, Tables, Trade, TIB, site header) against a threaded local server. browser.mjs and WebKit runs need absent Playwright browser builds; the OCR and Vision review suites need private archive variables.
