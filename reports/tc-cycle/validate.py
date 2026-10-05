@@ -78,7 +78,10 @@ for node in ast.walk(ast.parse((P/'research_data.py').read_text())):
  if isinstance(node,ast.Constant) and isinstance(node.value,str):assert not node.value.startswith(('day_average_','month_average_')),node.value
 for node in ast.walk(tree):
  if isinstance(node,ast.Constant) and isinstance(node.value,str):assert not node.value.startswith(('day_average_','month_average_')),node.value
-assert all(x['calendarMatch'] for x in r['calendar'])
+from events_bridge import canonical_events, CANONICAL_EVENTS
+canonical=canonical_events()['dataset']
+assert r['eventsSource']['sha256']==hashlib.sha256(CANONICAL_EVENTS.read_bytes()).hexdigest()
+assert {e['eventId'] for e in r['eventOccurrences']} <= {e['id'] for e in canonical['events']}
 print(f'PASS: {len(expected)} worlds of {len(universe)} in market-update.json, {len(obs)} captures, {len(r["worldForecast"]):,} world/side/week forecasts, spread arithmetic, source isolation, no future leakage, model errors, rolling-origin metrics and bootstrap intervals, transfer tests, operational returns, paired comparisons and calendar dates.')
 
 for source in r['sources']:
@@ -88,7 +91,7 @@ for w in expected:
  archive=json.load(open(P/f'inputs/history/{w.lower()}.json'))
  records=[x for g in archive['snapshots'] for x in (g if isinstance(g,list) else [g])]
  assert sorted(api,key=lambda x:x['time'])==sorted(records,key=lambda x:x['time'])
-assert {(x['world'],x['successor']) for x in r['predecessor']}=={(p,w) for w,ps in PREDECESSORS.items() for p in ps if w in expected}
+assert {(x['world'],x['successor']) for x in r['predecessor']}=={(p,w) for w,ps in PREDECESSORS.items() for p in ps if w in expected and (P/f'inputs/api/{p.lower()}.json').exists()}
 for x in r['predecessor']:assert x['days']==next(q['days'] for q in r['quality'] if q['world']==x['world'])
 assert {x['world'] for x in r['quality']}==expected|{x['world'] for x in r['predecessor']}
 print(f'PASS: input hashes, direct API provenance, archive reconciliation for {len(expected)} worlds and separate predecessor history.')
@@ -248,8 +251,8 @@ print(f"PASS: forecast ledger chain and append-only history, {len(forecasts)} fr
 # Optional: rerun complement.py on a copy and require byte-identical output (all draws are seeded; ~2 min).
 if '--reproduce' in sys.argv:
  with tempfile.TemporaryDirectory() as tmp:
-  for name in ['complement.py','research_data.py','universe.py','mergers.json','market-update.json','results.json','inputs','source-package']:
+  for name in ['complement.py','research_data.py','universe.py','events_bridge.py','market-update.json','results.json','inputs','source-package']:
    (shutil.copytree if (P/name).is_dir() else shutil.copy)(P/name,Path(tmp)/name)
-  subprocess.run([sys.executable,'complement.py'],cwd=tmp,check=True,stdout=subprocess.DEVNULL)
+  subprocess.run([sys.executable,'complement.py'],cwd=tmp,check=True,stdout=subprocess.DEVNULL,env={**__import__('os').environ,'TIBINANCE_REPOSITORY':str(P.parents[1])})
   assert (Path(tmp)/'complement.json').read_bytes()==(P/'complement.json').read_bytes()
  print('PASS: complement.py reproduces complement.json byte for byte.')

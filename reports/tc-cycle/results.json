@@ -91314,7 +91314,7 @@
       "returnPct": -0.1292577690202279,
       "abnormalPct": 0.016269871391741995,
       "p": 0.9660169915042479,
-      "q": 0.9835809368043251
+      "q": 0.9920039980009995
     },
     {
       "event": "Annual Autumn Vintage",
@@ -91323,7 +91323,7 @@
       "returnPct": 1.0592875209416408,
       "abnormalPct": -0.019697974444112722,
       "p": 0.9490254872563718,
-      "q": 0.9835809368043251
+      "q": 0.9920039980009995
     },
     {
       "event": "Bewitched",
@@ -91332,7 +91332,7 @@
       "returnPct": -0.32285636645935767,
       "abnormalPct": 0.21246097904922107,
       "p": 0.7231384307846077,
-      "q": 0.9740347217695499
+      "q": 0.9920039980009995
     },
     {
       "event": "Carnival Month",
@@ -91341,7 +91341,7 @@
       "returnPct": 0.526014966589283,
       "abnormalPct": 0.8179777571586127,
       "p": 0.09045477261369315,
-      "q": 0.6751624187906047
+      "q": 0.6430118274196235
     },
     {
       "event": "Christmas",
@@ -91350,7 +91350,7 @@
       "returnPct": -0.5980505442636058,
       "abnormalPct": 0.6296294884231856,
       "p": 0.351824087956022,
-      "q": 0.8395802098950524
+      "q": 0.8537397967682825
     },
     {
       "event": "Chyllfroest",
@@ -91359,7 +91359,7 @@
       "returnPct": -0.3066712666586932,
       "abnormalPct": 0.3862332577259436,
       "p": 0.47976011994003,
-      "q": 0.8395802098950524
+      "q": 0.8537397967682825
     },
     {
       "event": "Colours of Magic",
@@ -91368,7 +91368,7 @@
       "returnPct": 0.6486111000095145,
       "abnormalPct": -0.3344869975786503,
       "p": 0.6041979010494752,
-      "q": 0.890396906809753
+      "q": 0.9160419790104948
     },
     {
       "event": "Demon's Lullaby",
@@ -91386,7 +91386,7 @@
       "returnPct": -1.5316733729675063,
       "abnormalPct": -1.0237238275445888,
       "p": 0.0814592703648176,
-      "q": 0.6751624187906047
+      "q": 0.6430118274196235
     },
     {
       "event": "Exaltation Overload",
@@ -91395,7 +91395,7 @@
       "returnPct": -0.1492238906533455,
       "abnormalPct": 0.12080157181233495,
       "p": 0.744127936031984,
-      "q": 0.9740347217695499
+      "q": 0.9920039980009995
     },
     {
       "event": "Flower Month",
@@ -91404,7 +91404,7 @@
       "returnPct": -3.0013625565770985,
       "abnormalPct": -2.230333610946489,
       "p": 0.0074962518740629685,
-      "q": 0.13993003498250875
+      "q": 0.11244377811094453
     },
     {
       "event": "Full Moon",
@@ -91413,7 +91413,7 @@
       "returnPct": 0.1703136514292829,
       "abnormalPct": -0.023236879089297082,
       "p": 0.9020489755122438,
-      "q": 0.9762810902241187
+      "q": 0.9920039980009995
     },
     {
       "event": "Halloween Event",
@@ -91422,7 +91422,7 @@
       "returnPct": -1.201886886327418,
       "abnormalPct": -2.3801321397208897,
       "p": 0.0004997501249375312,
-      "q": 0.02798600699650175
+      "q": 0.029985007496251874
     },
     {
       "event": "Hot Cuisine Month",
@@ -91431,7 +91431,7 @@
       "returnPct": 2.7649672077938527,
       "abnormalPct": 0.7817708033170254,
       "p": 0.44577711144427784,
-      "q": 0.8395802098950524
+      "q": 0.8537397967682825
     },
     {
       "event": "Last Creep Standing",
@@ -91440,7 +91440,7 @@
       "returnPct": 0.0747938616134616,
       "abnormalPct": 0.22356471554564458,
       "p": 0.31384307846076964,
-      "q": 0.8395802098950524
+      "q": 0.8537397967682825
     },
     {
       "event": "Lightbearer",
@@ -91449,7 +91449,7 @@
       "returnPct": -0.2309084444264049,
       "abnormalPct": -0.0969779055967688,
       "p": 0.8985507246376812,
-      "q": 0.9762810902241187
+      "q": 0.9920039980009995
     },
     {
       "event": "Loot Event",
@@ -91458,7 +91458,7 @@
       "returnPct": 1.1290895688834532,
       "abnormalPct": 0.12133276803888916,
       "p": 0.7971014492753623,
-      "q": 0.9740347217695499
+      "q": 0.9920039980009995
     },
     {
       "event": "New Year",
@@ -91467,7 +91467,7 @@
       "returnPct": -0.9660557522047777,
       "abnormalPct": 0.6848419179158094,
       "p": 0.2638680659670165,
-      "q": 0.8395802098950524
+      "q": 0.8537397967682825
     },
     {
       "event": "Orcsoberfest",
@@ -91476,7 +91476,7 @@
       "returnPct": 0.5828389863300544,
       "abnormalPct": -0.13336151560802345,
       "p": 0.8000999500249875,
-      "q": 0.9740347217695499
+      "q": 0.9920039980009995
     },
     {
       "event": "Prank Month",
@@ -91485,7 +91485,7 @@
       "returnPct": -0.3066712666586932,
       "abnormalPct": 0.3917271044959966,
       "p": 0.4577711144427786,
-      "q": 0.8395802098950524
+      "q": 0.8537397967682825
     },
     {
       "event": "Rapid Respawn",
@@ -91494,7 +91494,7 @@
       "returnPct": 0.4177441389308599,
       "abnormalPct": 0.44959362712289896,
       "p": 0.13043478260869565,
-      "q": 0.7304347826086957
+      "q": 0.7741583753577757
     },
     {
       "event": "Rise of Devovorga",
@@ -91503,7 +91503,7 @@
       "returnPct": -0.020211370846654718,
       "abnormalPct": -0.9387725270529736,
       "p": 0.09645177411294353,
-      "q": 0.6751624187906047
+      "q": 0.6430118274196235
     },
     {
       "event": "Skill Event",
@@ -91512,7 +91512,7 @@
       "returnPct": -1.0897756147813933,
       "abnormalPct": -0.3746480742754425,
       "p": 0.5427286356821589,
-      "q": 0.890396906809753
+      "q": 0.8727215339698572
     },
     {
       "event": "Spring into Life",
@@ -91521,3187 +91521,2690 @@
       "returnPct": -0.5091696471492547,
       "abnormalPct": -0.3691465198761851,
       "p": 0.41379310344827586,
-      "q": 0.8395802098950524
+      "q": 0.8537397967682825
+    },
+    {
+      "event": "Summer Update",
+      "side": "ask",
+      "n": 4,
+      "returnPct": -0.17838676654623878,
+      "abnormalPct": -0.7348629925816302,
+      "p": 0.19540229885057472,
+      "q": 0.8526986506746627
     },
     {
       "event": "The First Dragon",
       "side": "ask",
       "n": 4,
       "returnPct": 0.5203240080544423,
-      "abnormalPct": -0.22992274908387886,
-      "p": 0.6751624187906047,
-      "q": 0.9694639859557401
+      "abnormalPct": -0.24175731640978018,
+      "p": 0.679160419790105,
+      "q": 0.9702291711287214
     },
     {
       "event": "Valentine's Day",
       "side": "ask",
       "n": 4,
       "returnPct": -0.24032073521687877,
-      "abnormalPct": -0.09592825711791945,
-      "p": 0.7721139430284858,
-      "q": 0.9740347217695499
+      "abnormalPct": -0.07494390123763875,
+      "p": 0.8320839580209896,
+      "q": 0.9920039980009995
+    },
+    {
+      "event": "Winter Update",
+      "side": "ask",
+      "n": 3,
+      "returnPct": -0.4910224021304633,
+      "abnormalPct": 0.3711645460732114,
+      "p": 0.6106946526736632,
+      "q": 0.9160419790104948
     },
     {
       "event": "Winterlight Solstice",
       "side": "ask",
       "n": 3,
       "returnPct": -1.4759305807514513,
-      "abnormalPct": 0.5223827020225971,
-      "p": 0.551224387806097,
-      "q": 0.890396906809753
+      "abnormalPct": 0.5565520614385344,
+      "p": 0.5072463768115942,
+      "q": 0.8537397967682825
     },
     {
       "event": "XP/Skill Event",
       "side": "ask",
       "n": 22,
       "returnPct": -0.11829142104723823,
-      "abnormalPct": -0.2669234549710658,
-      "p": 0.3758120939530235,
-      "q": 0.8395802098950524
+      "abnormalPct": -0.2665590195085091,
+      "p": 0.3938030984507746,
+      "q": 0.8537397967682825
     },
     {
       "event": "A Piece of Cake",
       "side": "bid",
       "n": 4,
       "returnPct": -0.8664814016025627,
-      "abnormalPct": -0.6942754071617597,
-      "p": 0.23338330834582707,
-      "q": 0.8395802098950524
+      "abnormalPct": -0.698027230480777,
+      "p": 0.22438780609695153,
+      "q": 0.8526986506746627
     },
     {
       "event": "Annual Autumn Vintage",
       "side": "bid",
       "n": 7,
       "returnPct": 0.9403893304191542,
-      "abnormalPct": -0.13640026099735963,
-      "p": 0.7221389305347327,
-      "q": 0.9740347217695499
+      "abnormalPct": -0.12850691032481446,
+      "p": 0.729135432283858,
+      "q": 0.9920039980009995
     },
     {
       "event": "Bewitched",
       "side": "bid",
       "n": 3,
       "returnPct": 0.006063468849430359,
-      "abnormalPct": 0.48256550987590163,
-      "p": 0.5567216391804098,
-      "q": 0.890396906809753
+      "abnormalPct": 0.4939996649715527,
+      "p": 0.5122438780609695,
+      "q": 0.8537397967682825
     },
     {
       "event": "Carnival Month",
       "side": "bid",
       "n": 3,
       "returnPct": 0.39403643283492495,
-      "abnormalPct": 0.73751636426088,
-      "p": 0.22538730634682658,
-      "q": 0.8395802098950524
+      "abnormalPct": 0.7294334620803439,
+      "p": 0.2273863068465767,
+      "q": 0.8526986506746627
     },
     {
       "event": "Christmas",
       "side": "bid",
       "n": 3,
       "returnPct": -0.6699621891336567,
-      "abnormalPct": 0.7322804166980154,
-      "p": 0.2768615692153923,
-      "q": 0.8395802098950524
+      "abnormalPct": 0.7195639288873146,
+      "p": 0.28235882058970513,
+      "q": 0.8537397967682825
     },
     {
       "event": "Chyllfroest",
       "side": "bid",
       "n": 3,
       "returnPct": -0.5886213582024207,
-      "abnormalPct": 0.12361247188194979,
-      "p": 0.8735632183908046,
-      "q": 0.9762810902241187
+      "abnormalPct": 0.14732673940307384,
+      "p": 0.862568715642179,
+      "q": 0.9920039980009995
     },
     {
       "event": "Colours of Magic",
       "side": "bid",
       "n": 7,
       "returnPct": 0.5310633892873172,
-      "abnormalPct": -0.5916433491290509,
-      "p": 0.344327836081959,
-      "q": 0.8395802098950524
+      "abnormalPct": -0.5953293690733877,
+      "p": 0.35132433783108447,
+      "q": 0.8537397967682825
     },
     {
       "event": "Demon's Lullaby",
       "side": "bid",
       "n": 4,
       "returnPct": -0.8967971520851724,
-      "abnormalPct": -0.5100602135600606,
-      "p": 0.592703648175912,
-      "q": 0.890396906809753
+      "abnormalPct": -0.5399362676761693,
+      "p": 0.5527236381809095,
+      "q": 0.8727215339698572
     },
     {
       "event": "Double Daily Reward Month",
       "side": "bid",
       "n": 3,
       "returnPct": -1.7786317623991823,
-      "abnormalPct": -1.5423188018296314,
-      "p": 0.04597701149425287,
-      "q": 0.5149425287356322
+      "abnormalPct": -1.499559610277552,
+      "p": 0.05647176411794103,
+      "q": 0.5647176411794103
     },
     {
       "event": "Exaltation Overload",
       "side": "bid",
       "n": 7,
       "returnPct": 0.010835340503241633,
-      "abnormalPct": 0.26170779331047145,
-      "p": 0.4757621189405297,
-      "q": 0.8395802098950524
+      "abnormalPct": 0.2509917696649652,
+      "p": 0.4852573713143428,
+      "q": 0.8537397967682825
     },
     {
       "event": "Flower Month",
       "side": "bid",
       "n": 3,
       "returnPct": -2.7136148764208587,
-      "abnormalPct": -2.0148217946909903,
-      "p": 0.03798100949525238,
-      "q": 0.5149425287356322
+      "abnormalPct": -1.94999386918,
+      "p": 0.04147926036981509,
+      "q": 0.49775112443778113
     },
     {
       "event": "Full Moon",
       "side": "bid",
       "n": 43,
       "returnPct": 0.38149338529230686,
-      "abnormalPct": 0.17541688444177356,
-      "p": 0.39030484757621187,
-      "q": 0.8395802098950524
+      "abnormalPct": 0.1716420077183774,
+      "p": 0.4302848575712144,
+      "q": 0.8537397967682825
     },
     {
       "event": "Halloween Event",
       "side": "bid",
       "n": 3,
       "returnPct": -0.8853132331696387,
-      "abnormalPct": -2.0796295983811586,
+      "abnormalPct": -2.0676303609028692,
       "p": 0.0009995002498750624,
-      "q": 0.02798600699650175
+      "q": 0.029985007496251874
     },
     {
       "event": "Hot Cuisine Month",
       "side": "bid",
       "n": 3,
       "returnPct": 2.5653234541419923,
-      "abnormalPct": 0.6502783953075298,
-      "p": 0.40879560219890054,
-      "q": 0.8395802098950524
+      "abnormalPct": 0.6407508801889771,
+      "p": 0.4337831084457771,
+      "q": 0.8537397967682825
     },
     {
       "event": "Last Creep Standing",
       "side": "bid",
       "n": 30,
       "returnPct": -0.010751880196376856,
-      "abnormalPct": 0.1339948745974324,
-      "p": 0.5902048975512244,
-      "q": 0.890396906809753
+      "abnormalPct": 0.12504446346175793,
+      "p": 0.6431784107946027,
+      "q": 0.9412366987238089
     },
     {
       "event": "Lightbearer",
       "side": "bid",
       "n": 3,
       "returnPct": -0.24202821154116805,
-      "abnormalPct": -0.14587021071144352,
-      "p": 0.7936031984007996,
-      "q": 0.9740347217695499
+      "abnormalPct": -0.16890702825759812,
+      "p": 0.7646176911544228,
+      "q": 0.9920039980009995
     },
     {
       "event": "Loot Event",
       "side": "bid",
       "n": 4,
       "returnPct": 0.9037038015264139,
-      "abnormalPct": -0.10227556623125446,
-      "p": 0.848575712143928,
-      "q": 0.9762810902241187
+      "abnormalPct": -0.1039356906158272,
+      "p": 0.8455772113943029,
+      "q": 0.9920039980009995
     },
     {
       "event": "New Year",
       "side": "bid",
       "n": 4,
       "returnPct": -1.3595975091320733,
-      "abnormalPct": 0.4838623365297038,
-      "p": 0.4577711144427786,
-      "q": 0.8395802098950524
+      "abnormalPct": 0.5017215344613736,
+      "p": 0.46326836581709147,
+      "q": 0.8537397967682825
     },
     {
       "event": "Orcsoberfest",
       "side": "bid",
       "n": 7,
       "returnPct": 0.7471629636718009,
-      "abnormalPct": -0.06882175905272288,
-      "p": 0.9065467266366817,
-      "q": 0.9762810902241187
+      "abnormalPct": -0.06436210815854602,
+      "p": 0.9220389805097451,
+      "q": 0.9920039980009995
     },
     {
       "event": "Prank Month",
       "side": "bid",
       "n": 3,
       "returnPct": -0.5886213582024207,
-      "abnormalPct": 0.10865058745351981,
-      "p": 0.8920539730134932,
-      "q": 0.9762810902241187
+      "abnormalPct": 0.11439839666950698,
+      "p": 0.8875562218890555,
+      "q": 0.9920039980009995
     },
     {
       "event": "Rapid Respawn",
       "side": "bid",
       "n": 15,
       "returnPct": 0.2958951068462943,
-      "abnormalPct": 0.4110411314896271,
-      "p": 0.20389805097451275,
-      "q": 0.8395802098950524
+      "abnormalPct": 0.4116186306738524,
+      "p": 0.22288855572213892,
+      "q": 0.8526986506746627
     },
     {
       "event": "Rise of Devovorga",
       "side": "bid",
       "n": 4,
       "returnPct": 0.014629993062861455,
-      "abnormalPct": -0.8555158583343097,
-      "p": 0.12393803098450774,
-      "q": 0.7304347826086957
+      "abnormalPct": -0.863396664892974,
+      "p": 0.14192903548225888,
+      "q": 0.7741583753577757
     },
     {
       "event": "Skill Event",
       "side": "bid",
       "n": 3,
       "returnPct": -1.8291077791858072,
-      "abnormalPct": -1.0808465252951764,
-      "p": 0.24187906046976512,
-      "q": 0.8395802098950524
+      "abnormalPct": -1.1435603065293938,
+      "p": 0.21339330334832585,
+      "q": 0.8526986506746627
     },
     {
       "event": "Spring into Life",
       "side": "bid",
       "n": 4,
       "returnPct": -0.5741244928438471,
-      "abnormalPct": -0.40084253682902216,
-      "p": 0.440279860069965,
-      "q": 0.8395802098950524
+      "abnormalPct": -0.3895904482571131,
+      "p": 0.4847576211894053,
+      "q": 0.8537397967682825
+    },
+    {
+      "event": "Summer Update",
+      "side": "bid",
+      "n": 4,
+      "returnPct": -1.2155926051185986,
+      "abnormalPct": -2.0396213262494265,
+      "p": 0.004497751124437781,
+      "q": 0.0899550224887556
     },
     {
       "event": "The First Dragon",
       "side": "bid",
       "n": 4,
       "returnPct": 1.2937832622267456,
-      "abnormalPct": 0.536862078365458,
-      "p": 0.37681159420289856,
-      "q": 0.8395802098950524
+      "abnormalPct": 0.479762391519503,
+      "p": 0.4142928535732134,
+      "q": 0.8537397967682825
     },
     {
       "event": "Valentine's Day",
       "side": "bid",
       "n": 4,
       "returnPct": -0.1457272224517947,
-      "abnormalPct": 0.03829118940277909,
-      "p": 0.9295352323838081,
-      "q": 0.9821504342168539
+      "abnormalPct": 0.011719437235825395,
+      "p": 0.9740129935032483,
+      "q": 0.9920039980009995
+    },
+    {
+      "event": "Winter Update",
+      "side": "bid",
+      "n": 3,
+      "returnPct": -0.9930657828246677,
+      "abnormalPct": -0.006109712356819194,
+      "p": 0.9920039980009995,
+      "q": 0.9920039980009995
     },
     {
       "event": "Winterlight Solstice",
       "side": "bid",
       "n": 3,
       "returnPct": -1.6012218323952654,
-      "abnormalPct": 0.6618151669548543,
-      "p": 0.4352823588205897,
-      "q": 0.8395802098950524
+      "abnormalPct": 0.6301519249292546,
+      "p": 0.4607696151924038,
+      "q": 0.8537397967682825
     },
     {
       "event": "XP/Skill Event",
       "side": "bid",
       "n": 22,
       "returnPct": -0.0227103062584766,
-      "abnormalPct": -0.2508319660891065,
-      "p": 0.46676661669165415,
-      "q": 0.8395802098950524
+      "abnormalPct": -0.2543736582162298,
+      "p": 0.44677661169415295,
+      "q": 0.8537397967682825
     }
   ],
   "eventOccurrences": [
     {
-      "event": "The First Dragon",
-      "date": "2023-01-30",
+      "eventId": "the-first-dragon-2023-01-30-the-first-dragon",
       "side": "ask",
       "logReturn": 0.026077283873557244
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2023-02-03",
+      "eventId": "rapid-respawn-2023-02-03-rapid-respawn",
       "side": "ask",
       "logReturn": 0.02599864651823516
     },
     {
-      "event": "Full Moon",
-      "date": "2023-02-12",
+      "eventId": "full-moon-2023-02-12-full-moon",
       "side": "ask",
       "logReturn": -0.004945670814734688
     },
     {
-      "event": "Valentine's Day",
-      "date": "2023-02-14",
+      "eventId": "valentine-s-day-2023-02-14-valentine-s-day",
       "side": "ask",
       "logReturn": -0.004344752997529697
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2023-02-20",
+      "eventId": "last-creep-standing-2023-02-20-last-creep-standing",
       "side": "ask",
       "logReturn": 0.004537084204405115
     },
     {
-      "event": "A Piece of Cake",
-      "date": "2023-02-21",
+      "eventId": "a-piece-of-cake-2023-02-21-a-piece-of-cake",
       "side": "ask",
       "logReturn": 0.004584453996697421
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2023-03-03",
+      "eventId": "xp-skill-2023-03-03-xp-skill-event",
       "side": "ask",
       "logReturn": -0.010117703610936904
     },
     {
-      "event": "Orcsoberfest",
-      "date": "2023-03-10",
+      "eventId": "orcsoberfest-2023-03-10-orcsoberfest",
       "side": "ask",
       "logReturn": 0.007580032038661167
     },
     {
-      "event": "Full Moon",
-      "date": "2023-03-12",
+      "eventId": "full-moon-2023-03-12-full-moon",
       "side": "ask",
       "logReturn": 0.014355596660708016
     },
     {
-      "event": "Colours of Magic",
-      "date": "2023-03-15",
+      "eventId": "colours-of-magic-2023-03-15-colours-of-magic",
       "side": "ask",
       "logReturn": 0.0237425695828054
     },
     {
-      "event": "Loot Event",
-      "date": "2023-04-06",
+      "eventId": "loot-event-2023-04-06-loot-event",
       "side": "ask",
       "logReturn": 0.02221439205331486
     },
     {
-      "event": "Full Moon",
-      "date": "2023-04-12",
+      "eventId": "full-moon-2023-04-12-full-moon",
       "side": "ask",
       "logReturn": 0.010755264196643194
     },
     {
-      "event": "Spring into Life",
-      "date": "2023-04-16",
+      "eventId": "spring-into-life-2023-04-16-spring-into-life",
       "side": "ask",
       "logReturn": 0.01397922525265839
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2023-04-20",
+      "eventId": "last-creep-standing-2023-04-20-last-creep-standing",
       "side": "ask",
       "logReturn": 0.02062806450930221
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2023-05-05",
+      "eventId": "xp-skill-2023-05-05-xp-skill-event",
       "side": "ask",
       "logReturn": -0.010821051083315185
     },
     {
-      "event": "Demon's Lullaby",
-      "date": "2023-05-07",
+      "eventId": "demon-s-lullaby-2023-05-07-demon-s-lullaby",
       "side": "ask",
       "logReturn": -0.0035494626342161537
     },
     {
-      "event": "Full Moon",
-      "date": "2023-05-12",
+      "eventId": "full-moon-2023-05-12-full-moon",
       "side": "ask",
       "logReturn": 0.02156579372796246
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2023-05-20",
+      "eventId": "last-creep-standing-2023-05-20-last-creep-standing",
       "side": "ask",
       "logReturn": 0.010408840470172999
     },
     {
-      "event": "Loot Event",
-      "date": "2023-06-02",
+      "eventId": "xp-skill-2023-06-02-xp-skill-event",
       "side": "ask",
       "logReturn": -0.010933237998519514
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2023-06-02",
+      "eventId": "loot-event-2023-06-02-loot-event",
       "side": "ask",
       "logReturn": -0.010933237998519514
     },
     {
-      "event": "Full Moon",
-      "date": "2023-06-12",
+      "eventId": "full-moon-2023-06-12-full-moon",
       "side": "ask",
       "logReturn": 0.0033343158080637015
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2023-06-20",
+      "eventId": "last-creep-standing-2023-06-20-last-creep-standing",
       "side": "ask",
       "logReturn": -0.001926604889884088
     },
     {
-      "event": "Bewitched",
-      "date": "2023-06-21",
+      "eventId": "bewitched-2023-06-21-bewitched",
       "side": "ask",
       "logReturn": -0.001926604889884088
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2023-07-07",
+      "eventId": "xp-skill-2023-07-07-xp-skill-event",
       "side": "ask",
       "logReturn": -0.010306970255147365
     },
     {
-      "event": "Full Moon",
-      "date": "2023-07-12",
+      "eventId": "update-2023-07-10-summer-update-2023",
+      "side": "ask",
+      "logReturn": -0.03199125677129347
+    },
+    {
+      "eventId": "full-moon-2023-07-12-full-moon",
       "side": "ask",
       "logReturn": -0.03738993210077432
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2023-07-20",
+      "eventId": "last-creep-standing-2023-07-20-last-creep-standing",
       "side": "ask",
       "logReturn": -0.00405618502648233
     },
     {
-      "event": "Rise of Devovorga",
-      "date": "2023-08-01",
+      "eventId": "rise-of-devovorga-2023-08-01-rise-of-devovorga",
       "side": "ask",
       "logReturn": 0.010444175017670686
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2023-08-04",
+      "eventId": "rapid-respawn-2023-08-04-rapid-respawn",
       "side": "ask",
       "logReturn": 0.012792148317730592
     },
     {
-      "event": "Full Moon",
-      "date": "2023-08-12",
+      "eventId": "full-moon-2023-08-12-full-moon",
       "side": "ask",
       "logReturn": 0.006291065041541443
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2023-08-20",
+      "eventId": "last-creep-standing-2023-08-20-last-creep-standing",
       "side": "ask",
       "logReturn": 0.007338240349478738
     },
     {
-      "event": "Annual Autumn Vintage",
-      "date": "2023-09-01",
+      "eventId": "annual-autumn-vintage-2023-09-01-annual-autumn-vintage",
       "side": "ask",
       "logReturn": -0.0005887311675727638
     },
     {
-      "event": "Rise of Devovorga",
-      "date": "2023-09-02",
+      "eventId": "rise-of-devovorga-2023-09-02-rise-of-devovorga",
       "side": "ask",
       "logReturn": -0.008635563199594735
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2023-09-08",
+      "eventId": "xp-skill-2023-09-08-xp-skill-event",
       "side": "ask",
       "logReturn": 0.00819758664424699
     },
     {
-      "event": "Full Moon",
-      "date": "2023-09-12",
+      "eventId": "full-moon-2023-09-12-full-moon",
       "side": "ask",
       "logReturn": 0.0041613931343365525
     },
     {
-      "event": "Colours of Magic",
-      "date": "2023-09-15",
+      "eventId": "colours-of-magic-2023-09-15-colours-of-magic",
       "side": "ask",
       "logReturn": -0.002645205282902739
     },
     {
-      "event": "Annual Autumn Vintage",
-      "date": "2023-10-01",
+      "eventId": "annual-autumn-vintage-2023-10-01-annual-autumn-vintage",
       "side": "ask",
       "logReturn": 0.020249995059987626
     },
     {
-      "event": "Loot Event",
-      "date": "2023-10-06",
+      "eventId": "loot-event-2023-10-06-loot-event",
       "side": "ask",
       "logReturn": 0.022281138311811458
     },
     {
-      "event": "Full Moon",
-      "date": "2023-10-12",
+      "eventId": "full-moon-2023-10-12-full-moon",
       "side": "ask",
       "logReturn": 0.01778722084515949
     },
     {
-      "event": "Orcsoberfest",
-      "date": "2023-10-13",
+      "eventId": "orcsoberfest-2023-10-13-orcsoberfest",
       "side": "ask",
       "logReturn": 0.01056816386529402
     },
     {
-      "event": "Annual Autumn Vintage",
-      "date": "2023-10-17",
+      "eventId": "annual-autumn-vintage-2023-10-17-annual-autumn-vintage",
       "side": "ask",
       "logReturn": 0.019755980276426877
     },
     {
-      "event": "Halloween Event",
-      "date": "2023-10-31",
+      "eventId": "halloween-event-2023-10-31-halloween-event",
       "side": "ask",
       "logReturn": -0.011793304566985605
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2023-11-03",
+      "eventId": "xp-skill-2023-11-03-xp-skill-event",
       "side": "ask",
       "logReturn": -0.02045413842236515
     },
     {
-      "event": "Lightbearer",
-      "date": "2023-11-11",
+      "eventId": "lightbearer-2023-11-11-lightbearer",
       "side": "ask",
       "logReturn": -0.017125770105479495
     },
     {
-      "event": "Full Moon",
-      "date": "2023-11-12",
+      "eventId": "full-moon-2023-11-12-full-moon",
       "side": "ask",
       "logReturn": -0.012934251780999367
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2023-11-20",
+      "eventId": "last-creep-standing-2023-11-20-last-creep-standing",
       "side": "ask",
       "logReturn": 0.010631429807675962
     },
     {
-      "event": "New Year",
-      "date": "2023-12-01",
+      "eventId": "new-year-2023-12-01-new-year",
       "side": "ask",
       "logReturn": -0.016346384212315487
     },
     {
-      "event": "Winterlight Solstice",
-      "date": "2023-12-01",
+      "eventId": "winterlight-solstice-2023-12-01-winterlight-solstice",
       "side": "ask",
       "logReturn": -0.016346384212315487
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2023-12-02",
+      "eventId": "rapid-respawn-2023-12-02-rapid-respawn",
       "side": "ask",
       "logReturn": -0.014916357726932198
     },
     {
-      "event": "Christmas",
-      "date": "2023-12-12",
+      "eventId": "update-2023-12-04-winter-update-2023",
+      "side": "ask",
+      "logReturn": -0.02211950307249981
+    },
+    {
+      "eventId": "christmas-2023-12-12-christmas",
       "side": "ask",
       "logReturn": -0.022302353369070625
     },
     {
-      "event": "Full Moon",
-      "date": "2023-12-12",
+      "eventId": "full-moon-2023-12-12-full-moon",
       "side": "ask",
       "logReturn": -0.022302353369070625
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2023-12-20",
+      "eventId": "last-creep-standing-2023-12-20-last-creep-standing",
       "side": "ask",
       "logReturn": -0.04744384863681758
     },
     {
-      "event": "Winterlight Solstice",
-      "date": "2023-12-22",
+      "eventId": "xp-skill-2023-12-22-xp-skill-event",
       "side": "ask",
       "logReturn": -0.02332313330819049
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2023-12-22",
+      "eventId": "winterlight-solstice-2023-12-22-winterlight-solstice",
       "side": "ask",
       "logReturn": -0.02332313330819049
     },
     {
-      "event": "New Year",
-      "date": "2023-12-27",
+      "eventId": "new-year-2023-12-27-new-year",
       "side": "ask",
       "logReturn": 0.006672529865088597
     },
     {
-      "event": "Tibia Anniversary",
-      "date": "2024-01-07",
+      "eventId": "tibia-anniversary-2024-01-07-tibia-anniversary",
       "side": "ask",
       "logReturn": -0.00687161598807081
     },
     {
-      "event": "Full Moon",
-      "date": "2024-01-12",
+      "eventId": "full-moon-2024-01-12-full-moon",
       "side": "ask",
       "logReturn": -0.006378386211986597
     },
     {
-      "event": "The First Dragon",
-      "date": "2024-01-14",
+      "eventId": "the-first-dragon-2024-01-14-the-first-dragon",
       "side": "ask",
       "logReturn": -0.0026196374395092807
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2024-01-20",
+      "eventId": "last-creep-standing-2024-01-20-last-creep-standing",
       "side": "ask",
       "logReturn": 0.008770402678360456
     },
     {
-      "event": "Carnival Month",
-      "date": "2024-02-01",
+      "eventId": "carnival-month-2024-02-01-carnival-month",
       "side": "ask",
       "logReturn": -0.0005040746137146788
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2024-02-02",
+      "eventId": "rapid-respawn-2024-02-02-rapid-respawn",
       "side": "ask",
       "logReturn": -0.0009659199037545588
     },
     {
-      "event": "Full Moon",
-      "date": "2024-02-12",
+      "eventId": "full-moon-2024-02-12-full-moon",
       "side": "ask",
       "logReturn": -0.014153315967131921
     },
     {
-      "event": "Valentine's Day",
-      "date": "2024-02-14",
+      "eventId": "valentine-s-day-2024-02-14-valentine-s-day",
       "side": "ask",
       "logReturn": -0.014739078079350444
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2024-02-20",
+      "eventId": "last-creep-standing-2024-02-20-last-creep-standing",
       "side": "ask",
       "logReturn": -0.006865408280676172
     },
     {
-      "event": "A Piece of Cake",
-      "date": "2024-02-21",
+      "eventId": "a-piece-of-cake-2024-02-21-a-piece-of-cake",
       "side": "ask",
       "logReturn": -0.005440086714196888
     },
     {
-      "event": "Double Daily Reward Month",
-      "date": "2024-03-01",
+      "eventId": "xp-skill-2024-03-01-xp-skill-event",
       "side": "ask",
       "logReturn": -0.009875482709744197
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2024-03-01",
+      "eventId": "double-daily-reward-month-2024-03-01-double-daily-reward-month",
       "side": "ask",
       "logReturn": -0.009875482709744197
     },
     {
-      "event": "Orcsoberfest",
-      "date": "2024-03-08",
+      "eventId": "xp-skill-2024-03-08-xp-skill-event",
       "side": "ask",
       "logReturn": -0.004100034821773732
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2024-03-08",
+      "eventId": "orcsoberfest-2024-03-08-orcsoberfest",
       "side": "ask",
       "logReturn": -0.004100034821773732
     },
     {
-      "event": "Full Moon",
-      "date": "2024-03-12",
+      "eventId": "full-moon-2024-03-12-full-moon",
       "side": "ask",
       "logReturn": -0.008406666613518798
     },
     {
-      "event": "Colours of Magic",
-      "date": "2024-03-15",
+      "eventId": "colours-of-magic-2024-03-15-colours-of-magic",
       "side": "ask",
       "logReturn": -0.012077476894334456
     },
     {
-      "event": "Chyllfroest",
-      "date": "2024-04-01",
+      "eventId": "chyllfroest-2024-04-01-chyllfroest",
       "side": "ask",
       "logReturn": -0.0030635112919033106
     },
     {
-      "event": "Prank Month",
-      "date": "2024-04-01",
+      "eventId": "prank-month-2024-04-01-prank-month",
       "side": "ask",
       "logReturn": -0.0030635112919033106
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2024-04-05",
+      "eventId": "rapid-respawn-2024-04-05-rapid-respawn",
       "side": "ask",
       "logReturn": -0.0038429589453398355
     },
     {
-      "event": "Exaltation Overload",
-      "date": "2024-04-12",
+      "eventId": "exaltation-overload-2024-04-12-exaltation-overload",
       "side": "ask",
       "logReturn": 0.002534183345855107
     },
     {
-      "event": "Full Moon",
-      "date": "2024-04-12",
+      "eventId": "full-moon-2024-04-12-full-moon",
       "side": "ask",
       "logReturn": 0.002534183345855107
     },
     {
-      "event": "Spring into Life",
-      "date": "2024-04-16",
+      "eventId": "spring-into-life-2024-04-16-spring-into-life",
       "side": "ask",
       "logReturn": 0.0017159767524294585
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2024-04-20",
+      "eventId": "last-creep-standing-2024-04-20-last-creep-standing",
       "side": "ask",
       "logReturn": -0.009907952634624328
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2024-05-03",
+      "eventId": "xp-skill-2024-05-03-xp-skill-event",
       "side": "ask",
       "logReturn": 0.008450542732767116
     },
     {
-      "event": "Demon's Lullaby",
-      "date": "2024-05-07",
+      "eventId": "demon-s-lullaby-2024-05-07-demon-s-lullaby",
       "side": "ask",
       "logReturn": 0.0
     },
     {
-      "event": "Full Moon",
-      "date": "2024-05-12",
+      "eventId": "full-moon-2024-05-12-full-moon",
       "side": "ask",
       "logReturn": -0.008813014796181216
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2024-05-20",
+      "eventId": "last-creep-standing-2024-05-20-last-creep-standing",
       "side": "ask",
       "logReturn": 0.01725213509240038
     },
     {
-      "event": "Flower Month",
-      "date": "2024-06-01",
+      "eventId": "flower-month-2024-06-01-flower-month",
       "side": "ask",
       "logReturn": -0.06924257699859815
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2024-06-07",
+      "eventId": "xp-skill-2024-06-07-skill-event",
       "side": "ask",
       "logReturn": -0.006650731662901493
     },
     {
-      "event": "Skill Event",
-      "date": "2024-06-07",
+      "eventId": "rapid-respawn-2024-06-07-rapid-respawn",
       "side": "ask",
       "logReturn": -0.006650731662901493
     },
     {
-      "event": "Full Moon",
-      "date": "2024-06-12",
+      "eventId": "full-moon-2024-06-12-full-moon",
       "side": "ask",
       "logReturn": 0.001681808835134704
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2024-06-20",
+      "eventId": "last-creep-standing-2024-06-20-last-creep-standing",
       "side": "ask",
       "logReturn": -0.011765816400450829
     },
     {
-      "event": "Bewitched",
-      "date": "2024-06-21",
+      "eventId": "bewitched-2024-06-21-bewitched",
       "side": "ask",
       "logReturn": -0.006413793317565537
     },
     {
-      "event": "Full Moon",
-      "date": "2024-07-12",
+      "eventId": "update-2024-07-01-summer-update-2024",
+      "side": "ask",
+      "logReturn": -0.016797480753924798
+    },
+    {
+      "eventId": "xp-skill-2024-07-12-xp-skill-event",
       "side": "ask",
       "logReturn": 0.002060083642653919
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2024-07-12",
+      "eventId": "full-moon-2024-07-12-full-moon",
       "side": "ask",
       "logReturn": 0.002060083642653919
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2024-07-20",
+      "eventId": "last-creep-standing-2024-07-20-last-creep-standing",
       "side": "ask",
       "logReturn": 0.01358174869156276
     },
     {
-      "event": "Hot Cuisine Month",
-      "date": "2024-08-01",
+      "eventId": "hot-cuisine-month-2024-08-01-hot-cuisine-month",
       "side": "ask",
       "logReturn": 0.04565325816893735
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2024-08-02",
+      "eventId": "rapid-respawn-2024-08-02-rapid-respawn",
       "side": "ask",
       "logReturn": 0.05287258356638934
     },
     {
-      "event": "Full Moon",
-      "date": "2024-08-12",
+      "eventId": "full-moon-2024-08-12-full-moon",
       "side": "ask",
       "logReturn": 0.005296406758839144
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2024-09-06",
+      "eventId": "xp-skill-2024-09-06-xp-skill-event",
       "side": "ask",
       "logReturn": 0.014469588812782049
     },
     {
-      "event": "Full Moon",
-      "date": "2024-09-12",
+      "eventId": "full-moon-2024-09-12-full-moon",
       "side": "ask",
       "logReturn": 0.02709340459226182
     },
     {
-      "event": "Colours of Magic",
-      "date": "2024-09-15",
+      "eventId": "colours-of-magic-2024-09-15-colours-of-magic",
       "side": "ask",
       "logReturn": 0.05332608538097488
     },
     {
-      "event": "Annual Autumn Vintage",
-      "date": "2024-10-01",
+      "eventId": "annual-autumn-vintage-2024-10-01-annual-autumn-vintage",
       "side": "ask",
       "logReturn": -0.0035113120864447758
     },
     {
-      "event": "Loot Event",
-      "date": "2024-10-04",
+      "eventId": "loot-event-2024-10-04-loot-event",
       "side": "ask",
       "logReturn": 0.011348224847294017
     },
     {
-      "event": "Orcsoberfest",
-      "date": "2024-10-11",
+      "eventId": "orcsoberfest-2024-10-11-orcsoberfest",
       "side": "ask",
       "logReturn": 0.026745083515451854
     },
     {
-      "event": "Full Moon",
-      "date": "2024-10-12",
+      "eventId": "full-moon-2024-10-12-full-moon",
       "side": "ask",
       "logReturn": 0.019202540710780307
     },
     {
-      "event": "Annual Autumn Vintage",
-      "date": "2024-10-17",
+      "eventId": "annual-autumn-vintage-2024-10-17-annual-autumn-vintage",
       "side": "ask",
       "logReturn": -0.001714487838661418
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2024-10-25",
+      "eventId": "xp-skill-2024-10-25-xp-skill-event",
       "side": "ask",
       "logReturn": 0.018005888081805168
     },
     {
-      "event": "Halloween Event",
-      "date": "2024-10-31",
+      "eventId": "halloween-event-2024-10-31-halloween-event",
       "side": "ask",
       "logReturn": -0.016215828733566914
     },
     {
-      "event": "Exaltation Overload",
-      "date": "2024-11-01",
+      "eventId": "exaltation-overload-2024-11-01-exaltation-overload",
       "side": "ask",
       "logReturn": -0.016215828733566914
     },
     {
-      "event": "Lightbearer",
-      "date": "2024-11-11",
+      "eventId": "lightbearer-2024-11-11-lightbearer",
       "side": "ask",
       "logReturn": 0.008942767997235427
     },
     {
-      "event": "Full Moon",
-      "date": "2024-11-12",
+      "eventId": "full-moon-2024-11-12-full-moon",
       "side": "ask",
       "logReturn": 0.014384008758184836
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2024-11-20",
+      "eventId": "last-creep-standing-2024-11-20-last-creep-standing",
       "side": "ask",
       "logReturn": -0.0011049447396259738
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2024-12-06",
+      "eventId": "update-2024-11-25-winter-update-2024",
+      "side": "ask",
+      "logReturn": -0.0070216202423930875
+    },
+    {
+      "eventId": "rapid-respawn-2024-12-06-rapid-respawn",
       "side": "ask",
       "logReturn": -0.004083449970629623
     },
     {
-      "event": "Christmas",
-      "date": "2024-12-12",
+      "eventId": "christmas-2024-12-12-christmas",
       "side": "ask",
       "logReturn": 0.005626250332290288
     },
     {
-      "event": "Full Moon",
-      "date": "2024-12-12",
+      "eventId": "full-moon-2024-12-12-full-moon",
       "side": "ask",
       "logReturn": 0.005626250332290288
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2024-12-20",
+      "eventId": "last-creep-standing-2024-12-20-last-creep-standing",
       "side": "ask",
       "logReturn": -0.004559393901086237
     },
     {
-      "event": "Winterlight Solstice",
-      "date": "2024-12-22",
+      "eventId": "winterlight-solstice-2024-12-22-winterlight-solstice",
       "side": "ask",
       "logReturn": -0.004938406703622174
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2024-12-23",
+      "eventId": "xp-skill-2024-12-23-xp-skill-event",
       "side": "ask",
       "logReturn": -0.0041802373933779976
     },
     {
-      "event": "New Year",
-      "date": "2024-12-27",
+      "eventId": "new-year-2024-12-27-new-year",
       "side": "ask",
       "logReturn": -0.008691261253611096
     },
     {
-      "event": "Tibia Anniversary",
-      "date": "2025-01-07",
+      "eventId": "tibia-anniversary-2025-01-07-tibia-anniversary",
       "side": "ask",
       "logReturn": 0.009663159111053442
     },
     {
-      "event": "Full Moon",
-      "date": "2025-01-12",
+      "eventId": "full-moon-2025-01-12-full-moon",
       "side": "ask",
       "logReturn": -0.011315940887478403
     },
     {
-      "event": "The First Dragon",
-      "date": "2025-01-14",
+      "eventId": "economy-2025-01-14-tibia-token-launched",
       "side": "ask",
       "logReturn": -0.012726845467361674
     },
     {
-      "event": "Exaltation Overload",
-      "date": "2025-01-17",
+      "eventId": "the-first-dragon-2025-01-14-the-first-dragon",
+      "side": "ask",
+      "logReturn": -0.012726845467361674
+    },
+    {
+      "eventId": "exaltation-overload-2025-01-17-exaltation-overload",
       "side": "ask",
       "logReturn": -0.002419937335824093
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2025-01-20",
+      "eventId": "last-creep-standing-2025-01-20-last-creep-standing",
       "side": "ask",
       "logReturn": 0.01110993053472967
     },
     {
-      "event": "Carnival Month",
-      "date": "2025-02-01",
+      "eventId": "carnival-month-2025-02-01-carnival-month",
       "side": "ask",
       "logReturn": 0.010315218597784025
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2025-02-07",
+      "eventId": "rapid-respawn-2025-02-07-rapid-respawn",
       "side": "ask",
       "logReturn": 0.003757177790198162
     },
     {
-      "event": "Full Moon",
-      "date": "2025-02-12",
+      "eventId": "full-moon-2025-02-12-full-moon",
       "side": "ask",
       "logReturn": 5.128468127687083e-05
     },
     {
-      "event": "Valentine's Day",
-      "date": "2025-02-14",
+      "eventId": "valentine-s-day-2025-02-14-valentine-s-day",
       "side": "ask",
       "logReturn": 0.002205016020845386
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2025-02-20",
+      "eventId": "last-creep-standing-2025-02-20-last-creep-standing",
       "side": "ask",
       "logReturn": 0.005574321481375364
     },
     {
-      "event": "A Piece of Cake",
-      "date": "2025-02-21",
+      "eventId": "a-piece-of-cake-2025-02-21-a-piece-of-cake",
       "side": "ask",
       "logReturn": 0.0017805109260794517
     },
     {
-      "event": "Double Daily Reward Month",
-      "date": "2025-03-01",
+      "eventId": "double-daily-reward-month-2025-03-01-double-daily-reward-month",
       "side": "ask",
       "logReturn": -0.03361606387459508
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2025-03-07",
+      "eventId": "xp-skill-2025-03-07-xp-skill-event",
       "side": "ask",
       "logReturn": -0.007803756288323884
     },
     {
-      "event": "Full Moon",
-      "date": "2025-03-12",
+      "eventId": "full-moon-2025-03-12-full-moon",
       "side": "ask",
       "logReturn": -0.007792768899625124
     },
     {
-      "event": "Orcsoberfest",
-      "date": "2025-03-14",
+      "eventId": "orcsoberfest-2025-03-14-orcsoberfest",
       "side": "ask",
       "logReturn": -0.012237634687500302
     },
     {
-      "event": "Colours of Magic",
-      "date": "2025-03-15",
+      "eventId": "colours-of-magic-2025-03-15-colours-of-magic",
       "side": "ask",
       "logReturn": -0.01239895102919555
     },
     {
-      "event": "Chyllfroest",
-      "date": "2025-04-01",
+      "eventId": "chyllfroest-2025-04-01-chyllfroest",
       "side": "ask",
       "logReturn": -0.0026997127706344113
     },
     {
-      "event": "Prank Month",
-      "date": "2025-04-01",
+      "eventId": "prank-month-2025-04-01-prank-month",
       "side": "ask",
       "logReturn": -0.0026997127706344113
     },
     {
-      "event": "Exaltation Overload",
-      "date": "2025-04-04",
+      "eventId": "exaltation-overload-2025-04-04-exaltation-overload",
       "side": "ask",
       "logReturn": -0.007106909561225195
     },
     {
-      "event": "Full Moon",
-      "date": "2025-04-12",
+      "eventId": "update-2025-04-08-monk-released",
+      "side": "ask",
+      "logReturn": -0.0051247145846250175
+    },
+    {
+      "eventId": "full-moon-2025-04-12-full-moon",
       "side": "ask",
       "logReturn": -0.004014000127933665
     },
     {
-      "event": "Spring into Life",
-      "date": "2025-04-16",
+      "eventId": "economy-2025-04-15-tibia-token-fee-raised-to-8",
+      "side": "ask",
+      "logReturn": -0.024521733389344925
+    },
+    {
+      "eventId": "spring-into-life-2025-04-16-spring-into-life",
       "side": "ask",
       "logReturn": -0.029802846875807417
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2025-04-20",
+      "eventId": "last-creep-standing-2025-04-20-last-creep-standing",
       "side": "ask",
       "logReturn": -0.027524294188369013
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2025-05-02",
+      "eventId": "xp-skill-2025-05-02-xp-skill-event",
       "side": "ask",
       "logReturn": 0.018005929970890303
     },
     {
-      "event": "Demon's Lullaby",
-      "date": "2025-05-07",
+      "eventId": "demon-s-lullaby-2025-05-07-demon-s-lullaby",
       "side": "ask",
       "logReturn": -0.007153288344810325
     },
     {
-      "event": "Full Moon",
-      "date": "2025-05-12",
+      "eventId": "full-moon-2025-05-12-full-moon",
       "side": "ask",
       "logReturn": -0.0351950739831455
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2025-05-20",
+      "eventId": "last-creep-standing-2025-05-20-last-creep-standing",
       "side": "ask",
       "logReturn": -0.011007487813257683
     },
     {
-      "event": "Flower Month",
-      "date": "2025-06-01",
+      "eventId": "world-created-2025-05-21-luzibra-opened",
+      "side": "ask",
+      "logReturn": -0.0048137298400751085
+    },
+    {
+      "eventId": "flower-month-2025-06-01-flower-month",
       "side": "ask",
       "logReturn": -0.01487503230337639
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2025-06-06",
+      "eventId": "xp-skill-2025-06-06-skill-event",
       "side": "ask",
       "logReturn": -0.018013188884791552
     },
     {
-      "event": "Skill Event",
-      "date": "2025-06-06",
+      "eventId": "rapid-respawn-2025-06-06-rapid-respawn",
       "side": "ask",
       "logReturn": -0.018013188884791552
     },
     {
-      "event": "Full Moon",
-      "date": "2025-06-12",
+      "eventId": "full-moon-2025-06-12-full-moon",
       "side": "ask",
       "logReturn": -0.006634332127182685
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2025-07-04",
+      "eventId": "xp-skill-2025-07-04-xp-skill-event",
       "side": "ask",
       "logReturn": 0.0038354142902245164
     },
     {
-      "event": "Full Moon",
-      "date": "2025-07-12",
+      "eventId": "full-moon-2025-07-12-full-moon",
       "side": "ask",
       "logReturn": 0.008060625596764598
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2025-07-20",
+      "eventId": "last-creep-standing-2025-07-20-last-creep-standing",
       "side": "ask",
       "logReturn": 0.012974415485666493
     },
     {
-      "event": "Hot Cuisine Month",
-      "date": "2025-08-01",
+      "eventId": "update-2025-07-21-summer-update-2025",
+      "side": "ask",
+      "logReturn": 0.012620264059837134
+    },
+    {
+      "eventId": "economy-2025-07-29-transfer-block-lifted",
+      "side": "ask",
+      "logReturn": 0.019839446825262147
+    },
+    {
+      "eventId": "store-2025-07-29-premium-restriction-lifted",
+      "side": "ask",
+      "logReturn": 0.019839446825262147
+    },
+    {
+      "eventId": "rapid-respawn-2025-08-01-rapid-respawn",
       "side": "ask",
       "logReturn": 0.017392751038123273
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2025-08-01",
+      "eventId": "hot-cuisine-month-2025-08-01-hot-cuisine-month",
       "side": "ask",
       "logReturn": 0.017392751038123273
     },
     {
-      "event": "Full Moon",
-      "date": "2025-08-12",
+      "eventId": "full-moon-2025-08-12-full-moon",
       "side": "ask",
       "logReturn": 0.04390827525453947
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2025-08-20",
+      "eventId": "last-creep-standing-2025-08-20-last-creep-standing",
       "side": "ask",
       "logReturn": -0.01164786283708995
     },
     {
-      "event": "Rise of Devovorga",
-      "date": "2025-09-01",
+      "eventId": "rise-of-devovorga-2025-09-01-rise-of-devovorga",
       "side": "ask",
       "logReturn": -0.0012629384211684722
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2025-09-05",
+      "eventId": "xp-skill-2025-09-05-xp-skill-event",
       "side": "ask",
       "logReturn": 0.013959825976750516
     },
     {
-      "event": "Full Moon",
-      "date": "2025-09-12",
+      "eventId": "full-moon-2025-09-12-full-moon",
       "side": "ask",
       "logReturn": 0.01769191599597225
     },
     {
-      "event": "Colours of Magic",
-      "date": "2025-09-15",
+      "eventId": "colours-of-magic-2025-09-15-colours-of-magic",
       "side": "ask",
       "logReturn": 0.0027053416681734194
     },
     {
-      "event": "Annual Autumn Vintage",
-      "date": "2025-10-01",
+      "eventId": "annual-autumn-vintage-2025-10-01-annual-autumn-vintage",
       "side": "ask",
       "logReturn": 0.0258767034631294
     },
     {
-      "event": "Exaltation Overload",
-      "date": "2025-10-03",
+      "eventId": "exaltation-overload-2025-10-03-exaltation-overload",
       "side": "ask",
       "logReturn": 0.0037610008397586676
     },
     {
-      "event": "Orcsoberfest",
-      "date": "2025-10-10",
+      "eventId": "orcsoberfest-2025-10-10-orcsoberfest",
       "side": "ask",
       "logReturn": 0.022778472877944985
     },
     {
-      "event": "Full Moon",
-      "date": "2025-10-12",
+      "eventId": "full-moon-2025-10-12-full-moon",
       "side": "ask",
       "logReturn": 0.017605822118598905
     },
     {
-      "event": "Annual Autumn Vintage",
-      "date": "2025-10-17",
+      "eventId": "annual-autumn-vintage-2025-10-17-annual-autumn-vintage",
       "side": "ask",
       "logReturn": 0.013691998829233616
     },
     {
-      "event": "Halloween Event",
-      "date": "2025-10-31",
+      "eventId": "halloween-event-2025-10-31-halloween-event",
       "side": "ask",
       "logReturn": -0.008265905068618417
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2025-11-07",
+      "eventId": "world-created-2025-11-06-terribra-opened",
+      "side": "ask",
+      "logReturn": 0.002964589059814254
+    },
+    {
+      "eventId": "world-merge-2025-11-06-blumera",
+      "side": "ask",
+      "logReturn": 0.002964589059814254
+    },
+    {
+      "eventId": "world-merge-2025-11-06-citra",
+      "side": "ask",
+      "logReturn": 0.002964589059814254
+    },
+    {
+      "eventId": "world-merge-2025-11-06-eclipta",
+      "side": "ask",
+      "logReturn": 0.002964589059814254
+    },
+    {
+      "eventId": "world-merge-2025-11-06-kalanta",
+      "side": "ask",
+      "logReturn": 0.002964589059814254
+    },
+    {
+      "eventId": "world-merge-2025-11-06-monstera",
+      "side": "ask",
+      "logReturn": 0.002964589059814254
+    },
+    {
+      "eventId": "world-merge-2025-11-06-sombra",
+      "side": "ask",
+      "logReturn": 0.002964589059814254
+    },
+    {
+      "eventId": "world-merge-2025-11-06-tempestera",
+      "side": "ask",
+      "logReturn": 0.002964589059814254
+    },
+    {
+      "eventId": "world-merge-2025-11-06-terribra",
+      "side": "ask",
+      "logReturn": 0.002964589059814254
+    },
+    {
+      "eventId": "world-merge-2025-11-06-xymera",
+      "side": "ask",
+      "logReturn": 0.002964589059814254
+    },
+    {
+      "eventId": "xp-skill-2025-11-07-xp-skill-event",
       "side": "ask",
       "logReturn": 0.0075409865945455295
     },
     {
-      "event": "Lightbearer",
-      "date": "2025-11-11",
+      "eventId": "lightbearer-2025-11-11-lightbearer",
       "side": "ask",
       "logReturn": 0.0012477386358943925
     },
     {
-      "event": "Full Moon",
-      "date": "2025-11-12",
+      "eventId": "full-moon-2025-11-12-full-moon",
       "side": "ask",
       "logReturn": -0.002540601147368625
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2025-11-20",
+      "eventId": "last-creep-standing-2025-11-20-last-creep-standing",
       "side": "ask",
       "logReturn": 0.0050003213832617
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2025-12-05",
+      "eventId": "update-2025-11-24-winter-update-2025",
+      "side": "ask",
+      "logReturn": 0.014374166976396412
+    },
+    {
+      "eventId": "rapid-respawn-2025-12-05-rapid-respawn",
       "side": "ask",
       "logReturn": -0.01247981471077639
     },
     {
-      "event": "Christmas",
-      "date": "2025-12-12",
+      "eventId": "christmas-2025-12-12-christmas",
       "side": "ask",
       "logReturn": -0.0013192778246152615
     },
     {
-      "event": "Full Moon",
-      "date": "2025-12-12",
+      "eventId": "full-moon-2025-12-12-full-moon",
       "side": "ask",
       "logReturn": -0.0013192778246152615
     },
     {
-      "event": "New Year",
-      "date": "2025-12-27",
+      "eventId": "new-year-2025-12-27-new-year",
       "side": "ask",
       "logReturn": -0.020464978121340117
     },
     {
-      "event": "Full Moon",
-      "date": "2026-01-12",
+      "eventId": "full-moon-2026-01-12-full-moon",
       "side": "ask",
       "logReturn": -0.002051176250456676
     },
     {
-      "event": "The First Dragon",
-      "date": "2026-01-14",
+      "eventId": "the-first-dragon-2026-01-14-the-first-dragon",
       "side": "ask",
       "logReturn": 0.01002819903887101
     },
     {
-      "event": "Exaltation Overload",
-      "date": "2026-01-16",
+      "eventId": "exaltation-overload-2026-01-16-exaltation-overload",
       "side": "ask",
       "logReturn": 0.010497083363280958
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2026-01-20",
+      "eventId": "last-creep-standing-2026-01-20-last-creep-standing",
       "side": "ask",
       "logReturn": 0.002297553533124123
     },
     {
-      "event": "Carnival Month",
-      "date": "2026-02-01",
+      "eventId": "carnival-month-2026-02-01-carnival-month",
       "side": "ask",
       "logReturn": 0.00592794622406509
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2026-02-06",
+      "eventId": "rapid-respawn-2026-02-06-rapid-respawn",
       "side": "ask",
       "logReturn": -0.0007304221120903555
     },
     {
-      "event": "Full Moon",
-      "date": "2026-02-12",
+      "eventId": "full-moon-2026-02-12-full-moon",
       "side": "ask",
       "logReturn": -0.004156281959917867
     },
     {
-      "event": "Valentine's Day",
-      "date": "2026-02-14",
+      "eventId": "valentine-s-day-2026-02-14-valentine-s-day",
       "side": "ask",
       "logReturn": 0.007254416296788809
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2026-02-20",
+      "eventId": "last-creep-standing-2026-02-20-last-creep-standing",
       "side": "ask",
       "logReturn": -0.002462943092241591
     },
     {
-      "event": "A Piece of Cake",
-      "date": "2026-02-21",
+      "eventId": "a-piece-of-cake-2026-02-21-a-piece-of-cake",
       "side": "ask",
       "logReturn": -0.006098533365798282
     },
     {
-      "event": "Double Daily Reward Month",
-      "date": "2026-03-01",
+      "eventId": "double-daily-reward-month-2026-03-01-double-daily-reward-month",
       "side": "ask",
       "logReturn": -0.002814193235394816
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2026-03-06",
+      "eventId": "xp-skill-2026-03-06-xp-skill-event",
       "side": "ask",
       "logReturn": -0.01575500676648407
     },
     {
-      "event": "Full Moon",
-      "date": "2026-03-12",
+      "eventId": "full-moon-2026-03-12-full-moon",
       "side": "ask",
       "logReturn": -0.013897987278331782
     },
     {
-      "event": "Orcsoberfest",
-      "date": "2026-03-13",
+      "eventId": "orcsoberfest-2026-03-13-orcsoberfest",
       "side": "ask",
       "logReturn": -0.010653789225090927
     },
     {
-      "event": "Colours of Magic",
-      "date": "2026-03-15",
+      "eventId": "colours-of-magic-2026-03-15-colours-of-magic",
       "side": "ask",
       "logReturn": -0.007396196539018627
     },
     {
-      "event": "Chyllfroest",
-      "date": "2026-04-01",
+      "eventId": "chyllfroest-2026-04-01-chyllfroest",
       "side": "ask",
       "logReturn": -0.0034510499351861337
     },
     {
-      "event": "Prank Month",
-      "date": "2026-04-01",
+      "eventId": "prank-month-2026-04-01-prank-month",
       "side": "ask",
       "logReturn": -0.0034510499351861337
     },
     {
-      "event": "Exaltation Overload",
-      "date": "2026-04-03",
+      "eventId": "exaltation-overload-2026-04-03-exaltation-overload",
       "side": "ask",
       "logReturn": -0.0015030657454342758
     },
     {
-      "event": "Full Moon",
-      "date": "2026-04-12",
+      "eventId": "full-moon-2026-04-12-full-moon",
       "side": "ask",
       "logReturn": -0.0030393955183513938
     },
     {
-      "event": "Spring into Life",
-      "date": "2026-04-16",
+      "eventId": "spring-into-life-2026-04-16-spring-into-life",
       "side": "ask",
       "logReturn": -0.006311168441547356
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2026-04-20",
+      "eventId": "last-creep-standing-2026-04-20-last-creep-standing",
       "side": "ask",
       "logReturn": -0.0007679169967853193
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2026-05-01",
+      "eventId": "xp-skill-2026-05-01-xp-skill-event",
       "side": "ask",
       "logReturn": -0.0037746928042986633
     },
     {
-      "event": "Demon's Lullaby",
-      "date": "2026-05-07",
+      "eventId": "demon-s-lullaby-2026-05-07-demon-s-lullaby",
       "side": "ask",
       "logReturn": -0.006197925376030735
     },
     {
-      "event": "Full Moon",
-      "date": "2026-05-12",
+      "eventId": "full-moon-2026-05-12-full-moon",
       "side": "ask",
       "logReturn": -0.004520658244485435
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2026-05-20",
+      "eventId": "world-created-2026-05-20-floribra-opened",
       "side": "ask",
       "logReturn": -0.004043068833115897
     },
     {
-      "event": "Flower Month",
-      "date": "2026-06-01",
+      "eventId": "last-creep-standing-2026-05-20-last-creep-standing",
+      "side": "ask",
+      "logReturn": -0.004043068833115897
+    },
+    {
+      "eventId": "flower-month-2026-06-01-flower-month",
       "side": "ask",
       "logReturn": -0.007302154373195037
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2026-06-05",
+      "eventId": "xp-skill-2026-06-05-skill-event",
       "side": "ask",
       "logReturn": -0.008208794429938047
     },
     {
-      "event": "Skill Event",
-      "date": "2026-06-05",
+      "eventId": "rapid-respawn-2026-06-05-rapid-respawn",
       "side": "ask",
       "logReturn": -0.008208794429938047
     },
     {
-      "event": "Full Moon",
-      "date": "2026-06-12",
+      "eventId": "full-moon-2026-06-12-full-moon",
       "side": "ask",
       "logReturn": 0.0033349180233765217
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2026-06-20",
+      "eventId": "last-creep-standing-2026-06-20-last-creep-standing",
       "side": "ask",
       "logReturn": 0.0135767547248841
     },
     {
-      "event": "Bewitched",
-      "date": "2026-06-21",
+      "eventId": "bewitched-2026-06-21-bewitched",
       "side": "ask",
       "logReturn": -0.0013609619563671462
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2026-07-03",
+      "eventId": "economy-2026-06-30-transfers-opened",
+      "side": "ask",
+      "logReturn": 0.000667369654112438
+    },
+    {
+      "eventId": "xp-skill-2026-07-03-xp-skill-event",
       "side": "ask",
       "logReturn": 0.010880081789924306
     },
     {
-      "event": "Full Moon",
-      "date": "2026-07-12",
+      "eventId": "full-moon-2026-07-12-full-moon",
       "side": "ask",
       "logReturn": 0.02696336456638175
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2026-07-20",
+      "eventId": "update-2026-07-13-summer-update-2026",
+      "side": "ask",
+      "logReturn": 0.02902663085690189
+    },
+    {
+      "eventId": "last-creep-standing-2026-07-20-last-creep-standing",
       "side": "ask",
       "logReturn": 0.01537278740036671
     },
     {
-      "event": "Hot Cuisine Month",
-      "date": "2026-08-01",
+      "eventId": "hot-cuisine-month-2026-08-01-hot-cuisine-month",
       "side": "ask",
       "logReturn": 0.01877695990050431
     },
     {
-      "event": "The Great Expedition",
-      "date": "2026-08-06",
+      "eventId": "the-great-expedition-2026-08-05-the-great-expedition",
+      "side": "ask",
+      "logReturn": 0.017129673550574
+    },
+    {
+      "eventId": "the-great-expedition-2026-08-06-the-great-expedition",
       "side": "ask",
       "logReturn": 0.020872668978355408
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2026-08-07",
+      "eventId": "rapid-respawn-2026-08-07-rapid-respawn",
       "side": "ask",
       "logReturn": 0.01960943269667846
     },
     {
-      "event": "Full Moon",
-      "date": "2026-08-12",
+      "eventId": "full-moon-2026-08-12-full-moon",
       "side": "ask",
       "logReturn": 0.011228119619684831
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2026-08-20",
+      "eventId": "last-creep-standing-2026-08-20-last-creep-standing",
       "side": "ask",
       "logReturn": 0.008459469406890125
     },
     {
-      "event": "Rise of Devovorga",
-      "date": "2026-09-01",
+      "eventId": "rise-of-devovorga-2026-09-01-rise-of-devovorga",
       "side": "ask",
       "logReturn": -0.0013542099416860832
     },
     {
-      "event": "The First Dragon",
-      "date": "2023-01-30",
+      "eventId": "the-first-dragon-2023-01-30-the-first-dragon",
       "side": "bid",
       "logReturn": 0.026791650017495495
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2023-02-03",
+      "eventId": "rapid-respawn-2023-02-03-rapid-respawn",
       "side": "bid",
       "logReturn": 0.029320814663372687
     },
     {
-      "event": "Full Moon",
-      "date": "2023-02-12",
+      "eventId": "full-moon-2023-02-12-full-moon",
       "side": "bid",
       "logReturn": -0.00742982741042338
     },
     {
-      "event": "Valentine's Day",
-      "date": "2023-02-14",
+      "eventId": "valentine-s-day-2023-02-14-valentine-s-day",
       "side": "bid",
       "logReturn": -0.0028689850727783533
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2023-02-20",
+      "eventId": "last-creep-standing-2023-02-20-last-creep-standing",
       "side": "bid",
       "logReturn": 0.0015255045708476892
     },
     {
-      "event": "A Piece of Cake",
-      "date": "2023-02-21",
+      "eventId": "a-piece-of-cake-2023-02-21-a-piece-of-cake",
       "side": "bid",
       "logReturn": 0.004114065101091529
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2023-03-03",
+      "eventId": "xp-skill-2023-03-03-xp-skill-event",
       "side": "bid",
       "logReturn": -0.01647241081370983
     },
     {
-      "event": "Orcsoberfest",
-      "date": "2023-03-10",
+      "eventId": "orcsoberfest-2023-03-10-orcsoberfest",
       "side": "bid",
       "logReturn": 0.014834526845181703
     },
     {
-      "event": "Full Moon",
-      "date": "2023-03-12",
+      "eventId": "full-moon-2023-03-12-full-moon",
       "side": "bid",
       "logReturn": 0.020987162686468736
     },
     {
-      "event": "Colours of Magic",
-      "date": "2023-03-15",
+      "eventId": "colours-of-magic-2023-03-15-colours-of-magic",
       "side": "bid",
       "logReturn": 0.02662813653749483
     },
     {
-      "event": "Loot Event",
-      "date": "2023-04-06",
+      "eventId": "loot-event-2023-04-06-loot-event",
       "side": "bid",
       "logReturn": 0.019065222677967317
     },
     {
-      "event": "Full Moon",
-      "date": "2023-04-12",
+      "eventId": "full-moon-2023-04-12-full-moon",
       "side": "bid",
       "logReturn": -0.0014551938706503082
     },
     {
-      "event": "Spring into Life",
-      "date": "2023-04-16",
+      "eventId": "spring-into-life-2023-04-16-spring-into-life",
       "side": "bid",
       "logReturn": 0.00796135311477117
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2023-04-20",
+      "eventId": "last-creep-standing-2023-04-20-last-creep-standing",
       "side": "bid",
       "logReturn": 0.030190635549195752
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2023-05-05",
+      "eventId": "xp-skill-2023-05-05-xp-skill-event",
       "side": "bid",
       "logReturn": -0.0156425338926547
     },
     {
-      "event": "Demon's Lullaby",
-      "date": "2023-05-07",
+      "eventId": "demon-s-lullaby-2023-05-07-demon-s-lullaby",
       "side": "bid",
       "logReturn": -0.0025424315541100534
     },
     {
-      "event": "Full Moon",
-      "date": "2023-05-12",
+      "eventId": "full-moon-2023-05-12-full-moon",
       "side": "bid",
       "logReturn": 0.033075462952860915
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2023-05-20",
+      "eventId": "last-creep-standing-2023-05-20-last-creep-standing",
       "side": "bid",
       "logReturn": 0.007913220898347102
     },
     {
-      "event": "Loot Event",
-      "date": "2023-06-02",
+      "eventId": "xp-skill-2023-06-02-xp-skill-event",
       "side": "bid",
       "logReturn": -0.0050848695251789035
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2023-06-02",
+      "eventId": "loot-event-2023-06-02-loot-event",
       "side": "bid",
       "logReturn": -0.0050848695251789035
     },
     {
-      "event": "Full Moon",
-      "date": "2023-06-12",
+      "eventId": "full-moon-2023-06-12-full-moon",
       "side": "bid",
       "logReturn": -0.005005917423893048
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2023-06-20",
+      "eventId": "last-creep-standing-2023-06-20-last-creep-standing",
       "side": "bid",
       "logReturn": 0.0010031902287933718
     },
     {
-      "event": "Bewitched",
-      "date": "2023-06-21",
+      "eventId": "bewitched-2023-06-21-bewitched",
       "side": "bid",
       "logReturn": 0.0010031902287933718
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2023-07-07",
+      "eventId": "xp-skill-2023-07-07-xp-skill-event",
       "side": "bid",
       "logReturn": -0.015344255739754844
     },
     {
-      "event": "Full Moon",
-      "date": "2023-07-12",
+      "eventId": "update-2023-07-10-summer-update-2023",
+      "side": "bid",
+      "logReturn": -0.04102817606662275
+    },
+    {
+      "eventId": "full-moon-2023-07-12-full-moon",
       "side": "bid",
       "logReturn": -0.038000121378555546
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2023-07-20",
+      "eventId": "last-creep-standing-2023-07-20-last-creep-standing",
       "side": "bid",
       "logReturn": 0.0004059947276454184
     },
     {
-      "event": "Rise of Devovorga",
-      "date": "2023-08-01",
+      "eventId": "rise-of-devovorga-2023-08-01-rise-of-devovorga",
       "side": "bid",
       "logReturn": 0.004078787607509377
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2023-08-04",
+      "eventId": "rapid-respawn-2023-08-04-rapid-respawn",
       "side": "bid",
       "logReturn": 0.008783849681212284
     },
     {
-      "event": "Full Moon",
-      "date": "2023-08-12",
+      "eventId": "full-moon-2023-08-12-full-moon",
       "side": "bid",
       "logReturn": 0.010000083334583399
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2023-08-20",
+      "eventId": "last-creep-standing-2023-08-20-last-creep-standing",
       "side": "bid",
       "logReturn": 0.005755648186446444
     },
     {
-      "event": "Annual Autumn Vintage",
-      "date": "2023-09-01",
+      "eventId": "annual-autumn-vintage-2023-09-01-annual-autumn-vintage",
       "side": "bid",
       "logReturn": -0.004944820051645961
     },
     {
-      "event": "Rise of Devovorga",
-      "date": "2023-09-02",
+      "eventId": "rise-of-devovorga-2023-09-02-rise-of-devovorga",
       "side": "bid",
       "logReturn": -0.006022406362816226
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2023-09-08",
+      "eventId": "xp-skill-2023-09-08-xp-skill-event",
       "side": "bid",
       "logReturn": 0.007972576780151366
     },
     {
-      "event": "Full Moon",
-      "date": "2023-09-12",
+      "eventId": "full-moon-2023-09-12-full-moon",
       "side": "bid",
       "logReturn": 0.0013505302883305287
     },
     {
-      "event": "Colours of Magic",
-      "date": "2023-09-15",
+      "eventId": "colours-of-magic-2023-09-15-colours-of-magic",
       "side": "bid",
       "logReturn": -0.0063756728098698125
     },
     {
-      "event": "Annual Autumn Vintage",
-      "date": "2023-10-01",
+      "eventId": "annual-autumn-vintage-2023-10-01-annual-autumn-vintage",
       "side": "bid",
       "logReturn": 0.014680844782973592
     },
     {
-      "event": "Loot Event",
-      "date": "2023-10-06",
+      "eventId": "loot-event-2023-10-06-loot-event",
       "side": "bid",
       "logReturn": 0.014643055237480525
     },
     {
-      "event": "Full Moon",
-      "date": "2023-10-12",
+      "eventId": "full-moon-2023-10-12-full-moon",
       "side": "bid",
       "logReturn": 0.013885580893948736
     },
     {
-      "event": "Orcsoberfest",
-      "date": "2023-10-13",
+      "eventId": "orcsoberfest-2023-10-13-orcsoberfest",
       "side": "bid",
       "logReturn": 0.011213657201902483
     },
     {
-      "event": "Annual Autumn Vintage",
-      "date": "2023-10-17",
+      "eventId": "annual-autumn-vintage-2023-10-17-annual-autumn-vintage",
       "side": "bid",
       "logReturn": 0.02187048678432638
     },
     {
-      "event": "Halloween Event",
-      "date": "2023-10-31",
+      "eventId": "halloween-event-2023-10-31-halloween-event",
       "side": "bid",
       "logReturn": -0.01535134368786711
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2023-11-03",
+      "eventId": "xp-skill-2023-11-03-xp-skill-event",
       "side": "bid",
       "logReturn": -0.026053577848382574
     },
     {
-      "event": "Lightbearer",
-      "date": "2023-11-11",
+      "eventId": "lightbearer-2023-11-11-lightbearer",
       "side": "bid",
       "logReturn": -0.012540229971789465
     },
     {
-      "event": "Full Moon",
-      "date": "2023-11-12",
+      "eventId": "full-moon-2023-11-12-full-moon",
       "side": "bid",
       "logReturn": -0.010024699100651121
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2023-11-20",
+      "eventId": "last-creep-standing-2023-11-20-last-creep-standing",
       "side": "bid",
       "logReturn": 0.003582673944982571
     },
     {
-      "event": "New Year",
-      "date": "2023-12-01",
+      "eventId": "new-year-2023-12-01-new-year",
       "side": "bid",
       "logReturn": -0.012477112914996114
     },
     {
-      "event": "Winterlight Solstice",
-      "date": "2023-12-01",
+      "eventId": "winterlight-solstice-2023-12-01-winterlight-solstice",
       "side": "bid",
       "logReturn": -0.012477112914996114
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2023-12-02",
+      "eventId": "rapid-respawn-2023-12-02-rapid-respawn",
       "side": "bid",
       "logReturn": -0.01708453682971609
     },
     {
-      "event": "Christmas",
-      "date": "2023-12-12",
+      "eventId": "update-2023-12-04-winter-update-2023",
+      "side": "bid",
+      "logReturn": -0.02855751890406457
+    },
+    {
+      "eventId": "christmas-2023-12-12-christmas",
       "side": "bid",
       "logReturn": -0.03229582514780767
     },
     {
-      "event": "Full Moon",
-      "date": "2023-12-12",
+      "eventId": "full-moon-2023-12-12-full-moon",
       "side": "bid",
       "logReturn": -0.03229582514780767
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2023-12-20",
+      "eventId": "last-creep-standing-2023-12-20-last-creep-standing",
       "side": "bid",
       "logReturn": -0.03330346553345111
     },
     {
-      "event": "Winterlight Solstice",
-      "date": "2023-12-22",
+      "eventId": "xp-skill-2023-12-22-xp-skill-event",
       "side": "bid",
       "logReturn": -0.02316855744719102
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2023-12-22",
+      "eventId": "winterlight-solstice-2023-12-22-winterlight-solstice",
       "side": "bid",
       "logReturn": -0.02316855744719102
     },
     {
-      "event": "New Year",
-      "date": "2023-12-27",
+      "eventId": "new-year-2023-12-27-new-year",
       "side": "bid",
       "logReturn": -0.004987470842660065
     },
     {
-      "event": "Tibia Anniversary",
-      "date": "2024-01-07",
+      "eventId": "tibia-anniversary-2024-01-07-tibia-anniversary",
       "side": "bid",
       "logReturn": -0.007393561811275762
     },
     {
-      "event": "Full Moon",
-      "date": "2024-01-12",
+      "eventId": "full-moon-2024-01-12-full-moon",
       "side": "bid",
       "logReturn": 0.004253454228697266
     },
     {
-      "event": "The First Dragon",
-      "date": "2024-01-14",
+      "eventId": "the-first-dragon-2024-01-14-the-first-dragon",
       "side": "bid",
       "logReturn": 0.00761106696905871
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2024-01-20",
+      "eventId": "last-creep-standing-2024-01-20-last-creep-standing",
       "side": "bid",
       "logReturn": 0.00482267587991295
     },
     {
-      "event": "Carnival Month",
-      "date": "2024-02-01",
+      "eventId": "carnival-month-2024-02-01-carnival-month",
       "side": "bid",
       "logReturn": 0.0017150110151548153
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2024-02-02",
+      "eventId": "rapid-respawn-2024-02-02-rapid-respawn",
       "side": "bid",
       "logReturn": -0.0026278237577733775
     },
     {
-      "event": "Full Moon",
-      "date": "2024-02-12",
+      "eventId": "full-moon-2024-02-12-full-moon",
       "side": "bid",
       "logReturn": -0.013509261680146368
     },
     {
-      "event": "Valentine's Day",
-      "date": "2024-02-14",
+      "eventId": "valentine-s-day-2024-02-14-valentine-s-day",
       "side": "bid",
       "logReturn": -0.012483123574543219
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2024-02-20",
+      "eventId": "last-creep-standing-2024-02-20-last-creep-standing",
       "side": "bid",
       "logReturn": -0.015569612441714427
     },
     {
-      "event": "A Piece of Cake",
-      "date": "2024-02-21",
+      "eventId": "a-piece-of-cake-2024-02-21-a-piece-of-cake",
       "side": "bid",
       "logReturn": -0.016053671506370857
     },
     {
-      "event": "Double Daily Reward Month",
-      "date": "2024-03-01",
+      "eventId": "xp-skill-2024-03-01-xp-skill-event",
       "side": "bid",
       "logReturn": -0.007485373706556249
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2024-03-01",
+      "eventId": "double-daily-reward-month-2024-03-01-double-daily-reward-month",
       "side": "bid",
       "logReturn": -0.007485373706556249
     },
     {
-      "event": "Orcsoberfest",
-      "date": "2024-03-08",
+      "eventId": "xp-skill-2024-03-08-xp-skill-event",
       "side": "bid",
       "logReturn": -0.014345439326708705
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2024-03-08",
+      "eventId": "orcsoberfest-2024-03-08-orcsoberfest",
       "side": "bid",
       "logReturn": -0.014345439326708705
     },
     {
-      "event": "Full Moon",
-      "date": "2024-03-12",
+      "eventId": "full-moon-2024-03-12-full-moon",
       "side": "bid",
       "logReturn": 0.00040461865244538687
     },
     {
-      "event": "Colours of Magic",
-      "date": "2024-03-15",
+      "eventId": "colours-of-magic-2024-03-15-colours-of-magic",
       "side": "bid",
       "logReturn": 0.004828536680502306
     },
     {
-      "event": "Chyllfroest",
-      "date": "2024-04-01",
+      "eventId": "chyllfroest-2024-04-01-chyllfroest",
       "side": "bid",
       "logReturn": -0.007372397473378983
     },
     {
-      "event": "Prank Month",
-      "date": "2024-04-01",
+      "eventId": "prank-month-2024-04-01-prank-month",
       "side": "bid",
       "logReturn": -0.007372397473378983
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2024-04-05",
+      "eventId": "rapid-respawn-2024-04-05-rapid-respawn",
       "side": "bid",
       "logReturn": -0.008632459479136672
     },
     {
-      "event": "Exaltation Overload",
-      "date": "2024-04-12",
+      "eventId": "exaltation-overload-2024-04-12-exaltation-overload",
       "side": "bid",
       "logReturn": -0.004503835867186149
     },
     {
-      "event": "Full Moon",
-      "date": "2024-04-12",
+      "eventId": "full-moon-2024-04-12-full-moon",
       "side": "bid",
       "logReturn": -0.004503835867186149
     },
     {
-      "event": "Spring into Life",
-      "date": "2024-04-16",
+      "eventId": "spring-into-life-2024-04-16-spring-into-life",
       "side": "bid",
       "logReturn": 0.0026725538781694896
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2024-04-20",
+      "eventId": "last-creep-standing-2024-04-20-last-creep-standing",
       "side": "bid",
       "logReturn": 0.0007520493698816161
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2024-05-03",
+      "eventId": "xp-skill-2024-05-03-xp-skill-event",
       "side": "bid",
       "logReturn": 0.006914501182359829
     },
     {
-      "event": "Demon's Lullaby",
-      "date": "2024-05-07",
+      "eventId": "demon-s-lullaby-2024-05-07-demon-s-lullaby",
       "side": "bid",
       "logReturn": -0.01031665019270796
     },
     {
-      "event": "Full Moon",
-      "date": "2024-05-12",
+      "eventId": "full-moon-2024-05-12-full-moon",
       "side": "bid",
       "logReturn": -0.0020050362190057918
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2024-05-20",
+      "eventId": "last-creep-standing-2024-05-20-last-creep-standing",
       "side": "bid",
       "logReturn": 0.017375364984415814
     },
     {
-      "event": "Flower Month",
-      "date": "2024-06-01",
+      "eventId": "flower-month-2024-06-01-flower-month",
       "side": "bid",
       "logReturn": -0.07089199510974652
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2024-06-07",
+      "eventId": "xp-skill-2024-06-07-skill-event",
       "side": "bid",
       "logReturn": -0.010131731395180902
     },
     {
-      "event": "Skill Event",
-      "date": "2024-06-07",
+      "eventId": "rapid-respawn-2024-06-07-rapid-respawn",
       "side": "bid",
       "logReturn": -0.010131731395180902
     },
     {
-      "event": "Full Moon",
-      "date": "2024-06-12",
+      "eventId": "full-moon-2024-06-12-full-moon",
       "side": "bid",
       "logReturn": 0.006756782462879687
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2024-06-20",
+      "eventId": "last-creep-standing-2024-06-20-last-creep-standing",
       "side": "bid",
       "logReturn": -0.004352894457242295
     },
     {
-      "event": "Bewitched",
-      "date": "2024-06-21",
+      "eventId": "bewitched-2024-06-21-bewitched",
       "side": "bid",
       "logReturn": -0.0025659219318133965
     },
     {
-      "event": "Full Moon",
-      "date": "2024-07-12",
+      "eventId": "update-2024-07-01-summer-update-2024",
+      "side": "bid",
+      "logReturn": -0.04413754612240619
+    },
+    {
+      "eventId": "xp-skill-2024-07-12-xp-skill-event",
       "side": "bid",
       "logReturn": 0.0017531561292597187
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2024-07-12",
+      "eventId": "full-moon-2024-07-12-full-moon",
       "side": "bid",
       "logReturn": 0.0017531561292597187
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2024-07-20",
+      "eventId": "last-creep-standing-2024-07-20-last-creep-standing",
       "side": "bid",
       "logReturn": 0.022686919858013663
     },
     {
-      "event": "Hot Cuisine Month",
-      "date": "2024-08-01",
+      "eventId": "hot-cuisine-month-2024-08-01-hot-cuisine-month",
       "side": "bid",
       "logReturn": 0.02957379760547802
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2024-08-02",
+      "eventId": "rapid-respawn-2024-08-02-rapid-respawn",
       "side": "bid",
       "logReturn": 0.04391588207577715
     },
     {
-      "event": "Full Moon",
-      "date": "2024-08-12",
+      "eventId": "full-moon-2024-08-12-full-moon",
       "side": "bid",
       "logReturn": 0.009600482674329778
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2024-09-06",
+      "eventId": "xp-skill-2024-09-06-xp-skill-event",
       "side": "bid",
       "logReturn": 0.03233345325931701
     },
     {
-      "event": "Full Moon",
-      "date": "2024-09-12",
+      "eventId": "full-moon-2024-09-12-full-moon",
       "side": "bid",
       "logReturn": 0.02438895948250001
     },
     {
-      "event": "Colours of Magic",
-      "date": "2024-09-15",
+      "eventId": "colours-of-magic-2024-09-15-colours-of-magic",
       "side": "bid",
       "logReturn": 0.03276058348438266
     },
     {
-      "event": "Annual Autumn Vintage",
-      "date": "2024-10-01",
+      "eventId": "annual-autumn-vintage-2024-10-01-annual-autumn-vintage",
       "side": "bid",
       "logReturn": 0.006644542718668511
     },
     {
-      "event": "Loot Event",
-      "date": "2024-10-04",
+      "eventId": "loot-event-2024-10-04-loot-event",
       "side": "bid",
       "logReturn": 0.0073623849865665095
     },
     {
-      "event": "Orcsoberfest",
-      "date": "2024-10-11",
+      "eventId": "orcsoberfest-2024-10-11-orcsoberfest",
       "side": "bid",
       "logReturn": 0.030774050190237847
     },
     {
-      "event": "Full Moon",
-      "date": "2024-10-12",
+      "eventId": "full-moon-2024-10-12-full-moon",
       "side": "bid",
       "logReturn": 0.025080498377297412
     },
     {
-      "event": "Annual Autumn Vintage",
-      "date": "2024-10-17",
+      "eventId": "annual-autumn-vintage-2024-10-17-annual-autumn-vintage",
       "side": "bid",
       "logReturn": -0.006379114669090864
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2024-10-25",
+      "eventId": "xp-skill-2024-10-25-xp-skill-event",
       "side": "bid",
       "logReturn": 0.01698902317032374
     },
     {
-      "event": "Halloween Event",
-      "date": "2024-10-31",
+      "eventId": "halloween-event-2024-10-31-halloween-event",
       "side": "bid",
       "logReturn": -0.0088422862608156
     },
     {
-      "event": "Exaltation Overload",
-      "date": "2024-11-01",
+      "eventId": "exaltation-overload-2024-11-01-exaltation-overload",
       "side": "bid",
       "logReturn": -0.0088422862608156
     },
     {
-      "event": "Lightbearer",
-      "date": "2024-11-11",
+      "eventId": "lightbearer-2024-11-11-lightbearer",
       "side": "bid",
       "logReturn": 0.003481583380381516
     },
     {
-      "event": "Full Moon",
-      "date": "2024-11-12",
+      "eventId": "full-moon-2024-11-12-full-moon",
       "side": "bid",
       "logReturn": 0.007592269229445263
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2024-11-20",
+      "eventId": "last-creep-standing-2024-11-20-last-creep-standing",
       "side": "bid",
       "logReturn": -3.845931965935533e-05
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2024-12-06",
+      "eventId": "update-2024-11-25-winter-update-2024",
+      "side": "bid",
+      "logReturn": -0.006470779733232636
+    },
+    {
+      "eventId": "rapid-respawn-2024-12-06-rapid-respawn",
       "side": "bid",
       "logReturn": -0.00200829131069332
     },
     {
-      "event": "Christmas",
-      "date": "2024-12-12",
+      "eventId": "christmas-2024-12-12-christmas",
       "side": "bid",
       "logReturn": 0.01228083351660169
     },
     {
-      "event": "Full Moon",
-      "date": "2024-12-12",
+      "eventId": "full-moon-2024-12-12-full-moon",
       "side": "bid",
       "logReturn": 0.01228083351660169
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2024-12-20",
+      "eventId": "last-creep-standing-2024-12-20-last-creep-standing",
       "side": "bid",
       "logReturn": -0.01607009317647469
     },
     {
-      "event": "Winterlight Solstice",
-      "date": "2024-12-22",
+      "eventId": "winterlight-solstice-2024-12-22-winterlight-solstice",
       "side": "bid",
       "logReturn": -0.012779726646398882
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2024-12-23",
+      "eventId": "xp-skill-2024-12-23-xp-skill-event",
       "side": "bid",
       "logReturn": -0.0022240621560353337
     },
     {
-      "event": "New Year",
-      "date": "2024-12-27",
+      "eventId": "new-year-2024-12-27-new-year",
       "side": "bid",
       "logReturn": -0.011291276094882946
     },
     {
-      "event": "Tibia Anniversary",
-      "date": "2025-01-07",
+      "eventId": "tibia-anniversary-2025-01-07-tibia-anniversary",
       "side": "bid",
       "logReturn": 0.0011627601003507057
     },
     {
-      "event": "Full Moon",
-      "date": "2025-01-12",
+      "eventId": "full-moon-2025-01-12-full-moon",
       "side": "bid",
       "logReturn": -0.0013065945279342429
     },
     {
-      "event": "The First Dragon",
-      "date": "2025-01-14",
+      "eventId": "economy-2025-01-14-tibia-token-launched",
       "side": "bid",
       "logReturn": -0.0018867556707745595
     },
     {
-      "event": "Exaltation Overload",
-      "date": "2025-01-17",
+      "eventId": "the-first-dragon-2025-01-14-the-first-dragon",
+      "side": "bid",
+      "logReturn": -0.0018867556707745595
+    },
+    {
+      "eventId": "exaltation-overload-2025-01-17-exaltation-overload",
       "side": "bid",
       "logReturn": 0.0010823511833944605
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2025-01-20",
+      "eventId": "last-creep-standing-2025-01-20-last-creep-standing",
       "side": "bid",
       "logReturn": 0.0010823511833944605
     },
     {
-      "event": "Carnival Month",
-      "date": "2025-02-01",
+      "eventId": "carnival-month-2025-02-01-carnival-month",
       "side": "bid",
       "logReturn": 0.0010530889385300536
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2025-02-07",
+      "eventId": "rapid-respawn-2025-02-07-rapid-respawn",
       "side": "bid",
       "logReturn": 0.009827218523717532
     },
     {
-      "event": "Full Moon",
-      "date": "2025-02-12",
+      "eventId": "full-moon-2025-02-12-full-moon",
       "side": "bid",
       "logReturn": 0.008972880902095413
     },
     {
-      "event": "Valentine's Day",
-      "date": "2025-02-14",
+      "eventId": "valentine-s-day-2025-02-14-valentine-s-day",
       "side": "bid",
       "logReturn": 0.00616956492351237
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2025-02-20",
+      "eventId": "last-creep-standing-2025-02-20-last-creep-standing",
       "side": "bid",
       "logReturn": -0.007742175971883716
     },
     {
-      "event": "A Piece of Cake",
-      "date": "2025-02-21",
+      "eventId": "a-piece-of-cake-2025-02-21-a-piece-of-cake",
       "side": "bid",
       "logReturn": -0.01389773769337893
     },
     {
-      "event": "Double Daily Reward Month",
-      "date": "2025-03-01",
+      "eventId": "double-daily-reward-month-2025-03-01-double-daily-reward-month",
       "side": "bid",
       "logReturn": -0.047961091301713214
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2025-03-07",
+      "eventId": "xp-skill-2025-03-07-xp-skill-event",
       "side": "bid",
       "logReturn": 0.019315020622560804
     },
     {
-      "event": "Full Moon",
-      "date": "2025-03-12",
+      "eventId": "full-moon-2025-03-12-full-moon",
       "side": "bid",
       "logReturn": 0.011480803958687565
     },
     {
-      "event": "Orcsoberfest",
-      "date": "2025-03-14",
+      "eventId": "orcsoberfest-2025-03-14-orcsoberfest",
       "side": "bid",
       "logReturn": -0.002543939004447633
     },
     {
-      "event": "Colours of Magic",
-      "date": "2025-03-15",
+      "eventId": "colours-of-magic-2025-03-15-colours-of-magic",
       "side": "bid",
       "logReturn": -0.024160997568700427
     },
     {
-      "event": "Chyllfroest",
-      "date": "2025-04-01",
+      "eventId": "chyllfroest-2025-04-01-chyllfroest",
       "side": "bid",
       "logReturn": -0.014987105288428507
     },
     {
-      "event": "Prank Month",
-      "date": "2025-04-01",
+      "eventId": "prank-month-2025-04-01-prank-month",
       "side": "bid",
       "logReturn": -0.014987105288428507
     },
     {
-      "event": "Exaltation Overload",
-      "date": "2025-04-04",
+      "eventId": "exaltation-overload-2025-04-04-exaltation-overload",
       "side": "bid",
       "logReturn": -0.015408879067191348
     },
     {
-      "event": "Full Moon",
-      "date": "2025-04-12",
+      "eventId": "update-2025-04-08-monk-released",
+      "side": "bid",
+      "logReturn": 0.0002626903656133284
+    },
+    {
+      "eventId": "full-moon-2025-04-12-full-moon",
       "side": "bid",
       "logReturn": -0.0016329697377765536
     },
     {
-      "event": "Spring into Life",
-      "date": "2025-04-16",
+      "eventId": "economy-2025-04-15-tibia-token-fee-raised-to-8",
+      "side": "bid",
+      "logReturn": -0.025736869102083202
+    },
+    {
+      "eventId": "spring-into-life-2025-04-16-spring-into-life",
       "side": "bid",
       "logReturn": -0.027156315756309404
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2025-04-20",
+      "eventId": "last-creep-standing-2025-04-20-last-creep-standing",
       "side": "bid",
       "logReturn": -0.025274483182147804
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2025-05-02",
+      "eventId": "xp-skill-2025-05-02-xp-skill-event",
       "side": "bid",
       "logReturn": 0.0025673955052457334
     },
     {
-      "event": "Demon's Lullaby",
-      "date": "2025-05-07",
+      "eventId": "demon-s-lullaby-2025-05-07-demon-s-lullaby",
       "side": "bid",
       "logReturn": -0.014788657473426496
     },
     {
-      "event": "Full Moon",
-      "date": "2025-05-12",
+      "eventId": "full-moon-2025-05-12-full-moon",
       "side": "bid",
       "logReturn": -0.017241806434506103
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2025-05-20",
+      "eventId": "last-creep-standing-2025-05-20-last-creep-standing",
       "side": "bid",
       "logReturn": -0.02070564358834581
     },
     {
-      "event": "Flower Month",
-      "date": "2025-06-01",
+      "eventId": "world-created-2025-05-21-luzibra-opened",
+      "side": "bid",
+      "logReturn": -0.00904370384050291
+    },
+    {
+      "eventId": "flower-month-2025-06-01-flower-month",
       "side": "bid",
       "logReturn": 0.0005355549071773091
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2025-06-06",
+      "eventId": "xp-skill-2025-06-06-skill-event",
       "side": "bid",
       "logReturn": -0.024388515342338633
     },
     {
-      "event": "Skill Event",
-      "date": "2025-06-06",
+      "eventId": "rapid-respawn-2025-06-06-rapid-respawn",
       "side": "bid",
       "logReturn": -0.024388515342338633
     },
     {
-      "event": "Full Moon",
-      "date": "2025-06-12",
+      "eventId": "full-moon-2025-06-12-full-moon",
       "side": "bid",
       "logReturn": -0.004074247374203415
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2025-07-04",
+      "eventId": "xp-skill-2025-07-04-xp-skill-event",
       "side": "bid",
       "logReturn": 0.01645313131975744
     },
     {
-      "event": "Full Moon",
-      "date": "2025-07-12",
+      "eventId": "full-moon-2025-07-12-full-moon",
       "side": "bid",
       "logReturn": 0.012194901288831448
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2025-07-20",
+      "eventId": "last-creep-standing-2025-07-20-last-creep-standing",
       "side": "bid",
       "logReturn": 0.009409847156630947
     },
     {
-      "event": "Hot Cuisine Month",
-      "date": "2025-08-01",
+      "eventId": "update-2025-07-21-summer-update-2025",
+      "side": "bid",
+      "logReturn": 0.012227594824326534
+    },
+    {
+      "eventId": "economy-2025-07-29-transfer-block-lifted",
+      "side": "bid",
+      "logReturn": 0.017712705893130263
+    },
+    {
+      "eventId": "store-2025-07-29-premium-restriction-lifted",
+      "side": "bid",
+      "logReturn": 0.017712705893130263
+    },
+    {
+      "eventId": "rapid-respawn-2025-08-01-rapid-respawn",
       "side": "bid",
       "logReturn": 0.024993196256239976
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2025-08-01",
+      "eventId": "hot-cuisine-month-2025-08-01-hot-cuisine-month",
       "side": "bid",
       "logReturn": 0.024993196256239976
     },
     {
-      "event": "Full Moon",
-      "date": "2025-08-12",
+      "eventId": "full-moon-2025-08-12-full-moon",
       "side": "bid",
       "logReturn": 0.03232553000811225
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2025-08-20",
+      "eventId": "last-creep-standing-2025-08-20-last-creep-standing",
       "side": "bid",
       "logReturn": -0.006849534120099741
     },
     {
-      "event": "Rise of Devovorga",
-      "date": "2025-09-01",
+      "eventId": "rise-of-devovorga-2025-09-01-rise-of-devovorga",
       "side": "bid",
       "logReturn": 0.011490020077561058
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2025-09-05",
+      "eventId": "xp-skill-2025-09-05-xp-skill-event",
       "side": "bid",
       "logReturn": 0.018276100125931026
     },
     {
-      "event": "Full Moon",
-      "date": "2025-09-12",
+      "eventId": "full-moon-2025-09-12-full-moon",
       "side": "bid",
       "logReturn": 0.018415097210739598
     },
     {
-      "event": "Colours of Magic",
-      "date": "2025-09-15",
+      "eventId": "colours-of-magic-2025-09-15-colours-of-magic",
       "side": "bid",
       "logReturn": 0.008899095239844423
     },
     {
-      "event": "Annual Autumn Vintage",
-      "date": "2025-10-01",
+      "eventId": "annual-autumn-vintage-2025-10-01-annual-autumn-vintage",
       "side": "bid",
       "logReturn": 0.018546937286578215
     },
     {
-      "event": "Exaltation Overload",
-      "date": "2025-10-03",
+      "eventId": "exaltation-overload-2025-10-03-exaltation-overload",
       "side": "bid",
       "logReturn": 0.009204051616957122
     },
     {
-      "event": "Orcsoberfest",
-      "date": "2025-10-10",
+      "eventId": "orcsoberfest-2025-10-10-orcsoberfest",
       "side": "bid",
       "logReturn": 0.019725422044445946
     },
     {
-      "event": "Full Moon",
-      "date": "2025-10-12",
+      "eventId": "full-moon-2025-10-12-full-moon",
       "side": "bid",
       "logReturn": 0.015898913815706395
     },
     {
-      "event": "Annual Autumn Vintage",
-      "date": "2025-10-17",
+      "eventId": "annual-autumn-vintage-2025-10-17-annual-autumn-vintage",
       "side": "bid",
       "logReturn": 0.015100786899882352
     },
     {
-      "event": "Halloween Event",
-      "date": "2025-10-31",
+      "eventId": "halloween-event-2025-10-31-halloween-event",
       "side": "bid",
       "logReturn": -0.0024840325051134547
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2025-11-07",
+      "eventId": "world-created-2025-11-06-terribra-opened",
+      "side": "bid",
+      "logReturn": 0.007565858747455406
+    },
+    {
+      "eventId": "world-merge-2025-11-06-blumera",
+      "side": "bid",
+      "logReturn": 0.007565858747455406
+    },
+    {
+      "eventId": "world-merge-2025-11-06-citra",
+      "side": "bid",
+      "logReturn": 0.007565858747455406
+    },
+    {
+      "eventId": "world-merge-2025-11-06-eclipta",
+      "side": "bid",
+      "logReturn": 0.007565858747455406
+    },
+    {
+      "eventId": "world-merge-2025-11-06-kalanta",
+      "side": "bid",
+      "logReturn": 0.007565858747455406
+    },
+    {
+      "eventId": "world-merge-2025-11-06-monstera",
+      "side": "bid",
+      "logReturn": 0.007565858747455406
+    },
+    {
+      "eventId": "world-merge-2025-11-06-sombra",
+      "side": "bid",
+      "logReturn": 0.007565858747455406
+    },
+    {
+      "eventId": "world-merge-2025-11-06-tempestera",
+      "side": "bid",
+      "logReturn": 0.007565858747455406
+    },
+    {
+      "eventId": "world-merge-2025-11-06-terribra",
+      "side": "bid",
+      "logReturn": 0.007565858747455406
+    },
+    {
+      "eventId": "world-merge-2025-11-06-xymera",
+      "side": "bid",
+      "logReturn": 0.007565858747455406
+    },
+    {
+      "eventId": "xp-skill-2025-11-07-xp-skill-event",
       "side": "bid",
       "logReturn": 0.007553296485745589
     },
     {
-      "event": "Lightbearer",
-      "date": "2025-11-11",
+      "eventId": "lightbearer-2025-11-11-lightbearer",
       "side": "bid",
       "logReturn": 0.0017889993936655226
     },
     {
-      "event": "Full Moon",
-      "date": "2025-11-12",
+      "eventId": "full-moon-2025-11-12-full-moon",
       "side": "bid",
       "logReturn": -0.001244445722392084
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2025-11-20",
+      "eventId": "last-creep-standing-2025-11-20-last-creep-standing",
       "side": "bid",
       "logReturn": 0.003791354739249331
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2025-12-05",
+      "eventId": "update-2025-11-24-winter-update-2025",
+      "side": "bid",
+      "logReturn": 0.005087411511380132
+    },
+    {
+      "eventId": "rapid-respawn-2025-12-05-rapid-respawn",
       "side": "bid",
       "logReturn": -0.0051375150775371005
     },
     {
-      "event": "Christmas",
-      "date": "2025-12-12",
+      "eventId": "christmas-2025-12-12-christmas",
       "side": "bid",
       "logReturn": -0.00015150367425389527
     },
     {
-      "event": "Full Moon",
-      "date": "2025-12-12",
+      "eventId": "full-moon-2025-12-12-full-moon",
       "side": "bid",
       "logReturn": -0.00015150367425389527
     },
     {
-      "event": "New Year",
-      "date": "2025-12-27",
+      "eventId": "new-year-2025-12-27-new-year",
       "side": "bid",
       "logReturn": -0.02600112710017624
     },
     {
-      "event": "Full Moon",
-      "date": "2026-01-12",
+      "eventId": "full-moon-2026-01-12-full-moon",
       "side": "bid",
       "logReturn": 0.004628107434468017
     },
     {
-      "event": "The First Dragon",
-      "date": "2026-01-14",
+      "eventId": "the-first-dragon-2026-01-14-the-first-dragon",
       "side": "bid",
       "logReturn": 0.01890345392452881
     },
     {
-      "event": "Exaltation Overload",
-      "date": "2026-01-16",
+      "eventId": "exaltation-overload-2026-01-16-exaltation-overload",
       "side": "bid",
       "logReturn": 0.019840896510672015
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2026-01-20",
+      "eventId": "last-creep-standing-2026-01-20-last-creep-standing",
       "side": "bid",
       "logReturn": -0.004747398843639904
     },
     {
-      "event": "Carnival Month",
-      "date": "2026-02-01",
+      "eventId": "carnival-month-2026-02-01-carnival-month",
       "side": "bid",
       "logReturn": 0.009029764324519924
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2026-02-06",
+      "eventId": "rapid-respawn-2026-02-06-rapid-respawn",
       "side": "bid",
       "logReturn": 0.001268767351424176
     },
     {
-      "event": "Full Moon",
-      "date": "2026-02-12",
+      "eventId": "full-moon-2026-02-12-full-moon",
       "side": "bid",
       "logReturn": -0.005614216304102487
     },
     {
-      "event": "Valentine's Day",
-      "date": "2026-02-14",
+      "eventId": "valentine-s-day-2026-02-14-valentine-s-day",
       "side": "bid",
       "logReturn": 0.0033492034102496028
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2026-02-20",
+      "eventId": "last-creep-standing-2026-02-20-last-creep-standing",
       "side": "bid",
       "logReturn": -0.0027792132868867283
     },
     {
-      "event": "A Piece of Cake",
-      "date": "2026-02-21",
+      "eventId": "a-piece-of-cake-2026-02-21-a-piece-of-cake",
       "side": "bid",
       "logReturn": -0.00897294303964118
     },
     {
-      "event": "Double Daily Reward Month",
-      "date": "2026-03-01",
+      "eventId": "double-daily-reward-month-2026-03-01-double-daily-reward-month",
       "side": "bid",
       "logReturn": 0.0016072795941786103
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2026-03-06",
+      "eventId": "xp-skill-2026-03-06-xp-skill-event",
       "side": "bid",
       "logReturn": -0.0187316493422811
     },
     {
-      "event": "Full Moon",
-      "date": "2026-03-12",
+      "eventId": "full-moon-2026-03-12-full-moon",
       "side": "bid",
       "logReturn": -0.012929527578316715
     },
     {
-      "event": "Orcsoberfest",
-      "date": "2026-03-13",
+      "eventId": "orcsoberfest-2026-03-13-orcsoberfest",
       "side": "bid",
       "logReturn": -0.007551291041617298
     },
     {
-      "event": "Colours of Magic",
-      "date": "2026-03-15",
+      "eventId": "colours-of-magic-2026-03-15-colours-of-magic",
       "side": "bid",
       "logReturn": -0.005503606138001078
     },
     {
-      "event": "Chyllfroest",
-      "date": "2026-04-01",
+      "eventId": "chyllfroest-2026-04-01-chyllfroest",
       "side": "bid",
       "logReturn": 0.004648685902991108
     },
     {
-      "event": "Prank Month",
-      "date": "2026-04-01",
+      "eventId": "prank-month-2026-04-01-prank-month",
       "side": "bid",
       "logReturn": 0.004648685902991108
     },
     {
-      "event": "Exaltation Overload",
-      "date": "2026-04-03",
+      "eventId": "exaltation-overload-2026-04-03-exaltation-overload",
       "side": "bid",
       "logReturn": -0.0006138653692468859
     },
     {
-      "event": "Full Moon",
-      "date": "2026-04-12",
+      "eventId": "full-moon-2026-04-12-full-moon",
       "side": "bid",
       "logReturn": -0.0028339991697286927
     },
     {
-      "event": "Spring into Life",
-      "date": "2026-04-16",
+      "eventId": "spring-into-life-2026-04-16-spring-into-life",
       "side": "bid",
       "logReturn": -0.006508748151612955
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2026-04-20",
+      "eventId": "last-creep-standing-2026-04-20-last-creep-standing",
       "side": "bid",
       "logReturn": -0.006527280517843994
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2026-05-01",
+      "eventId": "xp-skill-2026-05-01-xp-skill-event",
       "side": "bid",
       "logReturn": -0.002536428774838516
     },
     {
-      "event": "Demon's Lullaby",
-      "date": "2026-05-07",
+      "eventId": "demon-s-lullaby-2026-05-07-demon-s-lullaby",
       "side": "bid",
       "logReturn": -0.00838596406407501
     },
     {
-      "event": "Full Moon",
-      "date": "2026-05-12",
+      "eventId": "full-moon-2026-05-12-full-moon",
       "side": "bid",
       "logReturn": 0.00027140356519473463
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2026-05-20",
+      "eventId": "world-created-2026-05-20-floribra-opened",
       "side": "bid",
       "logReturn": -0.008023855654370055
     },
     {
-      "event": "Flower Month",
-      "date": "2026-06-01",
+      "eventId": "last-creep-standing-2026-05-20-last-creep-standing",
+      "side": "bid",
+      "logReturn": -0.008023855654370055
+    },
+    {
+      "eventId": "flower-month-2026-06-01-flower-month",
       "side": "bid",
       "logReturn": -0.012176959920236386
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2026-06-05",
+      "eventId": "xp-skill-2026-06-05-skill-event",
       "side": "bid",
       "logReturn": -0.020861036652741336
     },
     {
-      "event": "Skill Event",
-      "date": "2026-06-05",
+      "eventId": "rapid-respawn-2026-06-05-rapid-respawn",
       "side": "bid",
       "logReturn": -0.020861036652741336
     },
     {
-      "event": "Full Moon",
-      "date": "2026-06-12",
+      "eventId": "full-moon-2026-06-12-full-moon",
       "side": "bid",
       "logReturn": 0.015234604963442276
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2026-06-20",
+      "eventId": "last-creep-standing-2026-06-20-last-creep-standing",
       "side": "bid",
       "logReturn": 0.006252665458318306
     },
     {
-      "event": "Bewitched",
-      "date": "2026-06-21",
+      "eventId": "bewitched-2026-06-21-bewitched",
       "side": "bid",
       "logReturn": 0.0017446302538776796
     },
     {
-      "event": "XP/Skill Event",
-      "date": "2026-07-03",
+      "eventId": "economy-2026-06-30-transfers-opened",
+      "side": "bid",
+      "logReturn": 0.007934988633275948
+    },
+    {
+      "eventId": "xp-skill-2026-07-03-xp-skill-event",
       "side": "bid",
       "logReturn": 0.011964669196053143
     },
     {
-      "event": "Full Moon",
-      "date": "2026-07-12",
+      "eventId": "full-moon-2026-07-12-full-moon",
       "side": "bid",
       "logReturn": 0.02179646913249541
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2026-07-20",
+      "eventId": "update-2026-07-13-summer-update-2026",
+      "side": "bid",
+      "logReturn": 0.02401647304869101
+    },
+    {
+      "eventId": "last-creep-standing-2026-07-20-last-creep-standing",
       "side": "bid",
       "logReturn": 0.01995016815085872
     },
     {
-      "event": "Hot Cuisine Month",
-      "date": "2026-08-01",
+      "eventId": "hot-cuisine-month-2026-08-01-hot-cuisine-month",
       "side": "bid",
       "logReturn": 0.02142214091226027
     },
     {
-      "event": "The Great Expedition",
-      "date": "2026-08-06",
+      "eventId": "the-great-expedition-2026-08-05-the-great-expedition",
+      "side": "bid",
+      "logReturn": 0.014875526159624052
+    },
+    {
+      "eventId": "the-great-expedition-2026-08-06-the-great-expedition",
       "side": "bid",
       "logReturn": 0.018503013837609654
     },
     {
-      "event": "Rapid Respawn",
-      "date": "2026-08-07",
+      "eventId": "rapid-respawn-2026-08-07-rapid-respawn",
       "side": "bid",
       "logReturn": 0.017080911131715646
     },
     {
-      "event": "Full Moon",
-      "date": "2026-08-12",
+      "eventId": "full-moon-2026-08-12-full-moon",
       "side": "bid",
       "logReturn": 0.012360485659152208
     },
     {
-      "event": "Last Creep Standing",
-      "date": "2026-08-20",
+      "eventId": "last-creep-standing-2026-08-20-last-creep-standing",
       "side": "bid",
       "logReturn": 0.012258107731090293
     },
     {
-      "event": "Rise of Devovorga",
-      "date": "2026-09-01",
+      "eventId": "rise-of-devovorga-2026-09-01-rise-of-devovorga",
       "side": "bid",
       "logReturn": -0.008961244402904472
     }
   ],
-  "calendar": [
-    {
-      "event": "Annual Autumn Vintage",
-      "start": "2026-10-01",
-      "endExclusive": "2026-10-08",
-      "calendarMatch": true,
-      "icsStart": "20261001T080000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Orcsoberfest",
-      "start": "2026-10-09",
-      "endExclusive": "2026-10-16",
-      "calendarMatch": true,
-      "icsStart": "20261009T080000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Full Moon",
-      "start": "2026-10-12",
-      "endExclusive": "2026-10-15",
-      "calendarMatch": true,
-      "icsStart": "20261012T080000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Annual Autumn Vintage",
-      "start": "2026-10-17",
-      "endExclusive": "2026-10-24",
-      "calendarMatch": true,
-      "icsStart": "20261017T080000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Halloween Event",
-      "start": "2026-10-31",
-      "endExclusive": "2026-11-03",
-      "calendarMatch": true,
-      "icsStart": "20261031T090000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Lightbearer",
-      "start": "2026-11-11",
-      "endExclusive": "2026-11-15",
-      "calendarMatch": true,
-      "icsStart": "20261111T090000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Full Moon",
-      "start": "2026-11-12",
-      "endExclusive": "2026-11-15",
-      "calendarMatch": true,
-      "icsStart": "20261112T090000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Last Creep Standing",
-      "start": "2026-11-20",
-      "endExclusive": "2026-11-25",
-      "calendarMatch": true,
-      "icsStart": "20261120T090000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Full Moon",
-      "start": "2026-12-12",
-      "endExclusive": "2026-12-15",
-      "calendarMatch": true,
-      "icsStart": "20261212T090000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Christmas",
-      "start": "2026-12-12",
-      "endExclusive": "2026-12-31",
-      "calendarMatch": true,
-      "icsStart": "20261212T090000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Last Creep Standing",
-      "start": "2026-12-20",
-      "endExclusive": "2026-12-25",
-      "calendarMatch": true,
-      "icsStart": "20261220T090000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Winterlight Solstice",
-      "start": "2026-12-22",
-      "endExclusive": "2027-01-10",
-      "calendarMatch": true,
-      "icsStart": "20261222T090000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "New Year",
-      "start": "2026-12-27",
-      "endExclusive": "2027-01-03",
-      "calendarMatch": true,
-      "icsStart": "20261227T090000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Tibia Anniversary",
-      "start": "2027-01-07",
-      "endExclusive": "2027-01-10",
-      "calendarMatch": true,
-      "icsStart": "20270107T090000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Full Moon",
-      "start": "2027-01-12",
-      "endExclusive": "2027-01-15",
-      "calendarMatch": true,
-      "icsStart": "20270112T090000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "The First Dragon",
-      "start": "2027-01-14",
-      "endExclusive": "2027-02-12",
-      "calendarMatch": true,
-      "icsStart": "20270114T090000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Last Creep Standing",
-      "start": "2027-01-20",
-      "endExclusive": "2027-01-25",
-      "calendarMatch": true,
-      "icsStart": "20270120T090000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Carnival Month",
-      "start": "2027-02-01",
-      "endExclusive": "2027-03-01",
-      "calendarMatch": true,
-      "icsStart": "20270201T090000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Full Moon",
-      "start": "2027-02-12",
-      "endExclusive": "2027-02-15",
-      "calendarMatch": true,
-      "icsStart": "20270212T090000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Valentine's Day",
-      "start": "2027-02-14",
-      "endExclusive": "2027-02-15",
-      "calendarMatch": true,
-      "icsStart": "20270214T090000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Last Creep Standing",
-      "start": "2027-02-20",
-      "endExclusive": "2027-02-25",
-      "calendarMatch": true,
-      "icsStart": "20270220T090000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "A Piece of Cake",
-      "start": "2027-02-21",
-      "endExclusive": "2027-02-26",
-      "calendarMatch": true,
-      "icsStart": "20270221T090000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Double Daily Reward Month",
-      "start": "2027-03-01",
-      "endExclusive": "2027-03-31",
-      "calendarMatch": true,
-      "icsStart": "20270301T090000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Orcsoberfest",
-      "start": "2027-03-12",
-      "endExclusive": "2027-03-19",
-      "calendarMatch": true,
-      "icsStart": "20270312T090000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Full Moon",
-      "start": "2027-03-12",
-      "endExclusive": "2027-03-15",
-      "calendarMatch": true,
-      "icsStart": "20270312T090000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Colours of Magic",
-      "start": "2027-03-15",
-      "endExclusive": "2027-03-23",
-      "calendarMatch": true,
-      "icsStart": "20270315T090000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Prank Month",
-      "start": "2027-04-01",
-      "endExclusive": "2027-05-01",
-      "calendarMatch": true,
-      "icsStart": "20270401T080000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Chyllfroest",
-      "start": "2027-04-01",
-      "endExclusive": "2027-05-01",
-      "calendarMatch": true,
-      "icsStart": "20270401T080000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Full Moon",
-      "start": "2027-04-12",
-      "endExclusive": "2027-04-15",
-      "calendarMatch": true,
-      "icsStart": "20270412T080000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Spring into Life",
-      "start": "2027-04-16",
-      "endExclusive": "2027-04-23",
-      "calendarMatch": true,
-      "icsStart": "20270416T080000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Last Creep Standing",
-      "start": "2027-04-20",
-      "endExclusive": "2027-04-25",
-      "calendarMatch": true,
-      "icsStart": "20270420T080000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Demon's Lullaby",
-      "start": "2027-05-07",
-      "endExclusive": "2027-05-14",
-      "calendarMatch": true,
-      "icsStart": "20270507T080000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Full Moon",
-      "start": "2027-05-12",
-      "endExclusive": "2027-05-15",
-      "calendarMatch": true,
-      "icsStart": "20270512T080000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Last Creep Standing",
-      "start": "2027-05-20",
-      "endExclusive": "2027-05-25",
-      "calendarMatch": true,
-      "icsStart": "20270520T080000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Flower Month",
-      "start": "2027-06-01",
-      "endExclusive": "2027-07-01",
-      "calendarMatch": true,
-      "icsStart": "20270601T080000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Full Moon",
-      "start": "2027-06-12",
-      "endExclusive": "2027-06-15",
-      "calendarMatch": true,
-      "icsStart": "20270612T080000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Last Creep Standing",
-      "start": "2027-06-20",
-      "endExclusive": "2027-06-25",
-      "calendarMatch": true,
-      "icsStart": "20270620T080000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Bewitched",
-      "start": "2027-06-21",
-      "endExclusive": "2027-06-25",
-      "calendarMatch": true,
-      "icsStart": "20270621T080000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Full Moon",
-      "start": "2027-07-12",
-      "endExclusive": "2027-07-15",
-      "calendarMatch": true,
-      "icsStart": "20270712T080000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Last Creep Standing",
-      "start": "2027-07-20",
-      "endExclusive": "2027-07-25",
-      "calendarMatch": true,
-      "icsStart": "20270720T080000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Hot Cuisine Month",
-      "start": "2027-08-01",
-      "endExclusive": "2027-09-01",
-      "calendarMatch": true,
-      "icsStart": "20270801T080000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "The Great Expedition",
-      "start": "2027-08-05",
-      "endExclusive": "2027-08-12",
-      "calendarMatch": true,
-      "icsStart": "20270805T080000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Full Moon",
-      "start": "2027-08-12",
-      "endExclusive": "2027-08-15",
-      "calendarMatch": true,
-      "icsStart": "20270812T080000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Last Creep Standing",
-      "start": "2027-08-20",
-      "endExclusive": "2027-08-25",
-      "calendarMatch": true,
-      "icsStart": "20270820T080000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Rise of Devovorga",
-      "start": "2027-09-01",
-      "endExclusive": "2027-09-07",
-      "calendarMatch": true,
-      "icsStart": "20270901T080000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Full Moon",
-      "start": "2027-09-12",
-      "endExclusive": "2027-09-15",
-      "calendarMatch": true,
-      "icsStart": "20270912T080000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    },
-    {
-      "event": "Colours of Magic",
-      "start": "2027-09-15",
-      "endExclusive": "2027-09-23",
-      "calendarMatch": true,
-      "icsStart": "20270915T080000Z",
-      "status": "Agenda fornecida; sujeita a revisão"
-    }
-  ],
-  "calendarUpdated": "2026-08-05T19:34:02+00:00",
   "sources": [
+    {
+      "file": "../../data/events/events.json",
+      "sha256": "acecda431bcbcf6d58489a7859da039eb41dbb92e87fb2897f557f59a7147333"
+    },
     {
       "file": "inputs/api/antica.json",
       "sha256": "c2638fefb58a5e385a3be242b1d126c73aa61a0163b00499e5a5df42e2de1def"
@@ -94873,14 +94376,6 @@
     {
       "file": "inputs/api/yonabra.json",
       "sha256": "a3d60d62f3725ca6ce441e4aef25172a5c39bfd41558af7cdbf5a85614f0c1a7"
-    },
-    {
-      "file": "inputs/calendar.ics",
-      "sha256": "00f2d45b3482e72c9b33fc86af4660dfaab91332844247e0bbe919172a55c4de"
-    },
-    {
-      "file": "inputs/eventschedule.json",
-      "sha256": "db5abb7190c0872014a1e554579ac2dbba95915e6b74b30459fd0e6b652cf1d6"
     },
     {
       "file": "inputs/history/antica.json",
@@ -95057,10 +94552,6 @@
     {
       "file": "market-update.json",
       "sha256": "a63912642f540cc997a07228cb6108c68648ea267ee4d9c2e6ec393afeee9521"
-    },
-    {
-      "file": "source-package/events_intervals.json",
-      "sha256": "fb574a2470bf34379296703fcc56d3e2b0c87693a1ab0b9f45b9d2fb214a1c0a"
     }
   ],
   "tradeComparison": [
@@ -160778,5 +160269,9 @@
       "trade": 40162.0,
       "gapPct": 1.1484410416561674
     }
-  ]
+  ],
+  "eventsSource": {
+    "file": "../../data/events/events.json",
+    "sha256": "acecda431bcbcf6d58489a7859da039eb41dbb92e87fb2897f557f59a7147333"
+  }
 }

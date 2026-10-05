@@ -971,7 +971,13 @@ async function loadLedger(file) {
 // ---------------------------------------------------------------- report
 async function main() {
   // Always revalidate: a page updated on the server must never pair new code with a cached older data file.
-  const [R, C, U, I, L, ME, X, LG] = await Promise.all([...['results.json', 'complement.json', 'market-update.json', 'inflation.json', 'lifecycle.json', 'mergers.json', 'robustness.json'].map(loadReportData), loadLedger('forecast-ledger.jsonl')]);
+  const [R, C, U, I, L, X, LG] = await Promise.all([...['results.json', 'complement.json', 'market-update.json', 'inflation.json', 'lifecycle.json', 'robustness.json'].map(loadReportData), loadLedger('forecast-ledger.jsonl')]);
+  const {loadEvents, eventsFor, mergerAnnouncements} = await import('../../js/events.js');
+  const eventDataset = await loadEvents(), canonicalEvents = eventsFor(eventDataset), ME = mergerAnnouncements(eventDataset);
+  const eventById = new Map(canonicalEvents.map(event => [event.id, event]));
+  const eventDate = id => eventById.get(id).start;
+  const terribraMerge = eventById.get('world-merge-2025-11-06-terribra');
+  const premiumEvent = eventById.get('store-2025-07-29-premium-restriction-lifted');
   const root = document.getElementById('report');
 
   // ---- shorthand over the data files
@@ -1081,7 +1087,7 @@ async function main() {
   // sentence or clause; the notes at the end give a full note the first time a source is cited and a shortened
   // note afterwards. note() only marks the keys: both editions evaluate every string (t() takes both), so numbers
   // are assigned once, in reading order over the whole report's markup, before any page is shown (numberNotes). Merger announcements come
-  // from mergers.json, so a new announcement is cited with the data that states it.
+  // from canonical Events, so a new announcement is cited with the data that states it.
   const mergerKey = event => `merger-${event.successor.toLowerCase()}`;
   // Chicago dates and URLs: "October 6, 2025"; a URL is printed in full and escaped for markup.
   const chicagoDate = iso => `${MONTHS_LONG_EN[isoMonth(iso)]} ${isoDay(iso)}, ${isoYear(iso)}`;
@@ -1103,13 +1109,13 @@ async function main() {
       short: 'CipSoft, “The Market”'},
     tracker: {full: `TibiaMarket, <em>Tibia Market Tracker</em>, accessed September 24, 2026, ${link('https://tibiamarket.top/')}`,
       short: 'TibiaMarket, <em>Tibia Market Tracker</em>'},
-    terribraAnnounced: tibiaNews(8513, '2025-10-06', 'Game World Merge Announcement', 'Game World Merge Announcement'),
-    terribraDate: tibiaNews(8514, '2025-11-03', 'news ticker on the date of the game world merges', 'news ticker on the date of the merges', false),
-    terribraDone: tibiaNews(8515, '2025-11-06', 'news ticker on the completion of the game world merges', 'news ticker on the completion of the merges', false),
-    floribraLaunch: tibiaNews(8767, '2026-05-20', 'news ticker on the launch of the game worlds Maligna, Junera, and Floribra', 'news ticker on the launch of Floribra', false),
-    luzibraLaunch: tibiaNews(8385, '2025-05-21', 'news ticker on the launch of the game worlds Sonira, Kalimera, and Luzibra', 'news ticker on the launch of Luzibra', false),
-    luzibraTransfers: tibiaNews(8866, '2026-06-30', 'Fixes and Changes', 'Fixes and Changes'),
-    luzibraPremium: tibiaNews(8475, '2025-07-30', 'news ticker on the removal of the Premium restriction for Kalimera, Luzibra, and Sonira', 'news ticker on the removal of the Premium restriction', false),
+    terribraAnnounced: tibiaNews(8513, terribraMerge.merge.announcedOn, 'Game World Merge Announcement', 'Game World Merge Announcement'),
+    terribraDate: tibiaNews(8514, terribraMerge.merge.confirmedOn, 'news ticker on the date of the game world merges', 'news ticker on the date of the merges', false),
+    terribraDone: tibiaNews(8515, terribraMerge.start, 'news ticker on the completion of the game world merges', 'news ticker on the completion of the merges', false),
+    floribraLaunch: tibiaNews(8767, eventDate('world-created-2026-05-20-floribra-opened'), 'news ticker on the launch of the game worlds Maligna, Junera, and Floribra', 'news ticker on the launch of Floribra', false),
+    luzibraLaunch: tibiaNews(8385, eventDate('world-created-2025-05-21-luzibra-opened'), 'news ticker on the launch of the game worlds Sonira, Kalimera, and Luzibra', 'news ticker on the launch of Luzibra', false),
+    luzibraTransfers: tibiaNews(8866, eventDate('economy-2026-06-30-transfers-opened'), 'Fixes and Changes', 'Fixes and Changes'),
+    luzibraPremium: tibiaNews(8475, premiumEvent.provenance.find(p => p.publishedOn).publishedOn, 'news ticker on the removal of the Premium restriction for Kalimera, Luzibra, and Sonira', 'news ticker on the removal of the Premium restriction', false),
     ...Object.fromEntries(ME.map(event => [mergerKey(event), {
       full: `CipSoft, “${event.sourceTitle},” <em>Tibia</em>, ${chicagoDate(event.announcedOn)}, ${link(event.source)}`,
       short: `CipSoft, “${event.sourceTitle},” ${chicagoDate(event.announcedOn)}`}])),
@@ -1474,7 +1480,7 @@ async function main() {
   // ---- the report, in the order of the inference: each chapter resolves one stage and prepares the next
   const para = (en, pt) => `<p>${t(en, pt)}</p>`;
   // The calendar for the year ahead leaves out short recurring events; its title spans the events it lists.
-  const calendar = R.calendar.filter(x => !['Full Moon', 'Last Creep Standing', "Valentine's Day"].includes(x.event));
+  const calendar = canonicalEvents.map(e => ({id: e.id, event: e.title, start: e.start, end: e.end}));
   const allModelled = worlds.length === updates.length;
   const target = L.ageAnalogy.target, donor = L.ageAnalogy.donor, births = L.ageAnalogy.birthDates;
   const preds = pred ? L.terribra.predecessors : [];
@@ -2178,8 +2184,8 @@ async function main() {
       `Os predecessors descrevem os Markets que antecederam ${L.terribra.world}, mas suas quotes não são observações do successor: ${R.predecessor.map(p => `${p.world} tem ${p.days} dias válidos entre ${longDate(p.first)} e ${longDate(p.last)}`).join(', enquanto ')}. Por isso, permanecem como séries separadas, e o backtest pareado abaixo avalia seu conteúdo preditivo comparando a regra que as utiliza com suas alternativas nos mesmos alvos.`)}</div>
     <div id="card-predecessor"></div></div>` : ''}
     <div class="analysis-row"><div class="prose">
-    ${para(`Aligning the two worlds by server age shifts ${donor}'s calendar onto ${target}'s, so that prices in gold can be compared at the same stage since launch, before ${donor}'s transfer opening, without normalising the worlds to a common level. ${ageCoverage.length === 2 ? `Neither period since launch is fully observed, because ${list(ageCoverage.map(r => `${r.world}'s first valid offer came at ${r.firstAgeDays} days of age`))}. ` : ''}The pair is relevant because it shares region and PvP type, but launch cohort, calendar, population, free-account access (${donor}'s Premium restriction was removed on ${longDate('2025-07-29')})${note('luzibraPremium')} and transfers remain confounded with age, so the analogy is a hypothesis about a trajectory, whose usefulness depends on the backtests and on the distance between regimes, not a claim that ${donor} is ${target}'s future.`,
-      `Alinhar os dois worlds pela server age desloca o calendário de ${donor} para o de ${target}, de modo que os prices em gold podem ser comparados no mesmo estágio desde o launch, antes da abertura de transfers de ${donor}, sem normalizar os worlds a um nível comum. ${ageCoverage.length === 2 ? `Nenhum dos períodos desde o launch é integralmente observado, pois ${list(ageCoverage.map(r => `a primeira offer válida de ${r.world} ocorreu aos ${r.firstAgeDays} dias de idade`))}. ` : ''}O par é relevante porque compartilha região e tipo de PvP, mas launch cohort, calendário, população, acesso de free accounts (a restrição Premium de ${donor} foi removida em ${longDate('2025-07-29')})${note('luzibraPremium')} e transfers continuam confundidos com a idade, de modo que a analogia é uma hipótese sobre uma trajetória, cuja utilidade depende dos backtests e da distância entre regimes, e não uma afirmação de que ${donor} é o futuro de ${target}.`)}
+    ${para(`Aligning the two worlds by server age shifts ${donor}'s calendar onto ${target}'s, so that prices in gold can be compared at the same stage since launch, before ${donor}'s transfer opening, without normalising the worlds to a common level. ${ageCoverage.length === 2 ? `Neither period since launch is fully observed, because ${list(ageCoverage.map(r => `${r.world}'s first valid offer came at ${r.firstAgeDays} days of age`))}. ` : ''}The pair is relevant because it shares region and PvP type, but launch cohort, calendar, population, free-account access (${donor}'s Premium restriction was removed on ${longDate(premiumEvent.start)})${note('luzibraPremium')} and transfers remain confounded with age, so the analogy is a hypothesis about a trajectory, whose usefulness depends on the backtests and on the distance between regimes, not a claim that ${donor} is ${target}'s future.`,
+      `Alinhar os dois worlds pela server age desloca o calendário de ${donor} para o de ${target}, de modo que os prices em gold podem ser comparados no mesmo estágio desde o launch, antes da abertura de transfers de ${donor}, sem normalizar os worlds a um nível comum. ${ageCoverage.length === 2 ? `Nenhum dos períodos desde o launch é integralmente observado, pois ${list(ageCoverage.map(r => `a primeira offer válida de ${r.world} ocorreu aos ${r.firstAgeDays} dias de idade`))}. ` : ''}O par é relevante porque compartilha região e tipo de PvP, mas launch cohort, calendário, população, acesso de free accounts (a restrição Premium de ${donor} foi removida em ${longDate(premiumEvent.start)})${note('luzibraPremium')} e transfers continuam confundidos com a idade, de modo que a analogia é uma hipótese sobre uma trajetória, cuja utilidade depende dos backtests e da distância entre regimes, e não uma afirmação de que ${donor} é o futuro de ${target}.`)}
     </div><div id="card-age-curve"></div></div>
     <div class="prose narrative-grid" id="lifecycle-validation" data-report-anchor>
     <p>${t('The matched backtests compare the candidates on the same observed targets for each side and horizon, so a lower MAPE indicates a smaller error on that paired set; because the origins overlap, their number overstates the independent evidence.', 'Os backtests pareados comparam os candidatos nos mesmos alvos observados para cada lado e horizon, de modo que um MAPE menor indica erro menor nesse conjunto pareado; como as origins se sobrepõem, seu número superestima a evidência independente.')} <span id="lifecycle-findings"></span></p>
@@ -2278,10 +2284,10 @@ async function main() {
     </div>
     <div class="analysis-row" id="s12" data-report-anchor>
     <div class="prose">
-    ${para(`The calendar for the year ahead lists the remaining events of the schedule updated on ${longDate(R.calendarUpdated.slice(0, 10))}, favouring long events and those relevant to the cycle; experience, loot and update events are omitted because the schedule does not date them, and the schedule may still change. Because the event study finds no effect large enough to trade on, these dates mark periods worth watching rather than adjustments to the scenarios.`,
-      `O calendário do próximo ano lista os eventos remanescentes da agenda atualizada em ${longDate(R.calendarUpdated.slice(0, 10))}, privilegiando eventos longos ou relevantes para o cycle; eventos de experiência, loot e updates ficam de fora porque a agenda não os data, e a agenda ainda pode mudar. Como o event study não encontra efeito grande o bastante para justificar um trade, essas datas marcam períodos a acompanhar, e não ajustes aos scenarios.`)}
+    ${para(`This calendar uses the shared canonical Events collection, including game, market, token and world events. Changing a world or the report language does not change which Events exist. Dates are inclusive Tibia server days. Event associations are historical descriptive estimates rather than evidence of a causal price effect.`,
+      `Este calendário usa a coleção canônica de Events, incluindo eventos do jogo, mercado, token e worlds. Alterar o world ou o idioma não muda os Events existentes. As datas são dias de servidor inclusivos. As associações históricas são descritivas e não demonstram um efeito causal no price.`)}
     </div>
-    <div class="evidence-stack">${card({evidence: 'observed', title: `Event Calendar: ${monthYearEn(calendar[0].start)} to ${monthYearEn(calendar.at(-1).start)}`, body: table({columns: [{key: 'start', label: 'Início', render: cellDate}, {key: 'endExclusive', label: 'Fim exclusivo', render: cellDate}, {key: 'event', label: 'Evento'}], rows: calendar})})}</div>
+    <div class="evidence-stack" data-canonical-events="${esc(calendar.map(e => e.id).join(' '))}">${card({evidence: 'observed', title: `Shared Events: ${calendar.length} records`, body: table({columns: [{key: 'start', label: 'Start', render: cellDate}, {key: 'end', label: 'End (inclusive)', render: cellDate}, {key: 'event', label: 'Event'}], rows: calendar})})}</div>
     </div>
     <div class="prose narrative-grid">
     ${para(`None of these checks overturns the principal findings, but each bounds them. The dating of the later cycles is robust to the reversal threshold; the apparent persistence of weekly movements is ${acf[0].r < acf[0].rWeeklyMedian ? 'largely a product of aggregation and the annual cycle' : 'not a product of aggregation'}; offers and daily averages ${gapVerdict === 'close' ? 'are close in the benchmark' : gapVerdict === 'differ' ? 'differ in the benchmark' : 'cannot be compared in the benchmark'}, although the choice of price measure must still be stated; and neither weekdays nor events provide a signal larger than the cost of trading on it. The cleaning floor and the anchor, finally, ${floorFlips.length || aaFlips.length ? 'reverse some conclusions, as stated above' : 'reverse none of the conclusions'}.`,
@@ -3205,8 +3211,8 @@ async function main() {
   // 10: events by side
   on(() => {
     const s = state.side;
-    document.getElementById('card-events').innerHTML = card({evidence: 'observed', title: sided(`${bench}: Selected Events`, s), controls: sideControl(), body: table({columns: [{key: 'event', label: 'Evento'}, num('n', 'Ocorrências'), signed('returnPct', 'Variação', 2), signed('abnormalPct', 'Excesso vs placebo', 2), num('q', 'q ajustado', 3)],
-      rows: R.eventStudy.filter(x => x.side === s && ['XP/Skill Event', 'Rapid Respawn', 'Loot Event', 'Halloween Event', 'Lightbearer', 'Orcsoberfest', 'Colours of Magic', 'Annual Autumn Vintage', 'Winterlight Solstice'].includes(x.event))})});
+    document.getElementById('card-events').innerHTML = card({evidence: 'observed', title: sided(`${bench}: Event Associations`, s), controls: sideControl(), body: table({columns: [{key: 'event', label: 'Evento'}, num('n', 'Ocorrências'), signed('returnPct', 'Variação', 2), signed('abnormalPct', 'Excesso vs placebo', 2), num('q', 'q ajustado', 3)],
+      rows: R.eventStudy.filter(x => x.side === s)})});
   }, ['side'], ['card-events']);
 
   // 03: offer inflation. Its world cards follow the shared selection over the whole universe, worlds

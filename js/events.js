@@ -1,6 +1,6 @@
 /*
- * Market events: dated facts plotted over a world's chart, kept apart from the market history
- * (data/market-events/events.json, built by tools/build_market_events.mjs). Pure functions; no DOM, no chart library.
+ * Canonical Events: dated facts plotted over a world's chart, kept apart from the market history
+ * (data/events/events.json). Pure functions; no DOM, no chart library.
  *
  * An event:
  *   id           stable and unique
@@ -9,12 +9,13 @@
  *   title, description
  *   worlds       'all', or the names of the worlds it concerns (one or several)
  *   merge        world merges only: { from: [worlds], into: world, status: 'completed' | 'announced', notBefore? }
- *   source       provenance, kept in the data and never shown on the chart
+ *   provenance   source records and original boundaries; references hold citation URLs
+ *   type, assets, entities  canonical affected-entity metadata, used only by explicit queries
  *
- * A world's events are the global ones and those naming it. Its own lifecycle events (opened, retired, merged) also
+ * Every consumer receives all events. Explicit queries may use metadata. Its own lifecycle events (opened, retired, merged) also
  * bound its time axis, so they are plotted even where no price was observed near them.
  */
-export const EVENTS = 'data/market-events/events.json';
+export const EVENTS = new URL('../data/events/events.json', import.meta.url);
 
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
 const isDay = value => typeof value === 'string' && DAY.test(value) && !Number.isNaN(Date.parse(`${value}T00:00:00Z`))
@@ -24,11 +25,11 @@ const FORBIDDEN = /[\u00b7\u2013\u2014]/;
 
 export const appliesTo = (event, world) => event.worlds === 'all' || event.worlds.includes(world);
 
-// The events for one world, in date order, each with its category resolved (and its rank in the dataset's order).
-export function eventsFor(dataset, world) {
+// The full collection, in date order, with resolved categories. Context arguments cannot select a universe.
+export function eventsFor(dataset) {
   if (!dataset) return [];
   const categories = new Map(dataset.categories.map((c, rank) => [c.id, { ...c, rank }]));
-  return dataset.events.filter(e => appliesTo(e, world)).map(e => ({ ...e, category: categories.get(e.category) }));
+  return dataset.events.map(e => ({ ...e, category: categories.get(e.category) }));
 }
 
 // A lifecycle event that has happened (an announcement has not) and concerns this world by name.
@@ -99,7 +100,7 @@ export function exportNotes(events, { limit = 6 } = {}) {
  * Every problem with a dataset, as text; none means it is valid. worlds: the known world names (current, retired and
  * any the dataset declares). A completed merge's successor must be a known world; an announced one may not exist yet.
  */
-export function validate(dataset, worlds) {
+export function validate(dataset, worlds = dataset.worlds ?? []) {
   const errors = [], known = new Set(worlds);
   const categories = new Map();
   for (const c of dataset.categories ?? []) {
@@ -109,13 +110,16 @@ export function validate(dataset, worlds) {
     if (typeof c.mark === 'string' && !/^[A-Z]{1,2}$/.test(c.mark)) errors.push(`category ${c.id}: mark is one or two capital letters`);
     categories.set(c.id, c);
   }
-  const ids = new Set();
+  const ids = new Set(), occurrences = new Set();
   let previous = null;
   for (const e of dataset.events ?? []) {
     const at = `event ${e.id}`;
     if (typeof e.id !== 'string' || !e.id) errors.push('an event has no id');
     if (ids.has(e.id)) errors.push(`${at} is listed twice`);
     ids.add(e.id);
+    const occurrence = `${e.type}|${e.start}`;
+    if (occurrences.has(occurrence)) errors.push(`${at}: duplicate real occurrence`);
+    occurrences.add(occurrence);
     if (!categories.has(e.category)) errors.push(`${at}: unknown category ${e.category}`);
     if (!isDay(e.start) || !isDay(e.end)) errors.push(`${at}: start and end are server days (YYYY-MM-DD)`);
     else if (e.end < e.start) errors.push(`${at}: ends before it starts`);
@@ -136,13 +140,18 @@ export function validate(dataset, worlds) {
       else {
         if (!['completed', 'announced'].includes(m.status)) errors.push(`${at}: a merge is completed or announced`);
         if (m.status === 'completed' && !known.has(m.into)) errors.push(`${at}: unknown successor ${m.into}`);
-        if (m.notBefore !== undefined && !isDay(m.notBefore)) errors.push(`${at}: notBefore is a server day`);
+        for (const field of ['notBefore', 'confirmedDate', 'verifiedOn', 'announcedOn', 'confirmedOn']) {
+          if (m[field] !== undefined && m[field] !== null && !isDay(m[field])) errors.push(`${at}: ${field} is a server day`);
+        }
         const scope = Array.isArray(e.worlds) ? new Set(e.worlds) : null;
         if (!scope || m.from.some(w => !scope.has(w))) errors.push(`${at}: a merge concerns every world it joins`);
         if (m.status === 'completed' && !scope?.has(m.into)) errors.push(`${at}: a completed merge concerns its successor`);
       }
     } else if (e.merge !== undefined) errors.push(`${at}: only a world merge has merge details`);
-    if (!e.source || typeof e.source !== 'object' || !(e.source.url || e.source.file)) errors.push(`${at}: a source (url or file) is required`);
+    if (!Array.isArray(e.provenance) || !e.provenance.length || e.provenance.some(p => !p || !(p.url || p.file))) errors.push(`${at}: provenance (url or file) is required`);
+    if (!e.type || typeof e.type !== 'string') errors.push(`${at}: type is required`);
+    if (e.assets !== 'all' && (!Array.isArray(e.assets) || !e.assets.length || e.assets.some(a => !['tibia-coin', 'tibia-token'].includes(a)))) errors.push(`${at}: invalid assets`);
+    if (!Array.isArray(e.entities) || !Array.isArray(e.references)) errors.push(`${at}: entities and references are lists`);
     // Date order, then category order, then id: the order the builder writes.
     if (previous && isDay(e.start) && order(previous, e, dataset.categories) > 0) errors.push(`${at} is out of order`);
     previous = e;
@@ -153,4 +162,48 @@ export function validate(dataset, worlds) {
 export function order(a, b, categories) {
   const rank = id => categories.findIndex(c => c.id === id);
   return a.start.localeCompare(b.start) || rank(a.category) - rank(b.category) || a.id.localeCompare(b.id);
+}
+
+// One loader for every page. Failed attempts are retryable; successful reads are shared.
+let loaded;
+export function loadEvents() {
+  return loaded ??= fetch(EVENTS, { cache: 'no-cache' }).then(async response => {
+    if (!response.ok) throw new Error(`Events: HTTP ${response.status}`);
+    const dataset = await response.json(), errors = validate(dataset);
+    if (dataset.format !== 2 || errors.length) throw new Error(`Invalid canonical Events: ${errors.join('; ')}`);
+    return dataset;
+  }).catch(error => { loaded = null; throw error; });
+}
+
+export const addEventDays = (day, n) => new Date(Date.parse(`${day}T00:00:00Z`) + n * 86400000).toISOString().slice(0, 10);
+// Filters only arise from an explicit user or analytical query, never a selected page/Market.
+export function queryEvents(events, { category = '', scope = '', type = '', asset = '', world = '', first = '', last = '', period = 'all', today = eventToday() } = {}) {
+  return events.filter(e => (!category || (e.category.id ?? e.category) === category)
+    && (!scope || (scope === 'global' ? e.worlds === 'all' : e.worlds !== 'all'))
+    && (!type || e.type === type) && (!asset || e.assets === 'all' || e.assets.includes(asset))
+    && (!world || appliesTo(e, world)) && (!first || e.end >= first) && (!last || e.start <= last)
+    && (period === 'all' || (period === 'upcoming' ? e.end >= today : period === 'recent' ? e.end < today && e.end >= addEventDays(today, -90) : e.end < today)));
+}
+export function mergerAnnouncements(dataset) {
+  return eventsFor(dataset).filter(e => e.merge?.status === 'announced').map(e => ({
+    id: e.id, successor: e.merge.into, participants: e.merge.from, announcedOn: e.start,
+    notBefore: e.merge.notBefore, confirmedDate: e.merge.confirmedDate ?? null,
+    verifiedOn: e.merge.verifiedOn, sourceTitle: e.provenance[0].title ?? e.title,
+    source: e.provenance[0].url ?? e.references[0]
+  }));
+}
+export function lifecycleFacts(dataset) {
+  const events = eventsFor(dataset);
+  return { births: Object.fromEntries(events.filter(e => e.category.id === 'world-created').flatMap(e => e.worlds.map(w => [w, e.start]))),
+    predecessors: Object.fromEntries(events.filter(e => e.merge?.status === 'completed').map(e => [e.merge.into, e.merge.from])),
+    retirements: Object.fromEntries(events.filter(e => e.merge?.status === 'completed').flatMap(e => e.merge.from.map(w => [w, {offline:e.start, mergedInto:e.merge.into}]))),
+    transfers: Object.fromEntries(events.filter(e => e.type === 'Transfers opened').flatMap(e => e.worlds.map(w => [w, e.start]))) };
+}
+
+// Today means a Tibia server day, consistently across timezones and pages.
+export function eventToday(now = new Date()) {
+  const parts = Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Berlin',
+    year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', hourCycle:'h23' }).formatToParts(now).map(p=>[p.type,p.value]));
+  const day = `${parts.year}-${parts.month}-${parts.day}`;
+  return Number(parts.hour) < 10 ? addEventDays(day,-1) : day;
 }

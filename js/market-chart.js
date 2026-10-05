@@ -22,7 +22,7 @@
  */
 import { fmt } from './format.js';
 import { lineLayers, statisticsAt } from './market-series.js';
-import { eventsLayer } from './market-events-layer.js';
+import { eventsLayer } from './market-events-layer.js?v=20261004-events';
 import { projectionsLayer } from './market-projections-layer.js';
 
 export const SIDES = {

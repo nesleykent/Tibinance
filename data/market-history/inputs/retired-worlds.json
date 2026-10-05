@@ -1,10 +1,8 @@
 {
- "note": "Retired worlds with Tibia Coin market history: offline date, merge target, type, location and BattlEye from each world's TibiaWiki infobox (retrieved 2026-10-04).",
+ "note": "Retired-world market registry: world type, location and BattlEye. Offline days and merge targets derive exclusively from canonical Events, data/events/events.json.",
  "worlds": [
   {
    "world": "Ambra",
-   "offline": "2025-11-06",
-   "mergedInto": "Sombra",
    "type": "Retro Open PvP",
    "location": "Brazil",
    "battleye": "Green",
@@ -12,8 +10,6 @@
   },
   {
    "world": "Divina",
-   "offline": "2025-11-06",
-   "mergedInto": "Eclipta",
    "type": "Retro Open PvP",
    "location": "United Kingdom",
    "battleye": "Green",
@@ -21,8 +17,6 @@
   },
   {
    "world": "Esmera",
-   "offline": "2025-11-06",
-   "mergedInto": "Blumera",
    "type": "Optional PvP",
    "location": "USA",
    "battleye": "Green",
@@ -30,8 +24,6 @@
   },
   {
    "world": "Fibera",
-   "offline": "2025-11-06",
-   "mergedInto": "Tempestera",
    "type": "Retro Open PvP",
    "location": "USA",
    "battleye": "Green",
@@ -39,8 +31,6 @@
   },
   {
    "world": "Flamera",
-   "offline": "2025-11-06",
-   "mergedInto": "Tempestera",
    "type": "Retro Open PvP",
    "location": "USA",
    "battleye": "Green",
@@ -48,8 +38,6 @@
   },
   {
    "world": "Gravitera",
-   "offline": "2025-11-06",
-   "mergedInto": "Monstera",
    "type": "Retro Hardcore PvP",
    "location": "USA",
    "battleye": "Green",
@@ -57,8 +45,6 @@
   },
   {
    "world": "Jacabra",
-   "offline": "2025-11-06",
-   "mergedInto": "Terribra",
    "type": "Retro Hardcore PvP",
    "location": "Brazil",
    "battleye": "Green",
@@ -66,8 +52,6 @@
   },
   {
    "world": "Jaguna",
-   "offline": "2025-11-06",
-   "mergedInto": "Citra",
    "type": "Open PvP",
    "location": "United Kingdom",
    "battleye": "Green",
@@ -75,8 +59,6 @@
   },
   {
    "world": "Malivora",
-   "offline": "2025-11-06",
-   "mergedInto": "Eclipta",
    "type": "Retro Open PvP",
    "location": "United Kingdom",
    "battleye": "Green",
@@ -84,8 +66,6 @@
   },
   {
    "world": "Obscubra",
-   "offline": "2025-11-06",
-   "mergedInto": "Terribra",
    "type": "Retro Hardcore PvP",
    "location": "Brazil",
    "battleye": "Green",
@@ -93,8 +73,6 @@
   },
   {
    "world": "Quebra",
-   "offline": "2025-11-06",
-   "mergedInto": "Sombra",
    "type": "Retro Open PvP",
    "location": "Brazil",
    "battleye": "Green",
@@ -102,8 +80,6 @@
   },
   {
    "world": "Runera",
-   "offline": "2025-11-06",
-   "mergedInto": "Xymera",
    "type": "Open PvP",
    "location": "USA",
    "battleye": "Green",
@@ -111,8 +87,6 @@
   },
   {
    "world": "Temera",
-   "offline": "2025-11-06",
-   "mergedInto": "Tempestera",
    "type": "Retro Open PvP",
    "location": "USA",
    "battleye": "Green",
@@ -120,8 +94,6 @@
   },
   {
    "world": "Ulera",
-   "offline": "2025-11-06",
-   "mergedInto": "Blumera",
    "type": "Optional PvP",
    "location": "USA",
    "battleye": "Green",
@@ -129,8 +101,6 @@
   },
   {
    "world": "Vandera",
-   "offline": "2025-11-06",
-   "mergedInto": "Xymera",
    "type": "Open PvP",
    "location": "USA",
    "battleye": "Green",
@@ -138,8 +108,6 @@
   },
   {
    "world": "Vitera",
-   "offline": "2025-11-06",
-   "mergedInto": "Blumera",
    "type": "Optional PvP",
    "location": "USA",
    "battleye": "Green",
@@ -147,8 +115,6 @@
   },
   {
    "world": "Wadira",
-   "offline": "2025-11-06",
-   "mergedInto": "Kalanta",
    "type": "Optional PvP",
    "location": "United Kingdom",
    "battleye": "Green",
@@ -156,8 +122,6 @@
   },
   {
    "world": "Wildera",
-   "offline": "2025-11-06",
-   "mergedInto": "Monstera",
    "type": "Retro Hardcore PvP",
    "location": "USA",
    "battleye": "Green",
@@ -165,8 +129,6 @@
   },
   {
    "world": "Yara",
-   "offline": "2025-11-06",
-   "mergedInto": "Citra",
    "type": "Open PvP",
    "location": "United Kingdom",
    "battleye": "Green",
@@ -174,8 +136,6 @@
   },
   {
    "world": "Zephyra",
-   "offline": "2025-11-06",
-   "mergedInto": "Kalanta",
    "type": "Optional PvP",
    "location": "United Kingdom",
    "battleye": "Green",

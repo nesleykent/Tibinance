@@ -4,6 +4,10 @@ Placebo: same computation at random anchor days (same durations), 4000 draws of 
 Windows: pre = 7 days before start; during = start..end; post7 = 7 days after end; post30 = 30 days after end.
 Activity: median over core worlds of log(transactions / median of the 28 days before the pre-window)."""
 import json, numpy as np, pandas as pd
+import sys
+from pathlib import Path
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
+from events_bridge import canonical_events
 rng=np.random.default_rng(42)
 I=pd.read_pickle('index.pkl'); V=pd.read_pickle('V.pkl'); core=json.load(open('core_worlds.json'))
 li=I['logI']; R=I['R']
@@ -35,7 +39,7 @@ def windows(s,e):
     return out
 def valid_anchor(s,e,need_post=30):
     return s-pd.Timedelta(days=67)>=first and e+pd.Timedelta(days=need_post)<=last
-ev=json.load(open('events_intervals.json'))+json.load(open('extra_events.json'))
+ev=[{**e,'event':e['type']} for e in canonical_events()['events']]
 for x in ev: x['s']=pd.Timestamp(x['start']); x['e']=pd.Timestamp(x['end'])
 GROUP={'XP/Skill Event':'XP/Skill Event','Skill Event':'Skill Event (junho)','Rapid Respawn':'Rapid Respawn','Loot Event':'Loot Event',
  'Exaltation Overload':'Exaltation Overload','Full Moon':'Full Moon','Last Creep Standing':'Last Creep Standing',
@@ -56,7 +60,7 @@ for x in ev:
     if not valid_anchor(x['s'],x['e'],need): continue
     w=windows(x['s'],x['e'])
     others=sorted({GROUP.get(y['event'],y['event']) for y in ev if y is not x and y['s']<=x['e']+pd.Timedelta(days=7) and y['e']>=x['s']-pd.Timedelta(days=7) and GROUP.get(y['event'],y['event'])!=g})
-    occ.setdefault(g,[]).append(dict(start=str(x['s'].date()),end=str(x['e'].date()),**{k:(None if pd.isna(v) else round(float(v)*100,2)) for k,v in w.items()},overlaps=others))
+    occ.setdefault(g,[]).append(dict(eventId=x['id'],start=str(x['s'].date()),end=str(x['e'].date()),**{k:(None if pd.isna(v) else round(float(v)*100,2)) for k,v in w.items()},overlaps=others))
 # placebo pools per duration
 days=pd.date_range(first+pd.Timedelta(days=67),last-pd.Timedelta(days=37))
 pool_cache={}
@@ -103,7 +107,7 @@ for rank,idx_ in reversed(list(enumerate(order,1))):
     prev=min(prev,ps[idx_]*m/rank); q[idx_]=prev
 for (i,key,p),qq in zip(tests,q): T.loc[i,key+'_q']=round(qq,3)
 T.to_csv('event_study.csv',index=False)
-json.dump(occ,open('event_occurrences.json','w'),indent=1)
+json.dump({g:[{k:v for k,v in o.items() if k not in ('start','end')} for o in rows] for g,rows in occ.items()},open('event_occurrences.json','w'),indent=1)
 pd.set_option('display.width',250)
 cols=['group','n','pre_mean','pre_p','pre_q','during_mean','during_p','during_q','post7_mean','post7_p','post7_q','post30_mean','post30_p','activity_mean','activity_p']
 print(T[[c for c in cols if c in T]].to_string(index=False))

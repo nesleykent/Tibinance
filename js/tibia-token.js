@@ -1,7 +1,7 @@
 // Token history uses completed UTC pool candles, never Tibia server days or best offers.
 import { dayGrid, lineLayers } from './market-series.js';
-import { eventsLayer } from './market-events-layer.js';
-import { eventsFor } from './market-events.js';
+import { eventsLayer } from './market-events-layer.js?v=20261004-events';
+import { eventsFor } from './events.js';
 export const CONTRACT = '0x111B95C2b65CbA53aB4E0AaDA12f55985045E446';
 export const POOL = '0xd2acfaec0e3b556f285fbb9026ede7e87885e611';
 export const tokenPrice = value => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 5, maximumFractionDigits: 5 }).format(value);
@@ -43,7 +43,7 @@ export function tokenView(file, dataset) {
     previous = p.day;
   }
   const prices = file.prices, end = prices.at(-1)?.day;
-  // Only explicitly token-related events are relevant. TC world lifecycle and game events are excluded.
-  const events = eventsFor(dataset, '').filter(e => /tibia token/i.test(`${e.title} ${e.description}`));
+  // Assets share the canonical collection; only explicit viewer filters select events.
+  const events = eventsFor(dataset);
   return { prices, byDay: new Map(prices.map(p => [p.day, p])), end, grid: prices.length ? dayGrid(prices[0].day, end) : [], events, profile: TOKEN_PROFILE };
 }

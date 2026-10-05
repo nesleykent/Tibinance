@@ -2,13 +2,13 @@
  * The Events layer of the Markets chart (js/market-chart.js): a marker per event along the foot of the price pane, at
  * its actual day, drawn by a pane primitive into the chart's own canvas, so the page and an exported image show the
  * same markers. A marker carries its category's mark in its group's colour; an event lasting several days underlines
- * them. Markers that would overlap become one marker with their count (js/market-events.js `cluster`).
+ * them. Markers that would overlap become one marker with their count (js/events.js `cluster`).
  *
  * The layer draws; it does not listen. A page subscribes to its layout (`onLayout`) to make markers inspectable
  * (js/market-events-ui.js) and marks one active (`setActive`), which then spans the chart's height. Hidden, it draws
  * nothing and reports no markers; the market series are untouched.
  */
-import { cluster, exportNotes, within } from './market-events.js';
+import { cluster, exportNotes, within } from './events.js';
 
 const HEIGHT = 14, PAD = 4, FONT = 9, FOOT = 4;   // marker size, inset of its label, type, gap above the pane's foot
 

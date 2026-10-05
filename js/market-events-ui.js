@@ -7,7 +7,7 @@
  * Hovering, focusing or tapping a marker shows its events' days, titles and descriptions beside it and marks it
  * active on the chart, where its days span the pane.
  */
-import { dateText, groupLabel } from './market-events.js';
+import { dateText, groupLabel } from './events.js';
 import { esc } from './format.js';
 
 const HEIGHT = 14, FOOT = 4;   // the marker's size and its gap above the pane's foot, as the layer draws them

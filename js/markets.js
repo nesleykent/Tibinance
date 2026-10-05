@@ -7,7 +7,7 @@
  * consecutive server days and dotted across unobserved days; the daily average
  * trade price for the same side in grey, by the same rule. Activity: raw transaction counters per completed
  * server day on that side. Nothing is interpolated. Events: markers along the foot of the chart, from
- * their own dataset (js/market-events.js); they can be hidden without touching the market series.
+ * their own dataset (js/events.js); they can be hidden without touching the market series.
  * Projections: the Research report's offer scenario for the world and side (js/market-projections.js), after the
  * last observation, off until the viewer shows them.
  *
@@ -16,12 +16,12 @@
  */
 import { fmt, esc, num } from './format.js';
 import { RANGES, changeOver, dayGrid, daysBetween, marketValues, neighbours, rangeStart, statisticsAt } from './market-series.js';
-import { SIDES, createMarketChart, dayOf } from './market-chart.js';
+import { SIDES, createMarketChart, dayOf } from './market-chart.js?v=20261004-events';
 import { dock } from './markets-dock.js';
-import { marketImage } from './market-export.js';
-import { EVENTS, eventsFor, lifecycleSpan } from './market-events.js';
-import { eventsPanel } from './market-events-panel.js';
-import { eventMarks } from './market-events-ui.js';
+import { marketImage } from './market-export.js?v=20261004-events';
+import { loadEvents as readEvents, eventsFor, lifecycleSpan, addEventDays } from './events.js';
+import { eventsPanel } from './market-events-panel.js?v=20261004-events';
+import { eventMarks } from './market-events-ui.js?v=20261004-events';
 import { PROJECTIONS, forwardEnd, pointText, projectionFor, weekOf } from './market-projections.js';
 import { screenerPanel } from './market-screener-panel.js';
 
@@ -69,7 +69,7 @@ const eventBrowser = eventsPanel($('eventsPanel'), {
     state.view.grid = dayGrid([grid[0], event.start].sort()[0], [grid.at(-1), event.end].sort().at(-1));
     market.draw(state.view, state.side);
     showEvents(true);
-    const shift = (day, n) => new Date(Date.parse(`${day}T00:00:00Z`) + n * 86400000).toISOString().slice(0, 10);
+    const shift = addEventDays;
     const from = [state.view.grid[0], shift(event.start, -7)].sort().at(-1);
     const to = [state.view.grid.at(-1), shift(event.end, 7)].sort()[0];
     chart.timeScale().setVisibleRange({ from, to });
@@ -95,7 +95,7 @@ function worldView(summary, file) {
   const values = marketValues(file), { closes, daily } = values;
   const days = [closes[0]?.serverDay, daily[0]?.serverDay, closes.at(-1)?.serverDay, daily.at(-1)?.serverDay].filter(Boolean).sort();
   const end = endOf(summary);
-  const events = eventsFor(state.events, summary.world);
+  const events = eventsFor(state.events);
   const span = lifecycleSpan(events, summary.world, historyStart());
   const first = [days[0], span?.first].filter(Boolean).sort()[0], last = [end, span?.last].filter(Boolean).sort().at(-1);
   return { ...values, summary, end, events,
@@ -312,7 +312,7 @@ async function select(world, { focus = false } = {}) {
   if (state.world !== world) return;   // a later click won while this file loaded
   state.view = worldView(summary, state.files.get(world));
   drawChart();
-  eventBrowser.update(state.events, world);
+  eventBrowser.update(state.events);
   showQuote();
   showLegend(null);
   // A current world without market data yet says so instead of drawing an empty chart.
@@ -583,9 +583,7 @@ function failed(error) {
 // Events are an optional layer: the market loads without them, and says nothing about their absence on the chart.
 async function loadEvents() {
   try {
-    const response = await fetch(EVENTS);
-    if (!response.ok) throw new Error(`${EVENTS}: ${response.status}`);
-    return await response.json();
+    return await readEvents();
   } catch (error) {
     console.warn('Market events are unavailable.', error);
     return null;

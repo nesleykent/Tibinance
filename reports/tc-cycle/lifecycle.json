@@ -71,40 +71,56 @@
   ],
   "sources": [
     {
-      "label": "Luzibra: lançamento em 21/05/2025",
+      "label": "Luzibra opened",
       "url": "https://www.tibia.com/news/?id=8385&subtopic=newsarchive"
     },
     {
-      "label": "Floribra: lançamento em 20/05/2026",
-      "url": "https://www.tibia.com/news/?id=8767&subtopic=newsarchive"
+      "label": "Premium restriction lifted",
+      "url": "https://www.tibia.com/news/?subtopic=newsarchive&id=8475"
     },
     {
-      "label": "Formação de Terribra por Jacabra e Obscubra: merger em 06/11/2025",
-      "url": "https://www.tibia.com/news/?id=8514&subtopic=newsarchive"
-    },
-    {
-      "label": "Terribra: composição do merger Jacabra/Obscubra",
-      "url": "https://www.tibia.com/news/?id=8513&subtopic=newsarchive"
-    },
-    {
-      "label": "Terribra: confirmação da conclusão do merger",
+      "label": "Terribra opened",
       "url": "https://www.tibia.com/news/?id=8515&subtopic=newsarchive"
     },
     {
-      "label": "Luzibra: abertura de transfers em 30/06/2026",
+      "label": "Jacabra and Obscubra merged into Terribra",
+      "url": "https://tibia.fandom.com/wiki/Jacabra"
+    },
+    {
+      "label": "Jacabra and Obscubra merged into Terribra",
+      "url": "https://tibia.fandom.com/wiki/Obscubra"
+    },
+    {
+      "label": "Jacabra and Obscubra merged into Terribra",
+      "url": "https://www.tibia.com/news/?id=8513&subtopic=newsarchive"
+    },
+    {
+      "label": "Jacabra and Obscubra merged into Terribra",
+      "url": "https://www.tibia.com/news/?id=8514&subtopic=newsarchive"
+    },
+    {
+      "label": "Jacabra and Obscubra merged into Terribra",
+      "url": "https://www.tibia.com/news/?id=8515&subtopic=newsarchive"
+    },
+    {
+      "label": "Floribra opened",
+      "url": "https://www.tibia.com/news/?id=8767&subtopic=newsarchive"
+    },
+    {
+      "label": "Transfers opened",
       "url": "https://www.tibia.com/news/?id=8866&subtopic=newsarchive"
     },
     {
-      "label": "Luzibra: retirada da restrição premium em 29/07/2025",
-      "url": "https://www.tibia.com/news/?id=8475&subtopic=newsarchive"
+      "label": "Merge announced: Etebra, Luzibra and Yubra into Deslumbra",
+      "url": "https://www.tibia.com/news/?subtopic=newsarchive&id=8968"
     }
   ],
   "inputHashes": {
     "market-update.json": "a63912642f540cc997a07228cb6108c68648ea267ee4d9c2e6ec393afeee9521",
-    "mergers.json": "16d366cd52d5e10ad81f83c60300e9dc45d9c0f7b1accb37bb477686b08941c6",
-    "universe.py": "c9cf855847bcf9f4734b13b8ffbf18b851d628536aeaff53a78ed75b6efcba73",
+    "../../data/events/events.json": "acecda431bcbcf6d58489a7859da039eb41dbb92e87fb2897f557f59a7147333",
+    "universe.py": "ae19e9d637d083cc344a090d5898fa6c534575a825a8a1fe21fa521e058b9fcb",
     "research_data.py": "53d72e1002a1ccdf9c6d7ccb7d5e17d50a0fedd5bdc46dc73a5c0d4e4a30c0e1",
-    "lifecycle.py": "376c26168cf1ce930adf8ee854861467cfef2ffc0c25e4ffe8ba93680be63cd8",
+    "lifecycle.py": "e015cc7aa149a199d6af51e93d0e1cf9a63d86039fe88981dc2a18e727ef8d90",
     "inputs/api/antica.json": "c2638fefb58a5e385a3be242b1d126c73aa61a0163b00499e5a5df42e2de1def",
     "inputs/api/terribra.json": "ab1e117a78df95814a004515f57f3d565da210470047c97ac2d1d17cf8d2bc16",
     "inputs/api/jacabra.json": "751be7077206b6f628a753fa3f40a5ce72868014d5afae824ee1ed4196b75b0e",

@@ -1,11 +1,18 @@
 import { createRequire } from 'node:module';
 import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+const dataset=JSON.parse(await readFile(new URL('../data/events/events.json',import.meta.url),'utf8'));
+const worldCount=dataset.events.filter(e=>e.worlds!=='all').length;
 const require = createRequire(import.meta.url);
 const { chromium, webkit } = require(`${process.env.TIBINANCE_NODE_MODULES}/playwright`);
 const engine = process.env.TIBINANCE_BROWSER ?? 'chrome';
 const browser = await (engine === 'webkit' ? webkit.launch() : chromium.launch({ channel: 'chrome' }));
 try {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  if(process.env.TIBINANCE_CHART_LIBRARY) {
+    const body=await readFile(process.env.TIBINANCE_CHART_LIBRARY,'utf8');
+    await page.route('https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.1/**',route=>route.fulfill({body,contentType:'text/javascript',headers:{'access-control-allow-origin':'*'}}));
+  }
   const errors = []; page.on('pageerror', e => errors.push(e.message));
   await page.clock.install({ time: new Date('2026-06-06T12:00:00Z') });
   await page.addInitScript(() => localStorage.setItem('tibinance.markets.dock', ''));
@@ -13,7 +20,7 @@ try {
   await page.waitForFunction(() => document.querySelector('#market').getAttribute('aria-busy') === 'false');
   await page.click('#eventsToggle');
   assert.equal(await page.getAttribute('#eventsToggle', 'aria-expanded'), 'true');
-  assert.equal(await page.locator('#eventAgenda [data-event]').count(), 281, 'the complete world-scoped event history is available by default');
+  assert.equal(await page.locator('#eventAgenda [data-event]').count(), dataset.events.length, 'the full canonical event history is available by default');
   await page.click('[data-event-section="eventAgendaSection"]');
   await page.click('[data-event-section="eventCalendarSection"]');
   const url = page.url();
@@ -59,8 +66,8 @@ try {
   await page.selectOption('#eventCategory', '');
   await page.selectOption('#eventScope', 'world');
   await page.selectOption('#eventPeriod', 'all');
-  assert.equal(await page.locator('#eventAgenda [data-event]').count(), 2);
-  await page.locator('#eventAgenda [data-event]').first().click();
+  assert.equal(await page.locator('#eventAgenda [data-event]').count(), worldCount);
+  await page.locator('#eventAgenda [data-event="world-created-2025-11-06-terribra-opened"]').click();
   assert.match(await page.innerText('#eventDetails'), /Terribra/);
   await page.click('#eventFocus');
   await page.waitForTimeout(200);
@@ -69,12 +76,12 @@ try {
   assert.equal(await page.isVisible('#eventTip'), true);
   await page.uncheck('#eventMarkers');
   assert.equal(await page.locator('#eventMarks button').count(), 0);
-  assert.equal(await page.locator('#eventAgenda [data-event]').count(), 2);
+  assert.equal(await page.locator('#eventAgenda [data-event]').count(), worldCount);
   await page.check('#eventMarkers');
   await page.selectOption('#eventScope', '');
   await page.fill('#eventMonth', '2025-11');
   await page.click('[data-day="2025-11-06"]');
-  assert.equal(await page.locator('#eventDayList [data-event]').count(), 2);
+  assert.equal(await page.locator('#eventDayList [data-event]').count(), dataset.events.filter(e=>e.start<='2025-11-06'&&e.end>='2025-11-06').length);
   await page.locator('#eventDayList [data-event]').last().click();
   await page.locator('#eventsPanel .panel-body').evaluate(e => e.scrollTop = 0);
   await page.mouse.move(20,20);
@@ -95,9 +102,9 @@ try {
   await page.click('#eventsToggle');
   await page.selectOption('#eventPeriod', 'all');
   await page.selectOption('#eventScope', 'world');
-  assert.match(await page.innerText('#eventsContext'), /Luzibra/);
+  assert.match(await page.innerText('#eventsContext'), /Shared Events/);
   assert.match(await page.innerText('#eventAgenda'), /Merge announced/);
-  assert.doesNotMatch(await page.innerText('#eventAgenda'), /Terribra opened/);
+  assert.match(await page.innerText('#eventAgenda'), /Terribra opened/);
   await page.selectOption('#eventScope', 'global');
   await page.locator('#eventAgenda [data-event]').first().focus();
   await page.keyboard.press('Enter');
@@ -109,7 +116,7 @@ try {
   await page.selectOption('#eventCategory', '');
   await page.fill('#eventMonth', '2026-10');
   await page.click('[data-day="2026-10-04"]');
-  assert.equal(await page.locator('#eventDayList [data-event]').count(), 2);
+  assert.equal(await page.locator('#eventDayList [data-event]').count(), dataset.events.filter(e=>e.worlds==='all'&&e.start<='2026-10-04'&&e.end>='2026-10-04').length);
   await page.locator('#eventDayList [data-event]').first().click();
   assert.match(await page.innerText('#eventDetails'), /Winterberries/);
   await page.goto(`${process.env.TIBINANCE_TEST_URL ?? 'http://127.0.0.1:8765'}/markets.html?world=Terribra&range=All`);

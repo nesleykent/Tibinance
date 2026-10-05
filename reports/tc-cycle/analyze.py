@@ -262,8 +262,8 @@ for w in WORLDS:
    if len(sell)>=3 and len(buy)>=3:roundtrips.append({'world':w,'cycle':f'{yr}–{yr+1}','sellMonth':mo,'bidMedian':sell.median(),'askRebuyMedian':buy.median(),'tcGainPct':(sell.median()/buy.median()-1)*100,'sellN':len(sell),'buyN':len(buy)})
 
 # Event association: Antica quote windows, broad descriptive + seasonal matched placebo test.
-events=json.load(open(ROOT/'source-package/events_intervals.json'))
-events=list({(e['event'],e['start'],e['end']):e for e in events}.values())
+from events_bridge import canonical_events, CANONICAL_EVENTS
+events=canonical_events()['events']
 eventobs=[]; eventsummary=[];rng=np.random.default_rng(20260924)
 for side in SIDES:
  s=history[BENCHMARK][side]
@@ -277,7 +277,7 @@ for side in SIDES:
   if eff is not None:candidates.setdefault((dt.year,dt.month),[]).append(eff)
  for e in events:
   dt=pd.Timestamp(e['start']);eff=effect(dt)
-  if eff is not None:eventobs.append({'event':e['event'],'date':e['start'],'side':side,'logReturn':eff})
+  if eff is not None:eventobs.append({'eventId':e['id'],'event':e['type'],'date':e['start'],'side':side,'logReturn':eff})
  for name in sorted({x['event'] for x in eventobs}):
   rows=[x for x in eventobs if x['event']==name and x['side']==side]
   if len(rows)<3:continue
@@ -290,17 +290,7 @@ for side in SIDES:
 order=np.argsort([r['p'] for r in eventsummary]); running=1
 for j in range(len(order)-1,-1,-1):
  i=order[j];running=min(running,eventsummary[i]['p']*len(order)/(j+1));eventsummary[i]['q']=running
-# Calendar cross-check: same dates, 8/9h timestamp differences intentionally preserved.
-e=json.load(open(ROOT/'inputs/eventschedule.json'));calendar=[]
-ics=(ROOT/'inputs/calendar.ics').read_text();icsrows=[]
-for block in ics.split('BEGIN:VEVENT')[1:]:
- fields=dict(re.findall(r'^(SUMMARY|DTSTART|DTEND):(.*)$',block,re.M));icsrows.append(fields)
-for r in e['eventlist']:
- start=pd.Timestamp(r['startdate'],unit='s',tz='UTC');end=pd.Timestamp(r['enddate'],unit='s',tz='UTC')
- if end.date()<=ASOF.date():continue
- matches=[x for x in icsrows if x.get('SUMMARY')==r['name'] and x.get('DTSTART','')[:8]==start.strftime('%Y%m%d') and x.get('DTEND','')[:8]==end.strftime('%Y%m%d')]
- calendar.append({'event':r['name'],'start':str(start.date()),'endExclusive':str(end.date()),'calendarMatch':bool(matches),'icsStart':matches[0].get('DTSTART') if matches else None,'status':'Agenda fornecida; sujeita a revisão'})
 predecessors=[{'world':p,'successor':w,'first':str(history[p].index[0].date()),'last':str(history[p].index[-1].date()),'days':len(history[p]),'ask':latest[p]['ask'],'bid':latest[p]['bid'],'firstAsk':float(history[p].iloc[0].ask),'firstBid':float(history[p].iloc[0].bid)} for w,ps in PREDECESSORS.items() for p in ps if w in WORLDS and p in history]
-results=js({'asOf':str(ASOF.date()),'benchmark':BENCHMARK,'universe':UNIVERSE,'captureCount':len(captures),'dataPolicy':{'daily':'API daily median; capture median fills missing calendar days only','captureTimezone':'Supplied local calendar date preserved; IANA timezone and UTC instant retained when available','anchor':'Latest day, latest capture preferred on a tie','weekly':'Sunday-ending labels on or before cutoff only','captureDaysAdded':sum(q['captureDaysAdded'] for q in quality)},'unmodelled':unmodelled,'worlds':world_metrics,'predecessor':predecessors,'quality':quality,'history':allrows,'forecast':paths,'worldForecast':world_paths,'backtest':backtest,'backtestDetail':tests,'validation':validation,'rollingDetail':rolling,'worldTestDetail':worldtests,'transferRolling':transfer,'cycles':cycles,'seasonality':season,'roundtrips':roundtrips,'eventStudy':eventsummary,'eventOccurrences':eventobs,'calendar':calendar,'calendarUpdated':pd.Timestamp(e['lastupdatetimestamp'],unit='s',tz='UTC').isoformat(),'sources':[{ 'file':str(p.relative_to(ROOT)),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted([*(ROOT/'inputs').rglob('*'),ROOT/'market-update.json',ROOT/'source-package/events_intervals.json']) if p.is_file()]})
+results=js({'asOf':str(ASOF.date()),'benchmark':BENCHMARK,'universe':UNIVERSE,'captureCount':len(captures),'dataPolicy':{'daily':'API daily median; capture median fills missing calendar days only','captureTimezone':'Supplied local calendar date preserved; IANA timezone and UTC instant retained when available','anchor':'Latest day, latest capture preferred on a tie','weekly':'Sunday-ending labels on or before cutoff only','captureDaysAdded':sum(q['captureDaysAdded'] for q in quality)},'unmodelled':unmodelled,'worlds':world_metrics,'predecessor':predecessors,'quality':quality,'history':allrows,'forecast':paths,'worldForecast':world_paths,'backtest':backtest,'backtestDetail':tests,'validation':validation,'rollingDetail':rolling,'worldTestDetail':worldtests,'transferRolling':transfer,'cycles':cycles,'seasonality':season,'roundtrips':roundtrips,'eventStudy':eventsummary,'eventOccurrences':[{k:v for k,v in x.items() if k not in ('event','date')} for x in eventobs],'eventsSource':{'file':'../../data/events/events.json','sha256':hashlib.sha256(CANONICAL_EVENTS.read_bytes()).hexdigest()},'sources':[{ 'file':str(p.relative_to(ROOT)) if p.is_relative_to(ROOT) else '../../data/events/events.json','sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted([*(ROOT/'inputs').rglob('*'),ROOT/'market-update.json',CANONICAL_EVENTS]) if p.is_file()]})
 (ROOT/'results.json').write_text(json.dumps(results,ensure_ascii=False,indent=2,allow_nan=False))
-print(json.dumps(js({'worlds':len(world_metrics),'backtest':backtest,'calendar':len(calendar),'unmatched':sum(not r['calendarMatch'] for r in calendar),'firstForecast':paths[0],'lastForecast':paths[51]}),ensure_ascii=False,indent=2))
+print(json.dumps(js({'worlds':len(world_metrics),'backtest':backtest,'canonicalEvents':len(events),'firstForecast':paths[0],'lastForecast':paths[51]}),ensure_ascii=False,indent=2))

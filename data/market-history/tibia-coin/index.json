@@ -9,7 +9,8 @@
   "inputs": [
     {"path":"data/observations.json","sha256":"a63912642f540cc997a07228cb6108c68648ea267ee4d9c2e6ec393afeee9521"},
     {"path":"data/market-history/inputs/worlds.json","sha256":"cf144c59a1cabdaa767b418362f676d8a674e85452e951d41bbe5ae2c99443cf"},
-    {"path":"data/market-history/inputs/retired-worlds.json","sha256":"f40d512d2664e70f8f96c250ab8f103aa5b171e0d751b7f45ffd7e16b5f7f5eb"},
+    {"path":"data/market-history/inputs/retired-worlds.json","sha256":"7720dba46ebcab1c04907f60e7078824553f0d8c672396f9da7e8f58b55c9d03"},
+    {"path":"data/events/events.json","sha256":"acecda431bcbcf6d58489a7859da039eb41dbb92e87fb2897f557f59a7147333"},
     {"path":"data/market-history/inputs/best-offer-exclusions.json","sha256":"2cbf9c0623223af5a001f9d1c877867c18ab191134166fe4e95a5709cd8ab508"},
     {"path":"reports/tc-cycle/inputs/api/antica.json","sha256":"c2638fefb58a5e385a3be242b1d126c73aa61a0163b00499e5a5df42e2de1def"},
     {"path":"reports/tc-cycle/inputs/api/astera.json","sha256":"0c77f34d685dfaa4c314d2e5862cf84c21fbe18287cc7d4454e342c94dccb506"},

@@ -47,10 +47,12 @@ try {
   assert.equal(await page.locator('#range [data-range="1M"]').getAttribute('aria-checked'), 'true');
   await page.screenshot({ path: `${shots}/tib-desktop.png` });
   await page.locator('#eventsToggle').click();
-  assert.match(await page.locator('#eventsContext').textContent(), /^Tibia Token events/);
+  assert.match(await page.locator('#eventsContext').textContent(), /^Shared Events across all assets and worlds/);
   const rows = await page.locator('#eventAgenda .event-row').allTextContents();
   assert.ok(rows.length >= 2);
-  assert.ok(rows.every(t => /Tibia Token/.test(t) && !/all worlds/.test(t)));
+  assert.equal(rows.length,295);
+  assert.ok(rows.some(t=>/Rapid Respawn/.test(t)));
+  assert.ok(rows.some(t=>/Terribra/.test(t)));
   await page.locator('#eventAgenda .event-row').first().click();
   await page.locator('#eventFocus').click();
   assert.match(await page.locator('#eventFocusStatus').textContent(), /Chart focused/);

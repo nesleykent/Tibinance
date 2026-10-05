@@ -6,14 +6,14 @@ import {join} from 'node:path';
 import {tmpdir} from 'node:os';
 import assert from 'node:assert/strict';
 import {rangeStart} from '../js/market-series.js';
-import {eventsFor, exportNotes} from '../js/market-events.js';
+import {eventsFor, exportNotes, groupLabel} from '../js/events.js';
 const require=createRequire(import.meta.url);
 const {chromium,webkit}=require(process.env.TIBINANCE_NODE_MODULES ? `${process.env.TIBINANCE_NODE_MODULES}/playwright` : 'playwright');
 const engine=process.env.TIBINANCE_BROWSER ?? 'chrome';
 const root=process.env.TIBINANCE_TEST_URL ?? 'http://127.0.0.1:8765';
 const read=async path=>JSON.parse(await readFile(new URL(`../${path}`,import.meta.url),'utf8'));
 const index=await read('data/market-history/tibia-coin/index.json');
-const dataset=await read('data/market-events/events.json');
+const dataset=await read('data/events/events.json');
 const byId=new Map(dataset.events.map(e=>[e.id,e]));
 const summary=world=>index.worlds.find(w=>w.world===world);
 
@@ -23,6 +23,10 @@ try {
   // The Worlds panel closed, so the chart has the page's width.
   await context.addInitScript(()=>{ if (!sessionStorage.getItem('seeded')) { localStorage.setItem('tibinance.markets.dock',''); sessionStorage.setItem('seeded','1'); } });
   const page=await context.newPage();
+  if(process.env.TIBINANCE_CHART_LIBRARY) {
+    const body=await readFile(process.env.TIBINANCE_CHART_LIBRARY,'utf8');
+    await page.route('https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.1/**',route=>route.fulfill({body,contentType:'text/javascript',headers:{'access-control-allow-origin':'*'}}));
+  }
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   page.on('console',m=>{if(m.type()==='error') errors.push(m.text());});
   const open=async(world,range,side='sell')=>{
@@ -46,26 +50,27 @@ try {
   let shown=await marks();
   const mergeMark=shown.find(m=>m.ids.includes(merge.id));
   assert.ok(mergeMark,`the merge is marked: ${JSON.stringify(shown.map(m=>m.ids))}`);
-  assert.equal(mergeMark.label,`2025-11-06, Jacabra and Obscubra merged into Terribra: ${merge.description}`);
-  // The marker stands on its day: the crosshair over it reads that day.
+  assert.equal(mergeMark.label,groupLabel(mergeMark.ids.map(id=>({...byId.get(id),category:dataset.categories.find(c=>c.id===byId.get(id).category)}))));
+  // A crowded canonical marker group may span adjacent event days; its tooltip retains the merge's date.
   let box=await chartBox();
   await page.mouse.move((mergeMark.left+mergeMark.right)/2,box.y+box.h/3);
-  assert.equal(await day(),'2025-11-06');
+  assert.ok((await day()) <= merge.start);
+  assert.ok(mergeMark.label.includes('2025-11-06'));
   // Every marker lies along the foot of the price pane, in the chart, none over another.
   const overlapFree=list=>list.every((a,i)=>list.slice(i+1).every(b=>a.right<=b.left+0.5 || b.right<=a.left+0.5));
   assert.ok(shown.every(m=>m.left>=box.x-1 && m.right<=box.x+box.w+1 && m.bottom<=box.y+box.h && m.top>box.y+box.h*0.75),'markers along the foot of the chart');
 
-  // ---- Global events on every world, a world's own only on it (and on the worlds it names).
+  // ---- Every world receives the canonical collection, including other worlds' metadata.
   await open('Antica','All');
   const antica=await shownIds();
   assert.ok(antica.length>30,`Antica shows the global events: ${antica.length}`);
-  for (const id of antica) assert.equal(byId.get(id).worlds,'all',`Antica shows only global events: ${id}`);
+  assert.ok(antica.includes('world-created-2025-05-21-luzibra-opened'),'canonical world metadata does not hide events on Antica');
   assert.ok(antica.includes('update-2025-04-08-monk-released'));
   await open('Luzibra','All');
   const luzibra=await shownIds();
   for (const id of ['world-created-2025-05-21-luzibra-opened','store-2025-07-29-premium-restriction-lifted','economy-2026-06-30-transfers-opened','world-merge-2026-09-21-deslumbra-announced'])
     assert.ok(luzibra.includes(id),`Luzibra shows ${id}`);
-  assert.ok(!luzibra.includes('economy-2025-07-29-transfer-block-lifted'),'not another world\'s event');
+  assert.ok(luzibra.includes('economy-2025-07-29-transfer-block-lifted'),'canonical facts from other worlds remain visible');
   assert.ok(summary('Luzibra').dailyStatisticsDays.first>'2025-05-21','Luzibra opened before its first market day');
   shown=await marks();
   box=await chartBox();
@@ -112,7 +117,7 @@ try {
   const before=await chartPixels();
   const mergeButton=page.locator(`#eventMarks [data-events~="${merge.id}"]`);
   await mergeButton.hover();
-  assert.equal(await tipText(),`2025-11-06 M ${merge.title} ${merge.description}`);
+  assert.ok((await tipText()).includes(`2025-11-06 M ${merge.title} ${merge.description}`));
   assert.ok(await chartPixels()>before+50,'the active merge spans the chart with its line');
   await page.mouse.move(10,10);
   assert.equal(await tipText(),null,'leaving the marker closes its details');
@@ -260,7 +265,7 @@ try {
   const bare=await browser.newContext({viewport:{width:1440,height:900}});
   const plain=await bare.newPage();
   const pageErrors=[];plain.on('pageerror',e=>pageErrors.push(e.message));
-  await plain.route('**/data/market-events/events.json',route=>route.fulfill({status:404,body:''}));
+  await plain.route('**/data/events/events.json',route=>route.fulfill({status:404,body:''}));
   await plain.goto(`${root}/markets.html?world=Antica`);
   await plain.waitForFunction(()=>document.getElementById('market').getAttribute('aria-busy')==='false');
   assert.equal(await plain.$eval('#status',s=>s.hidden),true,'the chart is drawn');

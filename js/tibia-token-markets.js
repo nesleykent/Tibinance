@@ -2,13 +2,13 @@
 import { esc } from './format.js';
 import { RANGES, changeOver, rangeStart, dayGrid } from './market-series.js';
 // Version the changed shared modules: GitHub Pages can retain pre-TIB code in browser caches.
-import { createMarketChart, dayOf } from './market-chart.js?v=20261004-tib';
-import { marketImage } from './market-export.js?v=20261004-tib';
+import { createMarketChart, dayOf } from './market-chart.js?v=20261004-events';
+import { marketImage } from './market-export.js?v=20261004-events';
 import { dock } from './markets-dock.js';
-import { EVENTS } from './market-events.js';
-import { eventsPanel } from './market-events-panel.js?v=20261004-tib';
-import { eventMarks } from './market-events-ui.js';
-import { TOKEN_PROFILE, tokenPrice, tokenView, CONTRACT } from './tibia-token.js';
+import { loadEvents, addEventDays } from './events.js';
+import { eventsPanel } from './market-events-panel.js?v=20261004-events';
+import { eventMarks } from './market-events-ui.js?v=20261004-events';
+import { TOKEN_PROFILE, tokenPrice, tokenView, CONTRACT } from './tibia-token.js?v=20261004-events';
 const $ = id => document.getElementById(id);
 const percent = new Intl.NumberFormat('en-US', { style: 'percent', maximumFractionDigits: 2, signDisplay: 'exceptZero' });
 const params = new URLSearchParams(location.search);
@@ -17,12 +17,10 @@ let view, file;
 const market = createMarketChart($('chart'), { profile: TOKEN_PROFILE }), chart = market.chart;
 const marks = eventMarks({ chart, part: market.part('events'), strip: $('eventMarks'), tip: $('eventTip') });
 const browser = eventsPanel($('eventsPanel'), {
-  contextText: events => `Tibia Token events. Dates are Tibia server days; prices are UTC daily candles. ${events.length} recorded events.`,
-  scopeText: () => 'Tibia Token',
   onFilter(events) { if (view) { view.events = events; market.refresh('events'); } },
   onFocus(event) {
     if (!event || !view.grid.length) return 'No token chart is available.';
-    const shift = (day, n) => new Date(Date.parse(`${day}T00:00:00Z`) + n * 86400000).toISOString().slice(0, 10);
+    const shift = addEventDays;
     view.grid = dayGrid([view.grid[0], shift(event.start, -7)].sort()[0], [view.grid.at(-1), shift(event.end, 7)].sort().at(-1));
     market.draw(view, 'sell'); showEvents(true);
     chart.timeScale().setVisibleRange({ from: shift(event.start, -7), to: shift(event.end, 7) });
@@ -86,12 +84,9 @@ async function main() {
   const response = await fetch('data/market-history/tibia-token/history.json');
   if (!response.ok) throw new Error(`TIB history: ${response.status}`);
   file = await response.json();
-  let events = null;
-  try { const response = await fetch(EVENTS); if (response.ok) events = await response.json(); } catch { /* price history remains usable */ }
-  view = tokenView(file, events);
-  const relevant = new Set(view.events.map(e => e.id));
-  const dataset = events && { ...events, events: events.events.filter(e => relevant.has(e.id)), categories: events.categories.filter(c => view.events.some(e => e.category.id === c.id)) };
-  $('eventScope').parentElement.hidden = true;
+  let dataset = null;
+  try { dataset = await loadEvents(); } catch (error) { console.warn('Events are unavailable.', error); }
+  view = tokenView(file, dataset);
   $('worldsPanel').setAttribute('aria-label', 'Tibia Token details');
   document.querySelector('[data-dock-target="worldsPanel"]').setAttribute('aria-label', 'Asset details');
   $('worldsPanel').innerHTML = `<div class="panel-head"><h2 class="panel-title">Tibia Token</h2></div><div class="panel-body"><p>TIB / USD</p><p>${esc(file.venue)} ${esc(file.pair)} pool on BNB Smart Chain.</p><p><a href="https://bscscan.com/token/${CONTRACT}" target="_blank" rel="noopener">Official token contract</a><br><code style="overflow-wrap:anywhere">${CONTRACT}</code></p><p>History: ${view.prices[0]?.day ?? 'N/A'} to ${view.end ?? 'N/A'} UTC.</p><p>${esc(file.coverageNote)}</p><p><a href="${esc(file.sourceUrl)}" target="_blank" rel="noopener">Pool and data source</a></p><p>One pool's USD prices and trading volume. Liquidity and prices may differ between pools.</p></div>`;
@@ -100,7 +95,7 @@ async function main() {
   await document.fonts.ready;
   dock($('dock'), { key: 'tibinance.markets.dock', roomy: () => matchMedia('(min-width:1280px)').matches,
     onChange() { const days = chart.timeScale().getVisibleLogicalRange(); requestAnimationFrame(() => requestAnimationFrame(() => { if (days) chart.timeScale().setVisibleLogicalRange(days); })); } });
-  market.draw(view, 'sell'); browser.update(dataset, 'Tibia Token');
+  market.draw(view, 'sell'); browser.update(dataset);
   $('eventMarkers').disabled = !dataset;
   let on = true; try { on = localStorage.getItem('tibinance.markets.events') !== 'hidden'; } catch { /* this visit only */ } showEvents(on);
   await new Promise(requestAnimationFrame); applyRange(); legend();

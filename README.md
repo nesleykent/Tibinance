@@ -116,7 +116,7 @@ explain how published market history is reproduced from frozen inputs.
 | [Technical guide](docs/project-guide.md) | Capture workflow, OCR, schemas, market layers, storage, dates, exports and verification |
 | [Research methodology](reports/tc-cycle/README.md) | Sources, models, limitations and report reproduction |
 | [Tibia Token](docs/tibia-token.md) | Contract verification, pool history, refresh workflow and future TC comparisons |
-| [Market events](data/market-events/README.md) | Event sources, generation and calendar coverage |
+| [Market events](data/events/README.md) | Event sources, generation and calendar coverage |
 | [CLI and archive processing](tools/README.cli.md) | Optional local batch tools and archive review |
 | [Chart integration audit](docs/market-chart-integration.md) | Canonical Statistics selection and chart verification |
 

@@ -4,6 +4,7 @@
 // Run with the same local server / Playwright environment as markets-browser.mjs (TIBINANCE_BROWSER=webkit for WebKit).
 import {createRequire} from 'node:module';
 import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
 const require=createRequire(import.meta.url);
 const {chromium,webkit}=require(process.env.TIBINANCE_NODE_MODULES ? `${process.env.TIBINANCE_NODE_MODULES}/playwright` : 'playwright');
 const engine=process.env.TIBINANCE_BROWSER ?? 'chrome';
@@ -29,6 +30,10 @@ const browser=await (engine==='webkit' ? webkit.launch({headless:true}) : chromi
 try {
   const context=await browser.newContext({locale:'en-US',viewport:{width:1440,height:900}});
   const page=await context.newPage();
+  if(process.env.TIBINANCE_CHART_LIBRARY) {
+    const body=await readFile(process.env.TIBINANCE_CHART_LIBRARY,'utf8');
+    await page.route('https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.1/**',route=>route.fulfill({body,contentType:'text/javascript',headers:{'access-control-allow-origin':'*'}}));
+  }
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   page.on('console',m=>{if(m.type()==='error') errors.push(m.text());});
   // Capture's saved list is not under test: an empty one keeps the page independent of local data.

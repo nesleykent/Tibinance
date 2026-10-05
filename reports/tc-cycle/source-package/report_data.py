@@ -1,7 +1,12 @@
 """Collect every number/series the report page needs into report_data.json."""
 import json, numpy as np, pandas as pd
+import sys
+from pathlib import Path
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
+from events_bridge import canonical_events
+EVENTS=canonical_events()['events']
 I=pd.read_pickle('index.pkl'); P=pd.read_pickle('P.pkl'); PB=pd.read_pickle('PB.pkl'); V=pd.read_pickle('V.pkl')
-core=json.load(open('core_worlds.json')); ab=json.load(open('results_ab.json')); occ=json.load(open('event_occurrences.json'))
+core=json.load(open('core_worlds.json')); ab=json.load(open('results_ab.json'))
 T=pd.read_csv('event_study.csv')
 out={}
 f,l=I['logI'].first_valid_index(),I['logI'].last_valid_index()
@@ -15,7 +20,7 @@ ant=pd.read_pickle('daily_by_world.pkl')['antica']
 out['weekly_antica_2023']=weekly(ant['p_book']['2023-01-01':'2024-01-14'])
 # swings & updates
 out['swings_index']=ab['swings_index_5pct']; out['swings_gentebra']=ab['swings_gentebra_5pct']
-upd=[x for x in json.load(open('extra_events.json'))]
+upd=[x for x in EVENTS if x['category']['id']=='update' or x['assets']==['tibia-token']]
 li=I['logI'].ffill(limit=2)
 def ch(t,a,b):
     ta=t+pd.Timedelta(days=a); tb=t+pd.Timedelta(days=b)
@@ -23,7 +28,7 @@ def ch(t,a,b):
         va,vb=li[ta],li[tb]
         return None if pd.isna(va) or pd.isna(vb) else round((np.exp(vb-va)-1)*100,1)
     except KeyError: return None
-out['updates']=[dict(event=x['event'],date=x['start'],before60=ch(pd.Timestamp(x['start']),-60,0),after30=ch(pd.Timestamp(x['start']),0,30),after90=ch(pd.Timestamp(x['start']),0,90),source=x['source']) for x in upd]
+out['updates']=[dict(eventId=x['id'],before60=ch(pd.Timestamp(x['start']),-60,0),after30=ch(pd.Timestamp(x['start']),0,30),after90=ch(pd.Timestamp(x['start']),0,90),) for x in upd]
 # stats tiles
 out['vol']=ab['vol_index']; out['vol_by_year']=ab['vol_by_year']; out['vol_world']=ab['vol_world_daily_std_pct']
 # seasonality
@@ -34,7 +39,7 @@ out['weekday_volume_pct']=ab['weekday_volume_dev_pct']
 out['weekday_p']={'index':ab['weekday_level_dev_index_p'],'gentebra':ab['weekday_level_dev_gentebra_p'],'gentebra_buy':ab['weekday_level_dev_gentebra_buy_p']}
 # event-time average abnormal path (index), day k relative to start, base = s-8
 def path(evname,K0=-10,K1=16):
-    iv=[x for x in json.load(open('events_intervals.json')) if x['event']==evname]
+    iv=[x for x in EVENTS if x['type']==evname]
     R=I['R']; rows=[]
     for x in iv:
         s=pd.Timestamp(x['start'])
@@ -49,7 +54,7 @@ out['path_xp']=path('XP/Skill Event'); out['path_rr']=path('Rapid Respawn')
 # activity path for XP: median over core worlds of log(v/median of days -36..-8), averaged over occurrences
 LV=np.log(V[core].where(V[core]>0))
 def act_path(evname,K0=-10,K1=16):
-    iv=[x for x in json.load(open('events_intervals.json')) if x['event']==evname]; rows=[]
+    iv=[x for x in EVENTS if x['type']==evname]; rows=[]
     for x in iv:
         s=pd.Timestamp(x['start'])
         if s-pd.Timedelta(days=40)<f or s+pd.Timedelta(days=K1)>l: continue

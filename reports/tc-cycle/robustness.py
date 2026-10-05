@@ -272,11 +272,11 @@ def run_pipeline(floor):
     """The published pipeline on a temporary copy whose research_data.py sets another floor; returns its four outputs."""
     tmp = Path(tempfile.mkdtemp(prefix='tc-floor-'))
     try:
-        for name in [*PIPELINE, 'research_data.py', 'universe.py', 'mergers.json', 'market-update.json', 'inputs', 'source-package']:
+        for name in [*PIPELINE, 'research_data.py', 'universe.py', 'events_bridge.py', 'market-update.json', 'inputs', 'source-package']:
             (shutil.copytree if (ROOT / name).is_dir() else shutil.copy)(ROOT / name, tmp / name)
         src = (tmp / 'research_data.py').read_text(); line = 'MIN_BID_ASK = .8\n'; assert src.count(line) == 1
         (tmp / 'research_data.py').write_text(src.replace(line, f'MIN_BID_ASK = {floor!r}\n'))
-        for script in PIPELINE: subprocess.run([sys.executable, script], cwd=tmp, check=True, stdout=subprocess.DEVNULL)
+        for script in PIPELINE: subprocess.run([sys.executable, script], cwd=tmp, check=True, stdout=subprocess.DEVNULL, env={**__import__('os').environ,'TIBINANCE_REPOSITORY':str(ROOT.parents[1])})
         return tuple(json.load(open(tmp / f)) for f in ('results.json', 'complement.json', 'inflation.json', 'lifecycle.json'))
     finally:
         shutil.rmtree(tmp, ignore_errors=True)

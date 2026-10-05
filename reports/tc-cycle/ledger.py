@@ -26,8 +26,8 @@ ROOT = Path(__file__).resolve().parent
 LEDGER = ROOT / 'forecast-ledger.jsonl'
 SIDES = ('ask', 'bid')
 MODELS = {'C': 'Constante', 'S': 'Sazonal 52 semanas', 'H': 'Harmônico', 'C+S': 'C+S', 'C+S+H': 'C+S+H'}
-PROGRAMS = ('research_data.py', 'universe.py', 'analyze.py', 'compare_trades.py', 'complement.py', 'robustness.py', 'ledger.py')
-INPUTS = ('market-update.json', 'mergers.json', 'results.json', 'complement.json', 'robustness.json')
+PROGRAMS = ('research_data.py', 'universe.py', 'events_bridge.py', '../../js/events.js', '../../tools/events.mjs', 'analyze.py', 'compare_trades.py', 'complement.py', 'robustness.py', 'ledger.py')
+INPUTS = ('market-update.json', '../../data/events/events.json', 'results.json', 'complement.json', 'robustness.json')
 sha = lambda b: hashlib.sha256(b).hexdigest()
 week_of = lambda iso: str((pd.Timestamp(iso) + pd.Timedelta(days=(6 - pd.Timestamp(iso).weekday()) % 7)).date())
 

@@ -21,12 +21,12 @@ test('TIB rejects wrong assets, units, duplicate days, invalid prices and malfor
     {prices:[file.prices[0],file.prices[0]]}, {prices:[{...file.prices[0],close:0}]}, {prices:[{...file.prices[0],high:0.001}]},
     {prices:[{...file.prices[0],volumeUsd:-1}]}, {prices:[{...file.prices[0],day:'2025-02-30'}]}]) assert.throws(() => tokenView({...file,...patch},null));
 });
-test('token events exclude world and unrelated global events', () => {
+test('token events retain global and world records from the canonical collection', () => {
   const dataset={categories:[{id:'token'}],events:[
     {id:'launch',category:'token',worlds:'all',title:'Tibia Token launch',description:'',start:'2025-01-14',end:'2025-01-14'},
     {id:'game',category:'token',worlds:'all',title:'Rapid respawn',description:''},
     {id:'world',category:'token',worlds:['Antica'],title:'Tibia Token',description:''}]};
-  assert.deepEqual(tokenView(file,dataset).events.map(e=>e.id),['launch']);
+  assert.deepEqual(tokenView(file,dataset).events.map(e=>e.id),['launch','game','world']);
 });
 test('TIB range change compares actual USD closes', () => {
   const view=tokenView(file,null), closes=view.prices.map(p=>({day:p.day,value:p.close}));

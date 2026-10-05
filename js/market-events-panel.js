@@ -1,29 +1,29 @@
-// The Events dock browses the same resolved, world-scoped events that feed the chart.
-import { dateText, eventsFor } from './market-events.js';
+// The Events dock browses the same canonical events that feed the chart.
+import { dateText, eventsFor, queryEvents, eventToday } from './events.js';
 import { esc } from './format.js';
-export function eventsPanel(root, { onFilter, onFocus, contextText, scopeText: customScopeText }) {
-  const today = new Date().toISOString().slice(0, 10);
-  let month = today.slice(0, 7), day = null, selected = null, events = [], world = '', available = false, categories = [], category = '', period = 'all', scope = '', initialized = false;
+export function eventsPanel(root, { onFilter, onFocus }) {
+  const today = eventToday();
+  let month = today.slice(0, 7), day = null, selected = null, events = [], available = false, categories = [], category = '', period = 'all', scope = '', initialized = false;
   const $ = id => root.querySelector(`#${id}`);
-  const filtered = () => events.filter(e => (!category || e.category.id === category) && (!scope || (scope === 'global' ? e.worlds === 'all' : e.worlds !== 'all')));
-  const scopeText = e => customScopeText ? customScopeText(e) : e.worlds === 'all' ? 'Global: all worlds' : `Worlds: ${e.worlds.join(', ')}`;
+  const filtered = () => queryEvents(events, { category, scope });
+  const scopeText = e => e.worlds === 'all' ? 'Global: all worlds' : `Worlds: ${e.worlds.join(', ')}`;
   const row = e => `<button type="button" class="event-row" data-event="${esc(e.id)}" aria-pressed="${e.id === selected}"><small>${esc(dateText(e))} / ${esc(e.category.label)}</small><strong>${esc(e.title)}</strong><small>${esc(scopeText(e))}</small></button>`;
   function render() {
     const list = filtered();
-    $('eventsContext').textContent = available ? contextText ? contextText(events) : `Global events and events concerning ${world}. Dates are inclusive server days. ${events.length} recorded events, ${events[0]?.start ?? 'no start date'} to ${events.reduce((last, e) => e.end > last ? e.end : last, '') || 'no end date'}. Game calendar types and market events share these filters.` : 'Event data is unavailable. Reload to try again.';
-    $('eventCategory').innerHTML = '<option value="">All categories</option>' + categories.map(c => `<option value="${esc(c.id)}">${esc(c.label)} (${events.filter(e => e.category.id === c.id).length})</option>`).join('');
+    $('eventsContext').textContent = available ? `Shared Events across all assets and worlds. Dates are inclusive Tibia server days. ${events.length} recorded events. Token price candles use UTC days.` : 'Event data is unavailable. Reload to try again.';
+    $('eventCategory').innerHTML = '<option value="">All categories</option>' + categories.map(c => `<option value="${esc(c.id)}">${esc(c.label)} (${queryEvents(events, { category: c.id }).length})</option>`).join('');
     $('eventCategory').value = category;
     $('eventMonth').value = month;
     const first = new Date(`${month}-01T00:00:00Z`), offset = (first.getUTCDay() + 6) % 7;
     const count = new Date(Date.UTC(first.getUTCFullYear(), first.getUTCMonth() + 1, 0)).getUTCDate();
     $('eventCalendar').innerHTML = '<span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>' + '<span></span>'.repeat(offset) + Array.from({ length: count }, (_, i) => {
-      const date = `${month}-${String(i + 1).padStart(2, '0')}`, hits = list.filter(e => e.start <= date && e.end >= date);
+      const date = `${month}-${String(i + 1).padStart(2, '0')}`, hits = queryEvents(list, { first: date, last: date });
       return `<button type="button" data-day="${date}" aria-pressed="${day === date}" ${date === today ? 'aria-current="date"' : ''} aria-label="${date}, ${hits.length} events${hits.length ? ', ' + esc(hits.map(e => e.title).join(', ')) : ''}"><span>${i + 1}</span><small>${hits.length || ''}</small>${hits.some(e => e.start !== e.end) ? '<i class="event-span" aria-hidden="true"></i>' : ''}</button>`;
     }).join('');
     $('eventDayTitle').textContent = day ? `Events on ${day}` : 'Choose a calendar day';
-    const hits = day ? list.filter(e => e.start <= day && e.end >= day) : [];
+    const hits = day ? queryEvents(list, { first: day, last: day }) : [];
     $('eventDayList').innerHTML = hits.map(row).join('') || (day ? '<p>No events on this day.</p>' : '');
-    const agenda = list.filter(e => period === 'all' || (period === 'upcoming' ? e.end >= today : period === 'recent' ? e.end < today && e.end >= new Date(Date.parse(today) - 90 * 86400000).toISOString().slice(0, 10) : e.end < today));
+    const agenda = queryEvents(list, { period, today });
     $('eventAgenda').innerHTML = agenda.map(row).join('') || '<p>No events match these filters.</p>';
     $('eventCount').textContent = `${agenda.length} events in chronological order`;
     const e = list.find(e => e.id === selected);
@@ -49,7 +49,7 @@ export function eventsPanel(root, { onFilter, onFocus, contextText, scopeText: c
     if (e.target.id === 'eventPeriod') { period = e.target.value; render(); }
     if (e.target.id === 'eventCategory' || e.target.id === 'eventScope') { category = $('eventCategory').value; scope = $('eventScope').value; selected = null; onFilter(filtered()); render(); }
   });
-  return { update(dataset, nextWorld) { world = nextWorld; available = !!dataset; categories = dataset?.categories ?? []; events = eventsFor(dataset, world); selected = null;
+  return { update(dataset) { available = !!dataset; categories = dataset?.categories ?? []; events = eventsFor(dataset); selected = null;
     if (!initialized && events.length) {
       initialized = true;
       if (!events.some(e => e.end >= today)) {

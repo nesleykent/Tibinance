@@ -32,8 +32,8 @@ and formatting. TC keeps the existing layers. TIB supplies price, USD volume
 and the existing Events layer, without best offers, TC Statistics or forecasts.
 `market-export.js` builds the offscreen chart with the same profile. Shared
 calendar ranges, changes, gap lines, dock and marker UI remain canonical.
-The Events calendar/agenda accepts presentation labels for an asset. TIB uses
-only explicitly token-related global events; their dates remain server days,
+The Events calendar/agenda and canonical collection are shared across all assets
+and worlds. TIB never selects its own event universe; event dates remain server days,
 and the help explains the UTC difference. Focusing a pre-coverage event adds
 axis whitespace but no prices; choosing a range restores observed coverage.
 

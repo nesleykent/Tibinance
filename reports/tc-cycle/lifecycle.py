@@ -11,12 +11,14 @@ import numpy as np
 import pandas as pd
 
 ROOT=Path(__file__).resolve().parent
-BIRTH={'Luzibra':pd.Timestamp('2025-05-21'),'Floribra':pd.Timestamp('2026-05-20'),'Terribra':pd.Timestamp('2025-11-06')}
-MERGE=BIRTH['Terribra']
-TRANSFER=pd.Timestamp('2026-06-30')
+from events_bridge import canonical_events, CANONICAL_EVENTS
+FACTS=canonical_events()
+BIRTH={w:pd.Timestamp(day) for w,day in FACTS['lifecycle']['births'].items()}
+MERGE=pd.Timestamp(next(e['start'] for e in FACTS['events'] if e.get('merge',{}).get('status')=='completed' and e['merge']['into']=='Terribra'))
+TRANSFER=pd.Timestamp(FACTS['lifecycle']['transfers']['Luzibra'])
 from universe import MERGERS
 NEXT_MERGE=pd.Timestamp(MERGERS['Luzibra'])
-PREDECESSORS=('Jacabra','Obscubra')
+PREDECESSORS=tuple(FACTS['lifecycle']['predecessors']['Terribra'])
 SIDES=('ask','bid')
 TERRIBRA_HORIZONS=(4,8,13,26)
 AGE_HORIZONS=(1,2,4,8,13,26,39,52)
@@ -190,14 +192,11 @@ def build():
                             donorStartAgeDays=match['startAgeDays'],donorEndAgeDays=match['endAgeDays'])
                     age_scenarios.append(row)
     mark_crossed(terr_scenarios);mark_crossed(age_scenarios)
-    sources=[{'label':'Luzibra: lançamento em 21/05/2025','url':'https://www.tibia.com/news/?id=8385&subtopic=newsarchive'},
-        {'label':'Floribra: lançamento em 20/05/2026','url':'https://www.tibia.com/news/?id=8767&subtopic=newsarchive'},
-        {'label':f"Formação de Terribra por {' e '.join(PREDECESSORS)}: merger em {MERGE.strftime('%d/%m/%Y')}",'url':'https://www.tibia.com/news/?id=8514&subtopic=newsarchive'},
-        {'label':'Terribra: composição do merger Jacabra/Obscubra','url':'https://www.tibia.com/news/?id=8513&subtopic=newsarchive'},
-        {'label':'Terribra: confirmação da conclusão do merger','url':'https://www.tibia.com/news/?id=8515&subtopic=newsarchive'},
-        {'label':'Luzibra: abertura de transfers em 30/06/2026','url':'https://www.tibia.com/news/?id=8866&subtopic=newsarchive'},
-        {'label':'Luzibra: retirada da restrição premium em 29/07/2025','url':'https://www.tibia.com/news/?id=8475&subtopic=newsarchive'}]
-    files=[ROOT/'market-update.json',ROOT/'mergers.json',ROOT/'universe.py',ROOT/'research_data.py',Path(__file__),*[ROOT/'inputs/api'/f'{w.lower()}.json' for w in names]]
+    sources=[{'label':e['title'],'url':url} for e in FACTS['events']
+             if any(w in ('Luzibra','Floribra','Terribra') for w in (e['worlds'] if e['worlds']!='all' else []))
+             for url in e['references']]
+
+    files=[ROOT/'market-update.json',CANONICAL_EVENTS,ROOT/'universe.py',ROOT/'research_data.py',Path(__file__),*[ROOT/'inputs/api'/f'{w.lower()}.json' for w in names]]
     payload={'asOf':str(cutoff.date()),'methodology':{
         'status':'Exploratory; fixed candidate rules, not a validated replacement for the main forecast.',
         'premium':'log(world same-side offer / Antica same-day same-side offer)',
@@ -208,7 +207,7 @@ def build():
             'Offer endpoints are indicative, not traded prices or fill guarantees. Bid/ask are modeled independently; scenarios are not an executable book.',
             'These exploratory models use a simple historical benchmark-return rule, distinct from the main report ensemble.',
             'Donor missing ages remain unsupported. Merger prices are not carried across world identities.']},
-        'coverage':coverage,'sources':sources,'inputHashes':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files if p.exists()},
+        'coverage':coverage,'sources':sources,'inputHashes':{str(p.relative_to(ROOT)) if p.is_relative_to(ROOT) else '../../data/events/events.json':hashlib.sha256(p.read_bytes()).hexdigest() for p in files if p.exists()},
         'terribra':{'world':'Terribra','predecessors':list(PREDECESSORS),'mergeDate':str(MERGE.date()),
             'methods':{'Constant':'Última oferta; retorno zero.','Benchmark':'Última oferta × exp(retorno Antica).','Local':'Benchmark × exp(mediana dos retornos do premium de Terribra).',
                 'Precursor':'Benchmark × exp(0.5 × mediana local + 0.5 × média das medianas dos precursores elegíveis antes do merger). Jacabra/Obscubra fornecem apenas mudanças próprias, com mínimo de 3 retornos por donor; activeDonors identifica quem contribui em cada horizonte.'},

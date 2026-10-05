@@ -8,6 +8,7 @@
 // (tools/fetch_market_history.mjs). The output is a pure function of the
 // inputs: no clock, no network, stable ordering.
 import { createHash } from 'node:crypto';
+import { lifecycleFacts, validate as validateEvents } from '../js/events.js';
 import { gunzipSync } from 'node:zlib';
 import { mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -202,6 +203,15 @@ async function readInputs(root) {
   };
   const captures = await read(CAPTURES);
   const snapshot = await read(WORLD_SNAPSHOT), facts = await read(RETIRED), reviewed = await read(EXCLUSIONS);
+  const events = await read('data/events/events.json');
+  const errors = validateEvents(events.value);
+  if (errors.length) throw new Error(errors.join('\n'));
+  const retirements = lifecycleFacts(events.value).retirements;
+  const retired = facts.value.worlds.map(w => {
+    if ('offline' in w || 'mergedInto' in w) throw new Error(`${w.world}: event facts belong in canonical Events`);
+    if (!retirements[w.world]) throw new Error(`${w.world}: canonical retirement event is missing`);
+    return {...w,...retirements[w.world]};
+  });
   const manifest = JSON.parse(await readFile(join(root, TIBIA_MARKET, 'manifest.json'), 'utf8'));
   const names = new Map(manifest.map(m => [m.world.toLowerCase(), m.world]));
   const files = (await readdir(join(root, TIBIA_MARKET))).filter(f => f.endsWith('.json') && f !== 'manifest.json').sort();
@@ -221,9 +231,9 @@ async function readInputs(root) {
   return {
     captures: captures.value,
     tibiaMarket: tibiaMarket.map(({ world, value }) => ({ world, rows: value })),
-    registry: { active: snapshot.value.worlds, retired: facts.value.worlds },
+    registry: { active: snapshot.value.worlds, retired },
     exclusions: reviewed.value.exclusions,
-    inputs: [captures, snapshot, facts, reviewed, ...tibiaMarket].map(({ path, sha256 }) => ({ path, sha256 }))
+    inputs: [captures, snapshot, facts, events, reviewed, ...tibiaMarket].map(({ path, sha256 }) => ({ path, sha256 }))
   };
 }
 

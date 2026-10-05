@@ -10,9 +10,10 @@ import json
 ROOT = Path(__file__).resolve().parent
 BENCHMARK = 'Antica'  # every relative measure (premium, transfer, co-movement) is against this world
 # Predecessor histories are shown separately and never concatenated with the successor's series.
-PREDECESSORS = {'Terribra': ('Obscubra', 'Jacabra')}
+from events_bridge import canonical_events
+PREDECESSORS = {w: tuple(names) for w, names in canonical_events()['lifecycle']['predecessors'].items()}
 # An announcement has its full membership even when a participant is outside the capture universe.
-MERGER_EVENTS = json.loads((ROOT / 'mergers.json').read_text())
+MERGER_EVENTS = canonical_events()['mergers']
 MERGERS = {world: event['confirmedDate'] or event['notBefore']
            for event in MERGER_EVENTS for world in event['participants']}
 
@@ -30,4 +31,5 @@ def api_worlds():
 
 
 def predecessor_worlds():
-    return sorted({p for w in worlds() for p in PREDECESSORS.get(w, ())})
+    # A canonical predecessor may have no captured price history in this report.
+    return sorted({p for w in worlds() for p in PREDECESSORS.get(w, ()) if (ROOT / f'inputs/api/{p.lower()}.json').exists()})

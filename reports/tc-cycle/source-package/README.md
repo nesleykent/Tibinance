@@ -4,7 +4,7 @@ Análise do preço de Tibia Coins (TC) em gold, por mundo, 2023–2026.
 
 ## Ordem para rodar (Python 3.11, pandas, numpy, scipy, statsmodels, ruptures)
 1. Baixe `data/market/world/<Mundo>/<mundo>_tibia_coins.json` do repositório nesleykent/tibia-warzones-schedule para a pasta `tc/` (nome do arquivo = mundo em minúsculas) e `data/worlds.json` como `worlds.json`.
-2. `python3 parse_events.py` — lê `events/ev*.txt` (dump do endpoint /events do tibiamarket) e gera `events_intervals.json` e `events_daily.json`.
+2. Events now come from `../../../data/events/events.json` through `../events_bridge.py`; there is no independent parser or calendar here.
 3. `python3 build_series.py` — séries diárias limpas por mundo (`daily_by_world.pkl`, `coverage.csv`).
 4. `python3 index_build.py` — índice de mercado (mediana em duas direções sobre log do preço, 71 mundos estabelecidos), índices por região, prêmio de cada mundo.
 5. `python3 analysis_ab.py` — volatilidade, sazonalidade, dia da semana, fases (ruptures), zigue-zague, altas fortes, correlação e defasagem entre regiões → `results_ab.json`.
@@ -22,8 +22,15 @@ Análise do preço de Tibia Coins (TC) em gold, por mundo, 2023–2026.
 ## Convenções
 - Preço do dia = `day_average_sell` (média dos negócios nas Sell Offers), limpo de pontos a mais de 6% da mediana móvel de 9 dias.
 - Dia = dia do servidor (Server Save 10:00 Europe/Berlin). `stats_day` = data do servidor no momento da coleta − 1. Validado: correlação 0,65 com o book no mesmo dia, ~0 nos vizinhos.
-- `extra_events.json`: datas de updates e mudanças econômicas, com a fonte de cada uma.
+- Event definitions, update dates and provenance are canonical. Event estimates below reference their stable IDs.
 - `indice_diario.csv`: índice diário (gp por TC do "mundo típico"), número de mundos no dia, índices BR/EU/NA.
 
 ## Limites
 Preços até 13/09/2026; eventos até 15/09/2026. Ver a seção "Limites" da página.
+
+The committed legacy event estimates are frozen reference measurements, labelled
+with their original calendar-day window convention. They do not define another
+Events collection. New runs of `analysis_events.py` / `report_data.py` read the
+canonical model and its inclusive server days. The original reference scripts
+require their original price/index intermediates; current offer-based Research
+uses `../analyze.py` and is independently reproducible from committed inputs.
