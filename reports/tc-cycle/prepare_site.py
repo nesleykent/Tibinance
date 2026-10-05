@@ -10,6 +10,9 @@ PUBLIC_FILES = ("index.html", "pt-br.html", "report.css", "report.js", "export.j
 
 
 def main():
+    # Rebuild this generated directory so removed public datasets cannot survive a refresh.
+    if REPORT.exists():
+        shutil.rmtree(REPORT)
     REPORT.mkdir(parents=True, exist_ok=True)
     for filename in PUBLIC_FILES:
         shutil.copyfile(ROOT / filename, REPORT / filename)

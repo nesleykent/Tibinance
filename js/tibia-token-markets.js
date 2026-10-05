@@ -45,11 +45,17 @@ function quote() {
   $('chart').setAttribute('aria-label', `Tibia Token daily close in USD and pool trading volume in USD. UTC history ${view.prices[0]?.day ?? 'unavailable'} to ${view.end ?? 'unavailable'}.`);
 }
 function legend(day) {
+  const rest = day == null;
   day ??= view?.end;
   const p = view?.byDay.get(day);
-  $('legend').innerHTML = `<span class="day">${esc(day ?? '')} UTC</span> <span class="label"><i class="key key-dot"></i>Daily close</span> <b class="value">${p ? tokenPrice(p.close) : 'N/A'}</b>`;
+  // The candle's open, high and low beside its close, as a terminal reads a bar.
+  const ohl = p ? ` <span class="rest ohlc">${[['O', p.open], ['H', p.high], ['L', p.low]].map(([k, v]) => `<span><span class="meta-label">${k}</span> ${tokenPrice(v)}</span>`).join(' ')}</span>` : '';
+  $('legend').innerHTML = `<span class="day">${esc(day ?? '')} UTC</span> <span class="label"><i class="key key-dot"></i>Daily close</span> <b class="value">${p ? tokenPrice(p.close) : 'N/A'}</b>${ohl}`;
   $('volumeLegend').innerHTML = `<span class="day"></span> <span class="label"><i class="key key-volume"></i>Pool volume</span> <b class="value">${p ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(p.volumeUsd) : 'N/A'}</b>`;
+  // The chart's status stands over its top: the price scale starts below it (js/market-chart.js fitTop).
+  if (rest) market.fitTop?.($('chartHead'));
 }
+new ResizeObserver(() => requestAnimationFrame(() => market.fitTop?.($('chartHead')))).observe($('chart'));
 function applyRange() {
   $('range').querySelectorAll('button').forEach(b => b.setAttribute('aria-checked', String(b.dataset.range === range)));
   if (view.grid.length) {

@@ -10,4 +10,13 @@ picker.addEventListener('change', () => {
   url.searchParams.delete('view');
   location.assign(url);
 });
-await import(asset === 'tibia-token' ? './tibia-token-markets.js?v=20261004-events' : './markets.js?v=20261004-events');
+// A module that cannot be fetched (a dropped connection) would otherwise leave the page loading forever.
+try {
+  await import(asset === 'tibia-token' ? './tibia-token-markets.js?v=20261004-events' : './markets.js?v=20261004-events');
+} catch (error) {
+  console.error(error);
+  const status = document.getElementById('status');
+  status.hidden = false;
+  status.textContent = 'Markets could not be loaded. Reload the page to try again.';
+  document.getElementById('market').setAttribute('aria-busy', 'false');
+}

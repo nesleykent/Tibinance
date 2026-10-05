@@ -95,9 +95,31 @@ test('known consumers cannot reintroduce a private Events file or a context-depe
   assert.match(publicFiles,/data\/events\/events.json/); assert.match(publicFiles,/js\/events.js/);
   const forbidden=/events_intervals\.json|events_daily\.json|extra_events\.json|eventschedule\.json|calendar\.ics|mergers\.json/;
   for(const dir of ['js','reports/tc-cycle','reports/tc-cycle/source-package']) for(const name of await readdir(new URL(`../${dir}/`,import.meta.url))) {
-    if(!/\.(js|py)$/.test(name))continue;
+    if(!/\.(js|py)$/.test(name) || name.startsWith('test_'))continue;
     assert.doesNotMatch(await readFile(new URL(`../${dir}/${name}`,import.meta.url),'utf8'),forbidden,`${dir}/${name}`);
   }
+});
+
+test('data and Research JSON cannot introduce another editable Events collection', async () => {
+  async function scan(directory) {
+    for(const entry of await readdir(new URL(`../${directory}/`,import.meta.url),{withFileTypes:true})) {
+      const path=`${directory}/${entry.name}`;
+      if(entry.isDirectory()) { if(!['dist','review','__pycache__'].includes(entry.name)) await scan(path); continue; }
+      if(!entry.name.endsWith('.json') || path==='data/events/events.json')continue;
+      // Frozen Python numerical outputs contain NaN; treat those non-event cells as null.
+      const raw=await readFile(new URL(`../${path}`,import.meta.url),'utf8');
+      const value=JSON.parse(raw.replace(/:\s*NaN(?=\s*[,}])/g,':null'));
+      function inspect(node) {
+        if(!node || typeof node!=='object')return;
+        if(Array.isArray(node)) {
+          assert.ok(!node.some(row=>row && typeof row==='object' && row.start && row.end && (row.event || (row.title && row.category))),`${path}: independent event definitions`);
+        }
+        for(const child of Object.values(node)) inspect(child);
+      }
+      inspect(value);
+    }
+  }
+  await scan('data');await scan('reports/tc-cycle');
 });
 
 test('validation covers dates, scope, merges and sources', () => {

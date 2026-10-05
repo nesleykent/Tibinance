@@ -19,7 +19,10 @@ Prices are the provider's USD valuation, not raw USDT units. Volume is pool
 trade volume in USD, not TIB quantity, global volume, or TC transactions.
 Candles use UTC calendar days, rather than the Berlin 10:00 server day.
 The acquisition day's incomplete candle is excluded. Daily OHLC and volume
-are retained; the chart draws the daily close and pool volume.
+are retained; the chart draws the daily close and pool volume, and its readout
+gives each candle's open, high and low beside the close, as a terminal reads a
+bar. Like Tibia Coin, the chart's status stands over its top and the price scale
+starts below it.
 
 Initial coverage is 363 completed days, 2025-10-06 through 2026-10-03.
 The public API rejected earlier pagination with HTTP 401. Launch-to-present

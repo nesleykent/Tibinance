@@ -65,8 +65,13 @@ class StatisticsDatasetTests(unittest.TestCase):
     def test_packaged_report_contains_the_shared_statistics_runtime_and_export(self):
         with tempfile.TemporaryDirectory() as d:
             output=Path(d)
+            stale=output/'reports'/'tc-cycle'/'mergers.json'
+            stale.parent.mkdir(parents=True,exist_ok=True)
+            stale.write_text('[]')
             with patch.object(prepare_site,'OUTPUT',output), patch.object(prepare_site,'REPORT',output/'reports'/'tc-cycle'):
                 prepare_site.main()
+            self.assertFalse(stale.exists())
+            self.assertEqual((output/'data/events/events.json').read_bytes(), (market.ROOT.parents[1]/'data/events/events.json').read_bytes())
             for shared in ('js/statistics.js','js/site-header.js','css/site-header.css'):
                 self.assertEqual((output/shared).read_text(),(market.ROOT.parents[1]/shared).read_text())
             self.assertTrue((output/'reports'/'tc-cycle'/'export.js').exists())

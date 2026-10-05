@@ -31,6 +31,7 @@ export const SIDES = {
 };
 
 const token = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const dayTick = new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric', timeZone: 'UTC' });
 export const colors = () => ({ sell: token('--sell'), buy: token('--buy'), average: token('--average'), text: token('--muted'),
   grid: token('--line-faint'), rule: token('--line'), crosshair: token('--line-strong'), ink: token('--ink'),
   canvas: token('--canvas') || '#fff', font: token('--font-ui'),
@@ -96,7 +97,7 @@ const activity = {
     return s;
   },
   draw(s, view, side, c) {
-    s.applyOptions({ color: `${c[side]}40` });
+    s.applyOptions({ color: `${c[side]}55` });
     s.setData(view.grid.map(day => {
       const value = statisticsAt(view, day, side)?.transactions;
       return value === undefined ? { time: day } : { time: day, value };
@@ -120,8 +121,12 @@ export function createMarketChart(container, { scale: k = 1, width, height, prof
       panes: { separatorColor: c.rule, separatorHoverColor: c.crosshair }, attributionLogo: !width },
     grid: { vertLines: { visible: false }, horzLines: { color: c.grid } },
     // Room above the highest price for the status lines, and below the lowest for the volume.
-    rightPriceScale: { borderVisible: false, scaleMargins: { top: 0.16, bottom: 0.22 } },
-    timeScale: { borderVisible: false, rightOffset: 4 },
+    // A label at the scale's top or bottom edge is shown only whole, never cut by the pane.
+    rightPriceScale: { borderVisible: false, entireTextOnly: true, scaleMargins: { top: 0.16, bottom: 0.22 } },
+    // A day's tick names its month too: alone between month ticks, or first on the axis, a bare day number would be a
+    // number without a date. Month and year ticks keep the library's own labels.
+    timeScale: { borderVisible: false, rightOffset: 4,
+      tickMarkFormatter: (time, type) => type === L.TickMarkType.DayOfMonth ? dayTick.format(new Date(`${dayOf(time)}T00:00:00Z`)) : null },
     crosshair: { mode: L.CrosshairMode.Normal,
       vertLine: { color: c.crosshair, labelBackgroundColor: c.ink },
       horzLine: { color: c.crosshair, labelBackgroundColor: c.ink } },
@@ -139,10 +144,22 @@ export function createMarketChart(container, { scale: k = 1, width, height, prof
   // Optional layers start shown, unless they say otherwise (`hidden: true`); hiding one redraws only that layer.
   const hidden = new Set(layers.filter(l => l.optional && l.hidden).map(l => l.id));
   const shown = layer => !(layer.optional && hidden.has(layer.id));
-  let last = null;
+  let last = null, topFraction = null;
   const drawLayer = layer => layer.draw(series.get(layer), last.view, last.side, c, { visible: shown(layer) });
   return {
     chart,
+    // Over the chart's top stands the page's status: the price scale starts below it, so no price is drawn under it.
+    // Called when the status or the chart changes size, never as the crosshair moves, so the chart does not rescale
+    // under the pointer.
+    fitTop(element) {
+      const area = container.getBoundingClientRect(), head = element.getBoundingClientRect();
+      const pane = area.height - chart.timeScale().height();
+      if (pane <= 0 || !head.height) return;
+      const top = Math.min(0.5, Math.max(0.08, (head.bottom - area.top + 12 * k) / pane));
+      if (topFraction !== null && Math.abs(top - topFraction) < 0.004) return;
+      topFraction = top;
+      chart.priceScale('right').applyOptions({ scaleMargins: { top, bottom: 0.22 } });
+    },
     draw(view, side) { last = { view, side }; layers.forEach(drawLayer); },
     setVisible(id, on) {
       const layer = layers.find(l => l.id === id && l.optional);

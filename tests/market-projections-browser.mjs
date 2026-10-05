@@ -13,6 +13,9 @@ const read=async path=>JSON.parse(await readFile(new URL(`../${path}`,import.met
 const dataset=await read('data/market-projections/tibia-coin.json');
 const n=new Intl.NumberFormat('en-US');
 const scenario=(world,side)=>dataset.worlds.find(w=>w.world===world)[side];
+// The edition's facts, read from the dataset rather than written in: Antica's anchor (its last observation) and the
+// horizon's last week move with every Research update.
+const antica=dataset.worlds.find(w=>w.world==='Antica').anchor,anchorDay=antica.serverDay,horizonEnd=dataset.method.last;
 const addDays=(day,k)=>new Date(Date.parse(`${day}T00:00:00Z`)+k*86400000).toISOString().slice(0,10);
 
 const browser=await (engine==='webkit' ? webkit.launch({headless:true}) : chromium.launch({headless:true,...(process.env.TIBINANCE_CHROME ? {executablePath:process.env.TIBINANCE_CHROME} : {channel:'chrome'})}));
@@ -41,7 +44,7 @@ try {
   assert.deepEqual([await toggle.getAttribute('aria-pressed'),await toggle.getAttribute('title')],['false','Show projections']);
   assert.equal(await text('#projectionLegend'),'');
   const historyEnd=await dayAt(0.999);
-  assert.equal(historyEnd,'2026-10-03','hidden, the chart ends with the history');
+  assert.equal(historyEnd,anchorDay,'hidden, the chart ends with the history');
   const url=page.url();
   await toggle.click();
   await page.waitForTimeout(150);
@@ -58,24 +61,24 @@ try {
   // ---- The boundary: the last observed day reads the observation; the next day reads the first projected week.
   let seen=new Map();
   for (let f=0.40;f<=0.60;f+=0.002) { const d=await dayAt(f); if (!seen.has(d)) seen.set(d,await legend()); }
-  assert.match(seen.get('2026-10-03'),/^2026-10-03 Best Sell Offer 43,114 /,'the anchor day is the last observation');
-  const next=[...seen.keys()].filter(d=>d>'2026-10-03').sort()[0];
+  assert.ok(seen.get(anchorDay).startsWith(`${anchorDay} Best Sell Offer ${n.format(antica.sell)} `),'the anchor day is the last observation');
+  const next=[...seen.keys()].filter(d=>d>anchorDay).sort()[0];
   const [w1,c1,l1,h1]=sell[0];
   assert.equal(seen.get(next),`${next} Projection ${n.format(c1)} band ${n.format(l1)} to ${n.format(h1)} week to ${w1}`);
   assert.ok(next<=w1,'the first days after the anchor belong to the first projected week');
 
   // ---- Horizon and range: the window ahead matches the range behind, up to the 52 weeks.
   await page.mouse.move(5,5);
-  assert.equal(await dayAt(0.999)>=addDays('2026-10-03',350),true,'1Y shows the whole horizon');
-  assert.match(await legend(),new RegExp(`Projection [\\d,]+ band [\\d,]+ to [\\d,]+ week to ${lastDay}|week to 2027-09-`));
+  assert.equal(await dayAt(0.999)>=addDays(anchorDay,350),true,'1Y shows the whole horizon');
+  assert.match(await legend(),new RegExp(`Projection [\\d,]+ band [\\d,]+ to [\\d,]+ week to ${lastDay}|week to ${horizonEnd.slice(0,8)}`));
   await page.click('#range button[data-range="1M"]');
   await page.waitForTimeout(100);
   const monthEnd=await dayAt(0.999);
-  assert.ok(monthEnd>'2026-10-28' && monthEnd<='2026-11-06',`1M shows about a month ahead: ${monthEnd}`);
+  assert.ok(monthEnd>addDays(anchorDay,25) && monthEnd<=addDays(anchorDay,34),`1M shows about a month ahead: ${monthEnd}`);
   assert.equal(new URL(page.url()).searchParams.get('range'),'1M');
   await page.click('#range button[data-range="All"]');
   await page.waitForTimeout(100);
-  assert.ok(await dayAt(0.999)>='2027-09-26','All shows the whole horizon');
+  assert.ok(await dayAt(0.999)>=addDays(horizonEnd,-7),'All shows the whole horizon');
 
   // ---- The side: the Buy Offers' own scenario.
   await page.click('#side button[data-side="buy"]');
@@ -95,7 +98,7 @@ try {
   await page.waitForTimeout(100);
   assert.deepEqual(await series(),shown,'hiding changes no market value, range or address');
   assert.equal(await text('#projectionLegend'),'');
-  assert.equal(await dayAt(0.999),'2026-10-03');
+  assert.equal(await dayAt(0.999),anchorDay);
   assert.doesNotMatch(await page.getAttribute('#chart','aria-label'),/Projection/);
   await toggle.click();
   // Remembered on this device across visits.
@@ -106,14 +109,14 @@ try {
   // ---- Conditions the Research sets: a merge suspends, a stale quote is conditional, confidence can be limited.
   await open('Luzibra','3M');
   await page.mouse.move(5,5);
-  const luzibra=scenario('Luzibra','sell').filter(r=>r[1]!==null);
-  assert.equal(await text('#projectionLegend'),`Projection ${n.format(luzibra.at(-1)[1])} band ${n.format(luzibra.at(-1)[2])} to ${n.format(luzibra.at(-1)[3])} on 2026-10-17 limited confidence suspended from 2026-10-24`);
-  assert.equal(await dayAt(0.999),'2026-10-17','the window stops where the Research suspends the scenario');
+  const luzibraRows=scenario('Luzibra','sell'),luzibra=luzibraRows.filter(r=>r[1]!==null),luzibraSuspended=luzibraRows.find(r=>r[1]===null)[0];
+  assert.equal(await text('#projectionLegend'),`Projection ${n.format(luzibra.at(-1)[1])} band ${n.format(luzibra.at(-1)[2])} to ${n.format(luzibra.at(-1)[3])} on ${luzibra.at(-1)[0]} limited confidence suspended from ${luzibraSuspended}`);
+  assert.equal(await dayAt(0.999),luzibra.at(-1)[0],'the window stops where the Research suspends the scenario');
   await open('Cantabra','6M','buy');
   await page.mouse.move(5,5);
   assert.match(await text('#projectionLegend'),/limited confidence$/);
   const stale=await dayAt(0.97);
-  assert.ok(stale>'2026-10-03',`a stale quote's scenario runs after the history: ${stale}`);
+  assert.ok(stale>anchorDay,`a stale quote's scenario runs after the history: ${stale}`);
   assert.match(await legend(),/Conditional: stale quote/);
 
   // ---- Unavailable, with the reason, where the Research has no scenario to place.
@@ -134,7 +137,7 @@ try {
   const eventRight=()=>page.$$eval('#eventMarks .event-mark',bs=>Math.max(...bs.map(b=>b.getBoundingClientRect().right)));
   await open('Antica','1Y');
   const withProjection=await eventIds();
-  const boundary=await (async()=>{for (let f=0.4;f<0.7;f+=0.002){if(await dayAt(f)>'2026-10-03'){const b=await plotBox();return b.x+b.w*f;}}return Infinity;})();
+  const boundary=await (async()=>{for (let f=0.4;f<0.7;f+=0.002){if(await dayAt(f)>anchorDay){const b=await plotBox();return b.x+b.w*f;}}return Infinity;})();
   assert.ok(await eventRight()<=boundary+12,'event markers stand in the history');
   await page.locator('#eventMarks .event-mark').first().hover();
   assert.equal(await page.$eval('#eventTip',t=>t.hidden),false,'an event marker still shows its details');
@@ -179,7 +182,7 @@ try {
   await open('Antica','3M');
   assert.equal(await toggle.isVisible(),true);
   assert.equal(await toggle.getAttribute('aria-pressed'),'true');
-  assert.match(await text('#projectionLegend'),/^Projection [\d,]+ band [\d,]+ to [\d,]+ on 2027-10-02$/);
+  assert.match(await text('#projectionLegend'),new RegExp(`^Projection [\\d,]+ band [\\d,]+ to [\\d,]+ on ${horizonEnd}$`));
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth),0);
   await page.setViewportSize({width:1440,height:900});
 

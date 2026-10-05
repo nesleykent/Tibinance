@@ -31,18 +31,41 @@ The analysis uses [TibiaMarket’s public API](https://api.tibiamarket.top/docs)
 ## Markets
 
 [Markets](../markets.html) is a market terminal for the Tibia Coin history of every
-tracked world. The chart fills the viewport under the header: the world and
-its quote head it, the 1M / 3M / 6M / YTD / 1Y / All ranges sit below it. Legends on the chart follow the crosshair
-(server day, best offer with its change from the previous observation, daily
-average, transaction activity), and the latest best offer is marked on the price scale. The
-page keeps the same outer margins as Capture and Research.
+tracked world, laid out chart first. The chart fills the viewport under the
+header, with the 1M / 3M / 6M / YTD / 1Y / All ranges below it, and the page
+keeps the same outer margins as Capture and Research.
 
-At its right edge, the tool rail leads with the market side, a compact Sell /
-Buy switch, then holds two kinds of tool (`js/markets-dock.js`): panel tools,
+The chart's status is one block over its top left, as a market terminal reads
+its legend:
+
+- the world, what it is (PvP type, BattlEye; a retired world's status and
+  successor), its latest best offer for the side shown and its change over the
+  range;
+- the market side the chart shows: a Sell / Buy choice, the segmented control
+  Tibinance uses for one choice of two, with each side's latest best offer and
+  the spread between them. The side shown is the raised thumb in its side's
+  colour. It chooses a view of the market, so it does not look like an order;
+- the readout of the day under the crosshair, or the latest day: the best offer
+  with its change from the previous observation, the daily average with that
+  day's traded high and low (read out only, never drawn: a Buy-side low of 1 is
+  common), and transaction activity.
+
+The price scale starts below the block, so no price is drawn under it, and
+gridlines run to the top. Edge price labels are shown only whole. A day's tick on
+the time axis names its month (`Sep 10`), so a tick alone between months, or
+first on the axis, is never a bare number. The latest best offer is marked on
+the price scale.
+
+At its right edge, the tool rail launches tools and holds no chart state. It has
+two kinds of tool (`js/markets-dock.js`): panel tools,
 which open a panel beside the chart, and direct actions. **Worlds**
-opens a dense, separately scrolling watchlist (latest best offer and its
-absolute and percentage change over the selected range) and the selected
-world's details; **Screener** sets every world side by side in the chart's
+opens a compact, separately scrolling watchlist (latest best offer and its
+absolute and percentage change over the selected range; a small raised R marks
+a retired world, an i an old latest best offer, each with its note as tooltip
+and accessible name) and, under it, the selected world's details: what it is,
+its latest best offer for the side shown with its change over the range, when it
+was observed, both sides and the spread, and its change over every range, each
+a press away from the chart; **Screener** sets every world side by side in the chart's
 place (below); **Events** opens a calendar, an agenda and each event's details,
 and its Chart markers switch shows or hides the event markers (below), a choice
 remembered in the browser rather than the address; **Projections** shows or
@@ -59,7 +82,7 @@ Tibinance mark. It is drawn from a second chart built offscreen from the same
 state (`js/market-export.js`), so every image has the same layout at twice the
 pixels or more, from any window. **Full screen** takes the whole terminal,
 rail included. Phones show the rail as a row under the chart and list the
-worlds below it. The chart is built from layers (`js/market-chart.js`); a
+worlds below it; the page opens on the chart, never scrolled to the list. The chart is built from layers (`js/market-chart.js`); a
 layer added there, such as events or projections, is drawn on the page and in
 every export alike.
 Selecting a world updates the chart and the address
@@ -78,8 +101,9 @@ into, and their ranges end on their last observed day.
 The Screener (`js/market-screener.js`, `js/market-screener-panel.js`) is part of
 Markets, opened from the tool rail. It takes the chart's place, and the open
 panel gives its width to the grid until the chart is back. Every world is a
-card for the side and range the chart uses (one choice for both, in the rail
-and in the ranges under the grid):
+card for the side and range the chart uses (one choice for both: the Screener
+has its own Sell / Buy in its head, since it takes the chart's place, and the
+ranges under the grid):
 
 - the world, its latest best offer and its change over the range, by the
   watchlist's rule; a current world whose latest best offer is more than seven
@@ -900,15 +924,29 @@ node tests/tables-browser.mjs
 `TIBINANCE_OFFERS_SAMPLE` enables the paired real Offers regression. These checks
 use isolated browser storage and API fixtures. No test state is imported into
 canonical data. The historical rebuild and subsequent Apple Vision review are
-complete: its 390 accepted captures are preserved; the latest screenshot update has 467 accepted captures across 40 worlds, with no unresolved review cases.
+complete: its 390 accepted captures are preserved; the latest screenshot update has 492 accepted captures across 40 worlds, with no unresolved review cases.
 The anonymous [review audit](../data/rebuild-vision-review.json) records recoveries and
 per-world coverage; [validation](../data/rebuild-validation.json) reconciles the archive.
 The progress ledger is in `PROGRESS.md`.
 
 
+### October 4 screenshot update
+
+The current canonical data contains 492 captures (440 Offers and 52 Statistics),
+7,678 offer observations and 5,525 offer identities across 40 worlds. The update
+adds the 25 Tibia Coins captures of 2026-10-04 (13 Offers, 12 Statistics) and
+leaves every one of the 467 earlier captures byte-identical, offer identities
+included: the run reused the 503 checkpointed results and finalized against the
+previous canonical dataset, which is what keeps identities stable. The archive
+now reconciles to 528 unique eligible images plus 40 duplicate copies: 492 ready,
+28 no-Market, three other items and five historical manual exclusions; no review
+or runtime failures. The rebuilt Markets history, its audits, the Research
+(`market-update.json` equals `data/observations.json` byte for byte) and the
+Markets projections follow from it; the Research froze its 2026-10-04 cutoff.
+
 ### October 3 screenshot update and independent review
 
-The current canonical data contains 467 captures (427 Offers and 40 Statistics),
+That update brought the data to 467 captures (427 Offers and 40 Statistics),
 7,419 offer observations and 5,433 offer identities across 40 worlds. The update
 adds 77 captures and preserves every previously accepted capture, timestamp,
 world and offer identity. The complete local archive reconciles to 503 unique

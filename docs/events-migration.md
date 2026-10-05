@@ -82,3 +82,29 @@ validation, loader sharing, explicit filter purity, Python projections,
 architectural checks against private calendars, marker/export derivation,
 Research acceptance checks, and desktop/mobile browser flows across TIB, TC,
 Antica, Luzibra, Terribra and both Research editions.
+
+## Completed verification (2026-10-04)
+
+The migration was integrated with the newer Markets layout and October 4 capture
+refresh before final verification. All 295 historical canonical identities survive.
+
+- 138 JavaScript unit/regression tests passed, including an architectural JSON
+  scan that rejects independent event definitions in data and Research sources.
+- 38 Research Python tests passed; packaging tests remove stale generated merger
+  datasets and compare the canonical copy with its source.
+- Research arithmetic, findings and runtime compatibility checks passed,
+  including 204 numerical comparisons.
+- Canonical validation, market-history and projection reproducibility checks passed.
+- The complete Research sensitivity pipeline was rebuilt through isolated copies
+  using the shared Events bridge. Acceptance checks passed for 40 worlds, 438
+  captures, 4,160 forecasts, provenance hashes, sensitivities and the forecast ledger.
+- Chrome and WebKit passed the desktop/mobile canonical flow for TIB, TC,
+  Antica, Luzibra, Terribra and both Research editions: identical IDs, explicit
+  filters, asset/world switching, chart focus/markers and PNG exports.
+- WebKit also passed the existing marker, Events-panel, TIB history/failure and
+  shared-header suites. Rendered desktop/mobile screenshots were inspected.
+- Standalone Research packaging copies the canonical dataset and module exactly.
+
+The legacy reference-package estimates remain frozen because their original
+price/index pickle intermediates are absent from the repository. Their event
+identities were migrated; the active offer-based Research studies were rebuilt.

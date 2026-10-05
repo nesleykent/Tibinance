@@ -87,8 +87,9 @@ try {
   assert.equal(param('range'),'1Y');
   assert.equal(await page.getAttribute('#range [data-range="1Y"]','aria-checked'),'true');
   await check('Antica','sell','1Y');
-  // So is the side, in the rail.
-  await page.click('#side [data-side="buy"]');
+  // So is the side: the Screener has the chart's choice of side in its head, since it takes the chart's place.
+  await page.click('#screenerSide [data-side="buy"]');
+  assert.equal(await page.getAttribute('#side [data-side="buy"]','aria-checked'),'true');
   assert.equal(param('side'),'buy');
   assert.ok(await page.$eval('#screenerGrid',g=>g.classList.contains('side-buy')));
   await check('Belobra','buy','1Y');
