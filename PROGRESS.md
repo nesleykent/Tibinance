@@ -14,19 +14,15 @@ Never force-push, never reset, never redo finished work.
 
 ## Current state
 
-- **Stage:** A0 (deployment safety bootstrap), substep 8 (isolation test). Steps 1 to 7 are done and verified.
-- **Production:** GitHub Pages source = **GitHub Actions** (switched 2026-10-13 20:45 UTC). Live = `release/0001`
-  (`b7eb0e4`); verified: all 495 served files equal the release (`pages_release.mjs verify-live --all`), and files
-  added after it (e.g. `docs/releases.md`) return 404. Main is ahead of production by design.
-- **This commit is the isolation test.** It edits a served file (a comment at the top of `css/site-header.css`)
-  and must **not** deploy. Verify that:
-  1. no "Pages release" run starts for this push (only CI);
-  2. no new github-pages deployment appears;
-  3. `node tools/ci/pages_release.mjs verify-live --all` still passes against `release/0001`;
-  4. `node tools/release.mjs --data HEAD --approver test` is refused as "nothing to release" (no data paths
-     changed since `b7eb0e4`).
-- **Exact next action:** run those four checks, record the results here in the next commit, then start Stage B
-  (forecast archive): `tools/forecasts/archive.py` first (plan, Stage B step 1).
+- **Stage:** B (forecast archive), substep 1 (`tools/forecasts/archive.py`). **Stage A0 is complete and verified.**
+- **Production:** GitHub Pages source = GitHub Actions. Live = `release/0001` (`b7eb0e4`), 495/495 files verified.
+  Main is ahead by design; nothing on main is live until `tools/release.mjs` releases it.
+- **Exact next action:** implement `tools/forecasts/archive.py` (stdlib only), following plan Stage B step 1.
+  - Content-addressed objects for outputs and input snapshots.
+  - Hash-chained `data/forecast-archive/publications.jsonl` with `contentHash` identity.
+  - Modes: `--ensure`, `--check`, `--backfill`, `--index`, `--reconcile`.
+- **Also pending:** `pages.yml` should check out `${{ github.sha }}` instead of `main`, so each deployment's sha
+  maps exactly to the `release/production.json` it deployed (needed for website publication evidence).
 
 ## Completed (verified)
 
@@ -46,6 +42,14 @@ Never force-push, never reset, never redo finished work.
   - `release/policy.json`: data-release paths.
   - `.github/workflows/ci.yml` and `pages.yml`.
   - `docs/releases.md`.
+- **A0 acceptance (2026-10-13), all passed:**
+  - **Isolation test:** checkpoint `218d6f8` edited a served file (`css/site-header.css`). Results:
+    - no Pages run started (only CI);
+    - no new github-pages deployment;
+    - live still equals `release/0001` 495/495, and the live CSS lacks the new comment;
+    - `release.mjs --data HEAD` was refused as "nothing to release", with no tag created.
+  - **CI on `218d6f8`:** success. Research 39 run with 2 skipped (hosting, exact-float variant); Site integrity
+    7/7; release verify 1 release consistent.
 - **A0 bootstrap results (2026-10-13):**
   - Release 0001 dry run (run 38464936631, Pages still legacy): validate and build passed, deploy skipped.
   - The downloaded artifact equals `release/0001` file for file (495/495). Live then differed only in
