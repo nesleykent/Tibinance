@@ -107,12 +107,15 @@ python robustness.py
 python -m unittest discover -p 'test_*.py'
 python validate.py --reproduce
 python ledger.py
+python ../../tools/forecasts/archive.py --ensure
 python validate.py
 node --check report.js
 node test_premium.cjs
 node test_report_findings.cjs
 python prepare_site.py
 ```
+
+Cada edição publicada (cenários de `results.json`, forecasts do ledger e projeções do Markets) é registrada no arquivo de forecasts do site (`data/forecast-archive/`, `tools/forecasts/archive.py --ensure`) antes de chegar ao `main`; o commit da edição sai por `tools/forecasts/publish.py`, que valida a unidade de publicação e nunca sobrescreve outra publicação. Ver `docs/releases.md` e `docs/economy-plan.md`.
 
 A reprodução lê arquivos congelados, sem buscar dados remotos. As datas futuras de eventos probabilísticos são alvos explícitos do desenho de pesquisa, não novas observações. O GitHub Pages serve os arquivos desta pasta diretamente. Fontes, entradas e transformações permanecem inspecionáveis; detalhes de revisões anteriores estão no histórico Git.
 

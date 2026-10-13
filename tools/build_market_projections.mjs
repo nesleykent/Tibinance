@@ -10,9 +10,14 @@
 //   node tools/build_market_projections.mjs          rebuild and write
 //   node tools/build_market_projections.mjs --check  fail if the committed file differs
 //
+// Projections present a published forecast, so the forecast archive comes first: the new file is written to a
+// temporary path, tools/forecasts/archive.py archives the Research edition and this presentation of it (durably,
+// with fsync), and only then is the file moved into place. If archiving fails, the projections are not replaced.
+//
 // Values are rounded to whole gold, as every Tibinance price is shown. The output is a pure function of the inputs.
 import { createHash } from 'node:crypto';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
+import { spawnSync } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { dirname, join } from 'node:path';
 import { addDays, serverDay } from '../js/market-history.js';
@@ -117,7 +122,14 @@ async function main() {
     return;
   }
   await mkdir(dirname(path), { recursive: true });
-  await writeFile(path, content);
+  const pending = `${path}.pending`;
+  await writeFile(pending, content);
+  const archived = spawnSync(process.env.PYTHON ?? 'python3', [join(ROOT, 'tools/forecasts/archive.py'), '--ensure', '--projections', pending], { cwd: ROOT, stdio: 'inherit' });
+  if (archived.status !== 0) {
+    await rm(pending, { force: true });
+    throw new Error('the forecast archive did not record this edition; the projections were not replaced');
+  }
+  await rename(pending, path);
   const dataset = JSON.parse(content);
   console.log(JSON.stringify({ file: OUTPUT, bytes: content.length, worlds: dataset.worlds.length, ...dataset.method }));
 }

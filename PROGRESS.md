@@ -18,8 +18,8 @@ Never force-push, never reset, never redo finished work.
   has been run.
 - **Production:** live = `release/0001` (`b7eb0e4`). Nothing in Stage B is released yet. The archive files are on
   main only.
-- **Exact next action:** the atomic hook in `tools/build_market_projections.mjs`. It calls
-  `archive.py --ensure --projections <tmp>` and renames the tmp file only after a durable append. Then `publish_evidence.py` (repository evidence from first-parent main; website evidence from GitHub Pages
+- **Exact next action:** `js/forecast-archive.js`, the pure lifecycle, as-of and metrics logic for the Markets
+  panel (plan Stage B step 7), with `tests/forecast-archive.test.mjs`. Then `publish_evidence.py` (repository evidence from first-parent main; website evidence from GitHub Pages
   deployments, legacy before 2026-10-13 and release-based after), then `evaluate.py`, `index.json`, the
   `build_market_projections.mjs` hook, `publish.py`, and the `pages.yml` checkout of `github.sha`.
 
@@ -129,6 +129,20 @@ Never force-push, never reset, never redo finished work.
     - `test_evaluate.py`: 7 tests (Mon–Sun target week, weekly median of daily medians, captures only fill missing
       days, unclosed and empty weeks not scored, idempotent re-run, supersession keeping the old score, zero
       actual, forecast chain untouched). Forecast-tool suite: 25 tests, all pass.
+  - Atomic hook: `tools/build_market_projections.mjs` writes `<file>.pending`, runs
+    `archive.py --ensure --projections <pending>` and renames only after success. `tests/forecast-archive.test.mjs`
+    proves a failing archive leaves the projections untouched. The Research README order now includes
+    `archive.py --ensure` after `ledger.py`.
+  - `tools/forecasts/publish.py`, the transaction:
+    1. Take the lock, archive with `--ensure`, and check the ledger prefix.
+    2. Refuse if main changed a non-archive unit file.
+    3. Reconcile the chains by `contentHash` (main's records first, plus the objects they cite) and rebuild the
+       index.
+    4. Run `--check` on the working tree, build the commit on the remote main with plumbing, and run `--check`
+       again on the commit's own tree.
+    5. Push without force (retried on rejection), then fast-forward locally.
+  - `test_publish.py`: 8 tests on throwaway origin and clones, including a rejected push followed by an
+    idempotent retry and two concurrent publishers. Forecast-tool suite: 33 tests pass. JS suite: 151 pass.
   - Incident: the first run of these tests wrote into the working copy of the real archive, because default
     arguments bound the paths at import. The 5 stray records (basis `test`) and 4 objects were never committed;
     they were removed and the committed archive was restored. Paths now resolve at call time, and the test class

@@ -29,3 +29,4 @@ node_modules/
 data/rebuilt-market/
 .openai/
 data/forecast-archive/.lock
+data/market-projections/*.pending
