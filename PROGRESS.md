@@ -14,14 +14,18 @@ Never force-push, never reset, never redo finished work.
 
 ## Current state
 
-- **Stage:** B (forecast archive). Substep 1 (`archive.py`) and substep 5 (`reproduce.py`) are done; the backfill
-  has been run.
-- **Production:** live = `release/0001` (`b7eb0e4`). Nothing in Stage B is released yet. The archive files are on
-  main only.
-- **Exact next action:** `js/forecast-archive.js`, the pure lifecycle, as-of and metrics logic for the Markets
-  panel (plan Stage B step 7), with `tests/forecast-archive.test.mjs`. Then `publish_evidence.py` (repository evidence from first-parent main; website evidence from GitHub Pages
-  deployments, legacy before 2026-10-13 and release-based after), then `evaluate.py`, `index.json`, the
-  `build_market_projections.mjs` hook, `publish.py`, and the `pages.yml` checkout of `github.sha`.
+- **Stage:** B (forecast archive). The core is complete and verified: archive, reproduce, evidence, evaluate,
+  index, the projections hook, publish, and the client logic. The Markets panel UI is Stage F.
+- **Production:** live = `release/0001` (`b7eb0e4`). Stage B files are on main only, unreleased by design.
+- **Exact next action:** Stage A2 automation for the forecast loop.
+  1. `tools/sync_market.mjs`, the shared update entry point (correction 6).
+  2. TibiaMarket incremental fetch: measure the API row cadence first, then dated increment files beside the
+     existing copies.
+  3. `.github/workflows/forecast-archive.yml`: on push, `deployment_status` and a daily schedule, run
+     `publish_evidence.py`, then `evaluate.py`, then commit via `publish.py`.
+  4. `.github/workflows/market-daily.yml`.
+
+  Then Stage C0 (kill-stats benchmark gate).
 
 ## Completed (verified)
 
@@ -143,6 +147,18 @@ Never force-push, never reset, never redo finished work.
     5. Push without force (retried on rejection), then fast-forward locally.
   - `test_publish.py`: 8 tests on throwaway origin and clones, including a rejected push followed by an
     idempotent retry and two concurrent publishers. Forecast-tool suite: 33 tests pass. JS suite: 151 pass.
+  - `index.json` now summarises the evaluation in force per target week (n, MAPE, bias, coverage). Points stay in
+    `evaluations.jsonl`.
+  - `js/forecast-archive.js` (pure, no DOM) provides:
+    - `weekEnding`; `publishedAt` (website evidence first, repository as a labelled fallback, archived never);
+    - `classify` and `lifecycleLabel`;
+    - `publishedBy` and `editionAsOf`, which show only what was public at t, newest publication first;
+    - `scenarioSeries` and `sameTarget` (several editions' forecasts for one target week, with horizons);
+    - `evaluationPoints` (superseded evaluations out of view);
+    - `metrics` (MAE, RMSE, MAPE, sMAPE, bias, coverage; a zero actual is skipped) and `groupMetrics`;
+    - `readObject` (gzip objects via `DecompressionStream`).
+
+    `tests/forecast-archive.test.mjs` has 7 tests. JS suite: 157 pass. Forecast-tool Python: 34 pass.
   - Incident: the first run of these tests wrote into the working copy of the real archive, because default
     arguments bound the paths at import. The 5 stray records (basis `test`) and 4 objects were never committed;
     they were removed and the committed archive was restored. Paths now resolve at call time, and the test class

@@ -33,13 +33,20 @@ def build_index(records: list[dict], evaluations: list[dict] | None = None) -> d
             by_subject.setdefault(r['subject'], []).append(r)
     superseded_by = {r['supersedes']: r['by'] for r in records if r['type'] == 'supersession'}
     presentations = [r for r in records if r['type'] == 'presentation']
-    current = {}
+    current = {}  # (forecast, weekEnding) -> the evaluation in force; superseded ones stay in evaluations.jsonl
     for e in evaluations:
-        key = (e['forecast'], e.get('world'), e.get('side'), e.get('target'), e.get('model'))
+        key = (e['forecast'], e['weekEnding'])
         if e['type'] == 'evaluation':
             current[key] = e
         elif e['type'] == 'evaluation-superseded':
             current.pop(key, None)
+
+    def summary(items):
+        pct = [i['pctError'] for i in items if i.get('pctError') is not None]
+        signed = [100 * (i['predicted'] / i['actual'] - 1) for i in items if i.get('actual')]
+        inside = [i['inside'] for i in items if i.get('inside') is not None]
+        return {'n': len(items), 'mape': sum(pct) / len(pct) if pct else None, 'bias': sum(signed) / len(signed) if signed else None,
+                'coverage': sum(inside) / len(inside) if inside else None}
 
     def evidence(subject, level):
         ev = [r for r in by_subject.get(subject, []) if r['type'] == 'publication-evidence' and r['level'] == level]
@@ -66,7 +73,7 @@ def build_index(records: list[dict], evaluations: list[dict] | None = None) -> d
     for r in records:
         if r['type'] != 'forecast':
             continue
-        evals = [e for k, e in sorted(current.items(), key=lambda kv: tuple(str(x) for x in kv[0])) if k[0] == r['contentHash']]
+        evals = [e for (f, week), e in sorted(current.items()) if f == r['contentHash']]
         forecasts.append({
             'contentHash': r['contentHash'], 'seq': r['seq'], 'product': r['product'], 'edition': r['edition'],
             'provenance': r['provenance'], 'dataCutoff': r['dataCutoff'], 'model': {'id': r['model']['id'], 'version': r['model'].get('version')},
@@ -75,8 +82,9 @@ def build_index(records: list[dict], evaluations: list[dict] | None = None) -> d
             'outputs': r['outputs']['object'], 'inputs': r['inputs']['object'], 'reproducibility': r['reproducibility'],
             'presentations': [{'surface': p['surface'], 'sha256': p['sha256']} for p in presentations if p['forecast'] == r['contentHash']],
             **lifecycle(r),
-            'evaluation': {'evaluated': len(evals), 'items': [{k: e[k] for k in ('world', 'side', 'target', 'model', 'horizon', 'actual', 'predicted',
-                                                                                  'absError', 'pctError', 'inside', 'observation') if k in e} for e in evals]},
+            'evaluation': {'points': sum(len(e['items']) for e in evals),
+                           'weeks': [{'weekEnding': e['weekEnding'], 'observationCutoff': e['observation']['cutoff'], 'record': e['contentHash'],
+                                      **summary(e['items'])} for e in evals]},
         })
     head = records[-1]['hash'] if records else None
     return {'format': 1, 'note': 'Derived from publications.jsonl and evaluations.jsonl by tools/forecasts/index.py; do not edit.',

@@ -17,8 +17,8 @@
    "dataCutoff": "2026-09-28",
    "edition": "tc-world-scenarios/2026-09-28",
    "evaluation": {
-    "evaluated": 0,
-    "items": []
+    "points": 0,
+    "weeks": []
    },
    "evidence": {
     "repository": {
@@ -74,8 +74,8 @@
    "dataCutoff": "2026-09-28",
    "edition": "research-ledger/2026-09-28",
    "evaluation": {
-    "evaluated": 0,
-    "items": []
+    "points": 0,
+    "weeks": []
    },
    "evidence": {
     "repository": {
@@ -139,8 +139,8 @@
    "dataCutoff": "2026-10-02",
    "edition": "tc-world-scenarios/2026-10-02",
    "evaluation": {
-    "evaluated": 0,
-    "items": []
+    "points": 0,
+    "weeks": []
    },
    "evidence": {
     "repository": {
@@ -196,8 +196,8 @@
    "dataCutoff": "2026-10-02",
    "edition": "research-ledger/2026-10-02",
    "evaluation": {
-    "evaluated": 0,
-    "items": []
+    "points": 0,
+    "weeks": []
    },
    "evidence": {
     "repository": {
@@ -261,8 +261,8 @@
    "dataCutoff": "2026-10-02",
    "edition": "tc-world-scenarios/2026-10-02",
    "evaluation": {
-    "evaluated": 0,
-    "items": []
+    "points": 0,
+    "weeks": []
    },
    "evidence": {
     "repository": {
@@ -319,8 +319,8 @@
    "dataCutoff": "2026-10-03",
    "edition": "tc-world-scenarios/2026-10-03",
    "evaluation": {
-    "evaluated": 0,
-    "items": []
+    "points": 0,
+    "weeks": []
    },
    "evidence": {
     "repository": {
@@ -389,8 +389,8 @@
    "dataCutoff": "2026-10-03",
    "edition": "research-ledger/2026-10-03",
    "evaluation": {
-    "evaluated": 0,
-    "items": []
+    "points": 0,
+    "weeks": []
    },
    "evidence": {
     "repository": {
@@ -454,8 +454,8 @@
    "dataCutoff": "2026-10-04",
    "edition": "tc-world-scenarios/2026-10-04",
    "evaluation": {
-    "evaluated": 0,
-    "items": []
+    "points": 0,
+    "weeks": []
    },
    "evidence": {
     "repository": {
@@ -516,8 +516,8 @@
    "dataCutoff": "2026-10-04",
    "edition": "research-ledger/2026-10-04",
    "evaluation": {
-    "evaluated": 0,
-    "items": []
+    "points": 0,
+    "weeks": []
    },
    "evidence": {
     "repository": {
@@ -581,8 +581,8 @@
    "dataCutoff": "2026-10-05",
    "edition": "tc-world-scenarios/2026-10-05",
    "evaluation": {
-    "evaluated": 0,
-    "items": []
+    "points": 0,
+    "weeks": []
    },
    "evidence": {
     "repository": {
@@ -648,8 +648,8 @@
    "dataCutoff": "2026-10-05",
    "edition": "research-ledger/2026-10-05",
    "evaluation": {
-    "evaluated": 0,
-    "items": []
+    "points": 0,
+    "weeks": []
    },
    "evidence": {
     "repository": {

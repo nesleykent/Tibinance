@@ -38,7 +38,9 @@ class EvaluateTest(unittest.TestCase):
                    'worldPaths': [{'world': 'Antica', 'date': d, 'side': s, 'base': 100.0, 'low': 90.0, 'high': 110.0, 'status': 'x'}
                                   for d in ('2026-09-21', '2026-09-28') for s in ('ask', 'bid')]}
         body = {'type': 'forecast', 'product': 'tc-world-scenarios', 'edition': 'tc-world-scenarios/2026-09-14', 'model': {'id': 'C+S+H transfer'},
-                'dataCutoff': '2026-09-14', 'target': {'definition': 'weekly median'}, 'outputs': {'object': ar.put_object(outputs)}, 'provenance': 'authentic'}
+                'dataCutoff': '2026-09-14', 'target': {'definition': 'weekly median'}, 'outputs': {'object': ar.put_object(outputs)}, 'provenance': 'authentic',
+                'createdAt': {'value': None, 'basis': 'test'}, 'horizon': {'unit': 'week', 'steps': 2}, 'interval': {'kind': 'heuristic-stress-band'},
+                'inputs': {'object': None, 'missing': []}, 'reproducibility': {'prediction': 'test'}}
         self.forecast = ar.append(self.records, body, 'test')
         self.evals = []
         self.path = ar.ARCHIVE / 'evaluations.jsonl'
@@ -111,6 +113,17 @@ class EvaluateTest(unittest.TestCase):
         before = ar.CHAIN.read_bytes()
         self.run_eval([row(WEEK[0], 100, 95), row(AFTER, 130, 120)])
         self.assertEqual(ar.CHAIN.read_bytes(), before)
+
+    def test_the_index_summarises_the_evaluation_in_force_per_week(self):
+        from index import build_index
+        self.run_eval([row(WEEK[0], 100, 95), row(AFTER, 130, 120)])
+        self.run_eval([row(WEEK[0], 100, 95), row(WEEK[1], 120, 96), row(AFTER, 130, 120)])  # supersedes the first score
+        week = build_index(self.records, self.evals)['forecasts'][0]['evaluation']['weeks']
+        self.assertEqual(len(week), 1)
+        self.assertEqual(week[0]['weekEnding'], '2026-09-27')
+        self.assertEqual(week[0]['n'], 2)
+        self.assertAlmostEqual(week[0]['mape'], (100 * 10 / 110 + 100 * abs(95.5 - 100) / 95.5) / 2)
+        self.assertEqual(week[0]['coverage'], 1.0)
 
 
 if __name__ == '__main__':
