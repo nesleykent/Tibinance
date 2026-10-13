@@ -14,15 +14,21 @@ Never force-push, never reset, never redo finished work.
 
 ## Current state
 
-- **Stage:** B (forecast archive), substep 1 (`tools/forecasts/archive.py`). **Stage A0 is complete and verified.**
-- **Production:** GitHub Pages source = GitHub Actions. Live = `release/0001` (`b7eb0e4`), 495/495 files verified.
-  Main is ahead by design; nothing on main is live until `tools/release.mjs` releases it.
-- **Exact next action:** implement `tools/forecasts/archive.py` (stdlib only), following plan Stage B step 1.
-  - Content-addressed objects for outputs and input snapshots.
-  - Hash-chained `data/forecast-archive/publications.jsonl` with `contentHash` identity.
-  - Modes: `--ensure`, `--check`, `--backfill`, `--index`, `--reconcile`.
-- **Also pending:** `pages.yml` should check out `${{ github.sha }}` instead of `main`, so each deployment's sha
-  maps exactly to the `release/production.json` it deployed (needed for website publication evidence).
+- **Stage:** B (forecast archive). Substep 1 (`archive.py`) and substep 5 (`reproduce.py`) are done; the backfill
+  has been run.
+- **Production:** live = `release/0001` (`b7eb0e4`). Nothing in Stage B is released yet. The archive files are on
+  main only.
+- **Exact next action:** `tools/forecasts/test_archive.py`. It must cover:
+  - no silent overwrite and idempotent re-run;
+  - supersession;
+  - reconcile of concurrent chains by `contentHash`;
+  - tamper detection;
+  - an unarchived representation failing `--check`;
+  - preservation of inputs.
+
+  Then `publish_evidence.py` (repository evidence from first-parent main; website evidence from GitHub Pages
+  deployments, legacy before 2026-10-13 and release-based after), then `evaluate.py`, `index.json`, the
+  `build_market_projections.mjs` hook, `publish.py`, and the `pages.yml` checkout of `github.sha`.
 
 ## Completed (verified)
 
@@ -71,6 +77,25 @@ Never force-push, never reset, never redo finished work.
   - Research suite via `tools/ci/run_research_tests.py` with the pinned venv: 37 pass, 1 skipped when
     `hosting.json` is absent (38/38 with it).
   - `reports/tc-cycle/validate.py`: PASS (ledger untouched: 5 frozen forecasts).
+
+- **Stage B so far:**
+  - `tools/forecasts/archive.py` (stdlib only): `--ensure`, `--backfill <rev>`, `--check`, `--reconcile <rev>`.
+    - Content-addressed objects live in `data/forecast-archive/objects/`.
+    - `publications.jsonl` is hash-chained, and every record has a `contentHash` that excludes the archival event.
+    - The validator runs `--check` whenever the archive exists.
+  - Backfill of `origin/main`'s first-parent history produced 17 records:
+    - 6 `tc-world-scenarios` editions: 2026-09-28; 2026-10-02 twice, with a supersession (`2ae4607` →
+      `f885548`); 2026-10-03; 2026-10-04; 2026-10-05.
+    - 5 `research-ledger` forecasts, imported read-only by seq and hash; the ledger file is untouched.
+    - 5 Markets projections presentations.
+  - Timestamps:
+    - createdAt for scenarios is "not recorded", bounded by the first commit that holds the edition (basis
+      stated).
+    - Ledger createdAt = `recordedAt`.
+    - archivedAt = backfill time, basis `backfill`.
+  - `tools/forecasts/reproduce.py --all` (needs numpy): all 6 editions rebuild from their input snapshots to
+    ≤ 4.4e-16 relative. Prediction reproducibility is verified.
+  - The archive is 1.1 MB.
 
 ## In progress / remaining
 

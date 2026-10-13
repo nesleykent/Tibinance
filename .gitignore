@@ -28,3 +28,4 @@ node_modules/
 # Local rebuild outputs and hosting metadata stay outside the public repository.
 data/rebuilt-market/
 .openai/
+data/forecast-archive/.lock
