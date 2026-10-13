@@ -259,6 +259,14 @@ Never force-push, never reset, never redo finished work.
     point-in-time T), `candidatesByCreature` and `valueOn` (strict, extended, pooled; minimum 100 kills;
     low-sample, backward and pooled flags). `tests/economy-value.test.mjs`: 4 tests, including retroactive
     correction, an upload after the effective date and price vintages.
+- **C5 code:** `tools/economy/build_gold.mjs`, injectable through `loadInputs`, with `--as-of T` for point-in-time
+  builds into `.cache/economy/gold-pit/` and `--check`.
+  - Outputs to `data/economy/gold/`: `index.json`, `worlds/<dir>.json` (daily directCoins, npcPotential, kills,
+    killsValued, playerDeaths, grossStable, status o/r/m), `contributions/<dir>.json` (monthly top 30 plus the
+    rest) and `creatures.json`.
+  - A version log goes to `data/economy/gold-versions.json`.
+  - `tests/economy-gold.test.mjs`: 4 hand-checked tests.
+  - **Not run on real data yet:** it waits for both long jobs and `map_creatures.mjs`.
 - **Incident (Stage B tests):** the first run of `test_archive.py` wrote into the working copy of the real
   archive, because default arguments bound the paths at import. The 5 stray records (basis `test`) and 4 objects were never committed;
     they were removed and the committed archive was restored. Paths now resolve at call time, and the test class
