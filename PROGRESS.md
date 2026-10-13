@@ -25,8 +25,8 @@ Never force-push, never reset, never redo finished work.
   - `data/economy/sync-status.json` (TibiaMarket source freshness).
 - **Exact next action:**
   1. (Done in this commit.)
-  2. Verify the Markets page locally (Antica shows "waits for the Research"; other worlds keep their projections).
-  3. Make a **full release** of that main commit.
+  2. (Done: browser suites pass.)
+  3. Make a **full release** of the current main commit.
 
      The data release cannot come first: release 0001's own projection test assumes the anchor is the latest
      observation, and that fails once Markets is newer, so the updated test must be released.
@@ -178,8 +178,12 @@ Never force-push, never reset, never redo finished work.
     - `tests/market-projections.test.mjs`: the logic tests now use the Research anchor observation, so they hold
       when Markets is newer. The freshness test became "each anchor is a real Markets observation, shown exactly
       while it is the latest".
-    - **Still to adapt:** `tests/market-projections-browser.mjs` still opens Antica and expects its projection.
-      It must pick a world whose projection is placed (do this before running browser suites).
+    - `tests/market-projections-browser.mjs` now opens Antica while its projection is placed, otherwise the
+      placed world with the longest history (Secura today). It checks that a waiting world says it waits, and
+      that an active world's axis runs to the market history's last server day (`index.through`), with projected
+      weeks read after it.
+    - **Browser suites in Chrome (2026-10-13, threaded local server):** all 12 pass (Markets, projections,
+      Screener, Events, Events panel, global, canonical Events, Statistics, tables, Trade, TIB, site header).
     - `tests/sync-tibiamarket.test.mjs`: 2 tests.
   - Incident: the first run of these tests wrote into the working copy of the real archive, because default
     arguments bound the paths at import. The 5 stray records (basis `test`) and 4 objects were never committed;

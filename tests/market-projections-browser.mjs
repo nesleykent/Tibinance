@@ -13,9 +13,17 @@ const read=async path=>JSON.parse(await readFile(new URL(`../${path}`,import.met
 const dataset=await read('data/market-projections/tibia-coin.json');
 const n=new Intl.NumberFormat('en-US');
 const scenario=(world,side)=>dataset.worlds.find(w=>w.world===world)[side];
-// The edition's facts, read from the dataset rather than written in: Antica's anchor (its last observation) and the
-// horizon's last week move with every Research update.
-const antica=dataset.worlds.find(w=>w.world==='Antica').anchor,anchorDay=antica.serverDay,horizonEnd=dataset.method.last;
+// The world the checks open: Antica while its projection is placed (its Research anchor is still its latest Markets
+// observation), otherwise the placed world with the longest history. Markets can be newer than the Research between
+// its reruns (daily TibiaMarket syncs, screenshot updates); the projection then waits, which is checked below.
+const index=await read('data/market-history/tibia-coin/index.json');
+const latest=w=>index.worlds.find(x=>x.world===w)?.latestBestOffer;
+const placed=w=>{const e=dataset.worlds.find(x=>x.world===w),l=latest(w);return Boolean(e&&l&&e.anchor.serverDay===l.serverDay&&e.anchor.sell===l.sell&&e.anchor.buy===l.buy&&e.sell.some(r=>r[1]!==null));};
+const W=placed('Antica')?'Antica':index.worlds.filter(w=>placed(w.world)).sort((a,b)=>(b.bestOfferDays?.days??0)-(a.bestOfferDays?.days??0))[0]?.world;
+assert.ok(W,'at least one world has a placed projection');
+// The edition's facts, read from the dataset rather than written in: the world's anchor (its last observation) and
+// the horizon's last week move with every Research update.
+const antica=dataset.worlds.find(w=>w.world===W).anchor,anchorDay=antica.serverDay,horizonEnd=dataset.method.last;
 const addDays=(day,k)=>new Date(Date.parse(`${day}T00:00:00Z`)+k*86400000).toISOString().slice(0,10);
 
 const browser=await (engine==='webkit' ? webkit.launch({headless:true}) : chromium.launch({headless:true,...(process.env.TIBINANCE_CHROME ? {executablePath:process.env.TIBINANCE_CHROME} : {channel:'chrome'})}));
@@ -40,11 +48,11 @@ try {
   const legend=()=>text('.chart-legend');
 
   // ---- Off until shown: the page opens as before, and the address never mentions projections.
-  await open('Antica');
+  await open(W);
   assert.deepEqual([await toggle.getAttribute('aria-pressed'),await toggle.getAttribute('title')],['false','Show projections']);
   assert.equal(await text('#projectionLegend'),'');
   const historyEnd=await dayAt(0.999);
-  assert.equal(historyEnd,anchorDay,'hidden, the chart ends with the history');
+  assert.equal(historyEnd,index.through,'hidden, the chart ends with the history (an active world\'s axis runs to the market history\'s last server day)');
   const url=page.url();
   await toggle.click();
   await page.waitForTimeout(150);
@@ -52,11 +60,11 @@ try {
   assert.equal(page.url(),url,'projection state is not part of the address');
 
   // ---- The Research's scenario for this world and side: its last week at rest, with its band.
-  const sell=scenario('Antica','sell'),buy=scenario('Antica','buy');
+  const sell=scenario(W,'sell'),buy=scenario(W,'buy');
   await page.mouse.move(5,5);
   const [lastDay,central,low,high]=sell.at(-1);
   // A stale Antica quote limits its confidence; the legend and label then say so.
-  const limited=dataset.worlds.find(w=>w.world==='Antica').stale;
+  const limited=dataset.worlds.find(w=>w.world===W).stale;
   assert.equal(await text('#projectionLegend'),`Projection ${n.format(central)} band ${n.format(low)} to ${n.format(high)} on ${lastDay}${limited?' limited confidence':''}`);
   assert.match(await page.getAttribute('#chart','aria-label'),new RegExp(`Projection from the last observation: Research offer scenario to ${lastDay}, central ${n.format(central)}, heuristic stress band ${n.format(low)} to ${n.format(high)}${limited?', limited confidence \\(stale quote\\)':''}\\.$`));
 
@@ -64,12 +72,14 @@ try {
   let seen=new Map();
   for (let f=0.40;f<=0.60;f+=0.0005) { const d=await dayAt(f); if (!seen.has(d)) seen.set(d,await legend()); }
   assert.ok(seen.get(anchorDay).startsWith(`${anchorDay} Best Sell Offer ${n.format(antica.sell)} `),'the anchor day is the last observation');
-  const [w1,c1,l1,h1]=sell[0];
-  // When the Research cutoff falls after the anchor, the days up to it are in no projected week.
-  for (const d of [...seen.keys()].filter(d=>d>anchorDay && d<addDays(w1,-6))) assert.ok(!seen.get(d).includes(' week to '),`${d} reads no week`);
-  const next=[...seen.keys()].filter(d=>d>=addDays(w1,-6)).sort()[0];
-  assert.equal(seen.get(next),`${next} Projection ${n.format(c1)} band ${n.format(l1)} to ${n.format(h1)} week to ${w1}${limited?" Conditional: stale quote":""}`);
-  assert.ok(next<=w1,'the first days after the anchor belong to the first projected week');
+  const [w1]=sell[0];
+  // Days still inside the market history (up to its last server day, for a world observed earlier) read as history,
+  // and days before the first projected week opens (when the Research cutoff falls after the anchor) read no week.
+  for (const d of [...seen.keys()].filter(d=>d>anchorDay && (d<addDays(w1,-6) || d<=index.through))) assert.ok(!seen.get(d).includes(' week to '),`${d} reads no week`);
+  const next=[...seen.keys()].filter(d=>d>=addDays(w1,-6) && d>index.through).sort()[0];
+  const [wk,c1,l1,h1]=sell.find(r=>r[0]>=next);
+  assert.equal(seen.get(next),`${next} Projection ${n.format(c1)} band ${n.format(l1)} to ${n.format(h1)} week to ${wk}${limited?" Conditional: stale quote":""}`);
+  assert.ok(next<=wk,'the first day after the history reads the projected week that holds it');
 
   // ---- Horizon and range: the window ahead matches the range behind, up to the 52 weeks.
   await page.mouse.move(5,5);
@@ -102,7 +112,7 @@ try {
   await page.waitForTimeout(100);
   assert.deepEqual(await series(),shown,'hiding changes no market value, range or address');
   assert.equal(await text('#projectionLegend'),'');
-  assert.equal(await dayAt(0.999),anchorDay);
+  assert.equal(await dayAt(0.999),index.through);
   assert.doesNotMatch(await page.getAttribute('#chart','aria-label'),/Projection/);
   await toggle.click();
   // Remembered on this device across visits.
@@ -123,6 +133,14 @@ try {
   assert.ok(stale>anchorDay,`a stale quote's scenario runs after the history: ${stale}`);
   assert.match(await legend(),/Conditional: stale quote/);
 
+  // ---- Newer Markets data than the Research's anchor: the projection waits for the Research, never moves.
+  const waiting=dataset.worlds.find(e=>!placed(e.world)&&latest(e.world)&&e.sell.some(r=>r[1]!==null));
+  if (waiting) {
+    await open(waiting.world,'1Y');
+    await page.mouse.move(5,5);
+    assert.match(await text('#projectionLegend'),new RegExp(`^Projection unavailable: The Research projection starts from the best offer of ${waiting.anchor.serverDay}; ${waiting.world} was observed later, on ${latest(waiting.world).serverDay}, so it waits for the Research to be rebuilt\\.$`));
+  }
+
   // ---- Unavailable, with the reason, where the Research has no scenario to place.
   for (const [world,reason] of [['Aethera','The Research projects the worlds it captures; Aethera is not among them.'],['Jacabra','A retired world has no projection.']]) {
     await open(world,'1Y');
@@ -139,7 +157,7 @@ try {
   // ---- With Events: the same events in the same days, still inspectable; markers stay in the history.
   const eventIds=()=>page.$$eval('#eventMarks .event-mark',bs=>bs.flatMap(b=>b.dataset.events.split(' ')).sort());
   const eventRight=()=>page.$$eval('#eventMarks .event-mark',bs=>Math.max(...bs.map(b=>b.getBoundingClientRect().right)));
-  await open('Antica','1Y');
+  await open(W,'1Y');
   const withProjection=await eventIds();
   const boundary=await (async()=>{for (let f=0.4;f<0.7;f+=0.002){if(await dayAt(f)>anchorDay){const b=await plotBox();return b.x+b.w*f;}}return Infinity;})();
   assert.ok(await eventRight()<=boundary+12,'event markers stand in the history');
@@ -183,7 +201,7 @@ try {
 
   // ---- Phones: the tool in the rail row, the readout and the window ahead, no sideways scroll.
   await page.setViewportSize({width:390,height:844});
-  await open('Antica','3M');
+  await open(W,'3M');
   assert.equal(await toggle.isVisible(),true);
   assert.equal(await toggle.getAttribute('aria-pressed'),'true');
   assert.match(await text('#projectionLegend'),new RegExp(`^Projection [\\d,]+ band [\\d,]+ to [\\d,]+ on ${horizonEnd}( limited confidence)?$`));
@@ -198,7 +216,7 @@ try {
   const pageErrors=[];plain.on('pageerror',e=>pageErrors.push(e.message));
   await plain.addInitScript(()=>localStorage.setItem('tibinance.markets.projections','shown'));
   await plain.route('**/data/market-projections/*.json',route=>route.fulfill({status:404,body:''}));
-  await plain.goto(`${root}/markets.html?world=Antica`);
+  await plain.goto(`${root}/markets.html?world=${W}`);
   await plain.waitForFunction(()=>document.getElementById('market').getAttribute('aria-busy')==='false');
   assert.equal(await plain.isDisabled('#projectionsToggle'),true);
   assert.equal(await plain.getAttribute('#projectionsToggle','aria-pressed'),'false');
@@ -206,7 +224,7 @@ try {
   assert.deepEqual(pageErrors,[]);
   await bare.close();
 
-  console.log(`Market projections browser checks passed (${engine}).`);
+  console.log(`Market projections browser checks passed (${engine}; placed world ${W}${dataset.worlds.some(e=>!placed(e.world)&&latest(e.world))?'; a waiting world checked':''}).`);
 } finally {
   await browser.close();
 }
