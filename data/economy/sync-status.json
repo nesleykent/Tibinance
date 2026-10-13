@@ -1,0 +1,15 @@
+{
+ "format": 1,
+ "sources": {
+  "tibiamarket": {
+   "lastDataChange": "2026-10-13T21:20:59.952Z",
+   "lastUpdatedWorlds": [
+    "Antica"
+   ],
+   "lastNewRows": 3,
+   "sourceLatestUpdate": "2026-10-06T15:42:53.197475",
+   "conflicts": []
+  }
+ },
+ "note": "Last data change and source freshness per synchronised source, written only when something changes. A source that stopped updating is stale, not missing: its last update is kept."
+}

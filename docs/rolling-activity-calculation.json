@@ -5,9 +5,9 @@
     "Counters for the shared portion of the two windows have not been revised."
   ],
   "worlds": 116,
-  "candidateSidePairs": 24124,
-  "calculableSideIntervals": 23091,
-  "independentlyChecked": 22848,
+  "candidateSidePairs": 24128,
+  "calculableSideIntervals": 23095,
+  "independentlyChecked": 22854,
   "mismatches": [
     {
       "world": "Descubra",
@@ -151,46 +151,6 @@
     }
   ],
   "missingSingleDays": [
-    {
-      "world": "Antica",
-      "side": "buy",
-      "firstDay": "2026-10-03",
-      "lastDay": "2026-10-03",
-      "days": 1,
-      "earlier": {
-        "timestamp": "2026-10-04T02:15:10.710Z",
-        "source": "screenshot",
-        "counter": 25766
-      },
-      "later": {
-        "timestamp": "2026-10-04T11:20:33.389Z",
-        "source": "screenshot",
-        "counter": 25693
-      },
-      "expired": 789,
-      "calculated": 716,
-      "observed": null
-    },
-    {
-      "world": "Antica",
-      "side": "sell",
-      "firstDay": "2026-10-03",
-      "lastDay": "2026-10-03",
-      "days": 1,
-      "earlier": {
-        "timestamp": "2026-10-04T02:15:10.710Z",
-        "source": "screenshot",
-        "counter": 13451
-      },
-      "later": {
-        "timestamp": "2026-10-04T11:20:33.389Z",
-        "source": "screenshot",
-        "counter": 13446
-      },
-      "expired": 483,
-      "calculated": 478,
-      "observed": null
-    },
     {
       "world": "Celebra",
       "side": "buy",

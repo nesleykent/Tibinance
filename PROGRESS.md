@@ -16,17 +16,15 @@ Never force-push, never reset, never redo finished work.
 
 - **Stage:** A2 (forecast-loop automation), alongside B. The Stage B core is complete.
 - **Production:** live = `release/0001` (`b7eb0e4`). Nothing newer is released.
-- **In progress (uncommitted in the working tree of the session that wrote this):**
-  - the first real TibiaMarket sync: Antica gained 3 rows (2026-10-04 to 2026-10-06);
-  - rebuilt Markets history and audits;
-  - projections, where Antica now waits for the Research because Markets is newer;
-  - the archive presentation record.
-
-  This goes to main through `node tools/sync_market.mjs --publish`. If you are another agent and do not have
-  those changes, run `node tools/sync_market.mjs --fetch --publish` yourself (needs `PYTHON` pointing at a
-  Python with the pinned pandas).
+- **Published by this commit:** the first real TibiaMarket sync.
+  - Antica +3 rows (2026-10-04 to 2026-10-06).
+  - Rebuilt Markets history and audits.
+  - Projections: Antica's projection now waits for the Research, because Markets observed 2026-10-06 after its
+    2026-10-04 anchor. This is the designed rule; other worlds are unchanged.
+  - A new projections presentation record in the archive.
+  - `data/economy/sync-status.json` (TibiaMarket source freshness).
 - **Exact next action:**
-  1. Publish the data with `--publish`.
+  1. (Done in this commit.)
   2. Verify the Markets page locally (Antica shows "waits for the Research"; other worlds keep their projections).
   3. Make a **full release** of that main commit.
 
