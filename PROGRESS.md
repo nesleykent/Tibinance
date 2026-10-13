@@ -14,19 +14,18 @@ Never force-push, never reset, never redo finished work.
 
 ## Current state
 
-- **Stage:** A0 (deployment safety bootstrap), substep 2. Tooling and workflows are written and locally verified.
-  This commit is "commit 1 (site-neutral)": it changes no served page, script, style or data file.
-- **Production:** still GitHub Pages "Deploy from a branch" (main, `/`), legacy. No release exists yet.
-- **Exact next action:** create release 0001 of `b7eb0e4` (the commit the live site served before this work):
-
-  ```
-  node tools/release.mjs --full b7eb0e4 --approver "Claude Code, A0 bootstrap per plan" --with PROGRESS.md
-  ```
-
-  Update this section in the same commit with `--with`. Then `gh workflow run pages.yml --ref main -f
-  tag=release/0001`, which is a dry run because Pages is legacy. Download the artifact, run
-  `node tools/ci/pages_release.mjs parity --dir <extracted artifact>` and `verify-live --all`. Then do A0 steps 5–8
-  of the plan: activate `build_type=workflow`, deploy, verify live, isolation test.
+- **Stage:** A0 (deployment safety bootstrap), substep 3. Release 0001 exists: `release/0001` = `b7eb0e4` (the
+  commit the live site served before this work), recorded in `release/production.json` and
+  `release/releases.jsonl` by this commit.
+- **Production:** still GitHub Pages "Deploy from a branch" (main, `/`), legacy. The live site therefore follows
+  main until activation. Every commit so far leaves all served files identical to `b7eb0e4`.
+- **Exact next action:** the dry run of release 0001.
+  1. Run `gh workflow run pages.yml --ref main -f tag=release/0001` (the push of `release/production.json` also
+     starts it). It must validate, build and upload, then skip deploy because `build_type` is legacy.
+  2. Run `gh run download <run> -n github-pages`, extract `artifact.tar`, then
+     `node tools/ci/pages_release.mjs parity --dir <dir>` and `node tools/ci/pages_release.mjs verify-live --all`.
+  3. Activate: `gh api -X PUT repos/nesleykent/Tibinance/pages -f build_type=workflow`, dispatch again, verify
+     live, run the isolation test (plan A0 steps 5–8).
 
 ## Completed (verified)
 

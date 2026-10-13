@@ -1,0 +1,79 @@
+{
+ "format": 1,
+ "note": "",
+ "approver": "Claude Code, A0 bootstrap per the approved plan (release 0001 = the commit the live site serves)",
+ "artifact": {
+  "bytes": 87265655,
+  "digest": "d3afc57aad80faa830441c9350eb84aa9890754edae88ec091f3738c5c36a343",
+  "files": 495
+ },
+ "commit": "b7eb0e4ad1b58e7aadd36bce5d7f8e440efcfe77",
+ "createdAt": "2026-10-13T20:42:20.039Z",
+ "kind": "full",
+ "policy": {
+  "dataPaths": [
+   "data/observations.json",
+   "data/observations.csv",
+   "data/offer-observations.csv",
+   "data/market-update-*.json",
+   "data/rebuild-*.json",
+   "data/market-history/**",
+   "data/market-projections/**",
+   "data/events/events.json",
+   "data/forecast-archive/**",
+   "docs/market-chart-integration-audit.json",
+   "docs/rolling-activity-calculation.json",
+   "reports/tc-cycle/*.json",
+   "reports/tc-cycle/*.csv",
+   "reports/tc-cycle/forecast-ledger.jsonl",
+   "reports/tc-cycle/inputs/**"
+  ],
+  "note": "Paths a data release may take from main. Everything else (pages, scripts, styles, tooling, docs) reaches production only through a full release, which also approves this file. Research outputs are forecast representations: a data release carrying them must pass the forecast-archive integrity check once the archive exists."
+ },
+ "policySha256": "5fe67c26f1600d2a40fda1fb08103d4c6ed551d71e7680f6d58e5125ed19587c",
+ "source": {
+  "commit": "b7eb0e4ad1b58e7aadd36bce5d7f8e440efcfe77"
+ },
+ "tag": "release/0001",
+ "tree": "0e24edb5146210b0761227af4feb91ccaf78d72f",
+ "validation": {
+  "checks": [
+   {
+    "name": "unit tests",
+    "ok": true
+   },
+   {
+    "name": "build_market_history --check",
+    "ok": true
+   },
+   {
+    "name": "build_market_projections --check",
+    "ok": true
+   },
+   {
+    "name": "audit_market_chart --check",
+    "ok": true
+   },
+   {
+    "name": "audit_rolling_activity --check",
+    "ok": true
+   },
+   {
+    "name": "build_tibia_token --check",
+    "ok": true
+   },
+   {
+    "name": "references",
+    "ok": true
+   }
+  ],
+  "validator": {
+   "commit": "e8da616cf9bc6e12fcf5ccb92d2587e3cec57d94",
+   "path": "tools/ci/validate_site.mjs"
+  }
+ },
+ "record": {
+  "seq": 1,
+  "hash": "9164a02f91c32a862a7a3ba7c2a43ec5e2e05c260bebcbe2cdf9fa7af5bab9f7"
+ }
+}
