@@ -223,6 +223,17 @@ Never force-push, never reset, never redo finished work.
   - `tools/economy/ingest_killstats.mjs`.
   - `tests/economy-killstats.test.mjs`: 5 tests.
   - `.cache/` is gitignored.
+- **C2 so far:** `js/economy-loot.js` provides:
+  - `parseLootPage` and `parseLine`, which read `{{Loot2}}` exactly as `Module:AverageLootValue` does (quirks
+    flagged);
+  - `parseItemPrices` (highest NPC buy price, buys only);
+  - `valueSample` (directCoins and npcPotential, unpriced lines reported);
+  - `wikiRound`;
+  - `dropRates` (observed binomial Wilson intervals).
+
+  **Parity:** 37 samples on 12 pages (versions 8.6 to 15.32) reproduce the published "Average loot value" exactly.
+  The fixture is `tests/fixtures/loot-parity.json` (CC-BY-SA, attributed). `tests/economy-loot.test.mjs`: 6 tests.
+  Next is `tools/economy/fetch_loot.mjs` (revision mining).
 - **Incident (Stage B tests):** the first run of `test_archive.py` wrote into the working copy of the real
   archive, because default arguments bound the paths at import. The 5 stray records (basis `test`) and 4 objects were never committed;
     they were removed and the committed archive was restored. Paths now resolve at call time, and the test class
