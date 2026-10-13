@@ -40,9 +40,7 @@ jobs:
 
   research:
     name: Research tests
-    # The committed Research outputs were computed on macOS arm64, and some tests compare them for exact equality;
-    # Linux x64 BLAS differs in the last digits (test_inflation), so the tests run on the same platform family.
-    runs-on: macos-15
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -52,6 +50,9 @@ jobs:
           cache-dependency-path: reports/tc-cycle/requirements.txt
       - run: pip install -r reports/tc-cycle/requirements.txt
       - name: Research unit tests
+        # Other machines' BLAS changes the last digits of the inflation decomposition; see the runner's docstring.
+        env:
+          TIBINANCE_FLOAT_TOLERANCE: '1'
         run: python tools/ci/run_research_tests.py
       - name: Research invariants and the append-only forecast ledger
         working-directory: reports/tc-cycle

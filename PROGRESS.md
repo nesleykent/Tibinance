@@ -14,18 +14,19 @@ Never force-push, never reset, never redo finished work.
 
 ## Current state
 
-- **Stage:** A0 (deployment safety bootstrap), substep 3. Release 0001 exists: `release/0001` = `b7eb0e4` (the
-  commit the live site served before this work), recorded in `release/production.json` and
-  `release/releases.jsonl` by this commit.
-- **Production:** still GitHub Pages "Deploy from a branch" (main, `/`), legacy. The live site therefore follows
-  main until activation. Every commit so far leaves all served files identical to `b7eb0e4`.
-- **Exact next action:** the dry run of release 0001.
-  1. Run `gh workflow run pages.yml --ref main -f tag=release/0001` (the push of `release/production.json` also
-     starts it). It must validate, build and upload, then skip deploy because `build_type` is legacy.
-  2. Run `gh run download <run> -n github-pages`, extract `artifact.tar`, then
-     `node tools/ci/pages_release.mjs parity --dir <dir>` and `node tools/ci/pages_release.mjs verify-live --all`.
-  3. Activate: `gh api -X PUT repos/nesleykent/Tibinance/pages -f build_type=workflow`, dispatch again, verify
-     live, run the isolation test (plan A0 steps 5–8).
+- **Stage:** A0 (deployment safety bootstrap), substep 8 (isolation test). Steps 1 to 7 are done and verified.
+- **Production:** GitHub Pages source = **GitHub Actions** (switched 2026-10-13 20:45 UTC). Live = `release/0001`
+  (`b7eb0e4`); verified: all 495 served files equal the release (`pages_release.mjs verify-live --all`), and files
+  added after it (e.g. `docs/releases.md`) return 404. Main is ahead of production by design.
+- **This commit is the isolation test.** It edits a served file (a comment at the top of `css/site-header.css`)
+  and must **not** deploy. Verify that:
+  1. no "Pages release" run starts for this push (only CI);
+  2. no new github-pages deployment appears;
+  3. `node tools/ci/pages_release.mjs verify-live --all` still passes against `release/0001`;
+  4. `node tools/release.mjs --data HEAD --approver test` is refused as "nothing to release" (no data paths
+     changed since `b7eb0e4`).
+- **Exact next action:** run those four checks, record the results here in the next commit, then start Stage B
+  (forecast archive): `tools/forecasts/archive.py` first (plan, Stage B step 1).
 
 ## Completed (verified)
 
@@ -45,9 +46,21 @@ Never force-push, never reset, never redo finished work.
   - `release/policy.json`: data-release paths.
   - `.github/workflows/ci.yml` and `pages.yml`.
   - `docs/releases.md`.
-- **CI on GitHub:** commit `4187b56` passed Site integrity (validator + release verify). Research failed only
-  `test_inflation`'s exact float equality on Linux x64 (last digits differ from the macOS arm64 outputs). The
-  Research job now runs on `macos-15`; the Research tests are unchanged.
+- **A0 bootstrap results (2026-10-13):**
+  - Release 0001 dry run (run 38464936631, Pages still legacy): validate and build passed, deploy skipped.
+  - The downloaded artifact equals `release/0001` file for file (495/495). Live then differed only in
+    `PROGRESS.md`, which branch deploy had republished from newer commits; it is a served doc, not site UI.
+  - The Pages source was switched to GitHub Actions. Release 0001 was deployed (run 38465232067, deploy job
+    success), and live equals the release 495/495.
+  - A legacy "pages build and deployment" run queued before the switch also finished afterwards; live content was
+    re-verified as release 0001 after it.
+  - Rollback path (documented in `docs/releases.md`): switch the Pages source back to the branch. Not needed.
+- **CI on GitHub:** Site integrity passes. Research failed only `test_inflation`'s bit-exact reproduction of
+  `inflation.json`: other machines' BLAS changes the last float digits (Linux x64 and GitHub macOS arm64 alike),
+  while it passes on the producing machine. CI sets `TIBINANCE_FLOAT_TOLERANCE=1`. `tools/ci/run_research_tests.py`
+  then runs that test body with only the top-level equality relaxed to 1e-9 relative on floats, and every other
+  assertion exact. The exact variant runs locally (verified 38/38 with `hosting.json`; 39 run, 1 skipped in
+  tolerance mode). The Research tests themselves are unchanged.
 - **Tests (local, 2026-10-13):**
   - `node --test tests/*.test.mjs`: 150 pass (138 existing + 12 new in `tests/release.test.mjs`).
   - `node tools/ci/validate_site.mjs`: all checks PASS.
