@@ -1,0 +1,68 @@
+# Forecast archive upkeep: publication evidence (pushes to main, Pages deployments) and evaluations of target weeks
+# that closed, appended to the archive's chains and published like any data. Runs when a forecast representation or
+# market data reaches main (for example a screenshot update pushed by hand), when a deployment finishes, and daily.
+# It never changes a forecast; it only appends evidence and evaluations.
+name: Forecast archive
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - reports/tc-cycle/results.json
+      - reports/tc-cycle/forecast-ledger.jsonl
+      - data/market-projections/**
+      - data/market-history/**
+      - data/observations.json
+  deployment_status:
+  schedule:
+    - cron: '20 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+  deployments: read
+
+concurrency:
+  group: data-writers
+  cancel-in-progress: false
+
+jobs:
+  upkeep:
+    if: github.event_name != 'deployment_status' || contains(fromJSON('["success","failure","error"]'), github.event.deployment_status.state)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '26'
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: reports/tc-cycle/requirements.txt
+      - run: pip install -r reports/tc-cycle/requirements.txt
+      - name: Bot identity
+        run: |
+          git config --global user.name 'Tibinance data bot'
+          git config --global user.email 'tibinance-bot@users.noreply.github.com'
+      - name: Every published representation is archived
+        run: python tools/forecasts/archive.py --check
+      - name: Publication evidence and evaluations
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python tools/forecasts/publish_evidence.py
+          python tools/forecasts/evaluate.py
+      - name: Publish and release the archive's new records
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python tools/forecasts/publish.py --message "Forecast archive: publication evidence and evaluations"
+          status=0
+          node tools/release.mjs --data HEAD --approver "GitHub Actions forecast archive (validated data release)" --dispatch || status=$?
+          if [ "$status" = 3 ]; then echo "Nothing new to release."; elif [ "$status" != 0 ]; then exit "$status"; fi

@@ -9,6 +9,7 @@
 //   node tools/release.mjs --data <commit> --approver "<who>"   release only data paths from <commit>
 //   node tools/release.mjs --status                             production vs main HEAD
 //   node tools/release.mjs --verify                             chain, tags and digests of every release
+// Exit codes: 0 released, 3 nothing to release, 1 any failure (nothing released).
 // Options: --with <path> (also commit this working-tree file, e.g. PROGRESS.md; repeatable), --no-push,
 //          --dispatch (start the Pages workflow; bots need it because GITHUB_TOKEN pushes trigger no workflows),
 //          --remote <name> (default origin), --note "<text>".
@@ -295,6 +296,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
     console.log(`${result.tag}: ${result.record.kind} release of ${result.record.commit}, artifact ${result.record.artifact.digest} (${result.record.artifact.files} files)${result.pushed ? ', pushed' : ', local only'}`);
   } catch (error) {
     console.error(error.message);
-    process.exit(1);
+    // 3: nothing to release (production already serves these data), which automation treats as success.
+    process.exit(/^nothing to release/.test(error.message) ? 3 : 1);
   }
 }

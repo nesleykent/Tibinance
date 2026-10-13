@@ -15,7 +15,9 @@ Never force-push, never reset, never redo finished work.
 ## Current state
 
 - **Stage:** A2 (forecast-loop automation), alongside B. The Stage B core is complete.
-- **Production:** `release/0002` is the full release of `9ef89f0` (recorded by this commit). Its Pages deployment and live verification are the next step.
+- **Production:** `release/0002` (full release of `9ef89f0`). Pages run 38470935431 succeeded, and
+  `verify-live --all` passes: 543/543 live files equal the release. Live now has the Antica TibiaMarket rows through
+  2026-10-06, Antica's projection "waits for the Research" (others placed), and the forecast archive files.
 - **Published by this commit:** the first real TibiaMarket sync.
   - Antica +3 rows (2026-10-04 to 2026-10-06).
   - Rebuilt Markets history and audits.
@@ -23,14 +25,12 @@ Never force-push, never reset, never redo finished work.
     2026-10-04 anchor. This is the designed rule; other worlds are unchanged.
   - A new projections presentation record in the archive.
   - `data/economy/sync-status.json` (TibiaMarket source freshness).
-- **Exact next action:**
-  1. (Done in this commit.)
-  2. (Done: browser suites pass.)
-  3. (Done: `release/0002`.) Verify the Pages run, then `node tools/ci/pages_release.mjs verify-live --all`.
+- **Exact next action:** run each workflow once to verify it, recording the run ids and results here:
+  - `gh workflow run market-daily.yml`
+  - `gh workflow run forecast-archive.yml`
 
-     The data release cannot come first: release 0001's own projection test assumes the anchor is the latest
-     observation, and that fails once Markets is newer, so the updated test must be released.
-  4. Then add `.github/workflows/market-daily.yml` and `forecast-archive.yml`.
+  Then run the market sync again to prove idempotency (it must commit nothing). Then start **Stage C0**, the
+  kill-stats benchmark gate.
 
 ## Completed (verified)
 
@@ -185,6 +185,15 @@ Never force-push, never reset, never redo finished work.
     - **Browser suites in Chrome (2026-10-13, threaded local server):** all 12 pass (Markets, projections,
       Screener, Events, Events panel, global, canonical Events, Statistics, tables, Trade, TIB, site header).
     - `tests/sync-tibiamarket.test.mjs`: 2 tests.
+    - Workflows:
+      - `.github/workflows/market-daily.yml` (18:40 UTC daily and on dispatch) runs `sync_market.mjs --fetch
+        --publish --release --dispatch`.
+      - `.github/workflows/forecast-archive.yml` (on pushes of representations or market data, on deployment
+        status, at 06:20 UTC and on dispatch) runs `archive --check`, `publish_evidence`, `evaluate` and `publish`,
+        then a data release.
+
+      Both share the `data-writers` concurrency group. `release.mjs` exits 3 for "nothing to release", which
+      automation treats as success.
   - Incident: the first run of these tests wrote into the working copy of the real archive, because default
     arguments bound the paths at import. The 5 stray records (basis `test`) and 4 objects were never committed;
     they were removed and the committed archive was restored. Paths now resolve at call time, and the test class

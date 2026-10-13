@@ -80,8 +80,8 @@ async function main() {
     if (!approver) throw new Error('--release needs --approver');
     const r = spawnSync(process.execPath, ['tools/release.mjs', '--data', 'HEAD', '--approver', approver, ...(args.includes('--dispatch') ? ['--dispatch'] : [])], { cwd: ROOT, encoding: 'utf8' });
     process.stdout.write(r.stdout ?? '');
-    if (r.status !== 0 && !/nothing to release/.test(r.stderr ?? '')) throw new Error(`data release failed: ${r.stderr}`);
-    if (r.status !== 0) console.log('data release: nothing to release (production already serves these data)');
+    if (r.status === 3) console.log('data release: nothing to release (production already serves these data)');
+    else if (r.status !== 0) throw new Error(`data release failed: ${r.stderr}`);
   }
 }
 
