@@ -39,7 +39,7 @@ jobs:
         run: node tools/release.mjs --verify
 
   research:
-    name: Research tests
+    name: Python tests
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5
@@ -54,6 +54,10 @@ jobs:
         env:
           TIBINANCE_FLOAT_TOLERANCE: '1'
         run: python tools/ci/run_research_tests.py
+      - name: Forecast archive tests and prediction reproduction of every archived edition
+        run: |
+          python -m unittest discover -s tools/forecasts -p 'test_*.py'
+          python tools/forecasts/reproduce.py --all
       - name: Research invariants and the append-only forecast ledger
         working-directory: reports/tc-cycle
         run: python validate.py

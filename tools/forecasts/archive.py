@@ -91,7 +91,8 @@ def content_hash(record: dict) -> str:
 
 # Objects ---------------------------------------------------------------------------------------------------------
 
-def put_object(value, root: Path = ARCHIVE) -> str:
+def put_object(value, root: Path | None = None) -> str:
+    root = root or ARCHIVE  # resolved at call time, so tests can point the module at a temporary archive
     text = canonical(value)
     digest = sha(text)
     path = root / 'objects' / f'{digest}.json.gz'
@@ -106,7 +107,8 @@ def put_object(value, root: Path = ARCHIVE) -> str:
     return digest
 
 
-def get_object(digest: str, root: Path = ARCHIVE):
+def get_object(digest: str, root: Path | None = None):
+    root = root or ARCHIVE
     text = gzip.decompress((root / 'objects' / f'{digest}.json.gz').read_bytes()).decode()
     if sha(text) != digest:
         raise ValueError(f'object {digest} does not match its name')
@@ -130,12 +132,14 @@ def read_chain(text: str, name: str = 'publications.jsonl') -> list[dict]:
     return records
 
 
-def load(path: Path = CHAIN) -> list[dict]:
+def load(path: Path | None = None) -> list[dict]:
+    path = path or CHAIN
     return read_chain(path.read_text(), path.name) if path.exists() else []
 
 
-def append(records: list[dict], body: dict, basis: str, path: Path = CHAIN, by: str | None = None) -> dict | None:
+def append(records: list[dict], body: dict, basis: str, path: Path | None = None, by: str | None = None) -> dict | None:
     """Appends body unless a record with the same content exists; returns the new record (or None)."""
+    path = path or CHAIN
     ch = content_hash(body)
     if any(r['contentHash'] == ch for r in records):
         return None

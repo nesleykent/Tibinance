@@ -18,15 +18,7 @@ Never force-push, never reset, never redo finished work.
   has been run.
 - **Production:** live = `release/0001` (`b7eb0e4`). Nothing in Stage B is released yet. The archive files are on
   main only.
-- **Exact next action:** `tools/forecasts/test_archive.py`. It must cover:
-  - no silent overwrite and idempotent re-run;
-  - supersession;
-  - reconcile of concurrent chains by `contentHash`;
-  - tamper detection;
-  - an unarchived representation failing `--check`;
-  - preservation of inputs.
-
-  Then `publish_evidence.py` (repository evidence from first-parent main; website evidence from GitHub Pages
+- **Exact next action:** `tools/forecasts/publish_evidence.py`. Then `publish_evidence.py` (repository evidence from first-parent main; website evidence from GitHub Pages
   deployments, legacy before 2026-10-13 and release-based after), then `evaluate.py`, `index.json`, the
   `build_market_projections.mjs` hook, `publish.py`, and the `pages.yml` checkout of `github.sha`.
 
@@ -96,6 +88,21 @@ Never force-push, never reset, never redo finished work.
   - `tools/forecasts/reproduce.py --all` (needs numpy): all 6 editions rebuild from their input snapshots to
     ≤ 4.4e-16 relative. Prediction reproducibility is verified.
   - The archive is 1.1 MB.
+  - `tools/forecasts/test_archive.py`: 12 tests, all pass (with numpy; 10 pass and 2 skip without it). They cover:
+    - idempotence and identity across machines;
+    - supersession;
+    - tamper detection and object immutability;
+    - `--check` failing on unarchived representations and on projections from other results;
+    - reconcile;
+    - the read-only ledger import;
+    - preserved inputs;
+    - reproduction, including detection of a changed input.
+
+    CI runs them plus `reproduce.py --all`.
+  - Incident: the first run of these tests wrote into the working copy of the real archive, because default
+    arguments bound the paths at import. The 5 stray records (basis `test`) and 4 objects were never committed;
+    they were removed and the committed archive was restored. Paths now resolve at call time, and the test class
+    asserts that the repository archive is byte-identical afterwards.
 
 ## In progress / remaining
 
