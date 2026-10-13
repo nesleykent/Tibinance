@@ -18,18 +18,24 @@ Never force-push, never reset, never redo finished work.
   forecast loop is verified; Stage C0 (benchmark gate) is done, with the decision below.
 - **Production:** `release/0003`, a **data release** made by the forecast-archive workflow on top of
   `release/0002`. Live verified: 543/543 files.
-- **Exact next action:** implement `tools/economy/ingest_killstats.mjs` to the C0 decision.
-  - **Fetch:** shallow blobless clone of each upstream repo pinned at its HEAD SHA, under the ignored
-    `.cache/economy/upstream/`, then a batched sparse checkout per month (never per-file lazy fetch).
-  - **Partitions:** `.cache/economy/killstats/<world>/<YYYY-MM>.bin.gz`. Each is gzip of a JSON header line plus a
-    varint body: per day, per race id (delta-coded), `last_day_killed` and `last_day_players_killed`, with the
-    global race dictionary.
-  - **Committed:** per world-month digests in `data/economy/sources/killstats.json`.
-  - **availableAt** per date comes from the upstream "Add data for date=…" commit times (GitHub commits API).
-  - **Upstream rewrites:** commits such as "Retroactively correct names" (2024-01-31, 2024-03-27, 2024-08-02),
-    "Backfill data based on new WU2023 entries" (2023-12-05) and the "Mark … as missing data" commits go into a
-    reviewed `data/economy/inputs/killstats-corrections.json`, so strict point-in-time mode can flag affected
-    dates (correction 11).
+- **Exact next action:** run the full kill-stats ingestion (C1), then commit its outputs, then C2
+  (`tools/economy/fetch_loot.mjs` with revision mining).
+- **Long-running job: full kill-stats ingestion.**
+  - **Command** (resumable; the same command resumes): `node tools/economy/ingest_killstats.mjs --full`. Expect
+    about 15–20 min.
+  - **Inputs:** `tibiamaps/tibia-kill-stats-from-2022-08-23-to-2025-12-04` and `tibiamaps/tibia-kill-stats`,
+    pinned at their HEAD at run time. The run records the commits in `data/economy/sources/killstats.json`.
+  - **Checkpoint:** after each month the run writes `.cache/economy/ingest-progress.json` and
+    `data/economy/sources/races.json`; a rerun skips finished months.
+  - **Outputs:**
+    - `.cache/economy/killstats/<world>/<YYYY-MM>.bin.gz` partitions: **local cache only, never committed**;
+    - `.cache/economy/upstream/` clones: local only;
+    - `data/economy/sources/races.json` and `killstats.json`: **committed only after the full run**.
+  - **Another agent** (or GitHub Actions) has no partitions and must rerun the command to regenerate them. The
+    committed per world-month SHA-256 digests (source files and partition) prove a rebuild matches.
+  - **Validation so far:** a trial of 2025-11 and 2025-12 ran in 37 s (159 world dirs, 1,602 races, 0 conflicts,
+    87 days recovered: the missing 2025-12-05 for each active world). Recovery is exact: three real present days
+    were removed and recovered identically (every race, kills and player deaths).
 
 ## Completed (verified)
 
@@ -211,6 +217,12 @@ Never force-push, never reset, never redo finished work.
   - **Actions limits:** well within the 10 GB cache and 6 h job limits. A full rebuild needs about 20 GB of
     transient disk if fully checked out, so it processes month by month and deletes each month's checkout.
   - **Upstream has 1,193 + 312 daily commits**, plus correction and backfill commits listed above.
+- **C1 code:**
+  - `js/economy-killstats.js`: partition codec (gzip of a JSON header plus a varint body), `missingDates`, and
+    `recoverDay`, which recovers a day exactly from a later file's weekly counter and refuses otherwise.
+  - `tools/economy/ingest_killstats.mjs`.
+  - `tests/economy-killstats.test.mjs`: 5 tests.
+  - `.cache/` is gitignored.
 - **Incident (Stage B tests):** the first run of `test_archive.py` wrote into the working copy of the real
   archive, because default arguments bound the paths at import. The 5 stray records (basis `test`) and 4 objects were never committed;
     they were removed and the committed archive was restored. Paths now resolve at call time, and the test class
