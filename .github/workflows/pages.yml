@@ -1,7 +1,7 @@
 # Deploys the approved production release, and nothing else.
 #
-# release/production.json names the release tag (written only by tools/release.mjs). This workflow checks out main
-# for the tooling, validates the tag's own revision, writes its exact artifact, refuses to continue unless the
+# release/production.json names the release tag (written only by tools/release.mjs). This workflow checks out the
+# commit it was started for (main) for the tooling and the manifest, validates the tag's own revision, writes its exact artifact, refuses to continue unless the
 # artifact digest equals the recorded one, and only then deploys. Checkpoints pushed to main are never deployed.
 # While the repository's Pages source is still "Deploy from a branch" (legacy), it runs as a dry run: validate and
 # build, upload the artifact for inspection, deploy nothing.
@@ -34,9 +34,11 @@ jobs:
       deploy: ${{ steps.mode.outputs.deploy }}
       tag: ${{ steps.release.outputs.tag }}
     steps:
+      # The commit this run was started for: its release/production.json names what is deployed, so each
+      # deployment's commit maps exactly to the release it served (publication evidence relies on it).
       - uses: actions/checkout@v5
         with:
-          ref: main
+          ref: ${{ github.sha }}
           fetch-depth: 0
           fetch-tags: true
       - uses: actions/setup-node@v5

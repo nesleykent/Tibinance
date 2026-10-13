@@ -395,6 +395,10 @@ def check() -> list[str]:
     proj_path = ROOT / PROJECTIONS
     if proj_path.exists() and not any(r['type'] == 'presentation' and r['sha256'] == sha(proj_path.read_bytes()) for r in records):
         problems.append(f'{PROJECTIONS}: this version is not archived as a presentation')
+    if records:
+        from index import stale  # the derived view the site reads must be a fresh build of the chains
+        if stale(records):
+            problems.append('data/forecast-archive/index.json is not a fresh build (run publish_evidence.py or index.write_index)')
     return problems
 
 

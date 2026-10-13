@@ -18,7 +18,7 @@ Never force-push, never reset, never redo finished work.
   has been run.
 - **Production:** live = `release/0001` (`b7eb0e4`). Nothing in Stage B is released yet. The archive files are on
   main only.
-- **Exact next action:** `tools/forecasts/publish_evidence.py`. Then `publish_evidence.py` (repository evidence from first-parent main; website evidence from GitHub Pages
+- **Exact next action:** `tools/forecasts/evaluate.py`. Then `publish_evidence.py` (repository evidence from first-parent main; website evidence from GitHub Pages
   deployments, legacy before 2026-10-13 and release-based after), then `evaluate.py`, `index.json`, the
   `build_market_projections.mjs` hook, `publish.py`, and the `pages.yml` checkout of `github.sha`.
 
@@ -99,6 +99,22 @@ Never force-push, never reset, never redo finished work.
     - reproduction, including detection of a changed input.
 
     CI runs them plus `reproduce.py --all`.
+  - `tools/forecasts/publish_evidence.py` appends publication evidence; `tools/forecasts/index.py` derives
+    `index.json`, whose freshness `--check` verifies.
+    - **Repository evidence** is the earliest listed moment main's actual head held the content. Push events are
+      exact. Legacy Pages builds of main count as "no later than". Pushes whose previous head already held the
+      content count only as an upper bound. Before the listed period, the committer date is a stated lower bound.
+    - **Website evidence** comes from successful Pages deployments. Legacy builds served main's commit; "Pages
+      release" serves the release commit named by `release/production.json` at the deployment's commit.
+      Failures are recorded separately.
+    - **Results on the real archive** (54 records): every edition is published at website level, with repository
+      time ≤ website time.
+    - **One projections version stays `archived`:** `276fca5`, a 2026-10-03 presentation that existed only on a
+      branch commit merged as a first parent, so it was never served.
+    - `pages.yml` now checks out `github.sha`, so each deployment maps to the release manifest it deployed.
+    - `test_publish_evidence.py`: 6 tests (archived without evidence, repository then website, failed deployment
+      after archival, upper bound, committer-date fallback, release tree vs main). All 18 forecast-tool tests
+      pass.
   - Incident: the first run of these tests wrote into the working copy of the real archive, because default
     arguments bound the paths at import. The 5 stray records (basis `test`) and 4 objects were never committed;
     they were removed and the committed archive was restored. Paths now resolve at call time, and the test class

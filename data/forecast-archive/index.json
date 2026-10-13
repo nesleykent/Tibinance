@@ -1,0 +1,838 @@
+{
+ "chain": {
+  "evaluations": 0,
+  "head": "93c69f681e8a88ac2fd7134bdd41ef13aa301509bcbce3a10fbfe2cff3329d4f",
+  "records": 54
+ },
+ "forecasts": [
+  {
+   "archiveBasis": "backfill",
+   "archivedAt": "2026-10-13T20:58:38+00:00",
+   "contentHash": "02af5160779cf158601721f6dec5eab7d04ef1174c8f08293d11a9d04cffb31d",
+   "createdAt": {
+    "basis": "generation time is not recorded by analyze.py; bounded by the first commit that holds it",
+    "notAfter": "2026-10-01T18:10:51-03:00",
+    "value": null
+   },
+   "dataCutoff": "2026-09-28",
+   "edition": "tc-world-scenarios/2026-09-28",
+   "evaluation": {
+    "evaluated": 0,
+    "items": []
+   },
+   "evidence": {
+    "repository": {
+     "at": "2026-10-01T21:16:22Z",
+     "basis": "github-pages-build-of-main",
+     "commit": "eb6296f4c2d5f3f358cbf5a6c5da02edc358acb5",
+     "uncertainty": "a Pages build of main started at this time, so main held it no later than this"
+    },
+    "website": {
+     "at": "2026-10-01T21:16:22Z",
+     "basis": "github-pages-deployment-success",
+     "deployment": 6795395583,
+     "release": null,
+     "uncertainty": "time of the successful deployment status; caches may serve the previous site for a few minutes"
+    }
+   },
+   "evidenceLevel": "website",
+   "failures": [],
+   "horizon": {
+    "stepDays": 7,
+    "steps": 52,
+    "unit": "week"
+   },
+   "inputs": "0054feb3dbe9a1fae79846771cfc889824bd6020ac00cc65bef934033b84d190",
+   "interval": "heuristic-stress-band",
+   "model": {
+    "id": "C+S+H transfer",
+    "version": "25563060a1171099ef8fa1e1647c56dc58cc4b579acc27ba938e1ce4488bd7ba"
+   },
+   "outputs": "2b3286016f120d299334e5eed8ae52a6539af99bdda921aed00f31725379bada",
+   "presentations": [],
+   "product": "tc-world-scenarios",
+   "provenance": "authentic",
+   "reproducibility": {
+    "missing": [],
+    "prediction": "complete inputs (tools/forecasts/reproduce.py rebuilds the outputs)",
+    "research": "from this repository at codeCommit (frozen inputs listed in the snapshot datasets)"
+   },
+   "seq": 1,
+   "state": "published",
+   "superseded": false,
+   "supersededBy": null,
+   "target": "Weekly median of daily offers (API daily median; capture median only on days without one), per side, for the Monday to Sunday week that holds the target date; the Research scoring rule"
+  },
+  {
+   "archiveBasis": "backfill",
+   "archivedAt": "2026-10-13T20:58:38+00:00",
+   "contentHash": "00147fe305b02be792a0988ccfb0f638715ba7b659c6a821175359570346ee98",
+   "createdAt": {
+    "basis": "ledger recordedAt",
+    "value": "2026-09-28T17:34:40+00:00"
+   },
+   "dataCutoff": "2026-09-28",
+   "edition": "research-ledger/2026-09-28",
+   "evaluation": {
+    "evaluated": 0,
+    "items": []
+   },
+   "evidence": {
+    "repository": {
+     "at": "2026-10-01T21:16:22Z",
+     "basis": "github-pages-build-of-main",
+     "commit": "eb6296f4c2d5f3f358cbf5a6c5da02edc358acb5",
+     "uncertainty": "a Pages build of main started at this time, so main held it no later than this"
+    },
+    "website": {
+     "at": "2026-10-01T21:16:22Z",
+     "basis": "github-pages-deployment-success",
+     "deployment": 6795395583,
+     "release": null,
+     "uncertainty": "time of the successful deployment status; caches may serve the previous site for a few minutes"
+    }
+   },
+   "evidenceLevel": "website",
+   "failures": [
+    {
+     "at": "2026-10-13T20:44:09Z",
+     "reason": "GitHub Pages deployment 7049603323 ended in error"
+    }
+   ],
+   "horizon": {
+    "stepDays": 7,
+    "steps": 52,
+    "unit": "week"
+   },
+   "inputs": null,
+   "interval": "simulated-p10-p90",
+   "model": {
+    "id": "Research ledger: C, S, H, C+S, C+S+H; simulated fan; world transfers",
+    "version": "25563060a1171099ef8fa1e1647c56dc58cc4b579acc27ba938e1ce4488bd7ba"
+   },
+   "outputs": "97a10b7e25714a6b1d0bc938a7f2289f041bfd29108e96c7c5bfae63da235e6f",
+   "presentations": [],
+   "product": "research-ledger",
+   "provenance": "authentic",
+   "reproducibility": {
+    "missing": [
+     "fan and world transfers need the full Research pipeline"
+    ],
+    "prediction": "partial",
+    "research": "from this repository at codeCommit"
+   },
+   "seq": 2,
+   "state": "published",
+   "superseded": false,
+   "supersededBy": null,
+   "target": "weekly median of daily offers in the week ending on the Sunday that holds the target date"
+  },
+  {
+   "archiveBasis": "backfill",
+   "archivedAt": "2026-10-13T20:58:38+00:00",
+   "contentHash": "97125b4d0a63325488826a98edd1e7bb33b144a3db97806266d8951551f4be28",
+   "createdAt": {
+    "basis": "generation time is not recorded by analyze.py; bounded by the first commit that holds it",
+    "notAfter": "2026-10-02T04:28:56-03:00",
+    "value": null
+   },
+   "dataCutoff": "2026-10-02",
+   "edition": "tc-world-scenarios/2026-10-02",
+   "evaluation": {
+    "evaluated": 0,
+    "items": []
+   },
+   "evidence": {
+    "repository": {
+     "at": "2026-10-02T07:29:12Z",
+     "basis": "github-push-event",
+     "commit": "2ae460756a2408e178f6ac9b695a0d6e270cb24e",
+     "uncertainty": "exact time GitHub received the push"
+    },
+    "website": {
+     "at": "2026-10-02T07:29:36Z",
+     "basis": "github-pages-deployment-success",
+     "deployment": 6803540045,
+     "release": null,
+     "uncertainty": "time of the successful deployment status; caches may serve the previous site for a few minutes"
+    }
+   },
+   "evidenceLevel": "website",
+   "failures": [],
+   "horizon": {
+    "stepDays": 7,
+    "steps": 52,
+    "unit": "week"
+   },
+   "inputs": "46b50bab5050281eae011b96883d5964b6f76c4fcd8a62a06b81b31c84ea8b97",
+   "interval": "heuristic-stress-band",
+   "model": {
+    "id": "C+S+H transfer",
+    "version": "349e7602e1c9954b5af8c27db77857216f22c8622692209710aa0bcd667ea76e"
+   },
+   "outputs": "39351eaed9072df075a0b7ea602bccd69da79d01b4a5383dc62fd06dc8fa202d",
+   "presentations": [],
+   "product": "tc-world-scenarios",
+   "provenance": "authentic",
+   "reproducibility": {
+    "missing": [],
+    "prediction": "complete inputs (tools/forecasts/reproduce.py rebuilds the outputs)",
+    "research": "from this repository at codeCommit (frozen inputs listed in the snapshot datasets)"
+   },
+   "seq": 3,
+   "state": "published",
+   "superseded": true,
+   "supersededBy": "558de6cb9a93b2a65922d8e8fbc2b72d5c1b7d6ba5142797ffdb61189a5be039",
+   "target": "Weekly median of daily offers (API daily median; capture median only on days without one), per side, for the Monday to Sunday week that holds the target date; the Research scoring rule"
+  },
+  {
+   "archiveBasis": "backfill",
+   "archivedAt": "2026-10-13T20:58:38+00:00",
+   "contentHash": "76392267744714990398810190c044ff4733adeed3fce42a8e83e282d896c214",
+   "createdAt": {
+    "basis": "ledger recordedAt",
+    "value": "2026-10-02T07:11:58+00:00"
+   },
+   "dataCutoff": "2026-10-02",
+   "edition": "research-ledger/2026-10-02",
+   "evaluation": {
+    "evaluated": 0,
+    "items": []
+   },
+   "evidence": {
+    "repository": {
+     "at": "2026-10-02T07:29:12Z",
+     "basis": "github-push-event",
+     "commit": "2ae460756a2408e178f6ac9b695a0d6e270cb24e",
+     "uncertainty": "exact time GitHub received the push"
+    },
+    "website": {
+     "at": "2026-10-02T07:29:36Z",
+     "basis": "github-pages-deployment-success",
+     "deployment": 6803540045,
+     "release": null,
+     "uncertainty": "time of the successful deployment status; caches may serve the previous site for a few minutes"
+    }
+   },
+   "evidenceLevel": "website",
+   "failures": [
+    {
+     "at": "2026-10-13T20:44:09Z",
+     "reason": "GitHub Pages deployment 7049603323 ended in error"
+    }
+   ],
+   "horizon": {
+    "stepDays": 7,
+    "steps": 52,
+    "unit": "week"
+   },
+   "inputs": null,
+   "interval": "simulated-p10-p90",
+   "model": {
+    "id": "Research ledger: C, S, H, C+S, C+S+H; simulated fan; world transfers",
+    "version": "349e7602e1c9954b5af8c27db77857216f22c8622692209710aa0bcd667ea76e"
+   },
+   "outputs": "bec4bafeac441a2421e82aa9e6d619e495f4560fe267b1d06d8384320c8412fa",
+   "presentations": [],
+   "product": "research-ledger",
+   "provenance": "authentic",
+   "reproducibility": {
+    "missing": [
+     "fan and world transfers need the full Research pipeline"
+    ],
+    "prediction": "partial",
+    "research": "from this repository at codeCommit"
+   },
+   "seq": 4,
+   "state": "published",
+   "superseded": false,
+   "supersededBy": null,
+   "target": "weekly median of daily offers in the week ending on the Sunday that holds the target date"
+  },
+  {
+   "archiveBasis": "backfill",
+   "archivedAt": "2026-10-13T20:58:38+00:00",
+   "contentHash": "558de6cb9a93b2a65922d8e8fbc2b72d5c1b7d6ba5142797ffdb61189a5be039",
+   "createdAt": {
+    "basis": "generation time is not recorded by analyze.py; bounded by the first commit that holds it",
+    "notAfter": "2026-10-02T12:38:55-03:00",
+    "value": null
+   },
+   "dataCutoff": "2026-10-02",
+   "edition": "tc-world-scenarios/2026-10-02",
+   "evaluation": {
+    "evaluated": 0,
+    "items": []
+   },
+   "evidence": {
+    "repository": {
+     "at": "2026-10-02T15:39:12Z",
+     "basis": "github-push-event",
+     "commit": "f885548ed2da49462e65ead3ada0d9bfe1610f4b",
+     "uncertainty": "exact time GitHub received the push"
+    },
+    "website": {
+     "at": "2026-10-02T15:39:44Z",
+     "basis": "github-pages-deployment-success",
+     "deployment": 6812184153,
+     "release": null,
+     "uncertainty": "time of the successful deployment status; caches may serve the previous site for a few minutes"
+    }
+   },
+   "evidenceLevel": "website",
+   "failures": [],
+   "horizon": {
+    "stepDays": 7,
+    "steps": 52,
+    "unit": "week"
+   },
+   "inputs": "0c3c5a577d6a93995e0472719bbd1b790c465f4cf663430ccc392910f84a1fd1",
+   "interval": "heuristic-stress-band",
+   "model": {
+    "id": "C+S+H transfer",
+    "version": "349e7602e1c9954b5af8c27db77857216f22c8622692209710aa0bcd667ea76e"
+   },
+   "outputs": "fbc7260291c8ed27a899d74538e57baac1807d740348164d129d3102195a5cba",
+   "presentations": [],
+   "product": "tc-world-scenarios",
+   "provenance": "authentic",
+   "reproducibility": {
+    "missing": [],
+    "prediction": "complete inputs (tools/forecasts/reproduce.py rebuilds the outputs)",
+    "research": "from this repository at codeCommit (frozen inputs listed in the snapshot datasets)"
+   },
+   "seq": 5,
+   "state": "published",
+   "superseded": false,
+   "supersededBy": null,
+   "target": "Weekly median of daily offers (API daily median; capture median only on days without one), per side, for the Monday to Sunday week that holds the target date; the Research scoring rule"
+  },
+  {
+   "archiveBasis": "backfill",
+   "archivedAt": "2026-10-13T20:58:38+00:00",
+   "contentHash": "3be8620a536c39ae4ba1927847027c545f7942783a560103678ed4066e0ec509",
+   "createdAt": {
+    "basis": "generation time is not recorded by analyze.py; bounded by the first commit that holds it",
+    "notAfter": "2026-10-04T01:32:30-03:00",
+    "value": null
+   },
+   "dataCutoff": "2026-10-03",
+   "edition": "tc-world-scenarios/2026-10-03",
+   "evaluation": {
+    "evaluated": 0,
+    "items": []
+   },
+   "evidence": {
+    "repository": {
+     "at": "2026-10-04T04:35:13Z",
+     "basis": "github-push-event",
+     "commit": "4477b0f8a1c8b59e5816150b1e7de737a80724b7",
+     "uncertainty": "exact time GitHub received the push"
+    },
+    "website": {
+     "at": "2026-10-04T04:35:39Z",
+     "basis": "github-pages-deployment-success",
+     "deployment": 6836865137,
+     "release": null,
+     "uncertainty": "time of the successful deployment status; caches may serve the previous site for a few minutes"
+    }
+   },
+   "evidenceLevel": "website",
+   "failures": [],
+   "horizon": {
+    "stepDays": 7,
+    "steps": 52,
+    "unit": "week"
+   },
+   "inputs": "c917ff68243ee1b7282512f29178303c7b07b14585f1ca8feb742f1146a7561f",
+   "interval": "heuristic-stress-band",
+   "model": {
+    "id": "C+S+H transfer",
+    "version": "349e7602e1c9954b5af8c27db77857216f22c8622692209710aa0bcd667ea76e"
+   },
+   "outputs": "404e681d806a4482b0830ecef1993cb6a5d75bf3acbf39c0bc7c7c58ee8aba3a",
+   "presentations": [
+    {
+     "sha256": "0f4b1de2e93af28d0c9c357b3e159a50f063d2ad866e49e384996b47956c8267",
+     "surface": "markets-projections"
+    },
+    {
+     "sha256": "6cb13c03f82c6c0ef70c4388315d93e322c8848ab5ff5563a86075e09024480a",
+     "surface": "markets-projections"
+    },
+    {
+     "sha256": "adbd53ed748d2bbb82fdce883d72de49721d270fbbd8d40cd7167370b4b13f15",
+     "surface": "markets-projections"
+    }
+   ],
+   "product": "tc-world-scenarios",
+   "provenance": "authentic",
+   "reproducibility": {
+    "missing": [],
+    "prediction": "complete inputs (tools/forecasts/reproduce.py rebuilds the outputs)",
+    "research": "from this repository at codeCommit (frozen inputs listed in the snapshot datasets)"
+   },
+   "seq": 7,
+   "state": "published",
+   "superseded": false,
+   "supersededBy": null,
+   "target": "Weekly median of daily offers (API daily median; capture median only on days without one), per side, for the Monday to Sunday week that holds the target date; the Research scoring rule"
+  },
+  {
+   "archiveBasis": "backfill",
+   "archivedAt": "2026-10-13T20:58:38+00:00",
+   "contentHash": "49acc5bab9ed3eba4f64cc354c830b73b1bd0d30afa028f9a3a6b08685011a12",
+   "createdAt": {
+    "basis": "ledger recordedAt",
+    "value": "2026-10-04T04:28:53+00:00"
+   },
+   "dataCutoff": "2026-10-03",
+   "edition": "research-ledger/2026-10-03",
+   "evaluation": {
+    "evaluated": 0,
+    "items": []
+   },
+   "evidence": {
+    "repository": {
+     "at": "2026-10-04T04:35:13Z",
+     "basis": "github-push-event",
+     "commit": "4477b0f8a1c8b59e5816150b1e7de737a80724b7",
+     "uncertainty": "exact time GitHub received the push"
+    },
+    "website": {
+     "at": "2026-10-04T04:35:39Z",
+     "basis": "github-pages-deployment-success",
+     "deployment": 6836865137,
+     "release": null,
+     "uncertainty": "time of the successful deployment status; caches may serve the previous site for a few minutes"
+    }
+   },
+   "evidenceLevel": "website",
+   "failures": [
+    {
+     "at": "2026-10-13T20:44:09Z",
+     "reason": "GitHub Pages deployment 7049603323 ended in error"
+    }
+   ],
+   "horizon": {
+    "stepDays": 7,
+    "steps": 52,
+    "unit": "week"
+   },
+   "inputs": null,
+   "interval": "simulated-p10-p90",
+   "model": {
+    "id": "Research ledger: C, S, H, C+S, C+S+H; simulated fan; world transfers",
+    "version": "349e7602e1c9954b5af8c27db77857216f22c8622692209710aa0bcd667ea76e"
+   },
+   "outputs": "e4603393e334f30939cb0d07f64a2a38b042f6f9bafd92316cece11a683dbb1a",
+   "presentations": [],
+   "product": "research-ledger",
+   "provenance": "authentic",
+   "reproducibility": {
+    "missing": [
+     "fan and world transfers need the full Research pipeline"
+    ],
+    "prediction": "partial",
+    "research": "from this repository at codeCommit"
+   },
+   "seq": 8,
+   "state": "published",
+   "superseded": false,
+   "supersededBy": null,
+   "target": "weekly median of daily offers in the week ending on the Sunday that holds the target date"
+  },
+  {
+   "archiveBasis": "backfill",
+   "archivedAt": "2026-10-13T20:58:39+00:00",
+   "contentHash": "fb4ea3d43b03aa1cc169fe96d230898dbf9657d47f1deda468b69e13af1844cd",
+   "createdAt": {
+    "basis": "generation time is not recorded by analyze.py; bounded by the first commit that holds it",
+    "notAfter": "2026-10-04T22:52:15-03:00",
+    "value": null
+   },
+   "dataCutoff": "2026-10-04",
+   "edition": "tc-world-scenarios/2026-10-04",
+   "evaluation": {
+    "evaluated": 0,
+    "items": []
+   },
+   "evidence": {
+    "repository": {
+     "at": "2026-10-04T21:26:11Z",
+     "basis": "github-push-event",
+     "commit": "8f8ead146cfcfc4b78c020c680c802eaa81c604e",
+     "uncertainty": "exact time GitHub received the push"
+    },
+    "website": {
+     "at": "2026-10-04T21:26:43Z",
+     "basis": "github-pages-deployment-success",
+     "deployment": 6846947615,
+     "release": null,
+     "uncertainty": "time of the successful deployment status; caches may serve the previous site for a few minutes"
+    }
+   },
+   "evidenceLevel": "website",
+   "failures": [],
+   "horizon": {
+    "stepDays": 7,
+    "steps": 52,
+    "unit": "week"
+   },
+   "inputs": "80d937255a26df7cc64fbe6defdc2d9f5a449d09d5576c98841bc5e73b6eddfa",
+   "interval": "heuristic-stress-band",
+   "model": {
+    "id": "C+S+H transfer",
+    "version": "9db672afd85345272e30ec26453b3a68b621d4c756f3d485883712eedba31519"
+   },
+   "outputs": "ca3bc7ea742edb657b5538e36449110f6a90d777def430477e0cda0083f76265",
+   "presentations": [
+    {
+     "sha256": "ed40bde9b336426feb5ebe203ad4b0f876172dce244d541c57a8adf5467b7461",
+     "surface": "markets-projections"
+    }
+   ],
+   "product": "tc-world-scenarios",
+   "provenance": "authentic",
+   "reproducibility": {
+    "missing": [],
+    "prediction": "complete inputs (tools/forecasts/reproduce.py rebuilds the outputs)",
+    "research": "from this repository at codeCommit (frozen inputs listed in the snapshot datasets)"
+   },
+   "seq": 12,
+   "state": "published",
+   "superseded": false,
+   "supersededBy": null,
+   "target": "Weekly median of daily offers (API daily median; capture median only on days without one), per side, for the Monday to Sunday week that holds the target date; the Research scoring rule"
+  },
+  {
+   "archiveBasis": "backfill",
+   "archivedAt": "2026-10-13T20:58:39+00:00",
+   "contentHash": "8cd080d6eb01bed126584d62d50d943176535597724aec78a9193b0880d09f10",
+   "createdAt": {
+    "basis": "ledger recordedAt",
+    "value": "2026-10-04T21:13:21+00:00"
+   },
+   "dataCutoff": "2026-10-04",
+   "edition": "research-ledger/2026-10-04",
+   "evaluation": {
+    "evaluated": 0,
+    "items": []
+   },
+   "evidence": {
+    "repository": {
+     "at": "2026-10-04T21:26:11Z",
+     "basis": "github-push-event",
+     "commit": "8f8ead146cfcfc4b78c020c680c802eaa81c604e",
+     "uncertainty": "exact time GitHub received the push"
+    },
+    "website": {
+     "at": "2026-10-04T21:26:43Z",
+     "basis": "github-pages-deployment-success",
+     "deployment": 6846947615,
+     "release": null,
+     "uncertainty": "time of the successful deployment status; caches may serve the previous site for a few minutes"
+    }
+   },
+   "evidenceLevel": "website",
+   "failures": [
+    {
+     "at": "2026-10-13T20:44:09Z",
+     "reason": "GitHub Pages deployment 7049603323 ended in error"
+    }
+   ],
+   "horizon": {
+    "stepDays": 7,
+    "steps": 52,
+    "unit": "week"
+   },
+   "inputs": null,
+   "interval": "simulated-p10-p90",
+   "model": {
+    "id": "Research ledger: C, S, H, C+S, C+S+H; simulated fan; world transfers",
+    "version": "349e7602e1c9954b5af8c27db77857216f22c8622692209710aa0bcd667ea76e"
+   },
+   "outputs": "03d5cf33a8095514c16c4aeabd45129208431a50b43f8688875fa4b8929d28e6",
+   "presentations": [],
+   "product": "research-ledger",
+   "provenance": "authentic",
+   "reproducibility": {
+    "missing": [
+     "fan and world transfers need the full Research pipeline"
+    ],
+    "prediction": "partial",
+    "research": "from this repository at codeCommit"
+   },
+   "seq": 13,
+   "state": "published",
+   "superseded": false,
+   "supersededBy": null,
+   "target": "weekly median of daily offers in the week ending on the Sunday that holds the target date"
+  },
+  {
+   "archiveBasis": "backfill",
+   "archivedAt": "2026-10-13T20:58:39+00:00",
+   "contentHash": "073bbb981ac794ad3c0c6b6bdedaac74596517ad16b0f0883a916e89d52ab04f",
+   "createdAt": {
+    "basis": "generation time is not recorded by analyze.py; bounded by the first commit that holds it",
+    "notAfter": "2026-10-05T01:04:34-03:00",
+    "value": null
+   },
+   "dataCutoff": "2026-10-05",
+   "edition": "tc-world-scenarios/2026-10-05",
+   "evaluation": {
+    "evaluated": 0,
+    "items": []
+   },
+   "evidence": {
+    "repository": {
+     "at": "2026-10-05T04:04:42Z",
+     "basis": "github-push-event",
+     "commit": "b7eb0e4ad1b58e7aadd36bce5d7f8e440efcfe77",
+     "uncertainty": "exact time GitHub received the push"
+    },
+    "website": {
+     "at": "2026-10-05T04:05:16Z",
+     "basis": "github-pages-deployment-success",
+     "deployment": 6851109091,
+     "release": null,
+     "uncertainty": "time of the successful deployment status; caches may serve the previous site for a few minutes"
+    }
+   },
+   "evidenceLevel": "website",
+   "failures": [
+    {
+     "at": "2026-10-13T20:44:09Z",
+     "reason": "GitHub Pages deployment 7049603323 ended in error"
+    }
+   ],
+   "horizon": {
+    "stepDays": 7,
+    "steps": 52,
+    "unit": "week"
+   },
+   "inputs": "1b1ae50d22c9638dbdf57fdd06056625b9228a347c7479b5b541204a2f7e34a2",
+   "interval": "heuristic-stress-band",
+   "model": {
+    "id": "C+S+H transfer",
+    "version": "9db672afd85345272e30ec26453b3a68b621d4c756f3d485883712eedba31519"
+   },
+   "outputs": "79d8c37bbfd31e988e6be3fa543c64d2b2e9483ed3a54137f1da3a9bee3a42ac",
+   "presentations": [
+    {
+     "sha256": "833198dd27102002405b816edb5fec2498bc9a5e1edcec9f05a86b62b6face24",
+     "surface": "markets-projections"
+    }
+   ],
+   "product": "tc-world-scenarios",
+   "provenance": "authentic",
+   "reproducibility": {
+    "missing": [],
+    "prediction": "complete inputs (tools/forecasts/reproduce.py rebuilds the outputs)",
+    "research": "from this repository at codeCommit (frozen inputs listed in the snapshot datasets)"
+   },
+   "seq": 15,
+   "state": "published",
+   "superseded": false,
+   "supersededBy": null,
+   "target": "Weekly median of daily offers (API daily median; capture median only on days without one), per side, for the Monday to Sunday week that holds the target date; the Research scoring rule"
+  },
+  {
+   "archiveBasis": "backfill",
+   "archivedAt": "2026-10-13T20:58:39+00:00",
+   "contentHash": "b9e3936939917df2a286c9360b6b66226ba86e9c40cfe056772563cca74f22da",
+   "createdAt": {
+    "basis": "ledger recordedAt",
+    "value": "2026-10-05T03:56:39+00:00"
+   },
+   "dataCutoff": "2026-10-05",
+   "edition": "research-ledger/2026-10-05",
+   "evaluation": {
+    "evaluated": 0,
+    "items": []
+   },
+   "evidence": {
+    "repository": {
+     "at": "2026-10-05T04:04:42Z",
+     "basis": "github-push-event",
+     "commit": "b7eb0e4ad1b58e7aadd36bce5d7f8e440efcfe77",
+     "uncertainty": "exact time GitHub received the push"
+    },
+    "website": {
+     "at": "2026-10-05T04:05:16Z",
+     "basis": "github-pages-deployment-success",
+     "deployment": 6851109091,
+     "release": null,
+     "uncertainty": "time of the successful deployment status; caches may serve the previous site for a few minutes"
+    }
+   },
+   "evidenceLevel": "website",
+   "failures": [
+    {
+     "at": "2026-10-13T20:44:09Z",
+     "reason": "GitHub Pages deployment 7049603323 ended in error"
+    }
+   ],
+   "horizon": {
+    "stepDays": 7,
+    "steps": 52,
+    "unit": "week"
+   },
+   "inputs": null,
+   "interval": "simulated-p10-p90",
+   "model": {
+    "id": "Research ledger: C, S, H, C+S, C+S+H; simulated fan; world transfers",
+    "version": "9db672afd85345272e30ec26453b3a68b621d4c756f3d485883712eedba31519"
+   },
+   "outputs": "f9aa79db88f4afc99b8b7c32c3890b3eaee00445a39ef451b6bf2a11782e5d00",
+   "presentations": [],
+   "product": "research-ledger",
+   "provenance": "authentic",
+   "reproducibility": {
+    "missing": [
+     "fan and world transfers need the full Research pipeline"
+    ],
+    "prediction": "partial",
+    "research": "from this repository at codeCommit"
+   },
+   "seq": 16,
+   "state": "published",
+   "superseded": false,
+   "supersededBy": null,
+   "target": "weekly median of daily offers in the week ending on the Sunday that holds the target date"
+  }
+ ],
+ "format": 1,
+ "note": "Derived from publications.jsonl and evaluations.jsonl by tools/forecasts/index.py; do not edit.",
+ "presentations": [
+  {
+   "contentHash": "2e5cf47535f70933e5bce40f5bc121d500768542a0863a3aac74cad739dace06",
+   "edition": "tc-world-scenarios/2026-10-03",
+   "evidence": {
+    "repository": {
+     "at": "2026-10-04T10:13:03Z",
+     "basis": "github-push-event",
+     "commit": "b96d2b4fab5f4e0be8240f87d74a6cd342c1c71f",
+     "uncertainty": "exact time GitHub received the push"
+    },
+    "website": {
+     "at": "2026-10-04T10:13:31Z",
+     "basis": "github-pages-deployment-success",
+     "deployment": 6839670067,
+     "release": null,
+     "uncertainty": "time of the successful deployment status; caches may serve the previous site for a few minutes"
+    }
+   },
+   "evidenceLevel": "website",
+   "failures": [],
+   "forecast": "3be8620a536c39ae4ba1927847027c545f7942783a560103678ed4066e0ec509",
+   "sha256": "0f4b1de2e93af28d0c9c357b3e159a50f063d2ad866e49e384996b47956c8267",
+   "state": "published",
+   "superseded": false,
+   "supersededBy": null,
+   "surface": "markets-projections"
+  },
+  {
+   "contentHash": "98250c62086bfe34ef1c88af917063bc7e097faf51920266557de17071678e55",
+   "edition": "tc-world-scenarios/2026-10-03",
+   "evidence": {
+    "repository": {
+     "at": "2026-10-04T19:37:16Z",
+     "basis": "github-push-event",
+     "commit": "4b5acd7bc337289be08349fd37add28790d7a5d8",
+     "uncertainty": "exact time GitHub received the push"
+    },
+    "website": {
+     "at": "2026-10-04T19:37:49Z",
+     "basis": "github-pages-deployment-success",
+     "deployment": 6845727739,
+     "release": null,
+     "uncertainty": "time of the successful deployment status; caches may serve the previous site for a few minutes"
+    }
+   },
+   "evidenceLevel": "website",
+   "failures": [],
+   "forecast": "3be8620a536c39ae4ba1927847027c545f7942783a560103678ed4066e0ec509",
+   "sha256": "6cb13c03f82c6c0ef70c4388315d93e322c8848ab5ff5563a86075e09024480a",
+   "state": "published",
+   "superseded": false,
+   "supersededBy": null,
+   "surface": "markets-projections"
+  },
+  {
+   "contentHash": "63c1ca8a39c45a3ffbb5dca52bece9d2b6ac51ce24cd2271d75996865f13676b",
+   "edition": "tc-world-scenarios/2026-10-03",
+   "evidence": {
+    "repository": null,
+    "website": null
+   },
+   "evidenceLevel": null,
+   "failures": [],
+   "forecast": "3be8620a536c39ae4ba1927847027c545f7942783a560103678ed4066e0ec509",
+   "sha256": "adbd53ed748d2bbb82fdce883d72de49721d270fbbd8d40cd7167370b4b13f15",
+   "state": "archived",
+   "superseded": false,
+   "supersededBy": null,
+   "surface": "markets-projections"
+  },
+  {
+   "contentHash": "c8479b94b1475fcfd4aa4965a71f5e96e324f7303424047a9ccedb1cbafe70e6",
+   "edition": "tc-world-scenarios/2026-10-04",
+   "evidence": {
+    "repository": {
+     "at": "2026-10-05T01:52:18Z",
+     "basis": "github-push-event",
+     "commit": "fafec9c94a247af56292bdf60bcc6ef934a6ed6c",
+     "uncertainty": "exact time GitHub received the push"
+    },
+    "website": {
+     "at": "2026-10-05T01:52:47Z",
+     "basis": "github-pages-deployment-success",
+     "deployment": 6849711656,
+     "release": null,
+     "uncertainty": "time of the successful deployment status; caches may serve the previous site for a few minutes"
+    }
+   },
+   "evidenceLevel": "website",
+   "failures": [],
+   "forecast": "fb4ea3d43b03aa1cc169fe96d230898dbf9657d47f1deda468b69e13af1844cd",
+   "sha256": "ed40bde9b336426feb5ebe203ad4b0f876172dce244d541c57a8adf5467b7461",
+   "state": "published",
+   "superseded": false,
+   "supersededBy": null,
+   "surface": "markets-projections"
+  },
+  {
+   "contentHash": "0198e03ec5ad9f57f7ffbd6f331ba90cf2e302d6c65401f84ef8f21954e2692c",
+   "edition": "tc-world-scenarios/2026-10-05",
+   "evidence": {
+    "repository": {
+     "at": "2026-10-05T04:04:42Z",
+     "basis": "github-push-event",
+     "commit": "b7eb0e4ad1b58e7aadd36bce5d7f8e440efcfe77",
+     "uncertainty": "exact time GitHub received the push"
+    },
+    "website": {
+     "at": "2026-10-05T04:05:16Z",
+     "basis": "github-pages-deployment-success",
+     "deployment": 6851109091,
+     "release": null,
+     "uncertainty": "time of the successful deployment status; caches may serve the previous site for a few minutes"
+    }
+   },
+   "evidenceLevel": "website",
+   "failures": [
+    {
+     "at": "2026-10-13T20:44:09Z",
+     "reason": "GitHub Pages deployment 7049603323 ended in error"
+    }
+   ],
+   "forecast": "073bbb981ac794ad3c0c6b6bdedaac74596517ad16b0f0883a916e89d52ab04f",
+   "sha256": "833198dd27102002405b816edb5fec2498bc9a5e1edcec9f05a86b62b6face24",
+   "state": "published",
+   "superseded": false,
+   "supersededBy": null,
+   "surface": "markets-projections"
+  }
+ ]
+}

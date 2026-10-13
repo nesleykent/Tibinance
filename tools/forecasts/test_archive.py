@@ -117,6 +117,9 @@ class ArchiveTest(unittest.TestCase):
         self.scenario(records)
         ar.ensure_ledger(records, LEDGER, basis='test', source_for=lambda r: {'kind': 'test'})
         ar.ensure_presentation(records, PROJECTIONS, RESULTS, basis='test', source={'kind': 'test'})
+        self.assertTrue(any('index.json' in p for p in ar.check()), 'a missing or stale index is caught')
+        from index import write_index
+        write_index(records)
         self.assertEqual(ar.check(), [])
         # A new Research output on disk that was not archived is caught.
         changed = json.loads(RESULTS)
