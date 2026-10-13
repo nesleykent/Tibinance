@@ -14,18 +14,25 @@ Never force-push, never reset, never redo finished work.
 
 ## Current state
 
-- **Stage:** B (forecast archive). The core is complete and verified: archive, reproduce, evidence, evaluate,
-  index, the projections hook, publish, and the client logic. The Markets panel UI is Stage F.
-- **Production:** live = `release/0001` (`b7eb0e4`). Stage B files are on main only, unreleased by design.
-- **Exact next action:** Stage A2 automation for the forecast loop.
-  1. `tools/sync_market.mjs`, the shared update entry point (correction 6).
-  2. TibiaMarket incremental fetch: measure the API row cadence first, then dated increment files beside the
-     existing copies.
-  3. `.github/workflows/forecast-archive.yml`: on push, `deployment_status` and a daily schedule, run
-     `publish_evidence.py`, then `evaluate.py`, then commit via `publish.py`.
-  4. `.github/workflows/market-daily.yml`.
+- **Stage:** A2 (forecast-loop automation), alongside B. The Stage B core is complete.
+- **Production:** live = `release/0001` (`b7eb0e4`). Nothing newer is released.
+- **In progress (uncommitted in the working tree of the session that wrote this):**
+  - the first real TibiaMarket sync: Antica gained 3 rows (2026-10-04 to 2026-10-06);
+  - rebuilt Markets history and audits;
+  - projections, where Antica now waits for the Research because Markets is newer;
+  - the archive presentation record.
 
-  Then Stage C0 (kill-stats benchmark gate).
+  This goes to main through `node tools/sync_market.mjs --publish`. If you are another agent and do not have
+  those changes, run `node tools/sync_market.mjs --fetch --publish` yourself (needs `PYTHON` pointing at a
+  Python with the pinned pandas).
+- **Exact next action:**
+  1. Publish the data with `--publish`.
+  2. Verify the Markets page locally (Antica shows "waits for the Research"; other worlds keep their projections).
+  3. Make a **full release** of that main commit.
+
+     The data release cannot come first: release 0001's own projection test assumes the anchor is the latest
+     observation, and that fails once Markets is newer, so the updated test must be released.
+  4. Then add `.github/workflows/market-daily.yml` and `forecast-archive.yml`.
 
 ## Completed (verified)
 
@@ -159,6 +166,23 @@ Never force-push, never reset, never redo finished work.
     - `readObject` (gzip objects via `DecompressionStream`).
 
     `tests/forecast-archive.test.mjs` has 7 tests. JS suite: 157 pass. Forecast-tool Python: 34 pass.
+  - **A2 so far:**
+    - `tools/sync_tibiamarket.mjs`: one `world_data` request. Only worlds whose source update is newer than every
+      copy we hold are refetched. A new copy is written only if it keeps every held row unchanged; otherwise it
+      is reported as a conflict.
+    - `tools/sync_market.mjs`, the shared update path: fetch, history, audits, projections (archived first),
+      evaluate, validate, `--publish` through `publish.py`, `--release` as a data release.
+    - `data/economy/sync-status.json` records each source's last data change and freshness. It is written only
+      when something changes.
+    - **TibiaMarket finding (2026-10-13):** of 113 worlds, most were last updated 2026-08-28 to 2026-09-15; Monza
+      2026-09-26; Antica 2026-10-06; nothing since. Evaluation therefore waits for screenshot updates or for the
+      source to resume. The first target week closes 2026-10-11.
+    - `tests/market-projections.test.mjs`: the logic tests now use the Research anchor observation, so they hold
+      when Markets is newer. The freshness test became "each anchor is a real Markets observation, shown exactly
+      while it is the latest".
+    - **Still to adapt:** `tests/market-projections-browser.mjs` still opens Antica and expects its projection.
+      It must pick a world whose projection is placed (do this before running browser suites).
+    - `tests/sync-tibiamarket.test.mjs`: 2 tests.
   - Incident: the first run of these tests wrote into the working copy of the real archive, because default
     arguments bound the paths at import. The 5 stray records (basis `test`) and 4 objects were never committed;
     they were removed and the committed archive was restored. Paths now resolve at call time, and the test class
