@@ -14,12 +14,26 @@ Never force-push, never reset, never redo finished work.
 
 ## Current state
 
-- **Stage:** C (historical gold generation potential). Substep 1, `tools/economy/ingest_killstats.mjs`. The A2
-  forecast loop is verified; Stage C0 (benchmark gate) is done, with the decision below.
+- **Stage:** C/D. **Handoff after quota exhaustion (Claude Code, 2026-10-13).** Two long local jobs were running
+  in the session that wrote this, and their outputs are **not committed**:
+  1. `node tools/economy/ingest_killstats.mjs --full`: it had reached about 2024-02 of 51 months.
+  2. `node tools/economy/fetch_loot.mjs`: it had cached about 30 of 1,454 pages, sped up to 50 revisions per
+     request.
+
+  Both resume from their caches when rerun. **An agent on another machine has no caches** and must run both
+  commands from scratch: about 2 h each, run serially.
 - **Production:** `release/0003`, a **data release** made by the forecast-archive workflow on top of
   `release/0002`. Live verified: 543/543 files.
-- **Exact next action:** run the full kill-stats ingestion (C1), then commit its outputs, then C2
-  (`tools/economy/fetch_loot.mjs` with revision mining).
+- **Exact next action:**
+  1. Finish both jobs. Then run `node tools/economy/map_creatures.mjs` and review the unmatched races by kills
+     (overrides go in `data/economy/inputs/creature-map-overrides.json`).
+  2. Run `node tools/economy/build_gold.mjs`, then commit `data/economy/sources/*` and `data/economy/gold/*` with
+     PROGRESS.
+  3. Run `node tools/economy/population/wayback_guildstats.mjs`, the Stage D archived GuildStats import (code and
+     tests are committed; not yet run).
+  4. Remaining after that: the D TibiaVIP PDF importer and permission-gated collectors, E econometrics, F Economy
+     page and Markets panel, G, H docs (`docs/economy.md`), then a full release.
+
 - **Long-running job 2: full loot evidence fetch (C2).**
   - **Command:** `node tools/economy/fetch_loot.mjs`. Expect about 60–90 min at about 0.7 s per request.
   - **Resumable:** each page's history is cached in `.cache/economy/wiki/pages/<pageid>.json.gz`; a rerun fetches
@@ -267,6 +281,12 @@ Never force-push, never reset, never redo finished work.
   - A version log goes to `data/economy/gold-versions.json`.
   - `tests/economy-gold.test.mjs`: 4 hand-checked tests.
   - **Not run on real data yet:** it waits for both long jobs and `map_creatures.mjs`.
+- **D so far:** `tools/economy/population/wayback_guildstats.mjs` imports archived GuildStats online-counter
+  pages.
+  - Labels are Europe/Berlin time, proven by the dip at 10:15, just after the server save. The daily value
+    labelled D is the mean of D−1 (within 0.1%).
+  - Original intervals are kept (PT15M, PT1H, P1D), and availableAt = capture time.
+  - `tests/economy-population.test.mjs`: 4 tests on the archived fixture.
 - **Incident (Stage B tests):** the first run of `test_archive.py` wrote into the working copy of the real
   archive, because default arguments bound the paths at import. The 5 stray records (basis `test`) and 4 objects were never committed;
     they were removed and the committed archive was restored. Paths now resolve at call time, and the test class
