@@ -1,0 +1,20 @@
+{
+ "note": "Paths a data release may take from main. Everything else (pages, scripts, styles, tooling, docs) reaches production only through a full release, which also approves this file. Research outputs are forecast representations: a data release carrying them must pass the forecast-archive integrity check once the archive exists.",
+ "dataPaths": [
+  "data/observations.json",
+  "data/observations.csv",
+  "data/offer-observations.csv",
+  "data/market-update-*.json",
+  "data/rebuild-*.json",
+  "data/market-history/**",
+  "data/market-projections/**",
+  "data/events/events.json",
+  "data/forecast-archive/**",
+  "docs/market-chart-integration-audit.json",
+  "docs/rolling-activity-calculation.json",
+  "reports/tc-cycle/*.json",
+  "reports/tc-cycle/*.csv",
+  "reports/tc-cycle/forecast-ledger.jsonl",
+  "reports/tc-cycle/inputs/**"
+ ]
+}

@@ -1,0 +1,56 @@
+# Checks every push and pull request. Passing CI does not deploy anything: production changes only through
+# tools/release.mjs, and the Pages workflow deploys only the approved release revision.
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  site:
+    name: Site integrity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '26'
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Git identity for the release tests' throwaway repositories
+        run: |
+          git config --global user.name 'Tibinance CI'
+          git config --global user.email 'ci@tibinance.invalid'
+      - name: Required integrity checks
+        run: node tools/ci/validate_site.mjs
+      - name: Release log, tags and artifact digests
+        run: node tools/release.mjs --verify
+
+  research:
+    name: Research tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: reports/tc-cycle/requirements.txt
+      - run: pip install -r reports/tc-cycle/requirements.txt
+      - name: Research unit tests
+        run: python tools/ci/run_research_tests.py
+      - name: Research invariants and the append-only forecast ledger
+        working-directory: reports/tc-cycle
+        run: python validate.py

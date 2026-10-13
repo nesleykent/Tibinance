@@ -1,3 +1,87 @@
+# Economic intelligence expansion: handoff ledger
+
+Shared by Claude Code and OpenAI Codex. The latest origin/main commit and this section are the authoritative state.
+Plan: `docs/economy-plan.md` (approved 2026-10-13, 15 binding corrections). Release model: `docs/releases.md`.
+
+**Resumption protocol:**
+
+1. Run `git status` and `git fetch origin`.
+2. Read this section and `docs/economy-plan.md`.
+3. Run `git log --oneline -15` and inspect uncommitted changes.
+4. Verify what is actually implemented, then continue from "Exact next action".
+
+Never force-push, never reset, never redo finished work.
+
+## Current state
+
+- **Stage:** A0 (deployment safety bootstrap), substep 2. Tooling and workflows are written and locally verified.
+  This commit is "commit 1 (site-neutral)": it changes no served page, script, style or data file.
+- **Production:** still GitHub Pages "Deploy from a branch" (main, `/`), legacy. No release exists yet.
+- **Exact next action:** create release 0001 of `b7eb0e4` (the commit the live site served before this work):
+
+  ```
+  node tools/release.mjs --full b7eb0e4 --approver "Claude Code, A0 bootstrap per plan" --with PROGRESS.md
+  ```
+
+  Update this section in the same commit with `--with`. Then `gh workflow run pages.yml --ref main -f
+  tag=release/0001`, which is a dry run because Pages is legacy. Download the artifact, run
+  `node tools/ci/pages_release.mjs parity --dir <extracted artifact>` and `verify-live --all`. Then do A0 steps 5–8
+  of the plan: activate `build_type=workflow`, deploy, verify live, isolation test.
+
+## Completed (verified)
+
+- **A0 tooling:**
+  - `tools/ci/artifact.mjs`: exact artifact of a commit; digest = SHA-256 of sorted "path TAB sha256" lines;
+    excludes `.github/`, `.cache/` and hidden paths.
+  - `tools/ci/validate_site.mjs`: unit tests, builder `--check`s, forecast-archive check once it exists, local
+    reference check.
+  - `tools/release.mjs`: `--full` / `--data` / `--status` / `--verify`; hash-chained `release/releases.jsonl`;
+    atomic tag + main push built on remote main; never force.
+  - `tools/ci/pages_release.mjs`: resolve, build, verify-live, parity.
+  - `tools/ci/run_research_tests.py`: skips only the test that needs the ignored `.openai/hosting.json`.
+  - `release/policy.json`: data-release paths.
+  - `.github/workflows/ci.yml` and `pages.yml`.
+  - `docs/releases.md`.
+- **Tests (local, 2026-10-13):**
+  - `node --test tests/*.test.mjs`: 149 pass (138 existing + 11 new in `tests/release.test.mjs`).
+  - `node tools/ci/validate_site.mjs`: all checks PASS.
+  - Research suite via `tools/ci/run_research_tests.py` with the pinned venv: 37 pass, 1 skipped when
+    `hosting.json` is absent (38/38 with it).
+  - `reports/tc-cycle/validate.py`: PASS (ledger untouched: 5 frozen forecasts).
+
+## In progress / remaining
+
+- A0 steps 3–8 (release 0001, dry run, parity, activation, live verification, isolation test).
+- Then Stages B, C, D, E, F, G, A2, H per the plan. Frequent checkpoints start after A0 step 8.
+
+## Unresolved requirements (carried, not substitutes)
+
+- GuildStats historical hourly online data: blocked by Cloudflare challenges for scripts. No circumvention. Legitimate
+  routes: Wayback snapshots (sparse, labelled), operator permission.
+- TibiaVIP active population: same blocker. The user's PDF (2026-10-13) holds "total known characters" only.
+
+## Decisions (do not reopen)
+
+- Economy is the 5th site section. Forecast history is a Markets dock panel.
+- Production is isolated from checkpoints via releases (`docs/releases.md`).
+- Forecast archive is append-only with transactional publication. `reports/tc-cycle/forecast-ledger.jsonl` is never
+  modified.
+- Terminology: `directCoins`, `npcPotential`, `grossPotential` from valued creatures. No liquidation rate is assumed.
+  The three are never all regressors together.
+- Point-in-time vs latest-evidence reconstruction; `effectiveAt` ≠ `availableAt`.
+- No republishing of the tibiamaps kill-stats archive. No agent swarms.
+
+## Files created or modified in this expansion
+
+- `tools/ci/` (new), `tools/release.mjs`, `tests/release.test.mjs`, `release/policy.json`, `.github/workflows/`
+- `docs/economy-plan.md`, `docs/releases.md`, this section
+
+## Long-running jobs
+
+None.
+
+---
+
 # Apple Vision review progress
 
 Branch main; restore coverage lost in 2ae4607. No agents launched or restarted. Preserve unrelated tools/validate_archive.py. User confirmed two 2024 historic captures belong to Gentebra.

@@ -1,0 +1,79 @@
+# Deploys the approved production release, and nothing else.
+#
+# release/production.json names the release tag (written only by tools/release.mjs). This workflow checks out main
+# for the tooling, validates the tag's own revision, writes its exact artifact, refuses to continue unless the
+# artifact digest equals the recorded one, and only then deploys. Checkpoints pushed to main are never deployed.
+# While the repository's Pages source is still "Deploy from a branch" (legacy), it runs as a dry run: validate and
+# build, upload the artifact for inspection, deploy nothing.
+name: Pages release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to deploy; must be the approved one in release/production.json
+        required: false
+  push:
+    branches: [main]
+    paths: ['release/production.json']
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-release
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Validate and build the release
+    runs-on: ubuntu-latest
+    outputs:
+      deploy: ${{ steps.mode.outputs.deploy }}
+      tag: ${{ steps.release.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '26'
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Git identity for the release tests' throwaway repositories
+        run: |
+          git config --global user.name 'Tibinance CI'
+          git config --global user.email 'ci@tibinance.invalid'
+      - name: Resolve the approved release
+        id: release
+        run: node tools/ci/pages_release.mjs resolve --tag "${{ inputs.tag }}"
+      - name: Validate the release revision and write its exact artifact
+        run: node tools/ci/pages_release.mjs build --tag "${{ steps.release.outputs.tag }}" --out _site
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+      - name: Deploy only when Pages is served by this workflow
+        id: mode
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          type=$(gh api "repos/${{ github.repository }}/pages" --jq .build_type)
+          echo "Pages build_type: $type"
+          if [ "$type" = "workflow" ]; then echo "deploy=true" >> "$GITHUB_OUTPUT"; else echo "deploy=false" >> "$GITHUB_OUTPUT"; echo "Dry run: nothing is deployed while the source is $type."; fi
+
+  deploy:
+    name: Deploy ${{ needs.build.outputs.tag }}
+    needs: build
+    if: needs.build.outputs.deploy == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
