@@ -211,8 +211,8 @@ Never force-push, never reset, never redo finished work.
   - **Actions limits:** well within the 10 GB cache and 6 h job limits. A full rebuild needs about 20 GB of
     transient disk if fully checked out, so it processes month by month and deletes each month's checkout.
   - **Upstream has 1,193 + 312 daily commits**, plus correction and backfill commits listed above.
-- **A2 so far:** wrote into the working copy of the real archive, because default
-    arguments bound the paths at import. The 5 stray records (basis `test`) and 4 objects were never committed;
+- **Incident (Stage B tests):** the first run of `test_archive.py` wrote into the working copy of the real
+  archive, because default arguments bound the paths at import. The 5 stray records (basis `test`) and 4 objects were never committed;
     they were removed and the committed archive was restored. Paths now resolve at call time, and the test class
     asserts that the repository archive is byte-identical afterwards.
 
