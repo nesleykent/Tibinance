@@ -18,7 +18,8 @@ Never force-push, never reset, never redo finished work.
   has been run.
 - **Production:** live = `release/0001` (`b7eb0e4`). Nothing in Stage B is released yet. The archive files are on
   main only.
-- **Exact next action:** `tools/forecasts/evaluate.py`. Then `publish_evidence.py` (repository evidence from first-parent main; website evidence from GitHub Pages
+- **Exact next action:** the atomic hook in `tools/build_market_projections.mjs`. It calls
+  `archive.py --ensure --projections <tmp>` and renames the tmp file only after a durable append. Then `publish_evidence.py` (repository evidence from first-parent main; website evidence from GitHub Pages
   deployments, legacy before 2026-10-13 and release-based after), then `evaluate.py`, `index.json`, the
   `build_market_projections.mjs` hook, `publish.py`, and the `pages.yml` checkout of `github.sha`.
 
@@ -115,6 +116,19 @@ Never force-push, never reset, never redo finished work.
     - `test_publish_evidence.py`: 6 tests (archived without evidence, repository then website, failed deployment
       after archival, upper bound, committer-date fallback, release tree vs main). All 18 forecast-tool tests
       pass.
+  - `tools/forecasts/evaluate.py` (needs pandas) scores closed target weeks with the Research's own
+    `build_daily` and `weekly_series`.
+    - Observations come from the Research and Markets TibiaMarket copies (merged by timestamp; conflicting rows
+      fail) plus `data/observations.json` and validated manual files. One observation-dataset object per run is
+      cited by every evaluation.
+    - It appends to `evaluations.jsonl` (hash chain). A changed actual appends `evaluation-superseded` and keeps
+      the old score.
+    - **Current run:** observation cutoff 2026-10-05, 0 scorable. The earliest target week ends 2026-10-11, so all
+      27,928 points are correctly awaiting observation.
+    - Scoring starts once observations pass 2026-10-11: TibiaMarket sync (A2) or a screenshot update.
+    - `test_evaluate.py`: 7 tests (Mon–Sun target week, weekly median of daily medians, captures only fill missing
+      days, unclosed and empty weeks not scored, idempotent re-run, supersession keeping the old score, zero
+      actual, forecast chain untouched). Forecast-tool suite: 25 tests, all pass.
   - Incident: the first run of these tests wrote into the working copy of the real archive, because default
     arguments bound the paths at import. The 5 stray records (basis `test`) and 4 objects were never committed;
     they were removed and the committed archive was restored. Paths now resolve at call time, and the test class
