@@ -250,6 +250,15 @@ Never force-push, never reset, never redo finished work.
   **Parity:** 37 samples on 12 pages (versions 8.6 to 15.32) reproduce the published "Average loot value" exactly.
   The fixture is `tests/fixtures/loot-parity.json` (CC-BY-SA, attributed). `tests/economy-loot.test.mjs`: 6 tests.
   Next is `tools/economy/fetch_loot.mjs` (revision mining).
+- **C3 and C4 code (written while the jobs run):**
+  - `tools/economy/map_creatures.mjs` maps races to loot pages: override, then the upstream normalisation map, then
+    exact, then redirect, then unmatched. A trial with the full page list matched 1,341 of 1,666 races through the
+    normalisation map before redirects. Unmatched races are mostly boss mechanics and creatures without loot pages.
+    Review by kills after ingestion; overrides go in `data/economy/inputs/creature-map-overrides.json`.
+  - `js/economy-value.js` provides `compareVersions`, `versionDater` (exact or bounded), `evidenceAt` (latest or
+    point-in-time T), `candidatesByCreature` and `valueOn` (strict, extended, pooled; minimum 100 kills;
+    low-sample, backward and pooled flags). `tests/economy-value.test.mjs`: 4 tests, including retroactive
+    correction, an upload after the effective date and price vintages.
 - **Incident (Stage B tests):** the first run of `test_archive.py` wrote into the working copy of the real
   archive, because default arguments bound the paths at import. The 5 stray records (basis `test`) and 4 objects were never committed;
     they were removed and the committed archive was restored. Paths now resolve at call time, and the test class
