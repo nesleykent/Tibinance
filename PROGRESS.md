@@ -20,7 +20,23 @@ Never force-push, never reset, never redo finished work.
   `release/0002`. Live verified: 543/543 files.
 - **Exact next action:** run the full kill-stats ingestion (C1), then commit its outputs, then C2
   (`tools/economy/fetch_loot.mjs` with revision mining).
-- **Long-running job: full kill-stats ingestion.**
+- **Long-running job 2: full loot evidence fetch (C2).**
+  - **Command:** `node tools/economy/fetch_loot.mjs`. Expect about 60–90 min at about 0.7 s per request.
+  - **Resumable:** each page's history is cached in `.cache/economy/wiki/pages/<pageid>.json.gz`; a rerun fetches
+    only pages whose latest revision changed.
+  - **Inputs:** `tibia.fandom.com` MediaWiki API: namespace 112 (1,454 pages), `Module:ItemPrices/data`, and the
+    `Updates/*` pages.
+  - **Outputs** (committed only after a complete run):
+    - `data/economy/sources/loot/chunk-NNNN.jsonl.gz`;
+    - `data/economy/sources/item-prices/chunk-NNNN.jsonl.gz`;
+    - `data/economy/sources/versions.json`.
+
+    The cache is local only; another agent reruns the command to rebuild it.
+  - **Trial on 5 pages:** 114 requests, 2.5 min; 366 sample records (Acid Blob alone has 95 revisions of its single
+    sample since 2022: contributors keep adding kills, and each revision is evidence); 47 ItemPrices vintages since
+    2022-08-23; 817 versions.
+  - **Do not commit** outputs of a `--limit` trial.
+- **Long-running job 1: full kill-stats ingestion.**
   - **Command** (resumable; the same command resumes): `node tools/economy/ingest_killstats.mjs --full`. Expect
     about 15–20 min.
   - **Inputs:** `tibiamaps/tibia-kill-stats-from-2022-08-23-to-2025-12-04` and `tibiamaps/tibia-kill-stats`,
