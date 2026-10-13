@@ -15,7 +15,7 @@ Never force-push, never reset, never redo finished work.
 ## Current state
 
 - **Stage:** A2 (forecast-loop automation), alongside B. The Stage B core is complete.
-- **Production:** live = `release/0001` (`b7eb0e4`). Nothing newer is released.
+- **Production:** `release/0002` is the full release of `9ef89f0` (recorded by this commit). Its Pages deployment and live verification are the next step.
 - **Published by this commit:** the first real TibiaMarket sync.
   - Antica +3 rows (2026-10-04 to 2026-10-06).
   - Rebuilt Markets history and audits.
@@ -26,7 +26,7 @@ Never force-push, never reset, never redo finished work.
 - **Exact next action:**
   1. (Done in this commit.)
   2. (Done: browser suites pass.)
-  3. Make a **full release** of the current main commit.
+  3. (Done: `release/0002`.) Verify the Pages run, then `node tools/ci/pages_release.mjs verify-live --all`.
 
      The data release cannot come first: release 0001's own projection test assumes the anchor is the latest
      observation, and that fails once Markets is newer, so the updated test must be released.
