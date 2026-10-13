@@ -2,7 +2,8 @@
 //
 //   node tools/sync_market.mjs                       rebuild, validate and evaluate from the inputs on disk
 //   node tools/sync_market.mjs --fetch               first fetch new TibiaMarket history (tools/sync_tibiamarket.mjs)
-//   node tools/sync_market.mjs ... --publish         commit the result to main (tools/forecasts/publish.py)
+//   node tools/sync_market.mjs ... --publish         commit the result to main (tools/forecasts/publish.py);
+//                                                    --with <path> adds files to the same commit (PROGRESS.md)
 //   node tools/sync_market.mjs ... --release --approver "<who>" [--dispatch]
 //                                                    then make it live with a data release (tools/release.mjs)
 //
@@ -71,7 +72,8 @@ async function main() {
   step('site validation', process.execPath, ['tools/ci/validate_site.mjs']);
   if (args.includes('--publish')) {
     step('publication', PYTHON, ['tools/forecasts/publish.py', '--message', value('--message') ?? 'Market data update: validated, reconciled and evaluated',
-      '--with', 'data/market-history', '--with', 'docs/market-chart-integration-audit.json', '--with', 'docs/rolling-activity-calculation.json', '--with', STATUS]);
+      '--with', 'data/market-history', '--with', 'docs/market-chart-integration-audit.json', '--with', 'docs/rolling-activity-calculation.json', '--with', STATUS,
+      ...args.flatMap((a, i) => (a === '--with' ? ['--with', args[i + 1]] : []))]);
   }
   if (args.includes('--release')) {
     const approver = value('--approver');
