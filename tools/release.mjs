@@ -159,6 +159,21 @@ function manifestCommit(base, record, chainText, withFiles, message, cwd) {
   return execFileSync('git', ['commit-tree', tree, '-p', base, '-m', message], { cwd, encoding: 'utf8' }).trim();
 }
 
+
+// Moves the local branch onto the manifest commit. The --with files were committed with exactly their working-tree
+// content, so they are first returned to HEAD's version (no content is lost: the commit holds it) and the
+// fast-forward brings that same content back. Anything else that blocks the fast-forward is left untouched.
+function followLocally(manifestSha, withFiles, cwd) {
+  if (!isAncestor('HEAD', manifestSha, cwd)) return false;
+  for (const [path, text] of withFiles) if (show(manifestSha, path, cwd) === text) git(['checkout', 'HEAD', '--', path], { cwd });
+  const r = spawnSync('git', ['merge', '--ff-only', '--quiet', manifestSha], { cwd, encoding: 'utf8' });
+  if (r.status !== 0) {
+    for (const [path, text] of withFiles) writeFileSync(join(cwd, path), text);
+    console.error(`note: the local branch was not fast-forwarded to ${manifestSha}: ${r.stderr.trim()}`);
+  }
+  return r.status === 0;
+}
+
 export function release({ kind, commit, approver, note = '', withPaths = [], push = true, dispatch = false, remote = 'origin', cwd = process.cwd(), validator, now = () => new Date().toISOString() }) {
   if (!['full', 'data'].includes(kind)) throw new Error('kind must be full or data');
   if (!approver) throw new Error('--approver is required: say who approved this release');
@@ -218,12 +233,12 @@ export function release({ kind, commit, approver, note = '', withPaths = [], pus
       const message = `release: ${tag} (${kind}) of ${kind === 'full' ? target.slice(0, 7) : `data ${target.slice(0, 7)} on ${source.base.tag}`}\n\nApproved by ${approver}.${note ? ` ${note}` : ''}\nArtifact ${body.artifact.digest} (${body.artifact.files} files).`;
       const manifestSha = manifestCommit(base, record, text, withFiles, message, cwd);
       if (!push) {
-        git(['merge', '--ff-only', '--quiet', manifestSha], { cwd });
+        followLocally(manifestSha, withFiles, cwd);
         return { tag, record, manifestCommit: manifestSha, pushed: false };
       }
       const r = spawnSync('git', ['push', '--atomic', '--porcelain', remote, `refs/tags/${tag}:refs/tags/${tag}`, `${manifestSha}:refs/heads/main`], { cwd, encoding: 'utf8' });
       if (r.status === 0) {
-        if (isAncestor('HEAD', manifestSha, cwd)) spawnSync('git', ['merge', '--ff-only', '--quiet', manifestSha], { cwd });
+        followLocally(manifestSha, withFiles, cwd);
         if (dispatch) execFileSync('gh', ['workflow', 'run', 'pages.yml', '--ref', 'main', '-f', `tag=${tag}`], { cwd, stdio: 'inherit' });
         return { tag, record, manifestCommit: manifestSha, pushed: true };
       }

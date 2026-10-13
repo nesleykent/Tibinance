@@ -184,3 +184,15 @@ test('release tooling never force-pushes', () => {
   }
   assert.ok(existsSync(new URL('../release/policy.json', import.meta.url)), 'the repository has a data-release policy');
 });
+
+test('--with records a working-tree file in the release commit and the local branch follows it', () => {
+  const f = fixture();
+  write(f.work, 'PROGRESS.md', 'base\n');
+  commit(f.work, 'progress');
+  sh(f.work, 'push', '--quiet', 'origin', 'HEAD:main');
+  write(f.work, 'PROGRESS.md', 'release 0001 recorded\n');
+  const r = release({ ...opts(f), kind: 'full', commit: 'HEAD', withPaths: ['PROGRESS.md'] });
+  assert.equal(sh(f.origin, 'show', 'main:PROGRESS.md'), 'release 0001 recorded');
+  assert.equal(sh(f.work, 'rev-parse', 'HEAD'), r.manifestCommit);
+  assert.equal(sh(f.work, 'status', '--porcelain'), '');
+});

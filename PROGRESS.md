@@ -38,6 +38,10 @@ Never force-push, never reset, never redo finished work.
     atomic tag + main push built on remote main; never force.
   - `tools/ci/pages_release.mjs`: resolve, build, verify-live, parity.
   - `tools/ci/run_research_tests.py`: skips only the test that needs the ignored `.openai/hosting.json`.
+  - Release 0001 created and pushed with the tool (`47958b6`, tag `release/0001` → `b7eb0e4`, artifact digest
+    `d3afc57aad80faa830441c9350eb84aa9890754edae88ec091f3738c5c36a343`, 495 files).
+  - Fix after release 0001: the local branch now follows the release commit when `--with` files were dirty with
+    the committed content (before, it stayed behind). Covered by a 12th release test.
   - `release/policy.json`: data-release paths.
   - `.github/workflows/ci.yml` and `pages.yml`.
   - `docs/releases.md`.
@@ -45,7 +49,7 @@ Never force-push, never reset, never redo finished work.
   `test_inflation`'s exact float equality on Linux x64 (last digits differ from the macOS arm64 outputs). The
   Research job now runs on `macos-15`; the Research tests are unchanged.
 - **Tests (local, 2026-10-13):**
-  - `node --test tests/*.test.mjs`: 149 pass (138 existing + 11 new in `tests/release.test.mjs`).
+  - `node --test tests/*.test.mjs`: 150 pass (138 existing + 12 new in `tests/release.test.mjs`).
   - `node tools/ci/validate_site.mjs`: all checks PASS.
   - Research suite via `tools/ci/run_research_tests.py` with the pinned venv: 37 pass, 1 skipped when
     `hosting.json` is absent (38/38 with it).
