@@ -42,6 +42,9 @@ Never force-push, never reset, never redo finished work.
   - `release/policy.json`: data-release paths.
   - `.github/workflows/ci.yml` and `pages.yml`.
   - `docs/releases.md`.
+- **CI on GitHub:** commit `4187b56` passed Site integrity (validator + release verify). Research failed only
+  `test_inflation`'s exact float equality on Linux x64 (last digits differ from the macOS arm64 outputs). The
+  Research job now runs on `macos-15`; the Research tests are unchanged.
 - **Tests (local, 2026-10-13):**
   - `node --test tests/*.test.mjs`: 149 pass (138 existing + 11 new in `tests/release.test.mjs`).
   - `node tools/ci/validate_site.mjs`: all checks PASS.

@@ -29,7 +29,7 @@ concurrency:
 jobs:
   build:
     name: Validate and build the release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       deploy: ${{ steps.mode.outputs.deploy }}
       tag: ${{ steps.release.outputs.tag }}
@@ -70,7 +70,7 @@ jobs:
     name: Deploy ${{ needs.build.outputs.tag }}
     needs: build
     if: needs.build.outputs.deploy == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
