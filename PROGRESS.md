@@ -5,7 +5,7 @@ Plan: `docs/economy-plan.md` (approved 2026-10-13, 15 binding corrections). Rele
 
 **Resumption protocol:**
 
-1. Run `git status` and `git fetch origin`.
+1. Run `git status` and `git fetch origin --tags` (data-release tags point off main and arrive only with `--tags`).
 2. Read this section and `docs/economy-plan.md`.
 3. Run `git log --oneline -15` and inspect uncommitted changes.
 4. Verify what is actually implemented, then continue from "Exact next action".
@@ -14,23 +14,22 @@ Never force-push, never reset, never redo finished work.
 
 ## Current state
 
-- **Stage:** A2 (forecast-loop automation), alongside B. The Stage B core is complete.
-- **Production:** `release/0002` (full release of `9ef89f0`). Pages run 38470935431 succeeded, and
-  `verify-live --all` passes: 543/543 live files equal the release. Live now has the Antica TibiaMarket rows through
-  2026-10-06, Antica's projection "waits for the Research" (others placed), and the forecast archive files.
-- **Published by this commit:** the first real TibiaMarket sync.
-  - Antica +3 rows (2026-10-04 to 2026-10-06).
-  - Rebuilt Markets history and audits.
-  - Projections: Antica's projection now waits for the Research, because Markets observed 2026-10-06 after its
-    2026-10-04 anchor. This is the designed rule; other worlds are unchanged.
-  - A new projections presentation record in the archive.
-  - `data/economy/sync-status.json` (TibiaMarket source freshness).
-- **Exact next action:** run each workflow once to verify it, recording the run ids and results here:
-  - `gh workflow run market-daily.yml`
-  - `gh workflow run forecast-archive.yml`
-
-  Then run the market sync again to prove idempotency (it must commit nothing). Then start **Stage C0**, the
-  kill-stats benchmark gate.
+- **Stage:** C (historical gold generation potential). Substep 1, `tools/economy/ingest_killstats.mjs`. The A2
+  forecast loop is verified; Stage C0 (benchmark gate) is done, with the decision below.
+- **Production:** `release/0003`, a **data release** made by the forecast-archive workflow on top of
+  `release/0002`. Live verified: 543/543 files.
+- **Exact next action:** implement `tools/economy/ingest_killstats.mjs` to the C0 decision.
+  - **Fetch:** shallow blobless clone of each upstream repo pinned at its HEAD SHA, under the ignored
+    `.cache/economy/upstream/`, then a batched sparse checkout per month (never per-file lazy fetch).
+  - **Partitions:** `.cache/economy/killstats/<world>/<YYYY-MM>.bin.gz`. Each is gzip of a JSON header line plus a
+    varint body: per day, per race id (delta-coded), `last_day_killed` and `last_day_players_killed`, with the
+    global race dictionary.
+  - **Committed:** per world-month digests in `data/economy/sources/killstats.json`.
+  - **availableAt** per date comes from the upstream "Add data for date=…" commit times (GitHub commits API).
+  - **Upstream rewrites:** commits such as "Retroactively correct names" (2024-01-31, 2024-03-27, 2024-08-02),
+    "Backfill data based on new WU2023 entries" (2023-12-05) and the "Mark … as missing data" commits go into a
+    reviewed `data/economy/inputs/killstats-corrections.json`, so strict point-in-time mode can flag affected
+    dates (correction 11).
 
 ## Completed (verified)
 
@@ -194,7 +193,25 @@ Never force-push, never reset, never redo finished work.
 
       Both share the `data-writers` concurrency group. `release.mjs` exits 3 for "nothing to release", which
       automation treats as success.
-  - Incident: the first run of these tests wrote into the working copy of the real archive, because default
+  - **A2 verification on GitHub (2026-10-13):**
+    - `market-daily.yml` run 38471257451: success. Nothing due, nothing to publish, nothing to release
+      (idempotent).
+    - `forecast-archive.yml` run 38472554608: success. It added repository and website evidence for the new
+      projections version, published `44f3231` and made data release `release/0003`; the bot-dispatched Pages
+      deploy succeeded and was verified live 543/543.
+    - Rerun 38472933229: 0 evidence, nothing to publish, nothing to release (idempotent).
+- **Stage C0 benchmark (2026-10-13), decision recorded:**
+  - **Fetch:** a shallow blobless clone of the archive repo takes 1.6 s and 2.5 MB (tree only; 102,891 world-day
+    files). Lazy per-file blob fetch is unusable (~20 MB in 10 min). A batched sparse checkout of one week, all
+    worlds (609 files, 117 MB JSON), takes 3.3 s, so about 10 min for the archive.
+  - **Parse:** 430 MB/s, so the full 19.8 GB of JSON costs under 1 min of CPU.
+  - **Rows:** about 91 M non-zero archive rows (plus about 27 M current).
+  - **Formats** (full-archive extrapolation): NDJSON+gzip 413 MB; columnar varint+gzip 178 MB; +zstd 172 MB (no
+    real gain, extra dependency). **Choice:** columnar gzip (standard library in Node and Python).
+  - **Actions limits:** well within the 10 GB cache and 6 h job limits. A full rebuild needs about 20 GB of
+    transient disk if fully checked out, so it processes month by month and deletes each month's checkout.
+  - **Upstream has 1,193 + 312 daily commits**, plus correction and backfill commits listed above.
+- **A2 so far:** wrote into the working copy of the real archive, because default
     arguments bound the paths at import. The 5 stray records (basis `test`) and 4 objects were never committed;
     they were removed and the committed archive was restored. Paths now resolve at call time, and the test class
     asserts that the repository archive is byte-identical afterwards.
