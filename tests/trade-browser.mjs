@@ -58,10 +58,10 @@ try {
   await type('book.buy.0.price','38.42k');
   assert.equal(await field('book.buy.0.price').inputValue(),'38,420');
   assert.match(await text('#tradeResult .trade-verdict'),/^Sell now Net proceeds: 384,200,000\. Enter your Sell Offer price to compare it with an offer\.$/);
-  assert.match(await text('.trade-breakeven'),/^BREAK-EVEN SELL OFFER PRICE 38,520 /,'the break-even price needs no offer price');
+  assert.match(await text('.trade-breakeven'),/^Break-even Sell Offer price 38,520 /,'the break-even price needs no offer price');
   await type('offerPrice','38900');
-  assert.equal(await text('.trade-verdict'),'BEST ON THESE NUMBERS Create Sell Offer +3,800,000 (+0.99%) over selling now, if the offer fills.');
-  assert.equal(await text('.trade-breakeven'),'BREAK-EVEN SELL OFFER PRICE 38,520 Below it, selling now nets more; from it up, an offer that fills nets at least as much.');
+  assert.equal(await text('.trade-verdict'),'Best on these numbers Create Sell Offer +3,800,000 (+0.99%) over selling now, if the offer fills.');
+  assert.equal(await text('.trade-breakeven'),'Break-even Sell Offer price 38,520 Below it, selling now nets more; from it up, an offer that fills nets at least as much.');
   assert.deepEqual(await cards(),[
     {id:'take',name:'Sell now',best:false,net:'384,200,000',lines:{'Sells now':'10,000 at 38,420','Market fee':'0'}},
     {id:'make',name:'Create Sell Offer',best:true,net:'388,000,000',lines:{'Offers':'10,000 at 38,900','Total Price':'389,000,000','Market fee':'1,000,000'}}]);
@@ -74,9 +74,9 @@ try {
 
   // At the break-even price the two are equal, and selling now leads; below it, selling now wins outright.
   await type('offerPrice','38520');
-  assert.equal(await text('.trade-verdict'),'BEST ON THESE NUMBERS Sell now The same as a Sell Offer of 10,000 at 38,520: 384,200,000 either way, and selling now does not wait on an offer.');
+  assert.equal(await text('.trade-verdict'),'Best on these numbers Sell now The same as a Sell Offer of 10,000 at 38,520: 384,200,000 either way, and selling now does not wait on an offer.');
   await type('offerPrice','38500');
-  assert.equal(await text('.trade-verdict'),'BEST ON THESE NUMBERS Sell now +200,000 (+0.05%) over a Sell Offer of 10,000 at 38,500, even if the offer filled.');
+  assert.equal(await text('.trade-verdict'),'Best on these numbers Sell now +200,000 (+0.05%) over a Sell Offer of 10,000 at 38,500, even if the offer filled.');
 
   // More than the Buy Offers hold: only their amount is priced, the rest is shown, and a split is offered.
   await type('offerPrice','38900');
@@ -86,8 +86,8 @@ try {
   assert.deepEqual(take.lines,{'Sells now':'4,000 of 10,000 at 38,420','Market fee':'0','Unsold':'6,000'});
   assert.equal(await page.$eval('[data-strategy="take"] .trade-net .trade-label',e=>e.textContent),'Net proceeds, for 4,000');
   assert.deepEqual(split.lines,{'Sells now':'4,000 at 38,420','Received now':'153,680,000','Then offers':'6,000 at 38,900','Offer Total Price':'233,400,000','Market fee':'1,000,000'});
-  assert.equal(await text('.trade-verdict'),'BEST ON THESE NUMBERS Create Sell Offer +1,920,000 (+0.50%) over selling 4,000 now and offering 6,000, if the offer fills.');
-  assert.match(await text('.trade-breakeven'),/^BREAK-EVEN SELL OFFER PRICE 38,421 Below it, selling 4,000 now and offering the rest nets more/);
+  assert.equal(await text('.trade-verdict'),'Best on these numbers Create Sell Offer +1,920,000 (+0.50%) over selling 4,000 now and offering 6,000, if the offer fills.');
+  assert.match(await text('.trade-breakeven'),/^Break-even Sell Offer price 38,421 Below it, selling 4,000 now and offering the rest nets more/);
 
   // An own price at the Buy Offer would be matched at once: refused as an offer, with the reason beside it.
   await type('offerPrice','38000');
@@ -130,7 +130,7 @@ try {
   assert.equal(await text('#tradeOwnName'),'Your Buy Offer');
   assert.equal(await field('offerPrice').getAttribute('aria-label'),'Your Buy Offer, Piece Price');
   assert.deepEqual((await cards()).map(c=>[c.name,c.best,c.net]),[['Buy now',false,'19,400,000'],['Buy now, offer the rest',false,'77,475,000'],['Create Buy Offer',true,'77,100,000']]);
-  assert.equal(await text('.trade-verdict'),'BEST ON THESE NUMBERS Create Buy Offer 375,000 (0.48%) less than buying 500 now and offering 1,500, if the offer fills.');
+  assert.equal(await text('.trade-verdict'),'Best on these numbers Create Buy Offer 375,000 (0.48%) less than buying 500 now and offering 1,500, if the offer fills.');
   assert.match(await text('[data-strategy="make"] .trade-note'),/^It would be the highest Buy Offer\. Its price and the fee leave your bank when it is placed\.$/);
   assert.equal((await cards())[0].lines['Not bought'],'1,500');
 

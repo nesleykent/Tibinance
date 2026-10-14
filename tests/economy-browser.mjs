@@ -59,7 +59,7 @@ try {
   // ---- A first visit exposes the entire recorded gold history, independently of TC price coverage.
   await page.goto(`${root}/`);
   await page.click('header.site [data-site-menu]');
-  await page.click('#site-menu a[href="economy.html"]');
+  await Promise.all([page.waitForURL(/economy\.html/),page.click('#site-menu a[href="economy.html"]')]);
   await ready();
   assert.equal(await page.title(),'Tibinance Economy');
   assert.equal(await page.getAttribute('#site-menu a[aria-current="page"]','href'),'economy.html');

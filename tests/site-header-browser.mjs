@@ -18,16 +18,16 @@ const REMOTE=research=>[['Capture',SITE],['Economy',`${SITE}economy.html`],['Eco
 // tv: the page is drawn in TradingView's idiom (css/tv.css): its 38px header runs edge to edge instead of Capture's
 // margins. links: the header's visible links besides the trail's (the project, and the TV pages' own link onward).
 const pages=[
-  {name:'Capture',path:'/',ready:'#capturesLoading[hidden]',trail:['Tibinance'],trigger:'Tibinance',home:null,links:LOCAL,headerLinks:1},
+  {name:'Capture',path:'/',ready:'#capturesLoading[hidden]',trail:['Tibinance'],trigger:'Tibinance',home:null,links:LOCAL,tv:true,headerLinks:1},
   {name:'Markets overview',path:'/markets-overview.html',ready:'#summaryCards li',trail:['Tibinance','/','Markets overview'],trigger:'Markets overview',home:'./',links:LOCAL,tv:true,headerLinks:3},
   {name:'Markets',path:'/markets.html',ready:'#market[aria-busy="false"]',trail:['Tibinance','/','Markets'],trigger:'Markets',home:'./',links:LOCAL,tv:true,headerLinks:3},
   {name:'Economy overview',path:'/economy-overview.html',ready:'#statCards .tv-stat',trail:['Tibinance','/','Economy overview'],trigger:'Economy overview',home:'./',links:LOCAL,tv:true,headerLinks:3},
   {name:'Economy',path:'/economy.html',ready:'#economy[aria-busy="false"]',trail:['Tibinance','/','Economy'],trigger:'Economy',home:'./',links:LOCAL,tv:true,headerLinks:3},
-  {name:'Trade',path:'/trade.html',ready:'#tradeResult .trade-prompt',trail:['Tibinance','/','Trade'],trigger:'Trade',home:'./',links:LOCAL,headerLinks:2},
-  {name:'Research',path:'/reports/tc-cycle/',ready:'#report[aria-busy="false"]',trail:['Tibinance','/','Research'],trigger:'Research',home:SITE,headerLinks:2,
+  {name:'Trade',path:'/trade.html',ready:'#tradeResult .trade-prompt',trail:['Tibinance','/','Trade'],trigger:'Trade',home:'./',links:LOCAL,tv:true,headerLinks:2},
+  {name:'Research',path:'/reports/tc-cycle/',ready:'#report[aria-busy="false"]',trail:['Tibinance','/','Research'],trigger:'Research',home:SITE,tv:true,headerLinks:2,
     links:REMOTE('./'),
     language:{name:'Language: EN, English',code:'EN',current:'English',empty:'No world matches.'}},
-  {name:'Research',path:'/reports/tc-cycle/pt-br.html',ready:'#report[aria-busy="false"]',trail:['Tibinance','/','Research'],trigger:'Research',home:SITE,headerLinks:2,
+  {name:'Research',path:'/reports/tc-cycle/pt-br.html',ready:'#report[aria-busy="false"]',trail:['Tibinance','/','Research'],trigger:'Research',home:SITE,tv:true,headerLinks:2,
     links:REMOTE('pt-br.html'),
     language:{name:'Idioma: PT, Português',code:'PT',current:'Português',empty:'Nenhum world encontrado.'}},
 ];

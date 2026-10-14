@@ -42,11 +42,6 @@ try {
   // Markets is reached from the site menu (tests/site-header-browser.mjs covers the menu itself).
   await page.goto(`${root}/`);
   assert.equal(await page.title(),'Tibinance');
-  // Capture's page margins: Markets is framed by the same ones.
-  const pageEdges=()=>page.$eval('.site .wrap',w=>{const r=w.getBoundingClientRect(),s=getComputedStyle(w);
-    return [r.left+parseFloat(s.paddingLeft),r.right-parseFloat(s.paddingRight)];});
-  const captureEdges=await pageEdges();
-  assert.ok(captureEdges[0]>100,`Capture's margin at 1440px: ${captureEdges[0]}`);
   assert.deepEqual(await page.$$eval('#site-menu a',as=>as.map(a=>[a.textContent,a.getAttribute('href')])),
     [['Capture','./'],['Economy','economy.html'],['Economy overview','economy-overview.html'],['Markets','markets.html'],['Markets overview','markets-overview.html'],['Research','reports/tc-cycle/'],['Trade','trade.html']]);
   await page.click('header.site [data-site-menu]');

@@ -12,7 +12,8 @@
  * Blocks sit on the chart page's background with a 4px gap between them, as TradingView lays them. Every id the page
  * scripts read is kept; this file only places and paints them. Narrow screens stack the chart, the rail and the panel.
  */
-:root { --toolbar-height:var(--tv-header); --watch-width:var(--tv-widget); --rail-width:var(--tv-right); --scale-inset:12px; --row-pad:6px; }
+/* The terminal's own dimensions, on the terminal only: other pages (the Research rail) define these names for themselves. */
+.tv-terminal { --toolbar-height:var(--tv-header); --watch-width:var(--tv-widget); --rail-width:var(--tv-right); --scale-inset:12px; --row-pad:6px; }
 
 /* ---- the frame ---- */
 body.tv-app { display:flex; flex-direction:column; height:100dvh; overflow:hidden; background:var(--tv-page); color:var(--tv-text); }

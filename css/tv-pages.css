@@ -1,0 +1,108 @@
+/*
+ * Capture, Trade and Research in TradingView's design system (css/tv.css): the pages keep their markup and their
+ * own stylesheets (css/app.css, css/trade.css, reports/tc-cycle/report.css), which already draw with the tokens tv.css
+ * rebinds; this file gives their components TradingView's idiom. Titles in its sans at 700 instead of the editorial
+ * serif; labels in sentence case, never small capitals; 34px buttons and fields with 8px corners and the blue focus;
+ * TradingView's segmented control; tables as its screener's; cards and the drop zone with 12px corners.
+ */
+body.tv-doc { --header-height:var(--tv-header); }
+.tv-doc .tv-header-end { display:flex; align-items:center; gap:2px; margin-left:auto; }
+.tv-doc .site-controls + .tv-header-end { margin-left:4px; }
+.tv-doc .site-controls { margin:0 0 0 auto; }
+.tv-doc-main { padding-bottom:64px; }
+.tv-doc code { padding:1px 6px; border-radius:4px; background:var(--tv-bg-3); font-size:12px; }
+
+/* ---- titles and text ---- */
+.tv-doc .hero { padding:40px 0 8px; }
+.tv-doc h1 { font:700 clamp(28px,4vw,40px)/1.2 var(--tv-font); letter-spacing:-.01em; }
+.tv-doc .deck { max-width:880px; margin-top:12px; color:var(--tv-text-2); font-size:18px; line-height:28px; }
+.tv-doc h2 { font:700 24px/32px var(--tv-font); letter-spacing:-.005em; }
+.tv-doc .block { margin-top:40px; padding-top:32px; border-top:1px solid var(--tv-border); }
+.tv-doc .block:first-of-type { margin-top:24px; }
+.tv-doc :is(.controls-label,table.data thead th,.kept h5,.side h4,.rowhead,.trade-label) {
+  color:var(--tv-text-2); font:600 12px/16px var(--tv-font); letter-spacing:0; text-transform:none; }
+.tv-doc .count,.tv-doc .results-meta { color:var(--tv-text-2); font-size:13px; }
+.tv-doc footer { margin-top:56px; padding:24px 0; border-top:1px solid var(--tv-border); color:var(--tv-text-2); font-size:13px; }
+
+/* ---- controls ---- */
+.tv-doc .btn { display:inline-flex; align-items:center; justify-content:center; height:34px; min-height:34px; padding:0 14px; border:0; border-radius:8px;
+  background:var(--tv-bg-3); color:var(--tv-text); font:500 14px var(--tv-font); }
+.tv-doc .btn:hover { background:var(--tv-gray-150); }
+:root[data-theme="dark"] .tv-doc .btn:hover { background:var(--tv-gray-750); }
+.tv-doc .btn.primary { background:var(--tv-brand); color:#fff; font-weight:600; }
+.tv-doc .btn.primary:hover { background:var(--tv-blue-600); }
+.tv-doc .btn.danger { background:transparent; box-shadow:inset 0 0 0 1px var(--tv-down); color:var(--tv-down); }
+.tv-doc .btn.danger:hover { background:var(--tv-down); color:#fff; }
+.tv-doc :is(.field,.filter,.rowline input,.statistics-sides input,.trade-input,select.field) {
+  min-height:34px; border:1px solid var(--tv-border-hover); border-radius:8px; background:var(--tv-input); color:var(--tv-text); font-family:var(--tv-font); }
+.tv-doc :is(.field,.filter,.rowline input,.statistics-sides input,.trade-input):focus { border-color:var(--tv-brand); box-shadow:0 0 0 1px var(--tv-brand); outline:0; }
+.tv-doc :is(.field,.filter,.trade-input)::placeholder { color:var(--tv-placeholder); }
+.tv-doc .segmented { min-height:34px; padding:3px; border-radius:8px; background:var(--tv-bg-3); }
+.tv-doc .segmented button { border-radius:6px; color:var(--tv-text); font:500 13px var(--tv-font); }
+.tv-doc .segmented button[aria-checked="true"] { background:var(--tv-bg); box-shadow:0 1px 2px rgb(0 0 0 / .12); font-weight:600; }
+:root[data-theme="dark"] .tv-doc .segmented button[aria-checked="true"] { background:var(--tv-gray-750); }
+.tv-doc .segmented button:not([aria-checked="true"]) + button:not([aria-checked="true"]) { background:none; }
+.tv-doc .segmented button:hover:not([aria-checked="true"]) { color:var(--tv-text); background:var(--tv-btn-hover); }
+.tv-doc .reprocess-track { width:36px; height:20px; border-radius:10px; background:var(--tv-gray-250); }
+:root[data-theme="dark"] .tv-doc .reprocess-track { background:var(--tv-gray-650); }
+.tv-doc .reprocess-track::after { top:2px; left:2px; width:16px; height:16px; box-shadow:var(--tv-shadow); }
+.tv-doc .reprocess-option[aria-checked="true"] .reprocess-track { background:var(--tv-brand); }
+.tv-doc .reprocess-option[aria-checked="true"] .reprocess-track::after { transform:translateX(16px); }
+.tv-doc .reprocess-option { font:500 12px var(--tv-font); color:var(--tv-text-2); }
+.tv-doc .colpick .seg-thumb { border-radius:6px; }
+.tv-doc .colpick-list { border:0; border-radius:8px; background:var(--tv-popup); box-shadow:var(--tv-popup-shadow); }
+
+/* ---- Capture ---- */
+.tv-doc .drop { padding:40px 24px; border:1px dashed var(--tv-border-hover); border-radius:12px; background:var(--tv-bg-2); }
+.tv-doc .drop:hover,.tv-doc .drop.over { border-color:var(--tv-brand); background:var(--tv-btn-active-bg); }
+.tv-doc .drop-inner strong { font:600 18px/26px var(--tv-font); letter-spacing:0; }
+.tv-doc .drop-inner span,.tv-doc .drop-inner small { color:var(--tv-text-2); }
+.tv-doc .privacy { font-size:13px; }
+.tv-doc .kept { border-left:2px solid var(--tv-border); }
+.tv-doc .qbar { border-radius:8px; }
+.tv-doc .queue .card { border-bottom-color:var(--tv-border); }
+.tv-doc .card summary:hover { background:var(--tv-row-hover); }
+.tv-doc table.data { font-size:13px; }
+.tv-doc table.data thead th { height:36px; border-bottom:1px solid var(--tv-border); vertical-align:middle; }
+.tv-doc table.data tr.grp th { height:24px; border-bottom-color:var(--tv-border); }
+.tv-doc table.data td { height:40px; border-bottom:1px solid var(--tv-border); }
+.tv-doc table.data tbody tr:hover { background:var(--tv-row-hover); }
+.tv-doc table.data tr.older-row { background:var(--tv-bg-2); }
+.tv-doc .sort-button:hover,.tv-doc th.sorted .sort-button { color:var(--tv-text); }
+.tv-doc th[data-sort][data-dir]::after { color:var(--tv-brand); }
+.tv-doc .statistics-sides fieldset { border:1px solid var(--tv-border); border-radius:12px; }
+
+/* ---- Trade ---- */
+.tv-doc .trade-group > legend { font-weight:600; }
+.tv-doc .trade-optional { font:400 12px var(--tv-font); text-transform:none; letter-spacing:0; }
+.tv-doc .trade-input { min-height:40px; font-size:16px; }
+.tv-doc .trade-intent { min-height:40px; }
+.tv-doc .trade-actions { border-top-color:var(--tv-border); }
+.tv-doc .trade-prompt { border:1px dashed var(--tv-border-hover); border-radius:12px; background:var(--tv-bg-2); color:var(--tv-text-2); font-size:14px; }
+.tv-doc .trade-verdict { border-left:3px solid var(--tv-brand); border-radius:8px; background:var(--tv-bg-2); }
+.tv-doc .trade-pick { font:700 22px/28px var(--tv-font); letter-spacing:0; }
+.tv-doc .trade-card { border:1px solid var(--tv-border); border-radius:12px; }
+.tv-doc .trade-card.is-best { border-color:var(--tv-brand); box-shadow:inset 0 0 0 1px var(--tv-brand); }
+.tv-doc .trade-best { padding:2px 8px; border-radius:4px; background:var(--tv-btn-active-bg); color:var(--tv-btn-active); font:600 12px var(--tv-font); letter-spacing:0; text-transform:none; }
+.tv-doc .trade-lines { border-top-color:var(--tv-border); }
+
+@media (max-width:760px) {
+  .tv-doc .hero { padding-top:24px; }
+  .tv-doc .deck { font-size:16px; line-height:24px; }
+  .tv-doc h2 { font-size:20px; line-height:28px; }
+}
+
+/* Without chart tools beside it, the trail needs no divider. */
+.tv-doc .tv-header .site-nav { border-right:0; }
+.tv-doc .colpick .seg-thumb { font:500 13px var(--tv-font); }
+
+/* ---- Research: an article, so its reading scale stays (16px base, ratio 1.2, as TradingView's articles read), in
+   TradingView's colours, sans and header; its headings at 700. ---- */
+:root:has(body.tv-report) { --type-base:1rem; --type-ratio:1.2; --tracking-tight:-.01em; }
+body.tv-report { font-size:var(--step-0); line-height:var(--leading-text); }
+/* Labels in sentence case, as TradingView writes them; the evidence chips keep their capitals, as status markers. */
+.tv-report :is(.eyebrow,.toc-title,details.drawer summary,table.data thead th,.kpi .label) { letter-spacing:0; text-transform:none; }
+.tv-report :is(.eyebrow,.toc-title,.kpi .label) { color:var(--tv-text-2); font-size:13px; }
+.tv-report .evidence { border-radius:4px; letter-spacing:.02em; }
+.tv-report table.data thead th { color:var(--tv-text-2); }
+.tv-report :is(.seg,select) { border-radius:8px; }
