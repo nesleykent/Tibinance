@@ -266,30 +266,27 @@ Its shared declarations in `css/app.css` and `reports/tc-cycle/report.css` are u
 history use those existing tokens directly; they define no replacement palette, sizing or typography tokens.
 The reference supplies tokens only: no earlier interface or functionality has been restored.
 
-Economy uses one persistent Lightweight Charts instance, one plot and one timeline. Its primary series are direct
-coins, potential NPC conversion and their gross sum from valued creatures. Optional TC Sell Offer medians use the
-left price axis; optional activity bars use an independent count scale at the bottom. The right axis remains gold
-per selected period. Comparisons, liquidation scenarios and constant-set overlays reuse that same chart and retain
-the visible time window. Resizing preserves the window. Exact figures, price-observation counts and coverage are
-also available in the HTML chart table. Missing and unfinished periods have no gold line segment; observed zero
-remains zero. No uncertainty interval is invented.
+Economy uses one persistent Lightweight Charts instance and timeline, with the selected Gross, Coins or NPC
+measure above a short kills pane. Values are gold per day: a day's total or a complete week's/month's total divided
+by its calendar days. The world watchlist uses the same rate functions and latest complete period as the chart;
+retired worlds appear when searched, with their end date. Missing/unfinished periods have no rate, and are never
+represented as zero. The selected range controls the comparison of complete periods, not a sum of partial periods.
 
-Day and week cross-world comparisons now sum exactly the selected dates. Month, quarter and year comparisons
-use the matching complete calendar-month aggregates. Worlds without data remain listed as unavailable; they are
-not assigned zero or silently removed. Choosing a world without data at the requested date retains that date.
-Comparability means full period coverage and at least 95% valued kills only; world age and merger lineage are not
-controlled. The caption states that limitation.
+TC Sell Offer medians use the left gold-per-coin axis. The constant creature set and all five labelled liquidation
+rates, including 75%, are separate overlays. Resizing or changing comparisons preserves the explored time window;
+All can show the full daily history at phone widths. Axis labels use K (thousand), M (million) and B (billion); full figures,
+coverage and price sample counts remain in Help's keyboard-scrollable Chart values and coverage table. Rates are
+rounded to whole gold/counts for display, matching the readout. No uncertainty interval is invented. If the chart
+library is unavailable, the controls, world details and data table remain usable; image export is disabled.
 
-The constant creature set is an additional comparison, rather than a replacement for the gross total beside
-full-set components. Its loot values can still change with evidence. All five hypothetical liquidation rates are
-available, including 75%, and are labelled assumptions. Period, world, scenario, constant-set, comparison filter,
-chart window and optional chart comparisons are retained in the URL. Segmented controls support arrow keys,
-Home and End. Economy and the Markets workspace use buttons instead of checkbox controls.
+World, measure, interval, range and comparison settings remain in the URL. Radio groups support arrows, Home and
+End with one tab stop per group. World and performance actions preserve keyboard focus when their rows rebuild.
+A world identity is committed with its successfully loaded data; failed/stale requests cannot relabel the previous
+world's figures. Initial and world-specific failures offer retry without losing the last valid view.
 
-Creature contributions remain monthly because the source files preserve monthly top lists. Day/week views
-explicitly label this context. Quarterly/yearly lists move every omitted row into Other. A creature absent from
-a monthly top list has only its listed-month portion available; its growth is suppressed unless both compared
-periods include it in every relevant monthly list. Small gold differences from daily sums reflect source rounding.
+Creature contributions remain monthly because the source files preserve monthly top lists. The Creatures panel
+keeps its month selector, top 30, Other total, kills, per-kill components and shares. No dataset or numerical model
+was changed by this interface audit. The original palette, typography and spacing tokens remain unchanged.
 
 Forecast-history as-of views use repository evidence when that was available before a later website deployment.
 Website-only filtering does not misclassify repository-published editions as never published. Accuracy views

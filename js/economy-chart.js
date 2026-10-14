@@ -13,8 +13,6 @@
  * Unfinished and gapped periods have no value: they keep their room on the axis (whitespace) and nothing is drawn
  * for them, so a partial week never reads as a fall.
  */
-import { fmt } from './format.js';
-
 const HIDDEN = 'rgba(0,0,0,0)';   // Lightweight Charts colours a segment with its first point's colour
 const token = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 export const dayOf = time => typeof time === 'string' ? time
@@ -41,6 +39,12 @@ export function periodLayers(rows) {
 
 export function economyChart(container, { onCrosshair } = {}) {
   const L = window.LightweightCharts, c = colors();
+  if (!L) {
+    container.textContent = 'Interactive chart unavailable. Open Help for chart values and coverage.';
+    container.classList.add('eco-chart-unavailable');
+    return null;
+  }
+  const axis = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 });
   const chart = L.createChart(container, {
     autoSize: true,
     layout: { background: { type: 'solid', color: 'transparent' }, textColor: c.text, fontFamily: token('--font-ui'), fontSize: 11,
@@ -48,13 +52,15 @@ export function economyChart(container, { onCrosshair } = {}) {
     grid: { vertLines: { visible: false }, horzLines: { color: c.grid } },
     rightPriceScale: { borderVisible: false, entireTextOnly: true, scaleMargins: { top: 0.16, bottom: 0.06 } },
     leftPriceScale: { visible: false, borderVisible: false, entireTextOnly: true, scaleMargins: { top: 0.16, bottom: 0.06 } },
-    timeScale: { borderVisible: false, rightOffset: 4 },
+    // The library preserves the time window across container and optional-axis width changes.
+    // https://tradingview.github.io/lightweight-charts/docs/api/interfaces/TimeScaleOptions#lockvisibletimerangeonresize
+    timeScale: { borderVisible: false, rightOffset: 4, minBarSpacing: 0.1, lockVisibleTimeRangeOnResize: true },
     crosshair: { mode: L.CrosshairMode.Normal, vertLine: { color: c.crosshair, labelBackgroundColor: c.ink }, horzLine: { color: c.crosshair, labelBackgroundColor: c.ink } },
-    localization: { priceFormatter: v => fmt(Math.round(v)), timeFormatter: dayOf },
+    localization: { priceFormatter: v => axis.format(v), timeFormatter: dayOf },
   });
   const line = options => chart.addSeries(L.LineSeries, { priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false, ...options });
   const kills = chart.addSeries(L.HistogramSeries, { priceLineVisible: false, lastValueVisible: false,
-    priceFormat: { type: 'custom', minMove: 1, formatter: v => fmt(Math.round(v)) } }, 1);
+    priceFormat: { type: 'custom', minMove: 1, formatter: v => axis.format(v) } }, 1);
   kills.priceScale().applyOptions({ scaleMargins: { top: 0.1, bottom: 0 } });
   chart.panes()[1]?.setStretchFactor(0.22);
   const price = line({ priceScaleId: 'left', color: c.price, lineWidth: 1 });
@@ -95,6 +101,13 @@ export function economyChart(container, { onCrosshair } = {}) {
     show(from, to) { chart.timeScale().setVisibleRange({ from, to }); },
     // The status block stands over the chart's top: the price scale starts below it (as js/market-chart.js fitTop).
     fitTop(element) {
+      if (getComputedStyle(element).position !== 'absolute') {
+        element.style.marginLeft = ''; element.style.maxWidth = '';
+        if (topFraction === 0.08) return;
+        topFraction = 0.08;
+        for (const id of ['right', 'left']) chart.priceScale(id).applyOptions({ scaleMargins: { top: 0.08, bottom: 0.06 } });
+        return;
+      }
       // Clear of the left scale when the TC price shows one.
       let left = 0;
       try { left = leftShown ? chart.priceScale('left').width() : 0; } catch { /* not laid out yet */ }

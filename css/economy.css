@@ -9,7 +9,7 @@
 .side-picker button[data-measure="npc"][aria-checked="true"] :is(.side-name,.side-value) { color:var(--buy); }
 
 /* Ranges, then the interval after a hairline, on the foot of the chart. */
-.eco-bar { display:flex; align-items:center; gap:var(--space-3); min-width:0; }
+.eco-bar { display:flex; flex-wrap:wrap; align-items:center; gap:var(--space-2) var(--space-3); min-width:0; }
 .eco-interval { margin-left:0; padding-left:var(--space-3); border-left:var(--rule) solid var(--line); }
 
 /* Keys: dashed for a comparison or an assumption; the TC price thin, in the daily-average grey. */
@@ -28,6 +28,18 @@
 .eco-segmented { display:flex; flex-wrap:wrap; }
 .eco-toggle[aria-pressed="true"] { background:var(--accent-soft); color:var(--accent); }
 .eco-prose p:first-child { margin-top:0; }
+.eco-data summary { cursor:pointer; color:var(--accent); }
+.eco-data-frame { max-width:100%; max-height:calc(var(--space-8) * 5); overflow:auto; margin-block:var(--space-2); isolation:isolate; }
+.eco-data-frame :is(th,td):first-child { position:sticky; left:0; background:var(--canvas); }
+.eco-data-frame .current td:first-child { background:var(--accent-soft); }
+.eco-data-frame th { position:sticky; top:0; background:var(--canvas); z-index:var(--layer-sticky); }
+.eco-data-frame th:first-child { z-index:var(--layer-header); }
+#loadFeedback p { margin:0 0 var(--space-3); }
+#loadFeedback { padding:var(--space-4); text-align:center; }
+#loadFeedback.has-view { inset:auto 0 0; background:var(--surface); padding:var(--space-3); border-top:var(--rule) solid var(--line); }
+#loadFeedback.has-view > div { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:var(--space-3); }
+#loadFeedback.has-view p { margin:0; }
+.eco-chart-unavailable { display:grid; place-items:center; padding:var(--space-4); color:var(--muted); text-align:center; font-size:var(--step-n1); }
 
 /* A month's creatures: name and gross potential on one line, what each kill yields and the share under them. */
 .eco-list { margin:var(--space-3) 0 0; padding:0; list-style:none; font-variant-numeric:lining-nums tabular-nums; }
@@ -40,6 +52,10 @@
 
 /* A narrow chart keeps the measure names and leaves their values to the readout and the details. */
 @container chart (max-width:599.98px) {
+  /* On a phone the status occupies its own row, so two price axes cannot squeeze it over the plot. */
+  #chartPanel .chart-area { display:flex; flex-direction:column; }
+  #chartPanel .chart { position:relative; inset:auto; flex:1; min-height:0; }
+  #chartPanel .chart-head { position:relative; order:-1; left:auto; top:auto; max-width:100%; padding-bottom:var(--space-2); }
   #measure .side-value { display:none; }
   /* The readout keeps the period, the measure and kills; the rest is in the details and the help. */
   .legend .eco-extra { display:none; }
@@ -48,4 +64,9 @@
   .eco-interval { padding-left:var(--space-2); }
   /* Gold figures run to ten digits: the readout keeps the change in percent only. */
   .chart-head .eco-delta { display:none; }
+  #chartPanel .legend .rest { grid-column:1 / -1; flex-wrap:wrap; white-space:normal; }
+  #chartPanel .legend .rest:empty { display:none; }
+}
+@container chart (max-width:319.98px) {
+  .eco-interval { padding-left:0; border-left:0; }
 }

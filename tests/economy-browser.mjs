@@ -33,9 +33,18 @@ try {
   const context=await browser.newContext({locale:'en-US',viewport:{width:1440,height:900},acceptDownloads:true});
   // Every run starts with the dock as a first visit leaves it.
   await context.addInitScript(()=>{ if (!sessionStorage.getItem('seeded')) { localStorage.removeItem('tibinance.economy.dock'); sessionStorage.setItem('seeded','1'); } });
+  // Observe the library's public chart API without adding test hooks to the shipped application.
+  await context.addInitScript(()=>{
+    Object.defineProperty(window,'LightweightCharts',{configurable:true,set(library){
+      window.economyTestCharts=[];
+      const wrapped={...library,createChart(...args){const chart=library.createChart(...args);window.economyTestCharts.push(chart);return chart;}};
+      Object.defineProperty(window,'LightweightCharts',{configurable:true,writable:true,value:wrapped});
+    }});
+  });
   const page=await context.newPage();
+  const expectedFailures=new Set();
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
-  page.on('console',m=>{if(m.type()==='error') errors.push(m.text());});
+  page.on('console',m=>{if(m.type()==='error' && !(expectedFailures.has(m.location().url) && /503|ERR_FAILED/.test(m.text()))) errors.push(m.text());});
   await page.route('**/data/observations.json',r=>r.fulfill({json:[]}));
   const text=sel=>page.$eval(sel,e=>e.innerText.trim().replace(/\s+/g,' '));
   const ready=()=>page.waitForFunction(()=>document.getElementById('economy').getAttribute('aria-busy')==='false',{timeout:60000});
@@ -104,6 +113,7 @@ try {
   await page.keyboard.press('ArrowDown');
   const next=active[active.indexOf('Gentebra')+1];
   await shown(next);
+  assert.equal(await page.evaluate(()=>document.activeElement.textContent.trim()),next,'keyboard world focus survives the completed load');
   await page.click('#worlds tr[data-world="Antica"] .pick');
   await shown('Antica');
 
@@ -133,11 +143,20 @@ try {
   await page.click('#range [data-range="1Y"]');
 
   // ---- The TC Sell Offer, on request, on its own scale; named as a median of observed days.
+  const explored=await page.evaluate(()=>{
+    const chart=window.economyTestCharts[0],range=chart.timeScale().getVisibleLogicalRange();
+    chart.timeScale().setVisibleLogicalRange({from:range.to-6,to:range.to});
+    return chart.timeScale().getVisibleLogicalRange();
+  });
   await page.click('#priceToggle');
+  await page.waitForTimeout(80);
+  const compared=await page.evaluate(()=>window.economyTestCharts[0].timeScale().getVisibleLogicalRange());
+  assert.ok(Math.abs(compared.from-explored.from)<0.001 && Math.abs(compared.to-explored.to)<0.001,'comparison retains the explored time window');
   assert.equal(await page.getAttribute('#priceToggle','aria-pressed'),'true');
   assert.match(await text('#legend'),/TC Sell Offer [\d,]+ median of \d+ days?/);
   assert.match(await page.getAttribute('#chart','aria-label'),/median TC Sell Offer per period on the left scale/);
   await page.click('#priceToggle');
+  await page.click('#range [data-range="1Y"]');
 
   // ---- Assumptions: a liquidation rate and the constant creature set are labelled, dashed, never in place of the measure.
   await page.click('[data-dock-target="assumptionsPanel"]');
@@ -193,15 +212,169 @@ try {
   if (shots) await page.screenshot({path:join(shots,`economy-${engine}-1440.png`)});
 
   // ---- Phone width: chart first, then the list; nothing sideways.
-  for (const width of [768,390]) {
+  const beforeResize=await page.evaluate(()=>window.economyTestCharts[0].timeScale().getVisibleLogicalRange());
+  for (const width of [768,600,472,390,320]) {
     await page.setViewportSize({width,height:844});
     await page.waitForTimeout(250);
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth),0,`no sideways scroll at ${width}px`);
+    const afterResize=await page.evaluate(()=>window.economyTestCharts[0].timeScale().getVisibleLogicalRange());
+    assert.ok(Math.abs(afterResize.from-beforeResize.from)<0.001 && Math.abs(afterResize.to-beforeResize.to)<0.001,`time window survives resize to ${width}px`);
     if (shots) await page.screenshot({path:join(shots,`economy-${engine}-${width}.png`),fullPage:true});
   }
+
+  // Radio groups have one tab stop and support their standard arrow/Home/End keyboard interaction.
+  await page.setViewportSize({width:1440,height:900});
+  await page.goto(`${root}/economy.html?world=Antica&interval=week`); await ready();
+  await page.locator('#measure [data-measure="gross"]').focus(); await page.keyboard.press('ArrowRight');
+  assert.equal(await page.getAttribute('#measure [data-measure="coins"]','aria-checked'),'true');
+  assert.equal(await text('#lastValue'),gold((await expected('antica','week','coins','1Y')).value));
+  await page.keyboard.press('Home');
+  await page.locator('#interval [data-interval="week"]').focus(); await page.keyboard.press('ArrowRight');
+  assert.equal(param('interval'),'month');
+  for (const id of ['measure','range','interval']) assert.equal(await page.locator(`#${id} button[tabindex="0"]`).count(),1);
+  await page.locator('#range [data-range="1Y"]').focus(); await page.keyboard.press('End');
+  assert.equal(param('range'),'All');
+  await page.click('#detailPerformance [data-range="1Y"]');
+  await page.locator('#detailPerformance [data-range="1Y"]').focus(); await page.keyboard.press('Enter');
+  assert.equal(await page.evaluate(()=>document.activeElement.dataset.range),'1Y','performance action retains focus');
+
+  await page.click('[data-dock-target="assumptionsPanel"]');
+  await page.locator('#liquidation [data-rate=""]').focus(); await page.keyboard.press('End');
+  assert.equal(param('rate'),'1');
+  await page.click('#stable'); await page.click('#priceToggle');
+  const allOptionsUrl=page.url();
+  assert.equal(await page.evaluate(()=>window.economyTestCharts.length),1,'all comparisons reuse one chart instance');
+  const selected=(await expected('antica','month','gross','1Y')).last;
+  await page.click('[data-dock-target="helpPanel"]');
+  await page.locator('.eco-data summary').click();
+  const columns=await page.locator('#chartData thead').innerText();
+  assert.match(columns,/Constant set/i); assert.match(columns,/assumption/i); assert.match(columns,/Price days/i);
+  const exact=await page.locator('#chartData tr.current').innerText();
+  for (const value of [selected.rate.grossPotential,selected.rate.directCoins,selected.rate.npcPotential,selected.rate.grossStable,selected.rate.kills]) assert.ok(exact.includes(gold(value)),`exact daily average ${value}`);
+  assert.ok(await page.locator('#chartData tbody tr').count()>40);
+  await page.setViewportSize({width:320,height:760});
+  const dataFrame=page.locator('.eco-data-frame');
+  await dataFrame.focus(); await page.keyboard.press('ArrowRight');
+  await page.waitForFunction(()=>document.querySelector('.eco-data-frame').scrollLeft>0);
+  assert.ok(await dataFrame.evaluate(e=>e.scrollLeft)>0,'exact values scroll by keyboard');
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth),0);
+  await page.click('#interval [data-interval="day"]'); await page.click('#range [data-range="All"]');
+  await page.waitForTimeout(100);
+  const wholeHistory=await page.evaluate(()=>{
+    const range=window.economyTestCharts[0].timeScale().getVisibleRange();
+    const iso=d=>typeof d==='string'?d:`${d.year}-${String(d.month).padStart(2,'0')}-${String(d.day).padStart(2,'0')}`;
+    return [iso(range.from),iso(range.to)];
+  });
+  const anticaHistory=await daily('antica');
+  assert.equal(wholeHistory[0],anticaHistory.first,'All retains the first recorded day even on a phone');
+
+  // The exact-data fallback remains usable when the chart CDN is unavailable.
+  const chartUrl='https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.1/dist/lightweight-charts.standalone.production.js';
+  expectedFailures.add(chartUrl);
+  await page.route(chartUrl,r=>r.abort('failed'));
+  await page.goto(allOptionsUrl); await ready();
+  assert.match(await text('#chart'),/Interactive chart unavailable/);
+  assert.equal(await page.locator('#exportButton').isDisabled(),true);
+  if (!await page.locator('#helpPanel').isVisible()) await page.click('[data-dock-target="helpPanel"]');
+  await page.locator('.eco-data summary').click();
+  assert.ok(await page.locator('#chartData tbody tr').count()>40);
+  assert.equal(await text('#lastValue'),gold(selected.rate.grossPotential));
+  await page.unroute(chartUrl);
+
+  // Failed requests never relabel previous data; a keyboard retry remains operable after repeated failure.
+  await page.setViewportSize({width:1440,height:900});
+  await page.goto(`${root}/economy.html?world=Antica&interval=week`); await ready();
+  if (!await page.locator('#worldsPanel').isVisible()) await page.click('[data-dock-target="worldsPanel"]');
+  const failure=`${root}/data/economy/gold/contributions/gentebra.json`;
+  expectedFailures.add(failure);
+  await page.route(failure,r=>r.fulfill({status:503,body:'test-only failure'}));
+  await page.click('#worlds tr[data-world="Gentebra"] .pick');
+  await page.waitForSelector('#retry:not([hidden])');
+  assert.match(await text('#status'),/Gentebra.*Still showing Antica/);
+  await page.click('#measure [data-measure="coins"]');
+  assert.equal(await text('#world'),'Antica');
+  assert.equal(param('world'),'Antica');
+  assert.equal(await text('#lastValue'),gold((await expected('antica','week','coins','1Y')).value));
+  assert.equal(await page.getAttribute('#worlds tr[data-world="Antica"]','aria-selected'),'true');
+  await page.locator('#retry').focus(); await page.keyboard.press('Enter');
+  await page.waitForSelector('#retry:not([hidden])');
+  assert.equal(await page.evaluate(()=>document.activeElement.id),'retry');
+  await page.unroute(failure);
+  await page.locator('#retry').focus(); await page.keyboard.press('Enter'); await shown('Gentebra');
+  assert.equal(await page.evaluate(()=>document.activeElement.textContent.trim()),'Gentebra');
+  assert.equal(await page.locator('#loadFeedback').isVisible(),false);
+
+  const stale=`${root}/data/economy/gold/contributions/astera.json`;
+  expectedFailures.add(stale);
+  let releaseStale, seenStale, doneStale;
+  const held=new Promise(resolve=>{releaseStale=resolve;});
+  const seen=new Promise(resolve=>{seenStale=resolve;});
+  const done=new Promise(resolve=>{doneStale=resolve;});
+  await page.route(stale,async r=>{seenStale(); await held; await r.fulfill({status:503,body:'test-only stale failure'}); doneStale();});
+  await page.click('#worlds tr[data-world="Astera"] .pick'); await seen;
+  await page.click('#worlds tr[data-world="Secura"] .pick'); await shown('Secura');
+  releaseStale(); await done; await page.waitForLoadState('networkidle');
+  assert.equal(await text('#world'),'Secura');
+  assert.equal(await page.locator('#loadFeedback').isVisible(),false);
+  await page.unroute(stale);
+
+  // An attempted navigation can stop after beforeunload without ever reaching pagehide.
+  await page.evaluate(()=>dispatchEvent(new Event('beforeunload')));
+  await page.click('#worlds tr[data-world="Belobra"] .pick'); await shown('Belobra');
+  assert.equal(await page.locator('#loadFeedback').isVisible(),false);
+  // Exercise the cache-restoration lifecycle explicitly (Chrome automation disables its actual cache).
+  await page.evaluate(()=>{
+    dispatchEvent(new PageTransitionEvent('pagehide',{persisted:true}));
+    dispatchEvent(new PageTransitionEvent('pageshow',{persisted:true}));
+  });
+  await page.click('#worlds tr[data-world="Calmera"] .pick'); await shown('Calmera');
+
+  // A test-only delayed font-ready promise must not let startup replace a world already chosen by the user.
+  const startup=await context.newPage();
+  startup.on('pageerror',error=>errors.push(error.message));
+  await startup.addInitScript(()=>{
+    const ready=document.fonts.ready;
+    Object.defineProperty(document.fonts,'ready',{get:()=>new Promise(resolve=>{window.releaseEconomyFonts=()=>ready.then(resolve);})});
+  });
+  let releaseSelected, seenSelected;
+  const selectedHold=new Promise(resolve=>{releaseSelected=resolve;});
+  const selectedSeen=new Promise(resolve=>{seenSelected=resolve;});
+  await startup.route(failure,async r=>{seenSelected(); await selectedHold; await r.continue();});
+  await startup.goto(`${root}/economy.html`);
+  await startup.waitForFunction(()=>typeof window.releaseEconomyFonts==='function');
+  if (!await startup.locator('#worldsPanel').isVisible()) await startup.click('[data-dock-target="worldsPanel"]');
+  await startup.fill('#filter','Gentebra');
+  await startup.click('#worlds tr[data-world="Gentebra"] .pick'); await selectedSeen;
+  await startup.evaluate(()=>window.releaseEconomyFonts());
+  await startup.evaluate(()=>new Promise(requestAnimationFrame));
+  releaseSelected();
+  await startup.waitForFunction(()=>document.getElementById('world').textContent==='Gentebra' && document.getElementById('economy').getAttribute('aria-busy')==='false');
+  assert.equal(new URL(startup.url()).searchParams.get('world'),'Gentebra');
+  await startup.close();
+
+  // Initial load also offers retry and only wires one set of controls after recovery.
+  const indexUrl=`${root}/data/economy/gold/index.json`;
+  expectedFailures.add(indexUrl);
+  await page.route(indexUrl,r=>r.fulfill({status:503,body:'test-only initial failure'}));
+  await page.goto(`${root}/economy.html`); await page.waitForSelector('#retry:not([hidden])');
+  await page.locator('#retry').focus(); await page.keyboard.press('Enter');
+  await page.waitForSelector('#retry:not([hidden])');
+  assert.equal(await page.evaluate(()=>document.activeElement.id),'retry');
+  await page.unroute(indexUrl);
+  const initialWorldFailure=`${root}/data/economy/gold/contributions/antica.json`;
+  expectedFailures.add(initialWorldFailure);
+  await page.route(initialWorldFailure,r=>r.fulfill({status:503,body:'test-only world failure after index retry'}));
+  await page.locator('#retry').focus(); await page.keyboard.press('Enter');
+  await page.waitForFunction(()=>document.getElementById('status').textContent.includes('Antica data could not be loaded'));
+  assert.equal(await page.evaluate(()=>document.activeElement.id),'retry','initial data retry followed by a world failure retains Retry focus');
+  await page.unroute(initialWorldFailure);
+  await page.locator('#retry').focus(); await page.keyboard.press('Enter'); await shown('Antica');
+  await page.locator('#measure [data-measure="gross"]').focus(); await page.keyboard.press('ArrowRight');
+  assert.equal(param('measure'),'coins','one key moves exactly one option after retry');
+  assert.equal(await page.locator('input[type="checkbox"]').count(),0);
   assert.doesNotMatch(await page.content(),/\u00b7|&middot;/);
   assert.deepEqual(errors,[]);
-  console.log(`PASS ${engine}: Economy terminal reached from the menu; status, measures, readout and details recomputed from the data; list and chart agree at every interval and measure; retired worlds by search; keyboard list; ranges and performance; TC price, labelled assumptions and constant set; creatures, research and method panels; crosshair; export; 1440/768/390 layouts`);
+  console.log(`PASS ${engine}: Economy terminal arithmetic, world list, measures/ranges/intervals, scenarios, full chart table, keyboard radios and focus, export, preserved chart windows, 1440/768/600/472/390/320 layouts, chart-CDN fallback, failed-world identity, stale requests and keyboard retry`);
 } finally {
   await browser.close();
 }

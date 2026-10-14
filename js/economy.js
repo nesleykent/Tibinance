@@ -15,7 +15,7 @@ import { fmt, esc, num } from './format.js';
 import { dock } from './markets-dock.js';
 import { MEASURES, INTERVALS, ratePeriods, rangeChange, rangeStartOf, overviewRows, periodOf, contributions, lastDay, median,
   LIQUIDATION_SCENARIOS } from './economy-data.js?v=20261015-terminal';
-import { economyChart, colors } from './economy-chart.js?v=20261015-terminal';
+import { economyChart, colors } from './economy-chart.js?v=20261015-audit';
 
 const $ = id => document.getElementById(id);
 const RANGES = ['1M', '3M', '6M', 'YTD', '1Y', 'All'];
@@ -44,13 +44,23 @@ const state = {
 };
 const data = { index: null, overview: null, market: null, results: null, sync: null, access: null, creatures: {}, vip: null };
 const files = new Map();   // world dir -> promise of {daily, contrib}
-let view = null, request = 0;
+let view = null, request = 0, retryWorld = null, pendingWorld = null, wired = false;
+let requests = new AbortController();
 
 const chart = economyChart($('chart'), { onCrosshair: day => showLegend(day) });
+$('exportButton').disabled = !chart;
 const field = () => MEASURES[state.measure].field;
+const cancelRequests = () => { request++; requests.abort(); };
+addEventListener('pagehide', cancelRequests);
+addEventListener('pageshow', e => {
+  if (!e.persisted) return;
+  requests = new AbortController(); files.clear(); retryWorld = null; pendingWorld = null;
+  if (view) { $('economy').setAttribute('aria-busy', 'false'); draw(); }
+  else main().catch(failed);
+});
 
 /* ------------------------------------------------------------------ loading */
-const json = async path => { const r = await fetch(path); if (!r.ok) throw new Error(`${path}: HTTP ${r.status}`); return r.json(); };
+const json = async path => { const r = await fetch(path, { signal: requests.signal }); if (!r.ok) throw new Error(`${path}: HTTP ${r.status}`); return r.json(); };
 const optional = path => json(path).catch(() => null);
 function worldFiles(w) {
   if (!files.has(w.dir)) files.set(w.dir, Promise.all([json(`data/economy/gold/worlds/${w.dir}.json`), json(`data/economy/gold/contributions/${w.dir}.json`)])
@@ -78,26 +88,45 @@ function buildView(summary, daily, contrib) {
 
 async function select(world, { focus = false } = {}) {
   const summary = summaryOf(world) ?? summaryOf('Antica');
-  state.world = summary.world;
   const mine = ++request;
+  pendingWorld = summary.world; retryWorld = null;
+  const retryFocused = document.activeElement === $('retry');
   drawWatchlist();
-  if (focus) document.querySelector(`#worlds tr[data-world="${CSS.escape(state.world)}"] .pick`)?.focus();
+  if (focus) document.querySelector(`#worlds tr[data-world="${CSS.escape(summary.world)}"] .pick`)?.focus();
+  feedback(`Loading ${summary.world}.${view ? ` Still showing ${state.world}.` : ''}`);
   $('economy').setAttribute('aria-busy', 'true');
-  const { daily, contrib } = await worldFiles(summary);
-  if (mine !== request) return;   // a later choice won while this one loaded
+  let daily, contrib;
+  try { ({ daily, contrib } = await worldFiles(summary)); }
+  catch (error) {
+    if (mine !== request) return false;
+    pendingWorld = null;
+    retryWorld = summary.world;
+    failed(error);
+    if (retryFocused && retryFocusVacant()) $('retry').focus();
+    return false;
+  }
+  if (mine !== request) return false;   // a later choice won while this one loaded
+  state.world = summary.world;
+  pendingWorld = null;
   view = buildView(summary, daily, contrib);
+  retryWorld = null;
   state.month = null;
   draw();
   $('economy').setAttribute('aria-busy', 'false');
+  if (retryFocused && retryFocusVacant()) document.querySelector(`#worlds tr[data-world="${CSS.escape(state.world)}"] .pick`)?.focus();
+  return true;
 }
 
 // Everything that follows the world, measure, interval, range or a comparison.
-function draw() {
+function draw({ preserveRange = false } = {}) {
   if (!view) return;
-  $('status').hidden = Boolean(view.last);
-  if (!view.last) $('status').textContent = `No complete ${state.interval} of data for ${state.world}.`;
-  chart.draw({ periods: view.periods, measure: state.measure, field: field(), rate: state.rate, stable: state.stable, price: state.price ? view.price : null });
-  for (const b of $('measure').querySelectorAll('button')) b.setAttribute('aria-checked', String(b.dataset.measure === state.measure));
+  const visibleRange = preserveRange ? chart?.chart.timeScale().getVisibleLogicalRange() : null;
+  if (!pendingWorld && !retryWorld) {
+    $('loadFeedback').hidden = Boolean(view.last); $('retry').hidden = true;
+    if (!view.last) $('status').textContent = `No complete ${state.interval} of data for ${state.world}.`;
+  }
+  chart?.draw({ periods: view.periods, measure: state.measure, field: field(), rate: state.rate, stable: state.stable, price: state.price ? view.price : null });
+  setChoice('measure', 'measure', state.measure);
   $('chartPanel').dataset.measure = state.measure;
   setChoice('range', 'range', state.range);
   setChoice('interval', 'interval', state.interval);
@@ -109,21 +138,23 @@ function draw() {
   showDetails();
   drawWatchlist();
   drawCreatures();
+  drawChartData();
   describeChart();
-  applyRange();
+  if (visibleRange) chart.chart.timeScale().setVisibleLogicalRange(visibleRange);
+  else applyRange();
   saveUrl();
   requestAnimationFrame(fitHead);
 }
 
 function applyRange(attempt = 0) {
-  if (!view?.periods.length) return;
+  if (!chart || !view?.periods.length) return;
   // The chart measures its container asynchronously; a range set at zero width is lost.
   if (chart.chart.timeScale().width() === 0 && attempt < 30) { requestAnimationFrame(() => applyRange(attempt + 1)); return; }
   const first = view.periods[0].start, lastStart = view.periods.at(-1).start;
   const start = view.last ? rangeStartOf(view.last.end, state.range) : null;
   chart.show(!start || start < first ? first : periodOf(start, state.interval)[0], lastStart);
 }
-const fitHead = () => chart.fitTop($('chartHead'));
+const fitHead = () => chart?.fitTop($('chartHead'));
 new ResizeObserver(() => requestAnimationFrame(fitHead)).observe($('chart'));
 
 /* ------------------------------------------------------------------ status */
@@ -188,11 +219,27 @@ function showLegend(day) {
 
 function describeChart() {
   const p = view.last, m = MEASURES[state.measure];
-  $('chart').setAttribute('aria-label', `${state.world}, ${m.name.toLowerCase()} from valued creatures in gold per day, by ${UNIT[state.interval]}, range ${state.range}. `
+  $('chart').setAttribute('aria-label', `${chart ? '' : 'Interactive chart unavailable. '}${state.world}, ${m.name.toLowerCase()} from valued creatures in gold per day, by ${UNIT[state.interval]}, range ${state.range}. `
     + (p ? `Latest complete ${UNIT[state.interval]}: ${periodLabel(p)}, ${gold(p.rate[field()])} gold per day, kill coverage ${pct1(p.killCoverage)}.` : 'No complete period.')
     + (state.price ? ' With the median TC Sell Offer per period on the left scale.' : '')
     + (state.rate !== null ? ` With coins plus ${state.rate * 100}% of NPC potential, an assumption.` : '')
-    + (state.stable ? ' With the constant creature set for comparison.' : ''));
+    + (state.stable ? ' With the constant creature set for comparison.' : '')
+    + ' Full period values and coverage are available in Help.');
+}
+
+function drawChartData() {
+  const extras = [
+    ...(state.stable ? [{ title: 'Constant set (gold/day)', value: p => p.rate.grossStable }] : []),
+    ...(state.rate !== null ? [{ title: `Coins + ${state.rate * 100}% NPC (assumption, gold/day)`, value: p => p.rate.directCoins === null ? null : p.rate.directCoins + state.rate * p.rate.npcPotential }] : []),
+  ];
+  $('chartData').innerHTML = '<caption class="sr-only">Daily averages at the selected interval, from valued creatures. Incomplete periods remain unavailable.</caption><thead><tr><th>Period</th><th class="num">Gross (gold/day)</th><th class="num">Coins (gold/day)</th><th class="num">NPC (gold/day)</th>'
+    + extras.map(e => `<th class="num">${esc(e.title)}</th>`).join('')
+    + '<th class="num">Kills/day</th><th class="num">Players killed/day</th><th>Days with data</th><th class="num">Kill coverage</th>'
+    + (state.price ? '<th class="num">TC Sell (gold/coin)</th><th class="num">Price days</th>' : '') + '</tr></thead><tbody>'
+    + [...view.periods].reverse().map(p => `<tr${p === view.last ? ' class="current"' : ''}><td>${esc(periodLabel(p))}</td>`
+      + [p.rate.grossPotential, p.rate.directCoins, p.rate.npcPotential, ...extras.map(e => e.value(p)), p.rate.kills, p.rate.playerDeaths].map(v => `<td class="num">${gold(v)}</td>`).join('')
+      + `<td>${p.covered} / ${p.days}${p.complete ? '' : ' incomplete'}</td><td class="num">${pct1(p.killCoverage)}</td>`
+      + (state.price ? `<td class="num">${gold(view.price.get(p.start)?.sell)}</td><td class="num">${view.price.get(p.start)?.n ?? 0}</td>` : '') + '</tr>').join('') + '</tbody>';
 }
 
 /* --------------------------------------------------------------- watchlist */
@@ -207,6 +254,8 @@ function watchList() {
 
 function drawWatchlist() {
   if (!data.index) return;
+  const active = document.activeElement;
+  const focusedWorld = active.closest('#worlds tr[data-world]')?.dataset.world;
   const list = watchList();
   $('worldCount').textContent = fmt(list.length);
   $('noWorlds').hidden = list.length > 0;
@@ -221,10 +270,13 @@ function drawWatchlist() {
     return `<tr data-world="${esc(r.world)}" aria-selected="${r.world === state.world}"><th scope="row"><button type="button" class="pick">${esc(r.world)}</button>${flags}</th>`
       + `<td${r.ended ? ' class="stale"' : ''}>${gold(r.value)}</td><td>${signedRatio(r.change)}</td></tr>`;
   }).join('');
+  if (focusedWorld && !active.isConnected) document.querySelector(`#worlds tr[data-world="${CSS.escape(focusedWorld)}"] .pick`)?.focus({ preventScroll: true });
 }
 
 /* ----------------------------------------------------------------- details */
 function showDetails() {
+  const active = document.activeElement;
+  const focusedRange = active.closest('#detailPerformance button')?.dataset.range;
   const p = view.last, s = view.summary, change = rangeChange(view.periods, field(), state.range);
   $('detailsWorld').textContent = state.world;
   $('detailMeta').innerHTML = metaOf(state.world);
@@ -243,6 +295,7 @@ function showDetails() {
     const c = rangeChange(view.periods, field(), r);
     return `<button type="button" data-range="${r}" aria-pressed="${r === state.range}"><span class="perf-value ${c ? tone(c.ratio) : ''}">${c ? percent.format(c.ratio) : 'N/A'}</span><span class="perf-range">${r}</span></button>`;
   }).join('');
+  if (focusedRange && !active.isConnected) $('detailPerformance').querySelector(`[data-range="${focusedRange}"]`)?.focus({ preventScroll: true });
 }
 
 /* --------------------------------------------------------------- creatures */
@@ -340,7 +393,10 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && terminal.c
 
 /* ----------------------------------------------------------------- the rest */
 function setChoice(group, attr, value) {
-  for (const b of $(group).querySelectorAll('button')) b.setAttribute('aria-checked', String(b.dataset[attr] === value));
+  for (const b of $(group).querySelectorAll('button')) {
+    const selected = b.dataset[attr] === value;
+    b.setAttribute('aria-checked', String(selected)); b.tabIndex = selected ? 0 : -1;
+  }
 }
 function saveUrl() {
   const p = new URLSearchParams({ world: state.world, measure: state.measure, interval: state.interval, range: state.range,
@@ -357,11 +413,27 @@ function showTip(flag) {
 }
 
 function wire() {
+  // WebKit does not consistently scroll a focused overflow region with Left/Right. Keep this table's
+  // horizontal keyboard navigation explicit; events from any descendant retain their native behavior.
+  const dataFrame = $('chartData').parentElement;
+  dataFrame.addEventListener('keydown', e => {
+    if (e.target !== dataFrame || !['ArrowLeft', 'ArrowRight'].includes(e.key) || e.altKey || e.ctrlKey || e.metaKey) return;
+    e.preventDefault();
+    dataFrame.scrollBy({ left: (e.key === 'ArrowRight' ? 1 : -1) * dataFrame.clientWidth / 2 });
+  });
+  for (const id of ['measure', 'range', 'interval', 'liquidation']) $(id).addEventListener('keydown', e => {
+    if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(e.key)) return;
+    const buttons = [...$(id).querySelectorAll('button')], at = buttons.indexOf(e.target);
+    if (at < 0) return;
+    e.preventDefault();
+    const next = e.key === 'Home' ? 0 : e.key === 'End' ? buttons.length - 1 : (at + (['ArrowRight', 'ArrowDown'].includes(e.key) ? 1 : -1) + buttons.length) % buttons.length;
+    buttons[next].click(); buttons[next].focus();
+  });
   dock($('dock'), { key: 'tibinance.economy.dock', roomy: () => matchMedia(ROOMY).matches, onChange() {
-    const days = chart.chart.timeScale().getVisibleLogicalRange();
+    const days = chart?.chart.timeScale().getVisibleLogicalRange();
     requestAnimationFrame(() => requestAnimationFrame(() => { if (days) chart.chart.timeScale().setVisibleLogicalRange(days); }));
   } });
-  $('measure').addEventListener('click', e => { const b = e.target.closest('button'); if (b && b.dataset.measure !== state.measure) { state.measure = b.dataset.measure; draw(); } });
+  $('measure').addEventListener('click', e => { const b = e.target.closest('button'); if (b && b.dataset.measure !== state.measure) { state.measure = b.dataset.measure; draw({ preserveRange: true }); } });
   $('range').addEventListener('click', e => { const r = e.target.closest('button')?.dataset.range; if (r) { state.range = r; draw(); } });
   $('detailPerformance').addEventListener('click', e => { const r = e.target.closest('button')?.dataset.range; if (r) { state.range = r; draw(); } });
   $('interval').addEventListener('click', e => {
@@ -371,14 +443,14 @@ function wire() {
     view = buildView(view.summary, view.daily, view.contrib);
     draw();
   });
-  $('priceToggle').addEventListener('click', () => { state.price = !state.price; draw(); });
+  $('priceToggle').addEventListener('click', () => { state.price = !state.price; draw({ preserveRange: true }); });
   $('liquidation').addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b) return;
     state.rate = b.dataset.rate === '' ? null : Number(b.dataset.rate);
     setChoice('liquidation', 'rate', b.dataset.rate);
-    draw();
+    draw({ preserveRange: true });
   });
-  $('stable').addEventListener('click', () => { state.stable = !state.stable; $('stable').setAttribute('aria-pressed', String(state.stable)); draw(); });
+  $('stable').addEventListener('click', () => { state.stable = !state.stable; $('stable').setAttribute('aria-pressed', String(state.stable)); draw({ preserveRange: true }); });
   $('creatureMonth').addEventListener('change', e => { state.month = e.target.value; drawCreatures(); });
   $('exportButton').addEventListener('click', () => exportImage().catch(e => { console.error(e); $('exportStatus').textContent = 'The chart image could not be exported.'; }));
   $('expand').addEventListener('click', () => toggleExpanded().catch(console.error));
@@ -404,27 +476,53 @@ function wire() {
   document.addEventListener('keydown', e => { if (e.key === 'Escape') tip.hidden = true; });
 }
 
-function failed(error) {
-  console.error(error);
-  $('status').hidden = false;
-  $('status').textContent = 'The economy data could not be loaded.';
+function feedback(message, error = false) {
+  $('loadFeedback').hidden = false;
+  $('loadFeedback').classList.toggle('has-view', Boolean(view));
+  $('status').textContent = message;
+  $('retry').hidden = !error;
+}
+const retryFocusVacant = () => document.activeElement === document.body || document.activeElement === $('retry');
+function failed() {
+  feedback(retryWorld ? `${retryWorld} data could not be loaded.${view ? ` Still showing ${state.world}.` : ''} Retry or choose another world.` : 'The economy data could not be loaded. Retry to try again.', true);
   $('economy').setAttribute('aria-busy', 'false');
 }
 
 async function main() {
+  const controller = requests;
+  try {
   [data.index, data.overview, data.market, data.results, data.sync, data.access, data.creatures, data.vip] = await Promise.all([
     json('data/economy/gold/index.json'), json('data/economy/gold/overview.json'), optional('data/market-history/tibia-coin/index.json'),
     optional('reports/economy/results.json'), optional('data/economy/sync-status.json'), optional('data/economy/population/access.json'),
     optional('data/economy/gold/creatures.json'), optional('data/economy/population/tibiavip-snapshot/2026-10-13.json')]);
   data.creatures = data.creatures?.creatures ?? {};
+  if (controller !== requests) return;
   setChoice('liquidation', 'rate', state.rate === null ? '' : String(state.rate));
   $('stable').setAttribute('aria-pressed', String(state.stable));
-  wire();
+  const startupRequest = request;
+  if (!wired) { wire(); wired = true; }
   renderFindings();
   renderProvenance();
   await document.fonts.ready;
   await new Promise(requestAnimationFrame);
-  await select(state.world);
+  if (startupRequest !== request || controller !== requests) return false;
+  return await select(state.world);
+  } catch (error) { if (controller === requests && !controller.signal.aborted) throw error; }
 }
 
+$('retry').addEventListener('click', async () => {
+  const world = retryWorld;
+  if (world) await select(world);
+  else {
+    feedback('Loading the economy data.');
+    try {
+      const loaded = await main();
+      if (retryFocusVacant()) {
+        if (loaded) document.querySelector('#worlds tr[aria-selected="true"] .pick')?.focus();
+        else if (!$('retry').hidden) $('retry').focus();
+      }
+    }
+    catch { failed(); if (retryFocusVacant()) $('retry').focus(); }
+  }
+});
 main().catch(failed);
