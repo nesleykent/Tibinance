@@ -11,6 +11,9 @@
 //                 commit) gives the creature name, which equals a loot page title ignoring case
 //   exact         the race itself equals a loot page title ignoring case
 //   redirect      the creature name redirects on TibiaWiki (a renamed creature) to a creature with a loot page
+//   singularized  an English plural left in the name (wolves, marksmen, reavers) singularised by fixed rules, accepted
+//                 only when exactly one loot page matches; names shared by several creatures (nomads, butterflies:
+//                 one race for several variants) stay unmatched rather than borrow one variant's loot
 // Anything else is unmatched and stays unvalued: its kills count in kill coverage, never in valued totals.
 // The stable creature id is the loot page's page id. Unmatched races are listed with their total kills.
 import { existsSync, readFileSync, writeFileSync, readdirSync } from 'node:fs';
@@ -57,8 +60,22 @@ export function matchRaces(races, { normalize, lootTitles, redirects = new Map()
       const p = target && pages.get(key(target));
       if (p) return { race, raceId, creature: p.title.replace(/^Loot Statistics:/, ''), pageId: p.pageid, method: 'redirect', pretty, redirectedFrom: name };
     }
+    for (const name of [pretty, race].filter(Boolean)) {
+      const hits = [...new Set(singulars(name).map(n => pages.get(key(n))).filter(Boolean))];
+      if (hits.length === 1) return { race, raceId, creature: hits[0].title.replace(/^Loot Statistics:/, ''), pageId: hits[0].pageid, method: 'singularized', pretty, singularizedFrom: name };
+    }
     return { race, raceId, creature: null, pageId: null, method: 'unmatched', pretty };
   });
+}
+
+// Singular candidates of a plural English name, changing only its last word.
+export function singulars(name) {
+  const words = name.split(' '), last = words.at(-1), stem = words.slice(0, -1).join(' ');
+  const forms = new Set();
+  const rules = [[/men$/, 'man'], [/ves$/, 'f'], [/ves$/, 'fe'], [/ies$/, 'y'], [/(ch|sh|ss|x|z)es$/, '$1'], [/i$/, 'us'], [/s$/, '']];
+  for (const [re, to] of rules) if (re.test(last)) forms.add([stem, last.replace(re, to)].filter(Boolean).join(' '));
+  forms.delete(name);
+  return [...forms];
 }
 
 async function resolveRedirects(names) {
@@ -105,7 +122,7 @@ async function main() {
     note: 'Kill-statistics races matched to TibiaWiki creatures with Loot Statistics pages. method: override, normalized (upstream normalisation map), exact, redirect, unmatched. Unmatched races are never valued.',
     normalizeSource: { repo: 'tibiamaps/tibia-kill-stats', path: 'normalize-names.mjs', commit, pairs: normalize.size },
     summary: { races: mapped.length, matched: mapped.filter(m => m.pageId).length, kills: total, matchedKills,
-      byMethod: Object.fromEntries(['override', 'normalized', 'exact', 'redirect', 'unmatched'].map(k => [k, mapped.filter(m => m.method === k).length])) },
+      byMethod: Object.fromEntries(['override', 'normalized', 'exact', 'redirect', 'singularized', 'unmatched'].map(k => [k, mapped.filter(m => m.method === k).length])) },
     unmatchedByKills: mapped.filter(m => !m.pageId).map(m => ({ race: m.race, kills: kills.get(m.raceId) ?? 0, method: m.method, note: m.note ?? null }))
       .sort((a, b) => b.kills - a.kills),
     races: mapped,

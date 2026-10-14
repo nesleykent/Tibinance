@@ -4,7 +4,7 @@
 //   node tools/economy/fetch_loot.mjs --offline  rebuild the evidence from the cached revisions only
 //
 // Sources (CC-BY-SA, TibiaWiki contributors, via the MediaWiki API with a descriptive User-Agent, one request at a
-// time, maxlag=5): every "Loot Statistics:" page (namespace 112), Module:ItemPrices/data, and the Updates/<version>
+// time, maxlag=5, up to 50 revisions per content request): every "Loot Statistics:" page (namespace 112), Module:ItemPrices/data, and the Updates/<version>
 // pages. For each loot page and for ItemPrices it keeps the revision that was current on 2022-08-23 (the first day of
 // kill statistics) and every later revision, so any point in time since then can be reconstructed.
 //
@@ -41,7 +41,7 @@ let requests = 0;
 async function api(params) {
   const url = `${API}?${new URLSearchParams({ format: 'json', formatversion: '2', maxlag: '5', ...params })}`;
   for (let attempt = 0; attempt < 6; attempt++) {
-    await sleep(requests++ ? 700 : 0);
+    requests++;  // serial requests (MediaWiki etiquette); maxlag and back-off below keep the load polite
     const r = await fetch(url, { headers: { 'User-Agent': UA, Accept: 'application/json' } });
     if (r.status === 429 || r.status >= 500) { await sleep(5000 * (attempt + 1)); continue; }
     const body = await r.json();
@@ -77,7 +77,7 @@ async function revisionList(pageid) {
   return [...(base ? [{ ...base, baseline: true }] : []), ...after];
 }
 
-async function contents(revids, batch = 20) {
+async function contents(revids, batch = 50) {
   const out = new Map();
   for (let i = 0; i < revids.length; i += batch) {
     const body = await api({ action: 'query', prop: 'revisions', revids: revids.slice(i, i + batch).join('|'), rvprop: 'ids|content', rvslots: 'main' });
@@ -95,7 +95,7 @@ async function pageHistory(page, latest, offline) {
   const have = new Map((cached?.revisions ?? []).map(r => [r.revid, r]));
   const bySha = new Map((cached?.revisions ?? []).map(r => [r.sha1, r.content]));
   const need = list.filter(r => !have.has(r.revid) && !(r.sha1 && bySha.has(r.sha1))).map(r => r.revid);
-  const fetched = await contents(need, page.title === PRICES_TITLE ? 2 : 20);  // ItemPrices revisions are ~820 KB each
+  const fetched = await contents(need, page.title === PRICES_TITLE ? 2 : 50);  // ItemPrices revisions are ~820 KB each
   const revisions = list.map(r => ({ revid: r.revid, timestamp: r.timestamp, sha1: r.sha1 ?? null, baseline: Boolean(r.baseline),
     content: have.get(r.revid)?.content ?? fetched.get(r.revid) ?? (r.sha1 ? bySha.get(r.sha1) : undefined) ?? '' }));
   const history = { pageid: page.pageid, title: page.title, lastrevid: latest, revisions };

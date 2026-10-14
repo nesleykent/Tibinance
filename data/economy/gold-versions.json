@@ -1,0 +1,37 @@
+{
+ "format": 1,
+ "note": "Each derived version of data/economy/gold/: methodology, evidence vintage, kill commits and code. Earlier versions stay reproducible from git history and the append-only evidence.",
+ "versions": [
+  {
+   "methodology": 1,
+   "evidence": {
+    "lootRecords": 263003,
+    "liveSamples": 2035,
+    "latestLootRevision": "2026-10-13T21:40:13Z",
+    "prices": {
+     "revId": 1203407,
+     "revTimestamp": "2026-08-24T18:15:53Z"
+    },
+    "versions": 817,
+    "creatureMap": {
+     "matched": 1401,
+     "races": 1750
+    }
+   },
+   "killstats": [
+    {
+     "id": "archive",
+     "repo": "tibiamaps/tibia-kill-stats-from-2022-08-23-to-2025-12-04",
+     "commit": "8aaa41d7f82cbb38305c7a2d8e5029e5480f74f6"
+    },
+    {
+     "id": "current",
+     "repo": "tibiamaps/tibia-kill-stats",
+     "commit": "539fca597feeb19f36e8665d6afb3cf30757e78b"
+    }
+   ],
+   "indexSha256": "9c3bdfdeb5c1e1c8f4e22720016f0824734850be225c93216c6a70da44730870",
+   "code": "480af15909b112effaeb88d17cf5ceb83f30f3b6"
+  }
+ ]
+}

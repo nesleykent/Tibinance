@@ -1,0 +1,5725 @@
+{
+ "format": 1,
+ "note": "Client versions and their release dates from the TibiaWiki Updates/<version> pages (CC-BY-SA). A version is effective, and public, from its release date; a sample \"made after\" a version is valid from that date. Undated builds are bounded by the latest dated version below them when used.",
+ "versions": [
+  {
+   "version": "--",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "1.0",
+   "date": "1997-01-07",
+   "name": "Alpha 1.0",
+   "type": "Major",
+   "implemented": "1.0"
+  },
+  {
+   "version": "1.01",
+   "date": "1997-01-13",
+   "name": "Alpha 1.01",
+   "type": "Minor",
+   "implemented": "1.01"
+  },
+  {
+   "version": "2.0",
+   "date": "1997-06-03",
+   "name": "Alpha 2.0",
+   "type": "Major",
+   "implemented": "2.0"
+  },
+  {
+   "version": "2.01",
+   "date": "1997-07-23",
+   "name": "Version 2.01 Alpha",
+   "type": "Patch",
+   "implemented": "2.01"
+  },
+  {
+   "version": "3.0",
+   "date": "1997-10-28",
+   "name": "Alpha 3.0",
+   "type": "Major",
+   "implemented": "3.0"
+  },
+  {
+   "version": "4.0",
+   "date": "1998-05-20",
+   "name": "Beta 4.0",
+   "type": "Major",
+   "implemented": "4.0"
+  },
+  {
+   "version": "4.1",
+   "date": "1998-06-05",
+   "name": "Beta 4.1",
+   "type": "Minor",
+   "implemented": "4.1"
+  },
+  {
+   "version": "5.0",
+   "date": "1999-06-18",
+   "name": "Beta 5.0",
+   "type": "Major",
+   "implemented": "5.0"
+  },
+  {
+   "version": "5.1",
+   "date": "1999-12-23",
+   "name": "Beta 5.1",
+   "type": "Major",
+   "implemented": "5.1"
+  },
+  {
+   "version": "5.2",
+   "date": "2000-03-17",
+   "name": "Beta 5.2",
+   "type": "Minor",
+   "implemented": "5.2"
+  },
+  {
+   "version": "6.0",
+   "date": "2000-11-03",
+   "name": "Version 6.0 Beta",
+   "type": "Major",
+   "implemented": "6.0"
+  },
+  {
+   "version": "6.1",
+   "date": "2000-12-23",
+   "name": "Christmas Update 2000",
+   "type": "Major",
+   "implemented": "6.1"
+  },
+  {
+   "version": "6.2",
+   "date": "2001-06-10",
+   "name": null,
+   "type": "Major",
+   "implemented": "6.2"
+  },
+  {
+   "version": "6.3",
+   "date": "2001-09-24",
+   "name": null,
+   "type": "Minor",
+   "implemented": "6.3"
+  },
+  {
+   "version": "6.4",
+   "date": "2001-11-02",
+   "name": null,
+   "type": "Major",
+   "implemented": "6.4"
+  },
+  {
+   "version": "6.5",
+   "date": "2001-12-19",
+   "name": null,
+   "type": "Major",
+   "implemented": "6.5"
+  },
+  {
+   "version": "6.6",
+   "date": "2002-02-18",
+   "name": null,
+   "type": "Major",
+   "implemented": "6.6"
+  },
+  {
+   "version": "6.61",
+   "date": "2002-02-20",
+   "name": null,
+   "type": "Patch",
+   "implemented": "6.61"
+  },
+  {
+   "version": "6.61-6.97",
+   "date": "2002-06-14",
+   "name": null,
+   "type": "Major",
+   "implemented": "6.61-6.97"
+  },
+  {
+   "version": "6.98",
+   "date": "2002-08-23",
+   "name": null,
+   "type": "Patch",
+   "implemented": "6.98"
+  },
+  {
+   "version": "7.0",
+   "date": "2002-08-28",
+   "name": "Summer Update 2002",
+   "type": "Major",
+   "implemented": "7.0"
+  },
+  {
+   "version": "7.1",
+   "date": "2002-12-17",
+   "name": "Christmas Update 2002",
+   "type": "Major",
+   "implemented": "7.1"
+  },
+  {
+   "version": "7.01",
+   "date": "2002-10-22",
+   "name": null,
+   "type": "Minor",
+   "implemented": "7.01"
+  },
+  {
+   "version": "7.2",
+   "date": "2003-12-16",
+   "name": "Christmas Update 2003",
+   "type": "Major",
+   "implemented": "7.2"
+  },
+  {
+   "version": "7.02",
+   "date": "2002-11-21",
+   "name": null,
+   "type": "Minor",
+   "implemented": "7.02"
+  },
+  {
+   "version": "7.3",
+   "date": "2004-08-11",
+   "name": null,
+   "type": "Major",
+   "implemented": "7.3"
+  },
+  {
+   "version": "7.4",
+   "date": "2004-12-14",
+   "name": "Christmas Update 2004",
+   "type": "Major",
+   "implemented": "7.4"
+  },
+  {
+   "version": "7.5",
+   "date": "2005-08-09",
+   "name": "Summer Update 2005",
+   "type": "Major",
+   "implemented": "7.5"
+  },
+  {
+   "version": "7.6",
+   "date": "2005-12-12",
+   "name": "Christmas Update 2005",
+   "type": "Major",
+   "implemented": "7.6"
+  },
+  {
+   "version": "7.7",
+   "date": "2006-05-17",
+   "name": "Technical Update 7.7",
+   "type": "Minor",
+   "implemented": "7.7"
+  },
+  {
+   "version": "7.8",
+   "date": "2006-08-01",
+   "name": "Summer Update 2006",
+   "type": "Major",
+   "implemented": "7.8"
+  },
+  {
+   "version": "7.9",
+   "date": "2006-12-12",
+   "name": "Christmas Update 2006",
+   "type": "Major",
+   "implemented": "7.9"
+  },
+  {
+   "version": "7.11",
+   "date": "2003-06-27",
+   "name": null,
+   "type": "Minor",
+   "implemented": "7.11"
+  },
+  {
+   "version": "7.11 (2)",
+   "date": "2003-09-03",
+   "name": null,
+   "type": "Patch",
+   "implemented": "7.11 (2)"
+  },
+  {
+   "version": "7.11-7.2",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "7.21",
+   "date": "2004-01-21",
+   "name": null,
+   "type": "Minor",
+   "implemented": "7.21"
+  },
+  {
+   "version": "7.23",
+   "date": "2004-03-09",
+   "name": null,
+   "type": "Minor",
+   "implemented": "7.23"
+  },
+  {
+   "version": "7.24",
+   "date": "2004-03-15",
+   "name": null,
+   "type": "Minor",
+   "implemented": "7.24"
+  },
+  {
+   "version": "7.26",
+   "date": "2004-05-04",
+   "name": null,
+   "type": "Minor",
+   "implemented": "7.26"
+  },
+  {
+   "version": "7.27",
+   "date": "2004-07-22",
+   "name": null,
+   "type": "Patch",
+   "implemented": "7.27"
+  },
+  {
+   "version": "7.35",
+   "date": "2004-12-10",
+   "name": null,
+   "type": "Minor",
+   "implemented": "7.35"
+  },
+  {
+   "version": "7.41",
+   "date": "2005-06-07",
+   "name": null,
+   "type": "Patch",
+   "implemented": "7.41"
+  },
+  {
+   "version": "7.55",
+   "date": "2005-11-16",
+   "name": null,
+   "type": "Patch",
+   "implemented": "7.55"
+  },
+  {
+   "version": "7.61",
+   "date": "2006-05-05",
+   "name": null,
+   "type": "Minor",
+   "implemented": "7.61"
+  },
+  {
+   "version": "7.71",
+   "date": "2006-05-31",
+   "name": null,
+   "type": "Patch",
+   "implemented": "7.71"
+  },
+  {
+   "version": "7.72",
+   "date": "2006-06-09",
+   "name": null,
+   "type": "Patch",
+   "implemented": "7.72"
+  },
+  {
+   "version": "7.81",
+   "date": "2006-08-29",
+   "name": null,
+   "type": "Patch",
+   "implemented": "7.81"
+  },
+  {
+   "version": "7.82",
+   "date": "2006-10-13",
+   "name": null,
+   "type": "Minor",
+   "implemented": "7.82"
+  },
+  {
+   "version": "7.92",
+   "date": "2007-01-08",
+   "name": "10<sup>th</sup> Anniversary Update",
+   "type": "Minor",
+   "implemented": "7.92"
+  },
+  {
+   "version": "8.00",
+   "date": "2007-06-26",
+   "name": "Summer Update 2007",
+   "type": "Major",
+   "implemented": "8.00"
+  },
+  {
+   "version": "8.0",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "8.1",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "8.2",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "8.3",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "8.4",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "8.5",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "8.6",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "8.7",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "8.10",
+   "date": "2007-12-11",
+   "name": "Christmas Update 2007",
+   "type": "Major",
+   "implemented": "8.10"
+  },
+  {
+   "version": "8.11",
+   "date": "2008-04-08",
+   "name": null,
+   "type": "Minor",
+   "implemented": "8.11"
+  },
+  {
+   "version": "8.20",
+   "date": "2008-07-02",
+   "name": "Summer Update 2008",
+   "type": "Major",
+   "implemented": "8.20"
+  },
+  {
+   "version": "8.21",
+   "date": "2008-07-24",
+   "name": null,
+   "type": "Minor",
+   "implemented": "8.21"
+  },
+  {
+   "version": "8.22",
+   "date": "2008-08-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "8.22"
+  },
+  {
+   "version": "8.30",
+   "date": "2008-09-30",
+   "name": null,
+   "type": "Patch",
+   "implemented": "8.30"
+  },
+  {
+   "version": "8.31",
+   "date": "2008-10-01",
+   "name": null,
+   "type": "Patch",
+   "implemented": "8.31"
+  },
+  {
+   "version": "8.40",
+   "date": "2008-12-10",
+   "name": "Winter Update 2008",
+   "type": "Major",
+   "implemented": "8.40"
+  },
+  {
+   "version": "8.41",
+   "date": "2009-03-18",
+   "name": "Spring Patch 2009",
+   "type": "Minor",
+   "implemented": "8.41"
+  },
+  {
+   "version": "8.42",
+   "date": "2009-04-22",
+   "name": null,
+   "type": "Patch",
+   "implemented": "8.42"
+  },
+  {
+   "version": "8.50",
+   "date": "2009-07-01",
+   "name": "Summer Update 2009",
+   "type": "Major",
+   "implemented": "8.50"
+  },
+  {
+   "version": "8.51",
+   "date": "2009-10-01",
+   "name": null,
+   "type": "Patch",
+   "implemented": "8.51"
+  },
+  {
+   "version": "8.52",
+   "date": "2009-10-01",
+   "name": null,
+   "type": "Patch",
+   "implemented": "8.52"
+  },
+  {
+   "version": "8.53",
+   "date": "2009-11-05",
+   "name": "Autumn Patch 2009",
+   "type": "Patch",
+   "implemented": "8.53"
+  },
+  {
+   "version": "8.54",
+   "date": "2009-12-09",
+   "name": "Christmas Update 2009",
+   "type": "Major",
+   "implemented": "8.54"
+  },
+  {
+   "version": "8.55",
+   "date": "2010-03-17",
+   "name": "Spring Patch 2010",
+   "type": "Patch",
+   "implemented": "8.55"
+  },
+  {
+   "version": "8.56",
+   "date": "2010-05-05",
+   "name": null,
+   "type": "Patch",
+   "implemented": "8.56"
+  },
+  {
+   "version": "8.57",
+   "date": "2010-05-06",
+   "name": null,
+   "type": "Patch",
+   "implemented": "8.57"
+  },
+  {
+   "version": "8.60",
+   "date": "2010-06-30",
+   "name": "Summer Update 2010",
+   "type": "Major",
+   "implemented": "8.60"
+  },
+  {
+   "version": "8.61",
+   "date": "2010-08-23",
+   "name": null,
+   "type": "Patch",
+   "implemented": "8.61"
+  },
+  {
+   "version": "8.62",
+   "date": "2010-09-22",
+   "name": "Autumn Patch 2010",
+   "type": "Patch",
+   "implemented": "8.62"
+  },
+  {
+   "version": "8.70",
+   "date": "2010-12-08",
+   "name": "Winter Update 2010",
+   "type": "Major",
+   "implemented": "8.70"
+  },
+  {
+   "version": "8.71",
+   "date": "2011-01-27",
+   "name": null,
+   "type": "Patch",
+   "implemented": "8.71"
+  },
+  {
+   "version": "8.72",
+   "date": "2011-04-20",
+   "name": "Spring Patch 2011",
+   "type": "Patch",
+   "implemented": "8.72"
+  },
+  {
+   "version": "8.73",
+   "date": "2011-05-03",
+   "name": null,
+   "type": "Patch",
+   "implemented": "8.73"
+  },
+  {
+   "version": "8.74",
+   "date": "2011-05-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "8.74"
+  },
+  {
+   "version": "9.00",
+   "date": "2011-06-09",
+   "name": null,
+   "type": "Patch",
+   "implemented": "9.00"
+  },
+  {
+   "version": "9.0",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "9.1",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "9.2",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "9.4",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "9.5",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "9.6",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "9.6/To-Do",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "9.7",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "9.8",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "9.8/To-Do",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "9.10",
+   "date": "2011-07-06",
+   "name": "Summer Update 2011",
+   "type": "Major",
+   "implemented": "9.10"
+  },
+  {
+   "version": "9.20",
+   "date": "2011-09-27",
+   "name": "Autumn Patch 2011",
+   "type": "Minor",
+   "implemented": "9.20"
+  },
+  {
+   "version": "9.31",
+   "date": "2011-10-20",
+   "name": null,
+   "type": "Patch",
+   "implemented": "9.31"
+  },
+  {
+   "version": "9.40",
+   "date": "2011-12-14",
+   "name": "Winter Update 2011",
+   "type": "Major",
+   "implemented": "9.40"
+  },
+  {
+   "version": "9.41",
+   "date": "2011-12-20",
+   "name": null,
+   "type": "Patch",
+   "implemented": "9.41"
+  },
+  {
+   "version": "9.42",
+   "date": "2011-12-29",
+   "name": null,
+   "type": "Patch",
+   "implemented": "9.42"
+  },
+  {
+   "version": "9.43",
+   "date": "2012-01-04",
+   "name": null,
+   "type": "Patch",
+   "implemented": "9.43"
+  },
+  {
+   "version": "9.44",
+   "date": "2012-01-13",
+   "name": null,
+   "type": "Patch",
+   "implemented": "9.44"
+  },
+  {
+   "version": "9.45",
+   "date": "2012-03-22",
+   "name": null,
+   "type": "Patch",
+   "implemented": "9.45"
+  },
+  {
+   "version": "9.46",
+   "date": "2012-03-22",
+   "name": null,
+   "type": "Patch",
+   "implemented": "9.46"
+  },
+  {
+   "version": "9.50",
+   "date": "2012-04-03",
+   "name": "Spring Patch 2012",
+   "type": "Minor",
+   "implemented": "9.50"
+  },
+  {
+   "version": "9.51",
+   "date": "2012-04-05",
+   "name": null,
+   "type": "Patch",
+   "implemented": "9.51"
+  },
+  {
+   "version": "9.52",
+   "date": "2012-04-13",
+   "name": null,
+   "type": "Patch",
+   "implemented": "9.52"
+  },
+  {
+   "version": "9.53",
+   "date": "2012-05-03",
+   "name": null,
+   "type": "Patch",
+   "implemented": "9.53"
+  },
+  {
+   "version": "9.54",
+   "date": "2012-06-13",
+   "name": null,
+   "type": "Patch",
+   "implemented": "9.54"
+  },
+  {
+   "version": "9.60",
+   "date": "2012-07-11",
+   "name": "Summer Update 2012",
+   "type": "Major",
+   "implemented": "9.60"
+  },
+  {
+   "version": "9.60/To-Do",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "9.61",
+   "date": "2012-08-09",
+   "name": null,
+   "type": "Patch",
+   "implemented": "9.61"
+  },
+  {
+   "version": "9.62",
+   "date": "2012-08-29",
+   "name": null,
+   "type": "Patch",
+   "implemented": "9.62"
+  },
+  {
+   "version": "9.63",
+   "date": "2012-08-29",
+   "name": null,
+   "type": "Patch",
+   "implemented": "9.63"
+  },
+  {
+   "version": "9.70",
+   "date": "2012-10-10",
+   "name": "Autumn Patch 2012",
+   "type": "Minor",
+   "implemented": "9.70"
+  },
+  {
+   "version": "9.71",
+   "date": "2012-11-08",
+   "name": null,
+   "type": "Patch",
+   "implemented": "9.71"
+  },
+  {
+   "version": "9.80",
+   "date": "2012-12-12",
+   "name": "Winter Update 2012",
+   "type": "Major",
+   "implemented": "9.80"
+  },
+  {
+   "version": "9.81",
+   "date": "2012-12-13",
+   "name": null,
+   "type": "Patch",
+   "implemented": "9.81"
+  },
+  {
+   "version": "9.82",
+   "date": "2013-02-27",
+   "name": null,
+   "type": "Patch",
+   "implemented": "9.82"
+  },
+  {
+   "version": "9.83",
+   "date": "2013-03-14",
+   "name": null,
+   "type": "Patch",
+   "implemented": "9.83"
+  },
+  {
+   "version": "9.84",
+   "date": "2013-04-04",
+   "name": null,
+   "type": "Patch",
+   "implemented": "9.84"
+  },
+  {
+   "version": "9.85",
+   "date": "2013-04-11",
+   "name": null,
+   "type": "Patch",
+   "implemented": "9.85"
+  },
+  {
+   "version": "9.86",
+   "date": "2013-04-23",
+   "name": null,
+   "type": "Minor",
+   "implemented": "9.86"
+  },
+  {
+   "version": "10.00",
+   "date": "2013-06-05",
+   "name": null,
+   "type": "Minor",
+   "implemented": "10.00"
+  },
+  {
+   "version": "10.0",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.01",
+   "date": "2013-06-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.01"
+  },
+  {
+   "version": "10.1",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.02",
+   "date": "2013-06-19",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.02"
+  },
+  {
+   "version": "10.2",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.3",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.3/Sprites",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.4",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.5",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.6",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.6b",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.7",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.7/Sprite Changes",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.7/Testing",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.8",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.8/Sprite Changes",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.9",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.10",
+   "date": "2013-07-17",
+   "name": "Summer Update 2013 Part 1",
+   "type": "Major",
+   "implemented": "10.10"
+  },
+  {
+   "version": "10.11",
+   "date": "2013-08-23",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.11"
+  },
+  {
+   "version": "10.12",
+   "date": "2013-08-30",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.12"
+  },
+  {
+   "version": "10.13",
+   "date": "2013-09-05",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.13"
+  },
+  {
+   "version": "10.20",
+   "date": "2013-09-18",
+   "name": "Summer Update 2013 Part 2",
+   "type": "Major",
+   "implemented": "10.20"
+  },
+  {
+   "version": "10.21",
+   "date": "2013-10-29",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.21"
+  },
+  {
+   "version": "10.30",
+   "date": "2013-12-11",
+   "name": "Winter Update 2013",
+   "type": "Major",
+   "implemented": "10.30"
+  },
+  {
+   "version": "10.30/Sprites",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.31",
+   "date": "2013-12-18",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.31"
+  },
+  {
+   "version": "10.32",
+   "date": "2014-01-20",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.32"
+  },
+  {
+   "version": "10.33",
+   "date": "2014-01-23",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.33"
+  },
+  {
+   "version": "10.34",
+   "date": "2014-01-29",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.34"
+  },
+  {
+   "version": "10.35",
+   "date": "2014-02-18",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.35"
+  },
+  {
+   "version": "10.36",
+   "date": "2014-03-06",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.36"
+  },
+  {
+   "version": "10.37",
+   "date": "2014-03-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.37"
+  },
+  {
+   "version": "10.38",
+   "date": "2014-03-31",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.38"
+  },
+  {
+   "version": "10.39",
+   "date": "2014-04-28",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.39"
+  },
+  {
+   "version": "10.40",
+   "date": "2014-05-20",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.40"
+  },
+  {
+   "version": "10.41",
+   "date": "2014-05-27",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.41"
+  },
+  {
+   "version": "10.50",
+   "date": "2014-07-07",
+   "name": "Summer Update 2014",
+   "type": "Major",
+   "implemented": "10.50"
+  },
+  {
+   "version": "10.51",
+   "date": "2014-07-22",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.51"
+  },
+  {
+   "version": "10.51/Sprite Changes",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.52",
+   "date": "2014-08-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.52"
+  },
+  {
+   "version": "10.53",
+   "date": "2014-08-26",
+   "name": null,
+   "type": "Minor",
+   "implemented": "10.53"
+  },
+  {
+   "version": "10.53 (2)",
+   "date": "2014-09-03",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.53 (2)"
+  },
+  {
+   "version": "10.53b",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.54",
+   "date": "2014-09-09",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.54"
+  },
+  {
+   "version": "10.55",
+   "date": "2014-09-15",
+   "name": null,
+   "type": "Minor",
+   "implemented": "10.55"
+  },
+  {
+   "version": "10.55/Sprite Changes",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.56",
+   "date": "2014-09-24",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.56"
+  },
+  {
+   "version": "10.57",
+   "date": "2014-09-30",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.57"
+  },
+  {
+   "version": "10.58",
+   "date": "2014-10-06",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.58"
+  },
+  {
+   "version": "10.59",
+   "date": "2014-10-08",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.59"
+  },
+  {
+   "version": "10.59 (2)",
+   "date": "2014-10-14",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.59 (2)"
+  },
+  {
+   "version": "10.59b",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.60",
+   "date": "2014-10-28",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.60"
+  },
+  {
+   "version": "10.60 (2)",
+   "date": "2014-10-29",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.60 (2)"
+  },
+  {
+   "version": "10.61",
+   "date": "2014-10-30",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.61"
+  },
+  {
+   "version": "10.62",
+   "date": "2014-11-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.62"
+  },
+  {
+   "version": "10.63",
+   "date": "2014-11-19",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.63"
+  },
+  {
+   "version": "10.64",
+   "date": "2014-12-04",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.64"
+  },
+  {
+   "version": "10.70",
+   "date": "2014-12-10",
+   "name": "Winter Update 2014",
+   "type": "Major",
+   "implemented": "10.70"
+  },
+  {
+   "version": "10.70/Sprite Changes",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.70/Testing",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.71",
+   "date": "2014-12-16",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.71"
+  },
+  {
+   "version": "10.71 (2)",
+   "date": "2014-12-18",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.71 (2)"
+  },
+  {
+   "version": "10.71b",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.72",
+   "date": "2015-01-13",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.72"
+  },
+  {
+   "version": "10.73",
+   "date": "2015-01-20",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.73"
+  },
+  {
+   "version": "10.73b",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.74",
+   "date": "2015-01-27",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.74"
+  },
+  {
+   "version": "10.75",
+   "date": "2015-02-10",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.75"
+  },
+  {
+   "version": "10.76",
+   "date": "2015-03-03",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.76"
+  },
+  {
+   "version": "10.77",
+   "date": "2015-04-14",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.77"
+  },
+  {
+   "version": "10.77/Sprite Changes",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.78",
+   "date": "2015-05-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.78"
+  },
+  {
+   "version": "10.79",
+   "date": "2015-06-16",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.79"
+  },
+  {
+   "version": "10.80",
+   "date": "2015-07-21",
+   "name": "Summer Update 2015",
+   "type": "Major",
+   "implemented": "10.80"
+  },
+  {
+   "version": "10.80/Sprite Changes",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.81",
+   "date": "2015-08-11",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.81"
+  },
+  {
+   "version": "10.82",
+   "date": "2015-09-30",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.82"
+  },
+  {
+   "version": "10.82/Sprite Changes",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.90",
+   "date": "2015-12-08",
+   "name": "Winter Update 2015",
+   "type": "Major",
+   "implemented": "10.90"
+  },
+  {
+   "version": "10.91",
+   "date": "2016-02-23",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.91"
+  },
+  {
+   "version": "10.92",
+   "date": "2016-04-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.92"
+  },
+  {
+   "version": "10.93",
+   "date": "2016-05-03",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.93"
+  },
+  {
+   "version": "10.94",
+   "date": "2016-05-31",
+   "name": "Summer Update 2016",
+   "type": "Major",
+   "implemented": "10.94"
+  },
+  {
+   "version": "10.94/Sprite Changes",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "10.95",
+   "date": "2016-06-14",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.95"
+  },
+  {
+   "version": "10.96",
+   "date": "2016-07-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.96"
+  },
+  {
+   "version": "10.97",
+   "date": "2016-08-30",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.97"
+  },
+  {
+   "version": "10.98",
+   "date": "2016-09-13",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.98"
+  },
+  {
+   "version": "10.99",
+   "date": "2016-10-25",
+   "name": null,
+   "type": "Patch",
+   "implemented": "10.99"
+  },
+  {
+   "version": "11.00",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "11.00.3768",
+   "date": "2016-09-13",
+   "name": "Tibia 11",
+   "type": "Major",
+   "implemented": "11.00.3768"
+  },
+  {
+   "version": "11.00.3787",
+   "date": "2016-09-15",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.00.3787"
+  },
+  {
+   "version": "11.00.3813",
+   "date": "2016-09-16",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.00.3813"
+  },
+  {
+   "version": "11.00.3831",
+   "date": "2016-09-21",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.00.3831"
+  },
+  {
+   "version": "11.00.3839",
+   "date": "2016-09-22",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.00.3839"
+  },
+  {
+   "version": "11.00.3862",
+   "date": "2016-09-27",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.00.3862"
+  },
+  {
+   "version": "11.00.3878",
+   "date": "2016-09-30",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.00.3878"
+  },
+  {
+   "version": "11.00.3913",
+   "date": "2016-10-05",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.00.3913"
+  },
+  {
+   "version": "11.00.3947",
+   "date": "2016-10-11",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.00.3947"
+  },
+  {
+   "version": "11.00.3953",
+   "date": "2016-10-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.00.3953"
+  },
+  {
+   "version": "11.01.3987",
+   "date": "2016-10-25",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.01.3987"
+  },
+  {
+   "version": "11.01.4015",
+   "date": "2016-11-14",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.01.4015"
+  },
+  {
+   "version": "11.01.4078",
+   "date": "2016-11-22",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.01.4078"
+  },
+  {
+   "version": "11.01.4098",
+   "date": "2016-11-29",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.01.4098"
+  },
+  {
+   "version": "11.02",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "11.02.4128",
+   "date": "2016-12-06",
+   "name": "Winter Update 2016",
+   "type": "Major",
+   "implemented": "11.02.4128"
+  },
+  {
+   "version": "11.02.4171",
+   "date": "2016-12-07",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.02.4171"
+  },
+  {
+   "version": "11.02.4180",
+   "date": "2016-12-14",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.02.4180"
+  },
+  {
+   "version": "11.03",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "11.03.4221",
+   "date": "2016-12-15",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.03.4221"
+  },
+  {
+   "version": "11.03.4245",
+   "date": "2017-01-05",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.03.4245"
+  },
+  {
+   "version": "11.03.4246",
+   "date": "2017-01-07",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.03.4246"
+  },
+  {
+   "version": "11.04.4312",
+   "date": "2017-01-16",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.04.4312"
+  },
+  {
+   "version": "11.04.4320",
+   "date": "2017-01-17",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.04.4320"
+  },
+  {
+   "version": "11.04.4347",
+   "date": "2017-01-20",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.04.4347"
+  },
+  {
+   "version": "11.04.4363",
+   "date": "2017-01-23",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.04.4363"
+  },
+  {
+   "version": "11.04.4366",
+   "date": "2017-01-23",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.04.4366"
+  },
+  {
+   "version": "11.04.4384",
+   "date": "2017-01-25",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.04.4384"
+  },
+  {
+   "version": "11.04.4391",
+   "date": "2017-01-31",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.04.4391"
+  },
+  {
+   "version": "11.10",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "11.10.4427",
+   "date": "2017-02-07",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.10.4427"
+  },
+  {
+   "version": "11.10.4445",
+   "date": "2017-02-08",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.10.4445"
+  },
+  {
+   "version": "11.10.4472",
+   "date": "2017-02-13",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.10.4472"
+  },
+  {
+   "version": "11.10.4527",
+   "date": "2017-02-21",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.10.4527"
+  },
+  {
+   "version": "11.10.4562",
+   "date": "2017-02-28",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.10.4562"
+  },
+  {
+   "version": "11.11.4601",
+   "date": "2017-03-08",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.11.4601"
+  },
+  {
+   "version": "11.20",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "11.20.4691",
+   "date": "2017-03-21",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.20.4691"
+  },
+  {
+   "version": "11.20.4732",
+   "date": "2017-03-28",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.20.4732"
+  },
+  {
+   "version": "11.20.4789",
+   "date": "2017-04-04",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.20.4789"
+  },
+  {
+   "version": "11.21.4812",
+   "date": "2017-04-11",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.21.4812"
+  },
+  {
+   "version": "11.30",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "11.30.4868",
+   "date": "2017-04-25",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.30.4868"
+  },
+  {
+   "version": "11.30.4876",
+   "date": "2017-04-26",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.30.4876"
+  },
+  {
+   "version": "11.30.4898",
+   "date": "2017-05-02",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.30.4898"
+  },
+  {
+   "version": "11.30.4948",
+   "date": "2017-05-10",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.30.4948"
+  },
+  {
+   "version": "11.30.5036",
+   "date": "2017-05-18",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.30.5036"
+  },
+  {
+   "version": "11.31",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "11.31.5138",
+   "date": "2017-06-08",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.31.5138"
+  },
+  {
+   "version": "11.32",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "11.32.5206",
+   "date": "2017-06-20",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.32.5206"
+  },
+  {
+   "version": "11.32.5229",
+   "date": "2017-06-22",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.32.5229"
+  },
+  {
+   "version": "11.32.5246",
+   "date": "2017-06-27",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.32.5246"
+  },
+  {
+   "version": "11.32.5287",
+   "date": "2017-07-04",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.32.5287"
+  },
+  {
+   "version": "11.32.5341",
+   "date": "2017-07-10",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.32.5341"
+  },
+  {
+   "version": "11.34.5384",
+   "date": "2017-07-18",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.34.5384"
+  },
+  {
+   "version": "11.35.5388",
+   "date": "2017-07-19",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.35.5388"
+  },
+  {
+   "version": "11.40",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "11.40.5409",
+   "date": "2017-07-25",
+   "name": "Summer Update 2017",
+   "type": "Major",
+   "implemented": "11.40.5409"
+  },
+  {
+   "version": "11.41",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "11.41.5435",
+   "date": "2017-08-01",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.41.5435"
+  },
+  {
+   "version": "11.42.5478",
+   "date": "2017-08-08",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.42.5478"
+  },
+  {
+   "version": "11.43.5504",
+   "date": "2017-08-16",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.43.5504"
+  },
+  {
+   "version": "11.44.5516",
+   "date": "2017-08-22",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.44.5516"
+  },
+  {
+   "version": "11.45",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "11.45.5528",
+   "date": "2017-08-29",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.45.5528"
+  },
+  {
+   "version": "11.46.5537",
+   "date": "2017-08-30",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.46.5537"
+  },
+  {
+   "version": "11.46.5556",
+   "date": "2017-09-09",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.46.5556"
+  },
+  {
+   "version": "11.47.5602",
+   "date": "2017-09-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.47.5602"
+  },
+  {
+   "version": "11.47.5620",
+   "date": "2017-09-13",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.47.5620"
+  },
+  {
+   "version": "11.47.5640",
+   "date": "2017-09-19",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.47.5640"
+  },
+  {
+   "version": "11.47.5674",
+   "date": "2017-09-26",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.47.5674"
+  },
+  {
+   "version": "11.48",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "11.48.5712",
+   "date": "2017-10-04",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.48.5712"
+  },
+  {
+   "version": "11.48.5753",
+   "date": "2017-10-10",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.48.5753"
+  },
+  {
+   "version": "11.49.5813",
+   "date": "2017-10-17",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.49.5813"
+  },
+  {
+   "version": "11.49.5884",
+   "date": "2017-10-26",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.49.5884"
+  },
+  {
+   "version": "11.49.5921",
+   "date": "2017-11-02",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.49.5921"
+  },
+  {
+   "version": "11.49.5983",
+   "date": "2017-11-14",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.49.5983"
+  },
+  {
+   "version": "11.49.6018",
+   "date": "2017-11-21",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.49.6018"
+  },
+  {
+   "version": "11.49.6030",
+   "date": "2017-11-28",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.49.6030"
+  },
+  {
+   "version": "11.50",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "11.50.6055",
+   "date": "2017-12-05",
+   "name": "Winter Update 2017",
+   "type": "Major",
+   "implemented": "11.50.6055"
+  },
+  {
+   "version": "11.51.6099",
+   "date": "2017-12-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.51.6099"
+  },
+  {
+   "version": "11.52.6104",
+   "date": "2017-12-19",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.52.6104"
+  },
+  {
+   "version": "11.53",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "11.53.6154",
+   "date": "2018-01-09",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.53.6154"
+  },
+  {
+   "version": "11.54.6216",
+   "date": "2018-01-16",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.54.6216"
+  },
+  {
+   "version": "11.55.6239",
+   "date": "2018-01-17",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.55.6239"
+  },
+  {
+   "version": "11.56.6239",
+   "date": "2018-01-23",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.56.6239"
+  },
+  {
+   "version": "11.57.6239",
+   "date": "2018-01-30",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.57.6239"
+  },
+  {
+   "version": "11.58.6239",
+   "date": "2018-02-06",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.58.6239"
+  },
+  {
+   "version": "11.59.6413",
+   "date": "2018-02-13",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.59.6413"
+  },
+  {
+   "version": "11.59.6424",
+   "date": "2018-02-13",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.59.6424"
+  },
+  {
+   "version": "11.60",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "11.60.6457",
+   "date": "2018-02-20",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.60.6457"
+  },
+  {
+   "version": "11.65",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "11.65.6492",
+   "date": "2018-02-27",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.65.6492"
+  },
+  {
+   "version": "11.65.6507",
+   "date": "2018-02-28",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.65.6507"
+  },
+  {
+   "version": "11.66.6516",
+   "date": "2018-03-06",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.66.6516"
+  },
+  {
+   "version": "11.70.6521",
+   "date": "2018-03-13",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.70.6521"
+  },
+  {
+   "version": "11.70.6535",
+   "date": "2018-03-13",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.70.6535"
+  },
+  {
+   "version": "11.70.6543",
+   "date": "2018-03-14",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.70.6543"
+  },
+  {
+   "version": "11.70.6548",
+   "date": "2018-03-15",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.70.6548"
+  },
+  {
+   "version": "11.70.6555",
+   "date": "2018-03-16",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.70.6555"
+  },
+  {
+   "version": "11.71.6562",
+   "date": "2018-03-20",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.71.6562"
+  },
+  {
+   "version": "11.71.6571",
+   "date": "2018-03-20",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.71.6571"
+  },
+  {
+   "version": "11.72",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "11.72.6598",
+   "date": "2018-03-27",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.72.6598"
+  },
+  {
+   "version": "11.72.6646",
+   "date": "2018-04-11",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.72.6646"
+  },
+  {
+   "version": "11.72.6698",
+   "date": "2018-04-18",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.72.6698"
+  },
+  {
+   "version": "11.73",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "11.73.6703",
+   "date": "2018-04-24",
+   "name": null,
+   "type": "Minor",
+   "implemented": "11.73.6703"
+  },
+  {
+   "version": "11.74.6781",
+   "date": "2018-05-02",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.74.6781"
+  },
+  {
+   "version": "11.75",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "11.75.6785",
+   "date": "2018-05-08",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.75.6785"
+  },
+  {
+   "version": "11.75.6829",
+   "date": "2018-05-15",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.75.6829"
+  },
+  {
+   "version": "11.75.6837",
+   "date": "2018-05-17",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.75.6837"
+  },
+  {
+   "version": "11.75.6922",
+   "date": "2018-05-29",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.75.6922"
+  },
+  {
+   "version": "11.75.6942",
+   "date": "2018-05-29",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.75.6942"
+  },
+  {
+   "version": "11.75.6969",
+   "date": "2018-06-05",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.75.6969"
+  },
+  {
+   "version": "11.75.6980",
+   "date": "2018-06-07",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.75.6980"
+  },
+  {
+   "version": "11.80",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "11.80.7048",
+   "date": "2018-07-03",
+   "name": "Summer Update 2018",
+   "type": "Major",
+   "implemented": "11.80.7048"
+  },
+  {
+   "version": "11.80.7086",
+   "date": "2018-07-04",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.80.7086"
+  },
+  {
+   "version": "11.81",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "11.81.7107",
+   "date": "2018-07-10",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.81.7107"
+  },
+  {
+   "version": "11.81.7119",
+   "date": "2018-07-11",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.81.7119"
+  },
+  {
+   "version": "11.82.7127",
+   "date": "2018-07-16",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.82.7127"
+  },
+  {
+   "version": "11.83",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "11.83.7129",
+   "date": "2018-07-17",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.83.7129"
+  },
+  {
+   "version": "11.85.7148",
+   "date": "2018-07-24",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.85.7148"
+  },
+  {
+   "version": "11.86",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "11.86.7197",
+   "date": "2018-07-31",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.86.7197"
+  },
+  {
+   "version": "11.86.7234",
+   "date": "2018-08-07",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.86.7234"
+  },
+  {
+   "version": "11.86.7253",
+   "date": "2018-08-14",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.86.7253"
+  },
+  {
+   "version": "11.87.7266",
+   "date": "2018-08-28",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.87.7266"
+  },
+  {
+   "version": "11.88",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "11.88.7288",
+   "date": "2018-09-04",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.88.7288"
+  },
+  {
+   "version": "11.90",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "11.90.7293",
+   "date": "2018-09-11",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.90.7293"
+  },
+  {
+   "version": "11.91.7346",
+   "date": "2018-09-18",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.91.7346"
+  },
+  {
+   "version": "11.91.7423",
+   "date": "2018-10-02",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.91.7423"
+  },
+  {
+   "version": "11.92",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "11.92.7441",
+   "date": "2018-10-09",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.92.7441"
+  },
+  {
+   "version": "11.93.7495",
+   "date": "2018-10-23",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.93.7495"
+  },
+  {
+   "version": "11.94.7495",
+   "date": "2018-10-29",
+   "name": null,
+   "type": "Minor",
+   "implemented": "11.94.7495"
+  },
+  {
+   "version": "11.94.7595",
+   "date": "2018-10-30",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.94.7595"
+  },
+  {
+   "version": "11.95.7611",
+   "date": "2018-11-27",
+   "name": null,
+   "type": "Patch",
+   "implemented": "11.95.7611"
+  },
+  {
+   "version": "12.??",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "12.00",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "12.00.7695",
+   "date": "2018-12-03",
+   "name": "Winter Update 2018",
+   "type": "Major",
+   "implemented": "12.00.7695"
+  },
+  {
+   "version": "12.00.7695/New Stackable Items",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "12.00/New Stackable Items",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "12.01.7724",
+   "date": "2018-12-04",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.01.7724"
+  },
+  {
+   "version": "12.02",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "12.02.7746",
+   "date": "2018-12-11",
+   "name": "Winterlight Solstice Update",
+   "type": "Minor",
+   "implemented": "12.02.7746"
+  },
+  {
+   "version": "12.03.7790",
+   "date": "2018-12-18",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.03.7790"
+  },
+  {
+   "version": "12.03.7844",
+   "date": "2019-01-09",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.03.7844"
+  },
+  {
+   "version": "12.05.7904",
+   "date": "2019-01-15",
+   "name": "Hirelings Patch",
+   "type": "Patch",
+   "implemented": "12.05.7904"
+  },
+  {
+   "version": "12.06.7941",
+   "date": "2019-01-22",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.06.7941"
+  },
+  {
+   "version": "12.06.7958",
+   "date": "2019-01-23",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.06.7958"
+  },
+  {
+   "version": "12.07.7973",
+   "date": "2019-01-29",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.07.7973"
+  },
+  {
+   "version": "12.08",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "12.08.7995",
+   "date": "2019-02-05",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.08.7995"
+  },
+  {
+   "version": "12.08.8034",
+   "date": "2019-02-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.08.8034"
+  },
+  {
+   "version": "12.08.8046",
+   "date": "2019-02-19",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.08.8046"
+  },
+  {
+   "version": "12.08.8051",
+   "date": "2019-02-22",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.08.8051"
+  },
+  {
+   "version": "12.09.8053",
+   "date": "2019-02-26",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.09.8053"
+  },
+  {
+   "version": "12.10.8084",
+   "date": "2019-03-05",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.10.8084"
+  },
+  {
+   "version": "12.11",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "12.11.8154",
+   "date": "2019-03-19",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.11.8154"
+  },
+  {
+   "version": "12.12",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "12.12.8202",
+   "date": "2019-03-26",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.12.8202"
+  },
+  {
+   "version": "12.12.8266",
+   "date": "2019-04-02",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.12.8266"
+  },
+  {
+   "version": "12.12.8341",
+   "date": "2019-04-09",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.12.8341"
+  },
+  {
+   "version": "12.12.8413",
+   "date": "2019-04-24",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.12.8413"
+  },
+  {
+   "version": "12.15",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "12.15.8493",
+   "date": "2019-05-21",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.15.8493"
+  },
+  {
+   "version": "12.15.8554",
+   "date": "2019-05-28",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.15.8554"
+  },
+  {
+   "version": "12.15.8610",
+   "date": "2019-06-04",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.15.8610"
+  },
+  {
+   "version": "12.15.8659",
+   "date": "2019-06-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.15.8659"
+  },
+  {
+   "version": "12.15.8706",
+   "date": "2019-06-18",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.15.8706"
+  },
+  {
+   "version": "12.15.8721",
+   "date": "2019-06-26",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.15.8721"
+  },
+  {
+   "version": "12.15.8762",
+   "date": "2019-07-02",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.15.8762"
+  },
+  {
+   "version": "12.15.8788",
+   "date": "2019-07-04",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.15.8788"
+  },
+  {
+   "version": "12.15.8794",
+   "date": "2019-07-05",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.15.8794"
+  },
+  {
+   "version": "12.15.8795",
+   "date": "2019-07-16",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.15.8795"
+  },
+  {
+   "version": "12.20",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "12.20.8834",
+   "date": "2019-07-29",
+   "name": "Summer Update 2019",
+   "type": "Major",
+   "implemented": "12.20.8834"
+  },
+  {
+   "version": "12.20.8858",
+   "date": "2019-07-31",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.20.8858"
+  },
+  {
+   "version": "12.20.8870",
+   "date": "2019-08-06",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.20.8870"
+  },
+  {
+   "version": "12.20.8884",
+   "date": "2019-08-13",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.20.8884"
+  },
+  {
+   "version": "12.20.8888",
+   "date": "2019-08-14",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.20.8888"
+  },
+  {
+   "version": "12.20.8897",
+   "date": "2019-08-21",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.20.8897"
+  },
+  {
+   "version": "12.20.8910",
+   "date": "2019-08-27",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.20.8910"
+  },
+  {
+   "version": "12.20.8910 (2)",
+   "date": "2019-09-03",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.20.8910 (2)"
+  },
+  {
+   "version": "12.20.8958",
+   "date": "2019-09-17",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.20.8958"
+  },
+  {
+   "version": "12.20.9030",
+   "date": "2019-10-01",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.20.9030"
+  },
+  {
+   "version": "12.20.9066",
+   "date": "2019-10-09",
+   "name": "Orcsoberfest Update",
+   "type": "Minor",
+   "implemented": "12.20.9066"
+  },
+  {
+   "version": "12.20.9108",
+   "date": "2019-10-14",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.20.9108"
+  },
+  {
+   "version": "12.20.9169",
+   "date": "2019-10-22",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.20.9169"
+  },
+  {
+   "version": "12.20.9183",
+   "date": "2019-10-23",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.20.9183"
+  },
+  {
+   "version": "12.20.9210",
+   "date": "2019-10-29",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.20.9210"
+  },
+  {
+   "version": "12.20.9221",
+   "date": "2019-11-05",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.20.9221"
+  },
+  {
+   "version": "12.20.9260",
+   "date": "2019-11-19",
+   "name": "Houses Update",
+   "type": "Minor",
+   "implemented": "12.20.9260"
+  },
+  {
+   "version": "12.20.9274",
+   "date": "2019-11-26",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.20.9274"
+  },
+  {
+   "version": "12.30",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "12.30.9287",
+   "date": "2019-12-02",
+   "name": "Winter Update 2019",
+   "type": "Major",
+   "implemented": "12.30.9287"
+  },
+  {
+   "version": "12.30.9305",
+   "date": "2019-12-10",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.30.9305"
+  },
+  {
+   "version": "12.30.9305 (2)",
+   "date": "2019-12-11",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.30.9305 (2)"
+  },
+  {
+   "version": "12.30.9308",
+   "date": "2019-12-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.30.9308"
+  },
+  {
+   "version": "12.30.9327",
+   "date": "2019-12-17",
+   "name": "Winter Update 2019 Adjustments",
+   "type": "Patch",
+   "implemented": "12.30.9327"
+  },
+  {
+   "version": "12.30.9367",
+   "date": "2020-01-14",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.30.9367"
+  },
+  {
+   "version": "12.30.9391",
+   "date": "2020-01-21",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.30.9391"
+  },
+  {
+   "version": "12.31",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "12.31.9434",
+   "date": "2020-01-28",
+   "name": "Hunting Ground Rebalancing",
+   "type": "Minor",
+   "implemented": "12.31.9434"
+  },
+  {
+   "version": "12.31.9451",
+   "date": "2020-01-29",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.31.9451"
+  },
+  {
+   "version": "12.31.9471",
+   "date": "2020-02-04",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.31.9471"
+  },
+  {
+   "version": "12.31.9488",
+   "date": "2020-02-07",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.31.9488"
+  },
+  {
+   "version": "12.31.9502",
+   "date": "2020-02-11",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.31.9502"
+  },
+  {
+   "version": "12.31.9502 (2)",
+   "date": "2020-02-17",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.31.9502 (2)"
+  },
+  {
+   "version": "12.31.9530",
+   "date": "2020-02-18",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.31.9530"
+  },
+  {
+   "version": "12.31.9540",
+   "date": "2020-02-25",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.31.9540"
+  },
+  {
+   "version": "12.31.9564",
+   "date": "2020-03-03",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.31.9564"
+  },
+  {
+   "version": "12.31.9580",
+   "date": "2020-03-06",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.31.9580"
+  },
+  {
+   "version": "12.31.9593",
+   "date": "2020-03-10",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.31.9593"
+  },
+  {
+   "version": "12.31.9604",
+   "date": "2020-03-17",
+   "name": "Weapons Rebalancing",
+   "type": "Minor",
+   "implemented": "12.31.9604"
+  },
+  {
+   "version": "12.31.9618",
+   "date": "2020-03-24",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.31.9618"
+  },
+  {
+   "version": "12.31.9640",
+   "date": "2020-03-31",
+   "name": "Stamina Changes",
+   "type": "Patch",
+   "implemented": "12.31.9640"
+  },
+  {
+   "version": "12.31.9655",
+   "date": "2020-04-07",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.31.9655"
+  },
+  {
+   "version": "12.31.9658",
+   "date": "2020-04-09",
+   "name": "Tournament Triumph Preparation",
+   "type": "Minor",
+   "implemented": "12.31.9658"
+  },
+  {
+   "version": "12.31.9667",
+   "date": "2020-04-15",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.31.9667"
+  },
+  {
+   "version": "12.31.9667 (2)",
+   "date": "2020-04-17",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.31.9667 (2)"
+  },
+  {
+   "version": "12.31.9810",
+   "date": "2020-05-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.31.9810"
+  },
+  {
+   "version": "12.31.9842",
+   "date": "2020-05-19",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.31.9842"
+  },
+  {
+   "version": "12.31.9861",
+   "date": "2020-05-26",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.31.9861"
+  },
+  {
+   "version": "12.31.9888",
+   "date": "2020-06-03",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.31.9888"
+  },
+  {
+   "version": "12.31.9914",
+   "date": "2020-06-17",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.31.9914"
+  },
+  {
+   "version": "12.31.9925",
+   "date": "2020-06-23",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.31.9925"
+  },
+  {
+   "version": "12.31.9984",
+   "date": "2020-07-07",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.31.9984"
+  },
+  {
+   "version": "12.40",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "12.40.9997",
+   "date": "2020-07-13",
+   "name": "Summer Update 2020",
+   "type": "Major",
+   "implemented": "12.40.9997"
+  },
+  {
+   "version": "12.40.9997 (2)",
+   "date": "2020-07-17",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.40.9997 (2)"
+  },
+  {
+   "version": "12.40.9997 (3)",
+   "date": "2020-07-19",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.40.9997 (3)"
+  },
+  {
+   "version": "12.40.10030",
+   "date": "2020-07-21",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.40.10030"
+  },
+  {
+   "version": "12.40.10043",
+   "date": "2020-07-28",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.40.10043"
+  },
+  {
+   "version": "12.40.10061",
+   "date": "2020-08-03",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.40.10061"
+  },
+  {
+   "version": "12.40.10085",
+   "date": "2020-08-11",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.40.10085"
+  },
+  {
+   "version": "12.40.10085 (2)",
+   "date": "2020-08-13",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.40.10098"
+  },
+  {
+   "version": "12.40.10098",
+   "date": "2020-08-18",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.40.10098"
+  },
+  {
+   "version": "12.40.10135",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "12.50.10109",
+   "date": "2020-08-25",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.50.10109"
+  },
+  {
+   "version": "12.50.10135",
+   "date": "2020-09-01",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.50.10135"
+  },
+  {
+   "version": "12.50.10164",
+   "date": "2020-09-08",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.50.10164"
+  },
+  {
+   "version": "12.50.10173",
+   "date": "2020-09-14",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.50.10173"
+  },
+  {
+   "version": "12.50.10177",
+   "date": "2020-09-15",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.50.10177"
+  },
+  {
+   "version": "12.51.10194",
+   "date": "2020-09-22",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.51.10194"
+  },
+  {
+   "version": "12.51.10215",
+   "date": "2020-09-29",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.51.10215"
+  },
+  {
+   "version": "12.51.10215 (2)",
+   "date": "2020-10-06",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.51.10215 (2)"
+  },
+  {
+   "version": "12.51.10320",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "12.51.10323",
+   "date": "2020-10-13",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.51.10323"
+  },
+  {
+   "version": "12.51.10394",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "12.52.10354",
+   "date": "2020-10-20",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.52.10354"
+  },
+  {
+   "version": "12.52.10382",
+   "date": "2020-10-27",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.52.10382"
+  },
+  {
+   "version": "12.52.10394",
+   "date": "2020-11-03",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.52.10394"
+  },
+  {
+   "version": "12.52.10394(2)",
+   "date": "2020-11-18",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.52.10394(2)"
+  },
+  {
+   "version": "12.53",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "12.55",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "12.55.10451",
+   "date": "2020-11-23",
+   "name": "Vocation Adjustments 2020",
+   "type": "Minor",
+   "implemented": "12.55.10451"
+  },
+  {
+   "version": "12.55.10454",
+   "date": "2020-11-24",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.55.10454"
+  },
+  {
+   "version": "12.60",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "12.60.10463",
+   "date": "2020-11-30",
+   "name": "Winter Update 2020",
+   "type": "Major",
+   "implemented": "12.60.10463"
+  },
+  {
+   "version": "12.60.10468",
+   "date": "2020-12-01",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.60.10468"
+  },
+  {
+   "version": "12.60.10484",
+   "date": "2020-12-07",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.60.10484"
+  },
+  {
+   "version": "12.60.10503",
+   "date": "2020-12-15",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.60.10503"
+  },
+  {
+   "version": "12.60.10522",
+   "date": "2021-01-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.60.10522"
+  },
+  {
+   "version": "12.61.10522",
+   "date": "2021-01-26",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.61.10522"
+  },
+  {
+   "version": "12.61.10531",
+   "date": "2021-01-18",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.61.10531"
+  },
+  {
+   "version": "12.61.10571",
+   "date": "2021-02-02",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.61.10571"
+  },
+  {
+   "version": "12.62.10592",
+   "date": "2021-02-09",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.62.10592"
+  },
+  {
+   "version": "12.63.10611",
+   "date": "2021-02-16",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.63.10611"
+  },
+  {
+   "version": "12.63.10628",
+   "date": "2021-02-23",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.63.10628"
+  },
+  {
+   "version": "12.63.10647",
+   "date": "2021-03-02",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.63.10647"
+  },
+  {
+   "version": "12.64.10651",
+   "date": "2021-03-02",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.64.10651"
+  },
+  {
+   "version": "12.64.10672",
+   "date": "2021-03-09",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.64.10672"
+  },
+  {
+   "version": "12.64.10693",
+   "date": "2021-03-16",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.64.10693"
+  },
+  {
+   "version": "12.65.10717",
+   "date": "2021-03-23",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.65.10717"
+  },
+  {
+   "version": "12.65.10733",
+   "date": "2021-03-30",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.65.10733"
+  },
+  {
+   "version": "12.65.10733 (2)",
+   "date": "2021-04-07",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.65.10733 (2)"
+  },
+  {
+   "version": "12.66.10771",
+   "date": "2021-04-20",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.66.10771"
+  },
+  {
+   "version": "12.66.10771 (2)",
+   "date": "2021-04-27",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.66.10771 (2)"
+  },
+  {
+   "version": "12.66.10792",
+   "date": "2021-05-04",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.66.10792"
+  },
+  {
+   "version": "12.66.10792 (2)",
+   "date": "2021-05-11",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.66.10792 (2)"
+  },
+  {
+   "version": "12.66.10832",
+   "date": "2021-05-18",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.66.10832"
+  },
+  {
+   "version": "12.66.10836",
+   "date": "2021-05-26",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.66.10836"
+  },
+  {
+   "version": "12.66.10866",
+   "date": "2021-06-01",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.66.10866"
+  },
+  {
+   "version": "12.66.10876",
+   "date": "2021-06-09",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.66.10876"
+  },
+  {
+   "version": "12.67.10918",
+   "date": "2021-06-22",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.67.10918"
+  },
+  {
+   "version": "12.67.10934",
+   "date": "2021-06-29",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.67.10934"
+  },
+  {
+   "version": "12.67.10934 (2)",
+   "date": "2021-07-06",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.67.10934 (2)"
+  },
+  {
+   "version": "12.70",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "12.70.10953",
+   "date": "2021-07-12",
+   "name": "Summer Update 2021",
+   "type": "Major",
+   "implemented": "12.70.10953"
+  },
+  {
+   "version": "12.70.10971",
+   "date": "2021-07-20",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.70.10971"
+  },
+  {
+   "version": "12.70.10974",
+   "date": "2021-07-23",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.70.10974"
+  },
+  {
+   "version": "12.70.10974 (2)",
+   "date": "2021-07-27",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.70.10974 (2)"
+  },
+  {
+   "version": "12.70.10995",
+   "date": "2021-08-03",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.70.10995"
+  },
+  {
+   "version": "12.70.11005",
+   "date": "2021-08-10",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.70.11005"
+  },
+  {
+   "version": "12.70.11011",
+   "date": "2021-08-17",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.70.11011"
+  },
+  {
+   "version": "12.71.11017",
+   "date": "2021-08-24",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.71.11017"
+  },
+  {
+   "version": "12.71.11025",
+   "date": "2021-08-31",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.71.11025"
+  },
+  {
+   "version": "12.71.11035",
+   "date": "2021-09-07",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.71.11035"
+  },
+  {
+   "version": "12.71.11127",
+   "date": "2021-09-28",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.71.11127"
+  },
+  {
+   "version": "12.71.11165",
+   "date": "2021-10-05",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.71.11165"
+  },
+  {
+   "version": "12.72.11206",
+   "date": "2021-10-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.72.11206"
+  },
+  {
+   "version": "12.72.11272",
+   "date": "2021-10-19",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.72.11272"
+  },
+  {
+   "version": "12.72.11332",
+   "date": "2021-10-26",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.72.11332"
+  },
+  {
+   "version": "12.72.11389",
+   "date": "2021-11-09",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.72.11389"
+  },
+  {
+   "version": "12.72.11405",
+   "date": "2021-11-09",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.72.11405"
+  },
+  {
+   "version": "12.72.11426",
+   "date": "2021-11-23",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.72.11426"
+  },
+  {
+   "version": "12.80",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "12.80.11430",
+   "date": "2021-11-29",
+   "name": "Winter Update 2021",
+   "type": "Major",
+   "implemented": "12.80.11430"
+  },
+  {
+   "version": "12.81.11448",
+   "date": "2021-11-30",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.81.11448"
+  },
+  {
+   "version": "12.81.11448 (2)",
+   "date": "2021-12-01",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.81.11448"
+  },
+  {
+   "version": "12.81.11448 (3)",
+   "date": "2021-12-02",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.81.11448"
+  },
+  {
+   "version": "12.81.11461",
+   "date": "2021-12-07",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.81.11461"
+  },
+  {
+   "version": "12.81.11476",
+   "date": "2021-12-14",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.81.11476"
+  },
+  {
+   "version": "12.85",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "12.85.11485",
+   "date": "2022-01-07",
+   "name": "25<sup>th</sup> Anniversary Update",
+   "type": "Minor",
+   "implemented": "12.85.11485"
+  },
+  {
+   "version": "12.85.11505",
+   "date": "2022-01-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.85.11505"
+  },
+  {
+   "version": "12.85.11505 (2)",
+   "date": "2022-01-13",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.85.11505 (2)"
+  },
+  {
+   "version": "12.85.11508",
+   "date": "2022-01-14",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.85.11508"
+  },
+  {
+   "version": "12.85.11511",
+   "date": "2022-01-18",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.85.11511"
+  },
+  {
+   "version": "12.85.11525",
+   "date": "2022-01-25",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.85.11525"
+  },
+  {
+   "version": "12.85.11542",
+   "date": "2022-01-25",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.85.11542"
+  },
+  {
+   "version": "12.86.11580",
+   "date": "2022-02-15",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.86.11580"
+  },
+  {
+   "version": "12.86.11621",
+   "date": "2022-02-22",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.86.11621"
+  },
+  {
+   "version": "12.86.11669",
+   "date": "2022-03-01",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.86.11669"
+  },
+  {
+   "version": "12.86.11669 (2)",
+   "date": "2022-03-08",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.86.11669 (2)"
+  },
+  {
+   "version": "12.86.11809",
+   "date": "2022-03-29",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.86.11809"
+  },
+  {
+   "version": "12.86.11818",
+   "date": "2022-04-05",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.86.11818"
+  },
+  {
+   "version": "12.86.11871",
+   "date": "2022-04-20",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.86.11871"
+  },
+  {
+   "version": "12.86.11871 (2)",
+   "date": "2022-04-27",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.86.11871 (2)"
+  },
+  {
+   "version": "12.86.11934",
+   "date": "2022-05-03",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.86.11934"
+  },
+  {
+   "version": "12.86.11934 (2)",
+   "date": "2022-05-10",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.86.11934 (2)"
+  },
+  {
+   "version": "12.86.11986",
+   "date": "2022-05-17",
+   "name": "Pantibian Festival",
+   "type": "Patch",
+   "implemented": "12.86.11986"
+  },
+  {
+   "version": "12.87.11992",
+   "date": "2022-05-17",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.87.11992"
+  },
+  {
+   "version": "12.87.12038",
+   "date": "2022-05-24",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.87.12038"
+  },
+  {
+   "version": "12.87.12047",
+   "date": "2022-06-01",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.87.12047"
+  },
+  {
+   "version": "12.87.12055",
+   "date": "2022-06-08",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.87.12055"
+  },
+  {
+   "version": "12.87.12055 (2)",
+   "date": "2022-06-14",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.87.12055 (2)"
+  },
+  {
+   "version": "12.87.12128",
+   "date": "2022-07-05",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.87.12128"
+  },
+  {
+   "version": "12.87.12150",
+   "date": "2022-07-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.87.12150"
+  },
+  {
+   "version": "12.90",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "12.90.12182",
+   "date": "2022-07-18",
+   "name": "Summer Update 2022",
+   "type": "Major",
+   "implemented": "12.90.12182"
+  },
+  {
+   "version": "12.90.12195",
+   "date": "2022-07-19",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.90.12195"
+  },
+  {
+   "version": "12.90.12235",
+   "date": "2022-07-26",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.90.12235"
+  },
+  {
+   "version": "12.90.12248",
+   "date": "2022-08-02",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.90.12248"
+  },
+  {
+   "version": "12.90.12248 (2)",
+   "date": "2022-08-09",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.90.12248 (2)"
+  },
+  {
+   "version": "12.91.12329",
+   "date": "2022-08-23",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.91.12329"
+  },
+  {
+   "version": "12.91.12383",
+   "date": "2022-09-06",
+   "name": null,
+   "type": "Patch",
+   "implemented": "12.91.12383"
+  },
+  {
+   "version": "13.00.12529",
+   "date": "2022-09-27",
+   "name": "Sound Update",
+   "type": "Minor",
+   "implemented": "13.00.12529"
+  },
+  {
+   "version": "13.00.12534",
+   "date": "2022-09-27",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.00.12534"
+  },
+  {
+   "version": "13.00.12539",
+   "date": "2022-09-27",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.00.12539"
+  },
+  {
+   "version": "13.00.12569",
+   "date": "2022-10-05",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.00.12569"
+  },
+  {
+   "version": "13.05.12613",
+   "date": "2022-10-11",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.05.12613"
+  },
+  {
+   "version": "13.05.12613 (2)",
+   "date": "2022-10-14",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.05.12613 (2)"
+  },
+  {
+   "version": "13.05.12657",
+   "date": "2022-10-14",
+   "name": "Damage and Healing Scaling per Level Update",
+   "type": "Patch",
+   "implemented": "13.05.12657"
+  },
+  {
+   "version": "13.05.12694",
+   "date": "2022-10-25",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.05.12694"
+  },
+  {
+   "version": "13.05.12715",
+   "date": "2022-11-02",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.05.12715"
+  },
+  {
+   "version": "13.05.12733",
+   "date": "2022-11-09",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.05.12733"
+  },
+  {
+   "version": "13.05.12827",
+   "date": "2022-11-22",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.05.12827"
+  },
+  {
+   "version": "13.10",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "13.10.12852",
+   "date": "2022-11-28",
+   "name": "Winter Update 2022",
+   "type": "Major",
+   "implemented": "13.10.12852"
+  },
+  {
+   "version": "13.10.12855",
+   "date": "2022-11-28",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.10.12855"
+  },
+  {
+   "version": "13.10.12858",
+   "date": "2022-11-29",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.10.12858"
+  },
+  {
+   "version": "13.10.12865",
+   "date": "2022-12-01",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.10.12865"
+  },
+  {
+   "version": "13.10.12872",
+   "date": "2022-12-02",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.10.12872"
+  },
+  {
+   "version": "13.10.12874",
+   "date": "2022-12-06",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.10.12874"
+  },
+  {
+   "version": "13.10.12892",
+   "date": "2022-12-13",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.10.12892"
+  },
+  {
+   "version": "13.11.12918",
+   "date": "2023-01-10",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.11.12918"
+  },
+  {
+   "version": "13.11.12929",
+   "date": "2023-01-11",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.11.12929"
+  },
+  {
+   "version": "13.11.12949",
+   "date": "2023-01-17",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.11.12949"
+  },
+  {
+   "version": "13.11.12974",
+   "date": "2023-01-24",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.11.12974"
+  },
+  {
+   "version": "13.11.12985",
+   "date": "2023-01-25",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.11.12985"
+  },
+  {
+   "version": "13.11.12992",
+   "date": "2023-01-31",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.11.12992"
+  },
+  {
+   "version": "13.11.12997",
+   "date": "2023-02-07",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.11.12997"
+  },
+  {
+   "version": "13.12.13005",
+   "date": "2023-02-08",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.12.13005"
+  },
+  {
+   "version": "13.12.13018",
+   "date": "2023-02-14",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.12.13018"
+  },
+  {
+   "version": "13.13.13061",
+   "date": "2023-02-28",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.13.13061"
+  },
+  {
+   "version": "13.13.13068",
+   "date": "2023-02-28",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.13.13068"
+  },
+  {
+   "version": "13.13.13074",
+   "date": "2023-03-01",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.13.13074"
+  },
+  {
+   "version": "13.13.13087",
+   "date": "2023-03-02",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.13.13087"
+  },
+  {
+   "version": "13.13.13091",
+   "date": "2023-03-03",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.13.13091"
+  },
+  {
+   "version": "13.13.13093",
+   "date": "2023-03-07",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.13.13093"
+  },
+  {
+   "version": "13.13.13113",
+   "date": "2023-03-09",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.13.13113"
+  },
+  {
+   "version": "13.13.13133",
+   "date": "2023-03-14",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.13.13133"
+  },
+  {
+   "version": "13.14.13146",
+   "date": "2023-03-21",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.14.13146"
+  },
+  {
+   "version": "13.14.13163",
+   "date": "2023-03-28",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.14.13163"
+  },
+  {
+   "version": "13.15.13186",
+   "date": "2023-04-04",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.15.13186"
+  },
+  {
+   "version": "13.15.13196",
+   "date": "2023-04-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.15.13196"
+  },
+  {
+   "version": "13.16.13209",
+   "date": "2023-04-18",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.16.13209"
+  },
+  {
+   "version": "13.17.13314",
+   "date": "2023-05-03",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.17.13314"
+  },
+  {
+   "version": "13.17.13344",
+   "date": "2023-05-16",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.17.13344"
+  },
+  {
+   "version": "13.17.13371",
+   "date": "2023-05-23",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.17.13371"
+  },
+  {
+   "version": "13.17.13405",
+   "date": "2023-06-06",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.17.13405"
+  },
+  {
+   "version": "13.17.13451",
+   "date": "2023-06-20",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.17.13451"
+  },
+  {
+   "version": "13.17.13464",
+   "date": "2023-06-27",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.17.13464"
+  },
+  {
+   "version": "13.20",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "13.20.13560",
+   "date": "2023-07-10",
+   "name": "Summer Update 2023",
+   "type": "Major",
+   "implemented": "13.20.13560"
+  },
+  {
+   "version": "13.20.13623",
+   "date": "2023-07-18",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.20.13623"
+  },
+  {
+   "version": "13.20.13673",
+   "date": "2023-07-25",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.20.13673"
+  },
+  {
+   "version": "13.20.13709",
+   "date": "2023-08-01",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.20.13709"
+  },
+  {
+   "version": "13.21.13743",
+   "date": "2023-08-08",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.21.13743"
+  },
+  {
+   "version": "13.21.13775",
+   "date": "2023-08-16",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.21.13775"
+  },
+  {
+   "version": "13.21.13810",
+   "date": "2023-08-22",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.21.13810"
+  },
+  {
+   "version": "13.21.13831",
+   "date": "2023-08-29",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.21.13831"
+  },
+  {
+   "version": "13.21.13839",
+   "date": "2023-09-05",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.21.13839"
+  },
+  {
+   "version": "13.21.13899",
+   "date": "2023-09-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.21.13899"
+  },
+  {
+   "version": "13.21.13988",
+   "date": "2023-09-26",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.21.13988"
+  },
+  {
+   "version": "13.21.14040",
+   "date": "2023-10-04",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.21.14040"
+  },
+  {
+   "version": "13.21.14172",
+   "date": "2023-10-17",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.21.14172"
+  },
+  {
+   "version": "13.22.14242",
+   "date": "2023-10-24",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.22.14242"
+  },
+  {
+   "version": "13.22.14282",
+   "date": "2023-10-31",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.22.14282"
+  },
+  {
+   "version": "13.22.14339",
+   "date": "2023-11-14",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.22.14339"
+  },
+  {
+   "version": "13.22.14366",
+   "date": "2023-11-21",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.22.14366"
+  },
+  {
+   "version": "13.22.14544",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "13.30",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "13.30.14423",
+   "date": "2023-12-04",
+   "name": "Winter Update 2023",
+   "type": "Major",
+   "implemented": "13.30.14423"
+  },
+  {
+   "version": "13.30.14428",
+   "date": "2023-12-06",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.30.14428"
+  },
+  {
+   "version": "13.30.14434",
+   "date": "2023-12-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.30.14434"
+  },
+  {
+   "version": "13.31.14485",
+   "date": "2024-01-09",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.31.14485"
+  },
+  {
+   "version": "13.32.14520",
+   "date": "2024-01-16",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.32.14520"
+  },
+  {
+   "version": "13.32.14544",
+   "date": "2024-01-23",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.32.14544"
+  },
+  {
+   "version": "13.33.14565",
+   "date": "2024-01-30",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.33.14565"
+  },
+  {
+   "version": "13.33.14570",
+   "date": "2024-01-30",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.33.14570"
+  },
+  {
+   "version": "13.33.14594",
+   "date": "2024-02-06",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.33.14594"
+  },
+  {
+   "version": "13.34.14623",
+   "date": "2024-02-13",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.34.14623"
+  },
+  {
+   "version": "13.34.14631",
+   "date": "2024-02-13",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.34.14631"
+  },
+  {
+   "version": "13.34.14646",
+   "date": "2024-02-20",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.34.14646"
+  },
+  {
+   "version": "13.34.14679",
+   "date": "2024-02-28",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.34.14679"
+  },
+  {
+   "version": "13.34.14770",
+   "date": "2024-03-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.34.14770"
+  },
+  {
+   "version": "13.34.14810",
+   "date": "2024-03-19",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.34.14810"
+  },
+  {
+   "version": "13.34.14823",
+   "date": "2024-03-26",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.34.14823"
+  },
+  {
+   "version": "13.34.14873",
+   "date": "2024-04-09",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.34.14873"
+  },
+  {
+   "version": "13.34.14900",
+   "date": "2024-04-16",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.34.14900"
+  },
+  {
+   "version": "13.35.14931",
+   "date": "2024-04-23",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.35.14931"
+  },
+  {
+   "version": "13.35.14987",
+   "date": "2024-04-29",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.35.14987"
+  },
+  {
+   "version": "13.35.15030",
+   "date": "2024-05-07",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.35.15030"
+  },
+  {
+   "version": "13.36.5b5f56",
+   "date": "2024-05-14",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.36.5b5f56"
+  },
+  {
+   "version": "13.36.6d4312",
+   "date": "2024-05-28",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.36.6d4312"
+  },
+  {
+   "version": "13.36.82652a",
+   "date": "2024-05-22",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.36.82652a"
+  },
+  {
+   "version": "13.36.d5ce5f",
+   "date": "2024-05-15",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.36.d5ce5f"
+  },
+  {
+   "version": "13.36.d8d851",
+   "date": "2024-05-14",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.36.d8d851"
+  },
+  {
+   "version": "13.37.1a37e1",
+   "date": "2024-06-25",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.37.1a37e1"
+  },
+  {
+   "version": "13.37.2b8a62",
+   "date": "2024-06-18",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.37.2b8a62"
+  },
+  {
+   "version": "13.37.abe843",
+   "date": "2024-06-19",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.37.abe843"
+  },
+  {
+   "version": "13.40",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "13.40.6a0a21",
+   "date": "2024-07-23",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.40.6a0a21"
+  },
+  {
+   "version": "13.40.54ea79",
+   "date": "2024-07-01",
+   "name": "Summer Update 2024",
+   "type": "Major",
+   "implemented": "13.40.54ea79"
+  },
+  {
+   "version": "13.40.93b0a1",
+   "date": "2024-07-30",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.40.93b0a1"
+  },
+  {
+   "version": "13.40.d5a654",
+   "date": "2024-07-16",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.40.d5a654"
+  },
+  {
+   "version": "13.40.e235a1",
+   "date": "2024-07-03",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.40.e235a1"
+  },
+  {
+   "version": "13.40.e15431",
+   "date": "2024-08-06",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.40.e15431"
+  },
+  {
+   "version": "13.41.77ccc9",
+   "date": "2024-08-27",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.41.77ccc9"
+  },
+  {
+   "version": "13.41.29789e",
+   "date": "2024-09-03",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.41.29789e"
+  },
+  {
+   "version": "13.41.693617",
+   "date": "2024-08-28",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.41.693617"
+  },
+  {
+   "version": "13.41.807681",
+   "date": "2024-09-04",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.41.807681"
+  },
+  {
+   "version": "13.41.a953fd",
+   "date": "2024-08-27",
+   "name": null,
+   "type": "Patch",
+   "implemented": "13.41.a953fd"
+  },
+  {
+   "version": "14.00.0af05f",
+   "date": "2024-09-11",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.00.0af05f"
+  },
+  {
+   "version": "14.00.0e4f6f",
+   "date": "2024-09-10",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.00.0e4f6f"
+  },
+  {
+   "version": "14.00.03d650",
+   "date": "2024-11-05",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.00.03d650"
+  },
+  {
+   "version": "14.00.6ce6f4",
+   "date": "2024-09-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.00.6ce6f4"
+  },
+  {
+   "version": "14.00.142f15",
+   "date": "2024-10-08",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.00.142f15"
+  },
+  {
+   "version": "14.00.408ba0",
+   "date": "2024-09-19",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.00.408ba0"
+  },
+  {
+   "version": "14.00.3119b1",
+   "date": "2024-10-29",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.00.3119b1"
+  },
+  {
+   "version": "14.00.7103e2",
+   "date": "2024-09-24",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.00.7103e2"
+  },
+  {
+   "version": "14.00.649480",
+   "date": "2024-09-18",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.00.649480"
+  },
+  {
+   "version": "14.00.bce109",
+   "date": "2024-09-10",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.00.bce109"
+  },
+  {
+   "version": "14.00.dd51c7",
+   "date": "2024-10-15",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.00.dd51c7"
+  },
+  {
+   "version": "14.00.df069e",
+   "date": "2024-11-05",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.00.df069e"
+  },
+  {
+   "version": "14.00.e4681a",
+   "date": "2024-09-17",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.00.e4681a"
+  },
+  {
+   "version": "14.05.0a7868",
+   "date": "2024-11-19",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.05.0a7868"
+  },
+  {
+   "version": "14.05.70ce66",
+   "date": "2024-11-11",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.05.70ce66"
+  },
+  {
+   "version": "14.10",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "14.10.2f6fbd",
+   "date": "2024-12-03",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.10.2f6fbd"
+  },
+  {
+   "version": "14.10.4e0c16",
+   "date": "2024-11-25",
+   "name": "Winter Update 2024",
+   "type": "Major",
+   "implemented": "14.10.4e0c16"
+  },
+  {
+   "version": "14.10.db74b1",
+   "date": "2024-11-26",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.10.db74b1"
+  },
+  {
+   "version": "14.10.f6bb68",
+   "date": "2024-12-06",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.10.f6bb68"
+  },
+  {
+   "version": "14.11.0fbf6c",
+   "date": "2024-12-10",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.11.0fbf6c"
+  },
+  {
+   "version": "14.12.0d8883",
+   "date": "2025-03-25",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.12.0d8883"
+  },
+  {
+   "version": "14.12.3bd135",
+   "date": "2025-01-14",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.12.3bd135"
+  },
+  {
+   "version": "14.12.43db04",
+   "date": "2025-03-11",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.12.43db04"
+  },
+  {
+   "version": "14.12.86fa54",
+   "date": "2025-01-07",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.12.86fa54"
+  },
+  {
+   "version": "14.12.95abf3",
+   "date": "2025-02-18",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.12.95abf3"
+  },
+  {
+   "version": "14.12.5229e4",
+   "date": "2025-03-04",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.12.5229e4"
+  },
+  {
+   "version": "14.12.14639b",
+   "date": "2025-02-11",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.12.14639b"
+  },
+  {
+   "version": "14.12.969405",
+   "date": "2025-02-04",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.12.969405"
+  },
+  {
+   "version": "14.12.adfa58",
+   "date": "2025-04-01",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.12.adfa58"
+  },
+  {
+   "version": "14.12.ca169e",
+   "date": "2025-01-08",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.12.ca169e"
+  },
+  {
+   "version": "14.12.dd424b",
+   "date": "2025-01-07",
+   "name": null,
+   "type": "Patch",
+   "implemented": "14.12.dd424b"
+  },
+  {
+   "version": "14.15",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "15.00",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "15.00.249ccc",
+   "date": "2025-04-08",
+   "name": "Monk Vocation Update",
+   "type": "Major",
+   "implemented": "15.00.249ccc"
+  },
+  {
+   "version": "15.00.483ebe",
+   "date": "2025-04-24",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.00.483ebe"
+  },
+  {
+   "version": "15.00.ac8333",
+   "date": "2025-04-15",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.00.ac8333"
+  },
+  {
+   "version": "15.01.2a9bd5",
+   "date": "2025-05-27",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.01.2a9bd5"
+  },
+  {
+   "version": "15.01.4b0877",
+   "date": "2025-06-11",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.01.4b0877"
+  },
+  {
+   "version": "15.01.34ec7d",
+   "date": "2025-05-06",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.01.34ec7d"
+  },
+  {
+   "version": "15.01.51b64a",
+   "date": "2025-04-28",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.01.51b64a"
+  },
+  {
+   "version": "15.01.84f39b",
+   "date": "2025-05-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.01.84f39b"
+  },
+  {
+   "version": "15.01.13671d",
+   "date": "2025-05-06",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.01.13671d"
+  },
+  {
+   "version": "15.01.036432",
+   "date": "2025-06-03",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.01.036432"
+  },
+  {
+   "version": "15.01.744703",
+   "date": "2025-05-20",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.01.744703"
+  },
+  {
+   "version": "15.02.09fafd",
+   "date": "2025-06-24",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.02.09fafd"
+  },
+  {
+   "version": "15.02.bc1c97",
+   "date": "2025-06-17",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.02.bc1c97"
+  },
+  {
+   "version": "15.03.7ea642",
+   "date": "2025-07-03",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.03.7ea642"
+  },
+  {
+   "version": "15.03.9d06a9",
+   "date": "2025-07-02",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.03.9d06a9"
+  },
+  {
+   "version": "15.03.116c20",
+   "date": "2025-07-15",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.03.116c20"
+  },
+  {
+   "version": "15.03.ae0345",
+   "date": "2025-07-01",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.03.ae0345"
+  },
+  {
+   "version": "15.03.afe753",
+   "date": "2025-07-08",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.03.afe753"
+  },
+  {
+   "version": "15.10",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "15.10.46b862",
+   "date": "2025-07-21",
+   "name": "Summer Update 2025",
+   "type": "Major",
+   "implemented": "15.10.46b862"
+  },
+  {
+   "version": "15.10.77ba00",
+   "date": "2025-07-22",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.10.77ba00"
+  },
+  {
+   "version": "15.10.724f8f",
+   "date": "2025-07-29",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.10.724f8f"
+  },
+  {
+   "version": "15.11.9e5d3f",
+   "date": "2025-10-14",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.11.9e5d3f"
+  },
+  {
+   "version": "15.11.34ee73",
+   "date": "2025-09-02",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.11.34ee73"
+  },
+  {
+   "version": "15.11.57e218",
+   "date": "2025-09-09",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.11.57e218"
+  },
+  {
+   "version": "15.11.76f164",
+   "date": "2025-09-23",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.11.76f164"
+  },
+  {
+   "version": "15.11.b91244",
+   "date": "2025-08-26",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.11.b91244"
+  },
+  {
+   "version": "15.11.c5bf24",
+   "date": "2025-08-05",
+   "name": null,
+   "type": "Minor",
+   "implemented": "15.11.c5bf24"
+  },
+  {
+   "version": "15.11.c9d1cf",
+   "date": "2025-08-19",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.11.c9d1cf"
+  },
+  {
+   "version": "15.11.d69b04",
+   "date": "2025-08-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.11.d69b04"
+  },
+  {
+   "version": "15.11.dd3523",
+   "date": "2025-09-30",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.11.dd3523"
+  },
+  {
+   "version": "15.12",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "15.12.c7d92c",
+   "date": "2025-10-21",
+   "name": "Newhaven Update",
+   "type": "Minor",
+   "implemented": "15.12.c7d92c"
+  },
+  {
+   "version": "15.13.02dfc3",
+   "date": "2025-11-11",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.13.02dfc3"
+  },
+  {
+   "version": "15.13.6a3f05",
+   "date": "2025-10-28",
+   "name": null,
+   "type": "Minor",
+   "implemented": "15.13.6a3f05"
+  },
+  {
+   "version": "15.13.95c94f",
+   "date": "2025-11-04",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.13.95c94f"
+  },
+  {
+   "version": "15.14",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "15.20",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "15.20.6bd207",
+   "date": "2025-12-16",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.20.6bd207"
+  },
+  {
+   "version": "15.20.7a5cc9",
+   "date": "2025-11-24",
+   "name": "Winter Update 2025",
+   "type": "Major",
+   "implemented": "15.20.7a5cc9"
+  },
+  {
+   "version": "15.20.45a63c",
+   "date": "2025-12-09",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.20.45a63c"
+  },
+  {
+   "version": "15.20.99c34c",
+   "date": "2025-12-02",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.20.99c34c"
+  },
+  {
+   "version": "15.20.8007a5",
+   "date": "2025-11-25",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.20.8007a5"
+  },
+  {
+   "version": "15.20.f23bc3",
+   "date": "2025-12-10",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.20.f23bc3"
+  },
+  {
+   "version": "15.21.0d352b",
+   "date": "2026-01-20",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.21.0d352b"
+  },
+  {
+   "version": "15.21.1b752f",
+   "date": "2026-01-13",
+   "name": null,
+   "type": "Minor",
+   "implemented": "15.21.1b752f"
+  },
+  {
+   "version": "15.22.c8f8bc",
+   "date": "2026-01-27",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.22.c8f8bc"
+  },
+  {
+   "version": "15.22.c93366",
+   "date": "2026-01-27",
+   "name": "Auto-learn Spells Update",
+   "type": "Minor",
+   "implemented": "15.22.c93366"
+  },
+  {
+   "version": "15.23.1d12c3",
+   "date": "2026-02-17",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.23.1d12c3"
+  },
+  {
+   "version": "15.23.05daf3",
+   "date": "2026-03-10",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.23.05daf3"
+  },
+  {
+   "version": "15.23.8d75ff",
+   "date": "2026-03-11",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.23.8d75ff"
+  },
+  {
+   "version": "15.23.9d7ba9",
+   "date": "2026-02-10",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.23.9d7ba9"
+  },
+  {
+   "version": "15.23.86efd0",
+   "date": "2026-02-04",
+   "name": null,
+   "type": "Minor",
+   "implemented": "15.23.86efd0"
+  },
+  {
+   "version": "15.23.bd141c",
+   "date": "2026-03-05",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.23.bd141c"
+  },
+  {
+   "version": "15.23.bf9553",
+   "date": "2026-02-24",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.23.bf9553"
+  },
+  {
+   "version": "15.23.cfa1fb",
+   "date": "2026-03-10",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.23.cfa1fb"
+  },
+  {
+   "version": "15.23.fb0341",
+   "date": "2026-03-03",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.23.fb0341"
+  },
+  {
+   "version": "15.24.6d181b",
+   "date": "2026-03-24",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.24.6d181b"
+  },
+  {
+   "version": "15.24.83c48a",
+   "date": "2026-06-09",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.24.83c48a"
+  },
+  {
+   "version": "15.24.95dcf3",
+   "date": "2026-03-17",
+   "name": "Targuna Update",
+   "type": "Minor",
+   "implemented": "15.24.95dcf3"
+  },
+  {
+   "version": "15.24.102f89",
+   "date": "2026-04-21",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.24.102f89"
+  },
+  {
+   "version": "15.24.984a9e",
+   "date": "2026-05-12",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.24.984a9e"
+  },
+  {
+   "version": "15.24.845104",
+   "date": "2026-05-05",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.24.845104"
+  },
+  {
+   "version": "15.24.c50b3f",
+   "date": "2026-03-31",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.24.c50b3f"
+  },
+  {
+   "version": "15.24.cf6eb8",
+   "date": "2026-05-19",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.24.cf6eb8"
+  },
+  {
+   "version": "15.24.d0c720",
+   "date": "2026-05-05",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.24.d0c720"
+  },
+  {
+   "version": "15.24.d57fb2",
+   "date": "2026-06-02",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.24.d57fb2"
+  },
+  {
+   "version": "15.24.e96518",
+   "date": "2026-04-28",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.24.e96518"
+  },
+  {
+   "version": "15.24.eb0021",
+   "date": "2026-04-14",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.24.eb0021"
+  },
+  {
+   "version": "15.24.ff830d",
+   "date": "2026-05-27",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.24.ff830d"
+  },
+  {
+   "version": "15.25.0a00a0",
+   "date": "2026-06-30",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.25.0a00a0"
+  },
+  {
+   "version": "15.25.3a4a52",
+   "date": "2026-06-16",
+   "name": "Vocation Adjustments 2026",
+   "type": "Minor",
+   "implemented": "15.25.3a4a52"
+  },
+  {
+   "version": "15.25.4202a3",
+   "date": "2026-06-23",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.25.4202a3"
+  },
+  {
+   "version": "15.25.a360ec",
+   "date": "2026-06-23",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.25.a360ec"
+  },
+  {
+   "version": "15.25.bd5a04",
+   "date": "2026-07-07",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.25.bd5a04"
+  },
+  {
+   "version": "15.30",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "15.30.004fb1",
+   "date": "2026-07-14",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.30.004fb1"
+  },
+  {
+   "version": "15.30.358f69",
+   "date": "2026-07-21",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.30.358f69"
+  },
+  {
+   "version": "15.30.a30dad",
+   "date": "2026-07-13",
+   "name": "Summer Update 2026",
+   "type": "Major",
+   "implemented": "15.30.a30dad"
+  },
+  {
+   "version": "15.31.69f220",
+   "date": "2026-07-28",
+   "name": "Patch 15.31.69f220",
+   "type": "Patch",
+   "implemented": "15.31.69f220"
+  },
+  {
+   "version": "15.32.75d4a0",
+   "date": "2026-08-26",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.32.75d4a0"
+  },
+  {
+   "version": "15.32.bf29ac",
+   "date": "2026-08-18",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.32.bf29ac"
+  },
+  {
+   "version": "15.32.dd3c32",
+   "date": "2026-09-11",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.32.dd3c32"
+  },
+  {
+   "version": "15.32.df7b29",
+   "date": "2026-08-11",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.32.df7b29"
+  },
+  {
+   "version": "15.32.f84c0e",
+   "date": "2026-08-05",
+   "name": "Patch 15.34.1a8250",
+   "type": "Patch",
+   "implemented": "15.32.f84c0e"
+  },
+  {
+   "version": "15.32.fc9100",
+   "date": "2026-08-04",
+   "name": "Patch 15.32.fc9100",
+   "type": "Patch",
+   "implemented": "15.32.fc9100"
+  },
+  {
+   "version": "15.33.7d7e7b",
+   "date": "2026-09-15",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.33.7d7e7b"
+  },
+  {
+   "version": "15.33.8f27df",
+   "date": "2026-09-23",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.33.8f27df"
+  },
+  {
+   "version": "15.33.98dba5",
+   "date": "2026-09-16",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.33.98dba5"
+  },
+  {
+   "version": "15.33.df9fa3",
+   "date": "2026-09-29",
+   "name": null,
+   "type": "Patch",
+   "implemented": "15.33.df9fa3"
+  },
+  {
+   "version": "Next Update",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "Pre-6.0",
+   "date": "2000-11-02",
+   "name": null,
+   "type": "Major",
+   "implemented": "Pre-6.0"
+  },
+  {
+   "version": "Summer Update 2026",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "Update 7.9",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "Update 8.0",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "Update 8.1",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  },
+  {
+   "version": "Update 8.12",
+   "date": null,
+   "name": null,
+   "type": null,
+   "implemented": null
+  }
+ ]
+}

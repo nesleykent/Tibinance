@@ -1,0 +1,10 @@
+{
+ "format": 1,
+ "note": "Append-only evidence chunks; a chunk never changes once committed. CC-BY-SA, TibiaWiki contributors.",
+ "chunks": [
+  {
+   "file": "chunk-0001.jsonl.gz",
+   "sha256": "7cf73250f630e4d762035d295131c751c7b9ecf33b764e1805a0103d707f91ec"
+  }
+ ]
+}
