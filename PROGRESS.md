@@ -14,8 +14,8 @@ Never force-push, never reset, never redo finished work.
 
 ## Current state
 
-- **Stage:** A2 (`economy-daily.yml`) next. **Stage F is done**: the Economy page (5699edc) and, committed by this
-  commit, the Markets "Forecast history" panel. Stages B to E are done; G is decided (see below).
+- **Stage:** G or H next. **A2 economy automation is committed by this commit** (`economy-daily.yml`, first run
+  dispatched after the push; see Long-running jobs). Stages B to F are done; G is decided (see below).
 - **Production:** `release/0003` (a data release by the forecast-archive workflow on top of `release/0002`, live
   verified 543/543). **Awaiting a full release:** everything since `release/0002` that is code or a page: Stages C
   to F, including `economy.html` and the Economy link added to every page's menu. The Research pages link to
@@ -26,9 +26,9 @@ Never force-push, never reset, never redo finished work.
   point-in-time features. It is not built yet; it needs a daily point-in-time feature build in Actions, which in
   turn needs the kill and loot caches.
 - **Exact next action:**
-  1. A2: `economy-daily.yml` (kill-statistics increment, `build_gold`, a weekly loot sync with the Actions cache plus
-     a recovery procedure); `data/economy/**` added to `release/policy.json` (takes effect with the next full
-     release).
+  1. Check the first `economy-daily.yml` run (Actions, "Economy data"). A cold cache rebuilds every kill-statistics
+     month, about 2 hours. It should commit `data/economy` through the latest upstream day, and its release step
+     should end with "nothing to release" (exit 3) until a full release approves the extended policy.
   2. G challenger, if the daily point-in-time features are in place.
   3. H: `docs/economy.md` (the Economy page already links it on GitHub), README and project-guide updates, full test
      and browser suites, then a full release with live verification and the final five-section report.
@@ -424,9 +424,21 @@ Never force-push, never reset, never redo finished work.
       suites pass.
     - Node suite: 197/197. `validate_site.mjs`: 8/8.
 
+- **A2, economy automation** (`.github/workflows/economy-daily.yml`, `release/policy.json`):
+  - **Schedule:** daily at 03:30 UTC (05:30 Berlin in summer), in the shared `data-writers` concurrency group. It
+    runs the incremental kill-statistics ingestion (with `GH_TOKEN` for the upstream commit lists), then
+    `fetch_loot` and `map_creatures` on Mondays or on request, then `build_gold`, `validate_site`, one commit of
+    `data/economy`, a rebase and push, and a data release (exit 3 "nothing to release" counts as success).
+  - **Cache:** the kill partitions, commit lists and wiki revisions are in the Actions cache (`economy-v1-*`), saved
+    even when a later step fails.
+  - **Recovery:** an evicted cache is rebuilt by the same commands (about 2 hours each, within the 330-minute limit).
+    The committed per world-month digests prove a rebuilt partition matches.
+  - **Policy:** `data/economy/**` and `reports/economy/results.json` are added to `release/policy.json`, effective
+    with the next full release.
+
 ## In progress / remaining
 
-- G (conditional), A2 `economy-daily.yml`, H (docs, full suites, full release, final five-section report).
+- G (prospective challenger), H (docs, full suites, full release, final five-section report).
 
 ## Unresolved requirements (carried, not substitutes)
 
@@ -468,6 +480,10 @@ Never force-push, never reset, never redo finished work.
     after a fixed `status.split` error.
   - **Dependency:** needs the kill-partition and loot caches above. Another agent must regenerate all of it.
   - **Validation:** each build passes the same checks as the latest-evidence build.
+- **First `economy-daily.yml` run** (GitHub Actions, dispatched after this commit):
+  - **Cache:** cold, so every kill-statistics month is rebuilt, about 2 hours.
+  - **Outputs:** a bot commit of `data/economy` on main.
+  - **If it fails:** read the run log and rerun it; the cache saved by the failed run is reused.
 
 ---
 

@@ -1,0 +1,101 @@
+# Daily economy data: the kill statistics tibiamaps added, then gold generation potential rebuilt; on Mondays (or on
+# request) the TibiaWiki loot evidence first. Only derived files and evidence are committed (data/economy/); the
+# kill-statistics archive is never republished.
+#
+# Caches: the kill partitions (.cache/economy/killstats), the upstream commit lists (.cache/economy/commits) and the
+# wiki revisions (.cache/economy/wiki) live in the Actions cache as temporary storage only. When they are evicted (7
+# days unused, or the 10 GB limit), the same commands rebuild them from the pinned upstream sources: about 2 hours for
+# the kill statistics, about 2 hours for the wiki revisions, inside this job's time limit. The per world-month SHA-256
+# digests in data/economy/sources/killstats.json prove a rebuilt partition matches the one first built. No other
+# agent or machine depends on this cache (PROGRESS.md, "Caches").
+#
+# A failure at any step commits and releases nothing; the last validated data stay live.
+name: Economy data
+
+on:
+  schedule:
+    - cron: '30 3 * * *'   # 05:30 Europe/Berlin in summer, 04:30 in winter: after tibiamaps' collection at about 04:00
+  workflow_dispatch:
+    inputs:
+      loot:
+        description: Also sync the TibiaWiki loot evidence (otherwise Mondays only)
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: data-writers
+  cancel-in-progress: false
+
+jobs:
+  economy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 330
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '26'
+      - name: Bot identity
+        run: |
+          git config --global user.name 'Tibinance data bot'
+          git config --global user.email 'tibinance-bot@users.noreply.github.com'
+      - name: Restore the economy cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            .cache/economy/killstats
+            .cache/economy/commits
+            .cache/economy/wiki
+          key: economy-v1-${{ github.run_id }}
+          restore-keys: economy-v1-
+      - name: Kill statistics (incremental; months missing from the cache are rebuilt)
+        env:
+          GH_TOKEN: ${{ github.token }}   # the upstream commit lists (when each file became available) come from the API
+        run: node tools/economy/ingest_killstats.mjs
+      - name: Loot evidence and creature map (Mondays, or on request)
+        run: |
+          if [ "${{ inputs.loot }}" = "true" ] || [ "$(date -u +%u)" = "1" ]; then
+            node tools/economy/fetch_loot.mjs
+            node tools/economy/map_creatures.mjs
+          else
+            echo "Loot evidence syncs on Mondays."
+          fi
+      - name: Gold generation potential (latest evidence)
+        run: node --max-old-space-size=12288 tools/economy/build_gold.mjs
+      - name: Save the economy cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            .cache/economy/killstats
+            .cache/economy/commits
+            .cache/economy/wiki
+          key: economy-v1-${{ github.run_id }}
+      - name: Validate the whole site
+        run: node tools/ci/validate_site.mjs
+      - name: Commit, push and release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git add data/economy
+          if git diff --cached --quiet; then echo "No new economy data."; exit 0; fi
+          files=$(node -e 'const k=require("./data/economy/sources/killstats.json");console.log(Object.values(k.worlds).map(w=>w.last).sort().at(-1))')
+          git commit -q -m "Economy data: kill statistics files through ${files}, gold generation potential rebuilt"
+          git fetch -q origin main
+          git rebase -q origin/main
+          git push -q origin HEAD:main
+          # A data release carries data/economy/** once release/policy.json (approved by a full release) lists it;
+          # until then there is nothing to release (exit 3) and the data wait on main.
+          set +e
+          node tools/release.mjs --data "$(git rev-parse HEAD)" --dispatch --approver "GitHub Actions economy data (validated data release)"
+          code=$?
+          set -e
+          [ "$code" = "0" ] || [ "$code" = "3" ]
