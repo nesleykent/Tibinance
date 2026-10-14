@@ -85,6 +85,15 @@ try {
   const shortFormat=new Intl.NumberFormat('en-US',{notation:'compact',maximumFractionDigits:2});
   assert.equal(await page.textContent('#statCards [data-id="gross"] .tv-stat-value'),shortFormat.format(sum));
   assert.deepEqual(await page.$$eval('#statCards .tv-stat',s=>s.map(e=>e.dataset.id)),['gross','coins','npc','kills']);
+  // Accumulated, as the Economy terminal: every month's total added up, here over All, the whole of monthly.json.
+  const monthly=await load('data/economy/gold/monthly.json');
+  const grossTotal=Object.values(monthly.worlds).flat().filter(r=>r[5]).reduce((a,r)=>a+r[1]+r[2],0);
+  await page.click('#summaryMode [data-mode="accumulated"]');
+  assert.match(await text('#summaryName'),/^Gross potential, the whole game: accumulated since \d{4}-\d{2}$/);
+  assert.equal(await page.textContent('#summaryLast'),shortFormat.format(grossTotal));
+  assert.match(await text('#summaryUnit'),/^gold accumulated to \d{4}-\d{2}, \d+ worlds$/);
+  await page.click('#summaryMode [data-mode="daily"]');
+  assert.match(await text('#summaryName'),/per day in each month$/);
   await page.click('#statCards [data-id="kills"]');
   assert.match(await text('#summaryName'),/^Creature kills/);
   assert.match(await text('#summaryUnit'),/^kills per day, \d{4}-\d{2}, \d+ worlds$/);

@@ -409,7 +409,8 @@ async function exportImage() {
   const canvas = document.createElement('canvas');
   canvas.width = shot.width + pad * 2 * ratio; canvas.height = shot.height + 110 * ratio;
   const ctx = canvas.getContext('2d'), font = getComputedStyle(document.documentElement).getPropertyValue('--font-ui');
-  ctx.fillStyle = getComputedStyle(document.body).backgroundColor; ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // The chart's own ground (its pane), not the page's: the terminal's page colour is only the gap between its blocks.
+  ctx.fillStyle = getComputedStyle(document.querySelector('.chart-area') ?? document.body).backgroundColor; ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.scale(ratio, ratio);
   ctx.fillStyle = c.ink; ctx.font = `600 18px ${font}`;
   ctx.fillText(`${state.world}: ${state.measures.map(k => MEASURES[k].short).join(', ') || 'gold hidden'}, ${state.mode === 'daily' ? 'gold per day' : 'accumulated gold (log scale)'} (${state.range})`, pad, 32);

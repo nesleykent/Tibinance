@@ -22,7 +22,7 @@
 }
 /* The wordmark keeps its place on the page's edge; the hover track extends past it. */
 .site-nav > :first-child { margin-inline-start:calc(var(--space-2) * -1); }
-.site-logo { flex:none; width:var(--space-5); height:var(--space-5); }
+.site-logo { flex:none; width:calc(var(--unit) * 5); height:calc(var(--unit) * 5); }
 .site-home { gap:var(--space-2); color:var(--ink); font-family:var(--font-ui); font-size:var(--step-1); font-weight:var(--weight-strong); letter-spacing:var(--tracking-tight); }
 .site-section,.site-slash { color:var(--muted); font-family:var(--font-editorial); font-size:var(--step-1); font-weight:var(--weight-regular); letter-spacing:var(--tracking-tight); }
 /* the crumbs' own padding spaces the slash: a clear gap on each side */

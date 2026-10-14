@@ -50,6 +50,8 @@ export function summaryChart(container, { format = short } = {}) {
       area.setData(data);
       chart.timeScale().fitContent();
     },
+    // A logarithmic scale, for accumulated figures.
+    log(on) { chart.priceScale('right').applyOptions({ mode: on ? L.PriceScaleMode.Logarithmic : L.PriceScaleMode.Normal }); },
     show(from) {
       const data = area.data();
       if (!data.length) return;

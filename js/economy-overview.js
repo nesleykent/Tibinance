@@ -7,7 +7,7 @@
  * The whole game per day in a month: each world's month total divided by its days with data, summed over the worlds.
  * A change of a sum over worlds: today's sum against the sum of each world's value at the start of the range.
  */
-import { $, esc, pill, tone, short, whole, logo, percent, summaryChart, heatmap, heatScale, sortableTable, worldSearch, sectionChips } from './tv-overview.js?v=20261014-tv';
+import { $, esc, pill, tone, short, whole, logo, percent, summaryChart, heatmap, heatScale, sortableTable, worldSearch, sectionChips } from './tv-overview.js?v=20261014-details';
 
 const RANGES = ['1M', '3M', '6M', 'YTD', '1Y', 'All'];
 const MEASURE = { gross: 'Gross potential', coins: 'Direct gold', npc: 'NPC potential' };
@@ -48,11 +48,13 @@ async function main() {
   const months = new Map();
   for (const list of Object.values(monthly.worlds)) for (const [month, coins, npc, kills, , days] of list) {
     if (!days) continue;
-    const m = months.get(month) ?? { coins: 0, npc: 0, kills: 0, worlds: 0 };
+    // Per day (each world's month total over its days with data), and the month's totals for accumulating.
+    const m = months.get(month) ?? { coins: 0, npc: 0, kills: 0, worlds: 0, coinsTotal: 0, npcTotal: 0, killsTotal: 0 };
     m.coins += coins / days; m.npc += npc / days; m.kills += kills / days; m.worlds++;
+    m.coinsTotal += coins; m.npcTotal += npc; m.killsTotal += kills;
     months.set(month, m);
   }
-  const series = [...months].sort((a, b) => a[0].localeCompare(b[0])).map(([month, m]) => ({ time: `${month}-01`, ...m, gross: m.coins + m.npc }));
+  const series = [...months].sort((a, b) => a[0].localeCompare(b[0])).map(([month, m]) => ({ time: `${month}-01`, ...m, gross: m.coins + m.npc, grossTotal: m.coinsTotal + m.npcTotal }));
   const lastMonth = series.at(-1);
   const latestTotal = k => all?.week?.[k]?.[0] ?? rows.reduce((a, r) => a + (r[k] ?? 0), 0);
   const CARDS = [
@@ -69,27 +71,42 @@ async function main() {
   $('activeWorlds').textContent = `${rows.length} active worlds, latest complete weeks through ${overview.through}`;
 
   const chart = summaryChart($('summaryChart'));
-  let current = 'gross', range = 'All';
+  // Daily averages, or as the Economy terminal accumulates: every month's total added up from the range's first month,
+  // on a logarithmic scale.
+  let current = 'gross', range = 'All', mode = 'daily';
   function showChart() {
-    const data = series.map(m => ({ time: m.time, value: m[current] }));
-    const last = data.at(-1), first = range === 'All' ? null : (() => {
-      const [y, m] = last.time.split('-').map(Number), back = { '6M': 6, YTD: m - 1, '1Y': 12 }[range];
+    const lastTime = series.at(-1).time;
+    const first = range === 'All' ? null : (() => {
+      const [y, m] = lastTime.split('-').map(Number), back = { '6M': 6, YTD: m - 1, '1Y': 12 }[range];
       return new Date(Date.UTC(y, m - 1 - back, 1)).toISOString().slice(0, 10);
     })();
-    const base = first ? data.find(d => d.time >= first) : data[0];
-    const ch = base && last && base !== last ? last.value / base.value - 1 : null;
-    $('summaryName').textContent = `${CARDS.find(c => c.id === current).name}, the whole game: per day in each month`;
-    $('summaryLast').textContent = short(last?.value);
-    const worlds = series.at(-1)?.worlds;
-    $('summaryUnit').textContent = `${current === 'kills' ? 'kills' : 'gold'} per day, ${last?.time.slice(0, 7)}, ${worlds} worlds`;
-    $('summaryChange').innerHTML = ch == null ? '' : `<span class="${tone(ch)}">${percent.format(ch)}</span> <span class="tv-muted">${range}</span>`;
+    const name = CARDS.find(c => c.id === current).name, worlds = series.at(-1)?.worlds, what = current === 'kills' ? 'kills' : 'gold';
+    let data;
+    if (mode === 'accumulated') {
+      let sum = 0;
+      data = series.filter(m => !first || m.time >= first).map(m => ({ time: m.time, value: (sum += m[`${current}Total`]) }));
+      $('summaryName').textContent = `${name}, the whole game: accumulated since ${data[0].time.slice(0, 7)}`;
+      $('summaryUnit').textContent = `${what} accumulated to ${lastTime.slice(0, 7)}, ${worlds} worlds`;
+      $('summaryChange').innerHTML = `<span class="tv-muted">${range}, log scale</span>`;
+    } else {
+      data = series.map(m => ({ time: m.time, value: m[current] }));
+      const base = first ? data.find(d => d.time >= first) : data[0], last = data.at(-1);
+      const ch = base && last && base !== last ? last.value / base.value - 1 : null;
+      $('summaryName').textContent = `${name}, the whole game: per day in each month`;
+      $('summaryUnit').textContent = `${what} per day, ${lastTime.slice(0, 7)}, ${worlds} worlds`;
+      $('summaryChange').innerHTML = ch == null ? '' : `<span class="${tone(ch)}">${percent.format(ch)}</span> <span class="tv-muted">${range}</span>`;
+    }
+    $('summaryLast').textContent = short(data.at(-1)?.value);
+    chart?.log(mode === 'accumulated');
     chart?.set(data, { color: COLOR[current] });
-    chart?.show(first);
+    chart?.show(mode === 'accumulated' ? null : first);
+    document.querySelectorAll('#summaryMode button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
     document.querySelectorAll('#statCards .tv-stat').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.id === current)));
     document.querySelectorAll('#summaryRanges button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.range === range)));
   }
   $('statCards').addEventListener('click', e => { const id = e.target.closest('[data-id]')?.dataset.id; if (id) { current = id; showChart(); } });
   $('summaryRanges').addEventListener('click', e => { const r = e.target.closest('[data-range]')?.dataset.range; if (r) { range = r; showChart(); } });
+  $('summaryMode').addEventListener('click', e => { const m = e.target.closest('[data-mode]')?.dataset.mode; if (m) { mode = m; showChart(); } });
   showChart();
 
   /* ---- heatmap ---- */

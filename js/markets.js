@@ -19,7 +19,7 @@ import { fmt, esc, num } from './format.js';
 import { RANGES, changeOver, dayGrid, daysBetween, marketValues, neighbours, rangeStart, statisticsAt } from './market-series.js';
 import { SIDES, createMarketChart, dayOf } from './market-chart.js?v=20261014-tv';
 import { dock } from './markets-dock.js';
-import { marketImage } from './market-export.js?v=20261014-tv';
+import { marketImage } from './market-export.js?v=20261014-details';
 import { loadEvents as readEvents, eventsFor, lifecycleSpan, addEventDays } from './events.js';
 import { eventsPanel } from './market-events-panel.js?v=20261014-rebuild';
 import { eventMarks } from './market-events-ui.js?v=20261014-rebuild';

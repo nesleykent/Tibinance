@@ -52,7 +52,8 @@ export async function marketImage({ view, side, logicalRange, context, hidden = 
 }
 
 function compose({ shot, ratio, k, plotWidth, market, keys, notes, context, side }) {
-  const c = { canvas: token('--canvas') || '#fff', ink: token('--ink'), muted: token('--muted'), line: token('--line'), lineStrong: token('--line-strong'),
+  // The chart's ground (TradingView's pane where the page has one), so the image matches the chart on screen.
+  const c = { canvas: token('--tv-pane') || token('--canvas') || '#fff', ink: token('--ink'), muted: token('--muted'), line: token('--line'), lineStrong: token('--line-strong'),
     up: token('--positive'), down: token('--negative'),
     events: { world: token('--event-world'), game: token('--event-game'), market: token('--event-market') },
     band: token(side === 'buy' ? '--buy' : '--sell') };

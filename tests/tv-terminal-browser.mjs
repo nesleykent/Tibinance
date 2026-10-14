@@ -4,6 +4,7 @@
 // bar replay; the theme. Run with the same local server / Playwright environment as markets-browser.mjs.
 import {createRequire} from 'node:module';
 import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
 const require=createRequire(import.meta.url);
 const {chromium,webkit}=require(process.env.TIBINANCE_NODE_MODULES ? `${process.env.TIBINANCE_NODE_MODULES}/playwright` : 'playwright');
 const engine=process.env.TIBINANCE_BROWSER ?? 'chrome';
@@ -177,6 +178,13 @@ try {
   await page.reload();
   await shown('Antica');
   assert.equal(await page.getAttribute('html','data-theme'),'dark','remembered');
+  // An exported image takes the chart's own ground, never the page's gap colour.
+  const corner=async()=>{
+    const download=page.waitForEvent('download');await page.click('#exportButton');
+    const png=(await readFile(await (await download).path())).toString('base64');
+    return page.evaluate(async png=>{const i=await createImageBitmap(await (await fetch(`data:image/png;base64,${png}`)).blob());const c=new OffscreenCanvas(i.width,i.height).getContext('2d');c.drawImage(i,0,0);return [...c.getImageData(4,4,1,1).data.slice(0,3)];},png);
+  };
+  assert.deepEqual(await corner(),[15,15,15],'Markets image on the dark pane');
   await page.click('#tvTheme');
 
   // ---- Economy: the same terminal; its interval in the top toolbar; drawings kept per world.
@@ -185,6 +193,7 @@ try {
   assert.equal(await page.textContent('#tvSymbolName'),'Antica');
   await page.click('header.site #interval [data-interval="month"]');
   assert.equal(new URL(page.url()).searchParams.get('interval'),'month');
+  assert.deepEqual(await corner(),[255,255,255],'Economy image on the light pane, not the page grey');
   // The viewer's log survives every redraw; the gold mode applies its own scale only when it changes.
   const scaleShown=()=>page.$$eval('.tv-scale button',bs=>bs.map(b=>b.getAttribute('aria-pressed')));
   await page.click('.tv-scale [data-scale="log"]');

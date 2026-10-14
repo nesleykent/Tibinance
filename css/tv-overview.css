@@ -51,6 +51,8 @@ body.tv-page { min-height:100dvh; background:var(--tv-bg); color:var(--tv-text);
 .tv-summary-change { font-size:16px; font-weight:600; font-variant-numeric:tabular-nums; }
 .tv-summary-chart { position:relative; min-width:0; height:380px; margin-top:12px; overflow:hidden; }
 .tv-summary-ranges { display:flex; gap:4px; margin-top:12px; }
+.tv-summary-tools { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; margin-top:12px; }
+.tv-summary-tools .tv-summary-ranges { margin-top:0; }
 .tv-summary-ranges button { height:30px; padding:0 12px; border:0; border-radius:15px; background:transparent; color:var(--tv-text); font:500 14px var(--tv-font); cursor:pointer; }
 .tv-summary-ranges button:hover { background:var(--tv-bg-3); }
 .tv-summary-ranges button[aria-pressed="true"] { background:var(--tv-bg-3); color:var(--tv-text); font-weight:700; }

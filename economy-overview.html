@@ -7,10 +7,10 @@
 <meta name="description" content="Gold generated across Tibia worlds: the whole game by month, a heatmap of the worlds, highlights, regions and every world.">
 <script src="js/tv-theme.js"></script>
 <link rel="stylesheet" href="css/app.css">
-<link rel="stylesheet" href="css/site-header.css?v=20261014-review">
+<link rel="stylesheet" href="css/site-header.css?v=20261014-details">
 <link rel="stylesheet" href="css/tv.css?v=20261014-tv">
 <link rel="stylesheet" href="css/tv-terminal.css?v=20261014-details">
-<link rel="stylesheet" href="css/tv-overview.css?v=20261014-tv">
+<link rel="stylesheet" href="css/tv-overview.css?v=20261014-details">
 <link rel="icon" href="tibinance-icon.svg" type="image/svg+xml">
 </head>
 <body class="tv-page">
@@ -56,7 +56,10 @@
         <span id="summaryLast" class="tv-summary-last"></span><span id="summaryUnit" class="tv-summary-unit"></span><span id="summaryChange" class="tv-summary-change"></span>
       </div>
       <div id="summaryChart" class="tv-summary-chart" role="img" aria-label="The chosen measure for the whole game, per day in each month"></div>
-      <div id="summaryRanges" class="tv-summary-ranges" role="group" aria-label="Range"><button type="button" data-range="6M" aria-pressed="false">6M</button><button type="button" data-range="YTD" aria-pressed="false">YTD</button><button type="button" data-range="1Y" aria-pressed="false">1Y</button><button type="button" data-range="All" aria-pressed="true">All</button></div>
+      <div class="tv-summary-tools">
+        <div id="summaryMode" class="tv-summary-ranges" role="group" aria-label="Gold values"><button type="button" data-mode="daily" aria-pressed="true">Daily avg</button><button type="button" data-mode="accumulated" aria-pressed="false" title="Every month's total added up from the range's first month, on a logarithmic scale">Accumulated</button></div>
+        <div id="summaryRanges" class="tv-summary-ranges" role="group" aria-label="Range"><button type="button" data-range="6M" aria-pressed="false">6M</button><button type="button" data-range="YTD" aria-pressed="false">YTD</button><button type="button" data-range="1Y" aria-pressed="false">1Y</button><button type="button" data-range="All" aria-pressed="true">All</button></div>
+      </div>
     </div>
     <p class="tv-section-note">Headline figures sum every active world's latest complete week. The chart sums, for each month, every world's month total divided by its days with data; the latest month is still running.</p>
   </section>
@@ -99,6 +102,6 @@
 <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.1/dist/lightweight-charts.standalone.production.js"
         integrity="sha384-KkYqTZlM13Zya6fVUF3IGCBOQ1ehFeJVVgxaVvD/0MebineF9EI8Jkd3NnWNChqN" crossorigin="anonymous"></script>
 <script type="module" src="js/site-header.js"></script>
-<script type="module" src="js/economy-overview.js?v=20261014-tv"></script>
+<script type="module" src="js/economy-overview.js?v=20261014-details"></script>
 </body>
 </html>
