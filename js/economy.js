@@ -13,8 +13,8 @@
  */
 import { fmt, esc, num } from './format.js';
 import { dock } from './markets-dock.js';
-import { MEASURES, INTERVALS, ratePeriods, accumulatedPeriods, rangeChange, rangeStartOf, overviewRows, periodOf, contributions, lastDay, median,
-  LIQUIDATION_SCENARIOS } from './economy-data.js?v=20261014-series';
+import { MEASURES, INTERVALS, ratePeriods, accumulatedPeriods, rangeChange, rangeStartOf, overviewRows, periodOf, contributions, lastDay, sellOfferPeriods,
+  LIQUIDATION_SCENARIOS } from './economy-data.js?v=20261014-global-price';
 import { economyChart, colors } from './economy-chart.js?v=20261014-tv';
 import { connect, changed } from './tv-bridge.js';
 
@@ -41,7 +41,7 @@ const state = {
   mode: params.get('mode') === 'accumulated' ? 'accumulated' : 'daily',
   kills: params.get('kills') !== '0',
   interval: INTERVALS.includes(params.get('interval')) ? params.get('interval') : 'week',
-  range: RANGES.includes(params.get('range')) ? params.get('range') : '1Y',
+  range: RANGES.includes(params.get('range')) ? params.get('range') : 'All',
   price: params.get('price') !== '0',
   rate: params.has('rate') && LIQUIDATION_SCENARIOS.includes(Number(params.get('rate'))) ? Number(params.get('rate')) : null,
   stable: params.get('stable') === '1',
@@ -70,11 +70,11 @@ addEventListener('pageshow', e => {
 const json = async path => { const r = await fetch(path, { signal: requests.signal }); if (!r.ok) throw new Error(`${path}: HTTP ${r.status}`); return r.json(); };
 const optional = path => json(path).catch(() => null);
 function worldFiles(w) {
-  if (!files.has(w.dir)) files.set(w.dir, Promise.all([json(`data/economy/gold/worlds/${w.dir}.json`), json(`data/economy/gold/contributions/${w.dir}.json`)])
+  if (!files.has(w.dir)) files.set(w.dir, Promise.all([json(`data/economy/gold/worlds/${w.dir}.json`), w.dir === 'all' ? Promise.resolve({ months: [] }) : json(`data/economy/gold/contributions/${w.dir}.json`)])
     .then(([daily, contrib]) => ({ daily, contrib })).catch(e => { files.delete(w.dir); throw e; }));
   return files.get(w.dir);
 }
-const summaryOf = world => data.index.worlds.find(w => w.world === world);
+const summaryOf = world => (world === 'All' ? data.overview.worlds.find(w => w.world === 'All') : data.index.worlds.find(w => w.world === world));
 const marketOf = world => data.market?.worlds.find(w => w.world === world) ?? null;
 const latestDay = () => data.index.worlds.map(w => w.last).sort().at(-1);
 
@@ -82,13 +82,8 @@ const latestDay = () => data.index.worlds.map(w => w.last).sort().at(-1);
 // The periods at the interval with their rates, the latest complete one, and each period's median Sell Offer.
 function buildView(summary, daily, contrib) {
   const periods = ratePeriods(daily, state.interval);
-  const prices = new Map();
-  for (const [day, sell] of marketOf(summary.world)?.bestOfferCloses ?? []) {
-    const start = periodOf(day, state.interval)[0];
-    if (!prices.has(start)) prices.set(start, []);
-    prices.get(start).push(sell);
-  }
-  const price = new Map([...prices].map(([start, v]) => [start, { sell: median(v), n: v.length }]));
+  const sources = summary.world === 'All' ? data.market?.worlds ?? [] : [marketOf(summary.world)].filter(Boolean);
+  const price = sellOfferPeriods(sources, state.interval);
   return { summary, daily, contrib, periods, last: periods.findLast(p => p.rate.grossPotential !== null) ?? null,
     byStart: new Map(periods.map(p => [p.start, p])), price, lastPrice: periods.findLast(p => price.has(p.start)) ?? null,
     end: lastDay(daily), ended: summary.last < latestDay() };
@@ -147,7 +142,7 @@ function draw({ preserveRange = false } = {}) {
   setChoice('interval', 'interval', state.interval);
   $('priceToggle').setAttribute('aria-pressed', String(state.price && Boolean(view.lastPrice)));
   $('priceToggle').title = view.lastPrice
-    ? `${state.price ? 'Hide' : 'Show'} the Tibia Coin Sell Offer price; gold per TC on the left scale. Latest observed ${periodLabel(view.lastPrice)}.`
+    ? `${state.price ? 'Hide' : 'Show'} the Tibia Coin Sell Offer price; ${state.world === 'All' ? 'daily median across observed worlds, then median of days in each period; ' : ''}gold per TC on the left scale. Latest observed ${periodLabel(view.lastPrice)}.`
     : 'No Tibia Coin price observations for this world’s recorded history.';
   $('priceToggle').disabled = !view.lastPrice;
   showQuote();
@@ -184,6 +179,7 @@ function periodLabel(p, interval = state.interval) {
   return `${d.toLocaleString('en-US', { month: 'long', timeZone: 'UTC' })} ${d.getUTCFullYear()}`;
 }
 function metaOf(world) {
+  if (world === 'All') return `<span>All worlds</span><span>${fmt(view.summary.latestWorldCount)} worlds on ${esc(view.end)}</span>`;
   const m = marketOf(world);
   return [m?.type && `<span>${esc(m.type)}</span>`, m?.battleye && `<span>BattlEye <span class="be-${esc(m.battleye)}">${esc(m.battleye)}</span></span>`,
     m?.location && `<span>${esc(m.location)}</span>`, view?.ended && `<span class="tag">Ended ${esc(view.summary.last)}</span>`].filter(Boolean).join('');
@@ -204,7 +200,7 @@ function showQuote() {
   const a = p && view.accumulated.get(p.start);
   $('through').textContent = state.mode === 'accumulated'
     ? `Accumulated gold (log scale), ${a?.from ?? ''} to ${p?.end ?? view.end}. ${a ? `${a.covered}/${a.days} days with data${a.complete ? '' : ' (partial subtotal)'}. ` : ''}Kills per day.`
-    : `Gold per day by ${UNIT[state.interval]}. Kill days through ${view.end}`;
+    : `Gold per day by ${UNIT[state.interval]}. History ${view.daily.first} to ${view.end}${p?.worldDays !== undefined ? `. ${p.worldDaysCovered}/${p.worldDays} world-days with data` : ''}`;
 }
 
 /*
@@ -239,10 +235,11 @@ function showLegend(day) {
   if (state.kills) rows.push(extra(`${key('key-volume', KEY[state.measure])}Kills/day`, gold(p.rate.kills), `<span class="meta">${pct1(p.killCoverage)} valued</span>`, true));
   if (state.stable && values.grossPotential !== null) rows.push(extra(`${key('eco-key-dashed', 'var(--accent)')}Constant set`, gold(values.grossStable), '<span class="meta">comparison</span>', true));
   if (state.rate !== null && values.grossPotential !== null) rows.push(extra(`${key('eco-key-dashed', 'var(--caution)')}Gold + ${state.rate * 100}% NPC`, gold(values.directCoins + state.rate * values.npcPotential), '<span class="meta">assumption</span>', true));
-  if (state.price) {
+  if (state.price && view.lastPrice) {
     const pricedPeriod = !day && !view.price.has(p.start) ? view.lastPrice : p;
     const q = pricedPeriod && view.price.get(pricedPeriod.start);
-    rows.push(extra(`${key('key-average', 'var(--average)')}TC Sell Offer`, q ? gold(q.sell) : 'N/A', `<span class="meta">${q ? `median of ${fmt(q.n)} day${q.n === 1 ? '' : 's'}${pricedPeriod !== p ? `, last observed ${esc(periodLabel(pricedPeriod))}` : ''}` : 'not observed'}</span>`, true));
+    const basis = state.world === 'All' ? `median of ${fmt(q?.n ?? 0)} daily world medians; ${fmt(q?.worlds ?? 0)} worlds, ${fmt(q?.worldDays ?? 0)} world-days` : `median of ${fmt(q?.n ?? 0)} day${q?.n === 1 ? '' : 's'}`;
+    rows.push(extra(`${key('key-average', 'var(--average)')}TC Sell Offer${state.world === 'All' ? ' (world median)' : ''}`, q ? gold(q.sell) : 'N/A', `<span class="meta">${q ? `${basis}${pricedPeriod !== p ? `, last observed ${esc(periodLabel(pricedPeriod))}` : ''}` : 'not observed'}</span>`, true));
   }
   $('legend').innerHTML = `${head} ${rows.join(' ')}`;
   if (!day) fitHead();
@@ -256,7 +253,7 @@ function describeChart() {
     + (p ? `Latest complete ${UNIT[state.interval]}: ${periodLabel(p)}, ${m.name}: ${gold(view.values.get(p.start)[field()])} ${state.mode === 'daily' ? 'gold per day' : 'gold accumulated'}, kill coverage ${pct1(p.killCoverage)}.` : 'No complete period.')
     + (state.mode === 'accumulated' && a ? ` Logarithmic gold scale. Since ${a.from}: ${a.covered} of ${a.days} days with data${a.complete ? '' : ', partial subtotal'}.` : '')
     + (state.kills ? ' Kills per day in the lower pane.' : '')
-    + (state.price && view.lastPrice ? ' With the median TC Sell Offer per period on the left scale.' : '')
+    + (state.price && view.lastPrice ? ` With the ${state.world === 'All' ? 'median of daily world-median TC Sell Offers' : 'median TC Sell Offer'} per period on the left scale.` : '')
     + (state.rate !== null ? ` With gold plus ${state.rate * 100}% of NPC potential, an assumption.` : '')
     + (state.stable ? ' With the constant creature set for comparison.' : '')
     + ' Full period values and coverage are available in Help.');
@@ -271,13 +268,15 @@ function drawChartData() {
   $('chartData').innerHTML = `<caption class="sr-only">${unit} at the selected interval, from valued creatures. Accumulated subtotals exclude missing days.</caption><thead><tr><th>Period</th><th class="num">Gross (${unit})</th><th class="num">Gold (${unit})</th><th class="num">NPC (${unit})</th>`
     + extras.map(e => `<th class="num">${esc(e.title)}</th>`).join('')
     + '<th class="num">Kills/day</th><th>Days with data</th><th class="num">Kill coverage</th>'
+    + (view.daily.worldsExpected ? '<th>World-days with data</th>' : '')
     + (state.mode === 'accumulated' ? '<th>Accumulated days with data</th>' : '')
-    + (state.price ? '<th class="num">TC Sell (gold/coin)</th><th class="num">Price days</th>' : '') + '</tr></thead><tbody>'
+    + (state.price && view.lastPrice ? '<th class="num">TC Sell (gold/coin)</th><th class="num">Price days</th>' + (state.world === 'All' ? '<th class="num">Worlds priced</th><th class="num">Price world-days</th>' : '') : '') + '</tr></thead><tbody>'
     + [...view.periods].reverse().map(p => `<tr${p === view.last ? ' class="current"' : ''}><td>${esc(periodLabel(p))}</td>`
       + [view.values.get(p.start).grossPotential, view.values.get(p.start).directCoins, view.values.get(p.start).npcPotential, ...extras.map(e => e.value(p)), p.rate.kills].map(v => `<td class="num">${gold(v)}</td>`).join('')
       + `<td>${p.covered} / ${p.days}${p.complete ? '' : ' incomplete'}</td><td class="num">${pct1(p.killCoverage)}</td>`
+      + (view.daily.worldsExpected ? `<td>${p.worldDaysCovered} / ${p.worldDays}</td>` : '')
       + (state.mode === 'accumulated' ? `<td>${view.values.get(p.start).grossPotential === null ? 'N/A' : `${view.values.get(p.start).covered} / ${view.values.get(p.start).days}${view.values.get(p.start).complete ? '' : ' partial subtotal'}`}</td>` : '')
-      + (state.price ? `<td class="num">${gold(view.price.get(p.start)?.sell)}</td><td class="num">${view.price.get(p.start)?.n ?? 0}</td>` : '') + '</tr>').join('') + '</tbody>';
+      + (state.price && view.lastPrice ? `<td class="num">${gold(view.price.get(p.start)?.sell)}</td><td class="num">${view.price.get(p.start)?.n ?? 0}</td>${state.world === 'All' ? `<td class="num">${view.price.get(p.start)?.worlds ?? 0}</td><td class="num">${view.price.get(p.start)?.worldDays ?? 0}</td>` : ''}` : '') + '</tr>').join('') + '</tbody>';
 }
 
 /* --------------------------------------------------------------- watchlist */
@@ -286,7 +285,7 @@ function drawChartData() {
 function watchList() {
   const list = overviewRows(data.overview, state.interval, state.measure, state.range, state.filter);
   const { key: k, dir } = state.sort;
-  return list.sort((a, b) => (k === 'world' ? a.world.localeCompare(b.world) * dir
+  return list.sort((a, b) => a.dir === 'all' ? -1 : b.dir === 'all' ? 1 : (k === 'world' ? a.world.localeCompare(b.world) * dir
     : a[k] === null ? (b[k] === null ? a.world.localeCompare(b.world) : 1) : b[k] === null ? -1 : (a[k] - b[k]) * dir));
 }
 
@@ -295,7 +294,7 @@ function drawWatchlist() {
   const active = document.activeElement;
   const focusedWorld = active.closest('#worlds tr[data-world]')?.dataset.world;
   const list = watchList();
-  $('worldCount').textContent = fmt(list.length);
+  $('worldCount').textContent = fmt(list.filter(r => r.dir !== 'all').length);
   $('noWorlds').hidden = list.length > 0;
   for (const th of document.querySelectorAll('table.watch thead th')) {
     const k = th.querySelector('button').dataset.sort;
@@ -323,7 +322,7 @@ function showDetails() {
   $('detailChange').innerHTML = change ? `${signedDelta(change.delta)} ${signedRatio(change.ratio)}` : '';
   $('detailChangeLabel').textContent = change ? `Change ${state.range}` : `Change ${state.range}: not enough complete periods`;
   const online = data.vip?.observations.find(o => o.world === state.world && o.metric === 'characters-online');
-  $('detailNote').innerHTML = (p ? `Latest complete ${UNIT[state.interval]} <span>${esc(periodLabel(p))}</span>${change ? `, against <span>${esc(periodLabel(change.from))}</span>` : ''}<br>` : '')
+  $('detailNote').innerHTML = (state.world === 'All' ? `Sum of ${fmt(s.worldCount)} world histories, each during its recorded dates. Retired worlds are included until their last record.<br>${p ? `${fmt(p.worldDaysCovered)}/${fmt(p.worldDays)} world-days with data in this period.<br>` : ''}` : '') + (p ? `Latest complete ${UNIT[state.interval]} <span>${esc(periodLabel(p))}</span>${change ? `, against <span>${esc(periodLabel(change.from))}</span>` : ''}<br>` : '')
     + `Kill days <span>${esc(s.first)}</span> to <span>${esc(s.last)}</span>: ${fmt(s.observed)} observed, ${fmt(s.recovered)} recovered exactly, ${fmt(s.missing)} missing`
     + (online ? `<br>TibiaVIP, ${esc(data.vip.observedAt.slice(0, 10))}: <span>${fmt(online.value)}</span> characters online at one instant` : '');
   $('detailCoins').textContent = p ? gold(p.rate.directCoins) : 'N/A';
@@ -341,7 +340,7 @@ function showDetails() {
 // latest complete month until another is chosen.
 function drawCreatures() {
   const months = view.contrib.months.map(m => m.month).sort().reverse();
-  if (!months.length) { $('creatureMonth').innerHTML = ''; $('creatureList').innerHTML = ''; $('creatureNote').textContent = 'No creature contributions for this world.'; return; }
+  if (!months.length) { $('creatureMonth').innerHTML = ''; $('creatureList').innerHTML = ''; $('creatureNote').textContent = state.world === 'All' ? 'Choose an individual world for its creature breakdown. Monthly world top-30 lists cannot establish a complete global creature ranking.' : 'No creature contributions for this world.'; return; }
   const complete = months.filter(m => periodOf(`${m}-01`, 'month')[1] <= view.end);
   const month = state.month && months.includes(state.month) ? state.month : (complete[0] ?? months[0]);
   $('creatureMonth').innerHTML = months.map(m => `<option value="${m}"${m === month ? ' selected' : ''}>${m}${complete.includes(m) ? '' : ' (unfinished)'}</option>`).join('');
@@ -553,7 +552,7 @@ function connectTools() {
     values: () => view ? view.periods.map(p => ({ time: p.start, value: view.values.get(p.start)?.[field()] })).filter(v => Number.isFinite(v.value)) : [],
     format: v => gold(v),
     worlds: () => data.index ? overviewRows(data.overview, state.interval, state.measure, state.range, '').map(r => ({ world: r.world, last: r.value, ratio: r.change, retired: !!r.ended,
-      meta: [marketOf(r.world)?.type, marketOf(r.world)?.location, r.ended && `ended ${r.ended}`].filter(Boolean).join(', ') })) : [],
+      meta: r.dir === 'all' ? 'Every world, summed' : [marketOf(r.world)?.type, marketOf(r.world)?.location, r.ended && `ended ${r.ended}`].filter(Boolean).join(', ') })) : [],
     open: world => { $('filter').value = state.filter = ''; select(world).catch(failed); },
     reset: () => { chart.chart.priceScale('right').applyOptions({ autoScale: true }); applyRange(); },
     setStyle: style => chart.setStyle(style),

@@ -9,7 +9,7 @@ import {mkdir,readFile} from 'node:fs/promises';
 import {join} from 'node:path';
 import assert from 'node:assert/strict';
 import {fmt} from '../js/format.js';
-import {MEASURES,ratePeriods,rangeChange,contributions,periodOf,rangeStartOf,sumPeriod} from '../js/economy-data.js';
+import {MEASURES,ratePeriods,rangeChange,contributions,periodOf,rangeStartOf,sumPeriod,sellOfferPeriods} from '../js/economy-data.js';
 const require=createRequire(import.meta.url);
 const {chromium,webkit}=require(process.env.TIBINANCE_NODE_MODULES ? `${process.env.TIBINANCE_NODE_MODULES}/playwright` : 'playwright');
 const engine=process.env.TIBINANCE_BROWSER ?? 'chrome';
@@ -55,7 +55,7 @@ try {
   const listed=()=>page.$$eval('#worlds tr[data-world]',trs=>trs.map(tr=>tr.dataset.world));
   const shown=async world=>{await page.waitForFunction(w=>document.getElementById('world').textContent===w,world);await ready();await page.waitForTimeout(100);};
 
-  // ---- Reached from the site menu; Antica, gross potential, by week, over a year.
+  // ---- A first visit exposes the entire recorded gold history, independently of TC price coverage.
   await page.goto(`${root}/`);
   await page.click('header.site [data-site-menu]');
   await page.click('#site-menu a[href="economy.html"]');
@@ -63,6 +63,26 @@ try {
   assert.equal(await page.title(),'Tibinance Economy');
   assert.equal(await page.getAttribute('#site-menu a[aria-current="page"]','href'),'economy.html');
   assert.equal(await text('#world'),'Antica');
+  assert.equal(param('range'),'All','a first visit must not hide the history before the last year');
+  assert.equal(await page.getAttribute('#range [data-range="All"]','aria-checked'),'true');
+  await page.waitForTimeout(100);
+  const initialHistory=await daily('antica');
+  const initialFirst=periodOf(initialHistory.first,'week')[0];
+  const visibleFirst=await page.evaluate(()=>{
+    const d=window.economyTestCharts[0].timeScale().getVisibleRange().from;
+    return typeof d==='string'?d:`${d.year}-${String(d.month).padStart(2,'0')}-${String(d.day).padStart(2,'0')}`;
+  });
+  assert.equal(visibleFirst,initialFirst,'the initial chart reaches the oldest gold data');
+  const firstGold=await page.evaluate(()=>window.economyTestSeries.filter(s=>s.options().lineVisible===false)
+    .find(s=>s.options().visible).data().find(p=>p.value!==undefined));
+  assert.equal(firstGold.time,initialFirst,'gold before 2025 is plotted even with TC price enabled');
+  assert.ok(firstGold.value>0);
+  assert.equal(await text('#lastRange'),'All');
+  assert.ok((await text('#through')).includes(`History ${initialHistory.first} to `),'the available start date is visible');
+  if (shots) await page.screenshot({path:join(shots,`economy-${engine}-full-history.png`),fullPage:true});
+  // Explicit shorter ranges remain available, and the existing interaction checks use 1Y.
+  await page.click('#range [data-range="1Y"]');
+
   assert.deepEqual([param('world'),param('measure'),param('interval'),param('range')],['Antica','gross','week','1Y']);
   assert.equal(await page.locator('#measure #priceToggle').count(),1,'Tibia Coin price has a labelled control beside the gold series');
   assert.match(await text('#priceToggle'),/^Tibia Coin price/i);
@@ -83,14 +103,13 @@ try {
   assert.ok(legend.includes(`${(100*e.last.killCoverage).toFixed(1)}% valued`));
   assert.doesNotMatch(await page.locator('#economy').textContent(),/Players killed|Direct coins|>Coins</);
   assert.match(await page.getAttribute('#chart','aria-label'),/^Antica, gross potential from valued creatures in gold per day, by week, range 1Y\./);
-  const lastDay=(await daily('antica')).first;
-  assert.match(await text('#through'),/Kill days through \d{4}-\d\d-\d\d$/);
-  assert.ok(lastDay);
+  assert.ok((await text('#through')).includes(`History ${initialHistory.first} to `));
+  assert.ok(initialHistory.first);
 
   // ---- The watchlist: the active worlds, the selected one marked, its figures equal to the chart's.
-  const active=overview.worlds.filter(w=>!w.ended).map(w=>w.world).sort((a,b)=>a.localeCompare(b));
+  const active=['All',...overview.worlds.filter(w=>!w.ended && w.dir!=='all').map(w=>w.world).sort((a,b)=>a.localeCompare(b))];
   assert.deepEqual(await listed(),active);
-  assert.equal(await text('#worldCount'),String(active.length));
+  assert.equal(await text('#worldCount'),String(active.length-1));
   assert.equal(await page.getAttribute('#worlds tr[data-world="Antica"]','aria-selected'),'true');
   assert.deepEqual((await row('Antica')).slice(1),[gold(e.value),percent.format(e.change.ratio)],'the list and the chart agree');
   // Sorted by gold per day, largest first, then back by name.
@@ -106,6 +125,66 @@ try {
   assert.ok((await listed()).includes(retired.world));
   assert.equal(await page.$eval(`#worlds tr[data-world="${retired.world}"] .flag-retired`,f=>f.textContent),'R');
   await page.fill('#filter','');
+
+  // All sums gold and overlays a separately labelled cross-world median TC price.
+  await page.click('#worlds tr[data-world="All"] .pick'); await shown('All');
+  assert.equal(param('world'),'All');
+  assert.equal(await page.getAttribute('#priceToggle','disabled'),null);
+  assert.equal(await page.getAttribute('#priceToggle','aria-pressed'),'true');
+  assert.match(await page.getAttribute('#priceToggle','title'),/daily median across observed worlds/);
+  assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('left').options().visible),true);
+  assert.ok(await page.evaluate(()=>window.economyTestSeries[1].data().some(p=>Number.isFinite(p.value))));
+  assert.match(await text('#legend'),/TC Sell Offer \(world median\)/);
+  assert.match(await page.locator('#chartData thead').textContent(),/World-days with data/);
+  assert.match(await page.locator('#chartData thead').textContent(),/TC Sell.*Price days.*Worlds priced.*Price world-days/);
+  const globalMarket=(await load('data/market-history/tibia-coin/index.json')).worlds;
+  const globalHistory=await daily('all');
+  for (const interval of ['day','month','week']) {
+    await page.click(`#interval [data-interval="${interval}"]`);
+    const total=await expected('all',interval,'gross','1Y');
+    assert.equal(await text('#lastValue'),gold(total.value));
+    assert.equal((await row('All'))[1],gold(total.value),'the global watchlist and chart agree');
+    const prices=sellOfferPeriods(globalMarket,interval);
+    const plotted=await page.evaluate(()=>window.economyTestSeries[1].data().filter(p=>Number.isFinite(p.value)).map(p=>[p.time,p.value]));
+    assert.deepEqual(plotted,[...prices].map(([day,p])=>[day,p.sell]),`${interval}: All plots global TC medians`);
+    assert.equal(await text('#measurePrice'),gold([...prices.values()].at(-1).sell));
+    assert.match(await text('#legend'),/daily world medians; [\d,]+ worlds, [\d,]+ world-days/);
+
+    assert.ok((await text('#detailNote')).includes(`${total.last.worldDaysCovered.toLocaleString('en-US')}/${total.last.worldDays.toLocaleString('en-US')} world-days`));
+  }
+  const globalPriceWindow=await page.evaluate(()=>window.economyTestCharts[0].timeScale().getVisibleLogicalRange());
+  await page.click('#priceToggle');
+  assert.equal(await page.getAttribute('#priceToggle','aria-pressed'),'false');
+  assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('left').options().visible),false);
+  await page.click('#priceToggle');
+  assert.equal(await page.getAttribute('#priceToggle','aria-pressed'),'true');
+  const globalPriceWindowAfter=await page.evaluate(()=>window.economyTestCharts[0].timeScale().getVisibleLogicalRange());
+  assert.ok(Math.abs(globalPriceWindow.from-globalPriceWindowAfter.from)<0.001 && Math.abs(globalPriceWindow.to-globalPriceWindowAfter.to)<0.001,'global TC toggle preserves the gold timeline');
+  if (shots) await page.screenshot({path:join(shots,`economy-${engine}-all-worlds.png`)});
+  await page.click('#range [data-range="All"]');
+  await page.click('#valueMode [data-mode="accumulated"]');
+  const globalLast=(await expected('all','week','gross','All')).last;
+  const globalSum=sumPeriod(globalHistory,[globalHistory.first,globalLast.end]);
+  assert.equal(await text('#lastValue'),gold(globalSum.grossPotential));
+  assert.ok(globalSum.grossPotential>0);
+  assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('left').options().mode),0,'global TC retains its linear gold-per-coin unit beside log accumulated gold');
+  assert.equal(await page.getAttribute('#priceToggle','aria-pressed'),'true');
+  await page.reload(); await ready();
+  assert.equal(await text('#world'),'All');
+  assert.equal(await text('#lastValue'),gold(globalSum.grossPotential),'global accumulation survives reload');
+  assert.equal(await page.getAttribute('#priceToggle','aria-pressed'),'true','global TC remains enabled after reload');
+  assert.ok(await page.evaluate(()=>window.economyTestSeries[1].data().some(p=>Number.isFinite(p.value))));
+  await page.setViewportSize({width:390,height:844}); await page.waitForTimeout(200);
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth),0,'All fits a phone viewport');
+  if (shots) await page.screenshot({path:join(shots,`economy-${engine}-all-worlds-390.png`)});
+  await page.click('[data-dock-target="creaturesPanel"]');
+  assert.match(await text('#creatureNote'),/individual world/);
+  await page.setViewportSize({width:1440,height:900}); await page.waitForTimeout(100);
+  if (!await page.locator('#worldsPanel').isVisible()) await page.click('[data-dock-target="worldsPanel"]');
+  await page.click('#worlds tr[data-world="Antica"] .pick'); await shown('Antica');
+  assert.equal(await page.getAttribute('#priceToggle','aria-pressed'),'true','world-specific price preference survives All');
+  await page.click('#valueMode [data-mode="daily"]');
+  await page.click('#range [data-range="1Y"]');
 
   // ---- Another world from the list: the chart, the status and the address follow.
   await page.click('#worlds tr[data-world="Gentebra"] .pick');

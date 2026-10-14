@@ -34,7 +34,9 @@ async function main() {
   document.querySelectorAll('[data-through]').forEach(el => { el.textContent = overview.through; });
   const facts = new Map((market?.worlds ?? []).map(w => [w.world, w]));
   const at = range => RANGES.indexOf(range) + 1;
-  const active = overview.worlds.filter(w => !w.ended && w.week?.gross);
+  // The overview's own aggregate row (dir 'all', every world history summed) heads the figures; the worlds are the rest.
+  const all = overview.worlds.find(w => w.dir === 'all') ?? null;
+  const active = overview.worlds.filter(w => w !== all && !w.ended && w.week?.gross);
   const rows = active.map(w => {
     const f = facts.get(w.world), v = k => w.week[k]?.[0] ?? null;
     return { key: w.world, world: w.world, week: w.week, type: f?.type ?? 'World', location: f?.location ?? 'Unlisted',
@@ -52,14 +54,15 @@ async function main() {
   }
   const series = [...months].sort((a, b) => a[0].localeCompare(b[0])).map(([month, m]) => ({ time: `${month}-01`, ...m, gross: m.coins + m.npc }));
   const lastMonth = series.at(-1);
+  const latestTotal = k => all?.week?.[k]?.[0] ?? rows.reduce((a, r) => a + (r[k] ?? 0), 0);
   const CARDS = [
-    { id: 'gross', name: 'Gross potential', desc: 'Gold per day, every active world', value: rows.reduce((a, r) => a + (r.gross ?? 0), 0), measure: 'gross' },
-    { id: 'coins', name: 'Direct gold', desc: 'Gold dropped per day', value: rows.reduce((a, r) => a + (r.coins ?? 0), 0), measure: 'coins' },
-    { id: 'npc', name: 'NPC potential', desc: 'Loot sold to NPCs, per day', value: rows.reduce((a, r) => a + (r.npc ?? 0), 0), measure: 'npc' },
+    { id: 'gross', name: 'Gross potential', desc: 'Gold per day, every active world', value: latestTotal('gross'), measure: 'gross' },
+    { id: 'coins', name: 'Direct gold', desc: 'Gold dropped per day', value: latestTotal('coins'), measure: 'coins' },
+    { id: 'npc', name: 'NPC potential', desc: 'Loot sold to NPCs, per day', value: latestTotal('npc'), measure: 'npc' },
     { id: 'kills', name: 'Creature kills', desc: `Per day in ${lastMonth?.time.slice(0, 7) ?? 'the latest month'}`, value: lastMonth?.kills ?? null },
   ];
   $('statCards').innerHTML = CARDS.map(c => {
-    const ch = c.measure ? sumChange(rows, c.measure, '1M') : null;
+    const ch = c.measure ? all?.week?.[c.measure]?.[1] ?? sumChange(rows, c.measure, '1M') : null;
     return `<button type="button" class="tv-stat" data-id="${c.id}" aria-pressed="${c.id === 'gross'}"><span class="tv-stat-name"><i style="--c:${COLOR[c.id]}"></i>${esc(c.name)}</span>`
       + `<span class="tv-stat-value">${short(c.value)}</span><span class="tv-stat-sub">${c.measure ? `${pill(ch)} 1M` : ''}<span>${esc(c.desc)}</span></span></button>`;
   }).join('');

@@ -12,7 +12,9 @@ const root=process.env.TIBINANCE_TEST_URL ?? 'http://127.0.0.1:8765';
 const load=async path=>JSON.parse(await readFile(new URL(`../${path}`,import.meta.url),'utf8'));
 const index=await load('data/market-history/tibia-coin/index.json'),gold=await load('data/economy/gold/overview.json');
 const marketWorlds=index.worlds.filter(w=>w.status==='active' && w.bestOfferCloses.length).map(w=>w.world).sort();
-const goldWorlds=gold.worlds.filter(w=>!w.ended && w.week?.gross).map(w=>w.world).sort();
+// The overview's aggregate row (dir 'all') heads the figures and is not a world.
+const goldAll=gold.worlds.find(w=>w.dir==='all');
+const goldWorlds=gold.worlds.filter(w=>w!==goldAll && !w.ended && w.week?.gross).map(w=>w.world).sort();
 const browser=await (engine==='webkit' ? webkit.launch({headless:true}) : chromium.launch({headless:true,...(process.env.TIBINANCE_CHROME ? {executablePath:process.env.TIBINANCE_CHROME} : {channel:'chrome'})}));
 try {
   const context=await browser.newContext({locale:'en-US',viewport:{width:1440,height:900},colorScheme:'light'});
@@ -77,8 +79,9 @@ try {
   await page.waitForSelector('#statCards .tv-stat');
   assert.equal(await page.title(),'Tibinance Economy overview');
   assert.equal(await page.getAttribute('#site-menu a[aria-current="page"]','href'),'economy-overview.html');
-  // The headline gross is the sum of every active world's latest complete week.
-  const sum=gold.worlds.filter(w=>!w.ended && w.week?.gross).reduce((a,w)=>a+w.week.gross[0],0);
+  // The headline gross: the aggregate's latest complete week, the sum of every active world's (to rounding).
+  const sum=goldAll?.week.gross[0] ?? gold.worlds.filter(w=>!w.ended && w.week?.gross).reduce((a,w)=>a+w.week.gross[0],0);
+  assert.ok(Math.abs(sum-gold.worlds.filter(w=>w!==goldAll && !w.ended && w.week?.gross).reduce((a,w)=>a+w.week.gross[0],0))<=goldWorlds.length,'the aggregate is the sum of the worlds');
   const shortFormat=new Intl.NumberFormat('en-US',{notation:'compact',maximumFractionDigits:2});
   assert.equal(await page.textContent('#statCards [data-id="gross"] .tv-stat-value'),shortFormat.format(sum));
   assert.deepEqual(await page.$$eval('#statCards .tv-stat',s=>s.map(e=>e.dataset.id)),['gross','coins','npc','kills']);

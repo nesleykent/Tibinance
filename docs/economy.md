@@ -285,6 +285,31 @@ coverage and price sample counts remain in Help's keyboard-scrollable Chart valu
 rounded to whole gold/counts for display, matching the readout. No uncertainty interval is invented. If the chart
 library is unavailable, the controls, world details and data table remain usable; image export is disabled.
 
+Economy opens on **All**, exposing every recorded gold period for the selected world. Explicit URL ranges still
+apply. The chart footer states the available kill-day history's start and end even when a shorter range is selected.
+Antica's history starts on 2022-08-22; newer worlds start with their own first record, and retired worlds retain
+separate histories. TC price coverage does not truncate the gold timeline.
+
+**All in Worlds** sums the daily gold components, kills, valued kills, deaths and constant-set gold from every
+world with recorded history on that date. Retired worlds contribute through their last record, and new worlds
+from their first; no predecessor series is chained to its successor. The row stays above individual worlds and
+uses the same day/week/month and accumulated calculations as their charts. All is not counted as another world.
+The details state the number of world histories and world-days with data. Kill coverage is summed valued kills
+divided by summed kills, never an average of percentages. If any included world-day is missing, the global day
+is unavailable; accumulated subtotals exclude that day and retain incomplete-day coverage. Observed zero remains
+zero. This is gold generation potential, not a balance of gold currently held in all worlds.
+
+The daily All file (`gold/worlds/all.json`) and its overview are generated and checked together by
+`tools/build_economy_overview.mjs` from the committed world files, including on every economy refresh.
+
+All's TC overlay takes the median of the observed worlds' daily best Sell Offers, then the median of those daily
+world medians in each week or month. Each observed day has equal weight; days with more world quotes do not
+receive extra weight. The legend and chart table state price days, distinct worlds and price world-days. Missing
+quotes remain missing. This is an unweighted descriptive price in gold per TC, separate from the summed gold
+components; it remains on the linear left axis beside accumulated gold on the logarithmic right axis. The price
+toggle works on All and individual worlds, retaining its preference. The global view does not claim a creature ranking: the individual
+monthly files keep only each world's top 30, which cannot establish a complete global ranking.
+
 Daily avg shows gold per day on a linear scale. Accumulated uses a logarithmic gold scale and sums the raw daily components inside the exact inclusive selected-range
 boundaries, through the latest complete interval. A boundary week/month is clipped to the selected dates rather
 than included in full. Recovered days count; missing days are excluded, and later subtotals state cumulative days

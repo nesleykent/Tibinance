@@ -31,9 +31,11 @@ const FIELDS = ['directCoins', 'npcPotential', 'kills', 'killsValued', 'playerDe
 export function sumPeriod(world, [start, end]) {
   const from = Math.max(0, dayIndex(world, start)), to = Math.min(world.status.length - 1, dayIndex(world, end));
   const out = Object.fromEntries(FIELDS.map(f => [f, 0]));
-  let observed = 0, recovered = 0, missing = 0;
+  let observed = 0, recovered = 0, missing = 0, worldDays = 0, worldDaysCovered = 0;
   const span = Math.round((Date.parse(`${end}T00:00:00Z`) - Date.parse(`${start}T00:00:00Z`)) / DAY) + 1;
   for (let i = from; i <= to; i++) {
+    worldDays += world.worldsExpected?.[i] ?? 0;
+    worldDaysCovered += world.worldsCovered?.[i] ?? 0;
     const s = world.status[i];
     if (s === 'm') { missing++; continue; }
     s === 'r' ? recovered++ : observed++;
@@ -43,6 +45,7 @@ export function sumPeriod(world, [start, end]) {
   const outside = span - (to >= from ? to - from + 1 : 0);
   if (!covered) for (const f of FIELDS) out[f] = null;
   return { start, end, days: span, covered, observed, recovered, missing, outsideData: outside, complete: covered === span,
+    ...(world.worldsExpected ? { worldDays, worldDaysCovered } : {}),
     ...out, grossPotential: covered ? out.directCoins + out.npcPotential : null, killCoverage: out.kills ? out.killsValued / out.kills : null };
 }
 
@@ -115,6 +118,31 @@ export const median = values => {
   const v = values.filter(Number.isFinite).sort((a, b) => a - b), m = Math.floor(v.length / 2);
   return v.length ? (v.length % 2 ? v[m] : (v[m - 1] + v[m]) / 2) : null;
 };
+
+// One price per world and server day. All uses the cross-world median on each observed day, then the median
+// of those daily prices per interval: days have equal weight despite changes in the number of worlds sampled.
+// A single-world input preserves that world's existing period median. Counts describe quotes, not trade volume.
+export function sellOfferPeriods(worlds, interval) {
+  const days = new Map();
+  for (const w of worlds) for (const [day, sell] of w.bestOfferCloses ?? []) {
+    if (!Number.isFinite(sell) || sell <= 0) continue;
+    if (!days.has(day)) days.set(day, new Map());
+    const quotes = days.get(day);
+    if (quotes.has(w.world) && quotes.get(w.world) !== sell) throw new Error(`conflicting TC price: ${w.world} ${day}`);
+    quotes.set(w.world, sell);
+  }
+  const periods = new Map();
+  for (const [day, quotes] of [...days].sort(([a], [b]) => a.localeCompare(b))) {
+    const start = periodOf(day, interval)[0];
+    if (!periods.has(start)) periods.set(start, { daily: [], worlds: new Set(), worldDays: 0 });
+    const p = periods.get(start);
+    p.daily.push(median([...quotes.values()]));
+    for (const world of quotes.keys()) p.worlds.add(world);
+    p.worldDays += quotes.size;
+  }
+  return new Map([...periods].map(([start, p]) => [start,
+    { sell: median(p.daily), n: p.daily.length, worlds: p.worlds.size, worldDays: p.worldDays }]));
+}
 
 // Market values keep their own observation count: a sampled median is never a full-period gold total.
 export function chartPeriods(world, closes, unit) {
