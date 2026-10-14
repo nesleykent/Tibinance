@@ -27,6 +27,9 @@ const percent = new Intl.NumberFormat('en-US', { style: 'percent', minimumFracti
 const signedNumber = new Intl.NumberFormat('en-US', { signDisplay: 'exceptZero', maximumFractionDigits: 0 });
 const tone = v => (v > 0 ? 'up' : v < 0 ? 'down' : '');
 const gold = v => (Number.isFinite(v) ? fmt(Math.round(v)) : 'N/A');
+// In the 300px list, as TradingView abbreviates large figures (its volume, 38.98 M): the exact figure is the cell's title.
+const compactFormat = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 2 });
+const compactGold = v => (Number.isFinite(v) ? compactFormat.format(v) : 'N/A');
 const pct1 = v => (Number.isFinite(v) ? `${(100 * v).toFixed(1)}%` : 'N/A');
 const signedRatio = r => (r == null ? num(null) : `<span class="${tone(r)}">${percent.format(r)}</span>`);
 const signedDelta = d => (d == null ? num(null) : `<span class="${tone(d)}">${signedNumber.format(Math.round(d))}</span>`);
@@ -305,7 +308,7 @@ function drawWatchlist() {
       r.coverage !== null && r.coverage < 0.95 && `<span class="flag" tabindex="0" data-tip="Kill coverage ${pct1(r.coverage)}: under 95% of its kills are valued, so this figure understates the world more than most.">i</span>`,
       !r.last && `<span class="flag" tabindex="0" data-tip="No complete ${UNIT[state.interval]} of data.">i</span>`].filter(Boolean).join('');
     return `<tr data-world="${esc(r.world)}" aria-selected="${r.world === state.world}"><th scope="row"><button type="button" class="pick">${esc(r.world)}</button>${flags}</th>`
-      + `<td${r.ended ? ' class="stale"' : ''}>${gold(r.value)}</td><td>${signedRatio(r.change)}</td></tr>`;
+      + `<td${r.ended ? ' class="stale"' : ''} title="${gold(r.value)}">${compactGold(r.value)}</td><td>${signedRatio(r.change)}</td></tr>`;
   }).join('');
   if (focusedWorld && !active.isConnected) document.querySelector(`#worlds tr[data-world="${CSS.escape(focusedWorld)}"] .pick`)?.focus({ preventScroll: true });
 }
@@ -320,11 +323,23 @@ function showDetails() {
   $('detailLast').textContent = p ? gold(p.rate[field()]) : 'N/A';
   $('detailLastLabel').textContent = `${MEASURES[state.measure].name} per day`;
   $('detailChange').innerHTML = change ? `${signedDelta(change.delta)} ${signedRatio(change.ratio)}` : '';
-  $('detailChangeLabel').textContent = change ? `Change ${state.range}` : `Change ${state.range}: not enough complete periods`;
+  // The range alone after the change, as the chart's legend writes it; the caption below says what the figure is.
+  $('detailChangeLabel').textContent = change ? state.range : `${state.range}: not enough complete periods`;
+  $('detailChangeLabel').title = `Change over ${state.range}`;
   const online = data.vip?.observations.find(o => o.world === state.world && o.metric === 'characters-online');
-  $('detailNote').innerHTML = (state.world === 'All' ? `Sum of ${fmt(s.worldCount)} world histories, each during its recorded dates. Retired worlds are included until their last record.<br>${p ? `${fmt(p.worldDaysCovered)}/${fmt(p.worldDays)} world-days with data in this period.<br>` : ''}` : '') + (p ? `Latest complete ${UNIT[state.interval]} <span>${esc(periodLabel(p))}</span>${change ? `, against <span>${esc(periodLabel(change.from))}</span>` : ''}<br>` : '')
-    + `Kill days <span>${esc(s.first)}</span> to <span>${esc(s.last)}</span>: ${fmt(s.observed)} observed, ${fmt(s.recovered)} recovered exactly, ${fmt(s.missing)} missing`
-    + (online ? `<br>TibiaVIP, ${esc(data.vip.observedAt.slice(0, 10))}: <span>${fmt(online.value)}</span> characters online at one instant` : '');
+  // Key stats, as TradingView lists a symbol's: a label at the left, the figure at the right.
+  const stat = (label, value, title = '') => `<div${title ? ` title="${esc(title)}"` : ''}><dt>${label}</dt><dd>${value}</dd></div>`;
+  const unit = UNIT[state.interval];
+  $('detailNote').innerHTML = [
+    state.world === 'All' && stat('Worlds summed', fmt(s.worldCount), 'Sum of every world history, each during its recorded dates. Retired worlds are included until their last record.'),
+    state.world === 'All' && p && stat('Data this period', `${fmt(p.worldDaysCovered)}/${fmt(p.worldDays)} world-days`),
+    p && stat(`Latest ${unit}`, esc(periodLabel(p)), `The latest complete ${unit}`),
+    p && change && stat('Against', esc(periodLabel(change.from)), `The change over ${state.range} is measured against this ${unit}`),
+    stat('Kill days', `${esc(s.first)} to ${esc(s.last)}`),
+    stat('Days with data', `${fmt(s.observed + s.recovered)} of ${fmt(s.observed + s.recovered + s.missing)}`,
+      `${fmt(s.observed)} observed, ${fmt(s.recovered)} recovered exactly, ${fmt(s.missing)} missing`),
+    online && stat('Characters online', fmt(online.value), `TibiaVIP, ${data.vip.observedAt.slice(0, 10)}, at one instant`),
+  ].filter(Boolean).join('');
   $('detailCoins').textContent = p ? gold(p.rate.directCoins) : 'N/A';
   $('detailNpc').textContent = p ? gold(p.rate.npcPotential) : 'N/A';
   $('detailCoverage').textContent = p ? pct1(p.killCoverage) : 'N/A';

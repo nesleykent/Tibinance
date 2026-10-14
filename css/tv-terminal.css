@@ -180,33 +180,53 @@ body.tv-app h1,body.tv-app h2,body.tv-app h3,body.tv-app h4 { font-family:var(--
 .tv-terminal .btn:hover { background:var(--tv-btn-hover); }
 .tv-terminal .btn[aria-pressed="true"] { border-color:var(--tv-btn-active-bg); background:var(--tv-btn-active-bg); color:var(--tv-btn-active); }
 
-/* The watchlist: TradingView's columns (Symbol, Last, Chg, Chg%), 13px rows, blue hover and selection. */
-.tv-terminal table.watch { font-size:13px; }
-.tv-terminal table.watch thead th { padding:6px 8px; border-bottom:1px solid var(--tv-border); background:var(--tv-bg); color:var(--tv-text-2); font-size:12px; font-weight:400; letter-spacing:0; text-transform:none; }
-.tv-terminal table.watch tbody th,.tv-terminal table.watch td { padding:5px 8px; }
-.tv-terminal table.watch thead th:first-child,.tv-terminal table.watch tbody th { padding-left:12px; }
+/* The watchlist: TradingView's columns (Symbol, Last, Chg, Chg%), fixed so they fit the 300px widget: the name takes
+   what the figures leave, figures right-aligned and tabular, 30px rows, blue hover and selection. */
+.tv-terminal .watch-scroll { overflow-x:hidden; }
+.tv-terminal table.watch { table-layout:fixed; font-size:13px; font-variant-numeric:tabular-nums lining-nums; }
+.tv-terminal table.watch :is(th,td) { height:30px; padding:0 4px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.tv-terminal table.watch thead th { height:28px; border-bottom:1px solid var(--tv-border); background:var(--tv-bg); color:var(--tv-text-2); font-size:12px; font-weight:400; letter-spacing:0; text-transform:none; }
+.tv-terminal table.watch :is(thead th:first-child,tbody th) { padding-left:12px; }
+.tv-terminal table.watch :is(thead th:last-child,td:last-child) { padding-right:10px; }
+/* Widths from the widest figures: Last 45px, Chg 53px, Chg% 65px (Markets); Per day 56px, Chg% 77px (Economy). */
+#market table.watch thead th:nth-child(2) { width:18%; }
+#market table.watch thead th:nth-child(3) { width:21%; }
+#market table.watch thead th:nth-child(4) { width:27%; }
+#economy table.watch thead th:nth-child(2) { width:25%; }
+#economy table.watch thead th:nth-child(3) { width:31%; }
 .tv-terminal table.watch tbody tr:hover { background:var(--tv-row-hover); }
 .tv-terminal table.watch tbody tr[aria-selected="true"] { background:var(--tv-row-selected); box-shadow:none; }
-.tv-terminal table.watch .pick { color:var(--tv-text); font-weight:600; }
+.tv-terminal table.watch .pick { max-width:100%; overflow:hidden; color:var(--tv-text); font-weight:600; text-overflow:ellipsis; vertical-align:middle; }
 .tv-terminal table.watch td.stale { color:var(--tv-text-2); }
 .tv-terminal table.watch .flag { color:var(--tv-text-2); }
 .tv-terminal table.watch .flag-retired { color:var(--tv-orange-500); }
+/* Economy's aggregate leads the list, set apart from the worlds as a watchlist's section. */
+#economy table.watch tr[data-world="All"] :is(th,td) { border-bottom:1px solid var(--tv-border); }
 .tv-terminal .watch-tip,.tv-terminal .event-tip { border:0; border-radius:4px; background:var(--tv-tooltip); color:#fff; box-shadow:var(--tv-shadow); font-size:13px; }
 .tv-terminal .event-tip :is(.event-tip-days,.event-tip-text) { color:rgb(255 255 255 / .7); }
 
-/* The details widget, under the list: TradingView's symbol details. */
-.tv-terminal .details { padding:12px; border-top:1px solid var(--tv-border); }
-.tv-terminal .details-title { font:600 16px/22px var(--tv-font); }
-.tv-terminal .details-meta { gap:0 8px; color:var(--tv-text-2); font-size:12px; }
-.tv-terminal .details-quote { margin-top:8px; }
-.tv-terminal .details-last { font:600 28px/34px var(--tv-font); letter-spacing:0; }
-.tv-terminal .details-unit { color:var(--tv-text-2); font-size:12px; }
-.tv-terminal .details-change { font-size:14px; font-weight:600; }
-.tv-terminal .details-note { color:var(--tv-text-2); font-size:12px; line-height:18px; }
-.tv-terminal .details-note span { color:var(--tv-text); }
-.tv-terminal .details-book { gap:0 12px; font-size:13px; }
-.tv-terminal .details-book dt { color:var(--tv-text-2); font-size:12px; }
-.tv-terminal .details-heading { margin:14px 0 6px; color:var(--tv-text); font-size:14px; font-weight:600; letter-spacing:0; text-transform:none; }
+/* The details widget, under the list, as TradingView's symbol details: a widget of its own (the page's gap above it),
+   16px side padding. The symbol and its facts, dotted apart; the quote at 28px with its change on a 16px line and
+   what it is beneath, as TradingView's update line; Key stats as rows, a label at the left and the figure at the
+   right; then Performance. */
+.tv-terminal .details { flex:none; max-height:56%; overflow-y:auto; padding:12px 16px 16px; border-top:var(--tv-gap) solid var(--tv-page); }
+.tv-terminal .details-title { margin:0; font:600 16px/24px var(--tv-font); }
+.tv-terminal .details-meta { display:flex; flex-wrap:wrap; align-items:center; gap:0; margin:0; color:var(--tv-text-2); font-size:12px; line-height:20px; }
+.tv-terminal .details-meta > span + span::before { content:""; display:inline-block; width:3px; height:3px; margin:0 6px; border-radius:50%; background:var(--tv-text-3); vertical-align:middle; }
+.tv-terminal .details-meta .tag { margin:0; }
+.tv-terminal .details-status { margin:6px 0 0; color:var(--tv-text-2); font-size:12px; line-height:18px; }
+.tv-terminal .details-quote { display:flex; flex-wrap:wrap; align-items:baseline; gap:0 8px; margin:12px 0 0; }
+.tv-terminal .details-last { font:600 28px/36px var(--tv-font); letter-spacing:0; font-variant-numeric:tabular-nums lining-nums; }
+.tv-terminal .details-change { display:flex; flex-wrap:wrap; align-items:baseline; gap:0 8px; margin:0; font:600 16px/24px var(--tv-font); font-variant-numeric:tabular-nums lining-nums; }
+.tv-terminal .details-change .details-unit { font-weight:400; }
+.tv-terminal .details-unit { color:var(--tv-text-2); font-size:12px; font-weight:400; }
+.tv-terminal .details-caption { margin:2px 0 0; color:var(--tv-text-2); font-size:13px; line-height:18px; }
+.tv-terminal .details-heading { margin:20px 0 6px; color:var(--tv-text); font:600 14px/20px var(--tv-font); letter-spacing:0; text-transform:none; }
+.tv-terminal .tv-keystats { display:grid; gap:0; margin:0; }
+.tv-terminal .tv-keystats > div { display:flex; align-items:baseline; justify-content:space-between; gap:12px; padding:3px 0; }
+.tv-terminal .tv-keystats dt { flex:none; white-space:nowrap; color:var(--tv-text-2); font-size:13px; line-height:18px; }
+.tv-terminal .tv-keystats dd { margin:0; color:var(--tv-text); font-size:13px; font-weight:600; line-height:18px; text-align:right; font-variant-numeric:tabular-nums lining-nums; }
+.tv-terminal .tv-keystats dd .details-unit { margin-left:4px; }
 /* Performance: TradingView's tiles, tinted by the sign of the change. */
 .tv-terminal .performance { gap:6px; }
 .tv-terminal .performance button { gap:2px; padding:8px 4px; border-radius:6px; background:var(--tv-bg-3); color:var(--tv-text); font-family:var(--tv-font); }
@@ -215,8 +235,8 @@ body.tv-app h1,body.tv-app h2,body.tv-app h3,body.tv-app h4 { font-family:var(--
 .tv-terminal .performance button:hover { filter:brightness(.97); }
 :root[data-theme="dark"] .tv-terminal .performance button:hover { filter:brightness(1.2); }
 .tv-terminal .performance button[aria-pressed="true"] { box-shadow:inset 0 0 0 1px var(--tv-brand); }
-.tv-terminal .perf-value { font-size:14px; font-weight:600; }
-.tv-terminal .perf-value .up { color:var(--tv-up); } .tv-terminal .perf-value .down { color:var(--tv-down); }
+.tv-terminal .perf-value { font-size:14px; font-weight:600; font-variant-numeric:tabular-nums lining-nums; }
+.tv-terminal .perf-value .up,.tv-terminal .perf-value.up { color:var(--tv-up); } .tv-terminal .perf-value .down,.tv-terminal .perf-value.down { color:var(--tv-down); }
 .tv-terminal .perf-range { color:var(--tv-text-2); font-size:12px; }
 
 /* Events and Forecast history: the same widget frame, TradingView's inputs. */

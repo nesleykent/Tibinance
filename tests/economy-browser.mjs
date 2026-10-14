@@ -51,7 +51,8 @@ try {
   const text=sel=>page.$eval(sel,e=>e.innerText.trim().replace(/\s+/g,' '));
   const ready=()=>page.waitForFunction(()=>document.getElementById('economy').getAttribute('aria-busy')==='false',{timeout:60000});
   const param=name=>new URL(page.url()).searchParams.get(name);
-  const row=world=>page.$eval(`#worlds tr[data-world="${world}"]`,tr=>[...tr.cells].map(c=>c.textContent.trim()));
+  // The list abbreviates gold per day (107.32B) and keeps the exact figure as the cell's title.
+  const row=world=>page.$eval(`#worlds tr[data-world="${world}"]`,tr=>[...tr.cells].map(c=>c.title || c.textContent.trim()));
   const listed=()=>page.$$eval('#worlds tr[data-world]',trs=>trs.map(tr=>tr.dataset.world));
   const shown=async world=>{await page.waitForFunction(w=>document.getElementById('world').textContent===w,world);await ready();await page.waitForTimeout(100);};
 
@@ -114,7 +115,7 @@ try {
   assert.deepEqual((await row('Antica')).slice(1),[gold(e.value),percent.format(e.change.ratio)],'the list and the chart agree');
   // Sorted by gold per day, largest first, then back by name.
   await page.click('table.watch th button[data-sort="value"]');
-  const values=await page.$$eval('#worlds tr[data-world] td:nth-child(2)',tds=>tds.map(td=>Number(td.textContent.replace(/,/g,''))).filter(Number.isFinite));
+  const values=await page.$$eval('#worlds tr[data-world] td:nth-child(2)',tds=>tds.map(td=>Number((td.title || td.textContent).replace(/,/g,''))).filter(Number.isFinite));
   assert.ok(values.every((v,i)=>i===0||values[i-1]>=v),'largest first');
   assert.equal(await page.getAttribute('table.watch th:nth-child(2)','aria-sort'),'descending');
   await page.click('table.watch th button[data-sort="world"]');
