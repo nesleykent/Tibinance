@@ -17,7 +17,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { dirname, join, normalize, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const BUILDER_CHECKS = ['build_market_history', 'build_market_projections', 'audit_market_chart', 'audit_rolling_activity', 'build_tibia_token'];
+const BUILDER_CHECKS = ['build_market_history', 'build_market_projections', 'audit_market_chart', 'audit_rolling_activity', 'build_tibia_token', 'build_economy_overview'];
 const SKIP_DIRS = new Set(['node_modules', 'dist', 'app', 'exports']);
 
 const run = (cmd, args, cwd) => {

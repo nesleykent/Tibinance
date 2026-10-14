@@ -152,3 +152,59 @@ export function crossWorld(index, files, period) {
     return { world: w.world, dir: w.dir, sum: s, warnings, comparable: Boolean(s && s.complete && s.killCoverage >= 0.95) };
   });
 }
+
+// ---- The Economy terminal (economy.html): one measure, as gold per day, at one interval -------------------------
+// Every interval plots the same unit, gold per day: a day's total, or a week's or month's total over its days. So a
+// weekly or monthly line is a smoothing of the daily one, never a different scale. A period counts only when every
+// one of its days has data; an unfinished or gapped period has no rate (it is never a fall, and never zero).
+
+export const MEASURES = {
+  gross: { field: 'grossPotential', name: 'Gross potential', short: 'Gross' },
+  coins: { field: 'directCoins', name: 'Direct coins', short: 'Coins' },
+  npc: { field: 'npcPotential', name: 'NPC potential', short: 'NPC' },
+};
+export const INTERVALS = ['day', 'week', 'month'];
+const RATE_FIELDS = ['grossPotential', 'directCoins', 'npcPotential', 'kills', 'killsValued', 'playerDeaths', 'grossStable'];
+
+// Every period of the world at the interval, each with its rates per day (null unless complete).
+export function ratePeriods(world, unit) {
+  return series(world, unit).map(p => ({ ...p, rate: Object.fromEntries(RATE_FIELDS.map(f => [f, p.complete && p[f] !== null ? p[f] / p.days : null])) }));
+}
+
+const MONTHS_BACK = { '1M': 1, '3M': 3, '6M': 6, '1Y': 12 };
+// The first day a range shows when it ends on `end` (calendar months, clamped to the shorter month); null for All.
+// The same rule as Markets (js/market-series.js rangeStart).
+export function rangeStartOf(end, range) {
+  if (range === 'All') return null;
+  const [y, m, d] = end.split('-').map(Number);
+  if (range === 'YTD') return `${y}-01-01`;
+  if (!MONTHS_BACK[range]) throw new Error(`unknown range ${range}`);
+  const month = new Date(Date.UTC(y, m - 1 - MONTHS_BACK[range], 1));
+  const last = new Date(Date.UTC(month.getUTCFullYear(), month.getUTCMonth() + 1, 0)).getUTCDate();
+  month.setUTCDate(Math.min(d, last));
+  return month.toISOString().slice(0, 10);
+}
+
+// Change of the latest complete period's rate against the complete period holding the range's first day (or, when
+// that one is incomplete, the latest complete one before it, else the first inside the range). Null without a base.
+export function rangeChange(periods, field, range) {
+  const done = periods.filter(p => p.rate[field] !== null);
+  if (done.length < 2) return null;
+  const last = done.at(-1), start = rangeStartOf(last.end, range);
+  const base = start === null ? done[0] : (done.findLast(p => p.start <= start) ?? done.find(p => p.start >= start));
+  if (!base || base === last || !base.rate[field]) return null;
+  return { from: base, to: last, delta: last.rate[field] - base.rate[field], ratio: last.rate[field] / base.rate[field] - 1 };
+}
+
+// One watchlist row per world from the overview (data/economy/gold/overview.json, tools/build_economy_overview.mjs):
+// the measure in gold per day over its latest complete period at the interval, and its change over the range, computed
+// by the chart's own functions, so a world's row and its chart agree. Worlds whose data ended (retired or merged)
+// appear only when a search names them, as on Markets; low kill coverage is stated, never hidden.
+export function overviewRows(overview, interval, measure, range, filter = '') {
+  const at = overview.ranges.indexOf(range) + 1, q = filter.trim().toLowerCase();
+  return overview.worlds.filter(w => (q ? w.world.toLowerCase().includes(q) : !w.ended)).map(w => {
+    const v = w[interval], m = v?.[measure];
+    return { world: w.world, dir: w.dir, ended: w.ended ? w.last : null, last: v?.last ?? null, coverage: v?.coverage ?? null,
+      value: m ? m[0] : null, change: m ? m[at] : null };
+  });
+}

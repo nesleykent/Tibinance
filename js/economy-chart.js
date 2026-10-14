@@ -1,105 +1,113 @@
-// One chart instance, plot and time axis. Optional price and activity comparisons have independent scales.
-import { fmt, esc } from './format.js';
-import { chartPeriods, brokenLine, withLiquidation, periodOf, sumPeriod } from './economy-data.js?v=20261014-rebuild';
-const ink = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-const value = n => Number.isFinite(n) ? fmt(Math.round(n)) : 'N/A';
-const dayOf = t => typeof t === 'string' ? t : `${t.year}-${String(t.month).padStart(2, '0')}-${String(t.day).padStart(2, '0')}`;
-function pixels(name) {
-  const probe = document.createElement('div');
-  probe.style.cssText = `position:absolute;visibility:hidden;width:var(${name})`;
-  document.body.append(probe);
-  const n = probe.getBoundingClientRect().width;
-  probe.remove();
-  return n;
+/*
+ * The Economy chart, drawn as Markets draws its own (js/market-chart.js): one pane, one time axis, the page's status
+ * block over its top left. Lightweight Charts is loaded as a global by economy.html.
+ *
+ *   measure      the chosen quantity in gold per day: dots on complete periods, joined solid between consecutive
+ *                periods and dotted across periods without every day of data; the latest marked on the price scale
+ *   kills        all creature kills per day of each complete period, as bars in a short pane of their own under the
+ *                gold, so the gold scale never runs below zero to make room for them
+ *   stable       the constant creature set's gross potential per day, dashed (when compared)
+ *   scenario     coins plus a stated share of NPC potential, dashed, an assumption (when chosen)
+ *   price        the median Tibia Coin Sell Offer of each period, on the left scale (when shown)
+ *
+ * Unfinished and gapped periods have no value: they keep their room on the axis (whitespace) and nothing is drawn
+ * for them, so a partial week never reads as a fall.
+ */
+import { fmt } from './format.js';
+
+const HIDDEN = 'rgba(0,0,0,0)';   // Lightweight Charts colours a segment with its first point's colour
+const token = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+export const dayOf = time => typeof time === 'string' ? time
+  : typeof time === 'object' ? `${time.year}-${String(time.month).padStart(2, '0')}-${String(time.day).padStart(2, '0')}`
+  : new Date(time * 1000).toISOString().slice(0, 10);
+export const colors = () => ({ gross: token('--ink'), coins: token('--sell'), npc: token('--buy'), stable: token('--accent'),
+  scenario: token('--caution'), price: token('--average') || token('--muted'), text: token('--muted'), grid: token('--line-faint'),
+  rule: token('--line'), crosshair: token('--line-strong'), ink: token('--ink') });
+
+// rows: [{time, value}] for every period in order, value null where the period is not complete. Returns the layers
+// over the real points only: `solid` joins neighbouring periods, `dotted` spans the periods between two values.
+export function periodLayers(rows) {
+  const solid = [], dotted = [], points = [];
+  rows.forEach((row, i) => {
+    if (row.value === null) { solid.push({ time: row.time }); dotted.push({ time: row.time }); return; }
+    const nextValue = rows.slice(i + 1).findIndex(r => r.value !== null);
+    const adjacent = nextValue === 0, spans = nextValue > 0;
+    solid.push(adjacent ? { time: row.time, value: row.value } : { time: row.time, value: row.value, color: HIDDEN });
+    dotted.push(spans ? { time: row.time, value: row.value } : { time: row.time, value: row.value, color: HIDDEN });
+    points.push({ time: row.time, value: row.value });
+  });
+  return { solid, dotted, points };
 }
 
-export function economyChart({ onPeriod }) {
-  const L = window.LightweightCharts, el = document.getElementById('chart');
-  let chart = null, rows = [], context = null, viewKey = null, resize = null;
-  const lines = new Map();
-  const selected = () => rows.find(p => p.start === context.period) ?? { ...sumPeriod(context.world, periodOf(context.period, context.unit)), sell: null, priceDays: 0 };
-  const readout = p => {
-    document.getElementById('chartReadout').textContent = `${p.start} to ${p.end}: gross ${value(p.grossPotential)}, direct coins ${value(p.directCoins)}, NPC potential ${value(p.npcPotential)} gold; ${p.covered} of ${p.days} days${p.complete ? '' : ' (incomplete, gold and activity not plotted)'}; kill coverage ${p.killCoverage === null ? 'N/A' : `${(100 * p.killCoverage).toFixed(1)}%`}; TC median ${value(p.sell)} gold per coin from ${p.priceDays} daily closes; players killed ${value(p.playerDeaths)}.`;
+export function economyChart(container, { onCrosshair } = {}) {
+  const L = window.LightweightCharts, c = colors();
+  const chart = L.createChart(container, {
+    autoSize: true,
+    layout: { background: { type: 'solid', color: 'transparent' }, textColor: c.text, fontFamily: token('--font-ui'), fontSize: 11,
+      panes: { separatorColor: c.rule } },
+    grid: { vertLines: { visible: false }, horzLines: { color: c.grid } },
+    rightPriceScale: { borderVisible: false, entireTextOnly: true, scaleMargins: { top: 0.16, bottom: 0.06 } },
+    leftPriceScale: { visible: false, borderVisible: false, entireTextOnly: true, scaleMargins: { top: 0.16, bottom: 0.06 } },
+    timeScale: { borderVisible: false, rightOffset: 4 },
+    crosshair: { mode: L.CrosshairMode.Normal, vertLine: { color: c.crosshair, labelBackgroundColor: c.ink }, horzLine: { color: c.crosshair, labelBackgroundColor: c.ink } },
+    localization: { priceFormatter: v => fmt(Math.round(v)), timeFormatter: dayOf },
+  });
+  const line = options => chart.addSeries(L.LineSeries, { priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false, ...options });
+  const kills = chart.addSeries(L.HistogramSeries, { priceLineVisible: false, lastValueVisible: false,
+    priceFormat: { type: 'custom', minMove: 1, formatter: v => fmt(Math.round(v)) } }, 1);
+  kills.priceScale().applyOptions({ scaleMargins: { top: 0.1, bottom: 0 } });
+  chart.panes()[1]?.setStretchFactor(0.22);
+  const price = line({ priceScaleId: 'left', color: c.price, lineWidth: 1 });
+  const stable = line({ color: c.stable, lineWidth: 2, lineStyle: L.LineStyle.Dashed });
+  const scenario = line({ color: c.scenario, lineWidth: 2, lineStyle: L.LineStyle.Dashed });
+  const solid = line({ lineWidth: 2 }), dotted = line({ lineWidth: 2, lineStyle: L.LineStyle.Dotted });
+  const points = line({ lineVisible: false, pointMarkersVisible: true, pointMarkersRadius: 3, crosshairMarkerVisible: true,
+    lastValueVisible: true, priceLineVisible: true, priceLineWidth: 1, priceLineStyle: L.LineStyle.LargeDashed });
+  // Dots shrink, then give way to the line, as more periods share the same width (as on Markets).
+  chart.timeScale().subscribeVisibleLogicalRangeChange(range => {
+    if (!range) return;
+    const spacing = chart.timeScale().width() / Math.max(1, range.to - range.from);
+    points.applyOptions({ pointMarkersVisible: spacing >= 2, pointMarkersRadius: Math.min(3, Math.max(1.5, spacing / 2)) });
+  });
+  chart.subscribeCrosshairMove(p => onCrosshair?.(p.time === undefined ? null : dayOf(p.time)));
+  let topFraction = null, leftShown = false;
+  const whitespaceOrValue = (p, v) => (v === null || v === undefined ? { time: p.start } : { time: p.start, value: v });
+
+  return {
+    chart,
+    // view: {periods, measure ('gross'|'coins'|'npc'), field, rate (liquidation or null), stable, price ([{start, sell}] or null)}
+    draw(view) {
+      const color = c[view.measure];
+      const rows = view.periods.map(p => ({ time: p.start, value: p.rate[view.field] }));
+      const layers = periodLayers(rows);
+      for (const s of [solid, dotted]) s.applyOptions({ color });
+      points.applyOptions({ color, priceLineColor: color });
+      solid.setData(layers.solid); dotted.setData(layers.dotted); points.setData(layers.points);
+      kills.applyOptions({ color: `${color}40` });
+      kills.setData(view.periods.map(p => whitespaceOrValue(p, p.rate.kills)));
+      stable.setData(view.stable ? view.periods.map(p => whitespaceOrValue(p, p.rate.grossStable)) : []);
+      scenario.setData(view.rate === null ? [] : view.periods.map(p => whitespaceOrValue(p,
+        p.rate.directCoins === null ? null : p.rate.directCoins + view.rate * p.rate.npcPotential)));
+      price.setData(view.price ? view.periods.map(p => whitespaceOrValue(p, view.price.get(p.start)?.sell ?? null)) : []);
+      leftShown = Boolean(view.price);
+      chart.applyOptions({ leftPriceScale: { visible: leftShown } });
+    },
+    show(from, to) { chart.timeScale().setVisibleRange({ from, to }); },
+    // The status block stands over the chart's top: the price scale starts below it (as js/market-chart.js fitTop).
+    fitTop(element) {
+      // Clear of the left scale when the TC price shows one.
+      let left = 0;
+      try { left = leftShown ? chart.priceScale('left').width() : 0; } catch { /* not laid out yet */ }
+      element.style.marginLeft = left ? `${left + 8}px` : '';
+      element.style.maxWidth = left ? `calc(100% - ${left + 8}px - var(--space-8) * 2)` : '';
+      const area = container.getBoundingClientRect(), head = element.getBoundingClientRect();
+      const pane = chart.panes()[0]?.getHeight() ?? (area.height - chart.timeScale().height());
+      if (pane <= 0 || !head.height) return;
+      const top = Math.min(0.5, Math.max(0.08, (head.bottom - area.top + 12) / pane));
+      if (topFraction !== null && Math.abs(top - topFraction) < 0.004) return;
+      // The top margin only grows with the head here; a narrower head lets it shrink back on the next call.
+      topFraction = top;
+      for (const id of ['right', 'left']) chart.priceScale(id).applyOptions({ scaleMargins: { top, bottom: 0.06 } });
+    },
   };
-  function render(world, closes, state, preserveRange = false) {
-    const rangeBefore = chart?.timeScale().getVisibleLogicalRange();
-    context = { ...state, world };
-    rows = chartPeriods(world, closes, state.unit);
-    const chosen = selected();
-    readout(chosen);
-    document.getElementById('chartContext').textContent = `${world.world}, per ${state.unit}. Selected ${chosen.start} to ${chosen.end}.${chosen.covered ? '' : ' No data in this period; the chart shows the available history.'} Latest-evidence reconstruction; values cover valued creatures only. Constant-set comparisons can still reflect revised loot values.`;
-    document.getElementById('chartUnits').textContent = `Right axis: gold per ${state.unit} from valued creatures.`
-      + (state.price ? ' Left axis: median TC Sell Offer, gold per coin; observed closes only.' : '')
-      + (state.activity ? ' Bottom bars: players killed by creatures, on an independent count scale.' : '');
-    for (const [id, key] of [['chartPrice', 'price'], ['chartActivity', 'activity']]) document.getElementById(id).setAttribute('aria-pressed', String(state[key]));
-    document.getElementById('legend').innerHTML = '<span class="eco-key gross">Gross potential = coins + NPC</span><span class="eco-key coins">Direct coins</span><span class="eco-key npc">NPC potential</span>'
-      + (state.stable ? '<span class="eco-key stable">Constant creature set</span>' : '')
-      + (state.rate !== null ? `<span class="eco-key assumption">Coins + ${state.rate * 100}% NPC (assumption)</span>` : '')
-      + (state.price ? '<span class="eco-key market">TC Sell Offer, left axis</span>' : '')
-      + (state.activity ? '<span class="eco-key activity">Players killed, bottom bars</span>' : '');
-    el.setAttribute('aria-label', `Gold generation potential of ${world.world} per ${state.unit}, one chart. ${state.price ? 'Tibia Coin Sell Offer on the left axis. ' : ''}${state.activity ? 'Players killed by creatures as bottom bars on a separate count scale. ' : ''}Incomplete periods are gaps. Exact values and coverage are in the chart table.`);
-    const comparisons = [
-      ...(state.stable ? [{ title: 'Constant creature set', get: p => p.grossStable }] : []),
-      ...(state.rate !== null ? [{ title: `Coins + ${state.rate * 100}% NPC (assumption)`, get: p => withLiquidation(p, state.rate) }] : []),
-    ];
-    const extraHead = comparisons.map(c => `<th class="num">${esc(c.title)}</th>`).join('');
-    const extraCells = p => comparisons.map(c => `<td class="num">${value(c.get(p))}</td>`).join('');
-    document.getElementById('chartData').innerHTML = '<caption>Gold from valued creatures only; partial totals are labelled by days with data.</caption><thead><tr><th>Period</th><th class="num">Direct coins</th><th class="num">NPC potential</th><th class="num">Gross potential</th>' + extraHead + '<th>Days with data</th><th class="num">Kill coverage</th><th class="num">TC median</th><th class="num">Price days</th><th class="num">Players killed</th></tr></thead><tbody>'
-      + [...rows].reverse().map(p => `<tr${p.start === state.period ? ' class="current"' : ''}><td>${esc(p.start)}</td><td class="num">${value(p.directCoins)}</td><td class="num">${value(p.npcPotential)}</td><td class="num">${value(p.grossPotential)}</td>${extraCells(p)}<td>${p.covered} / ${p.days}${p.complete ? '' : ' incomplete'}</td><td class="num">${p.killCoverage === null ? 'N/A' : `${(p.killCoverage * 100).toFixed(1)}%`}</td><td class="num">${value(p.sell)}</td><td class="num">${p.priceDays}</td><td class="num">${value(p.playerDeaths)}</td></tr>`).join('') + '</tbody>';
-    if (!L) { el.textContent = 'Interactive chart unavailable. Open Chart values and coverage below.'; return; }
-    const fontSize = parseFloat(getComputedStyle(document.querySelector('.eco-note')).fontSize);
-    if (!chart) {
-      chart = L.createChart(el, {
-        width: el.clientWidth, height: el.clientHeight,
-        layout: { background: { type: 'solid', color: ink('--canvas') }, textColor: ink('--muted'), fontFamily: ink('--font-ui'), fontSize },
-        grid: { vertLines: { visible: false }, horzLines: { color: ink('--line-faint') } },
-        rightPriceScale: { borderVisible: false }, leftPriceScale: { borderVisible: false },
-        timeScale: { borderVisible: false, minBarSpacing: 0.1, rightOffset: 1 },
-        localization: { locale: 'en-US', priceFormatter: value },
-        crosshair: { mode: L.CrosshairMode.Normal, horzLine: { labelVisible: false, color: ink('--line-strong') }, vertLine: { color: ink('--line-strong') } },
-      });
-      chart.subscribeCrosshairMove(event => readout(event.time ? rows.find(r => r.start === dayOf(event.time)) ?? selected() : selected()));
-      chart.subscribeClick(event => { if (event.time) onPeriod(dayOf(event.time)); });
-      resize = new ResizeObserver(() => {
-        const range = chart.timeScale().getVisibleLogicalRange();
-        chart.resize(el.clientWidth, el.clientHeight);
-        chart.applyOptions({ layout: { fontSize: parseFloat(getComputedStyle(document.querySelector('.eco-note')).fontSize) } });
-        if (range) chart.timeScale().setVisibleLogicalRange(range);
-      });
-      resize.observe(el);
-    }
-    const add = (id, color, get, { scale = 'right', style = L.LineStyle.Solid, zero = false, visible = true } = {}) => {
-      if (!lines.has(id)) lines.set(id, chart.addSeries(L.LineSeries, { color, priceScaleId: scale, lineWidth: pixels('--rule-strong'), lineStyle: style,
-        priceLineVisible: false, lastValueVisible: false, pointMarkersVisible: true, pointMarkersRadius: pixels('--space-0'),
-        ...(zero ? { autoscaleInfoProvider: base => { const info = base(); return info ? { ...info, priceRange: { ...info.priceRange, minValue: 0 } } : info; } } : {}) }));
-      const s = lines.get(id); s.applyOptions({ visible }); s.setData(visible ? brokenLine(rows, get) : []);
-    };
-    const complete = field => p => p.complete ? p[field] : null;
-    // Context bars are added first so they cannot cover the gold lines.
-    if (!lines.has('activity')) lines.set('activity', chart.addSeries(L.HistogramSeries, { priceScaleId: 'activity', color: ink('--line-strong'), priceLineVisible: false, lastValueVisible: false }));
-    add('gross', ink('--ink'), complete('grossPotential'), { zero: true });
-    add('coins', ink('--sell'), complete('directCoins'));
-    add('npc', ink('--buy'), complete('npcPotential'));
-    add('stable', ink('--accent'), complete('grossStable'), { style: L.LineStyle.Dashed, visible: state.stable });
-    add('scenario', ink('--caution'), p => p.complete ? withLiquidation(p, state.rate) : null, { style: L.LineStyle.Dotted, visible: state.rate !== null });
-    add('price', ink('--muted'), p => p.sell, { scale: 'left', style: L.LineStyle.Dashed, visible: state.price });
-    lines.get('activity').applyOptions({ visible: state.activity });
-    lines.get('activity').setData(state.activity ? rows.map(p => p.complete ? { time: p.start, value: p.playerDeaths } : { time: p.start }) : []);
-    chart.applyOptions({ leftPriceScale: { visible: state.price }, rightPriceScale: { scaleMargins: { top: 0.1, bottom: 0 } } });
-    chart.priceScale('left').applyOptions({ scaleMargins: { top: 0.1, bottom: state.activity ? 0.25 : 0.1 } });
-    chart.priceScale('activity').applyOptions({ scaleMargins: { top: 0.82, bottom: 0 } });
-    const nextKey = `${world.world}/${state.unit}/${state.period}/${state.range}`;
-    if (rangeBefore && (preserveRange || nextKey === viewKey)) chart.timeScale().setVisibleLogicalRange(rangeBefore);
-    if (!preserveRange && nextKey !== viewKey) {
-      if (state.range === 'All' || !chosen.covered) chart.timeScale().fitContent();
-      else {
-        const anchor = new Date(`${state.period}T00:00:00Z`); anchor.setUTCFullYear(anchor.getUTCFullYear() - 1);
-        const from = periodOf(anchor.toISOString().slice(0, 10), state.unit)[0];
-        const end = rows[Math.min(rows.length - 1, rows.findIndex(p => p.start === state.period) + 1)]?.start ?? state.period;
-        chart.timeScale().setVisibleRange({ from: from < rows[0].start ? rows[0].start : from, to: end });
-      }
-    }
-    viewKey = nextKey;
-  }
-  return { render, destroy() { resize?.disconnect(); chart?.remove(); chart = null; } };
 }

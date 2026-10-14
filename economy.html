@@ -4,9 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tibinance Economy</title>
-<meta name="description" content="Estimated gold generation potential of every Tibia world from public kill statistics and TibiaWiki loot statistics: coins dropped and loot at NPC prices, by day, month and world, with coverage stated.">
+<meta name="description" content="Gold generation potential of every Tibia world, per day: coins dropped and loot at NPC prices, from public kill statistics and TibiaWiki loot statistics, with kill coverage stated.">
 <link rel="stylesheet" href="css/app.css">
-<link rel="stylesheet" href="css/economy.css?v=20261014-rebuild">
+<link rel="stylesheet" href="css/markets.css?v=20261014-history">
+<link rel="stylesheet" href="css/economy.css?v=20261015-terminal">
 <link rel="stylesheet" href="css/site-header.css?v=20261004-github">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪙</text></svg>">
 </head>
@@ -26,108 +27,188 @@
       </ul>
     </nav>
     <a class="site-control site-github" href="https://github.com/nesleykent/Tibinance" target="_blank" rel="noopener" aria-label="Tibinance project on GitHub" title="Tibinance on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .75a11.25 11.25 0 0 0-3.56 21.92c.56.1.77-.24.77-.54v-2.1c-3.13.68-3.79-1.33-3.79-1.33-.51-1.3-1.25-1.65-1.25-1.65-1.02-.7.08-.69.08-.69 1.13.08 1.72 1.16 1.72 1.16 1 1.72 2.64 1.22 3.28.93.1-.73.4-1.22.71-1.5-2.5-.28-5.13-1.25-5.13-5.56 0-1.23.44-2.23 1.16-3.02-.12-.28-.5-1.43.11-2.98 0 0 .95-.3 3.1 1.15a10.8 10.8 0 0 1 5.64 0c2.15-1.46 3.1-1.15 3.1-1.15.61 1.55.23 2.7.11 2.98.72.79 1.16 1.79 1.16 3.02 0 4.32-2.63 5.27-5.14 5.55.4.35.76 1.03.76 2.09v3.1c0 .3.2.65.77.54A11.25 11.25 0 0 0 12 .75Z"/></svg><span>GitHub</span></a>
-    <div class="site-controls">
-      <div id="site-world" class="site-world"></div>
-    </div>
   </div>
 </header>
 
-<main class="wrap economy">
+<main id="economy" class="wrap terminal" aria-busy="true">
+  <h1 class="sr-only">Gold generation potential of Tibia worlds</h1>
 
-<div class="hero">
-  <h1>Gold Generation Potential</h1>
-  <p class="deck">How much gold the creatures killed on a world could bring in: the coins they drop, and their other loot at what NPCs pay for it. Estimated from public kill statistics and TibiaWiki loot statistics, for the creatures with loot evidence.</p>
-</div>
+  <section id="chartPanel" class="chart-panel" aria-labelledby="world">
+    <div class="chart-area">
+      <div id="chart" class="chart" role="img"></div>
+      <!-- The status, one block over the chart's top left, as Markets reads it: the world, what it is, its latest
+           complete period in gold per day and its change over the range; the measure shown, with all three measures'
+           latest values; then the readout of the period under the crosshair. -->
+      <div id="chartHead" class="chart-head">
+        <div class="head-line">
+          <h2 id="world">Economy</h2>
+          <span id="worldMeta" class="symbol-meta"></span>
+          <span class="symbol-quote" aria-live="polite">
+            <span id="lastValue" class="symbol-last"></span>
+            <span id="lastChange" class="symbol-change"></span>
+            <span id="lastRange" class="symbol-range"></span>
+          </span>
+        </div>
+        <div id="measure" class="side-picker" role="radiogroup" aria-label="Measure">
+          <button type="button" data-measure="gross" role="radio" aria-checked="true"><span class="side-name">Gross</span> <span id="measureGross" class="side-value"></span></button>
+          <button type="button" data-measure="coins" role="radio" aria-checked="false"><span class="side-name">Coins</span> <span id="measureCoins" class="side-value"></span></button>
+          <button type="button" data-measure="npc" role="radio" aria-checked="false"><span class="side-name">NPC</span> <span id="measureNpc" class="side-value"></span></button>
+        </div>
+        <div class="chart-legend" aria-hidden="true">
+          <div id="legend" class="legend"></div>
+        </div>
+      </div>
+      <p id="status" class="chart-status">Loading…</p>
+    </div>
 
-<p id="status" class="eco-status" role="status">Loading the economy data.</p>
+    <div class="toolbar toolbar-bottom">
+      <div class="eco-bar">
+        <div id="range" class="ranges" role="radiogroup" aria-label="Range">
+          <button type="button" data-range="1M" role="radio" aria-checked="false">1M</button>
+          <button type="button" data-range="3M" role="radio" aria-checked="false">3M</button>
+          <button type="button" data-range="6M" role="radio" aria-checked="false">6M</button>
+          <button type="button" data-range="YTD" role="radio" aria-checked="false">YTD</button>
+          <button type="button" data-range="1Y" role="radio" aria-checked="true">1Y</button>
+          <button type="button" data-range="All" role="radio" aria-checked="false">All</button>
+        </div>
+        <div id="interval" class="ranges eco-interval" role="radiogroup" aria-label="Interval">
+          <button type="button" data-interval="day" role="radio" aria-checked="false" title="Each day">D</button>
+          <button type="button" data-interval="week" role="radio" aria-checked="true" title="Average per day of each week, Monday to Sunday">W</button>
+          <button type="button" data-interval="month" role="radio" aria-checked="false" title="Average per day of each month">M</button>
+        </div>
+      </div>
+      <span id="through" class="through"></span>
+    </div>
+  </section>
 
-<section id="economy" class="eco" hidden aria-labelledby="ecoWorld">
-  <div class="eco-head">
-    <h2 id="ecoWorld" class="eco-world"></h2>
-    <p id="ecoSpan" class="eco-span"></p>
+  <!-- The dock: the panel open beside the chart, and the tool rail at the right edge (js/markets-dock.js). -->
+  <div id="dock" class="dock">
+    <aside id="worldsPanel" class="dock-panel watchlist" aria-label="Worlds" data-dock-default>
+      <div class="watch-head">
+        <span class="watch-title">Worlds <span id="worldCount" class="watch-count"></span></span>
+        <input type="search" id="filter" class="filter" placeholder="Filter World…" aria-label="Filter worlds">
+      </div>
+      <div class="watch-scroll">
+        <table class="watch">
+          <thead>
+            <tr>
+              <th aria-sort="ascending"><button type="button" data-sort="world">World</button></th>
+              <th class="num" aria-sort="none"><button type="button" data-sort="value" title="Gold per day over the world's latest complete period at the interval">Per day</button></th>
+              <th class="num" aria-sort="none"><button type="button" data-sort="change" title="Change of gold per day over the selected range">Chg%</button></th>
+            </tr>
+          </thead>
+          <tbody id="worlds"></tbody>
+        </table>
+        <p id="noWorlds" class="empty" hidden>No world matches.</p>
+      </div>
+      <!-- The selected world under the list: its latest complete period in gold per day, its change over the range,
+           the three measures, its coverage, and its change over every range. -->
+      <section class="details" aria-labelledby="detailsWorld">
+        <h3 id="detailsWorld" class="details-title"></h3>
+        <p id="detailMeta" class="details-meta"></p>
+        <p class="details-quote"><span id="detailLast" class="details-last"></span> <span id="detailLastLabel" class="details-unit"></span></p>
+        <p class="details-change"><span id="detailChange"></span> <span id="detailChangeLabel" class="details-unit"></span></p>
+        <p id="detailNote" class="details-note"></p>
+        <dl class="details-book">
+          <div title="Direct coin drops per day"><dt>Coins</dt><dd id="detailCoins"></dd></div>
+          <div title="Potential NPC conversion per day"><dt>NPC</dt><dd id="detailNpc"></dd></div>
+          <div title="Valued kills of all kills"><dt>Coverage</dt><dd id="detailCoverage"></dd></div>
+        </dl>
+        <h4 class="details-heading" id="performanceTitle">Performance</h4>
+        <div id="detailPerformance" class="performance" role="group" aria-labelledby="performanceTitle"></div>
+      </section>
+      <div id="watchTip" class="watch-tip" role="tooltip" hidden></div>
+    </aside>
+
+    <section id="creaturesPanel" class="dock-panel help-panel" aria-labelledby="creaturesTitle">
+      <div class="panel-head eco-panel-head"><h2 id="creaturesTitle" class="panel-title">Creatures</h2>
+        <select id="creatureMonth" class="field eco-month" aria-label="Month"></select></div>
+      <div class="panel-body">
+        <p id="creatureNote" class="eco-panel-note"></p>
+        <ol id="creatureList" class="eco-list"></ol>
+      </div>
+    </section>
+
+    <section id="assumptionsPanel" class="dock-panel help-panel" aria-labelledby="assumptionsTitle">
+      <div class="panel-head"><h2 id="assumptionsTitle" class="panel-title">Assumptions</h2></div>
+      <div class="panel-body">
+        <p class="eco-panel-lead">Nothing here is observed. Each choice adds a dashed line to the chart and a row to the readout, labelled as what it is.</p>
+        <h3 class="eco-panel-heading" id="liqLabel">Hypothetical NPC liquidation</h3>
+        <div id="liquidation" class="segmented eco-segmented" role="radiogroup" aria-labelledby="liqLabel">
+          <button type="button" role="radio" data-rate="" aria-checked="true">None</button>
+          <button type="button" role="radio" data-rate="0" aria-checked="false">0%</button>
+          <button type="button" role="radio" data-rate="0.25" aria-checked="false">25%</button>
+          <button type="button" role="radio" data-rate="0.5" aria-checked="false">50%</button>
+          <button type="button" role="radio" data-rate="0.75" aria-checked="false">75%</button>
+          <button type="button" role="radio" data-rate="1" aria-checked="false">100%</button>
+        </div>
+        <p class="eco-panel-note">Coins plus that share of NPC potential: what would reach the world if players sold that share of their loot to NPCs. No liquidation rate is known, so none is assumed by default.</p>
+        <h3 class="eco-panel-heading">Constant creature set</h3>
+        <button id="stable" type="button" class="btn eco-toggle" aria-pressed="false">Compare the constant creature set</button>
+        <p class="eco-panel-note">Gross potential of the creatures valued since the first day of the data only, so a creature becoming valued never reads as growth. Their loot values can still change with new evidence.</p>
+      </div>
+    </section>
+
+    <section id="findingsPanel" class="dock-panel help-panel" aria-labelledby="findingsTitle">
+      <div class="panel-head"><h2 id="findingsTitle" class="panel-title">Research</h2></div>
+      <div id="findings" class="panel-body eco-prose"></div>
+    </section>
+
+    <section id="helpPanel" class="dock-panel help-panel" aria-labelledby="helpTitle">
+      <div class="panel-head"><h2 id="helpTitle" class="panel-title">Reading the chart</h2></div>
+      <div class="panel-body">
+        <ul class="help-keys">
+          <li><i class="key key-dot eco-key-measure" aria-hidden="true"></i>The measure, in gold per day: a day's total, or a week's or a month's total over its days, so every interval reads on the same scale.</li>
+          <li><i class="key key-dotted eco-key-measure" aria-hidden="true"></i>Dotted line: the periods in between lack a day of data, or are unfinished. Nothing is drawn for them, and nothing is filled in.</li>
+          <li><i class="key key-volume eco-key-measure" aria-hidden="true"></i>Kills per day: every creature kill, valued or not, at the foot of the chart on its own scale.</li>
+          <li><i class="key eco-key-price" aria-hidden="true"></i>TC Sell Offer, when shown: the median of the world's daily best Sell Offers in each period, on the left scale, in gold per coin.</li>
+          <li><i class="key eco-key-assumption" aria-hidden="true"></i>Dashed: an assumption or a comparison chosen in Assumptions, never an observation.</li>
+        </ul>
+        <div id="provenance" class="eco-prose"></div>
+        <p class="help-fine">Not affiliated with CipSoft. Tibia is a trademark of CipSoft GmbH.</p>
+      </div>
+    </section>
+
+    <!-- The tool rail: tools that analyse the world, flexible space, then utilities (as on Markets). -->
+    <div class="dock-rail" role="group" aria-label="Tools">
+      <div class="dock-group">
+        <button type="button" class="tool dock-tool" data-dock-target="worldsPanel" aria-label="Worlds">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7.5 5.5h9M7.5 10h9M7.5 14.5h9M3.5 5.5h.01M3.5 10h.01M3.5 14.5h.01"/></svg>
+        </button>
+        <button type="button" class="tool dock-tool" data-dock-target="creaturesPanel" aria-label="Creatures">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3.5 16.5h13M5.5 16.5V10M10 16.5V4.5M14.5 16.5V7.5"/></svg>
+        </button>
+        <button type="button" class="tool dock-tool" data-dock-target="assumptionsPanel" aria-label="Assumptions">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3.5 6h13M3.5 14h13"/><circle cx="7.5" cy="6" r="1.8"/><circle cx="12.5" cy="14" r="1.8"/></svg>
+        </button>
+        <button type="button" id="priceToggle" class="tool dock-tool" aria-pressed="false" aria-label="TC Sell Offer" title="Show the TC Sell Offer">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="6.5"/><path d="M7.5 7.5h5M10 7.5v6"/></svg>
+        </button>
+        <button type="button" class="tool dock-tool" data-dock-target="findingsPanel" aria-label="Research">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 3.5h7l3 3v10H5z"/><path d="M12 3.5v3h3M7.5 10h5M7.5 13h5"/></svg>
+        </button>
+      </div>
+      <span class="dock-space" aria-hidden="true"></span>
+      <div class="dock-group">
+        <button type="button" class="tool dock-tool" data-dock-target="helpPanel" aria-label="Help">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5"/><path d="M10 9v5M10 6.2v.1"/></svg>
+        </button>
+        <button type="button" id="exportButton" class="tool dock-tool" aria-label="Export chart image" title="Export chart image">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3.5v9M6.5 9l3.5 3.5L13.5 9M3.5 13v3.5h13V13"/></svg>
+        </button>
+        <button type="button" id="expand" class="tool dock-tool" aria-pressed="false" aria-label="Full screen" title="Full screen">
+          <svg class="icon-expand" viewBox="0 0 20 20" aria-hidden="true"><path d="M3.5 8V3.5H8M12 3.5h4.5V8M16.5 12v4.5H12M8 16.5H3.5V12"/></svg>
+          <svg class="icon-collapse" viewBox="0 0 20 20" aria-hidden="true"><path d="M8 3.5V8H3.5M16.5 8H12V3.5M12 16.5V12h4.5M3.5 12H8v4.5"/></svg>
+        </button>
+      </div>
+    </div>
+    <p id="exportStatus" class="sr-only" role="status"></p>
   </div>
-  <p id="ecoEvidence" class="eco-note"></p>
-
-  <div class="eco-controls">
-    <div class="eco-control">
-      <span class="eco-label" id="unitLabel">Period</span>
-      <div id="unit" class="segmented" role="radiogroup" aria-labelledby="unitLabel">
-        <button type="button" role="radio" data-unit="day" aria-checked="false">Day</button>
-        <button type="button" role="radio" data-unit="week" aria-checked="false">Week</button>
-        <button type="button" role="radio" data-unit="month" aria-checked="true">Month</button>
-        <button type="button" role="radio" data-unit="quarter" aria-checked="false">Quarter</button>
-        <button type="button" role="radio" data-unit="year" aria-checked="false">Year</button>
-      </div>
-    </div>
-    <label class="eco-control">
-      <span class="eco-label">Showing</span>
-      <select id="period" class="field"></select>
-    </label>
-    <div class="eco-control">
-      <span class="eco-label" id="liqLabel">Hypothetical NPC liquidation <span class="eco-assumption">assumption</span></span>
-      <div id="liquidation" class="segmented" role="radiogroup" aria-labelledby="liqLabel">
-        <button type="button" role="radio" data-rate="" aria-checked="true">None</button>
-        <button type="button" role="radio" data-rate="0" aria-checked="false">0%</button>
-        <button type="button" role="radio" data-rate="0.25" aria-checked="false">25%</button>
-        <button type="button" role="radio" data-rate="0.5" aria-checked="false">50%</button>
-        <button type="button" role="radio" data-rate="0.75" aria-checked="false">75%</button>
-        <button type="button" role="radio" data-rate="1" aria-checked="false">100%</button>
-      </div>
-    </div>
-    <button id="stable" class="btn" type="button" aria-pressed="false">Compare constant creature set</button>
-  </div>
-
-  <div id="tiles" class="eco-tiles" aria-live="polite"></div>
-
-  <figure class="eco-figure" aria-labelledby="chartTitle">
-    <figcaption class="eco-chart-head">
-      <h3 id="chartTitle">Potential over time</h3>
-      <div id="chartRange" class="segmented" role="radiogroup" aria-label="Chart window">
-        <button type="button" role="radio" data-range="1Y" aria-checked="true">1Y</button>
-        <button type="button" role="radio" data-range="All" aria-checked="false">All</button>
-      </div>
-    </figcaption>
-    <p id="chartContext" class="eco-note"></p>
-    <div id="legend" class="eco-legend"></div>
-    <div class="eco-chart-options" aria-label="Chart comparisons">
-      <button id="chartPrice" type="button" class="btn" aria-pressed="false">TC Sell Offer</button>
-      <button id="chartActivity" type="button" class="btn" aria-pressed="false">Activity</button>
-    </div>
-    <p id="chartUnits" class="eco-note"></p>
-    <div id="chart" class="eco-chart" role="group" aria-label="Economic indicators"></div>
-    <p id="chartReadout" class="eco-note"></p>
-    <p class="eco-note">Select a period above for exact figures. Hover or tap for chart values; drag or pinch to explore. Optional TC prices use the left axis; activity bars use a separate count scale below the gold lines. Gaps mean incomplete or unavailable periods. Market medians use only observed closes and state their sample size. No uncertainty interval is supported by the loot evidence.</p>
-    <details class="eco-chart-data"><summary>Chart values and coverage</summary><div class="table-wrap"><table id="chartData" class="data eco-table"></table></div></details>
-  </figure>
-
-  <section class="eco-section" aria-labelledby="contribTitle">
-    <h3 id="contribTitle">Creature contributions by month</h3>
-    <p id="contribNote" class="eco-note"></p>
-    <div class="table-wrap"><table id="contrib" class="data eco-table"></table></div>
-  </section>
-
-  <section class="eco-section" aria-labelledby="worldsTitle">
-    <h3 id="worldsTitle">Every world in the same period</h3>
-    <p class="eco-note">Worlds with missing days, data starting later, or kill coverage under 95% are flagged and not ranked as comparable. Values are never scaled up to cover unvalued kills.</p>
-    <button id="comparableOnly" class="btn" type="button" aria-pressed="false">Comparable worlds only</button>
-    <div class="table-wrap"><table id="worlds" class="data eco-table"></table></div>
-  </section>
-
-  <section class="eco-section" aria-labelledby="findingsTitle">
-    <h3 id="findingsTitle">What the research finds</h3>
-    <div id="findings" class="eco-prose"></div>
-  </section>
-
-  <details class="eco-section eco-provenance">
-    <summary><h3>Sources, method and coverage</h3></summary>
-    <div id="provenance" class="eco-prose"></div>
-  </details>
-</section>
-
 </main>
+
 <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.1/dist/lightweight-charts.standalone.production.js"
         integrity="sha384-KkYqTZlM13Zya6fVUF3IGCBOQ1ehFeJVVgxaVvD/0MebineF9EI8Jkd3NnWNChqN" crossorigin="anonymous"></script>
 <script type="module" src="js/site-header.js"></script>
-<script type="module" src="js/economy.js?v=20261014-rebuild"></script>
+<script type="module" src="js/economy.js?v=20261015-terminal"></script>
 </body>
 </html>

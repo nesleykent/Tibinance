@@ -1,84 +1,51 @@
 /*
- * Economy: gold generation potential per world. In Tibinance's own tokens (css/app.css): small-capital labels,
- * tabular figures, segmented controls, data tables. Coins and NPC potential get two distinct inks; an assumption is
- * always marked as one.
+ * Economy: the Markets terminal (css/markets.css), with what only Economy has. Its own tokens only (css/app.css): the
+ * measures take the Market's inks (gross in ink, coins in the Sell colour, NPC potential in the Buy colour), an
+ * assumption the caution ink, a comparison the accent. No token is defined here.
  */
 
-.economy { padding-bottom:var(--space-8); }
-.eco-status { margin:var(--space-3) 0; color:var(--muted); font-family:var(--font-ui); font-size:var(--step-n1); }
-.eco { display:grid; grid-template-columns:minmax(0, 1fr); gap:var(--space-5); font-family:var(--font-ui); }
-.eco > * { min-width:0; }
-.eco-head { display:flex; flex-wrap:wrap; align-items:baseline; gap:var(--space-3); }
-.eco-world { margin:0; font-family:var(--font-editorial); font-size:var(--step-3); font-weight:var(--weight-regular); }
-.eco-span { margin:0; color:var(--muted); font-size:var(--step-n1); }
+/* The measure picker is the Markets side picker with three choices; the chosen one in its measure's colour. */
+.side-picker button[data-measure="coins"][aria-checked="true"] :is(.side-name,.side-value) { color:var(--sell); }
+.side-picker button[data-measure="npc"][aria-checked="true"] :is(.side-name,.side-value) { color:var(--buy); }
 
-.eco-label { display:block; margin:0 0 var(--space-1); color:var(--muted); font-size:var(--step-n2); font-weight:var(--weight-strong);
-  letter-spacing:var(--tracking-caps); line-height:var(--leading-tight); text-transform:uppercase; }
-.eco-assumption { margin-left:var(--space-1); padding:0 var(--space-1); border:var(--rule) solid var(--caution); border-radius:var(--radius); color:var(--caution);
-  letter-spacing:0; text-transform:none; font-weight:var(--weight-regular); }
-.eco-controls { display:flex; flex-wrap:wrap; align-items:end; gap:var(--space-4); }
-.eco-control { display:grid; min-width:0; }
+/* Ranges, then the interval after a hairline, on the foot of the chart. */
+.eco-bar { display:flex; align-items:center; gap:var(--space-3); min-width:0; }
+.eco-interval { margin-left:0; padding-left:var(--space-3); border-left:var(--rule) solid var(--line); }
 
-.eco-tiles { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--space-4); }
-.eco-tile { display:grid; gap:var(--space-1); padding:var(--space-3) 0; border-top:var(--rule) solid var(--line); }
-.eco-tile .eco-value { font-size:var(--step-2); font-weight:var(--weight-strong); font-variant-numeric:lining-nums tabular-nums; line-height:var(--leading-tight); letter-spacing:var(--tracking-tight); overflow-wrap:anywhere; }
-.eco-tile .eco-sub { color:var(--muted); font-size:var(--step-n2); line-height:var(--leading-text); }
-.eco-tile.coins { border-top:var(--rule-strong) solid var(--sell); }
-.eco-tile.npc { border-top:var(--rule-strong) solid var(--buy); }
-.eco-tile.gross { border-top:var(--rule-strong) solid var(--ink); }
-.eco-tile.assumption { border-top:var(--rule-strong) dashed var(--caution); }
-.eco-unavailable { color:var(--muted); font-size:var(--step-n1); }
-.eco-up { color:var(--positive); } .eco-down { color:var(--negative); }
+/* Keys: dashed for a comparison or an assumption; the TC price thin, in the daily-average grey. */
+.eco-key-dashed { border-top-style:dashed; }
+.eco-key-measure { color:var(--ink); }
+.key.eco-key-price { border-top:var(--rule) solid var(--average); }
+.key.eco-key-assumption { border-top:var(--rule-strong) dashed var(--caution); }
 
-.eco-figure { margin:0; }
-.eco-legend { display:flex; flex-wrap:wrap; gap:var(--space-3); margin-block:var(--space-3); font-size:var(--step-n1); }
-.eco-key { display:inline-flex; align-items:center; gap:var(--space-1); color:var(--ink); }
-.eco-key::before { content:""; width:var(--space-4); height:var(--rule-strong); background:currentColor; }
-.eco-key.coins { color:var(--sell); } .eco-key.npc { color:var(--buy); } .eco-key.gross { color:var(--ink); } .eco-key.assumption { color:var(--caution); }
-.eco-key.assumption::before { background:repeating-linear-gradient(90deg,currentColor 0 var(--space-1),transparent var(--space-1) var(--space-2)); }
-.eco-chart { min-width:0; overflow:hidden; height:calc(var(--space-8) * 8); }
-.eco-note { margin:var(--space-2) 0 0; color:var(--muted); font-size:var(--step-n2); line-height:var(--leading-text); }
+/* Panels: the head may hold a control; a lead line, small headings and notes. */
+.eco-panel-head { justify-content:space-between; }
+.eco-month { min-height:calc(var(--control-height) - var(--space-1)); }
+.eco-panel-lead { margin-top:0; color:var(--muted); }
+.eco-panel-heading { margin:var(--space-4) 0 var(--space-2); font-size:var(--step-n2); font-weight:var(--weight-strong); letter-spacing:var(--tracking-caps); text-transform:uppercase; }
+.eco-panel-note { color:var(--muted); font-size:var(--step-n2); }
+.panel-body > .eco-panel-note:first-child { margin-top:0; }
+.eco-segmented { display:flex; flex-wrap:wrap; }
+.eco-toggle[aria-pressed="true"] { background:var(--accent-soft); color:var(--accent); }
+.eco-prose p:first-child { margin-top:0; }
 
-.eco-section h3 { margin:0 0 var(--space-2); font-family:var(--font-editorial); font-size:var(--step-1); font-weight:var(--weight-regular); }
-.eco-table td { font-size:var(--step-n1); }
-.eco-table td.num, .eco-table th.num { text-align:right; font-variant-numeric:lining-nums tabular-nums; }
-.eco-table th button { all:unset; cursor:pointer; }
-.eco-table th button:focus-visible { outline:var(--rule-strong) solid var(--accent); }
-.eco-table th[aria-sort="descending"] button::after { content:" \2193"; }
-.eco-table th[aria-sort="ascending"] button::after { content:" \2191"; }
-.eco-table .warn { color:var(--caution); white-space:normal; }
-.eco-table tr.current td { background:var(--accent-soft); }
-.eco-prose { max-width:72ch; color:var(--ink); font-size:var(--step-n1); line-height:var(--leading-text); }
-.eco-prose p { margin:0 0 var(--space-3); }
-.eco-prose ul { margin:0 0 var(--space-3); padding-left:var(--space-5); }
-.eco-provenance summary { cursor:pointer; list-style:none; }
-.eco-provenance summary h3 { display:inline; }
+/* A month's creatures: name and gross potential on one line, what each kill yields and the share under them. */
+.eco-list { margin:var(--space-3) 0 0; padding:0; list-style:none; font-variant-numeric:lining-nums tabular-nums; }
+.eco-list li { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:0 var(--space-2); padding:var(--space-1) 0; border-bottom:var(--rule) solid var(--line-faint); }
+.eco-list-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.eco-list-value { font-weight:var(--weight-strong); text-align:right; }
+.eco-list-sub,.eco-list-share { color:var(--muted); font-size:var(--step-n2); }
+.eco-list-share { text-align:right; }
+.eco-list-other .eco-list-name { color:var(--muted); }
 
-@media (max-width: 600px) {
-  .eco-controls { gap:var(--space-3); }
-  .eco-control, .eco-control .segmented { max-width:100%; }
-  .eco-control .segmented { overflow-x:auto; }
+/* A narrow chart keeps the measure names and leaves their values to the readout and the details. */
+@container chart (max-width:599.98px) {
+  #measure .side-value { display:none; }
+  /* The readout keeps the period, the measure and kills; the rest is in the details and the help. */
+  .legend .eco-extra { display:none; }
 }
-
-/* All visual roles resolve to the original shared palette and type/spacing scales. */
-.eco-chart-head { display:flex; align-items:center; justify-content:space-between; gap:var(--space-3); }
-.eco-chart-head h3 { margin:0; font:var(--weight-regular) var(--step-2)/var(--leading-tight) var(--font-editorial); }
-.eco-key.stable { color:var(--accent); }
-.eco-key.stable::before { background:repeating-linear-gradient(90deg,currentColor 0 var(--space-1),transparent var(--space-1) var(--space-2)); }
-.eco-chart-options { display:flex; flex-wrap:wrap; gap:var(--space-2); }
-.eco-chart-options button[aria-pressed="true"] { background:var(--accent-soft); color:var(--accent); }
-.eco-chart-data { margin-top:var(--space-3); font-size:var(--step-n1); }
-.eco-chart-data summary { cursor:pointer; color:var(--accent); }
-.eco-chart-data .table-wrap { max-height:calc(var(--space-8) * 6); }
-.eco-tile.stable { border-top:var(--rule-strong) dashed var(--accent); }
-.eco-controls .btn[aria-pressed="true"],#comparableOnly[aria-pressed="true"] { background:var(--accent-soft); color:var(--accent); }
-.eco-control select { min-width:0; }
-.eco-status[data-error] { color:var(--negative); }
-@media(max-width:600px) {
-  .eco-chart { height:calc(var(--space-8) * 6); }
-  .eco-tiles { grid-template-columns:repeat(2,minmax(0,1fr)); }
+@container chart (max-width:471.98px) {
+  .eco-interval { padding-left:var(--space-2); }
+  /* Gold figures run to ten digits: the readout keeps the change in percent only. */
+  .chart-head .eco-delta { display:none; }
 }
-
-.eco-key.market { color:var(--muted); }
-.eco-key.market::before { background:repeating-linear-gradient(90deg,currentColor 0 var(--space-1),transparent var(--space-1) var(--space-2)); }
-.eco-key.activity::before { width:var(--space-2); height:var(--space-3); background:var(--line-strong); }

@@ -361,20 +361,52 @@ backs off on rate limits like the research's `fetch_api.py`.
 
 ## Economy
 
-[Economy](https://nesleykent.github.io/Tibinance/economy.html) estimates each
-world's gold generation potential: direct coin drops, potential NPC conversion
-and their sum, from valued creatures only, with kill coverage beside every figure
-(`economy.html`, `js/economy.js`, arithmetic in `js/economy-data.js`). Periods
-are days, Monday-to-Sunday weeks, months, quarters or years, defaulting to the
-latest complete one; growth is computed only between complete periods and
-unfinished periods are not drawn. The chart keeps gold, the TC Sell Offer and
-players killed in separate panes and scales. Hypothetical liquidation rates are
-labelled assumptions; the constant creature set removes coverage effects; the
-creature table and the cross-world table state comparability rather than assume
-it. The data are `data/economy/` (built by `tools/economy/`), the findings
-`reports/economy/results.json`. Sources, valuation, coverage rules, population
-data, econometrics, the forecast archive and automation:
-[docs/economy.md](economy.md).
+[Economy](https://nesleykent.github.io/Tibinance/economy.html) is a terminal
+read like Markets, on the same layout and components (`economy.html`,
+`css/markets.css` with `css/economy.css`, `js/economy.js`, `js/economy-chart.js`,
+arithmetic in `js/economy-data.js`).
+
+**The chart and its status.** Every figure is gold per day from valued creatures:
+a day's total, or a complete week's (Monday to Sunday) or month's total over its
+days, so the D, W and M intervals read on one scale. The status block shows the
+world and what it is, the latest complete period's figure and its change over
+the range. Its picker chooses the measure: Gross potential, Coins (direct coin
+drops, in the Sell colour) or NPC (potential NPC conversion, in the Buy colour).
+
+- **Line:** solid between complete periods, dotted across a period that lacks a
+  day of data or is unfinished; such a period has no value and is never drawn.
+- **Kills:** every creature kill per day, valued or not, in a short pane under
+  the gold, so the gold scale never runs below zero.
+- **Readout:** for the period under the crosshair, the measure and its change
+  since the previous complete period, the other two measures, kills with their
+  coverage, players killed, and any comparison shown. A narrow chart keeps the
+  period, the measure and kills.
+- **Ranges** are Markets' own, 1M to All.
+
+**The dock.**
+
+- **Worlds:** a watchlist of the active worlds; retired worlds appear when a
+  search names them, marked R. Each world's figure for the measure and interval
+  comes from `data/economy/gold/overview.json`, which
+  `tools/build_economy_overview.mjs` builds with the chart's own functions, so a
+  world's row and its chart always agree. `--check` keeps it fresh in validation.
+  Under the list, the selected world's details: the figure, its change, its kill
+  days, the three measures, coverage, and performance over every range.
+- **Creatures:** a month's top 30 creatures by gross potential, the rest summed as
+  other.
+- **Assumptions:** a hypothetical NPC liquidation rate (0, 25, 50, 75 or 100%),
+  and the constant creature set for comparison. Both are drawn dashed and
+  labelled, never in place of the measure.
+- **Research:** the econometric findings (`reports/economy/results.json`).
+- **Help:** the chart's keys and the method and sources.
+
+**The rail.** Its actions show the median TC Sell Offer of each period on a left
+scale, export the chart as an image, and enter full screen. The address keeps
+the world, measure, interval, range and comparisons.
+
+The data are `data/economy/` (built by `tools/economy/`). Sources, valuation,
+coverage rules, population data, econometrics, the forecast archive and
+automation: [docs/economy.md](economy.md).
 
 ## Trade
 

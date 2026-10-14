@@ -1,3 +1,31 @@
+# Economy as a terminal, 2026-10-14
+
+- **Instruction:** the user compared the Economy page with Markets ("your page are incomplete! look how the [Markets]
+  page are") after the UI hold above. I took that as a new instruction to resume Economy UI work.
+- **Change:** Economy is rebuilt as a terminal in the Markets idiom, on Markets' own layout and components
+  (`css/markets.css`, `js/markets-dock.js`), with no new tokens (`css/economy.css` defines none):
+  - **Chart:** a status block with the world, its facts and its quote, a Gross, Coins or NPC picker, and the readout
+    under the crosshair. A short kills pane sits under the gold. Ranges run 1M to All, with D, W and M intervals.
+  - **Dock:** a Worlds watchlist (active worlds; retired ones when a search names them, marked R; low coverage
+    marked i) with details and performance; Creatures (a month's top 30); Assumptions (liquidation rate, constant
+    creature set; dashed and labelled); Research; Help with method and sources.
+  - **Rail:** the TC Sell Offer on a left scale, image export and full screen.
+  - **Gold per day:** every figure is gold per day, so the intervals share one scale. Only complete periods have
+    values (`ratePeriods`, `rangeChange` in `js/economy-data.js`), and the audited arithmetic from 448f613 is kept.
+- **Overview:** the watchlist reads `data/economy/gold/overview.json`. `tools/build_economy_overview.mjs` builds it
+  with the chart's own functions, so a world's row equals its chart for every interval, measure and range. It runs
+  as a builder `--check` in `validate_site.mjs` (now 9 checks) and after `build_gold` in `economy-daily.yml`.
+- **Tests:**
+  - `tests/economy-browser.mjs` is rewritten for the terminal: every figure is recomputed from the data, and the list
+    must agree with the chart at each interval and measure. It passes in Chrome.
+  - 3 new unit tests (209 of 209 pass).
+  - The header test's Economy ready check is updated and passes.
+- **Release:** not made. A full release of main would also ship the other agent's unreleased Markets changes
+  (Forecast history controls, the Events toggle convention, `markets.css`, `markets.js`, `markets.html`). Those
+  stay held until the user decides. Production stays `release/0005`.
+
+---
+
 # Economy automation verified, 2026-10-14
 
 - **First `economy-daily.yml` run** (38506418523, cold cache): every step succeeded.
