@@ -55,7 +55,7 @@ try {
   const listed=()=>page.$$eval('#worlds tr[data-world]',trs=>trs.map(tr=>tr.dataset.world));
   const shown=async world=>{await page.waitForFunction(w=>document.getElementById('world').textContent===w,world);await ready();await page.waitForTimeout(100);};
 
-  // ---- Reached from the site menu; Antica, gross potential, by week, over a year.
+  // ---- A first visit exposes the entire recorded gold history, independently of TC price coverage.
   await page.goto(`${root}/`);
   await page.click('header.site [data-site-menu]');
   await page.click('#site-menu a[href="economy.html"]');
@@ -63,6 +63,26 @@ try {
   assert.equal(await page.title(),'Tibinance Economy');
   assert.equal(await page.getAttribute('#site-menu a[aria-current="page"]','href'),'economy.html');
   assert.equal(await text('#world'),'Antica');
+  assert.equal(param('range'),'All','a first visit must not hide the history before the last year');
+  assert.equal(await page.getAttribute('#range [data-range="All"]','aria-checked'),'true');
+  await page.waitForTimeout(100);
+  const initialHistory=await daily('antica');
+  const initialFirst=periodOf(initialHistory.first,'week')[0];
+  const visibleFirst=await page.evaluate(()=>{
+    const d=window.economyTestCharts[0].timeScale().getVisibleRange().from;
+    return typeof d==='string'?d:`${d.year}-${String(d.month).padStart(2,'0')}-${String(d.day).padStart(2,'0')}`;
+  });
+  assert.equal(visibleFirst,initialFirst,'the initial chart reaches the oldest gold data');
+  const firstGold=await page.evaluate(()=>window.economyTestSeries.filter(s=>s.options().lineVisible===false)
+    .find(s=>s.options().visible).data().find(p=>p.value!==undefined));
+  assert.equal(firstGold.time,initialFirst,'gold before 2025 is plotted even with TC price enabled');
+  assert.ok(firstGold.value>0);
+  assert.equal(await text('#lastRange'),'All');
+  assert.ok((await text('#through')).includes(`History ${initialHistory.first} to `),'the available start date is visible');
+  if (shots) await page.screenshot({path:join(shots,`economy-${engine}-full-history.png`),fullPage:true});
+  // Explicit shorter ranges remain available, and the existing interaction checks use 1Y.
+  await page.click('#range [data-range="1Y"]');
+
   assert.deepEqual([param('world'),param('measure'),param('interval'),param('range')],['Antica','gross','week','1Y']);
   assert.equal(await page.locator('#measure #priceToggle').count(),1,'Tibia Coin price has a labelled control beside the gold series');
   assert.match(await text('#priceToggle'),/^Tibia Coin price/i);
@@ -83,9 +103,8 @@ try {
   assert.ok(legend.includes(`${(100*e.last.killCoverage).toFixed(1)}% valued`));
   assert.doesNotMatch(await page.locator('#economy').textContent(),/Players killed|Direct coins|>Coins</);
   assert.match(await page.getAttribute('#chart','aria-label'),/^Antica, gross potential from valued creatures in gold per day, by week, range 1Y\./);
-  const lastDay=(await daily('antica')).first;
-  assert.match(await text('#through'),/Kill days through \d{4}-\d\d-\d\d$/);
-  assert.ok(lastDay);
+  assert.ok((await text('#through')).includes(`History ${initialHistory.first} to `));
+  assert.ok(initialHistory.first);
 
   // ---- The watchlist: the active worlds, the selected one marked, its figures equal to the chart's.
   const active=overview.worlds.filter(w=>!w.ended).map(w=>w.world).sort((a,b)=>a.localeCompare(b));

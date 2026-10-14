@@ -285,6 +285,11 @@ coverage and price sample counts remain in Help's keyboard-scrollable Chart valu
 rounded to whole gold/counts for display, matching the readout. No uncertainty interval is invented. If the chart
 library is unavailable, the controls, world details and data table remain usable; image export is disabled.
 
+Economy opens on **All**, exposing every recorded gold period for the selected world. Explicit URL ranges still
+apply. The chart footer states the available kill-day history's start and end even when a shorter range is selected.
+Antica's history starts on 2022-08-22; newer worlds start with their own first record, and retired worlds retain
+separate histories. TC price coverage does not truncate the gold timeline.
+
 Daily avg shows gold per day on a linear scale. Accumulated uses a logarithmic gold scale and sums the raw daily components inside the exact inclusive selected-range
 boundaries, through the latest complete interval. A boundary week/month is clipped to the selected dates rather
 than included in full. Recovered days count; missing days are excluded, and later subtotals state cumulative days

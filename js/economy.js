@@ -40,7 +40,7 @@ const state = {
   mode: params.get('mode') === 'accumulated' ? 'accumulated' : 'daily',
   kills: params.get('kills') !== '0',
   interval: INTERVALS.includes(params.get('interval')) ? params.get('interval') : 'week',
-  range: RANGES.includes(params.get('range')) ? params.get('range') : '1Y',
+  range: RANGES.includes(params.get('range')) ? params.get('range') : 'All',
   price: params.get('price') !== '0',
   rate: params.has('rate') && LIQUIDATION_SCENARIOS.includes(Number(params.get('rate'))) ? Number(params.get('rate')) : null,
   stable: params.get('stable') === '1',
@@ -202,7 +202,7 @@ function showQuote() {
   const a = p && view.accumulated.get(p.start);
   $('through').textContent = state.mode === 'accumulated'
     ? `Accumulated gold (log scale), ${a?.from ?? ''} to ${p?.end ?? view.end}. ${a ? `${a.covered}/${a.days} days with data${a.complete ? '' : ' (partial subtotal)'}. ` : ''}Kills per day.`
-    : `Gold per day by ${UNIT[state.interval]}. Kill days through ${view.end}`;
+    : `Gold per day by ${UNIT[state.interval]}. History ${view.daily.first} to ${view.end}`;
 }
 
 /*
