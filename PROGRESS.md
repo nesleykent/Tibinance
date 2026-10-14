@@ -1,3 +1,21 @@
+# Economy automation verified, 2026-10-14
+
+- **First `economy-daily.yml` run** (38506418523, cold cache): every step succeeded.
+  - It rebuilt all 51 kill-statistics months for 159 worlds: 601 days recovered exactly, 0 conflicts.
+  - It committed `data/economy` through the kill-statistics files of 2026-10-13 (f9f5d13).
+  - It made the data release `release/0005`.
+- **Live check:** `node tools/ci/pages_release.mjs verify-live --all` passes, with 924 of 924 live files equal to
+  `release/0005`. A first check found one differing file and the next three found none: a CDN edge served one stale
+  copy.
+- **Gold challenger: not yet run.** That run started before the challenger step existed. The step is in
+  `economy-daily.yml` on main, so the next scheduled run (03:30 UTC) is the first to archive a `tc-gold-challenger`
+  edition. Check that it archives exactly one edition through `publish.py`, and that a rerun archives nothing.
+- **Unchanged:** this entry changes no code, data or release. Production stays `release/0005`. The UI rebuild on
+  main stays unreleased, as recorded above. A full release of main would deploy it, so none is made without a new
+  user instruction.
+
+---
+
 # Authorized authorship history rewrite, 2026-10-14
 
 The user explicitly authorized rewriting existing bot-authored commits and release references after the bot
@@ -115,12 +133,9 @@ Never force-push, never reset, never redo finished work.
   published Projections. Specification E is archived as a prospective challenger instead (`tc-gold-challenger`, role
   `challenger`): never shown, scored by `evaluate.py`, reproducible from its snapshot.
 - **Exact next action:**
-  1. Check the first `economy-daily.yml` run (38506418523, dispatched 2026-10-14 03:28 UTC, cold cache).
-     - It should push a bot commit of `data/economy` through the latest kill-statistics day.
-     - Its release step should then make a data release carrying `data/economy/**`, now that `release/0004`
-       approved the policy.
-     - The next run, scheduled or dispatched, is the first with the gold challenger. Confirm it archives one
-       `tc-gold-challenger` edition through `publish.py`, and that a rerun archives nothing.
+  1. Done: the first `economy-daily.yml` run is verified (see "Economy automation verified" at the top). Still
+     open: the next run is the first with the gold challenger. Confirm it archives one `tc-gold-challenger` edition
+     through `publish.py`, and that a rerun archives nothing.
   2. When target weeks close, check that `forecast-archive.yml` writes `data/forecast-archive/evaluations.jsonl`
      and that the Forecast history accuracy tables fill.
   3. Remaining work below.
