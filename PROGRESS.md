@@ -18,10 +18,14 @@ Never force-push, never reset, never redo finished work.
 - **Production:** `release/0003`, a **data release** made by the forecast-archive workflow on top of
   `release/0002`. Live verified: 543/543 files.
 - **Exact next action:**
-  1. Finish the Wayback import (`node tools/economy/population/wayback_guildstats.mjs`; resumable, it caches each
-     capture in `.cache/economy/wayback/`). Commit `data/economy/population/guildstats-wayback/`.
-  2. Dispatch `online-sampler.yml` once and confirm the `data/online-samples` branch.
-  3. Stage E: econometrics in `reports/economy/`.
+  1. Let the monthly point-in-time gold builds finish (`/private/tmp` script, local; the same as running
+     `node tools/economy/build_gold.mjs --as-of <YYYY-MM-01T00:00:00Z>` for each month 2024-01 to 2026-10, about
+     50 s each, into `.cache/economy/gold-pit/`).
+  2. Rerun `reports/economy/economy_research.py` (pinned venv) for the forecasting results.
+  3. Write `reports/economy/README.md` (findings: empirical results vs hypotheses).
+  4. Finish the Wayback import (`node tools/economy/population/wayback_guildstats.mjs`, resumable) and commit its
+     data.
+  5. Stage F (Economy page and Markets forecast-history panel).
 
 - **Caches for this data** (local only; another agent must regenerate them):
   - `node tools/economy/ingest_killstats.mjs --full` (about 2 h);
@@ -315,6 +319,20 @@ Never force-push, never reset, never redo finished work.
   - `sample_tibiadata.mjs` and `.github/workflows/online-sampler.yml`: every 30 min, on the `data/online-samples`
     branch (prospective; first local sample 2026-10-14T02:40:47Z: 96 worlds, 13,379 online).
   - Population tests: 5. JS suite: 186 pass.
+- **Stage E so far:** `reports/economy/economy_research.py` (pinned venv) writes `reports/economy/results.json`.
+  - **Preliminary results** (forecasting pending the point-in-time builds; 112 worlds, 5,887 world-weeks; price
+    cutoff 2026-10-06):
+    - **Levels, pooled R²:** ask 0.26 and bid 0.33 for C (gross); A (direct coins) 0.28/0.35; B 0.24/0.32;
+      D 0.30/0.37 (condition number 11.5, opposite signs: the components overlap).
+    - **Within-world R²** 0.04–0.13; **between-world R²** 0.14–0.33.
+    - **Unit roots:** non-stationary in 30 of 35 log price series and 33 of 35 gold series, so levels risk
+      spurious correlation.
+    - **Weekly changes** (world and week effects, two-way clustered): within R² at most 0.03; ask.D jointly
+      significant, bid.A at p 0.03.
+    - **Late-2025 divergence:** no world had most weeks "gold up, price down" over 2025-08 to 2026-02. Mean
+      13-week gold growth was +10–20% while prices rose +2–3%. Check a narrower window before writing findings.
+    - **Population cross-section** (TibiaVIP, one instant, 92 worlds): log price vs log gross per online
+      character R² 0.23; per known character R² 0.01.
 - **Incident (Stage B tests):** the first run of `test_archive.py` wrote into the working copy of the real
   archive, because default arguments bound the paths at import. The 5 stray records (basis `test`) and 4 objects were never committed;
     they were removed and the committed archive was restored. Paths now resolve at call time, and the test class
