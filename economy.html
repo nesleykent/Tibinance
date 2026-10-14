@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tibinance Economy</title>
-<meta name="description" content="Gold generation potential of every Tibia world, per day: coins dropped and loot at NPC prices, from public kill statistics and TibiaWiki loot statistics, with kill coverage stated.">
+<meta name="description" content="Gold generation potential of every Tibia world, per day: gold dropped and loot at NPC prices, from public kill statistics and TibiaWiki loot statistics, with kill coverage stated.">
 <link rel="stylesheet" href="css/app.css">
 <link rel="stylesheet" href="css/markets.css?v=20261014-history">
-<link rel="stylesheet" href="css/economy.css?v=20261015-audit">
+<link rel="stylesheet" href="css/economy.css?v=20261014-series">
 <link rel="stylesheet" href="css/site-header.css?v=20261004-github">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪙</text></svg>">
 </head>
@@ -45,14 +45,22 @@
           <span id="worldMeta" class="symbol-meta"></span>
           <span class="symbol-quote" aria-live="polite">
             <span id="lastValue" class="symbol-last"></span>
+            <span id="lastMeasure" class="symbol-range"></span>
             <span id="lastChange" class="symbol-change"></span>
             <span id="lastRange" class="symbol-range"></span>
           </span>
         </div>
-        <div id="measure" class="side-picker" role="radiogroup" aria-label="Measure">
-          <button type="button" data-measure="gross" role="radio" aria-checked="true"><span class="side-name">Gross</span> <span id="measureGross" class="side-value"></span></button>
-          <button type="button" data-measure="coins" role="radio" aria-checked="false"><span class="side-name">Coins</span> <span id="measureCoins" class="side-value"></span></button>
-          <button type="button" data-measure="npc" role="radio" aria-checked="false"><span class="side-name">NPC</span> <span id="measureNpc" class="side-value"></span></button>
+        <div class="eco-chart-controls">
+        <div id="measure" class="side-picker" role="group" aria-label="Show or hide chart series">
+          <button type="button" data-measure="gross" aria-pressed="true" title="Show or hide gold plus NPC potential"><span class="side-name">Gross</span> <span id="measureGross" class="side-value"></span></button>
+          <button type="button" data-measure="coins" aria-pressed="false" title="Show or hide direct gold"><span class="side-name">Gold</span> <span id="measureCoins" class="side-value"></span></button>
+          <button type="button" data-measure="npc" aria-pressed="false" title="Show or hide potential NPC conversion"><span class="side-name">NPC</span> <span id="measureNpc" class="side-value"></span></button>
+          <button id="killsToggle" type="button" aria-pressed="true" title="Show or hide kills per day"><span class="side-name">Kills</span></button>
+        </div>
+        <div id="valueMode" class="ranges" role="radiogroup" aria-label="Gold values">
+          <button type="button" data-mode="daily" role="radio" aria-checked="true">Daily avg</button>
+          <button type="button" data-mode="accumulated" role="radio" aria-checked="false" title="Accumulated gold since the selected range began, on a logarithmic scale">Accumulated</button>
+        </div>
         </div>
         <div class="chart-legend" aria-hidden="true">
           <div id="legend" class="legend"></div>
@@ -112,7 +120,7 @@
         <p class="details-change"><span id="detailChange"></span> <span id="detailChangeLabel" class="details-unit"></span></p>
         <p id="detailNote" class="details-note"></p>
         <dl class="details-book">
-          <div title="Direct coin drops per day"><dt>Coins</dt><dd id="detailCoins"></dd></div>
+          <div title="Direct gold drops per day"><dt>Gold</dt><dd id="detailCoins"></dd></div>
           <div title="Potential NPC conversion per day"><dt>NPC</dt><dd id="detailNpc"></dd></div>
           <div title="Valued kills of all kills"><dt>Coverage</dt><dd id="detailCoverage"></dd></div>
         </dl>
@@ -144,7 +152,7 @@
           <button type="button" role="radio" data-rate="0.75" aria-checked="false">75%</button>
           <button type="button" role="radio" data-rate="1" aria-checked="false">100%</button>
         </div>
-        <p class="eco-panel-note">Coins plus that share of NPC potential: what would reach the world if players sold that share of their loot to NPCs. No liquidation rate is known, so none is assumed by default.</p>
+        <p class="eco-panel-note">Gold plus that share of NPC potential: what would reach the world if players sold that share of their loot to NPCs. No liquidation rate is known, so none is assumed by default.</p>
         <h3 class="eco-panel-heading">Constant creature set</h3>
         <button id="stable" type="button" class="btn eco-toggle" aria-pressed="false">Compare the constant creature set</button>
         <p class="eco-panel-note">Gross potential of the creatures valued since the first day of the data only, so a creature becoming valued never reads as growth. Their loot values can still change with new evidence.</p>
@@ -161,11 +169,12 @@
       <div class="panel-body">
         <details class="eco-data">
           <summary>Chart values and coverage</summary>
-          <p class="eco-panel-note">All recorded periods at the selected interval. Gold and activity are daily averages, rounded to whole gold or counts as in the readout; incomplete periods are not plotted. K = thousand, M = million, B = billion on the axes. Scroll for all columns.</p>
+          <p class="eco-panel-note">All recorded periods at the selected interval. Gold follows Daily avg or Accumulated; activity stays per day. Accumulated sums available daily values inside the selected range; missing days make the subtotal partial. K = thousand, M = million, B = billion on the axes. Scroll for all columns.</p>
           <div class="eco-data-frame" role="region" aria-label="Chart values and coverage" tabindex="0"><table id="chartData" class="data"></table></div>
         </details>
+        <p class="eco-panel-note">Gross, Gold, NPC and Kills can be shown or hidden independently. Accumulated sums gold inside the selected range, through the latest complete interval, on a logarithmic scale. Gross includes potential NPC conversion; it is not the world's gold balance. Days without data are excluded and partial subtotals are labelled.</p>
         <ul class="help-keys">
-          <li><i class="key key-dot eco-key-measure" aria-hidden="true"></i>The measure, in gold per day: a day's total, or a week's or a month's total over its days, so every interval reads on the same scale.</li>
+          <li><i class="key key-dot eco-key-measure" aria-hidden="true"></i>Daily avg: a day's gold total, or a week's or a month's total over its days. Accumulated: the available gold since the selected range began.</li>
           <li><i class="key key-dotted eco-key-measure" aria-hidden="true"></i>Dotted line: the periods in between lack a day of data, or are unfinished. Nothing is drawn for them, and nothing is filled in.</li>
           <li><i class="key key-volume eco-key-measure" aria-hidden="true"></i>Kills per day: every creature kill, valued or not, at the foot of the chart on its own scale.</li>
           <li><i class="key eco-key-price" aria-hidden="true"></i>TC Sell Offer, when shown: the median of the world's daily best Sell Offers in each period, on the left scale, in gold per coin.</li>
@@ -216,6 +225,6 @@
 <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.1/dist/lightweight-charts.standalone.production.js"
         integrity="sha384-KkYqTZlM13Zya6fVUF3IGCBOQ1ehFeJVVgxaVvD/0MebineF9EI8Jkd3NnWNChqN" crossorigin="anonymous"></script>
 <script type="module" src="js/site-header.js"></script>
-<script type="module" src="js/economy.js?v=20261015-audit"></script>
+<script type="module" src="js/economy.js?v=20261014-series"></script>
 </body>
 </html>

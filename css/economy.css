@@ -4,9 +4,13 @@
  * assumption the caution ink, a comparison the accent. No token is defined here.
  */
 
-/* The measure picker is the Markets side picker with three choices; the chosen one in its measure's colour. */
-.side-picker button[data-measure="coins"][aria-checked="true"] :is(.side-name,.side-value) { color:var(--sell); }
-.side-picker button[data-measure="npc"][aria-checked="true"] :is(.side-name,.side-value) { color:var(--buy); }
+/* Independent series toggles keep each enabled measure's chart colour. */
+#measure button[aria-pressed="true"] { background:var(--surface); box-shadow:var(--control-thumb-shadow); font-weight:var(--weight-strong); }
+#measure button[aria-pressed="true"] :is(.side-name,.side-value) { color:var(--ink); }
+#measure button[data-measure="coins"][aria-pressed="true"] :is(.side-name,.side-value) { color:var(--sell); }
+#measure button[data-measure="npc"][aria-pressed="true"] :is(.side-name,.side-value) { color:var(--buy); }
+.eco-chart-controls { display:flex; flex-wrap:wrap; align-items:center; gap:var(--space-2) var(--space-3); }
+#measure { flex-wrap:wrap; }
 
 /* Ranges, then the interval after a hairline, on the foot of the chart. */
 .eco-bar { display:flex; flex-wrap:wrap; align-items:center; gap:var(--space-2) var(--space-3); min-width:0; }
@@ -59,13 +63,22 @@
   #measure .side-value { display:none; }
   /* The readout keeps the period, the measure and kills; the rest is in the details and the help. */
   .legend .eco-extra { display:none; }
+  .legend .eco-selected { display:revert; }
+  .legend .label.eco-selected { display:grid; }
+  .legend .rest.eco-selected { display:flex; }
 }
 @container chart (max-width:471.98px) {
   .eco-interval { padding-left:var(--space-2); }
   /* Gold figures run to ten digits: the readout keeps the change in percent only. */
   .chart-head .eco-delta { display:none; }
+  #chartPanel .chart-legend { grid-template-columns:minmax(0,1fr) auto; width:100%; }
+  #chartPanel .legend .label { white-space:normal; }
+  #chartPanel .legend .note { grid-column:1 / -1; }
   #chartPanel .legend .rest { grid-column:1 / -1; flex-wrap:wrap; white-space:normal; }
   #chartPanel .legend .rest:empty { display:none; }
+}
+@media (max-width:359.98px) {
+  #worldsPanel table.watch :is(th,td) { padding-inline:var(--space-1); }
 }
 @container chart (max-width:319.98px) {
   .eco-interval { padding-left:0; border-left:0; }

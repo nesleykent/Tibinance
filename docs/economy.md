@@ -11,7 +11,7 @@ The approved plan, with its fifteen binding corrections, is `docs/economy-plan.m
 
 | Name | Definition | Status |
 | --- | --- | --- |
-| **Direct coin drops** (`directCoins`) | Kills of each valued creature x the coins its loot sample expects per kill: gold, platinum and crystal coins at 1, 100 and 10,000 gold | Modelled direct creation of coins from loot |
+| **Direct gold drops** (`directCoins`) | Kills of each valued creature x the coins its loot sample expects per kill: gold, platinum and crystal coins at 1, 100 and 10,000 gold | Modelled direct creation of coins from loot |
 | **Potential NPC conversion** (`npcPotential`) | Kills x the other items per kill, each at the highest price an NPC pays for it | Potential only: items may be kept, traded, used or never sold |
 | **Estimated gross gold generation potential** (`grossPotential`) | `directCoins + npcPotential` | A maximum under the stated valuation, not observed monetary expansion |
 
@@ -30,7 +30,7 @@ incomplete the page says "from valued creatures" and shows the coverage beside t
   associations between worlds and no forecasting gain (below).
 
 **No NPC liquidation rate is assumed.** The schema keeps a slot for evidence about how much loot is actually sold.
-Until such evidence exists, "coins plus a share of NPC potential" appears only as a labelled hypothetical scenario
+Until such evidence exists, "gold plus a share of NPC potential" appears only as a labelled hypothetical scenario
 (0, 25, 50 or 100%), drawn dashed and marked "assumption".
 
 ## Sources
@@ -67,7 +67,7 @@ Until such evidence exists, "coins plus a share of NPC potential" appears only a
 - **Parsing.** `{{Loot2}}` samples are read exactly as TibiaWiki's own `Module:AverageLootValue` reads them
   (`js/economy-loot.js`). The sum of the two components matches the wiki's rendered "Average loot value" for the 37
   creatures checked.
-- **Coins and items.** Coins count at face value. Other items are valued at the highest NPC buy price in the price
+- **Gold and items.** Gold counts at face value. Other items are valued at the highest NPC buy price in the price
   vintage that applies.
 - **Revisions are evidence, append-only.** Every revision of every loot page and of the price module since
   2022-08-23 is kept: a sample's content with the revision that first held it (`availableAt`) and the revision that
@@ -151,10 +151,10 @@ missing day are dropped, never summed partially.
 
 | Specification | Regressors (logs) |
 | --- | --- |
-| A | direct coins |
+| A | direct gold |
 | B | NPC potential |
 | C | gross potential |
-| D | direct coins and NPC potential, with rank, condition number and variance inflation |
+| D | direct gold and NPC potential, with rank, condition number and variance inflation |
 | E | C plus players killed (and the TibiaVIP cross-section for population) |
 
 The three quantities are never regressors together, because the sum is an identity of its parts. Each
@@ -254,7 +254,7 @@ partitions.
   - binomial and empirical uncertainty of loot values.
 
   Until they are, intervals are not shown.
-- **Sensitivity rules** (extended, pooled, coins-only, alternate samples, ±1 day) are implemented or trivial, but
+- **Sensitivity rules** (extended, pooled, gold-only, alternate samples, ±1 day) are implemented or trivial, but
   not yet published as builds.
 - **Population history** is the open requirement above.
 
@@ -266,8 +266,8 @@ Its shared declarations in `css/app.css` and `reports/tc-cycle/report.css` are u
 history use those existing tokens directly; they define no replacement palette, sizing or typography tokens.
 The reference supplies tokens only: no earlier interface or functionality has been restored.
 
-Economy uses one persistent Lightweight Charts instance and timeline, with the selected Gross, Coins or NPC
-measure above a short kills pane. Values are gold per day: a day's total or a complete week's/month's total divided
+Economy uses one persistent Lightweight Charts instance and timeline, with independent Gross, Gold and NPC
+visibility controls above a short kills pane that can also be hidden. Values are gold per day: a day's total or a complete week's/month's total divided
 by its calendar days. The world watchlist uses the same rate functions and latest complete period as the chart;
 retired worlds appear when searched, with their end date. Missing/unfinished periods have no rate, and are never
 represented as zero. The selected range controls the comparison of complete periods, not a sum of partial periods.
@@ -279,7 +279,18 @@ coverage and price sample counts remain in Help's keyboard-scrollable Chart valu
 rounded to whole gold/counts for display, matching the readout. No uncertainty interval is invented. If the chart
 library is unavailable, the controls, world details and data table remain usable; image export is disabled.
 
-World, measure, interval, range and comparison settings remain in the URL. Radio groups support arrows, Home and
+Daily avg shows gold per day on a linear scale. Accumulated uses a logarithmic gold scale and sums the raw daily components inside the exact inclusive selected-range
+boundaries, through the latest complete interval. A boundary week/month is clipped to the selected dates rather
+than included in full. Recovered days count; missing days are excluded, and later subtotals state cumulative days
+with data and are labelled partial. Entirely missing bins stay blank. Gross remains gold plus NPC potential,
+not money supply or realised NPC sales. Constant-set and liquidation gold overlays follow the same mode; kills
+remain counts per day on their own linear scale and TC remains gold per coin. Players killed is omitted from the interface. The readout, accessible chart description, Help table and PNG
+export identify the mode and its coverage. The watchlist and world details remain daily averages, clearly labelled.
+
+World, visible series, gold mode, kills visibility, interval, range and comparison settings remain in the URL.
+Existing `measure` links still select that series. New `series` links can retain multiple or no gold series; the most
+recent enabled measure drives the headline and daily watchlist. Series are native toggle buttons with independent
+Tab/Space/Enter interaction. Radio groups for mode, interval, range and liquidation support arrows, Home and
 End with one tab stop per group. World and performance actions preserve keyboard focus when their rows rebuild.
 A world identity is committed with its successfully loaded data; failed/stale requests cannot relabel the previous
 world's figures. Initial and world-specific failures offer retry without losing the last valid view.

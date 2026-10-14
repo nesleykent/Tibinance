@@ -2,17 +2,19 @@
  * The Economy chart, drawn as Markets draws its own (js/market-chart.js): one pane, one time axis, the page's status
  * block over its top left. Lightweight Charts is loaded as a global by economy.html.
  *
- *   measure      the chosen quantity in gold per day: dots on complete periods, joined solid between consecutive
- *                periods and dotted across periods without every day of data; the latest marked on the price scale
+ *   measures     independent gold series, as daily averages or selected-range accumulated totals; real points
+ *                are joined solid between consecutive bins and dotted across missing bins
  *   kills        all creature kills per day of each complete period, as bars in a short pane of their own under the
  *                gold, so the gold scale never runs below zero to make room for them
  *   stable       the constant creature set's gross potential per day, dashed (when compared)
- *   scenario     coins plus a stated share of NPC potential, dashed, an assumption (when chosen)
+ *   scenario     gold plus a stated share of NPC potential, dashed, an assumption (when chosen)
  *   price        the median Tibia Coin Sell Offer of each period, on the left scale (when shown)
  *
- * Unfinished and gapped periods have no value: they keep their room on the axis (whitespace) and nothing is drawn
- * for them, so a partial week never reads as a fall.
+ * Daily averages omit incomplete bins. Accumulated gold uses available daily subtotals with coverage in the page
+ * readout; wholly missing bins remain whitespace. Hidden series retain their timeline and the explored range.
  */
+import { MEASURES } from './economy-data.js?v=20261014-series';
+
 const HIDDEN = 'rgba(0,0,0,0)';   // Lightweight Charts colours a segment with its first point's colour
 const token = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 export const dayOf = time => typeof time === 'string' ? time
@@ -66,14 +68,17 @@ export function economyChart(container, { onCrosshair } = {}) {
   const price = line({ priceScaleId: 'left', color: c.price, lineWidth: 1 });
   const stable = line({ color: c.stable, lineWidth: 2, lineStyle: L.LineStyle.Dashed });
   const scenario = line({ color: c.scenario, lineWidth: 2, lineStyle: L.LineStyle.Dashed });
-  const solid = line({ lineWidth: 2 }), dotted = line({ lineWidth: 2, lineStyle: L.LineStyle.Dotted });
-  const points = line({ lineVisible: false, pointMarkersVisible: true, pointMarkersRadius: 3, crosshairMarkerVisible: true,
-    lastValueVisible: true, priceLineVisible: true, priceLineWidth: 1, priceLineStyle: L.LineStyle.LargeDashed });
+  const measures = Object.fromEntries(Object.keys(MEASURES).map(k => [k, {
+    solid: line({ color: c[k], lineWidth: 2 }),
+    dotted: line({ color: c[k], lineWidth: 2, lineStyle: L.LineStyle.Dotted }),
+    points: line({ color: c[k], lineVisible: false, pointMarkersVisible: true, pointMarkersRadius: 3, crosshairMarkerVisible: true,
+      lastValueVisible: true, priceLineVisible: true, priceLineWidth: 1, priceLineStyle: L.LineStyle.LargeDashed }),
+  }]));
   // Dots shrink, then give way to the line, as more periods share the same width (as on Markets).
   chart.timeScale().subscribeVisibleLogicalRangeChange(range => {
     if (!range) return;
     const spacing = chart.timeScale().width() / Math.max(1, range.to - range.from);
-    points.applyOptions({ pointMarkersVisible: spacing >= 2, pointMarkersRadius: Math.min(3, Math.max(1.5, spacing / 2)) });
+    for (const { points } of Object.values(measures)) points.applyOptions({ pointMarkersVisible: spacing >= 2, pointMarkersRadius: Math.min(3, Math.max(1.5, spacing / 2)) });
   });
   chart.subscribeCrosshairMove(p => onCrosshair?.(p.time === undefined ? null : dayOf(p.time)));
   let topFraction = null, leftShown = false;
@@ -81,19 +86,22 @@ export function economyChart(container, { onCrosshair } = {}) {
 
   return {
     chart,
-    // view: {periods, measure ('gross'|'coins'|'npc'), field, rate (liquidation or null), stable, price ([{start, sell}] or null)}
+    // Gold values are either daily averages or exact-range running sums. Kills and TC keep their own units.
     draw(view) {
+      chart.priceScale('right').applyOptions({ mode: view.mode === 'accumulated' ? L.PriceScaleMode.Logarithmic : L.PriceScaleMode.Normal });
       const color = c[view.measure];
-      const rows = view.periods.map(p => ({ time: p.start, value: p.rate[view.field] }));
-      const layers = periodLayers(rows);
-      for (const s of [solid, dotted]) s.applyOptions({ color });
-      points.applyOptions({ color, priceLineColor: color });
-      solid.setData(layers.solid); dotted.setData(layers.dotted); points.setData(layers.points);
-      kills.applyOptions({ color: `${color}40` });
+      for (const [k, m] of Object.entries(MEASURES)) {
+        const layers = periodLayers(view.periods.map(p => ({ time: p.start, value: view.values.get(p.start)[m.field] })));
+        for (const [layer, s] of Object.entries(measures[k])) {
+          s.applyOptions({ visible: view.measures.includes(k) });
+          s.setData(layers[layer]);
+        }
+      }
+      kills.applyOptions({ color: `${color}40`, visible: view.kills });
       kills.setData(view.periods.map(p => whitespaceOrValue(p, p.rate.kills)));
-      stable.setData(view.stable ? view.periods.map(p => whitespaceOrValue(p, p.rate.grossStable)) : []);
+      stable.setData(view.stable ? view.periods.map(p => whitespaceOrValue(p, view.values.get(p.start).grossStable)) : []);
       scenario.setData(view.rate === null ? [] : view.periods.map(p => whitespaceOrValue(p,
-        p.rate.directCoins === null ? null : p.rate.directCoins + view.rate * p.rate.npcPotential)));
+        view.values.get(p.start).directCoins === null ? null : view.values.get(p.start).directCoins + view.rate * view.values.get(p.start).npcPotential)));
       price.setData(view.price ? view.periods.map(p => whitespaceOrValue(p, view.price.get(p.start)?.sell ?? null)) : []);
       leftShown = Boolean(view.price);
       chart.applyOptions({ leftPriceScale: { visible: leftShown } });

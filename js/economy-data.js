@@ -64,7 +64,7 @@ export function series(world, unit, { from = world.first, to = lastDay(world) } 
   return out;
 }
 
-// Hypothetical NPC liquidation: coins plus a stated share of the NPC potential. An assumption, never an observation.
+// Hypothetical NPC liquidation: gold plus a stated share of the NPC potential. An assumption, never an observation.
 export const LIQUIDATION_SCENARIOS = [0, 0.25, 0.5, 0.75, 1];
 export function withLiquidation(sum, rate) {
   if (!LIQUIDATION_SCENARIOS.includes(rate)) throw new Error('liquidation rate must be one of the labelled scenarios');
@@ -160,7 +160,7 @@ export function crossWorld(index, files, period) {
 
 export const MEASURES = {
   gross: { field: 'grossPotential', name: 'Gross potential', short: 'Gross' },
-  coins: { field: 'directCoins', name: 'Direct coins', short: 'Coins' },
+  coins: { field: 'directCoins', name: 'Direct gold', short: 'Gold' },
   npc: { field: 'npcPotential', name: 'NPC potential', short: 'NPC' },
 };
 export const INTERVALS = ['day', 'week', 'month'];
@@ -169,6 +169,26 @@ const RATE_FIELDS = ['grossPotential', 'directCoins', 'npcPotential', 'kills', '
 // Every period of the world at the interval, each with its rates per day (null unless complete).
 export function ratePeriods(world, unit) {
   return series(world, unit).map(p => ({ ...p, rate: Object.fromEntries(RATE_FIELDS.map(f => [f, p.complete && p[f] !== null ? p[f] / p.days : null])) }));
+}
+
+// Running sums of the available daily evidence, clipped to the exact selected range. Missing days never
+// contribute zero: a wholly missing bin is whitespace, and later subtotals carry their cumulative coverage.
+export function accumulatedPeriods(world, periods, [from, to]) {
+  const fields = ['directCoins', 'npcPotential', 'grossStable'];
+  const total = Object.fromEntries(fields.map(f => [f, 0]));
+  let covered = 0, days = 0;
+  return periods.map(p => {
+    const start = p.start < from ? from : p.start, end = p.end > to ? to : p.end;
+    const sum = start <= end ? sumPeriod(world, [start, end]) : null;
+    if (sum) {
+      covered += sum.covered; days += sum.days;
+      for (const f of fields) total[f] += sum[f] ?? 0;
+    }
+    const available = Boolean(sum?.covered);
+    return { start: p.start, from, end, days, covered, complete: covered === days,
+      ...Object.fromEntries(fields.map(f => [f, available ? total[f] : null])),
+      grossPotential: available ? total.directCoins + total.npcPotential : null };
+  });
 }
 
 const MONTHS_BACK = { '1M': 1, '3M': 3, '6M': 6, '1Y': 12 };

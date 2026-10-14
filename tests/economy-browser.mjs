@@ -9,7 +9,7 @@ import {mkdir,readFile} from 'node:fs/promises';
 import {join} from 'node:path';
 import assert from 'node:assert/strict';
 import {fmt} from '../js/format.js';
-import {MEASURES,ratePeriods,rangeChange,contributions,periodOf} from '../js/economy-data.js';
+import {MEASURES,ratePeriods,rangeChange,contributions,periodOf,rangeStartOf,sumPeriod} from '../js/economy-data.js';
 const require=createRequire(import.meta.url);
 const {chromium,webkit}=require(process.env.TIBINANCE_NODE_MODULES ? `${process.env.TIBINANCE_NODE_MODULES}/playwright` : 'playwright');
 const engine=process.env.TIBINANCE_BROWSER ?? 'chrome';
@@ -36,8 +36,10 @@ try {
   // Observe the library's public chart API without adding test hooks to the shipped application.
   await context.addInitScript(()=>{
     Object.defineProperty(window,'LightweightCharts',{configurable:true,set(library){
-      window.economyTestCharts=[];
-      const wrapped={...library,createChart(...args){const chart=library.createChart(...args);window.economyTestCharts.push(chart);return chart;}};
+      window.economyTestCharts=[]; window.economyTestSeries=[];
+      const wrapped={...library,createChart(...args){const chart=library.createChart(...args);window.economyTestCharts.push(chart);
+        const add=chart.addSeries.bind(chart);chart.addSeries=(...args)=>{const series=add(...args);window.economyTestSeries.push(series);return series;};
+        return chart;}};
       Object.defineProperty(window,'LightweightCharts',{configurable:true,writable:true,value:wrapped});
     }});
   });
@@ -69,12 +71,13 @@ try {
   assert.equal(await text('#lastChange'),`${e.change.delta>0?'+':''}${fmt(Math.round(e.change.delta))} ${percent.format(e.change.ratio)}`);
   assert.equal(await text('#lastRange'),'1Y');
   assert.deepEqual([await text('#measureGross'),await text('#measureCoins'),await text('#measureNpc')],[gold(e.rates.grossPotential),gold(e.rates.directCoins),gold(e.rates.npcPotential)]);
-  assert.equal(await page.getAttribute('#measure [data-measure="gross"]','aria-checked'),'true');
+  assert.equal(await page.getAttribute('#measure [data-measure="gross"]','aria-pressed'),'true');
   // The readout at rest: the latest complete week, its measures, kills with their coverage, players killed.
   const legend=await text('#legend');
   assert.match(legend,new RegExp(`^Week ${e.last.start} to ${e.last.end.slice(5)}`,'i'));
-  for (const name of ['Gross potential','Direct coins','NPC potential','Kills','Players killed']) assert.ok(legend.includes(name),`${name} in the readout`);
+  for (const name of ['Gross potential','Kills/day']) assert.ok(legend.includes(name),`${name} in the readout`);
   assert.ok(legend.includes(`${(100*e.last.killCoverage).toFixed(1)}% valued`));
+  assert.doesNotMatch(await page.locator('#economy').textContent(),/Players killed|Direct coins|>Coins</);
   assert.match(await page.getAttribute('#chart','aria-label'),/^Antica, gross potential from valued creatures in gold per day, by week, range 1Y\./);
   const lastDay=(await daily('antica')).first;
   assert.match(await text('#through'),/Kill days through \d{4}-\d\d-\d\d$/);
@@ -123,7 +126,7 @@ try {
   assert.equal(await text('#lastValue'),gold(e.value));
   assert.equal(param('measure'),'coins');
   assert.equal((await row('Antica'))[1],gold(e.value));
-  assert.equal(await text('#detailLastLabel'),'Direct coins per day');
+  assert.equal(await text('#detailLastLabel'),'Direct gold per day');
 
   // ---- The interval: months; then the range from the performance tiles.
   await page.click('#interval [data-interval="month"]');
@@ -139,19 +142,20 @@ try {
   assert.equal(await text('#lastRange'),'3M');
   assert.equal(await page.getAttribute('#range [data-range="3M"]','aria-checked'),'true');
   assert.equal(param('range'),'3M');
-  await page.click('#measure [data-measure="gross"]');
+  await page.click('#measure [data-measure="coins"]');
   await page.click('#range [data-range="1Y"]');
 
   // ---- The TC Sell Offer, on request, on its own scale; named as a median of observed days.
-  const explored=await page.evaluate(()=>{
+  const explored=await page.evaluate(async()=>{
     const chart=window.economyTestCharts[0],range=chart.timeScale().getVisibleLogicalRange();
     chart.timeScale().setVisibleLogicalRange({from:range.to-6,to:range.to});
+    await new Promise(requestAnimationFrame); await new Promise(requestAnimationFrame);
     return chart.timeScale().getVisibleLogicalRange();
   });
   await page.click('#priceToggle');
   await page.waitForTimeout(80);
   const compared=await page.evaluate(()=>window.economyTestCharts[0].timeScale().getVisibleLogicalRange());
-  assert.ok(Math.abs(compared.from-explored.from)<0.001 && Math.abs(compared.to-explored.to)<0.001,'comparison retains the explored time window');
+  assert.ok(Math.abs(compared.from-explored.from)<0.001 && Math.abs(compared.to-explored.to)<0.001,`comparison retains the explored time window: ${JSON.stringify({explored,compared})}`);
   assert.equal(await page.getAttribute('#priceToggle','aria-pressed'),'true');
   assert.match(await text('#legend'),/TC Sell Offer [\d,]+ median of \d+ days?/);
   assert.match(await page.getAttribute('#chart','aria-label'),/median TC Sell Offer per period on the left scale/);
@@ -163,7 +167,7 @@ try {
   const before=await text('#lastValue');
   await page.click('#liquidation [data-rate="0.5"]');
   e=await expected('antica','month','gross','1Y');
-  assert.match(await text('#legend'),new RegExp(`Coins \\+ 50% NPC ${gold(e.rates.directCoins+0.5*e.rates.npcPotential).replace(/,/g,',')} assumption`));
+  assert.match(await text('#legend'),new RegExp(`Gold \\+ 50% NPC ${gold(e.rates.directCoins+0.5*e.rates.npcPotential).replace(/,/g,',')} assumption`));
   assert.equal(await text('#lastValue'),before,'the measure is unchanged by an assumption');
   assert.equal(param('rate'),'0.5');
   await page.click('#stable');
@@ -208,7 +212,7 @@ try {
   const download=page.waitForEvent('download');
   await page.click('#exportButton');
   const file=await download;
-  assert.match(file.suggestedFilename(),/^tibinance-economy-antica-gross-month-1y-\d{4}-\d\d-\d\d\.png$/);
+  assert.match(file.suggestedFilename(),/^tibinance-economy-antica-gross-daily-month-1y-\d{4}-\d\d-\d\d\.png$/);
   if (shots) await page.screenshot({path:join(shots,`economy-${engine}-1440.png`)});
 
   // ---- Phone width: chart first, then the list; nothing sideways.
@@ -222,16 +226,16 @@ try {
     if (shots) await page.screenshot({path:join(shots,`economy-${engine}-${width}.png`),fullPage:true});
   }
 
-  // Radio groups have one tab stop and support their standard arrow/Home/End keyboard interaction.
+  // Series toggles use Tab and Space; radio groups support arrows/Home/End.
   await page.setViewportSize({width:1440,height:900});
   await page.goto(`${root}/economy.html?world=Antica&interval=week`); await ready();
-  await page.locator('#measure [data-measure="gross"]').focus(); await page.keyboard.press('ArrowRight');
-  assert.equal(await page.getAttribute('#measure [data-measure="coins"]','aria-checked'),'true');
+  await page.locator('#measure [data-measure="coins"]').focus(); await page.keyboard.press('Space');
+  assert.equal(await page.getAttribute('#measure [data-measure="coins"]','aria-pressed'),'true');
   assert.equal(await text('#lastValue'),gold((await expected('antica','week','coins','1Y')).value));
-  await page.keyboard.press('Home');
+  await page.click('#measure [data-measure="coins"]');
   await page.locator('#interval [data-interval="week"]').focus(); await page.keyboard.press('ArrowRight');
   assert.equal(param('interval'),'month');
-  for (const id of ['measure','range','interval']) assert.equal(await page.locator(`#${id} button[tabindex="0"]`).count(),1);
+  for (const id of ['valueMode','range','interval']) assert.equal(await page.locator(`#${id} button[tabindex="0"]`).count(),1);
   await page.locator('#range [data-range="1Y"]').focus(); await page.keyboard.press('End');
   assert.equal(param('range'),'All');
   await page.click('#detailPerformance [data-range="1Y"]');
@@ -257,7 +261,9 @@ try {
   await dataFrame.focus(); await page.keyboard.press('ArrowRight');
   await page.waitForFunction(()=>document.querySelector('.eco-data-frame').scrollLeft>0);
   assert.ok(await dataFrame.evaluate(e=>e.scrollLeft)>0,'exact values scroll by keyboard');
-  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth),0);
+  const overflow=await page.evaluate(()=>[...document.querySelectorAll('body *')].filter(e=>e.getBoundingClientRect().right>innerWidth && !e.closest('.eco-data-frame')).slice(0,4).map(e=>({tag:e.tagName,id:e.id,cls:e.className,right:e.getBoundingClientRect().right,text:e.textContent.slice(0,40)})));
+  if (shots) await page.screenshot({path:join(shots,`economy-${engine}-help-320.png`)});
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth),0,JSON.stringify(overflow));
   await page.click('#interval [data-interval="day"]'); await page.click('#range [data-range="All"]');
   await page.waitForTimeout(100);
   const wholeHistory=await page.evaluate(()=>{
@@ -267,6 +273,67 @@ try {
   });
   const anticaHistory=await daily('antica');
   assert.equal(wholeHistory[0],anticaHistory.first,'All retains the first recorded day even on a phone');
+
+  // Independent series: rendering, exact-range accumulation, units, URL persistence and all hidden.
+  await page.setViewportSize({width:1440,height:900});
+  await page.goto(`${root}/economy.html?world=Antica&interval=week&range=3M`); await ready();
+  const goldSeries=()=>page.evaluate(()=>window.economyTestSeries.filter(s=>s.options().lineVisible===false)
+    .map(s=>({visible:s.options().visible,last:s.data().at(-1)?.value})));
+  assert.deepEqual((await goldSeries()).map(s=>s.visible),[true,false,false]);
+  const initialWindow=await page.evaluate(()=>window.economyTestCharts[0].timeScale().getVisibleLogicalRange());
+  await page.click('#measure [data-measure="coins"]');
+  await page.click('#measure [data-measure="npc"]');
+  assert.deepEqual((await goldSeries()).map(s=>s.visible),[true,true,true]);
+  assert.equal(param('series'),'gross,coins,npc');
+  await page.click('#killsToggle');
+  assert.equal(param('series'),'gross,coins,npc','hiding kills preserves every gold series');
+  assert.equal(await page.evaluate(()=>window.economyTestSeries[0].options().visible),false);
+  assert.doesNotMatch(await text('#legend'),/Kills\/day/);
+  await page.click('#valueMode [data-mode="accumulated"]');
+  const modeWindow=await page.evaluate(()=>window.economyTestCharts[0].timeScale().getVisibleLogicalRange());
+  assert.ok(Math.abs(modeWindow.from-initialWindow.from)<0.001 && Math.abs(modeWindow.to-initialWindow.to)<0.001,'visibility and mode retain the chart window');
+  assert.equal(param('mode'),'accumulated');
+  assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('right').options().mode),1,'accumulated gold uses a logarithmic scale');
+  for (const interval of ['week','month','day']) {
+    await page.click(`#interval [data-interval="${interval}"]`);
+    for (const range of ['1M','3M','YTD','All']) {
+      await page.click(`#range [data-range="${range}"]`);
+      const {last}=await expected('antica',interval,'npc',range);
+      const sum=sumPeriod(await daily('antica'),[rangeStartOf(last.end,range) ?? (await daily('antica')).first,last.end]);
+      assert.deepEqual((await goldSeries()).map(s=>s.last),[sum.grossPotential,sum.directCoins,sum.npcPotential],`${interval}/${range}: chart sums raw daily gold`);
+      assert.equal(await text('#lastValue'),gold(sum.npcPotential),`${interval}/${range}: headline, ${page.url()}, sums ${JSON.stringify([sum.grossPotential,sum.directCoins,sum.npcPotential])}`);
+      assert.ok((await text('#legend')).includes('accumulated gold'));
+      assert.ok((await text('#legend')).includes(`${sum.covered}/${sum.days} days with data`));
+      const row=await page.locator('#chartData tr.current').textContent();
+      assert.ok(row.includes(gold(sum.grossPotential)) && row.includes(gold(sum.directCoins)) && row.includes(gold(sum.npcPotential)),`table matches plotted sums ${interval}/${range}: ${row}`);
+      if (!sum.complete) assert.match(await text('#through'),/partial subtotal/);
+    }
+  }
+  const shared=page.url(); await page.reload(); await ready();
+  assert.equal(page.url(),shared);
+  assert.deepEqual((await goldSeries()).map(s=>s.visible),[true,true,true]);
+  assert.equal(await page.getAttribute('#killsToggle','aria-pressed'),'false');
+  // Keep screenshots of this feature at desktop and phone widths, with all selected gold series visible.
+  await page.click('#range [data-range="3M"]');
+  if (!await page.locator('#worldsPanel').isVisible()) await page.click('[data-dock-target="worldsPanel"]');
+  if (shots) await page.screenshot({path:join(shots,`economy-${engine}-accumulated-desktop.png`)});
+  for (const width of [390,320]) {
+    await page.setViewportSize({width,height:844}); await page.waitForTimeout(150);
+    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth),0);
+    for (const label of ['Gross potential','Direct gold','NPC potential']) assert.ok((await page.locator('#legend').innerText()).includes(label));
+    if (shots) await page.screenshot({path:join(shots,`economy-${engine}-accumulated-${width}.png`)});
+  }
+  await page.setViewportSize({width:1440,height:900});
+  for (const k of ['gross','coins','npc']) await page.click(`#measure [data-measure="${k}"]`);
+  assert.deepEqual((await goldSeries()).map(s=>s.visible),[false,false,false]);
+  await page.reload(); await ready();
+  assert.deepEqual((await goldSeries()).map(s=>s.visible),[false,false,false]);
+  await page.click('#measure [data-measure="coins"]');
+  await page.locator('#valueMode [data-mode="accumulated"]').focus(); await page.keyboard.press('Home');
+  assert.equal(await text('#lastValue'),gold((await expected('antica','day','coins','3M')).value));
+  assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('right').options().mode),0,'daily averages return to a linear scale');
+  assert.equal(await page.evaluate(()=>window.economyTestCharts.length),1);
+  await page.goto(allOptionsUrl); await ready();
 
   // The exact-data fallback remains usable when the chart CDN is unavailable.
   const chartUrl='https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.1/dist/lightweight-charts.standalone.production.js';
@@ -369,12 +436,14 @@ try {
   assert.equal(await page.evaluate(()=>document.activeElement.id),'retry','initial data retry followed by a world failure retains Retry focus');
   await page.unroute(initialWorldFailure);
   await page.locator('#retry').focus(); await page.keyboard.press('Enter'); await shown('Antica');
-  await page.locator('#measure [data-measure="gross"]').focus(); await page.keyboard.press('ArrowRight');
-  assert.equal(param('measure'),'coins','one key moves exactly one option after retry');
+  await page.locator('#measure [data-measure="coins"]').focus(); await page.keyboard.press('Space');
+  assert.equal(await page.getAttribute('#measure [data-measure="coins"]','aria-pressed'),'true');
+  await page.waitForFunction(()=>new URL(location.href).searchParams.get('measure')==='coins');
+  assert.equal(param('measure'),'coins','Space toggles exactly one series after retry');
   assert.equal(await page.locator('input[type="checkbox"]').count(),0);
   assert.doesNotMatch(await page.content(),/\u00b7|&middot;/);
   assert.deepEqual(errors,[]);
-  console.log(`PASS ${engine}: Economy terminal arithmetic, world list, measures/ranges/intervals, scenarios, full chart table, keyboard radios and focus, export, preserved chart windows, 1440/768/600/472/390/320 layouts, chart-CDN fallback, failed-world identity, stale requests and keyboard retry`);
+  console.log(`PASS ${engine}: Economy terminal arithmetic, world list, measures/ranges/intervals, scenarios, full chart table, independent series, exact-range accumulation, keyboard and focus, export, preserved chart windows, 1440/768/600/472/390/320 layouts, chart-CDN fallback, failed-world identity, stale requests and keyboard retry`);
 } finally {
   await browser.close();
 }

@@ -3,8 +3,8 @@
  * status take the page; the dock beside it holds every world, the creatures behind a month, the labelled
  * assumptions, the research findings and the method; the rail at the right edge opens them.
  *
- * Every figure is gold per day from valued creatures: a day's total, or a complete week's or month's total over its
- * days (js/economy-data.js). Incomplete periods have no value and are never drawn. Kill coverage is beside every
+ * Daily averages use complete periods; accumulated gold sums available daily values inside the selected range,
+ * with cumulative day coverage (js/economy-data.js). Missing evidence is never filled. Kill coverage is beside every
  * figure; nothing is scaled up for unvalued kills, and no NPC liquidation rate is assumed unless one is chosen.
  *
  * Data (static files): data/economy/gold/ (index, the world's daily file and monthly creature contributions, monthly
@@ -13,9 +13,9 @@
  */
 import { fmt, esc, num } from './format.js';
 import { dock } from './markets-dock.js';
-import { MEASURES, INTERVALS, ratePeriods, rangeChange, rangeStartOf, overviewRows, periodOf, contributions, lastDay, median,
-  LIQUIDATION_SCENARIOS } from './economy-data.js?v=20261015-terminal';
-import { economyChart, colors } from './economy-chart.js?v=20261015-audit';
+import { MEASURES, INTERVALS, ratePeriods, accumulatedPeriods, rangeChange, rangeStartOf, overviewRows, periodOf, contributions, lastDay, median,
+  LIQUIDATION_SCENARIOS } from './economy-data.js?v=20261014-series';
+import { economyChart, colors } from './economy-chart.js?v=20261014-series';
 
 const $ = id => document.getElementById(id);
 const RANGES = ['1M', '3M', '6M', 'YTD', '1Y', 'All'];
@@ -34,7 +34,11 @@ const key = (cls, color) => `<i class="key ${cls}" style="--side:${color}"></i>`
 const params = new URLSearchParams(location.search);
 const state = {
   world: params.get('world') || 'Antica',
-  measure: MEASURES[params.get('measure')] ? params.get('measure') : 'gross',
+  measure: Object.hasOwn(MEASURES, params.get('measure')) ? params.get('measure') : 'gross',
+  measures: params.has('series') ? [...new Set(params.get('series').split(',').filter(k => Object.hasOwn(MEASURES, k)))]
+    : [Object.hasOwn(MEASURES, params.get('measure')) ? params.get('measure') : 'gross'],
+  mode: params.get('mode') === 'accumulated' ? 'accumulated' : 'daily',
+  kills: params.get('kills') !== '0',
   interval: INTERVALS.includes(params.get('interval')) ? params.get('interval') : 'week',
   range: RANGES.includes(params.get('range')) ? params.get('range') : '1Y',
   price: params.get('price') === '1',
@@ -42,6 +46,8 @@ const state = {
   stable: params.get('stable') === '1',
   sort: { key: 'world', dir: 1 }, filter: '', month: null,
 };
+// Old links retain their single measure; new links retain independent visibility, including all gold hidden.
+if (state.measures.length && !state.measures.includes(state.measure)) state.measure = state.measures[0];
 const data = { index: null, overview: null, market: null, results: null, sync: null, access: null, creatures: {}, vip: null };
 const files = new Map();   // world dir -> promise of {daily, contrib}
 let view = null, request = 0, retryWorld = null, pendingWorld = null, wired = false;
@@ -125,8 +131,15 @@ function draw({ preserveRange = false } = {}) {
     $('loadFeedback').hidden = Boolean(view.last); $('retry').hidden = true;
     if (!view.last) $('status').textContent = `No complete ${state.interval} of data for ${state.world}.`;
   }
-  chart?.draw({ periods: view.periods, measure: state.measure, field: field(), rate: state.rate, stable: state.stable, price: state.price ? view.price : null });
-  setChoice('measure', 'measure', state.measure);
+  const end = view.last?.end ?? view.end;
+  const from = rangeStartOf(end, state.range) ?? view.daily.first;
+  view.accumulated = new Map(accumulatedPeriods(view.daily, view.periods, [from, end]).map(p => [p.start, p]));
+  view.values = state.mode === 'accumulated' ? view.accumulated : new Map(view.periods.map(p => [p.start, p.rate]));
+  chart?.draw({ periods: view.periods, measure: state.measure, measures: state.measures, mode: state.mode, values: view.values,
+    kills: state.kills, rate: state.rate, stable: state.stable, price: state.price ? view.price : null });
+  for (const b of $('measure').querySelectorAll('[data-measure]')) b.setAttribute('aria-pressed', String(state.measures.includes(b.dataset.measure)));
+  $('killsToggle').setAttribute('aria-pressed', String(state.kills));
+  setChoice('valueMode', 'mode', state.mode);
   $('chartPanel').dataset.measure = state.measure;
   setChoice('range', 'range', state.range);
   setChoice('interval', 'interval', state.interval);
@@ -175,43 +188,55 @@ function showQuote() {
   const p = view.last, change = rangeChange(view.periods, field(), state.range);
   $('world').textContent = state.world;
   $('worldMeta').innerHTML = metaOf(state.world);
-  $('lastValue').textContent = p ? gold(p.rate[field()]) : 'N/A';
-  $('lastChange').innerHTML = change ? `<span class="eco-delta">${signedDelta(change.delta)}</span> ${signedRatio(change.ratio)}` : '';
+  $('lastValue').textContent = state.measures.length && p ? gold(view.values.get(p.start)[field()]) : '';
+  $('lastMeasure').textContent = state.measures.length ? MEASURES[state.measure].short : '';
+  $('lastChange').innerHTML = state.measures.length && state.mode === 'daily' && change ? `<span class="eco-delta">${signedDelta(change.delta)}</span> ${signedRatio(change.ratio)}` : '';
   $('lastRange').textContent = state.range;
-  $('measureGross').textContent = p ? gold(p.rate.grossPotential) : '';
-  $('measureCoins').textContent = p ? gold(p.rate.directCoins) : '';
-  $('measureNpc').textContent = p ? gold(p.rate.npcPotential) : '';
-  $('through').textContent = `Gold per day by ${UNIT[state.interval]}. Kill days through ${view.end}`;
+  $('measureGross').textContent = p ? gold(view.values.get(p.start).grossPotential) : '';
+  $('measureCoins').textContent = p ? gold(view.values.get(p.start).directCoins) : '';
+  $('measureNpc').textContent = p ? gold(view.values.get(p.start).npcPotential) : '';
+  const a = p && view.accumulated.get(p.start);
+  $('through').textContent = state.mode === 'accumulated'
+    ? `Accumulated gold (log scale), ${a?.from ?? ''} to ${p?.end ?? view.end}. ${a ? `${a.covered}/${a.days} days with data${a.complete ? '' : ' (partial subtotal)'}. ` : ''}Kills per day.`
+    : `Gold per day by ${UNIT[state.interval]}. Kill days through ${view.end}`;
 }
 
 /*
- * The readout of the period under the crosshair, or at rest the latest complete one: the measure per day and its
- * change since the previous complete period, the other two measures, kills with their coverage, players killed, and
- * any shown comparison. A period without every day of data says so instead of showing a value.
+ * The readout follows the visible series and value mode. Daily averages compare complete periods;
+ * accumulated values state their range start and cumulative day coverage, including partial subtotals.
  */
 function showLegend(day) {
   if (!view) return;
   const p = day ? view.byStart.get(day) : view.last;
   if (!p) { $('legend').innerHTML = ''; return; }
-  const f = field(), m = MEASURES[state.measure], color = KEY[state.measure];
-  const head = `<span class="day">${esc(periodLabel(p))}</span>`;
-  if (p.rate[f] === null) {
-    $('legend').innerHTML = `${head} <span class="label">${key('key-dot', color)}${m.name}</span> <span class="note">${p.covered ? `${fmt(p.covered)} of ${fmt(p.days)} days with data` : 'no data'}${p.end > view.end ? ', unfinished' : ''}: not drawn</span>`;
+  const values = view.values.get(p.start), accumulated = state.mode === 'accumulated';
+  const head = `<span class="day">${esc(periodLabel(p))}${accumulated ? ' / accumulated gold (log)' : ' / gold per day'}</span>`;
+  if (values.grossPotential === null) {
+    $('legend').innerHTML = `${head} <span class="note">${accumulated ? 'No available gold in this interval within the selected range' : `${p.covered} of ${p.days} days with data${p.end > view.end ? ', unfinished' : ''}`}: not drawn</span>`;
     return;
   }
-  const i = view.periods.indexOf(p), prev = view.periods.slice(0, i).findLast(q => q.rate[f] !== null);
-  const delta = prev ? p.rate[f] - prev.rate[f] : null;
-  const rows = [`<span class="label">${key('key-dot', color)}${m.name}</span> <b class="value">${gold(p.rate[f])}</b> <span class="rest">`
-    + (prev ? `<span class="eco-delta">${signedDelta(delta)}</span> ${signedRatio(delta / prev.rate[f])} <span class="meta">since ${esc(periodLabel(prev))}</span>` : '') + '</span>'];
-  const extra = (label, value, rest = '') => `<span class="label eco-extra">${label}</span> <b class="value eco-extra">${value}</b> <span class="rest eco-extra">${rest}</span>`;
-  for (const [k, other] of Object.entries(MEASURES)) if (k !== state.measure) rows.push(extra(`${key('', KEY[k])}${other.name}`, gold(p.rate[other.field])));
-  rows.push(`<span class="label">${key('key-volume', color)}Kills</span> <b class="value">${gold(p.rate.kills)}</b> <span class="rest"><span class="meta">${pct1(p.killCoverage)} valued</span></span>`);
-  rows.push(extra(`${key('key-average', 'var(--muted)')}Players killed`, gold(p.rate.playerDeaths)));
-  if (state.stable) rows.push(extra(`${key('eco-key-dashed', 'var(--accent)')}Constant set`, gold(p.rate.grossStable), '<span class="meta">comparison</span>'));
-  if (state.rate !== null) rows.push(extra(`${key('eco-key-dashed', 'var(--caution)')}Coins + ${state.rate * 100}% NPC`, gold(p.rate.directCoins + state.rate * p.rate.npcPotential), '<span class="meta">assumption</span>'));
+  const rows = [];
+  const extra = (label, value, rest = '', selected = false) => {
+    const cls = selected ? 'eco-selected' : 'eco-extra';
+    return `<span class="label ${cls}">${label}</span> <b class="value ${cls}">${value}</b> <span class="rest ${cls}">${rest}</span>`;
+  };
+  for (const [k, m] of Object.entries(MEASURES)) {
+    if (!state.measures.includes(k)) continue;
+    const prev = !accumulated && view.periods.slice(0, view.periods.indexOf(p)).findLast(q => q.rate[m.field] !== null);
+    const delta = prev ? values[m.field] - prev.rate[m.field] : null;
+    const change = prev ? `<span class="eco-delta">${signedDelta(delta)}</span> ${signedRatio(prev.rate[m.field] ? delta / prev.rate[m.field] : null)} <span class="meta">since ${esc(periodLabel(prev))}</span>` : '';
+    rows.push(extra(`${key('key-dot', KEY[k])}${m.name}`, gold(values[m.field]), change, true));
+  }
+  if (accumulated) {
+    const a = view.accumulated.get(p.start);
+    rows.push(`<span class="note eco-selected">From ${esc(a.from)}: ${a.covered}/${a.days} days with data${a.complete ? '' : ' / partial subtotal'}</span>`);
+  }
+  if (state.kills) rows.push(extra(`${key('key-volume', KEY[state.measure])}Kills/day`, gold(p.rate.kills), `<span class="meta">${pct1(p.killCoverage)} valued</span>`, true));
+  if (state.stable) rows.push(extra(`${key('eco-key-dashed', 'var(--accent)')}Constant set`, gold(values.grossStable), '<span class="meta">comparison</span>', true));
+  if (state.rate !== null) rows.push(extra(`${key('eco-key-dashed', 'var(--caution)')}Gold + ${state.rate * 100}% NPC`, gold(values.directCoins + state.rate * values.npcPotential), '<span class="meta">assumption</span>', true));
   if (state.price) {
     const q = view.price.get(p.start);
-    rows.push(extra(`${key('key-average', 'var(--average)')}TC Sell Offer`, q ? gold(q.sell) : 'N/A', `<span class="meta">${q ? `median of ${fmt(q.n)} day${q.n === 1 ? '' : 's'}` : 'not observed'}</span>`));
+    rows.push(extra(`${key('key-average', 'var(--average)')}TC Sell Offer`, q ? gold(q.sell) : 'N/A', `<span class="meta">${q ? `median of ${fmt(q.n)} day${q.n === 1 ? '' : 's'}` : 'not observed'}</span>`, true));
   }
   $('legend').innerHTML = `${head} ${rows.join(' ')}`;
   if (!day) fitHead();
@@ -219,26 +244,33 @@ function showLegend(day) {
 
 function describeChart() {
   const p = view.last, m = MEASURES[state.measure];
-  $('chart').setAttribute('aria-label', `${chart ? '' : 'Interactive chart unavailable. '}${state.world}, ${m.name.toLowerCase()} from valued creatures in gold per day, by ${UNIT[state.interval]}, range ${state.range}. `
-    + (p ? `Latest complete ${UNIT[state.interval]}: ${periodLabel(p)}, ${gold(p.rate[field()])} gold per day, kill coverage ${pct1(p.killCoverage)}.` : 'No complete period.')
+  const names = state.measures.map(k => MEASURES[k].name.toLowerCase()).join(', ') || 'gold series hidden';
+  const a = p && view.accumulated.get(p.start);
+  $('chart').setAttribute('aria-label', `${chart ? '' : 'Interactive chart unavailable. '}${state.world}, ${names} from valued creatures in ${state.mode === 'daily' ? 'gold per day' : 'accumulated gold'}, by ${UNIT[state.interval]}, range ${state.range}. `
+    + (p ? `Latest complete ${UNIT[state.interval]}: ${periodLabel(p)}, ${m.name}: ${gold(view.values.get(p.start)[field()])} ${state.mode === 'daily' ? 'gold per day' : 'gold accumulated'}, kill coverage ${pct1(p.killCoverage)}.` : 'No complete period.')
+    + (state.mode === 'accumulated' && a ? ` Logarithmic gold scale. Since ${a.from}: ${a.covered} of ${a.days} days with data${a.complete ? '' : ', partial subtotal'}.` : '')
+    + (state.kills ? ' Kills per day in the lower pane.' : '')
     + (state.price ? ' With the median TC Sell Offer per period on the left scale.' : '')
-    + (state.rate !== null ? ` With coins plus ${state.rate * 100}% of NPC potential, an assumption.` : '')
+    + (state.rate !== null ? ` With gold plus ${state.rate * 100}% of NPC potential, an assumption.` : '')
     + (state.stable ? ' With the constant creature set for comparison.' : '')
     + ' Full period values and coverage are available in Help.');
 }
 
 function drawChartData() {
+  const unit = state.mode === 'daily' ? 'gold/day' : 'accumulated gold';
   const extras = [
-    ...(state.stable ? [{ title: 'Constant set (gold/day)', value: p => p.rate.grossStable }] : []),
-    ...(state.rate !== null ? [{ title: `Coins + ${state.rate * 100}% NPC (assumption, gold/day)`, value: p => p.rate.directCoins === null ? null : p.rate.directCoins + state.rate * p.rate.npcPotential }] : []),
+    ...(state.stable ? [{ title: `Constant set (${unit})`, value: p => view.values.get(p.start).grossStable }] : []),
+    ...(state.rate !== null ? [{ title: `Gold + ${state.rate * 100}% NPC (assumption, ${unit})`, value: p => { const v = view.values.get(p.start); return v.directCoins === null ? null : v.directCoins + state.rate * v.npcPotential; } }] : []),
   ];
-  $('chartData').innerHTML = '<caption class="sr-only">Daily averages at the selected interval, from valued creatures. Incomplete periods remain unavailable.</caption><thead><tr><th>Period</th><th class="num">Gross (gold/day)</th><th class="num">Coins (gold/day)</th><th class="num">NPC (gold/day)</th>'
+  $('chartData').innerHTML = `<caption class="sr-only">${unit} at the selected interval, from valued creatures. Accumulated subtotals exclude missing days.</caption><thead><tr><th>Period</th><th class="num">Gross (${unit})</th><th class="num">Gold (${unit})</th><th class="num">NPC (${unit})</th>`
     + extras.map(e => `<th class="num">${esc(e.title)}</th>`).join('')
-    + '<th class="num">Kills/day</th><th class="num">Players killed/day</th><th>Days with data</th><th class="num">Kill coverage</th>'
+    + '<th class="num">Kills/day</th><th>Days with data</th><th class="num">Kill coverage</th>'
+    + (state.mode === 'accumulated' ? '<th>Accumulated days with data</th>' : '')
     + (state.price ? '<th class="num">TC Sell (gold/coin)</th><th class="num">Price days</th>' : '') + '</tr></thead><tbody>'
     + [...view.periods].reverse().map(p => `<tr${p === view.last ? ' class="current"' : ''}><td>${esc(periodLabel(p))}</td>`
-      + [p.rate.grossPotential, p.rate.directCoins, p.rate.npcPotential, ...extras.map(e => e.value(p)), p.rate.kills, p.rate.playerDeaths].map(v => `<td class="num">${gold(v)}</td>`).join('')
+      + [view.values.get(p.start).grossPotential, view.values.get(p.start).directCoins, view.values.get(p.start).npcPotential, ...extras.map(e => e.value(p)), p.rate.kills].map(v => `<td class="num">${gold(v)}</td>`).join('')
       + `<td>${p.covered} / ${p.days}${p.complete ? '' : ' incomplete'}</td><td class="num">${pct1(p.killCoverage)}</td>`
+      + (state.mode === 'accumulated' ? `<td>${view.values.get(p.start).grossPotential === null ? 'N/A' : `${view.values.get(p.start).covered} / ${view.values.get(p.start).days}${view.values.get(p.start).complete ? '' : ' partial subtotal'}`}</td>` : '')
       + (state.price ? `<td class="num">${gold(view.price.get(p.start)?.sell)}</td><td class="num">${view.price.get(p.start)?.n ?? 0}</td>` : '') + '</tr>').join('') + '</tbody>';
 }
 
@@ -311,7 +343,7 @@ function drawCreatures() {
   const total = c.total.grossPotential, name = page => data.creatures[page]?.creature ?? `#${page}`;
   $('creatureNote').textContent = `${month}: ${gold(total)} gold of gross potential from ${gold(c.total.kills)} valued kills. Each month keeps its top 30 creatures; the rest are summed as other.`;
   $('creatureList').innerHTML = c.rows.map(r => `<li><span class="eco-list-name">${esc(name(r.page))}</span><span class="eco-list-value">${gold(r.grossPotential)}</span>`
-    + `<span class="eco-list-sub">${fmt(r.kills)} kills, ${gold(r.coinsPerKill)} coins and ${gold(r.npcPerKill)} NPC value per kill</span><span class="eco-list-share">${pct1(r.share)}</span></li>`).join('')
+    + `<span class="eco-list-sub">${fmt(r.kills)} kills, ${gold(r.coinsPerKill)} gold and ${gold(r.npcPerKill)} NPC value per kill</span><span class="eco-list-share">${pct1(r.share)}</span></li>`).join('')
     + `<li class="eco-list-other"><span class="eco-list-name">Other creatures</span><span class="eco-list-value">${gold(c.other.directCoins + c.other.npcPotential)}</span>`
     + `<span class="eco-list-sub">${fmt(c.other.kills)} kills</span><span class="eco-list-share">${pct1(total ? (c.other.directCoins + c.other.npcPotential) / total : null)}</span></li>`;
 }
@@ -342,7 +374,7 @@ function renderProvenance() {
   const I = data.index, sync = data.sync?.sources ?? {};
   const access = id => data.access?.sources?.[id] ? `${data.access.sources[id].status} since ${data.access.sources[id].since.slice(0, 10)}` : 'unknown';
   $('provenance').innerHTML = `
-    <p><strong>Measured.</strong> For every creature kill in tibia.com's kill statistics, the coins and the NPC value of the loot TibiaWiki's loot statistics expect from that creature, from the sample made after the game version of that day. Kills of creatures without an applicable sample count in kill coverage and are never valued or scaled up.</p>
+    <p><strong>Measured.</strong> For every creature kill in tibia.com's kill statistics, the gold and the NPC value of the loot TibiaWiki's loot statistics expect from that creature, from the sample made after the game version of that day. Kills of creatures without an applicable sample count in kill coverage and are never valued or scaled up.</p>
     <p><strong>Not measured.</strong> Gold leaving the game, money supply, inflation, GDP, or what players actually sold. World transfers are not modelled. Undated game versions use lower date bounds; merger lineage and coverage-change markers are incomplete.</p>
     <p><strong>Sources.</strong> Kill statistics read at ${I.killstats.map(k => `<a href="https://github.com/${esc(k.repo)}/tree/${esc(k.commit)}">${esc(k.repo.split('/')[1])}</a> ${esc(k.commit.slice(0, 7))}`).join(' and ')}, not republished. ${fmt(I.evidence.lootRecords)} TibiaWiki loot sample records (CC-BY-SA), latest revision ${esc(I.evidence.latestLootRevision.slice(0, 10))}; NPC prices of ${esc(I.evidence.prices?.revTimestamp?.slice(0, 10) ?? 'unknown')}; ${fmt(I.evidence.creatureMap.matched)} of ${fmt(I.evidence.creatureMap.races)} races matched. ${esc(I.mode.kind)} reconstruction, methodology ${esc(String(I.methodology.version))}, ${esc(I.methodology.rule)} sample rule.</p>
     <p><strong>Population.</strong> GuildStats ${esc(access('guildstats'))}, TibiaVIP ${esc(access('tibiavip'))}: their histories remain an open requirement, so gold per active character is not shown. TibiaMarket last updated ${esc(sync.tibiamarket?.sourceLatestUpdate?.slice(0, 10) ?? 'unknown')}.</p>
@@ -360,12 +392,13 @@ async function exportImage() {
   ctx.fillStyle = getComputedStyle(document.body).backgroundColor; ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.scale(ratio, ratio);
   ctx.fillStyle = c.ink; ctx.font = `600 18px ${font}`;
-  ctx.fillText(`${state.world}: ${MEASURES[state.measure].name.toLowerCase()}, ${gold(view.last.rate[field()])} gold per day (${periodLabel(view.last)})`, pad, 32);
+  ctx.fillText(`${state.world}: ${state.measures.map(k => MEASURES[k].short).join(', ') || 'gold hidden'}, ${state.mode === 'daily' ? 'gold per day' : 'accumulated gold (log scale)'} (${state.range})`, pad, 32);
   ctx.fillStyle = c.text; ctx.font = `400 12px ${font}`;
-  ctx.fillText(`From valued creatures, by ${UNIT[state.interval]}, range ${state.range}; kill coverage ${pct1(view.last.killCoverage)}. Not money supply; no NPC liquidation assumed${state.rate !== null ? ` (dashed: coins + ${state.rate * 100}% NPC, an assumption)` : ''}.`, pad, 52);
+  const a = view.accumulated.get(view.last.start);
+  ctx.fillText(`From valued creatures, by ${UNIT[state.interval]}; ${state.mode === 'accumulated' ? `since ${a.from}, ${a.covered}/${a.days} days${a.complete ? '' : ', partial subtotal'}` : `kill coverage ${pct1(view.last.killCoverage)}`}. Not money supply${state.rate !== null ? `; dashed: gold + ${state.rate * 100}% NPC, assumption` : ''}.`, pad, 52);
   ctx.drawImage(shot, pad, 64, shot.width / ratio, shot.height / ratio);
   ctx.fillText(`Tibinance / Economy. Kill statistics through ${view.end}; TibiaWiki loot statistics, CC-BY-SA.`, pad, 64 + shot.height / ratio + 28);
-  const name = `tibinance-economy-${state.world.toLowerCase()}-${state.measure}-${state.interval}-${state.range.toLowerCase()}-${view.end}.png`;
+  const name = `tibinance-economy-${state.world.toLowerCase()}-${state.measures.map(k => MEASURES[k].short.toLowerCase()).join('-') || 'hidden'}-${state.mode}-${state.interval}-${state.range.toLowerCase()}-${view.end}.png`;
   const blob = await new Promise((resolve, reject) => canvas.toBlob(b => (b ? resolve(b) : reject(new Error('The image could not be encoded.'))), 'image/png'));
   const link = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: name });
   document.body.append(link); link.click(); link.remove();
@@ -400,6 +433,7 @@ function setChoice(group, attr, value) {
 }
 function saveUrl() {
   const p = new URLSearchParams({ world: state.world, measure: state.measure, interval: state.interval, range: state.range,
+    series: state.measures.join(','), ...(state.mode === 'accumulated' ? { mode: 'accumulated' } : {}), ...(!state.kills ? { kills: '0' } : {}),
     ...(state.price ? { price: '1' } : {}), ...(state.rate !== null ? { rate: String(state.rate) } : {}), ...(state.stable ? { stable: '1' } : {}) });
   history.replaceState(null, '', `${location.pathname}?${p}`);
 }
@@ -421,7 +455,7 @@ function wire() {
     e.preventDefault();
     dataFrame.scrollBy({ left: (e.key === 'ArrowRight' ? 1 : -1) * dataFrame.clientWidth / 2 });
   });
-  for (const id of ['measure', 'range', 'interval', 'liquidation']) $(id).addEventListener('keydown', e => {
+  for (const id of ['valueMode', 'range', 'interval', 'liquidation']) $(id).addEventListener('keydown', e => {
     if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(e.key)) return;
     const buttons = [...$(id).querySelectorAll('button')], at = buttons.indexOf(e.target);
     if (at < 0) return;
@@ -433,7 +467,20 @@ function wire() {
     const days = chart?.chart.timeScale().getVisibleLogicalRange();
     requestAnimationFrame(() => requestAnimationFrame(() => { if (days) chart.chart.timeScale().setVisibleLogicalRange(days); }));
   } });
-  $('measure').addEventListener('click', e => { const b = e.target.closest('button'); if (b && b.dataset.measure !== state.measure) { state.measure = b.dataset.measure; draw({ preserveRange: true }); } });
+  $('measure').addEventListener('click', e => {
+    const k = e.target.closest('button[data-measure]')?.dataset.measure;
+    if (!k) return;
+    if (state.measures.includes(k)) {
+      state.measures = state.measures.filter(m => m !== k);
+      if (state.measure === k && state.measures.length) state.measure = state.measures.at(-1);
+    } else { state.measures.push(k); state.measure = k; }
+    draw({ preserveRange: true });
+  });
+  $('killsToggle').addEventListener('click', () => { state.kills = !state.kills; draw({ preserveRange: true }); });
+  $('valueMode').addEventListener('click', e => {
+    const mode = e.target.closest('[data-mode]')?.dataset.mode;
+    if (mode && mode !== state.mode) { state.mode = mode; draw({ preserveRange: true }); }
+  });
   $('range').addEventListener('click', e => { const r = e.target.closest('button')?.dataset.range; if (r) { state.range = r; draw(); } });
   $('detailPerformance').addEventListener('click', e => { const r = e.target.closest('button')?.dataset.range; if (r) { state.range = r; draw(); } });
   $('interval').addEventListener('click', e => {
