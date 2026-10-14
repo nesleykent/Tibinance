@@ -103,3 +103,49 @@ test('archive objects decompress in the browser path', async () => {
   const value = { worldPaths: [{ a: 1 }] };
   assert.deepEqual(await readObject(gzipSync(JSON.stringify(value))), value);
 });
+
+// ---- The Markets Forecast history panel and layer (js/market-forecast-history*.js) --------------------------------
+import { SIDE_KEY, historyEditions, horizonPoint, historyAhead, historyAxisDays } from '../js/forecast-archive.js';
+
+test('the panel lists editions public by a date and, apart, archived ones never published; a model narrows both', () => {
+  const withModel = (f, id, archivedAt, dataCutoff) => ({ ...f, model: { id, version: 'v1' }, archivedAt, dataCutoff });
+  const index = { forecasts: [
+    withModel(forecast('a', { web: '2026-10-01T21:16:22Z' }), 'C+S+H transfer', '2026-10-13T20:00:00Z', '2026-09-28'),
+    withModel(forecast('b', { repo: '2026-10-04T10:13:03Z' }), 'C+S+H transfer', '2026-10-13T20:00:00Z', '2026-10-03'),
+    withModel(forecast('c', { state: 'archived' }), 'C+S+H transfer', '2026-10-05T00:00:00Z', '2026-10-04'),
+    withModel(forecast('d', { state: 'archived' }), 'challenger', '2026-10-20T00:00:00Z', '2026-10-19'),
+    withModel(forecast('e', { web: '2026-10-01T00:00:00Z', provenance: 'backtest' }), 'C+S+H transfer', '2026-10-01T00:00:00Z', '2026-09-01'),
+  ] };
+  const at = (day, o) => historyEditions(index, endOfDay(day), o);
+  assert.deepEqual(at('2026-10-14').published.map(x => x.forecast.contentHash), ['b', 'a'], 'newest publication first, never a backtest');
+  assert.equal(at('2026-10-14').published[0].publication.level, 'repository', 'repository evidence stands in, labelled');
+  assert.deepEqual(at('2026-10-14', { fallback: false }).published.map(x => x.forecast.contentHash), ['a'], 'website evidence only');
+  assert.deepEqual(at('2026-10-14').unpublished.map(f => f.contentHash), ['c'], 'archived by then, never published');
+  assert.deepEqual(at('2026-10-21').unpublished.map(f => f.contentHash), ['d', 'c']);
+  assert.deepEqual(at('2026-10-21', { model: 'challenger' }).published, []);
+  assert.deepEqual(at('2026-10-21', { model: 'challenger' }).unpublished.map(f => f.contentHash), ['d']);
+  assert.deepEqual(at('2026-09-30').published, []);
+});
+
+test('a horizon is the nth weekly point; Markets sides are the Research ask and bid', () => {
+  const series = scenarioSeries({ worldPaths: [
+    { world: 'Antica', side: 'ask', date: '2026-10-12', base: 2, low: 1, high: 3 },
+    { world: 'Antica', side: 'ask', date: '2026-10-05', base: 1, low: 0, high: 2 },
+    { world: 'Antica', side: 'bid', date: '2026-10-05', base: 9, low: 8, high: 10 },
+  ] }, 'Antica', SIDE_KEY.sell);
+  assert.equal(horizonPoint(series, 1).target, '2026-10-05');
+  assert.equal(horizonPoint(series, 2).base, 2);
+  assert.equal(horizonPoint(series, 4), null);
+  assert.deepEqual(SIDE_KEY, { sell: 'ask', buy: 'bid' });
+});
+
+test('drawn paths extend the axis past the history in proportion to the range, never past their last target', () => {
+  const paths = [{ points: [{ target: '2026-10-12' }, { target: '2026-11-30' }] }, { points: [{ target: '2026-10-05' }] }];
+  assert.equal(historyAhead(paths, '2026-10-06', 30), '2026-11-05', 'as many days ahead as the range shows behind');
+  assert.equal(historyAhead(paths, '2026-10-06', 365), '2026-11-30', 'up to the furthest target');
+  assert.equal(historyAhead(paths, '2026-10-06', 2), '2026-10-13', 'at least a week');
+  assert.equal(historyAhead([{ points: [{ target: '2026-10-01' }] }], '2026-10-06', 30), null, 'within the history: nothing ahead');
+  assert.equal(historyAhead([], '2026-10-06', 30), null);
+  const days = historyAxisDays(paths, '2026-11-27');
+  assert.deepEqual(days, ['2026-11-28', '2026-11-29', '2026-11-30']);
+});

@@ -75,7 +75,7 @@ try {
   const lefts=await page.evaluate(()=>['#world','#side','#legend .day','#legend .label'].map(s=>document.querySelector(s).getBoundingClientRect().left));
   assert.ok(lefts.every(l=>Math.abs(l-lefts[0])<=1),`the world, the side, the day and the series share a left edge: ${lefts}`);
   assert.deepEqual(await tools.getByRole('button').evaluateAll(bs=>bs.map(b=>[b.getAttribute('aria-label'),b.hasAttribute('data-dock-target') ? 'panel' : 'action'])),
-    [['Worlds','panel'],['Screener','action'],['Events','panel'],['Projections','action'],['Help','panel'],['Export chart image','action'],['Full screen','action']]);
+    [['Worlds','panel'],['Screener','action'],['Events','panel'],['Projections','action'],['Forecast history','panel'],['Help','panel'],['Export chart image','action'],['Full screen','action']]);
   assert.ok(await page.$('.toolbar-bottom #range'));
   // Inside Capture's margins, with or without the panel: the chart, then the Worlds panel, then the rail at the edge.
   const frame=()=>page.evaluate(()=>{
@@ -451,7 +451,7 @@ try {
   await page.setViewportSize({width:390,height:844});
   // On a phone the rail is a row under the chart, without the Worlds tool: the worlds are always listed.
   assert.equal(await page.isVisible('.dock-rail'),true);
-  assert.deepEqual(await tools.getByRole('button').filter({visible:true}).evaluateAll(bs=>bs.map(b=>b.getAttribute('aria-label'))),['Screener','Events','Projections','Help','Export chart image','Full screen']);
+  assert.deepEqual(await tools.getByRole('button').filter({visible:true}).evaluateAll(bs=>bs.map(b=>b.getAttribute('aria-label'))),['Screener','Events','Projections','Forecast history','Help','Export chart image','Full screen']);
   assert.ok(await page.evaluate(()=>{const c=document.getElementById('chartPanel').getBoundingClientRect(),r=document.querySelector('.dock-rail').getBoundingClientRect();return r.top>=c.bottom && r.height<60;}),'the rail is a row under the chart');
   assert.equal(await page.isVisible('#worlds tr[data-world="Antica"]'),true,'phones list the worlds with the rail closed');
   // Help opens between the rail and the worlds.

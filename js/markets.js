@@ -9,21 +9,24 @@
  * server day on that side. Nothing is interpolated. Events: markers along the foot of the chart, from
  * their own dataset (js/events.js); they can be hidden without touching the market series.
  * Projections: the Research report's offer scenario for the world and side (js/market-projections.js), after the
- * last observation, off until the viewer shows them.
+ * last observation, off until the viewer shows them. Forecast history: past editions of that scenario, as published,
+ * chosen in their panel (js/market-forecast-history.js) and drawn over the history.
  *
  * The Screener (js/market-screener-panel.js) takes the chart's place to set every world side by side for the same side
  * and range; opening a world from it, or from anywhere else, brings its chart back.
  */
 import { fmt, esc, num } from './format.js';
 import { RANGES, changeOver, dayGrid, daysBetween, marketValues, neighbours, rangeStart, statisticsAt } from './market-series.js';
-import { SIDES, createMarketChart, dayOf } from './market-chart.js?v=20261004-events';
+import { SIDES, createMarketChart, dayOf } from './market-chart.js?v=20261014-history';
 import { dock } from './markets-dock.js';
-import { marketImage } from './market-export.js?v=20261004-events';
+import { marketImage } from './market-export.js?v=20261014-history';
 import { loadEvents as readEvents, eventsFor, lifecycleSpan, addEventDays } from './events.js';
-import { eventsPanel } from './market-events-panel.js?v=20261004-events';
-import { eventMarks } from './market-events-ui.js?v=20261004-events';
+import { eventsPanel } from './market-events-panel.js?v=20261014-history';
+import { eventMarks } from './market-events-ui.js?v=20261014-history';
 import { PROJECTIONS, forwardEnd, pointText, projectionFor, weekOf } from './market-projections.js';
 import { screenerPanel } from './market-screener-panel.js?v=20261004-chart-first';
+import { historyPanel } from './market-forecast-history.js?v=20261014-history';
+import { historyAhead, weekEnding } from './forecast-archive.js?v=20261014-history';
 // The shared chart, its export and the Screener are imported at one versioned address everywhere (also in
 // js/market-export.js and js/tibia-token-markets.js): one copy of each module per page, refreshed past browser caches
 // when it changes. Bump the version in every importer together.
@@ -84,6 +87,24 @@ const eventBrowser = eventsPanel($('eventsPanel'), {
 });
 
 
+// Past editions of the Research scenario, chosen in their panel; what it chooses is drawn as the history layer.
+const forecastHistory = historyPanel($('historyPanel'), {
+  onDraw(paths) {
+    if (!state.view) return;
+    state.view.history = { side: state.side, paths };
+    market.refresh('history');
+    if (state.view.grid.length) { applyRange(); showLegend(null); describeChart(); }
+  },
+  onShow(on) {
+    market.setVisible('history', on);
+    if (state.view?.grid.length) { applyRange(); showLegend(null); describeChart(); fitHead(); }
+  }
+});
+const historyContext = () => state.view && { world: state.world, side: state.side, end: state.view.end };
+// The drawn editions of the side shown, while the layer is shown.
+const shownHistory = () => market.visible('history') && state.view?.history?.side === state.side && state.view.history.paths.length ? state.view.history.paths : null;
+
+
 /* -------------------------------------------------------------- the world */
 const retired = summary => summary.status === 'retired';
 // A world's history ends with the dataset, or on a retired world's last observed day;
@@ -126,7 +147,8 @@ function applyRange(attempt = 0) {
   // selected range itself is unchanged.
   const start = rangeStart(state.view.end, state.range);
   const from = !start || start <= grid[0] ? grid[0] : start;
-  const ahead = shownProjection() && forwardEnd(shownProjection(), daysBetween(from, state.view.end));
+  const days = daysBetween(from, state.view.end);
+  const ahead = [shownProjection() && forwardEnd(shownProjection(), days), shownHistory() && historyAhead(shownHistory(), state.view.end, days)].filter(Boolean).sort().at(-1);
   chart.timeScale().setVisibleRange({ from, to: ahead && ahead > grid.at(-1) ? ahead : grid.at(-1) });
 }
 
@@ -140,6 +162,7 @@ function showLegend(day) {
   const view = state.view, rest = day == null;
   if (!view) return;
   $('projectionLegend').innerHTML = '';
+  $('historyLegend').innerHTML = historyRow(day ?? view.latestDay);
   if (!view.latestDay) { $('legend').innerHTML = ''; $('volumeLegend').innerHTML = ''; return; }
   day ??= view.latestDay;
   // After the last observation there is no market value to read, only the projection, if shown.
@@ -172,6 +195,17 @@ function showLegend(day) {
 }
 
 const projectionLabel = '<span class="label"><i class="key key-projection"></i>Projection</span>';
+// The drawn editions' forecasts for the week that holds a day: what each said, never an interpolated day.
+function historyRow(day) {
+  const paths = shownHistory();
+  if (!paths || !day) return '';
+  const week = weekEnding(day);
+  return paths.map(p => {
+    const point = p.points.find(q => q.week === week);
+    const key = `<span class="label"><i class="key key-history slot-${p.slot + 1}"></i>${p.slot + 1}. Edition ${esc(p.cutoff)}</span>`;
+    return ` ${key} ${point ? `<b class="value">${fmt(Math.round(point.base))}</b> <span class="rest projected"><span>band ${fmt(Math.round(point.low))} to ${fmt(Math.round(point.high))}</span> <span>week to ${esc(week)}</span></span>` : '<span class="note">no forecast for this week</span>'}`;
+  }).join('');
+}
 // The projection, at rest: its value at the end of its horizon, or why there is none.
 function projectionRow(p) {
   if (!p.available) return ` ${projectionLabel} <span class="note">unavailable: ${esc(p.reason)}</span>`;
@@ -272,8 +306,10 @@ function describeChart() {
       ? ` Projection from the last observation: Research offer scenario to ${end.day}, central ${fmt(end.central)}, heuristic stress band ${fmt(end.low)} to ${fmt(end.high)}${p.confidence === 'limited' ? `, limited confidence (${p.limits.join('; ')})` : ''}${p.suspendedFrom ? `, suspended from ${p.suspendedFrom}` : ''}.`
       : ` Projection unavailable: ${p.reason}`;
   }
+  const paths = shownHistory();
+  const history = paths ? ` Past forecasts drawn: ${paths.map(p => `edition ${p.cutoff} of the Research offer scenario, public since ${p.published.at.slice(0, 10)} (${p.published.level === 'website' ? 'website' : 'repository only'}), weekly to ${p.points.at(-1).target}`).join('; ')}.` : '';
   $('chart').setAttribute('aria-label', `${summary.world}, ${SIDES[side].offer} history and daily transaction activity (count), range ${state.range}. `
-    + (latest ? `Latest ${fmt(latest[side])} on server day ${latest.serverDay}.` : 'No best offers observed.') + projection);
+    + (latest ? `Latest ${fmt(latest[side])} on server day ${latest.serverDay}.` : 'No best offers observed.') + projection + history);
 }
 
 // The viewer's own clock, written the way the rest of Tibinance writes times.
@@ -343,6 +379,7 @@ async function select(world, { focus = false } = {}) {
   if (state.world !== world) return;   // a later click won while this file loaded
   state.view = worldView(summary, state.files.get(world));
   drawChart();
+  forecastHistory.update(historyContext()).catch(historyFailed);
   eventBrowser.update(state.events);
   showQuote();
   showLegend(null);
@@ -402,11 +439,20 @@ function saveUrl() {
 // Opening or closing a panel changes the chart's width: it keeps showing the same days, wider or narrower.
 // The Worlds panel reopens at the selected world.
 function dockChanged(open) {
+  if (open === 'historyPanel') openHistory().catch(historyFailed);
   const days = chart.timeScale().getVisibleLogicalRange();
   requestAnimationFrame(() => requestAnimationFrame(() => {
     if (days) chart.timeScale().setVisibleLogicalRange(days);
     if (open === 'worldsPanel') revealRow(document.querySelector('#worlds tr[aria-selected="true"]'));
   }));
+}
+
+// The Forecast history panel loads the archive the first time it opens, then follows the world and side. Without the
+// archive the market works as before; the panel says so.
+const historyFailed = error => console.warn('The forecast history is unavailable.', error);
+async function openHistory() {
+  await forecastHistory.open();
+  if (historyContext()) await forecastHistory.update(historyContext());
 }
 
 /* ----------------------------------------------------------------- events */
@@ -492,6 +538,7 @@ function setSide(side) {
   setChoice('side', 'side', side);
   setChoice('screenerSide', 'side', side);
   saveUrl(); drawWatchlist(); drawChart(); showQuote(); showLegend(null); drawScreener();
+  if (state.view) forecastHistory.update(historyContext()).catch(historyFailed);
 }
 
 // One range for the chart and the Screener: the list, the quote and the grid follow it.
@@ -539,8 +586,8 @@ function imageContext() {
     valueNote: latest ? `${SIDES[side].offer} on server day ${latest.serverDay}` : SIDES[side].offer,
     change: change && { text: `${signedNumber.format(delta)} ${percent.format(change.ratio)}`, tone: tone(delta), note: `change over ${state.range}` },
     // Days after the last observation are projected, and the image says where one ends and the other begins.
-    shown: !shown ? '' : dayOf(shown.to) > end && shownProjection()
-      ? `Server days ${dayOf(shown.from)} to ${end}, projected to ${dayOf(shown.to)}`
+    shown: !shown ? '' : dayOf(shown.to) > end && (shownProjection() || shownHistory())
+      ? `Server days ${dayOf(shown.from)} to ${end}, ${shownProjection() ? 'projected' : 'past forecasts drawn'} to ${dayOf(shown.to)}`
       : `Server days ${dayOf(shown.from)} to ${dayOf(shown.to)}`,
     footer: `Server days run from 10:00 to 10:00 CET/CEST. Market history through ${end}.`
   };
@@ -552,7 +599,7 @@ async function exportImage() {
   button.disabled = true;
   try {
     const canvas = await marketImage({ view: state.view, side: state.side, logicalRange: chart.timeScale().getVisibleLogicalRange(), context: imageContext(),
-      hidden: ['events', 'projections'].filter(id => !market.visible(id)) });
+      hidden: ['events', 'projections', 'history'].filter(id => !market.visible(id)) });
     const blob = await new Promise((resolve, reject) => canvas.toBlob(b => (b ? resolve(b) : reject(new Error('The image could not be encoded.'))), 'image/png'));
     const name = `tibinance-${summary.world.toLowerCase()}-${state.side}-${state.range.toLowerCase()}-${state.view.end}.png`;
     const link = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: name });
@@ -571,6 +618,7 @@ async function exportImage() {
 
 function wire() {
   tools = dock($('dock'), { key: 'tibinance.markets.dock', roomy: () => matchMedia(ROOMY).matches, onChange: dockChanged });
+  if (tools.open === 'historyPanel') openHistory().catch(historyFailed);
   $('screenerToggle').addEventListener('click', () => showScreener(!state.screen));
   $('side').addEventListener('click', e => setSide(e.target.closest('button')?.dataset.side));
   $('detailPerformance').addEventListener('click', e => { const range = e.target.closest('button')?.dataset.range; if (range) setRange(range); });

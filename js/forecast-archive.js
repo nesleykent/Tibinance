@@ -135,6 +135,43 @@ export function groupMetrics(points, key) {
   return [...groups.entries()].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)).map(([k, ps]) => ({ key: k, ...metrics(ps) }));
 }
 
+// The Markets sides in the Research's terms: the Sell Offer is the ask, the Buy Offer the bid.
+export const SIDE_KEY = { sell: 'ask', buy: 'bid' };
+
+const addDays = (iso, k) => new Date(Date.parse(`${iso}T00:00:00Z`) + k * DAY).toISOString().slice(0, 10);
+const daysBetween = (a, b) => Math.round((Date.parse(`${b}T00:00:00Z`) - Date.parse(`${a}T00:00:00Z`)) / DAY);
+
+// What the forecast-history panel lists at instant t: the scenario editions public by then, newest first, and,
+// apart, the editions archived by then that were never published (listed with that label, never drawn or offered
+// as public predictions). `model` narrows both to one model id.
+export function historyEditions(index, t, { fallback = true, model = null } = {}) {
+  const ofModel = f => !model || f.model.id === model;
+  const published = publishedBy(index, t, { fallback }).filter(x => ofModel(x.forecast));
+  const unpublished = index.forecasts
+    .filter(f => f.product === SCENARIOS && f.provenance === 'authentic' && ofModel(f) && !publishedAt(f, { fallback }) && f.archivedAt && f.archivedAt <= t)
+    .sort((a, b) => (a.dataCutoff < b.dataCutoff ? 1 : -1));
+  return { published, unpublished };
+}
+
+// The point `weeks` weeks ahead in one world and side's weekly path, or null where the path is shorter.
+export const horizonPoint = (series, weeks) => series[weeks - 1] ?? null;
+
+// How far past the last observation (`end`) the chart shows drawn paths: as many days as the range shows before
+// it, at least a week, up to the furthest drawn target; null when every drawn point is within the history.
+export function historyAhead(paths, end, history) {
+  const last = paths.flatMap(p => p.points.map(q => q.target)).sort().at(-1);
+  if (!last || last <= end) return null;
+  return addDays(end, Math.min(Math.max(7, history), daysBetween(end, last)));
+}
+
+// Every day after `end` up to the furthest drawn target, so the axis keeps time proportional beyond the history.
+export function historyAxisDays(paths, end) {
+  const last = paths.flatMap(p => p.points.map(q => q.target)).sort().at(-1);
+  const days = [];
+  if (last) for (let day = addDays(end, 1); day <= last; day = addDays(day, 1)) days.push(day);
+  return days;
+}
+
 // Decompresses an archive object (gzip JSON) fetched as an ArrayBuffer.
 export async function readObject(buffer) {
   const stream = new Blob([buffer]).stream().pipeThrough(new DecompressionStream('gzip'));

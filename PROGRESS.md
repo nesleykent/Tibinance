@@ -14,8 +14,8 @@ Never force-push, never reset, never redo finished work.
 
 ## Current state
 
-- **Stage:** F (interface), part 2 next. **Stage E is done and committed by this commit** (findings in
-  `reports/economy/README.md`). The Economy page is done (5699edc). Stages B, C and D are done.
+- **Stage:** A2 (`economy-daily.yml`) next. **Stage F is done**: the Economy page (5699edc) and, committed by this
+  commit, the Markets "Forecast history" panel. Stages B to E are done; G is decided (see below).
 - **Production:** `release/0003` (a data release by the forecast-archive workflow on top of `release/0002`, live
   verified 543/543). **Awaiting a full release:** everything since `release/0002` that is code or a page: Stages C
   to F, including `economy.html` and the Economy link added to every page's menu. The Research pages link to
@@ -26,20 +26,11 @@ Never force-push, never reset, never redo finished work.
   point-in-time features. It is not built yet; it needs a daily point-in-time feature build in Actions, which in
   turn needs the kill and loot caches.
 - **Exact next action:**
-  1. Stage F, part 2: the Markets "Forecast history" dock panel.
-     - Logic already exists in `js/forecast-archive.js`: lifecycle, `publishedBy`, `scenarioSeries`, `sameTarget`,
-       `evaluationPoints` and `metrics`.
-     - Build a dock panel with filters for as-of date, horizon, status and evidence level, using the page's world and
-       side.
-     - Add a pane-primitive layer drawing up to 3 editions over the actual chart, included in the export.
-     - Add accuracy tables split into authentic published, archived-unpublished and backtest.
-     - `data/forecast-archive/evaluations.jsonl` does not exist yet: no target week has closed with an observation
-       for the archived editions, so accuracy shows as pending.
-     - Bump the shared `?v=` tags together.
-  2. A2: `economy-daily.yml` (kill-statistics increment, `build_gold`, a weekly loot sync with the Actions cache plus
-     a recovery procedure).
-  3. G challenger, if the daily point-in-time features are in place.
-  4. H: `docs/economy.md` (the Economy page already links it on GitHub), README and project-guide updates, full test
+  1. A2: `economy-daily.yml` (kill-statistics increment, `build_gold`, a weekly loot sync with the Actions cache plus
+     a recovery procedure); `data/economy/**` added to `release/policy.json` (takes effect with the next full
+     release).
+  2. G challenger, if the daily point-in-time features are in place.
+  3. H: `docs/economy.md` (the Economy page already links it on GitHub), README and project-guide updates, full test
      and browser suites, then a full release with live verification and the final five-section report.
 
 - **Caches for this data** (local only; another agent must regenerate them):
@@ -404,9 +395,37 @@ Never force-push, never reset, never redo finished work.
   The site job was green throughout. Releases validate with `validate_site.mjs`, which does not run these Python
   tests, so `release/0003` was unaffected.
 
+- **Stage F, Markets "Forecast history" panel** (`js/market-forecast-history.js`,
+  `js/market-forecast-history-layer.js`, helpers in `js/forecast-archive.js`, `markets.html`, `css/markets.css`):
+  - **Rail and loading:** a new rail tool opens a dock panel. The archive loads only when the panel first opens; the
+    market loads exactly as before without it.
+  - **Filters:**
+    - an "As of" date: editions public by the end of that day, newest first;
+    - weeks ahead (1, 4, 13, 26 or 52): each edition's point for the page's world and side, with its band;
+    - evidence: website, else repository (labelled), or website only;
+    - model;
+    - an optional list of editions archived but never published (labelled, never drawn).
+  - **Each edition shows:** its publication date and evidence level, its model, its reproducibility level, and
+    whether it was superseded.
+  - **Drawing:** up to 3 editions can be drawn over the chart, each in a stable slot (colour, line style, number).
+    Each gets its central path, faint stress band and a numbered hairline on its publication day. Paths extend the
+    axis past the history like the projection, and the readout, chart description and exported image (one note line
+    per edition) name them. "Chart paths" hides them without losing the choice.
+  - **Accuracy:** per class (website, repository only, archived-unpublished, backtest) and horizon, from
+    `evaluations.jsonl`. That file does not exist yet, so the panel says no target week has closed. It is fetched
+    only when `index.json` counts evaluations.
+  - **Versions:** module addresses are bumped together to `?v=20261014-history` (markets, chart, export, events, Tibia
+    Token, entry, the new modules, and the `markets.css` tag).
+  - **Tests:**
+    - `tests/forecast-archive.test.mjs`: 3 new tests for listing, horizons and the axis.
+    - `tests/market-forecast-history-browser.mjs` (Chrome): expected editions and values are read from the archive.
+    - Markets suite updated for the new rail tool.
+    - All Markets, Events, Screener, Projections, Tibia Token, canonical events (Chrome), header, Economy and Trade
+      suites pass.
+    - Node suite: 197/197. `validate_site.mjs`: 8/8.
+
 ## In progress / remaining
 
-- F: Markets "Forecast history" dock panel.
 - G (conditional), A2 `economy-daily.yml`, H (docs, full suites, full release, final five-section report).
 
 ## Unresolved requirements (carried, not substitutes)
@@ -435,7 +454,8 @@ Never force-push, never reset, never redo finished work.
 - D: `tools/economy/population/`, `data/economy/population/`, `tests/economy-population.test.mjs`
 - E: `reports/economy/` (`economy_research.py`, `results.json`, `README.md`, `test_economy_research.py`)
 - F: `economy.html`, `css/economy.css`, `js/economy.js`, `js/economy-data.js`, `tests/economy-data.test.mjs`,
-  `tests/economy-browser.mjs`; the menus of `index.html`, `markets.html`, `trade.html`, `reports/tc-cycle/*.html`
+  `tests/economy-browser.mjs`; the menus of `index.html`, `markets.html`, `trade.html`, `reports/tc-cycle/*.html`;
+  `js/market-forecast-history.js`, `js/market-forecast-history-layer.js`, `tests/market-forecast-history-browser.mjs`
 - `docs/economy-plan.md`, this section
 
 ## Long-running jobs

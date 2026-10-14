@@ -9,9 +9,9 @@
  * The image has the same layout from any window or phone (WIDTH by the height of its parts, in image pixels) and at
  * least twice as many device pixels: on a screen of lower density the offscreen chart is drawn larger instead.
  */
-import { createMarketChart } from './market-chart.js?v=20261004-events';
+import { createMarketChart } from './market-chart.js?v=20261014-history';
 import { dateText } from './events.js';
-import { drawMarker } from './market-events-layer.js?v=20261004-events';
+import { drawMarker } from './market-events-layer.js?v=20261014-history';
 
 const WIDTH = 1200, PAD = 32, CHART_HEIGHT = 560;
 const HEAD = 104;     // title, quote, legend and rule above the chart
@@ -146,7 +146,7 @@ function drawNotes(ctx, notes, { x, y, right, c, ui, text }) {
     // Plain lines (a projection): a key, then the text, cut short where it would pass the edge.
     if (note.lines) {
       for (const line of note.lines) {
-        if (line.mark !== 'none') drawKey(ctx, { mark: line.mark, color: line.mark === 'band' ? c.band : c.ink }, x, y + 10);
+        if (line.mark !== 'none') drawKey(ctx, { mark: line.mark, color: line.color ?? (line.mark === 'band' ? c.band : c.ink) }, x, y + 10);
         const tx = line.mark === 'none' ? x : x + 28;
         text(fit(ctx, line.text, right - tx, font), tx, y + 14, { font, color: line.mark === 'none' ? c.muted : c.ink });
         y += LINE;

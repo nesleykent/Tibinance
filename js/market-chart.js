@@ -22,8 +22,9 @@
  */
 import { fmt } from './format.js';
 import { lineLayers, statisticsAt } from './market-series.js';
-import { eventsLayer } from './market-events-layer.js?v=20261004-events';
+import { eventsLayer } from './market-events-layer.js?v=20261014-history';
 import { projectionsLayer } from './market-projections-layer.js';
+import { historyLayer } from './market-forecast-history-layer.js?v=20261014-history';
 
 export const SIDES = {
   sell: { offer: 'Best Sell Offer', offers: 'Sell Offers' },
@@ -36,6 +37,7 @@ export const colors = () => ({ sell: token('--sell'), buy: token('--buy'), avera
   grid: token('--line-faint'), rule: token('--line'), crosshair: token('--line-strong'), ink: token('--ink'),
   canvas: token('--canvas') || '#fff', font: token('--font-ui'),
   projection: token('--projection'), projectionRegion: token('--projection-region'),
+  history: [token('--history-1'), token('--history-2'), token('--history-3')],
   events: { world: token('--event-world'), game: token('--event-game'), market: token('--event-market') } });
 // Lightweight Charts reports a day as the string it was given or as {year, month, day}.
 export const dayOf = time => typeof time === 'string' ? time
@@ -106,9 +108,9 @@ const activity = {
   keys: (side, c) => [{ mark: 'bar', color: c[side], label: 'Transactions (count)' }]
 };
 
-// Read in this order; drawn by depth: activity behind the price series, the projection between the average and the
-// best offer, the events on top.
-export const LAYERS = [bestOffer, dailyAverage, activity, projectionsLayer, eventsLayer];
+// Read in this order; drawn by depth: activity behind the price series, the projection and past editions between the
+// average and the best offer, the events on top.
+export const LAYERS = [bestOffer, dailyAverage, activity, projectionsLayer, historyLayer, eventsLayer];
 
 /* ---------------------------------------------------------------- chart */
 export function createMarketChart(container, { scale: k = 1, width, height, profile = null } = {}) {

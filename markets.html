@@ -6,7 +6,7 @@
 <title>Tibinance Markets</title>
 <meta name="description" content="Tibia Coin offers by world and Tibia Token daily USD price history.">
 <link rel="stylesheet" href="css/app.css">
-<link rel="stylesheet" href="css/markets.css?v=20261004-database">
+<link rel="stylesheet" href="css/markets.css?v=20261014-history">
 <link rel="stylesheet" href="css/market-assets.css">
 <link rel="stylesheet" href="css/site-header.css?v=20261004-github">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪙</text></svg>">
@@ -66,6 +66,7 @@
           <div id="legend" class="legend"></div>
           <div id="volumeLegend" class="legend"></div>
           <div id="projectionLegend" class="legend"></div>
+          <div id="historyLegend" class="legend"></div>
         </div>
       </div>
       <!-- Over the event markers the chart draws at its foot (js/market-events-ui.js): one tab stop, arrows between. -->
@@ -188,6 +189,24 @@
         <section id="eventAgendaSection" aria-label="Event agenda"><div class="event-agenda-head"><h3>Agenda</h3><select id="eventPeriod" aria-label="Agenda period"><option value="upcoming">Upcoming and ongoing</option><option value="recent">Recent 90 days</option><option value="historical">Historical</option><option value="all" selected>All dates</option></select></div><p id="eventCount"></p><div id="eventAgenda"></div></section>
       </div>
     </section>
+    <section id="historyPanel" class="dock-panel history-panel" aria-labelledby="historyTitle">
+      <div class="panel-head"><h2 id="historyTitle" class="panel-title">Forecast history</h2><label><input id="historyPaths" type="checkbox" disabled> Chart paths</label></div>
+      <div class="panel-body">
+        <p id="historyContext">Loading the forecast archive…</p>
+        <div class="history-filters">
+          <label>As of<input id="historyAsOf" type="date"></label>
+          <label>Ahead<select id="historyHorizon"><option value="1">1 week</option><option value="4" selected>4 weeks</option><option value="13">13 weeks</option><option value="26">26 weeks</option><option value="52">52 weeks</option></select></label>
+          <label>Evidence<select id="historyEvidence"><option value="repository">Website, else repository</option><option value="website">Website only</option></select></label>
+          <label>Model<select id="historyModel"><option value="">Every model</option></select></label>
+        </div>
+        <ul id="historyEditions" class="history-list"></ul>
+        <label class="history-option"><input id="historyArchived" type="checkbox"> Also list editions archived but never published</label>
+        <div id="historyUnpublished" hidden></div>
+        <h3>Accuracy</h3>
+        <div id="historyAccuracy"></div>
+        <p class="history-meta">An edition is public from its first website deployment, or, where none is recorded, its first push to the repository, which is labelled. Each forecast was archived with its inputs before publication and is never changed afterwards. The band is a heuristic stress band, not a confidence interval.</p>
+      </div>
+    </section>
     <section id="helpPanel" class="dock-panel help-panel" aria-labelledby="helpTitle">
       <div class="panel-head"><h2 id="helpTitle" class="panel-title">Reading the chart</h2></div>
       <div class="panel-body">
@@ -199,6 +218,7 @@
           <li><i class="key key-volume" aria-hidden="true"></i>Transactions: the raw activity counter for this side during each completed server day. Rolling 30-day Statistics are not daily counts. Actual traded TC quantity is unknown.</li>
           <li><i class="key key-event" aria-hidden="true">M</i>Events, along the foot of the chart: world openings, merges and retirements, updates, XP/Skill and Rapid Respawn events, and market and Store changes. Point at, focus or tap a marker for its days and details. The Events tool opens a calendar, agenda and event details, with a chart marker visibility control.</li>
           <li><i class="key key-projection" aria-hidden="true"></i>Projection, off until shown: the Research report's offer scenario for this world and side, never an observation. It starts on the last observed best offer, in the tinted days after it. The dashed line is the central path, an equal-weight ensemble of three models for Antica moved to this world's own last best offer, weekly for up to 52 weeks; the faint band is a heuristic stress band, not a confidence interval. It stops where the Research suspends it before an announced merge. Worlds outside the Research's captures, retired worlds and worlds observed after the Research's cutoff have none.</li>
+          <li><i class="key key-history" aria-hidden="true"></i>Forecast history, off until chosen: past editions of the Research scenario, as Tibinance published them, drawn over what the market then did. Each has its own colour and line, its faint band, and a numbered hairline on the day it became public. Only editions with publication evidence are drawn; the Forecast history tool lists them by date, with their accuracy once target weeks close.</li>
 
         </ul>
         <p>Sell and Buy, at the top of the chart, choose the side shown; each names its latest best offer, and the figure between them is the spread. The day's high and low in the readout are the highest and lowest prices of that day's trades on the side shown.</p>
@@ -227,6 +247,9 @@
         <button type="button" id="projectionsToggle" class="tool dock-tool" aria-pressed="false" aria-label="Projections" title="Show projections">
           <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 14.5l3.5-3.5 3 2L11 11"/><path d="M11 11l6-5.5" stroke-dasharray="1.6 2.2"/><path d="M11 3.5v13"/></svg>
         </button>
+        <button type="button" id="historyToggle" class="tool dock-tool" data-dock-target="historyPanel" aria-label="Forecast history">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3.8 10a6.2 6.2 0 1 0 1.9-4.5"/><path d="M3.5 3.5v3.2h3.2"/><path d="M10 6.5V10l2.5 1.6"/></svg>
+        </button>
       </div>
       <span class="dock-space" aria-hidden="true"></span>
       <div class="dock-group">
@@ -249,6 +272,6 @@
 <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.1/dist/lightweight-charts.standalone.production.js"
         integrity="sha384-KkYqTZlM13Zya6fVUF3IGCBOQ1ehFeJVVgxaVvD/0MebineF9EI8Jkd3NnWNChqN" crossorigin="anonymous"></script>
 <script type="module" src="js/site-header.js"></script>
-<script type="module" src="js/markets-entry.js?v=20261004-events"></script>
+<script type="module" src="js/markets-entry.js?v=20261014-history"></script>
 </body>
 </html>

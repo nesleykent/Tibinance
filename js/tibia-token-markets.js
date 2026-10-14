@@ -2,13 +2,13 @@
 import { esc } from './format.js';
 import { RANGES, changeOver, rangeStart, dayGrid } from './market-series.js';
 // Version the changed shared modules: GitHub Pages can retain pre-TIB code in browser caches.
-import { createMarketChart, dayOf } from './market-chart.js?v=20261004-events';
-import { marketImage } from './market-export.js?v=20261004-events';
+import { createMarketChart, dayOf } from './market-chart.js?v=20261014-history';
+import { marketImage } from './market-export.js?v=20261014-history';
 import { dock } from './markets-dock.js';
 import { loadEvents, addEventDays } from './events.js';
-import { eventsPanel } from './market-events-panel.js?v=20261004-events';
-import { eventMarks } from './market-events-ui.js?v=20261004-events';
-import { TOKEN_PROFILE, tokenPrice, tokenView, CONTRACT } from './tibia-token.js?v=20261004-events';
+import { eventsPanel } from './market-events-panel.js?v=20261014-history';
+import { eventMarks } from './market-events-ui.js?v=20261014-history';
+import { TOKEN_PROFILE, tokenPrice, tokenView, CONTRACT } from './tibia-token.js?v=20261014-history';
 const $ = id => document.getElementById(id);
 const percent = new Intl.NumberFormat('en-US', { style: 'percent', maximumFractionDigits: 2, signDisplay: 'exceptZero' });
 const params = new URLSearchParams(location.search);

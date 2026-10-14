@@ -1,6 +1,6 @@
 // Token history uses completed UTC pool candles, never Tibia server days or best offers.
 import { dayGrid, lineLayers } from './market-series.js';
-import { eventsLayer } from './market-events-layer.js?v=20261004-events';
+import { eventsLayer } from './market-events-layer.js?v=20261014-history';
 import { eventsFor } from './events.js';
 export const CONTRACT = '0x111B95C2b65CbA53aB4E0AaDA12f55985045E446';
 export const POOL = '0xd2acfaec0e3b556f285fbb9026ede7e87885e611';
