@@ -1,3 +1,21 @@
+# Automation authorship correction, 2026-10-14
+
+The user cancelled further UI work and requested removal of the Tibinance data bot identity.
+The UI rebuild is committed on main as `ccb9ab1`, but is **not released**; no full release was created.
+Do not resume or deploy that UI work without a new user instruction.
+
+The four writing workflows (economy data, market sync, forecast archive and online sampler) now use the
+repository owner's existing commit identity, `nesleykent <nesleykent@icloud.com>`, for author and committer.
+Workflow names and messages still identify automated data updates. CI-only throwaway fixture identities are
+unchanged because they never author repository commits. Existing published commits/tags have not been rewritten.
+Removing the old identity from historical GitHub commit records requires a separate history rewrite, including
+release references, and conflicts with the standing no-history-rewrite/no-force-push rules.
+
+Verification: all four writer configurations inspected; no bot identity remains in any active workflow.
+Only workflow identity lines and this handoff entry changed. Next action: commit/push this authorship correction.
+
+---
+
 # Independent audit and reconstruction, 2026-10-14
 
 - **Scope:** the economic-intelligence work begins after `b7eb0e4`, spans the ingestion/valuation/archive commits,

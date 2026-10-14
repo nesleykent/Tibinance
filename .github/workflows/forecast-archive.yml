@@ -46,10 +46,10 @@ jobs:
           cache: pip
           cache-dependency-path: reports/tc-cycle/requirements.txt
       - run: pip install -r reports/tc-cycle/requirements.txt
-      - name: Bot identity
+      - name: Repository owner commit identity
         run: |
-          git config --global user.name 'Tibinance data bot'
-          git config --global user.email 'tibinance-bot@users.noreply.github.com'
+          git config --global user.name 'nesleykent'
+          git config --global user.email 'nesleykent@icloud.com'
       - name: Every published representation is archived
         run: python tools/forecasts/archive.py --check
       - name: Publication evidence and evaluations

@@ -27,8 +27,8 @@ jobs:
           node-version: '26'
       - name: Sample and append to the data branch
         run: |
-          git config --global user.name 'Tibinance data bot'
-          git config --global user.email 'tibinance-bot@users.noreply.github.com'
+          git config --global user.name 'nesleykent'
+          git config --global user.email 'nesleykent@icloud.com'
           if git ls-remote --exit-code --heads origin data/online-samples > /dev/null; then
             git fetch -q origin data/online-samples
             git worktree add -q ../samples -B data/online-samples origin/data/online-samples
