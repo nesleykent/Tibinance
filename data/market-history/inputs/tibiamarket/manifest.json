@@ -16,9 +16,9 @@
  {
   "world": "Antica",
   "url": "https://api.tibiamarket.top/item_history?server=Antica&item_id=22118&start_days_ago=2000&end_days_ago=-1",
-  "retrievedAt": "2026-10-13T21:20:59.950Z",
-  "rows": 1673,
-  "sha256": "543501726748b652c4abec40775423cd00c8e2fcc3d7690fe99af25e11bbb95c"
+  "retrievedAt": "2026-10-14T21:56:02.090Z",
+  "rows": 1681,
+  "sha256": "f552c0077c9813c578a2d034859e55611575a30cc172f6878872bbaf5643ad52"
  },
  {
   "world": "Blumera",
@@ -37,9 +37,9 @@
  {
   "world": "Bravoria",
   "url": "https://api.tibiamarket.top/item_history?server=Bravoria&item_id=22118&start_days_ago=2000&end_days_ago=-1",
-  "retrievedAt": "2026-10-04T00:34:49.630Z",
-  "rows": 371,
-  "sha256": "0f744fb51406ebfe29b2c6dc4e743e2dff5ed4a37a1e21313a724f36a26f462d"
+  "retrievedAt": "2026-10-14T21:56:14.757Z",
+  "rows": 401,
+  "sha256": "3307397340fa1247b89f1c2f8be3b9ea0eaf725d6e658686c4c8135b01636a57"
  },
  {
   "world": "Calmera",

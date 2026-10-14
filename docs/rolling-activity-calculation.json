@@ -5,9 +5,9 @@
     "Counters for the shared portion of the two windows have not been revised."
   ],
   "worlds": 116,
-  "candidateSidePairs": 24128,
-  "calculableSideIntervals": 23095,
-  "independentlyChecked": 22854,
+  "candidateSidePairs": 24130,
+  "calculableSideIntervals": 23097,
+  "independentlyChecked": 22856,
   "mismatches": [
     {
       "world": "Descubra",

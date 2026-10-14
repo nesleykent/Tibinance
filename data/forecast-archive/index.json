@@ -1,8 +1,8 @@
 {
  "chain": {
-  "evaluations": 0,
-  "head": "3ddea6f7100c9ec935f5567a9d47ee32222192be2e40cc0d8a0d0ad226ec7ae0",
-  "records": 58
+  "evaluations": 10,
+  "head": "8b2c0bbd0b250b14fb6709b7bfee3309cc5bebf54f83e5494b271a43edd8a290",
+  "records": 59
  },
  "forecasts": [
   {
@@ -17,8 +17,18 @@
    "dataCutoff": "2026-09-28",
    "edition": "tc-world-scenarios/2026-09-28",
    "evaluation": {
-    "points": 0,
-    "weeks": []
+    "points": 52,
+    "weeks": [
+     {
+      "bias": 5.8422083125238755,
+      "coverage": 0.7692307692307693,
+      "mape": 5.842208312523875,
+      "n": 52,
+      "observationCutoff": "2026-10-14",
+      "record": "30f54d74da62ca8b2fbfc07770ea9e0e1666e6614c9b8f1665e44308f05c20c4",
+      "weekEnding": "2026-10-11"
+     }
+    ]
    },
    "evidence": {
     "repository": {
@@ -74,8 +84,18 @@
    "dataCutoff": "2026-09-28",
    "edition": "research-ledger/2026-09-28",
    "evaluation": {
-    "points": 0,
-    "weeks": []
+    "points": 10,
+    "weeks": [
+     {
+      "bias": 6.856540202961854,
+      "coverage": null,
+      "mape": 6.856540202961857,
+      "n": 10,
+      "observationCutoff": "2026-10-14",
+      "record": "16df50cda39662f34210a9153055abfc795e4bdb81655a11d44731bb53f2f484",
+      "weekEnding": "2026-10-11"
+     }
+    ]
    },
    "evidence": {
     "repository": {
@@ -139,8 +159,18 @@
    "dataCutoff": "2026-10-02",
    "edition": "tc-world-scenarios/2026-10-02",
    "evaluation": {
-    "points": 0,
-    "weeks": []
+    "points": 50,
+    "weeks": [
+     {
+      "bias": 2.1105196967697797,
+      "coverage": 0.9,
+      "mape": 3.502640795345786,
+      "n": 50,
+      "observationCutoff": "2026-10-14",
+      "record": "33d2d3f1f73d689ec6d367528ec393558872d159ec41795b1d9614a40986a220",
+      "weekEnding": "2026-10-11"
+     }
+    ]
    },
    "evidence": {
     "repository": {
@@ -196,8 +226,18 @@
    "dataCutoff": "2026-10-02",
    "edition": "research-ledger/2026-10-02",
    "evaluation": {
-    "points": 0,
-    "weeks": []
+    "points": 10,
+    "weeks": [
+     {
+      "bias": 2.8559991190102396,
+      "coverage": null,
+      "mape": 2.8559991190102427,
+      "n": 10,
+      "observationCutoff": "2026-10-14",
+      "record": "4bcd3d69edc68e694ca9950c39a00ee670c20f8067997ab21c7344aa71e5c3c5",
+      "weekEnding": "2026-10-11"
+     }
+    ]
    },
    "evidence": {
     "repository": {
@@ -261,8 +301,18 @@
    "dataCutoff": "2026-10-02",
    "edition": "tc-world-scenarios/2026-10-02",
    "evaluation": {
-    "points": 0,
-    "weeks": []
+    "points": 52,
+    "weeks": [
+     {
+      "bias": 2.298210779780539,
+      "coverage": 0.8653846153846154,
+      "mape": 3.751225867519157,
+      "n": 52,
+      "observationCutoff": "2026-10-14",
+      "record": "28418fc7a410d382410a27ce3368074d3a01f20702e812c14e8ba28fd7227897",
+      "weekEnding": "2026-10-11"
+     }
+    ]
    },
    "evidence": {
     "repository": {
@@ -319,8 +369,18 @@
    "dataCutoff": "2026-10-03",
    "edition": "tc-world-scenarios/2026-10-03",
    "evaluation": {
-    "points": 0,
-    "weeks": []
+    "points": 52,
+    "weeks": [
+     {
+      "bias": 0.43232158959385714,
+      "coverage": 1.0,
+      "mape": 1.8468012838251266,
+      "n": 52,
+      "observationCutoff": "2026-10-14",
+      "record": "419a2e481c7f3e8c5fc6ba23e96ea16bf146b6a84b8db0df5e6e793f7d576454",
+      "weekEnding": "2026-10-11"
+     }
+    ]
    },
    "evidence": {
     "repository": {
@@ -389,8 +449,18 @@
    "dataCutoff": "2026-10-03",
    "edition": "research-ledger/2026-10-03",
    "evaluation": {
-    "points": 0,
-    "weeks": []
+    "points": 10,
+    "weeks": [
+     {
+      "bias": 1.361580252029545,
+      "coverage": null,
+      "mape": 1.3779099191925013,
+      "n": 10,
+      "observationCutoff": "2026-10-14",
+      "record": "0f3d8e081e2fbec9667870bfaa12ff89837ff12b43b459ce09c228d670a38d09",
+      "weekEnding": "2026-10-11"
+     }
+    ]
    },
    "evidence": {
     "repository": {
@@ -454,8 +524,18 @@
    "dataCutoff": "2026-10-04",
    "edition": "tc-world-scenarios/2026-10-04",
    "evaluation": {
-    "points": 0,
-    "weeks": []
+    "points": 52,
+    "weeks": [
+     {
+      "bias": 0.7024288721825501,
+      "coverage": 1.0,
+      "mape": 1.9357057656945988,
+      "n": 52,
+      "observationCutoff": "2026-10-14",
+      "record": "24ccd921a65d9a4b6db3c9247f779a2f3c0071bc9f38c152dc6873746271cfdb",
+      "weekEnding": "2026-10-11"
+     }
+    ]
    },
    "evidence": {
     "repository": {
@@ -516,8 +596,18 @@
    "dataCutoff": "2026-10-04",
    "edition": "research-ledger/2026-10-04",
    "evaluation": {
-    "points": 0,
-    "weeks": []
+    "points": 10,
+    "weeks": [
+     {
+      "bias": 1.6364271248127094,
+      "coverage": null,
+      "mape": 1.6364271248127094,
+      "n": 10,
+      "observationCutoff": "2026-10-14",
+      "record": "e2bbd0e12a2340a5c33a2a7e584862f7f0fb9eec4b8f18a4382aa66f3e4dc3f0",
+      "weekEnding": "2026-10-11"
+     }
+    ]
    },
    "evidence": {
     "repository": {
@@ -626,6 +716,10 @@
     {
      "sha256": "ab6b1981553fbfb52ebd2d156b3b9348c8a0276b1e058813c5f17d5ebde800de",
      "surface": "markets-projections"
+    },
+    {
+     "sha256": "5b3f50741f9e1fa0426891c5ad382ed1c2622d33847e11e42697b4584e082e0f",
+     "surface": "markets-projections"
     }
    ],
    "product": "tc-world-scenarios",
@@ -716,8 +810,18 @@
    "dataCutoff": "2026-10-06",
    "edition": "tc-gold-challenger/2026-10-06/2026-10-04",
    "evaluation": {
-    "points": 0,
-    "weeks": []
+    "points": 26,
+    "weeks": [
+     {
+      "bias": 4.613254256275293,
+      "coverage": null,
+      "mape": 4.711154189534337,
+      "n": 26,
+      "observationCutoff": "2026-10-14",
+      "record": "2df6f4521387c1c125a6bde95da9098dd8853bb802ce36c91c976ee9ff714eb0",
+      "weekEnding": "2026-10-11"
+     }
+    ]
    },
    "evidence": {
     "repository": null,
@@ -912,6 +1016,22 @@
    "forecast": "073bbb981ac794ad3c0c6b6bdedaac74596517ad16b0f0883a916e89d52ab04f",
    "sha256": "ab6b1981553fbfb52ebd2d156b3b9348c8a0276b1e058813c5f17d5ebde800de",
    "state": "published",
+   "superseded": false,
+   "supersededBy": null,
+   "surface": "markets-projections"
+  },
+  {
+   "contentHash": "18bd2aad6511a0138cf03344162fe3505bc176ed2ba3e3b031f198648951ce3f",
+   "edition": "tc-world-scenarios/2026-10-05",
+   "evidence": {
+    "repository": null,
+    "website": null
+   },
+   "evidenceLevel": null,
+   "failures": [],
+   "forecast": "073bbb981ac794ad3c0c6b6bdedaac74596517ad16b0f0883a916e89d52ab04f",
+   "sha256": "5b3f50741f9e1fa0426891c5ad382ed1c2622d33847e11e42697b4584e082e0f",
+   "state": "archived",
    "superseded": false,
    "supersededBy": null,
    "surface": "markets-projections"
