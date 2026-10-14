@@ -2243,8 +2243,536 @@
   "worldsWithMajorityDivergent": 0,
   "worldsChecked": 101
  },
+ "divergenceByQuarter": {
+  "note": "log change on the previous quarter; quarters with at least 12 analysed weeks on both sides",
+  "quarters": [
+   {
+    "quarter": "2023Q3",
+    "worlds": 1,
+    "goldUpPriceDown": 0,
+    "goldUpPriceDownStable": 0,
+    "goldUp": 0,
+    "priceDown": 1,
+    "medianGoldChange": -0.07451876025607618,
+    "medianStableChange": -0.07451876013435665,
+    "medianDeathsChange": -0.07148664605566069,
+    "medianPriceChange": -0.011160860081220747,
+    "correlation": null
+   },
+   {
+    "quarter": "2023Q4",
+    "worlds": 1,
+    "goldUpPriceDown": 0,
+    "goldUpPriceDownStable": 0,
+    "goldUp": 1,
+    "priceDown": 0,
+    "medianGoldChange": 0.27604094266400026,
+    "medianStableChange": 0.25125303218357686,
+    "medianDeathsChange": 0.2775536064263555,
+    "medianPriceChange": 0.05796521800673027,
+    "correlation": null
+   },
+   {
+    "quarter": "2024Q1",
+    "worlds": 2,
+    "goldUpPriceDown": 1,
+    "goldUpPriceDownStable": 1,
+    "goldUp": 2,
+    "priceDown": 1,
+    "medianGoldChange": 0.0950534398655325,
+    "medianStableChange": 0.08938688240465886,
+    "medianDeathsChange": 0.4482048324589778,
+    "medianPriceChange": -0.017934070417597425,
+    "correlation": null
+   },
+   {
+    "quarter": "2024Q2",
+    "worlds": 4,
+    "goldUpPriceDown": 1,
+    "goldUpPriceDownStable": 2,
+    "goldUp": 1,
+    "priceDown": 3,
+    "medianGoldChange": -0.04145219796311039,
+    "medianStableChange": -0.027177560909787957,
+    "medianDeathsChange": -0.8599706689878337,
+    "medianPriceChange": -0.023070936442934453,
+    "correlation": -0.6774530592426785
+   },
+   {
+    "quarter": "2024Q3",
+    "worlds": 8,
+    "goldUpPriceDown": 4,
+    "goldUpPriceDownStable": 4,
+    "goldUp": 4,
+    "priceDown": 7,
+    "medianGoldChange": -0.008190486427597676,
+    "medianStableChange": -0.004391741763013712,
+    "medianDeathsChange": -0.028482802814035146,
+    "medianPriceChange": -0.03906921565966748,
+    "correlation": -0.5490133662109986
+   },
+   {
+    "quarter": "2024Q4",
+    "worlds": 9,
+    "goldUpPriceDown": 0,
+    "goldUpPriceDownStable": 0,
+    "goldUp": 9,
+    "priceDown": 0,
+    "medianGoldChange": 0.139010587126414,
+    "medianStableChange": 0.13116532714031948,
+    "medianDeathsChange": 0.1428140909878053,
+    "medianPriceChange": 0.13454389966163305,
+    "correlation": 0.026974334375665474
+   },
+   {
+    "quarter": "2025Q1",
+    "worlds": 10,
+    "goldUpPriceDown": 7,
+    "goldUpPriceDownStable": 8,
+    "goldUp": 8,
+    "priceDown": 9,
+    "medianGoldChange": 0.064852930000038,
+    "medianStableChange": 0.07029257382098208,
+    "medianDeathsChange": 0.5681822307796862,
+    "medianPriceChange": -0.02405320172065384,
+    "correlation": 0.6655197203376072
+   },
+   {
+    "quarter": "2025Q2",
+    "worlds": 9,
+    "goldUpPriceDown": 4,
+    "goldUpPriceDownStable": 4,
+    "goldUp": 4,
+    "priceDown": 9,
+    "medianGoldChange": -0.008875704860223266,
+    "medianStableChange": -0.009201910155862691,
+    "medianDeathsChange": -0.42214923578398,
+    "medianPriceChange": -0.04338931741825469,
+    "correlation": 0.26740405191043864
+   },
+   {
+    "quarter": "2025Q3",
+    "worlds": 23,
+    "goldUpPriceDown": 0,
+    "goldUpPriceDownStable": 0,
+    "goldUp": 21,
+    "priceDown": 0,
+    "medianGoldChange": 0.11015597714817815,
+    "medianStableChange": 0.11656412044998277,
+    "medianDeathsChange": -0.3378144768027518,
+    "medianPriceChange": 0.01859068042680434,
+    "correlation": -0.38766345962705917
+   },
+   {
+    "quarter": "2025Q4",
+    "worlds": 28,
+    "goldUpPriceDown": 0,
+    "goldUpPriceDownStable": 0,
+    "goldUp": 27,
+    "priceDown": 0,
+    "medianGoldChange": 0.1430510636082083,
+    "medianStableChange": 0.15000375565178636,
+    "medianDeathsChange": 0.04342426807064115,
+    "medianPriceChange": 0.1012118964921136,
+    "correlation": -0.056227014695488874
+   },
+   {
+    "quarter": "2026Q1",
+    "worlds": 46,
+    "goldUpPriceDown": 34,
+    "goldUpPriceDownStable": 33,
+    "goldUp": 36,
+    "priceDown": 41,
+    "medianGoldChange": 0.08077514627987803,
+    "medianStableChange": 0.06641156589383534,
+    "medianDeathsChange": 0.032854751196328635,
+    "medianPriceChange": -0.05201670382209844,
+    "correlation": -0.12354496793124382
+   },
+   {
+    "quarter": "2026Q2",
+    "worlds": 49,
+    "goldUpPriceDown": 36,
+    "goldUpPriceDownStable": 37,
+    "goldUp": 38,
+    "priceDown": 47,
+    "medianGoldChange": 0.06497308793453271,
+    "medianStableChange": 0.05908610556280891,
+    "medianDeathsChange": -0.09032589701204508,
+    "medianPriceChange": -0.02507141809435076,
+    "correlation": 0.6300400764390643
+   },
+   {
+    "quarter": "2026Q3",
+    "worlds": 13,
+    "goldUpPriceDown": 0,
+    "goldUpPriceDownStable": 0,
+    "goldUp": 13,
+    "priceDown": 0,
+    "medianGoldChange": 0.22630525189489958,
+    "medianStableChange": 0.21294839510188268,
+    "medianDeathsChange": 0.03602929194298099,
+    "medianPriceChange": 0.08469150291789163,
+    "correlation": -0.16771817317746202
+   }
+  ]
+ },
  "forecasting": {
-  "status": "no origin has point-in-time features yet (builds through 2024-06-01)"
+  "origins": [
+   "2024-07-07",
+   "2026-10-04"
+  ],
+  "growthWeeks": 13,
+  "featureAgeWeeks": {
+   "max": 6,
+   "mean": 2.887730968218773,
+   "distribution": {
+    "1": 2500,
+    "2": 3074,
+    "3": 3144,
+    "4": 3145,
+    "5": 1591,
+    "6": 76
+   }
+  },
+  "builds": [
+   "2024-01-01",
+   "2024-02-01",
+   "2024-03-01",
+   "2024-04-01",
+   "2024-05-01",
+   "2024-06-01",
+   "2024-07-01",
+   "2024-08-01",
+   "2024-09-01",
+   "2024-10-01",
+   "2024-11-01",
+   "2024-12-01",
+   "2025-01-01",
+   "2025-02-01",
+   "2025-03-01",
+   "2025-04-01",
+   "2025-05-01",
+   "2025-06-01",
+   "2025-07-01",
+   "2025-08-01",
+   "2025-09-01",
+   "2025-10-01",
+   "2025-11-01",
+   "2025-12-01",
+   "2026-01-01",
+   "2026-02-01",
+   "2026-03-01",
+   "2026-04-01",
+   "2026-05-01",
+   "2026-06-01",
+   "2026-07-01",
+   "2026-08-01",
+   "2026-09-01",
+   "2026-10-01"
+  ],
+  "byHorizon": {
+   "1": {
+    "n": 4884,
+    "worlds": 109,
+    "origins": 112,
+    "models": {
+     "constant": {
+      "maeLogPct": 2.1671034376423806,
+      "rmseLogPct": 3.9230661523478565,
+      "mape": 2.1444473462758915,
+      "smape": 2.1646467537748277,
+      "biasLogPct": -0.32731963658317975
+     },
+     "drift": {
+      "maeLogPct": 2.189952285866282,
+      "rmseLogPct": 3.918222474049681,
+      "mape": 2.173519684172668,
+      "smape": 2.1875160383052465,
+      "biasLogPct": -0.040514368634260785,
+      "dmVsConstant": {
+       "stat": -0.28776716901869825,
+       "p": 0.7735249701113767
+      }
+     },
+     "A": {
+      "maeLogPct": 2.1778721035402504,
+      "rmseLogPct": 3.9053143814404514,
+      "mape": 2.162710717780461,
+      "smape": 2.1754456155306783,
+      "biasLogPct": 0.01815301885204188,
+      "dmVsConstant": {
+       "stat": -0.8308242008378992,
+       "p": 0.406072949004739
+      },
+      "dmVsDrift": {
+       "stat": -2.613342782855093,
+       "p": 0.008966132482709277
+      }
+     },
+     "B": {
+      "maeLogPct": 2.1810219783353744,
+      "rmseLogPct": 3.9121919810469743,
+      "mape": 2.165165812883482,
+      "smape": 2.178584410443231,
+      "biasLogPct": -0.0015868340726321402,
+      "dmVsConstant": {
+       "stat": -0.6812963591867753,
+       "p": 0.49568398657538193
+      },
+      "dmVsDrift": {
+       "stat": -1.810829645939871,
+       "p": 0.07016722574016088
+      }
+     },
+     "C": {
+      "maeLogPct": 2.1789651248468718,
+      "rmseLogPct": 3.9092453841859416,
+      "mape": 2.1633611402191386,
+      "smape": 2.1765313903937678,
+      "biasLogPct": 0.008405158246243454,
+      "dmVsConstant": {
+       "stat": -0.7545983231680083,
+       "p": 0.4504900301085657
+      },
+      "dmVsDrift": {
+       "stat": -2.1243736796339197,
+       "p": 0.033638909092586156
+      }
+     },
+     "D": {
+      "maeLogPct": 2.181764895892818,
+      "rmseLogPct": 3.9101379658858777,
+      "mape": 2.1669361024027447,
+      "smape": 2.1793343159039953,
+      "biasLogPct": 0.019406288187485868,
+      "dmVsConstant": {
+       "stat": -0.7524034751464899,
+       "p": 0.4518084573780383
+      },
+      "dmVsDrift": {
+       "stat": -2.029363091186747,
+       "p": 0.0424213215328022
+      }
+     },
+     "E": {
+      "maeLogPct": 2.1926134047820556,
+      "rmseLogPct": 3.9124474490667325,
+      "mape": 2.1776009292678844,
+      "smape": 2.1901812853009415,
+      "biasLogPct": 0.02206780624428221,
+      "dmVsConstant": {
+       "stat": -0.40540519064906416,
+       "p": 0.6851796961608385
+      },
+      "dmVsDrift": {
+       "stat": -0.5611007045299278,
+       "p": 0.5747288879018766
+      }
+     }
+    }
+   },
+   "4": {
+    "n": 4551,
+    "worlds": 108,
+    "origins": 106,
+    "models": {
+     "constant": {
+      "maeLogPct": 4.17101311374709,
+      "rmseLogPct": 7.568557377231949,
+      "mape": 4.036472826102332,
+      "smape": 4.155712414898286,
+      "biasLogPct": -1.157699344971665
+     },
+     "drift": {
+      "maeLogPct": 4.45972934506709,
+      "rmseLogPct": 7.65857476671759,
+      "mape": 4.367556142559477,
+      "smape": 4.444621898586224,
+      "biasLogPct": -0.18259603842985533,
+      "dmVsConstant": {
+       "stat": 0.8314459085283572,
+       "p": 0.4057217735624894
+      }
+     },
+     "A": {
+      "maeLogPct": 4.412871839095813,
+      "rmseLogPct": 7.611262190596231,
+      "mape": 4.329557183009528,
+      "smape": 4.398048561038406,
+      "biasLogPct": -0.0002231763289121064,
+      "dmVsConstant": {
+       "stat": 0.6821788775365675,
+       "p": 0.49512584920174296
+      },
+      "dmVsDrift": {
+       "stat": -0.5724161566345431,
+       "p": 0.5670400727032732
+      }
+     },
+     "B": {
+      "maeLogPct": 4.454006240551353,
+      "rmseLogPct": 7.6580253939890905,
+      "mape": 4.366759440581572,
+      "smape": 4.438967830783293,
+      "biasLogPct": -0.02340588103593731,
+      "dmVsConstant": {
+       "stat": 0.8394623461210343,
+       "p": 0.4012099104644502
+      },
+      "dmVsDrift": {
+       "stat": 0.48173930627046546,
+       "p": 0.6299911498646402
+      }
+     },
+     "C": {
+      "maeLogPct": 4.435584115772646,
+      "rmseLogPct": 7.637809312317955,
+      "mape": 4.350263403650296,
+      "smape": 4.4206353767065565,
+      "biasLogPct": 0.002215090805473264,
+      "dmVsConstant": {
+       "stat": 0.778109704150296,
+       "p": 0.43650434232470614
+      },
+      "dmVsDrift": {
+       "stat": 0.2262248342695489,
+       "p": 0.8210265562834029
+      }
+     },
+     "D": {
+      "maeLogPct": 4.473631528154006,
+      "rmseLogPct": 7.65655567151855,
+      "mape": 4.389005040391033,
+      "smape": 4.458733173405337,
+      "biasLogPct": 0.006082983217208203,
+      "dmVsConstant": {
+       "stat": 0.8557996610982053,
+       "p": 0.39210860272181414
+      },
+      "dmVsDrift": {
+       "stat": 0.49955764384969925,
+       "p": 0.6173865884154464
+      }
+     },
+     "E": {
+      "maeLogPct": 4.3927196935155575,
+      "rmseLogPct": 7.61758810847897,
+      "mape": 4.309190019008515,
+      "smape": 4.377768216138879,
+      "biasLogPct": -0.05185891644602308,
+      "dmVsConstant": {
+       "stat": 0.5259351694878376,
+       "p": 0.5989332520669812
+      },
+      "dmVsDrift": {
+       "stat": -0.7623838617705735,
+       "p": 0.4458309352466825
+      }
+     }
+    }
+   },
+   "13": {
+    "n": 3725,
+    "worlds": 89,
+    "origins": 88,
+    "models": {
+     "constant": {
+      "maeLogPct": 8.021761532785709,
+      "rmseLogPct": 12.5276761544079,
+      "mape": 7.6259808475269555,
+      "smape": 7.970449199022116,
+      "biasLogPct": -2.1684459628026698
+     },
+     "drift": {
+      "maeLogPct": 10.04128170919765,
+      "rmseLogPct": 13.94599291075107,
+      "mape": 9.921632094775836,
+      "smape": 9.985646301707108,
+      "biasLogPct": 0.4722666095802965,
+      "dmVsConstant": {
+       "stat": 1.9761031226838899,
+       "p": 0.048143098835779385
+      }
+     },
+     "A": {
+      "maeLogPct": 10.42234781061963,
+      "rmseLogPct": 14.197034236495906,
+      "mape": 10.344735228010677,
+      "smape": 10.366363666862762,
+      "biasLogPct": 0.7532885154135018,
+      "dmVsConstant": {
+       "stat": 2.1019174891056798,
+       "p": 0.03556050424744561
+      },
+      "dmVsDrift": {
+       "stat": 0.35501806592502516,
+       "p": 0.7225760570232334
+      }
+     },
+     "B": {
+      "maeLogPct": 10.730746006854536,
+      "rmseLogPct": 14.427953468672555,
+      "mape": 10.66928840444354,
+      "smape": 10.673635034174895,
+      "biasLogPct": 0.9309216891712726,
+      "dmVsConstant": {
+       "stat": 2.113480791167276,
+       "p": 0.034559637411128774
+      },
+      "dmVsDrift": {
+       "stat": 0.5751020087956438,
+       "p": 0.5652223094577802
+      }
+     },
+     "C": {
+      "maeLogPct": 10.66596651263293,
+      "rmseLogPct": 14.361290307432895,
+      "mape": 10.60388585541403,
+      "smape": 10.609386337422391,
+      "biasLogPct": 0.9222876278106575,
+      "dmVsConstant": {
+       "stat": 2.121935458962403,
+       "p": 0.03384315826317508
+      },
+      "dmVsDrift": {
+       "stat": 0.5003050106214012,
+       "p": 0.6168603265028696
+      }
+     },
+     "D": {
+      "maeLogPct": 10.661165828082126,
+      "rmseLogPct": 14.510578235382795,
+      "mape": 10.58700623662037,
+      "smape": 10.60237824187321,
+      "biasLogPct": 0.6812050314752862,
+      "dmVsConstant": {
+       "stat": 2.027496768022231,
+       "p": 0.0426116346425498
+      },
+      "dmVsDrift": {
+       "stat": 0.5542437114373688,
+       "p": 0.5794120669949254
+      }
+     },
+     "E": {
+      "maeLogPct": 9.685950171787134,
+      "rmseLogPct": 13.558608483569017,
+      "mape": 9.59770031024837,
+      "smape": 9.632902163885612,
+      "biasLogPct": 0.8021365455616852,
+      "dmVsConstant": {
+       "stat": 1.3847351486297799,
+       "p": 0.16613346729994172
+      },
+      "dmVsDrift": {
+       "stat": -2.0975704465752725,
+       "p": 0.035943108044374616
+      }
+     }
+    }
+   }
+  }
  },
  "population": {
   "snapshot": "2026-10-13",

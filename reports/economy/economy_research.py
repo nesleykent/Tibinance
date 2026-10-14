@@ -47,6 +47,7 @@ COMPONENTS = {'A': ['directCoins'], 'B': ['npcPotential'], 'C': ['grossPotential
 MIN_COVERAGE = 0.9   # weeks whose kill coverage falls below this are excluded (and counted)
 HORIZONS = (1, 4, 13)
 GROWTH_WEEKS = 13
+MAX_FEATURE_AGE_WEEKS = 6   # monthly point-in-time builds: a feature may be up to about five weeks old at an origin
 
 
 # Data ------------------------------------------------------------------------------------------------------------
@@ -233,6 +234,32 @@ def divergence(p: pd.DataFrame) -> dict:
             'worldsWithMajorityDivergent': sum(r['divergentWeeks'] > r['weeksChecked'] / 2 for r in rows), 'worldsChecked': len(rows)}
 
 
+def divergence_by_quarter(p: pd.DataFrame) -> dict:
+    """Narrower than the rolling check: per world and calendar quarter, the change on the previous quarter of total
+    gross potential (and of the constant creature set) and of the median weekly Sell Offer. Only quarters where both
+    quarters have all 13 or so weeks are compared. Every quarter is reported, so late 2025 is read against the others
+    (seasonality) rather than alone."""
+    q = p.assign(quarter=p['week'].dt.to_period('Q'))
+    g = q.groupby(['world', 'quarter']).agg(gross=('grossPotential', 'sum'), stable=('grossStable', 'sum'), deaths=('playerDeaths', 'sum'),
+                                             ask=('ask', 'median'), weeks=('week', 'size')).reset_index()
+    full = g['weeks'] >= 12
+    g = g[full].sort_values(['world', 'quarter'])
+    for c in ('gross', 'stable', 'deaths', 'ask'):
+        g[f'd_{c}'] = np.log(g[c]).groupby(g['world']).diff()
+    g['consecutive'] = g.groupby('world')['quarter'].diff().apply(lambda d: getattr(d, 'n', None) == 1)
+    g = g[g['consecutive'] & g['d_gross'].notna() & g['d_ask'].notna()]
+    out = []
+    for quarter, x in g.groupby('quarter'):
+        div = (x['d_gross'] > 0) & (x['d_ask'] < 0)
+        out.append({'quarter': str(quarter), 'worlds': int(len(x)), 'goldUpPriceDown': int(div.sum()),
+                    'goldUpPriceDownStable': int(((x['d_stable'] > 0) & (x['d_ask'] < 0)).sum()),
+                    'goldUp': int((x['d_gross'] > 0).sum()), 'priceDown': int((x['d_ask'] < 0).sum()),
+                    'medianGoldChange': float(x['d_gross'].median()), 'medianStableChange': float(x['d_stable'].median()),
+                    'medianDeathsChange': float(x['d_deaths'].median()), 'medianPriceChange': float(x['d_ask'].median()),
+                    'correlation': float(x['d_gross'].corr(x['d_ask'])) if len(x) > 2 else None})
+    return {'note': 'log change on the previous quarter; quarters with at least 12 analysed weeks on both sides', 'quarters': out}
+
+
 # Forecasting -----------------------------------------------------------------------------------------------------
 
 def pit_growth() -> dict[pd.Timestamp, pd.DataFrame]:
@@ -254,6 +281,18 @@ def pit_growth() -> dict[pd.Timestamp, pd.DataFrame]:
             frames.append(f.reset_index())
         out[asof] = pd.concat(frames, ignore_index=True)
     return out
+
+
+def features_at(builds: dict, origin: pd.Timestamp) -> pd.DataFrame:
+    """The features known at an origin: from the latest build made by then (only evidence published by the origin),
+    each world's latest complete week on or before it (an unfinished trailing week has no growth). Monthly builds
+    leave features up to about five weeks old; the caller drops older ones and reports the age."""
+    eligible = [a for a in builds if a <= origin]
+    if not eligible:
+        return pd.DataFrame(columns=['week', 'directCoins', 'npcPotential', 'grossPotential', 'playerDeaths', 'coverage']).rename_axis('world')
+    build = builds[max(eligible)]
+    known = build[build['week'] <= origin].replace([np.inf, -np.inf], np.nan).dropna(subset=['grossPotential', 'coverage'])
+    return known.sort_values('week').groupby('world').tail(1).set_index('world')
 
 
 def dm_test(e_base, e_model, h):
@@ -281,8 +320,7 @@ def forecasting(p: pd.DataFrame) -> dict:
     origins = pd.date_range(max(asofs[0], pd.Timestamp('2024-07-07')), p['week'].max(), freq='W-SUN')
     records = []
     for origin in origins:
-        build = builds[max(a for a in asofs if a <= origin)]  # only evidence published by the origin
-        feat = build[build['week'] <= origin].sort_values('week').groupby('world').tail(1).set_index('world')
+        feat = features_at(builds, origin)
         for h in HORIZONS:
             for world, s in prices.items():
                 if origin not in s.index or (origin + pd.Timedelta(weeks=h)) not in s.index:
@@ -291,11 +329,12 @@ def forecasting(p: pd.DataFrame) -> dict:
                 if not (p0 and p1 and p0 > 0 and p1 > 0) or world not in feat.index:
                     continue
                 x = feat.loc[world]
-                if not (x['coverage'] >= MIN_COVERAGE) or x['week'] < origin - pd.Timedelta(weeks=2):
+                if not (x['coverage'] >= MIN_COVERAGE) or x['week'] < origin - pd.Timedelta(weeks=MAX_FEATURE_AGE_WEEKS):
                     continue
                 records.append({'origin': origin, 'h': h, 'world': world, 'y': math.log(p1 / p0), 'p0': p0, 'p1': p1,
+                                'age': int((origin - x['week']).days // 7),
                                 **{f'x_{c}': x[c] for c in ('directCoins', 'npcPotential', 'grossPotential', 'playerDeaths')}})
-    data = pd.DataFrame(records).dropna()
+    data = pd.DataFrame(records).replace([np.inf, -np.inf], np.nan).dropna()
     if data.empty:
         return {'status': 'no origin has point-in-time features yet (builds through ' + str(asofs[-1].date()) + ')'}
     models = {'drift': [], 'A': ['x_directCoins'], 'B': ['x_npcPotential'], 'C': ['x_grossPotential'], 'D': ['x_directCoins', 'x_npcPotential'],
@@ -316,7 +355,9 @@ def forecasting(p: pd.DataFrame) -> dict:
             for i, (_, t) in enumerate(test.iterrows()):
                 preds.append({'h': h, 'origin': origin, 'world': t['world'], 'y': t['y'], 'p0': t['p0'], 'p1': t['p1'], **{k: float(v[i]) for k, v in row.items()}})
     pr = pd.DataFrame(preds)
-    out = {'origins': [str(origins[0].date()), str(origins[-1].date())] if len(origins) else None, 'growthWeeks': GROWTH_WEEKS, 'byHorizon': {}}
+    out = {'origins': [str(origins[0].date()), str(origins[-1].date())] if len(origins) else None, 'growthWeeks': GROWTH_WEEKS,
+           'featureAgeWeeks': {'max': MAX_FEATURE_AGE_WEEKS, 'mean': float(data['age'].mean()), 'distribution': {str(k): int(v) for k, v in data['age'].value_counts().sort_index().items()}},
+           'builds': [str(a.date()) for a in asofs], 'byHorizon': {}}
     for h in HORIZONS:
         q = pr[pr['h'] == h]
         if q.empty:
@@ -383,7 +424,7 @@ def clean(o):
 def main():
     p, meta = panel()
     results = {'format': 1, 'meta': meta, 'minCoverage': MIN_COVERAGE, 'levels': levels(p), 'unitRoots': unit_roots(p), 'changes': changes(p),
-               'divergence': divergence(p), 'forecasting': forecasting(p), 'population': population(p),
+               'divergence': divergence(p), 'divergenceByQuarter': divergence_by_quarter(p), 'forecasting': forecasting(p), 'population': population(p),
                'reference': 'The owner recalls about 45% of TC price variation explained by gold generation in earlier work; it is a reference, not a target, and nothing here is tuned toward it.'}
     OUT.write_text(json.dumps(clean(results), indent=1, allow_nan=False) + '\n')
     print(json.dumps(meta))

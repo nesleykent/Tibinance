@@ -160,6 +160,12 @@ try {
   assert.doesNotMatch(findings,/not available/);
   assert.match(findings,/R²/);
   assert.match(findings,/associations, not causes/);
+  // The out-of-sample verdict is read from the results, not written into the page.
+  const results=await load('reports/economy/results.json');
+  const fc=results.forecasting.byHorizon;
+  const beaten=Object.values(fc).some(x=>['A','B','C','D','E'].some(m=>x.models[m].maeLogPct<x.models.constant.maeLogPct));
+  assert.match(findings,beaten ? /beats no change at some horizon/ : /No gold-based specification beats the no-change forecast at any horizon/);
+  for (const [h,x] of Object.entries(fc)) assert.ok(findings.includes(`no change ${x.models.constant.maeLogPct.toFixed(2)}%`),`horizon ${h}`);
   await page.click('.eco-provenance summary');
   const provenance=await text('#provenance');
   for (const k of index.killstats) assert.ok(provenance.includes(k.commit.slice(0,7)),`kill statistics ${k.repo} at its commit`);

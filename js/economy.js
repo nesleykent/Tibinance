@@ -184,17 +184,30 @@ function renderFindings() {
   if (!R) { $('findings').innerHTML = '<p>The research results are not available.</p>'; return; }
   const lv = R.levels, ch = R.changes;
   const r2 = k => (lv[k] ? lv[k].pooled.r2.toFixed(2) : 'N/A');
+  // Out of sample: each gold-based specification (A to E) against the no-change forecast, at identical origins.
   const fc = R.forecasting?.byHorizon;
-  const forecastLine = fc ? Object.entries(fc).map(([h, x]) => {
-    const best = Object.entries(x.models).filter(([m]) => m !== 'constant').sort((a, b) => a[1].maeLogPct - b[1].maeLogPct)[0];
-    return `${h} week${h === '1' ? '' : 's'} ahead: no-change error ${x.models.constant.maeLogPct.toFixed(2)}%, best gold model ${best[0]} ${best[1].maeLogPct.toFixed(2)}%`;
-  }).join('; ') : 'out-of-sample results are pending';
+  const GOLD_MODELS = ['A', 'B', 'C', 'D', 'E'];
+  const horizons = fc ? Object.entries(fc).map(([h, x]) => {
+    const [best, b] = GOLD_MODELS.filter(m => x.models[m]).map(m => [m, x.models[m]]).sort((a, c) => a[1].maeLogPct - c[1].maeLogPct)[0];
+    return { h, n: x.n, constant: x.models.constant.maeLogPct, best, mae: b.maeLogPct, beats: b.maeLogPct < x.models.constant.maeLogPct };
+  }) : [];
+  const forecastLine = horizons.length
+    ? `${horizons.map(x => `${x.h} week${x.h === '1' ? '' : 's'} ahead, no change ${x.constant.toFixed(2)}% against the best gold-based specification (${x.best}) ${x.mae.toFixed(2)}%`).join('; ')} (mean absolute error of the log price, ${fmt(horizons[0].n)} or fewer forecasts per horizon, point-in-time gold data only). ${horizons.some(x => x.beats) ? 'A gold-based specification beats no change at some horizon; see the notes for its significance.' : 'No gold-based specification beats the no-change forecast at any horizon, so none is used in the Projections.'}`
+    : 'Out-of-sample results are pending.';
+  // Gold up and price down, quarter on previous quarter, in the quarters of late 2025 and 2026.
+  const quarters = (R.divergenceByQuarter?.quarters ?? []).filter(q => q.quarter >= '2025Q3' && q.worlds >= 10);
+  const split = quarters.filter(q => q.goldUpPriceDown > q.worlds / 2), q = x => x.quarter.replace('Q', ' Q');
+  const divergenceLine = quarters.length
+    ? `Quarter on quarter, gold potential rose while the Sell Offer fell in ${quarters.map(x => `${fmt(x.goldUpPriceDown)} of ${fmt(x.worlds)} worlds in ${q(x)}`).join(', ')}. ${split.length
+      ? `Most worlds split only in ${split.map(q).join(' and ')}; with the constant creature set the counts are ${split.map(x => `${fmt(x.goldUpPriceDownStable)} of ${fmt(x.worlds)}`).join(' and ')}, so newly valued creatures do not explain it.`
+      : 'In no quarter did most worlds split.'}`
+    : `In ${fmt(R.divergence.worldsWithMajorityDivergent)} of ${fmt(R.divergence.worldsChecked)} worlds did most weeks between August 2025 and February 2026 combine rising gold potential with falling prices.`;
   $('findings').innerHTML = `
-    <p><strong>Association in levels.</strong> Across ${fmt(R.meta.worlds)} worlds and ${fmt(R.meta.analysedWeeks)} world-weeks, the log of gross potential accounts for an R² of ${r2('ask.C')} of the log Sell Offer and ${r2('bid.C')} of the log Buy Offer (pooled); direct coins alone ${r2('ask.A')} and ${r2('bid.A')}. Within worlds over time the share is far smaller (R² ${lv['ask.C'].withinWorld.r2Within.toFixed(2)}). Most price and gold series are not stationary, so level associations can be spurious.</p>
+    <p><strong>Association in levels.</strong> Across ${fmt(R.meta.worlds)} worlds and ${fmt(R.meta.analysedWeeks)} world-weeks, the log of gross potential gives an R² of ${r2('ask.C')} against the log Sell Offer and ${r2('bid.C')} against the log Buy Offer (pooled); direct coins alone ${r2('ask.A')} and ${r2('bid.A')}. Most of it is between worlds: worlds that generate more gold have higher prices. Within worlds over time the share is far smaller (R² ${lv['ask.C'].withinWorld.r2Within.toFixed(2)}). Most price and gold series are not stationary, so level associations can be spurious.</p>
     <p><strong>Week-to-week changes.</strong> With world and week effects, changes in gold potential explain little of price changes (within R² at most ${Math.max(...Object.values(ch).map(x => x.r2Within)).toFixed(2)}).</p>
-    <p><strong>Late 2025.</strong> In ${fmt(R.divergence.worldsWithMajorityDivergent)} of ${fmt(R.divergence.worldsChecked)} worlds did most weeks between August 2025 and February 2026 combine rising gold potential with falling prices.</p>
-    <p><strong>Forecasting.</strong> ${esc(forecastLine)}.</p>
-    <p>These are associations, not causes. An R² is not the share of a price "caused" by gold. Details, specifications and limits: <a href="${REPO}/tree/main/reports/economy">the economy research notes</a> and <a href="${REPO}/blob/main/docs/economy.md">the methodology</a>. The owner's earlier figure of about 45% is a reference, never a target.</p>`;
+    <p><strong>Gold up, prices down.</strong> ${esc(divergenceLine)}</p>
+    <p><strong>Forecasting.</strong> ${esc(forecastLine)}</p>
+    <p>These are associations, not causes. An R² is not the share of a price "caused" by gold. Details, specifications and limits: <a href="${REPO}/tree/main/reports/economy">the economy research notes</a> and <a href="${REPO}/blob/main/docs/economy.md">the methodology</a>. An earlier estimate of about 45% is a reference here, never a target.</p>`;
 }
 
 function renderProvenance() {

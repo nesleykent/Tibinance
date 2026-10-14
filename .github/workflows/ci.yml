@@ -58,6 +58,8 @@ jobs:
         run: |
           python -m unittest discover -s tools/forecasts -p 'test_*.py'
           python tools/forecasts/reproduce.py --all
+      - name: Economy econometrics rules (synthetic data; the full run needs local caches)
+        run: python -m unittest discover -s reports/economy -p 'test_*.py'
       - name: Research invariants and the append-only forecast ledger
         working-directory: reports/tc-cycle
         run: python validate.py

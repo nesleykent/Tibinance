@@ -14,24 +14,33 @@ Never force-push, never reset, never redo finished work.
 
 ## Current state
 
-- **Stage:** F (interface). **The Economy page is done and committed by this commit** (not yet released). The
-  Markets "Forecast history" dock panel is next. Stages B, C and D are done; E has preliminary results with the
-  forecasting part pending.
+- **Stage:** F (interface), part 2 next. **Stage E is done and committed by this commit** (findings in
+  `reports/economy/README.md`). The Economy page is done (5699edc). Stages B, C and D are done.
 - **Production:** `release/0003` (a data release by the forecast-archive workflow on top of `release/0002`, live
   verified 543/543). **Awaiting a full release:** everything since `release/0002` that is code or a page: Stages C
   to F, including `economy.html` and the Economy link added to every page's menu. The Research pages link to
   `https://nesleykent.github.io/Tibinance/economy.html`, which 404s until a full release ships the page.
+- **Stage G decision (from Stage E):** no gold-based specification beats the no-change forecast at any horizon (1, 4
+  and 13 weeks), so no gold model enters the published Projections. The plan still asks for a prospective archived
+  challenger. Candidate: specification E (gross plus activity growth), the best at 4 and 13 weeks, generated from
+  point-in-time features. It is not built yet; it needs a daily point-in-time feature build in Actions, which in
+  turn needs the kill and loot caches.
 - **Exact next action:**
-  1. Rerun `/Users/nesleykent/Code/Tibinance/.venv/bin/python reports/economy/economy_research.py` for the
-     forecasting results, now that every point-in-time month is built (it writes strict JSON now: non-finite numbers
-     become null). The committed `results.json` is the earlier run with NaN converted to null; forecasting there is
-     pending.
-  2. Write `reports/economy/README.md` (results against hypotheses), with a narrower late-2025 divergence check and
-     the large daily swings (2023-06-02, 2023-06-05) checked against `data/events/events.json`.
-  3. Stage F, part 2: the Markets "Forecast history" dock panel (`js/forecast-archive.js` logic exists; a pane
-     layer, filters, accuracy tables). Bump the shared `?v=` tags together.
-  4. Stage G only if Stage E shows an out-of-sample gain; A2 `economy-daily.yml`; Stage H docs (`docs/economy.md`,
-     which the Economy page already links on GitHub) and a full release.
+  1. Stage F, part 2: the Markets "Forecast history" dock panel.
+     - Logic already exists in `js/forecast-archive.js`: lifecycle, `publishedBy`, `scenarioSeries`, `sameTarget`,
+       `evaluationPoints` and `metrics`.
+     - Build a dock panel with filters for as-of date, horizon, status and evidence level, using the page's world and
+       side.
+     - Add a pane-primitive layer drawing up to 3 editions over the actual chart, included in the export.
+     - Add accuracy tables split into authentic published, archived-unpublished and backtest.
+     - `data/forecast-archive/evaluations.jsonl` does not exist yet: no target week has closed with an observation
+       for the archived editions, so accuracy shows as pending.
+     - Bump the shared `?v=` tags together.
+  2. A2: `economy-daily.yml` (kill-statistics increment, `build_gold`, a weekly loot sync with the Actions cache plus
+     a recovery procedure).
+  3. G challenger, if the daily point-in-time features are in place.
+  4. H: `docs/economy.md` (the Economy page already links it on GitHub), README and project-guide updates, full test
+     and browser suites, then a full release with live verification and the final five-section report.
 
 - **Caches for this data** (local only; another agent must regenerate them):
   - `node tools/economy/ingest_killstats.mjs --full` (about 2 h);
@@ -351,9 +360,43 @@ Never force-push, never reset, never redo finished work.
     - Header, Markets and Trade browser suites updated for the five-section menu, all passing in Chrome.
     - Node suite: 194/194. `validate_site.mjs`: 8/8.
 
+- **Stage E, econometrics** (`reports/economy/economy_research.py`, `results.json`, `README.md`,
+  `test_economy_research.py`):
+  - **Point-in-time fix:** forecasting took each world's latest week, which in a point-in-time build is the
+    unfinished trailing week (NaN), so every origin was dropped. It now takes the latest complete week from the
+    latest build made by the origin (`features_at`). Features up to 6 weeks old are allowed (monthly builds), and
+    their age is reported (mean 2.9 weeks).
+  - **Out of sample:** 112 origins, 2024-07-07 to 2026-10-04. Mean absolute error in log %, no change against the
+    best gold specification:
+    - 1 week: 2.17 vs 2.18 (A);
+    - 4 weeks: 4.17 vs 4.39 (E);
+    - 13 weeks: 8.02 vs 9.69 (E).
+
+    At 13 weeks A to D are significantly worse than no change (Diebold-Mariano, p about 0.03). E beats drift at 13
+    weeks (p 0.04), and A, C and D beat drift at 1 week. None beats no change.
+  - **Narrower divergence** (`divergenceByQuarter`, quarter on quarter):
+    - gold up and Sell Offer down in 0 of 23 worlds in 2025 Q3 and 0 of 28 in 2025 Q4;
+    - 34 of 46 in 2026 Q1 and 36 of 49 in 2026 Q2;
+    - the constant creature set gives 33 and 37.
+
+    So the divergence is a first-half-2026 pattern, not a late-2025 one, and not a coverage effect. 2025 Q1 shows 7
+    of 10, which may be seasonal.
+  - **Daily swing check:** the 2023-06-02 to 06-04 spike (kills about 40 to 80 million a day on 90 worlds) is an
+    XP/Skill event with a Loot Event in `data/events/events.json`. It falls on the event days exactly, which confirms
+    the day alignment. Loot Event days (4 since 2022) are understated, because the valuation uses normal-time
+    samples.
+  - **Tests:** 13 synthetic tests:
+    - specifications never put all three components together;
+    - a missing day makes the week missing;
+    - point-in-time features never use a later build or week;
+    - quarterly counts, the Diebold-Mariano sign, and strict JSON.
+
+    They now run in `ci.yml`.
+  - **Page:** the Economy findings are computed from the results (verdict per horizon, quarterly counts), and the
+    browser test checks the verdict against `results.json`.
+
 ## In progress / remaining
 
-- E: forecasting results after the point-in-time rebuild; `reports/economy/README.md`.
 - F: Markets "Forecast history" dock panel.
 - G (conditional), A2 `economy-daily.yml`, H (docs, full suites, full release, final five-section report).
 
@@ -381,7 +424,7 @@ Never force-push, never reset, never redo finished work.
 - A2: `tools/sync_tibiamarket.mjs`, `tools/sync_market.mjs`, `tests/sync-tibiamarket.test.mjs`
 - C: `js/economy-{killstats,loot,value}.js`, `tools/economy/`, `data/economy/sources/`, `data/economy/gold/`
 - D: `tools/economy/population/`, `data/economy/population/`, `tests/economy-population.test.mjs`
-- E: `reports/economy/economy_research.py`, `reports/economy/results.json`
+- E: `reports/economy/` (`economy_research.py`, `results.json`, `README.md`, `test_economy_research.py`)
 - F: `economy.html`, `css/economy.css`, `js/economy.js`, `js/economy-data.js`, `tests/economy-data.test.mjs`,
   `tests/economy-browser.mjs`; the menus of `index.html`, `markets.html`, `trade.html`, `reports/tc-cycle/*.html`
 - `docs/economy-plan.md`, this section
