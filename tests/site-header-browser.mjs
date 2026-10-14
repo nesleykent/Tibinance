@@ -14,7 +14,7 @@ const LOCAL=[['Capture','./'],['Markets','markets.html'],['Economy','economy.htm
 const pages=[
   {name:'Capture',path:'/',ready:'#capturesLoading[hidden]',trail:['Tibinance'],trigger:'Tibinance',home:null,links:LOCAL},
   {name:'Markets',path:'/markets.html',ready:'#market[aria-busy="false"]',trail:['Tibinance','/','Markets'],trigger:'Markets',home:'./',links:LOCAL},
-  {name:'Economy',path:'/economy.html',ready:'#economy:not([hidden])',trail:['Tibinance','/','Economy'],trigger:'Economy',home:'./',links:LOCAL},
+  {name:'Economy',path:'/economy.html',ready:'#economy[aria-busy="false"]',trail:['Tibinance','/','Economy'],trigger:'Economy',home:'./',links:LOCAL},
   {name:'Trade',path:'/trade.html',ready:'#tradeResult .trade-prompt',trail:['Tibinance','/','Trade'],trigger:'Trade',home:'./',links:LOCAL},
   {name:'Research',path:'/reports/tc-cycle/',ready:'#report[aria-busy="false"]',trail:['Tibinance','/','Research'],trigger:'Research',home:SITE,
     links:[['Capture',SITE],['Markets',`${SITE}markets.html`],['Economy',`${SITE}economy.html`],['Trade',`${SITE}trade.html`],['Research','./']],

@@ -1,356 +1,207 @@
-// The Economy page in a real browser: reached from the site menu, read for what it states (figures recomputed here from
-// the same data files with js/economy-data.js), driven through its controls, and checked for what it must never do:
-// draw an unfinished period, present an assumption as an observation, rank incomparable worlds, or scroll sideways.
+// The Economy terminal in a real browser: reached from the site menu, read for what it states (every figure recomputed
+// here from the same data files with js/economy-data.js), driven through its controls like Markets, and checked for what
+// it must never do: show a figure the list and the chart disagree on, present an assumption as an observation, list a
+// retired world as active, or scroll sideways.
 // Run with the same local server / Playwright environment as markets-browser.mjs (TIBINANCE_BROWSER=webkit for WebKit).
-// Set TIBINANCE_SCREENSHOTS to a directory to keep full-page screenshots for inspection.
+// Set TIBINANCE_SCREENSHOTS to a directory to keep screenshots for inspection.
 import {createRequire} from 'node:module';
 import {mkdir,readFile} from 'node:fs/promises';
 import {join} from 'node:path';
 import assert from 'node:assert/strict';
 import {fmt} from '../js/format.js';
-import {periodOf,previousPeriod,sumPeriod,growth,series,withLiquidation} from '../js/economy-data.js';
+import {MEASURES,ratePeriods,rangeChange,contributions,periodOf} from '../js/economy-data.js';
 const require=createRequire(import.meta.url);
 const {chromium,webkit}=require(process.env.TIBINANCE_NODE_MODULES ? `${process.env.TIBINANCE_NODE_MODULES}/playwright` : 'playwright');
 const engine=process.env.TIBINANCE_BROWSER ?? 'chrome';
 const root=process.env.TIBINANCE_TEST_URL ?? 'http://127.0.0.1:8765';
 const shots=process.env.TIBINANCE_SCREENSHOTS;
 const load=async path=>JSON.parse(await readFile(new URL(`../${path}`,import.meta.url),'utf8'));
-const index=await load('data/economy/gold/index.json');
-const antica=await load('data/economy/gold/worlds/antica.json');
+const overview=await load('data/economy/gold/overview.json');
+const daily=async dir=>load(`data/economy/gold/worlds/${dir}.json`);
 const gold=n=>fmt(Math.round(n));
-const pct=v=>`${(100*v).toFixed(1)}%`;
+const percent=new Intl.NumberFormat('en-US',{style:'percent',minimumFractionDigits:2,maximumFractionDigits:2,signDisplay:'exceptZero'});
+// The latest complete period of a world at an interval, and its change over a range: the page's own arithmetic.
+const expected=async(dir,interval,measure,range)=>{
+  const periods=ratePeriods(await daily(dir),interval),field=MEASURES[measure].field;
+  const last=periods.findLast(p=>p.rate.grossPotential!==null);
+  return {last,value:last.rate[field],rates:last.rate,change:rangeChange(periods,field,range)};
+};
 
 const browser=await (engine==='webkit' ? webkit.launch({headless:true}) : chromium.launch({headless:true,...(process.env.TIBINANCE_CHROME ? {executablePath:process.env.TIBINANCE_CHROME} : {channel:'chrome'})}));
 try {
   if (shots) await mkdir(shots,{recursive:true});
-  const context=await browser.newContext({locale:'en-US',viewport:{width:1440,height:900}});
+  const context=await browser.newContext({locale:'en-US',viewport:{width:1440,height:900},acceptDownloads:true});
+  // Every run starts with the dock as a first visit leaves it.
+  await context.addInitScript(()=>{ if (!sessionStorage.getItem('seeded')) { localStorage.removeItem('tibinance.economy.dock'); sessionStorage.setItem('seeded','1'); } });
   const page=await context.newPage();
-  const expectedFailures=new Set();
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
-  page.on('console',m=>{if(m.type()==='error' && !(expectedFailures.has(m.location().url) && /503|ERR_FAILED/.test(m.text()))) errors.push(m.text());});
+  page.on('console',m=>{if(m.type()==='error') errors.push(m.text());});
   await page.route('**/data/observations.json',r=>r.fulfill({json:[]}));
-  const text=selector=>page.$eval(selector,e=>e.innerText.trim().replace(/\s+/g,' '));
-  // Headings are set in small capitals by CSS: their words are read as written.
-  const words=selector=>page.$eval(selector,e=>e.textContent.trim().replace(/\s+/g,' '));
-  const tiles=()=>page.$$eval('#tiles .eco-tile',ts=>ts.map(t=>({cls:t.className,label:t.querySelector('.eco-label').textContent,value:t.querySelector('.eco-value').textContent,sub:t.querySelector('.eco-sub')?.textContent ?? ''})));
-  const ready=()=>page.waitForSelector('#economy:not([hidden])',{timeout:60000});
+  const text=sel=>page.$eval(sel,e=>e.innerText.trim().replace(/\s+/g,' '));
+  const ready=()=>page.waitForFunction(()=>document.getElementById('economy').getAttribute('aria-busy')==='false',{timeout:60000});
+  const param=name=>new URL(page.url()).searchParams.get(name);
+  const row=world=>page.$eval(`#worlds tr[data-world="${world}"]`,tr=>[...tr.cells].map(c=>c.textContent.trim()));
+  const listed=()=>page.$$eval('#worlds tr[data-world]',trs=>trs.map(tr=>tr.dataset.world));
+  const shown=async world=>{await page.waitForFunction(w=>document.getElementById('world').textContent===w,world);await ready();await page.waitForTimeout(100);};
 
-  // Reached from the site menu.
+  // ---- Reached from the site menu; Antica, gross potential, by week, over a year.
   await page.goto(`${root}/`);
   await page.click('header.site [data-site-menu]');
   await page.click('#site-menu a[href="economy.html"]');
   await ready();
   assert.equal(await page.title(),'Tibinance Economy');
   assert.equal(await page.getAttribute('#site-menu a[aria-current="page"]','href'),'economy.html');
+  assert.equal(await text('#world'),'Antica');
+  assert.deepEqual([param('world'),param('measure'),param('interval'),param('range')],['Antica','gross','week','1Y']);
 
-  // With no period in the address: Antica, by month, at the latest complete month (an unfinished one would read as a
-  // fall), and the address says so.
-  const months=series(antica,'month').filter(p=>p.covered>0);
-  const latest=months.findLast(p=>p.complete);
-  assert.equal(await text('#ecoWorld'),'Antica');
-  assert.equal(await page.$eval('#period',s=>s.value),latest.start);
-  assert.equal(new URL(page.url()).searchParams.get('period'),latest.start);
-  const incomplete=months.filter(p=>!p.complete).map(p=>p.start);
-  assert.deepEqual(await page.$$eval('#period option',os=>os.filter(o=>o.textContent.endsWith('(incomplete)')).map(o=>o.value).sort()),incomplete.sort());
-  const s=index.worlds.find(w=>w.world==='Antica');
-  assert.match(await text('#ecoSpan'),new RegExp(`Kill days ${antica.first} to .*${fmt(s.recovered)} recovered exactly from weekly counts.*Kill coverage ${pct(s.killCoverage).replace('.','\\.')}`));
+  // ---- The status: the latest complete week in gold per day, its change over the range, all three measures.
+  let e=await expected('antica','week','gross','1Y');
+  assert.equal(await text('#lastValue'),gold(e.value));
+  assert.equal(await text('#lastChange'),`${e.change.delta>0?'+':''}${fmt(Math.round(e.change.delta))} ${percent.format(e.change.ratio)}`);
+  assert.equal(await text('#lastRange'),'1Y');
+  assert.deepEqual([await text('#measureGross'),await text('#measureCoins'),await text('#measureNpc')],[gold(e.rates.grossPotential),gold(e.rates.directCoins),gold(e.rates.npcPotential)]);
+  assert.equal(await page.getAttribute('#measure [data-measure="gross"]','aria-checked'),'true');
+  // The readout at rest: the latest complete week, its measures, kills with their coverage, players killed.
+  const legend=await text('#legend');
+  assert.match(legend,new RegExp(`^Week ${e.last.start} to ${e.last.end.slice(5)}`,'i'));
+  for (const name of ['Gross potential','Direct coins','NPC potential','Kills','Players killed']) assert.ok(legend.includes(name),`${name} in the readout`);
+  assert.ok(legend.includes(`${(100*e.last.killCoverage).toFixed(1)}% valued`));
+  assert.match(await page.getAttribute('#chart','aria-label'),/^Antica, gross potential from valued creatures in gold per day, by week, range 1Y\./);
+  const lastDay=(await daily('antica')).first;
+  assert.match(await text('#through'),/Kill days through \d{4}-\d\d-\d\d$/);
+  assert.ok(lastDay);
 
-  // September 2025: the three quantities from valued creatures, apart, with their coverage and the change on August.
-  await page.goto(`${root}/economy.html?world=Antica&unit=month&period=2025-09-01`);
-  await ready();
-  const sep=sumPeriod(antica,['2025-09-01','2025-09-30']),aug=sumPeriod(antica,['2025-08-01','2025-08-31']);
-  assert.equal(sep.complete,true);
-  let t=await tiles();
-  assert.deepEqual(t.slice(0,5).map(x=>[x.label,x.value]),[
-    ['Gross potential from valued creatures',gold(sep.grossPotential)],
-    ['Direct coin drops from valued creatures',gold(sep.directCoins)],
-    ['Potential NPC conversion from valued creatures',gold(sep.npcPotential)],
-    ['Kill coverage',pct(sep.killCoverage)],
-    ['Players killed by creatures',fmt(sep.playerDeaths)]]);
-  const g=growth(sep,aug).value;
-  assert.ok(t[0].sub.startsWith(`${g>=0?'+':''}${pct(g)} on August 2025`));
-  assert.match(t[2].sub,/Potential, not observed issuance/);
-  assert.match(t[3].sub,new RegExp(`${fmt(sep.killsValued)} of ${fmt(sep.kills)} kills valued, .* unvalued; 30 of 30 days with data`));
-  // No active-population history: the per-character figure says it is unavailable, and why.
-  assert.equal(t.at(-1).label,'Gold per active character');
-  assert.equal(t.at(-1).value,'Unavailable');
-  assert.ok(t.every(x=>!x.cls.includes('assumption')),'no assumption without a chosen scenario');
+  // ---- The watchlist: the active worlds, the selected one marked, its figures equal to the chart's.
+  const active=overview.worlds.filter(w=>!w.ended).map(w=>w.world).sort((a,b)=>a.localeCompare(b));
+  assert.deepEqual(await listed(),active);
+  assert.equal(await text('#worldCount'),String(active.length));
+  assert.equal(await page.getAttribute('#worlds tr[data-world="Antica"]','aria-selected'),'true');
+  assert.deepEqual((await row('Antica')).slice(1),[gold(e.value),percent.format(e.change.ratio)],'the list and the chart agree');
+  // Sorted by gold per day, largest first, then back by name.
+  await page.click('table.watch th button[data-sort="value"]');
+  const values=await page.$$eval('#worlds tr[data-world] td:nth-child(2)',tds=>tds.map(td=>Number(td.textContent.replace(/,/g,''))).filter(Number.isFinite));
+  assert.ok(values.every((v,i)=>i===0||values[i-1]>=v),'largest first');
+  assert.equal(await page.getAttribute('table.watch th:nth-child(2)','aria-sort'),'descending');
+  await page.click('table.watch th button[data-sort="world"]');
+  // A retired world appears when a search names it, marked R.
+  const retired=overview.worlds.find(w=>w.ended);
+  assert.ok(!(await listed()).includes(retired.world));
+  await page.fill('#filter',retired.world.toLowerCase());
+  assert.ok((await listed()).includes(retired.world));
+  assert.equal(await page.$eval(`#worlds tr[data-world="${retired.world}"] .flag-retired`,f=>f.textContent),'R');
+  await page.fill('#filter','');
 
-  // A hypothetical liquidation rate is a labelled assumption beside the observations, never in place of them.
+  // ---- Another world from the list: the chart, the status and the address follow.
+  await page.click('#worlds tr[data-world="Gentebra"] .pick');
+  await shown('Gentebra');
+  assert.equal(param('world'),'Gentebra');
+  e=await expected('gentebra','week','gross','1Y');
+  assert.equal(await text('#lastValue'),gold(e.value));
+  assert.equal(await text('#detailLast'),gold(e.value));
+  assert.equal(await text('#detailsWorld'),'Gentebra');
+  // Up and Down move through the list, as on Markets.
+  await page.focus('#worlds tr[data-world="Gentebra"] .pick');
+  await page.keyboard.press('ArrowDown');
+  const next=active[active.indexOf('Gentebra')+1];
+  await shown(next);
+  await page.click('#worlds tr[data-world="Antica"] .pick');
+  await shown('Antica');
+
+  // ---- The measure: coins, in the Sell colour; the list follows.
+  await page.click('#measure [data-measure="coins"]');
+  e=await expected('antica','week','coins','1Y');
+  assert.equal(await text('#lastValue'),gold(e.value));
+  assert.equal(param('measure'),'coins');
+  assert.equal((await row('Antica'))[1],gold(e.value));
+  assert.equal(await text('#detailLastLabel'),'Direct coins per day');
+
+  // ---- The interval: months; then the range from the performance tiles.
+  await page.click('#interval [data-interval="month"]');
+  e=await expected('antica','month','coins','1Y');
+  assert.equal(await text('#lastValue'),gold(e.value));
+  assert.equal((await row('Antica'))[1],gold(e.value),'the list follows the interval');
+  const tiles=await page.$$eval('#detailPerformance button',bs=>bs.map(b=>[b.dataset.range,b.querySelector('.perf-value').textContent]));
+  for (const [range,value] of tiles) {
+    const c=(await expected('antica','month','coins',range)).change;
+    assert.equal(value,c ? percent.format(c.ratio) : 'N/A',`performance ${range}`);
+  }
+  await page.click('#detailPerformance [data-range="3M"]');
+  assert.equal(await text('#lastRange'),'3M');
+  assert.equal(await page.getAttribute('#range [data-range="3M"]','aria-checked'),'true');
+  assert.equal(param('range'),'3M');
+  await page.click('#measure [data-measure="gross"]');
+  await page.click('#range [data-range="1Y"]');
+
+  // ---- The TC Sell Offer, on request, on its own scale; named as a median of observed days.
+  await page.click('#priceToggle');
+  assert.equal(await page.getAttribute('#priceToggle','aria-pressed'),'true');
+  assert.match(await text('#legend'),/TC Sell Offer [\d,]+ median of \d+ days?/);
+  assert.match(await page.getAttribute('#chart','aria-label'),/median TC Sell Offer per period on the left scale/);
+  await page.click('#priceToggle');
+
+  // ---- Assumptions: a liquidation rate and the constant creature set are labelled, dashed, never in place of the measure.
+  await page.click('[data-dock-target="assumptionsPanel"]');
+  const before=await text('#lastValue');
   await page.click('#liquidation [data-rate="0.5"]');
-  t=await tiles();
-  const assumed=t.find(x=>x.cls.includes('assumption'));
-  assert.deepEqual([assumed.label,assumed.value],['Coins plus 50% of NPC potential',gold(withLiquidation(sep,0.5))]);
-  assert.match(assumed.sub,/an assumption, not an observation/);
-  assert.equal(t[0].value,gold(sep.grossPotential),'the gross potential is unchanged by a scenario');
-  assert.match(await text('#legend'),/Coins \+ 50% NPC \(assumption\)/);
-  assert.match(await words('#liqLabel'),/assumption/);
+  e=await expected('antica','month','gross','1Y');
+  assert.match(await text('#legend'),new RegExp(`Coins \\+ 50% NPC ${gold(e.rates.directCoins+0.5*e.rates.npcPotential).replace(/,/g,',')} assumption`));
+  assert.equal(await text('#lastValue'),before,'the measure is unchanged by an assumption');
+  assert.equal(param('rate'),'0.5');
+  await page.click('#stable');
+  assert.match(await text('#legend'),new RegExp(`Constant set ${gold(e.rates.grossStable)} comparison`));
+  assert.match(await page.getAttribute('#chart','aria-label'),/an assumption\. With the constant creature set/);
+  await page.click('#stable');
   await page.click('#liquidation [data-rate=""]');
-  assert.ok((await tiles()).every(x=>!x.cls.includes('assumption')));
+  assert.doesNotMatch(await text('#legend'),/assumption|comparison/);
 
-  // The constant creature set: creatures valued since the first day only.
-  await page.click('#stable');
-  t=await tiles();
-  assert.equal(t.find(t=>t.cls.includes('stable')).value,gold(sep.grossStable));
-  assert.equal(t[0].value,gold(sep.grossPotential),'gross always equals full-set coins plus NPC');
-  await page.click('#stable');
+  // ---- Creatures behind the latest complete month, the rest summed as other.
+  await page.click('[data-dock-target="creaturesPanel"]');
+  const month=await page.$eval('#creatureMonth',s=>s.value);
+  const contrib=await load('data/economy/gold/contributions/antica.json');
+  const c=contributions(contrib,periodOf(`${month}-01`,'month'));
+  const items=await page.$$eval('#creatureList li',lis=>lis.map(li=>[li.querySelector('.eco-list-name').textContent,li.querySelector('.eco-list-value').textContent]));
+  assert.equal(items.length,c.rows.length+1);
+  assert.equal(items[0][1],gold(c.rows[0].grossPotential));
+  assert.equal(items.at(-1)[0],'Other creatures');
+  assert.match(await text('#creatureNote'),new RegExp(`^${month}: ${gold(c.total.grossPotential).replace(/,/g,',')} gold of gross potential`));
 
-  // Contributions: the month's creatures, the rest summed as other, and a change only between complete months.
-  const rows=await page.$$eval('#contrib tbody tr',trs=>trs.map(tr=>[...tr.cells].map(c=>c.textContent)));
-  assert.ok(rows.length>=10);
-  assert.equal(rows.at(-1)[0],'Other creatures');
-  assert.match(await words('#contrib thead'),/Change on the previous month/);
-  assert.ok(rows.slice(0,-1).some(r=>/%$/.test(r[8])),'August and September are complete: changes are shown');
-  assert.match(await text('#contribNote'),/^Month 2025-09\. The listed creatures hold/);
-
-  // A quarter: the period follows the unit, and the tiles sum the quarter.
-  await page.click('#unit [data-unit="quarter"]');
-  const q=periodOf('2025-09-01','quarter'),qs=sumPeriod(antica,q),qp=sumPeriod(antica,previousPeriod(q,'quarter'));
-  assert.equal(await page.$eval('#period',s=>s.value),q[0]);
-  assert.equal(new URL(page.url()).searchParams.get('unit'),'quarter');
-  t=await tiles();
-  assert.equal(t[0].value,gold(qs.grossPotential));
-  assert.ok(t[0].sub.startsWith(`${growth(qs,qp).value>=0?'+':''}${pct(growth(qs,qp).value)} on Q2 2025`));
-  assert.match(await words('#contrib thead'),/Change on the previous quarter/);
-
-  // An unfinished month: the figures stand with their coverage, no change and no creature change is computed.
-  const open=months.findLast(p=>!p.complete);
-  if (open) {
-    await page.click('#unit [data-unit="month"]');
-    await page.selectOption('#period',open.start);
-    t=await tiles();
-    assert.match(t[0].sub,/^Change: not computed/);
-    assert.match(await text('#contribNote'),/No change is computed/);
-    assert.ok((await page.$$eval('#contrib tbody tr td:nth-child(9)',tds=>tds.map(td=>td.textContent))).every(v=>v==='N/A'||v===''));
-  }
-
-  // Every world in the same month: sortable, Antica marked, comparability stated rather than assumed.
-  await page.goto(`${root}/economy.html?world=Antica&unit=month&period=2025-09-01`);
-  await ready();
-  const worldRows=()=>page.$$eval('#worlds tbody tr',trs=>trs.map(tr=>({world:tr.cells[0].textContent,gross:tr.cells[1].textContent,current:tr.classList.contains('current'),note:tr.cells[tr.cells.length-1].textContent})));
-  let w=await worldRows();
-  assert.ok(w.length>50,`${w.length} worlds`);
-  assert.deepEqual(w.filter(r=>r.current).map(r=>r.world),['Antica']);
-  assert.equal(w.find(r=>r.world==='Antica').gross,gold(sep.grossPotential),'the table and the tiles agree');
-  const num=v=>Number(v.replace(/,/g,''));
-  assert.ok(w.every((r,i)=>i===0||r.gross==='N/A'||num(w[i-1].gross)>=num(r.gross)),'sorted by gross potential, largest first');
-  assert.equal(await page.getAttribute('#worlds th:nth-child(2)','aria-sort'),'descending');
-  await page.locator('#worlds button[data-sort="world"]').focus();
-  await page.keyboard.press('Enter');
-  // Rebuilding sorted rows must keep the active header keyboard-accessible in place.
-  assert.equal(await page.evaluate(()=>document.activeElement.dataset.sort),'world');
-  w=await worldRows();
-  assert.deepEqual(w.map(r=>r.world),[...w.map(r=>r.world)].sort((a,b)=>a.localeCompare(b)));
-  assert.equal(await page.getAttribute('#worlds th:nth-child(1)','aria-sort'),'ascending');
-  await page.click('#comparableOnly');
-  const comparable=await worldRows();
-  assert.ok(comparable.length>0 && comparable.length<=w.length);
-  assert.ok(comparable.every(r=>r.note==='Comparable'));
-  assert.ok(w.some(r=>r.note!=='Comparable')||comparable.length===w.length);
-
-  // The world picker in the header changes the world and the address.
-  await page.click('#site-world .site-control');
-  await page.keyboard.type('gentebra');
-  await page.keyboard.press('Enter');
-  await page.waitForFunction(()=>document.getElementById('ecoWorld').textContent==='Gentebra');
-  assert.equal(new URL(page.url()).searchParams.get('world'),'Gentebra');
-  assert.equal(await page.getAttribute('#site-world .site-control','aria-label'),'World: Gentebra');
-
-  // The chart is drawn, with its panes described.
-  assert.ok(await page.$eval('#chart',e=>e.querySelectorAll('canvas').length>0));
-  assert.match(await page.getAttribute('#chart','aria-label'),/^Gold generation potential of Gentebra per month, one chart/);
-
-  // Day and week comparisons must use those exact days, never the containing month.
-  for (const [unit, day] of [['day','2025-09-01'], ['week','2025-09-01']]) {
-    await page.goto(`${root}/economy.html?world=Antica&unit=${unit}&period=${day}`);
-    await ready();
-    await page.waitForSelector('#worlds[aria-busy="false"]');
-    const expected=sumPeriod(antica,periodOf(day,unit));
-    const anticaRow=await page.locator('#worlds tr.current').innerText();
-    assert.ok(anticaRow.includes(gold(expected.grossPotential)),`${unit} exact total`);
-    assert.ok((await words('#worlds caption')).includes(`${periodOf(day,unit)[0]} to ${periodOf(day,unit)[1]}`));
-    assert.match(await text('#contribNote'),/monthly context, not the selected day or week/);
-  }
-  // A world with no data at the requested date must not silently jump to a later period or report zero.
-  await page.goto(`${root}/economy.html?world=Antica&unit=month&period=1999-01-01`); await ready();
-  assert.equal(await page.$eval('#period',s=>s.value),'1999-01-01');
-  assert.equal((await tiles())[0].value,'N/A');
-  assert.match(await text('#chartContext'),/No data in this period/);
-  await page.goto(`${root}/economy.html?world=Antica&unit=week&period=2025-09-01`); await ready();
-  await page.waitForSelector('#worlds[aria-busy="false"]');
-  // Scenario, comparison and chart-window state survive a shared URL and reload.
-  await page.click('#liquidation [data-rate="0.75"]');
-  await page.click('#stable');
-  await page.click('#chartRange [data-range="All"]');
-  await page.reload(); await ready();
-  assert.equal(await page.getAttribute('#liquidation [data-rate="0.75"]','aria-checked'),'true');
-  assert.equal(await page.getAttribute('#stable','aria-pressed'),'true');
-  assert.equal(await page.getAttribute('#chartRange [data-range="All"]','aria-checked'),'true');
-  await page.locator('#liquidation [data-rate="0.75"]').focus();
-  await page.keyboard.press('ArrowLeft');
-  assert.equal(await page.getAttribute('#liquidation [data-rate="0.5"]','aria-checked'),'true');
-  // The data table is a keyboard-accessible equivalent of every plotted series.
-  await page.locator('.eco-chart-data summary').click();
-  assert.ok(await page.locator('#chartData tbody tr').count()>100);
-  assert.equal(await page.locator('#chart table').count(),1,'one chart instance');
-  await page.evaluate(()=>{ window.chartTable=document.querySelector('#chart table'); });
-  await page.click('#chartPrice'); await page.click('#chartActivity');
-  assert.equal(await page.evaluate(()=>window.chartTable===document.querySelector('#chart table')),true,'comparisons reuse the same chart');
-  assert.match(await text('#chartUnits'),/Left axis: median TC Sell Offer/);
-  assert.match(await text('#chartUnits'),/Bottom bars: players killed/);
-  assert.equal(await page.locator('#chart table').count(),1,'one chart with both comparisons');
-  await page.goto(`${root}/economy.html?world=Gentebra&unit=month&period=2025-09-01`); await ready();
-
-  // Findings and provenance: associations, not causes; sources at their commits.
-  const findings=await text('#findings');
-  assert.doesNotMatch(findings,/not available/);
-  assert.match(findings,/R²/);
-  assert.match(findings,/associations, not causes/);
-  // The out-of-sample verdict is read from the results, not written into the page.
+  // ---- Research and method.
+  await page.click('[data-dock-target="findingsPanel"]');
   const results=await load('reports/economy/results.json');
-  const fc=results.forecasting.byHorizon;
-  const beaten=Object.values(fc).some(x=>['A','B','C','D','E'].some(m=>x.models[m].maeLogPct<x.models.constant.maeLogPct));
-  assert.match(findings,beaten ? /beats no change at some horizon/ : /No gold-based specification beats the no-change forecast at any horizon/);
-  for (const [h,x] of Object.entries(fc)) assert.ok(findings.includes(`no change ${x.models.constant.maeLogPct.toFixed(2)}%`),`horizon ${h}`);
-  await page.click('.eco-provenance summary');
-  const provenance=await text('#provenance');
-  for (const k of index.killstats) assert.ok(provenance.includes(k.commit.slice(0,7)),`kill statistics ${k.repo} at its commit`);
-  assert.match(provenance,/CC-BY-SA/);
-  assert.match(provenance,/No NPC liquidation rate is assumed/);
+  const beaten=Object.values(results.forecasting.byHorizon).some(x=>['A','B','C','D','E'].some(m=>x.models[m].maeLogPct<x.models.constant.maeLogPct));
+  assert.match(await text('#findings'),beaten ? /beats no change at some horizon/ : /No gold model beats the no-change forecast/);
+  await page.click('[data-dock-target="helpPanel"]');
+  const method=await text('#provenance');
+  assert.match(method,/CC-BY-SA/);
+  for (const k of (await load('data/economy/gold/index.json')).killstats) assert.ok(method.includes(k.commit.slice(0,7)));
+  await page.click('[data-dock-target="worldsPanel"]');
 
-  // Copy rules: no middle dot anywhere on the page.
-  assert.doesNotMatch(await page.content(),/\u00b7|&middot;/);
-  if (shots) await page.screenshot({path:join(shots,`economy-${engine}-1440.png`),fullPage:true});
+  // ---- The crosshair reads another period.
+  const plot=await page.$eval('#chart table tr td:nth-child(2)',el=>{const r=el.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height};});
+  const atRest=await text('#legend .day');
+  await page.mouse.move(plot.x+plot.w*0.3,plot.y+plot.h*0.5);
+  await page.waitForTimeout(80);
+  assert.notEqual(await text('#legend .day'),atRest);
+  await page.mouse.move(plot.x+plot.w*0.5,plot.y-40);
+  await page.waitForTimeout(80);
 
-  // Phone width: nothing scrolls sideways; wide tables scroll inside their own frames.
-  for (const width of [768,390,320]) {
+  // ---- Export: an image named for the view.
+  const download=page.waitForEvent('download');
+  await page.click('#exportButton');
+  const file=await download;
+  assert.match(file.suggestedFilename(),/^tibinance-economy-antica-gross-month-1y-\d{4}-\d\d-\d\d\.png$/);
+  if (shots) await page.screenshot({path:join(shots,`economy-${engine}-1440.png`)});
+
+  // ---- Phone width: chart first, then the list; nothing sideways.
+  for (const width of [768,390]) {
     await page.setViewportSize({width,height:844});
-    await page.waitForTimeout(200);
+    await page.waitForTimeout(250);
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth),0,`no sideways scroll at ${width}px`);
     if (shots) await page.screenshot({path:join(shots,`economy-${engine}-${width}.png`),fullPage:true});
   }
-
-  // Long annual figures remain whole, and the three same-row metrics share label/value tracks.
-  await page.goto(`${root}/economy.html?world=Antica&unit=year&period=2025-01-01&price=1&activity=1&stable=1&rate=0.75`); await ready();
-  for (const width of [320,380,381,390,600,601,768,900,901,1440]) {
-    await page.setViewportSize({width,height:900});
-    await page.waitForTimeout(100);
-    const geometry=await page.$$eval('.eco-tile',es=>es.map(e=>({
-      row:e.getBoundingClientRect().top,
-      valueTop:e.querySelector('.eco-value').getBoundingClientRect().top,
-      valueWidth:e.querySelector('.eco-value').scrollWidth,
-      width:e.clientWidth,
-    })));
-    for (const tile of geometry) {
-      assert.ok(tile.valueWidth<=tile.width,`complete numeric value at ${width}px`);
-      for (const peer of geometry.filter(p=>p.row===tile.row)) assert.equal(peer.valueTop,tile.valueTop,`aligned values at ${width}px`);
-    }
-    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth),0);
-  }
-  assert.match(await text('#chartReadout'),/Coins \+ 75% NPC \(assumption, gold\)/);
-  assert.match(await text('#chartReadout'),/Constant creature set \(gold\)/);
-  assert.equal(await page.locator('#chart table').count(),1);
-
-  // Horizontal scrolling retains the creature name; the overflow frame is explicitly keyboard-operable.
-  await page.setViewportSize({width:390,height:844});
-  const frame=page.locator('[aria-labelledby="contribTitle"].eco-table-scroll');
-  assert.equal(await frame.getAttribute('tabindex'),'0');
-  await frame.evaluate(e=>{e.scrollLeft=200;});
-  const bounds=await frame.evaluate(e=>({left:e.getBoundingClientRect().left,cell:e.querySelector('tbody td').getBoundingClientRect().left}));
-  assert.ok(Math.abs(bounds.cell-bounds.left)<2,'creature identity stays visible while reading numeric columns');
-
-  // Navigating through the world comparison preserves the current scenario and chart settings.
-  await page.locator('#worlds a').filter({hasText:'Gentebra'}).click(); await ready();
-  const shared=new URL(page.url()).searchParams;
-  for (const [key,value] of [['world','Gentebra'],['unit','year'],['period','2025-01-01'],['price','1'],['activity','1'],['stable','1'],['rate','0.75'],['range','1Y']]) assert.equal(shared.get(key),value,key);
-
-  // A failed world request must never relabel the previous world's figures, even after another control is used.
-  await page.goto(`${root}/economy.html?world=Antica&unit=month&period=2025-09-01`); await ready();
-  const failingPath=`${root}/data/economy/gold/contributions/gentebra.json`;
-  expectedFailures.add(failingPath);
-  await page.route(failingPath,r=>r.fulfill({status:503,body:'test-only unavailable'}));
-  const pick=async world=>{
-    await page.locator('#site-world .site-control').click();
-    await page.locator('#world-picker input').fill(world);
-    await page.getByRole('option',{name:world,exact:true}).click();
-  };
-  await pick('Gentebra');
-  await page.waitForSelector('#retry:not([hidden])');
-  assert.match(await text('#status'),/Gentebra.*Still showing Antica/);
-  assert.equal(await page.getAttribute('#site-world .site-control','aria-label'),'World: Antica');
-  await page.click('#liquidation [data-rate="0.5"]');
-  assert.equal(await text('#ecoWorld'),'Antica');
-  assert.match(await text('#chartContext'),/^Antica,/);
-  assert.equal(new URL(page.url()).searchParams.get('world'),'Antica');
-  assert.equal((await tiles())[0].value,gold(sep.grossPotential));
-  await page.locator('#retry').focus(); await page.keyboard.press('Enter');
-  await page.waitForSelector('#retry:not([hidden])');
-  assert.equal(await page.evaluate(()=>document.activeElement.id),'retry','failed keyboard retry retains focus');
-  await page.unroute(failingPath);
-  await page.locator('#retry').focus(); await page.keyboard.press('Enter');
-  await page.waitForFunction(()=>document.getElementById('ecoWorld').textContent==='Gentebra');
-  assert.equal(await page.locator('#feedback').isVisible(),false);
-  assert.equal(await page.getAttribute('#site-world .site-control','aria-label'),'World: Gentebra');
-  assert.equal(await page.evaluate(()=>document.activeElement.getAttribute('aria-label')),'World: Gentebra');
-
-  // An obsolete request failing after the next world loaded must not replace its state or status.
-  const stalePath=`${root}/data/economy/gold/contributions/antica.json`;
-  expectedFailures.add(stalePath);
-  let releaseStale, requestSeen, requestDone;
-  const held=new Promise(resolve=>{releaseStale=resolve;});
-  const seen=new Promise(resolve=>{requestSeen=resolve;});
-  const done=new Promise(resolve=>{requestDone=resolve;});
-  await page.route(stalePath,async r=>{requestSeen(); await held; await r.fulfill({status:503,body:'test-only stale failure'}); requestDone();});
-  await pick('Antica'); await seen;
-  await pick('Secura');
-  await page.waitForFunction(()=>document.getElementById('ecoWorld').textContent==='Secura');
-  releaseStale(); await done;
-  await page.waitForLoadState('networkidle');
-  assert.equal(await page.locator('#feedback').isVisible(),false);
-  assert.equal(await text('#ecoWorld'),'Secura');
-  assert.equal(new URL(page.url()).searchParams.get('world'),'Secura');
-  await page.unroute(stalePath);
-
-  // Browser-cache restoration cancels a pending request and restores the committed world's status.
-  // Exercise the lifecycle events directly; Chrome's automation launch disables the actual back/forward cache.
-  let releaseRestore, restoreSeen, restoreDone;
-  const restoreHold=new Promise(resolve=>{releaseRestore=resolve;});
-  const restoreStarted=new Promise(resolve=>{restoreSeen=resolve;});
-  const restoreFinished=new Promise(resolve=>{restoreDone=resolve;});
-  await page.route(stalePath,async r=>{restoreSeen(); await restoreHold; await r.fulfill({status:503,body:'test-only cancelled request'}); restoreDone();});
-  await pick('Antica'); await restoreStarted;
-  await page.evaluate(()=>{
-    dispatchEvent(new PageTransitionEvent('pagehide',{persisted:true}));
-    dispatchEvent(new PageTransitionEvent('pageshow',{persisted:true}));
-  });
-  releaseRestore(); await restoreFinished;
-  assert.equal(await page.locator('#feedback').isVisible(),false);
-  assert.equal(await page.getAttribute('#economy','aria-busy'),'false');
-  assert.equal(await text('#ecoWorld'),'Secura');
-  assert.equal(await page.getAttribute('#site-world .site-control','aria-label'),'World: Secura');
-  await page.unroute(stalePath);
-
-  // Initial data failure has an in-page retry, followed by one working picker and control wiring.
-  const indexPath=`${root}/data/economy/gold/index.json`;
-  expectedFailures.add(indexPath);
-  await page.route(indexPath,r=>r.fulfill({status:503,body:'test-only initial failure'}));
-  await page.goto(`${root}/economy.html`);
-  await page.waitForSelector('#retry:not([hidden])');
-  assert.match(await text('#status'),/could not be loaded/);
-  assert.equal(await page.locator('#economy').isVisible(),false);
-  await page.locator('#retry').focus(); await page.keyboard.press('Enter');
-  await page.waitForSelector('#retry:not([hidden])');
-  assert.equal(await page.evaluate(()=>document.activeElement.id),'retry','failed initial retry retains focus');
-  await page.unroute(indexPath);
-  await page.locator('#retry').focus(); await page.keyboard.press('Enter'); await ready();
-  assert.equal(await page.locator('#world-picker').count(),1);
-  assert.equal(await page.evaluate(()=>document.activeElement.getAttribute('aria-label')),'World: Antica');
-  await page.click('#stable');
-  assert.equal(await page.getAttribute('#stable','aria-pressed'),'true');
-
-  assert.equal(await page.locator('input[type=checkbox]').count(),0);
+  assert.doesNotMatch(await page.content(),/\u00b7|&middot;/);
   assert.deepEqual(errors,[]);
-  console.log(`PASS ${engine}: Economy arithmetic, scenarios, single chart, exact readout, contributions, comparability, sorting focus, world failure/retry and stale requests, initial retry, keyboard table access, whole/aligned figures and 1440/768/390/320 layouts`);
+  console.log(`PASS ${engine}: Economy terminal reached from the menu; status, measures, readout and details recomputed from the data; list and chart agree at every interval and measure; retired worlds by search; keyboard list; ranges and performance; TC price, labelled assumptions and constant set; creatures, research and method panels; crosshair; export; 1440/768/390 layouts`);
 } finally {
   await browser.close();
 }

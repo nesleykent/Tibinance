@@ -76,8 +76,10 @@ jobs:
           else
             echo "Loot evidence syncs on Mondays."
           fi
-      - name: Gold generation potential (latest evidence)
-        run: node --max-old-space-size=12288 tools/economy/build_gold.mjs
+      - name: Gold generation potential (latest evidence) and the Economy watchlist overview
+        run: |
+          node --max-old-space-size=12288 tools/economy/build_gold.mjs
+          node tools/build_economy_overview.mjs
       - name: Save the economy cache
         if: always()
         uses: actions/cache/save@v4

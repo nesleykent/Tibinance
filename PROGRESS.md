@@ -1,30 +1,57 @@
-# Economy UI/UX repair, 2026-10-14
+# Economy audit integration checkpoint, 2026-10-14
 
-The user requested a fresh Economy-page repair using the supplied Universal Autonomous UI/UX Fixer. This
-reopens Economy work only; the previously rejected Markets/forecast-history interface remains unreleased.
+A concurrent owner-authored Economy terminal redesign and release/0006 reached GitHub before this audit's push.
+The local repair checkpoint `34f854d` remains in history; its older page layout was never pushed or deployed.
+Integration preserves the newer terminal, data overview, release records and all unrelated upstream work.
+The current audit now targets that rendered terminal. Prior draft screenshots/tests are baseline evidence only,
+not verification of the newly published interface. Next: reproduce current defects, port applicable root-cause
+repairs, validate Chrome/WebKit and publish only verified Economy changes on release/0006.
 
-- Baselines inspected in the in-app browser at desktop and phone sizes, including the live release/0005.
-  Shared fonts, palette, spacing tokens and header are retained byte-for-byte. Dense tables retain every column
-  and row; no checkboxes, replacement tokens, data changes or additional charts are introduced.
-- Fixed independently stretched metric tracks and annual figures breaking across lines on narrow screens.
-  Grouped source metadata and related controls; retained the existing editorial typography and all disclosures.
-- One chart/timeline remains, with compact labelled axes, full exact readouts including optional scenarios,
-  and independently scaled activity bars. Corner tick labels no longer clip. An attempted reserved activity
-  band was rejected during visual QA because it produced negative gold ticks; the count overlay remains explicit.
-- Reproduced and fixed failed-world identity/data mismatches, keyboard sorting focus loss, dropped world-link
-  settings, and retry recovery. Delayed/failed obsolete requests cannot replace the committed world. Keyboard
-  retries retain/restore focus in Chrome and WebKit; page-cache restoration clears cancelled loading states.
-- Full-width tables are named keyboard scroll regions, with actual-overflow hints and sticky row identifiers.
-  The source disclosure retains its native expansion marker. No data, series, scenarios, columns or controls lost.
-- Verification: 206 JS tests and all eight site-integrity checks passed. Expanded Chrome and WebKit Economy
-  suites exercise exact arithmetic, scenarios, one chart, sort focus, failure/retry/stale responses, initial
-  retry, simulated page-cache lifecycle, shared view settings, and widths 320/380/381/390/600/601/768/900/901/1440.
-  Actual screen-reader speech was not tested. Claude supplied a read-only logic critique; reproduced objections
-  were repaired and independently checked. Screenshots and transient evidence are outside the repository.
+---
 
-Next: commit/push the reviewed repair, compose and validate an Economy-only release on the existing production
-revision (including necessary frozen-reference compatibility), and verify the published artifact. Other served
-pages/assets must remain identical to release/0005; no earlier rejected Markets work may enter this release.
+# Economy as a terminal, 2026-10-14
+
+- **Instruction:** the user compared the Economy page with Markets ("your page are incomplete! look how the [Markets]
+  page are") after the UI hold above. I took that as a new instruction to resume Economy UI work.
+- **Change:** Economy is rebuilt as a terminal in the Markets idiom, on Markets' own layout and components
+  (`css/markets.css`, `js/markets-dock.js`), with no new tokens (`css/economy.css` defines none):
+  - **Chart:** a status block with the world, its facts and its quote, a Gross, Coins or NPC picker, and the readout
+    under the crosshair. A short kills pane sits under the gold. Ranges run 1M to All, with D, W and M intervals.
+  - **Dock:** a Worlds watchlist (active worlds; retired ones when a search names them, marked R; low coverage
+    marked i) with details and performance; Creatures (a month's top 30); Assumptions (liquidation rate, constant
+    creature set; dashed and labelled); Research; Help with method and sources.
+  - **Rail:** the TC Sell Offer on a left scale, image export and full screen.
+  - **Gold per day:** every figure is gold per day, so the intervals share one scale. Only complete periods have
+    values (`ratePeriods`, `rangeChange` in `js/economy-data.js`), and the audited arithmetic from 448f613 is kept.
+- **Overview:** the watchlist reads `data/economy/gold/overview.json`. `tools/build_economy_overview.mjs` builds it
+  with the chart's own functions, so a world's row equals its chart for every interval, measure and range. It runs
+  as a builder `--check` in `validate_site.mjs` (now 9 checks) and after `build_gold` in `economy-daily.yml`.
+- **Tests:**
+  - `tests/economy-browser.mjs` is rewritten for the terminal: every figure is recomputed from the data, and the list
+    must agree with the chart at each interval and measure. It passes in Chrome.
+  - 3 new unit tests (209 of 209 pass).
+  - The header test's Economy ready check is updated and passes.
+- **Release:** not made. A full release of main would also ship the other agent's unreleased Markets changes
+  (Forecast history controls, the Events toggle convention, `markets.css`, `markets.js`, `markets.html`). Those
+  stay held until the user decides. Production stays `release/0005`.
+
+---
+
+# Economy automation verified, 2026-10-14
+
+- **First `economy-daily.yml` run** (38506418523, cold cache): every step succeeded.
+  - It rebuilt all 51 kill-statistics months for 159 worlds: 601 days recovered exactly, 0 conflicts.
+  - It committed `data/economy` through the kill-statistics files of 2026-10-13 (f9f5d13).
+  - It made the data release `release/0005`.
+- **Live check:** `node tools/ci/pages_release.mjs verify-live --all` passes, with 924 of 924 live files equal to
+  `release/0005`. A first check found one differing file and the next three found none: a CDN edge served one stale
+  copy.
+- **Gold challenger: not yet run.** That run started before the challenger step existed. The step is in
+  `economy-daily.yml` on main, so the next scheduled run (03:30 UTC) is the first to archive a `tc-gold-challenger`
+  edition. Check that it archives exactly one edition through `publish.py`, and that a rerun archives nothing.
+- **Unchanged:** this entry changes no code, data or release. Production stays `release/0005`. The UI rebuild on
+  main stays unreleased, as recorded above. A full release of main would deploy it, so none is made without a new
+  user instruction.
 
 ---
 
@@ -145,12 +172,9 @@ Never force-push, never reset, never redo finished work.
   published Projections. Specification E is archived as a prospective challenger instead (`tc-gold-challenger`, role
   `challenger`): never shown, scored by `evaluate.py`, reproducible from its snapshot.
 - **Exact next action:**
-  1. Check the first `economy-daily.yml` run (38506418523, dispatched 2026-10-14 03:28 UTC, cold cache).
-     - It should push a bot commit of `data/economy` through the latest kill-statistics day.
-     - Its release step should then make a data release carrying `data/economy/**`, now that `release/0004`
-       approved the policy.
-     - The next run, scheduled or dispatched, is the first with the gold challenger. Confirm it archives one
-       `tc-gold-challenger` edition through `publish.py`, and that a rerun archives nothing.
+  1. Done: the first `economy-daily.yml` run is verified (see "Economy automation verified" at the top). Still
+     open: the next run is the first with the gold challenger. Confirm it archives one `tc-gold-challenger` edition
+     through `publish.py`, and that a rerun archives nothing.
   2. When target weeks close, check that `forecast-archive.yml` writes `data/forecast-archive/evaluations.jsonl`
      and that the Forecast history accuracy tables fill.
   3. Remaining work below.

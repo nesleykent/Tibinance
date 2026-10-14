@@ -31,14 +31,7 @@ incomplete the page says "from valued creatures" and shows the coverage beside t
 
 **No NPC liquidation rate is assumed.** The schema keeps a slot for evidence about how much loot is actually sold.
 Until such evidence exists, "coins plus a share of NPC potential" appears only as a labelled hypothetical scenario
-(0, 25, 50, 75 or 100%), drawn dashed and marked "assumption".
-
-The Economy page uses one chart and timeline. Gold components and their sum use the right axis; optional TC
-Sell Offers use the left axis, and optional players-killed bars overlay the plot on an independent count scale.
-Axis abbreviations use K (thousand), M (million) and B (billion). The readout and keyboard-accessible chart table
-retain exact figures, coverage and price sample counts, including selected scenarios and constant-set comparisons.
-Changing worlds through the comparison table retains these settings. Failed loads retain the last valid world
-and provide an in-page retry.
+(0, 25, 50 or 100%), drawn dashed and marked "assumption".
 
 ## Sources
 
@@ -116,9 +109,9 @@ not built separately.
 - **Constant creature set.** `grossStable` sums only the creatures valued from the first kill day of the data. Its
   changes come from kills alone, never from a creature becoming valued. The Economy page offers it as a toggle, and
   the research repeats its divergence counts on it.
-- **Cross-world comparison.** A world is comparable for a period only if it has every day of it and at least 95%
-  kill coverage. A world that started later, has missing days or has lower coverage is shown with the reason and is
-  not ranked as comparable.
+- **Cross-world comparison.** The Economy watchlist compares worlds on their latest complete period only, never a
+  partial one. A world under 95% kill coverage is marked (i, with the coverage), since its figure understates it more
+  than most. A retired or merged world is marked R and keeps its last complete period. Values are never scaled up.
 - **Missing is never zero.** A missing day has no values. A period's sum states how many of its days had data, and
   growth is computed only between two complete periods. Unfinished periods are not drawn on the chart, because they
   would read as falls.

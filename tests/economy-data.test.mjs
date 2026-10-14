@@ -110,3 +110,49 @@ test('Economy reuses shared tokens directly and defines no replacement design to
   const html = readFileSync(new URL('../economy.html', import.meta.url), 'utf8');
   assert.doesNotMatch(html, /type=["']checkbox["']/i);
 });
+
+// ---- The Economy terminal: gold per day by interval, range changes, and the watchlist overview ------------------
+import { MEASURES, ratePeriods, rangeStartOf, rangeChange, overviewRows } from '../js/economy-data.js';
+import { buildOverview } from '../tools/build_economy_overview.mjs';
+
+const days = (first, values, status) => ({ first, status, directCoins: values.map(v => (v === null ? null : v)), npcPotential: values.map(v => (v === null ? null : 2 * v)),
+  kills: values.map(v => (v === null ? null : 10)), killsValued: values.map(v => (v === null ? null : 9)), playerDeaths: values.map(() => 1), grossStable: values.map(v => v) });
+
+test('every interval reads in gold per day, and only complete periods have a rate', () => {
+  // Monday 2025-09-01 to Sunday 2025-09-14, the second week missing a day.
+  const w = days('2025-09-01', [1, 1, 1, 1, 1, 1, 1, 2, 2, 2, null, 2, 2, 2], 'ooooooooo' + 'om' + 'ooo');
+  const weeks = ratePeriods(w, 'week');
+  assert.equal(weeks[0].rate.grossPotential, 3, 'a week total over its seven days');
+  assert.equal(weeks[1].rate.grossPotential, null, 'a gapped week has no rate, never a fall');
+  const daily = ratePeriods(w, 'day');
+  assert.equal(daily[7].rate.directCoins, 2);
+  assert.equal(daily[10].rate.directCoins, null);
+  assert.equal(ratePeriods(w, 'month')[0].rate.grossPotential, null, 'an unfinished month has no rate');
+  assert.deepEqual(Object.keys(MEASURES), ['gross', 'coins', 'npc']);
+});
+
+test('ranges count calendar months back from the latest complete period, as on Markets', () => {
+  assert.equal(rangeStartOf('2026-03-31', '1M'), '2026-02-28');
+  assert.equal(rangeStartOf('2026-10-11', 'YTD'), '2026-01-01');
+  assert.equal(rangeStartOf('2026-10-11', 'All'), null);
+  const p = (start, end, v) => ({ start, end, rate: { grossPotential: v } });
+  const periods = [p('2026-07-01', '2026-07-31', 100), p('2026-08-01', '2026-08-31', null), p('2026-09-01', '2026-09-30', 150)];
+  const c = rangeChange(periods, 'grossPotential', '1M');
+  assert.deepEqual([c.from.start, c.to.start, c.delta, c.ratio], ['2026-07-01', '2026-09-01', 50, 0.5], 'the base skips an incomplete period');
+  assert.equal(rangeChange([periods[0]], 'grossPotential', '1M'), null);
+});
+
+test('the watchlist overview equals the chart arithmetic, and lists retired worlds only when searched', () => {
+  const overview = buildOverview();
+  const antica = JSON.parse(readFileSync(new URL('../data/economy/gold/worlds/antica.json', import.meta.url), 'utf8'));
+  for (const interval of ['day', 'week', 'month']) {
+    const periods = ratePeriods(antica, interval), last = periods.findLast(q => q.rate.grossPotential !== null);
+    const row = overviewRows(overview, interval, 'coins', '1Y').find(r => r.world === 'Antica');
+    assert.equal(row.value, Math.round(last.rate.directCoins), interval);
+    assert.equal(row.change, Math.round(rangeChange(periods, 'directCoins', '1Y').ratio * 1e6) / 1e6, interval);
+  }
+  const retired = overview.worlds.find(w => w.ended);
+  assert.ok(!overviewRows(overview, 'week', 'gross', '1Y').some(r => r.world === retired.world));
+  assert.equal(overviewRows(overview, 'week', 'gross', '1Y', retired.world.slice(0, 4)).find(r => r.world === retired.world).ended, retired.last);
+  assert.equal(readFileSync(new URL('../data/economy/gold/overview.json', import.meta.url), 'utf8'), `${JSON.stringify(overview)}\n`, 'the committed overview is fresh');
+});
