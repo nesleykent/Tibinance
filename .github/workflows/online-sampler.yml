@@ -1,11 +1,9 @@
-# Prospective online counts: one TibiaData request every 30 minutes, appended to the data/online-samples branch
-# (tools/economy/population/sample_tibiadata.mjs). The frequent commits stay off main, so they never deploy or
-# disturb checkpoints. Labelled prospective everywhere: it starts now and never stands in for historical data.
+# Prospective online counts, manual only. Automatic collection was disabled at the owner's request to avoid
+# recurring Actions usage. Existing samples remain on data/online-samples; this workflow must be explicitly
+# re-enabled before a manual run. Samples never stand in for historical data.
 name: Online sampler
 
 on:
-  schedule:
-    - cron: '*/30 * * * *'
   workflow_dispatch:
 
 permissions:

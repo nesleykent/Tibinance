@@ -1,12 +1,12 @@
-// Prospective online counts from TibiaData, every 30 minutes (Stage D, labelled prospective).
+// Prospective online counts from TibiaData (Stage D, labelled prospective). Automatic collection is disabled.
 //
 //   node tools/economy/population/sample_tibiadata.mjs <directory>
 //
 // One request (api.tibiadata.com/v4/worlds) gives every world's players online at that moment, as tibia.com shows it.
-// Each run appends one line to <directory>/<YYYY-MM>.jsonl: the TibiaData timestamp and the count per world. The
-// online-sampler workflow keeps these on the data/online-samples branch, so the 48 daily commits never touch main.
+// Each run appends one line to <directory>/<YYYY-MM>.jsonl: the TibiaData timestamp and the count per world.
+// The manual online-sampler workflow keeps these on data/online-samples. It is disabled pending explicit re-enabling.
 // This series starts when sampling started: it is never merged into, or presented as, the historical GuildStats
-// series it cannot replace. Gaps (a skipped or late scheduled run) stay gaps; player-hours integrate only across
+// series it cannot replace. Gaps (a skipped or late sample) stay gaps; player-hours integrate only across
 // contiguous samples.
 import { appendFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';

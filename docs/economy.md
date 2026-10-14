@@ -42,7 +42,7 @@ Until such evidence exists, "gold plus a share of NPC potential" appears only as
 | Tibinance market history (`data/market-history/tibia-coin/`) | Tibia Coin Sell and Buy Offers | As described in the technical guide |
 | TibiaVIP worlds list, one snapshot (2026-10-13, supplied by the owner as a PDF) | Characters online and total known characters per world, at one instant | Only the extracted numbers and the file's SHA-256 are committed |
 | Internet Archive copies of guildstats.eu pages | Sparse archived windows of players online | Each observation names its capture |
-| TibiaData `/v4/worlds`, sampled every 30 minutes from 2026-10 | Prospective players online | Kept on the `data/online-samples` branch, labelled prospective |
+| TibiaData `/v4/worlds` snapshots from 2026-10 | Prospective players online | Existing samples kept on `data/online-samples`; automatic collection disabled |
 
 ### Kill statistics
 
@@ -129,8 +129,9 @@ not built separately.
   parsed, and the meaning of each series (average or peak) is verified per page against its hourly values. Labels
   are Europe/Berlin time, which the 10:15 server-save dip confirms. These are sparse windows, kept as
   `guildstats-wayback`.
-- **TibiaData sampler.** Players online every 30 minutes, from October 2026 on; prospective only.
-  `sample_tibiadata.mjs` integrates player-hours only across contiguous samples.
+- **TibiaData sampler.** Prospective online snapshots from October 2026. Automatic collection was disabled on
+  2026-10-14 at the owner's request to stop recurring Actions usage; the schedule was removed. Existing samples
+  are retained. `sample_tibiadata.mjs` integrates player-hours only across contiguous samples.
 
 **Unresolved requirements.** Continuous hourly GuildStats history and TibiaVIP active population remain required.
 Both sites answer automated requests with a Cloudflare challenge (HTTP 403). Tibinance does not circumvent bot
@@ -222,7 +223,7 @@ from what, and when it became public. It is never rewritten.
 | `economy-daily.yml` (03:30 UTC) | Kill statistics increment, loot evidence on Mondays, gold rebuild, challenger, one publication unit, data release |
 | `market-daily.yml` | TibiaMarket sync through `tools/sync_market.mjs`, also population access status |
 | `forecast-archive.yml` | Publication evidence and evaluations after pushes, deployments and daily |
-| `online-sampler.yml` | TibiaData players online every 30 minutes, to `data/online-samples` |
+| `online-sampler.yml` | Disabled; no schedule. Manual collection to `data/online-samples` requires explicit re-enabling |
 | `ci.yml` | Site validation and every Python suite on each push |
 | `pages.yml` | Deploys only an approved release (`docs/releases.md`) |
 
