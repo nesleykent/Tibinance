@@ -1,0 +1,350 @@
+/*
+ * The Markets and Economy terminals in TradingView's chart-page layout (css/tv.css holds its tokens and controls).
+ *
+ *   ┌──────────────────────────── top toolbar (38px) ─────────────────────────────┐
+ *   ├────┬──────────────────────────────────────────────┬───────────────────┬─────┤
+ *   │draw│  chart (legend over its top left)            │ widget bar (300px)│rail │
+ *   │bar │                                              │ watchlist/details │45px │
+ *   │52px├──────────────────────────────────────────────┤ or another panel  │     │
+ *   │    │  bottom toolbar (38px): ranges, clock, %/log/auto              │     │
+ *   └────┴──────────────────────────────────────────────┴───────────────────┴─────┘
+ *
+ * Blocks sit on the chart page's background with a 4px gap between them, as TradingView lays them. Every id the page
+ * scripts read is kept; this file only places and paints them. Narrow screens stack the chart, the rail and the panel.
+ */
+:root { --toolbar-height:var(--tv-header); --watch-width:var(--tv-widget); --rail-width:var(--tv-right); --scale-inset:12px; --row-pad:6px; }
+
+/* ---- the frame ---- */
+body.tv-app { display:flex; flex-direction:column; height:100dvh; overflow:hidden; background:var(--tv-page); color:var(--tv-text); }
+body.tv-app h1,body.tv-app h2,body.tv-app h3,body.tv-app h4 { font-family:var(--tv-font); letter-spacing:0; }
+
+/* ---- top toolbar ---- */
+.tv-header { position:relative; z-index:20; flex:none; height:var(--tv-header); margin-bottom:var(--tv-gap); background:var(--tv-bg); }
+.tv-header .wrap::after { display:none; }
+.tv-header-row { display:flex; align-items:center; gap:2px; height:100%; padding:0 4px; min-width:0; }
+.tv-header .site-nav { flex:none; align-items:center; padding-right:4px; margin-right:2px; border-right:1px solid var(--tv-divider); height:22px; }
+.tv-header .site-nav > :first-child { margin-inline-start:0; }
+.tv-header .site-crumb { min-height:34px; padding:0 8px; border-radius:4px; font-family:var(--tv-font); letter-spacing:0; }
+.tv-header .site-home { gap:6px; color:var(--tv-text); font-size:15px; font-weight:600; }
+.tv-header .site-home:hover { background:var(--tv-btn-hover); }
+.tv-header .tv-logo { width:26px; height:26px; flex:none; color:var(--tv-text); }
+.tv-header .site-slash { display:none; }
+.tv-header .site-section { color:var(--tv-text); font-size:14px; }
+.tv-header .site-section:is(:hover,[aria-expanded="true"]) { background:var(--tv-btn-hover); }
+.tv-header .site-chevron { stroke:var(--tv-text-2); }
+.tv-tools { flex:1; display:flex; align-items:center; gap:2px; min-width:0; overflow:hidden; }
+.tv-header-end { flex:none; display:flex; align-items:center; gap:2px; margin:0; padding-left:4px; }
+.tv-header .site-github { margin:0; color:var(--tv-text); }
+.tv-header .site-github svg { width:18px; height:18px; }
+.tv-btn.tv-static { cursor:default; font-weight:600; }
+.tv-btn.tv-static:hover { background:transparent; }
+.tv-symbol { gap:4px; padding:0 10px 0 6px; font-weight:600; text-transform:none; }
+.tv-symbol svg { width:20px; height:20px; color:var(--tv-text-2); }
+.tv-symbol span { max-width:160px; overflow:hidden; text-overflow:ellipsis; }
+.tv-btn > span { pointer-events:none; }
+.tv-select,#asset { height:34px; min-height:0; padding:0 26px 0 10px; border:0; border-radius:4px; background:transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath fill='none' stroke='%23808080' d='M5.5 7.5 9 11l3.5-3.5'/%3E%3C/svg%3E") right 4px center/18px no-repeat;
+  color:var(--tv-text); font:14px var(--tv-font); appearance:none; -webkit-appearance:none; cursor:pointer; }
+.tv-select:hover,#asset:hover { background-color:var(--tv-btn-hover); }
+.tv-select option { background:var(--tv-popup); color:var(--tv-text); }
+.tv-overview-link { color:var(--tv-text); }
+.tv-overview-link:hover { color:var(--tv-text); }
+/* One icon for each state: the moon in light, the sun in dark; enter or leave full screen. */
+#tvTheme .icon-sun,:root[data-theme="dark"] #tvTheme .icon-moon { display:none; }
+:root[data-theme="dark"] #tvTheme .icon-sun { display:block; }
+#tvTheme[aria-pressed="true"] { background:transparent; color:var(--tv-text); }
+#tvTheme[aria-pressed="true"]:hover { background:var(--tv-btn-hover); }
+#expand .icon-collapse,#expand[aria-pressed="true"] .icon-expand { display:none; }
+#expand[aria-pressed="true"] .icon-collapse { display:block; }
+#expand[aria-pressed="true"] { background:transparent; color:var(--tv-text); }
+
+/* The site menu, as TradingView's dropdowns. */
+.tv-app .site-panel { top:calc(var(--tv-header) + 2px); padding:6px 0; border:0; border-radius:6px; background:var(--tv-popup); color:var(--tv-text); box-shadow:var(--tv-popup-shadow); font:14px/20px var(--tv-font); }
+.tv-app .site-menu a { min-height:36px; padding:0 16px; border-radius:0; color:var(--tv-text); }
+.tv-app .site-menu a:hover { background:var(--tv-popup-hover); }
+.tv-app .site-menu a[aria-current] { background:var(--tv-brand); color:#fff; font-weight:400; }
+.tv-app .site-menu a[aria-current]::before { display:none; }
+.tv-app .site-options li.active { background:var(--tv-popup-hover); }
+.tv-app .site-search { border:1px solid var(--tv-border-hover); background:var(--tv-input); }
+
+/* ---- the terminal: draw bar, chart, panel, rail ---- */
+.tv-terminal { flex:1; min-height:0; display:grid; grid-template-columns:var(--tv-left) minmax(0,1fr) auto; gap:var(--tv-gap); padding:0 !important; background:var(--tv-page); }
+.tv-terminal > .chart-panel,.tv-terminal > .screener { grid-column:2; grid-row:1; }
+.tv-terminal > .dock { grid-column:3; grid-row:1; }
+
+/* The drawing toolbar: one column of 52px tool buttons, then the magnet, lock, hide and remove at the foot. */
+.tv-drawbar { grid-column:1; grid-row:1; display:flex; flex-direction:column; justify-content:space-between; min-height:0; padding:4px 0; overflow-y:auto; overflow-x:hidden; background:var(--tv-bg); scrollbar-width:none; }
+.tv-drawbar-group { display:flex; flex-direction:column; align-items:center; gap:2px; }
+.tv-drawbar .tv-btn { width:44px; height:38px; min-width:0; padding:0; border-radius:4px; color:var(--tv-text); }
+.tv-drawbar .tv-btn svg { width:28px; height:28px; }
+.tv-hdivider { flex:none; width:32px; height:1px; margin:4px 0; background:var(--tv-divider); }
+
+/* The chart block: the chart over its legend and markers, the bottom toolbar under a 4px gap. */
+.tv-terminal .chart-panel { display:grid; grid-template-columns:minmax(0,1fr); grid-template-rows:minmax(0,1fr) var(--tv-bottom); gap:var(--tv-gap); min-width:0; min-height:0; border:0; background:transparent; container:chart / inline-size; }
+.tv-terminal .chart-area { position:relative; min-height:0; overflow:clip; background:var(--tv-pane); }
+.tv-terminal .chart-status { background:var(--tv-pane); color:var(--tv-text-2); font-size:14px; }
+
+/* The legend, TradingView's: the symbol line in 16px, the SELL and BUY boxes, then a 13px row per series. */
+.tv-app .tv-terminal .chart-head { left:12px; top:8px; gap:6px; max-width:calc(100% - 96px); color:var(--tv-text); font-family:var(--tv-font); }
+.tv-terminal .head-line { align-items:baseline; gap:0 8px; }
+.tv-terminal .head-line h2 { font:400 17px/24px var(--tv-font); color:var(--tv-text); }
+.tv-legend-int { display:inline-flex; gap:8px; color:var(--tv-text); font-size:17px; line-height:24px; white-space:nowrap; }
+.tv-terminal .symbol-meta { gap:8px; color:var(--tv-text-2); font-size:13px; }
+.tv-terminal .symbol-quote { gap:6px; font-size:13px; }
+.tv-terminal .symbol-last { font-size:17px; font-weight:400; }
+.tv-terminal .symbol-change { font-size:13px; }
+.tv-terminal .symbol-range { color:var(--tv-text-2); font-size:12px; font-weight:400; letter-spacing:0; }
+.tv-terminal .symbol-change .up,.tv-terminal .symbol-change.up { color:var(--tv-up); }
+.tv-terminal .symbol-change .down,.tv-terminal .symbol-change.down { color:var(--tv-down); }
+
+/* SELL and BUY: TradingView's order buttons on the legend, here the market side the chart shows. The side shown is
+   filled in its colour; the other is outlined. The spread sits between them. */
+.tv-terminal #side { gap:0; padding:0; border-radius:0; background:none; }
+.tv-terminal #side button { flex-direction:column; align-items:flex-start; justify-content:center; gap:0; min-width:78px; min-height:40px; padding:2px 10px;
+  border:1px solid currentColor; border-radius:6px; background:var(--tv-pane); font:600 14px/18px var(--tv-font); box-shadow:none; }
+.tv-terminal #side button[data-side="sell"] { color:var(--tv-red-500); }
+.tv-terminal #side button[data-side="buy"] { align-items:flex-end; color:var(--tv-blue-500); }
+.tv-terminal #side .side-name { order:1; color:inherit; font-size:11px; font-weight:400; letter-spacing:0; text-transform:uppercase; opacity:.85; }
+.tv-terminal #side .side-value { color:inherit; }
+.tv-terminal #side button:hover .side-name { color:inherit; }
+.tv-terminal #side button[aria-checked="true"] { background:currentColor; box-shadow:none; }
+.tv-terminal #side button[aria-checked="true"] :is(.side-name,.side-value),
+.tv-terminal #side button[data-side][aria-checked="true"] :is(.side-name,.side-value) { color:#fff; }
+.tv-terminal #side button:not([aria-checked="true"]):hover { background:var(--tv-btn-hover); }
+.tv-terminal .side-spread { display:grid; place-items:center; align-self:center; min-width:40px; height:24px; margin:0 -4px; padding:0 6px; position:relative; z-index:1;
+  border:1px solid var(--tv-border-hover); border-radius:4px; background:var(--tv-pane); color:var(--tv-text); font-size:12px; }
+
+.tv-terminal .chart-legend { gap:2px 8px; color:var(--tv-text); font-size:13px; line-height:18px; }
+.tv-terminal .legend .day { color:var(--tv-text-2); font-size:12px; font-weight:400; letter-spacing:0; }
+.tv-terminal .legend .label { color:var(--tv-text); }
+.tv-terminal .legend .value { color:var(--tv-text); }
+.tv-terminal .legend .meta,.tv-terminal .legend .meta-label,.tv-terminal .legend .note { color:var(--tv-text-2); }
+.tv-terminal .legend .rest { color:var(--tv-text-2); }
+#indicatorLegend .label button { padding:0 4px; border:0; border-radius:3px; background:none; color:var(--tv-text-2); font:inherit; cursor:pointer; }
+#indicatorLegend .label button:hover { background:var(--tv-btn-hover); color:var(--tv-text); }
+
+/* The bottom toolbar: ranges at the start; the day's end, the clock and the scale modes at the end. */
+.tv-bottom { display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:0; height:var(--tv-bottom); padding:0 8px 0 4px !important; border:0 !important; background:var(--tv-bg); font-family:var(--tv-font); }
+.tv-terminal .ranges { gap:2px; margin:0; }
+.tv-terminal .ranges button { min-height:28px; padding:0 8px; border-radius:4px; color:var(--tv-text); font:13px var(--tv-font); }
+.tv-terminal .ranges button:hover { background:var(--tv-btn-hover); color:var(--tv-text); }
+.tv-terminal .ranges button[aria-checked="true"] { background:var(--tv-btn-active-bg); color:var(--tv-btn-active); font-weight:400; }
+.tv-bottom-end { flex:1; display:flex; align-items:center; justify-content:flex-end; gap:6px; min-width:0; }
+.tv-terminal .tv-bottom > .ranges { flex:none; }
+.tv-terminal .through { flex:0 1 auto; min-width:0; color:var(--tv-text-2); font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.tv-clock { color:var(--tv-text); font-size:13px; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.tv-scale { display:flex; gap:2px; }
+.tv-scale button { min-width:28px; height:28px; padding:0 6px; border:0; border-radius:4px; background:transparent; color:var(--tv-text); font:13px var(--tv-font); cursor:pointer; }
+.tv-scale button:hover { background:var(--tv-btn-hover); }
+.tv-scale button[aria-pressed="true"] { color:var(--tv-btn-active); }
+
+/* ---- the screener takes the chart's place ---- */
+.tv-terminal .screener { border:0; background:var(--tv-bg); font-family:var(--tv-font); }
+.tv-terminal .screener .toolbar { min-height:var(--tv-header); padding:4px 12px; }
+.tv-terminal .screener .toolbar-bottom { border-top:var(--tv-gap) solid var(--tv-page); }
+.tv-terminal .screener h2 { font:600 16px var(--tv-font); }
+.tv-terminal .screener-controls { padding:0 12px 8px !important; }
+.tv-terminal .screener-controls label { color:var(--tv-text-2); font-size:12px; font-weight:400; letter-spacing:0; text-transform:none; }
+.tv-terminal .screener-controls select { height:30px; border:1px solid var(--tv-border-hover); border-radius:4px; background:var(--tv-input); font-size:13px; }
+.tv-terminal .screener-scroll { padding:12px; border-top:1px solid var(--tv-border); }
+.tv-terminal .screen-card { border:1px solid var(--tv-border); border-radius:6px; background:var(--tv-bg); }
+.tv-terminal .screen-card:hover { border-color:var(--tv-border-hover); background:var(--tv-bg-2); }
+.tv-terminal .screen-card[aria-current="true"] { border-color:var(--tv-brand); box-shadow:inset 0 0 0 1px var(--tv-brand); }
+.tv-terminal .screen-name { font:600 15px var(--tv-font); }
+.tv-terminal .segmented { min-height:30px; padding:2px; border-radius:6px; background:var(--tv-bg-3); }
+.tv-terminal .segmented button { font:13px var(--tv-font); color:var(--tv-text); }
+.tv-terminal .segmented button[aria-checked="true"] { background:var(--tv-bg); font-weight:600; }
+.tv-terminal .screener-side [data-side="sell"][aria-checked="true"] { color:var(--tv-red-500); }
+.tv-terminal .screener-side [data-side="buy"][aria-checked="true"] { color:var(--tv-blue-500); }
+.tv-terminal .screener-button { color:var(--tv-text); font:13px var(--tv-font); }
+.tv-terminal .screener-button:hover { background:var(--tv-btn-hover); }
+
+/* ---- the widget bar: the open panel, then the rail ---- */
+.tv-terminal .dock { display:flex; gap:var(--tv-gap); min-height:0; }
+.tv-terminal .dock-panel { width:var(--tv-widget); min-height:0; border:0; background:var(--tv-bg); font-family:var(--tv-font); }
+.tv-terminal .dock-rail { width:var(--tv-right); padding:4px 0; background:var(--tv-bg); }
+.tv-terminal .dock-group { gap:2px; }
+.tv-terminal .dock-tool,.tv-terminal .dock-rail .tool { width:36px; height:36px; border-radius:4px; color:var(--tv-text); }
+.tv-terminal .dock-rail .tool svg { width:28px; height:28px; stroke-width:1; }
+.tv-terminal .dock-rail .tool:hover { background:var(--tv-btn-hover); color:var(--tv-text); }
+.tv-terminal .dock-rail .tool:is([aria-expanded="true"],[aria-pressed="true"]) { background:var(--tv-btn-active-bg); color:var(--tv-btn-active); }
+
+/* Panel heads: TradingView's widget header, 16px semibold, its actions at the end. */
+.tv-terminal :is(.watch-head,.panel-head) { min-height:46px; padding:6px 8px 6px 12px; border-bottom:1px solid var(--tv-border); }
+.tv-terminal :is(.watch-title,.panel-title) { color:var(--tv-text); font:600 16px/24px var(--tv-font); letter-spacing:0; text-transform:none; }
+.tv-terminal .watch-count { color:var(--tv-text-2); font-weight:400; }
+.tv-terminal :is(.filter,.watch-head .filter,.screener-head .filter) { height:30px; min-height:0; padding:0 10px; border:1px solid var(--tv-border-hover); border-radius:4px; background:var(--tv-input); color:var(--tv-text); font:13px var(--tv-font); }
+.tv-terminal .filter:focus { border-color:var(--tv-brand); outline:0; }
+.tv-terminal .panel-body { padding:12px; color:var(--tv-text); font-size:14px; line-height:20px; }
+.tv-terminal .panel-body p { margin:12px 0 0; }
+.tv-terminal .btn { min-height:30px; padding:0 10px; border:1px solid var(--tv-border-hover); border-radius:4px; background:var(--tv-bg); color:var(--tv-text); font:13px var(--tv-font); }
+.tv-terminal .btn:hover { background:var(--tv-btn-hover); }
+.tv-terminal .btn[aria-pressed="true"] { border-color:var(--tv-btn-active-bg); background:var(--tv-btn-active-bg); color:var(--tv-btn-active); }
+
+/* The watchlist: TradingView's columns (Symbol, Last, Chg, Chg%), 13px rows, blue hover and selection. */
+.tv-terminal table.watch { font-size:13px; }
+.tv-terminal table.watch thead th { padding:6px 8px; border-bottom:1px solid var(--tv-border); background:var(--tv-bg); color:var(--tv-text-2); font-size:12px; font-weight:400; letter-spacing:0; text-transform:none; }
+.tv-terminal table.watch tbody th,.tv-terminal table.watch td { padding:5px 8px; }
+.tv-terminal table.watch thead th:first-child,.tv-terminal table.watch tbody th { padding-left:12px; }
+.tv-terminal table.watch tbody tr:hover { background:var(--tv-row-hover); }
+.tv-terminal table.watch tbody tr[aria-selected="true"] { background:var(--tv-row-selected); box-shadow:none; }
+.tv-terminal table.watch .pick { color:var(--tv-text); font-weight:600; }
+.tv-terminal table.watch td.stale { color:var(--tv-text-2); }
+.tv-terminal table.watch .flag { color:var(--tv-text-2); }
+.tv-terminal table.watch .flag-retired { color:var(--tv-orange-500); }
+.tv-terminal .watch-tip,.tv-terminal .event-tip { border:0; border-radius:4px; background:var(--tv-tooltip); color:#fff; box-shadow:var(--tv-shadow); font-size:13px; }
+.tv-terminal .event-tip :is(.event-tip-days,.event-tip-text) { color:rgb(255 255 255 / .7); }
+
+/* The details widget, under the list: TradingView's symbol details. */
+.tv-terminal .details { padding:12px; border-top:1px solid var(--tv-border); }
+.tv-terminal .details-title { font:600 16px/22px var(--tv-font); }
+.tv-terminal .details-meta { gap:0 8px; color:var(--tv-text-2); font-size:12px; }
+.tv-terminal .details-quote { margin-top:8px; }
+.tv-terminal .details-last { font:600 28px/34px var(--tv-font); letter-spacing:0; }
+.tv-terminal .details-unit { color:var(--tv-text-2); font-size:12px; }
+.tv-terminal .details-change { font-size:14px; font-weight:600; }
+.tv-terminal .details-note { color:var(--tv-text-2); font-size:12px; line-height:18px; }
+.tv-terminal .details-note span { color:var(--tv-text); }
+.tv-terminal .details-book { gap:0 12px; font-size:13px; }
+.tv-terminal .details-book dt { color:var(--tv-text-2); font-size:12px; }
+.tv-terminal .details-heading { margin:14px 0 6px; color:var(--tv-text); font-size:14px; font-weight:600; letter-spacing:0; text-transform:none; }
+/* Performance: TradingView's tiles, tinted by the sign of the change. */
+.tv-terminal .performance { gap:6px; }
+.tv-terminal .performance button { gap:2px; padding:8px 4px; border-radius:6px; background:var(--tv-bg-3); color:var(--tv-text); font-family:var(--tv-font); }
+.tv-terminal .performance button:has(.up) { background:var(--tv-up-soft); }
+.tv-terminal .performance button:has(.down) { background:var(--tv-down-soft); }
+.tv-terminal .performance button:hover { filter:brightness(.97); }
+:root[data-theme="dark"] .tv-terminal .performance button:hover { filter:brightness(1.2); }
+.tv-terminal .performance button[aria-pressed="true"] { box-shadow:inset 0 0 0 1px var(--tv-brand); }
+.tv-terminal .perf-value { font-size:14px; font-weight:600; }
+.tv-terminal .perf-value .up { color:var(--tv-up); } .tv-terminal .perf-value .down { color:var(--tv-down); }
+.tv-terminal .perf-range { color:var(--tv-text-2); font-size:12px; }
+
+/* Events and Forecast history: the same widget frame, TradingView's inputs. */
+.tv-terminal .event-section-nav { padding:6px 12px; border-bottom:1px solid var(--tv-border); }
+.tv-terminal .events-panel :is(button,select,input[type="month"]),.tv-terminal .history-panel :is(select,input[type="date"]) { min-height:30px; border:1px solid var(--tv-border-hover); border-radius:4px; background:var(--tv-input); color:var(--tv-text); font:13px var(--tv-font); }
+.tv-terminal .events-panel button:hover { background:var(--tv-btn-hover); }
+.tv-terminal .events-panel button[aria-pressed="true"],.tv-terminal .history-panel button[aria-pressed="true"] { border-color:var(--tv-btn-active-bg); background:var(--tv-btn-active-bg); color:var(--tv-btn-active); }
+.tv-terminal .event-calendar button[aria-current] { border-color:var(--tv-brand); }
+.tv-terminal .event-span { background:var(--tv-brand); }
+.tv-terminal .history-edition,.tv-terminal .history-list > li { border-color:var(--tv-border); border-radius:6px; }
+
+/* The object tree: one row per drawing, its visibility, lock and removal at the end. */
+.tv-object-list { display:grid; gap:2px; margin:0 -12px; padding:0; list-style:none; }
+.tv-object-list li { display:flex; align-items:center; gap:8px; min-height:36px; padding:0 8px 0 12px; cursor:pointer; }
+.tv-object-list li:hover { background:var(--tv-row-hover); }
+.tv-object-list li[aria-selected="true"] { background:var(--tv-row-selected); }
+.tv-object-list .tv-obj-icon { width:28px; height:28px; flex:none; fill:none; stroke:currentColor; color:var(--tv-text-2); }
+.tv-object-list .tv-obj-name { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.tv-object-list .tv-btn { width:28px; min-width:0; height:28px; }
+.tv-object-list .tv-btn svg { width:24px; height:24px; }
+.tv-muted { color:var(--tv-text-2); }
+
+/* ---- floating chart UI: the drawing's own toolbar, the text editor, replay, the selection outline ---- */
+.tv-float { position:absolute; z-index:8; display:flex; align-items:center; gap:2px; padding:2px; border-radius:6px; background:var(--tv-popup); box-shadow:var(--tv-popup-shadow); }
+.tv-float .tv-btn { height:30px; min-width:30px; }
+.tv-float .tv-btn svg { width:24px; height:24px; }
+.tv-swatch { width:18px; height:18px; border-radius:3px; box-shadow:inset 0 0 0 1px rgb(0 0 0 / .15); }
+.tv-colors { display:grid; grid-template-columns:repeat(8,22px); gap:4px; padding:8px; }
+.tv-colors button { width:22px; height:22px; padding:0; border:0; border-radius:4px; cursor:pointer; }
+.tv-colors button[aria-checked="true"] { outline:2px solid var(--tv-brand); outline-offset:1px; }
+.tv-text-edit { position:absolute; z-index:9; min-width:120px; padding:4px 6px; border:1px solid var(--tv-brand); border-radius:4px; background:var(--tv-pane); color:var(--tv-text); font:14px var(--tv-font); outline:0; }
+.tv-replay { position:absolute; z-index:7; left:50%; bottom:12px; transform:translateX(-50%); display:flex; align-items:center; gap:2px; padding:2px 6px; border-radius:6px; background:var(--tv-popup); box-shadow:var(--tv-popup-shadow); font-size:13px; }
+.tv-replay[hidden] { display:none; }
+.tv-replay .tv-btn { height:30px; min-width:30px; }
+.tv-replay .tv-btn svg { width:24px; height:24px; }
+.tv-replay output { min-width:88px; padding:0 6px; color:var(--tv-text-2); font-variant-numeric:tabular-nums; text-align:center; }
+.chart-area.is-drawing,.chart-area.is-drawing * { cursor:crosshair !important; }
+.chart-area.is-hovering-drawing,.chart-area.is-hovering-drawing * { cursor:pointer !important; }
+.chart-area.is-dragging-drawing,.chart-area.is-dragging-drawing * { cursor:grabbing !important; }
+
+/* ---- dialogs: world search (Mod+K) and indicators ---- */
+.tv-search { width:min(620px,calc(100vw - 32px)); max-height:min(640px,calc(100dvh - 64px)); }
+.tv-search[open] { display:flex; flex-direction:column; }
+.tv-dialog-head { display:flex; align-items:center; justify-content:space-between; padding:16px 20px 8px; }
+.tv-dialog-head h2 { margin:0; font:600 20px/28px var(--tv-font); }
+.tv-dialog-search { display:flex; align-items:center; gap:8px; margin:0 20px 8px; padding:0 10px; border-bottom:1px solid var(--tv-border); }
+.tv-dialog-search svg { width:28px; height:28px; flex:none; fill:none; stroke:var(--tv-text-2); }
+.tv-dialog-search input { flex:1; height:44px; border:0; background:transparent; color:var(--tv-text); font:16px var(--tv-font); outline:0; }
+.tv-dialog-tabs { display:flex; gap:6px; padding:0 20px 8px; }
+.tv-dialog-tabs button { height:28px; padding:0 12px; border:0; border-radius:14px; background:var(--tv-bg-3); color:var(--tv-text); font:13px var(--tv-font); cursor:pointer; }
+.tv-dialog-tabs button[aria-pressed="true"] { background:var(--tv-text); color:var(--tv-bg); }
+.tv-results { flex:1; min-height:0; margin:0; padding:0 0 8px; overflow-y:auto; list-style:none; }
+.tv-results li { display:grid; grid-template-columns:minmax(0,1fr) auto auto; align-items:center; gap:12px; min-height:44px; padding:0 20px; cursor:pointer; font-size:14px; }
+.tv-results li:is(:hover,.active) { background:var(--tv-row-hover); }
+.tv-results .tv-r-name { font-weight:600; }
+.tv-results .tv-r-desc { color:var(--tv-text-2); font-size:13px; }
+.tv-results .tv-r-meta { color:var(--tv-text-2); font-size:12px; text-align:right; }
+.tv-results .tv-r-last { font-variant-numeric:tabular-nums; text-align:right; }
+.tv-dialog-close { width:34px; padding:0; }
+.tv-indicators { width:min(520px,calc(100vw - 32px)); }
+.tv-indicators[open] { display:flex; flex-direction:column; }
+
+
+/* ---- Economy: the measures as TradingView's legend toggles (a dot in the series' colour), the gold mode beside ---- */
+.tv-interval { display:flex; gap:2px; }
+.tv-interval .tv-btn { min-width:30px; padding:0 6px; font-weight:600; }
+.tv-terminal .eco-chart-controls { gap:6px 8px; }
+.tv-terminal #measure { gap:4px; padding:0; border-radius:0; background:none; }
+.tv-terminal #measure button { --m:var(--tv-text-2); display:inline-flex; flex-direction:row; align-items:center; gap:6px; min-height:26px; padding:0 8px;
+  border:1px solid var(--tv-border-hover); border-radius:4px; background:var(--tv-pane); box-shadow:none; color:var(--tv-text-2); font:13px var(--tv-font); }
+.tv-terminal #measure button::before { content:""; flex:none; width:8px; height:8px; border-radius:50%; border:1.5px solid var(--m); }
+.tv-terminal #measure button[aria-pressed="true"] { border-color:var(--m); color:var(--tv-text); font-weight:400; }
+.tv-terminal #measure button[aria-pressed="true"]::before { background:var(--m); }
+.tv-terminal #measure button[aria-pressed="true"] :is(.side-name,.side-value) { color:var(--tv-text); }
+.tv-terminal #measure button:not([aria-pressed="true"]):hover { background:var(--tv-btn-hover); }
+.tv-terminal #measure .side-name { color:inherit; font-size:13px; font-weight:400; letter-spacing:0; text-transform:none; }
+.tv-terminal #measure .side-value { font-weight:600; }
+.tv-terminal #measure [data-measure="gross"] { --m:var(--eco-gross); }
+.tv-terminal #measure [data-measure="coins"] { --m:var(--eco-coins); }
+.tv-terminal #measure [data-measure="npc"] { --m:var(--eco-npc); }
+.tv-terminal #measure #killsToggle { --m:var(--tv-gray-400); }
+.tv-terminal #measure #priceToggle { --m:var(--average); }
+.tv-terminal #valueMode { margin:0; }
+.tv-terminal #loadFeedback.has-view { border-top:1px solid var(--tv-border); background:var(--tv-popup); }
+.tv-terminal .eco-panel-heading { color:var(--tv-text); font-size:14px; letter-spacing:0; text-transform:none; }
+.tv-terminal .eco-list li { border-bottom-color:var(--tv-border); }
+.tv-terminal .eco-data-frame :is(th,td):first-child,.tv-terminal .eco-data-frame th { background:var(--tv-bg); }
+
+/* ---- full screen: the whole terminal, as the page shows it; the rail keeps the way back, as the header is not shown ---- */
+.tv-exit-full { display:none !important; }
+.tv-terminal:is(.expanded,:fullscreen) .tv-exit-full { display:inline-grid !important; }
+.tv-terminal:fullscreen,.tv-terminal.expanded { position:fixed; inset:0; z-index:30; padding:0 !important; background:var(--tv-page); }
+
+/* ---- narrow: the chart, then the rail as a row, then the panel; the page scrolls ---- */
+@media (max-width:900px) {
+  body.tv-app { display:block; height:auto; overflow:visible; }
+  .tv-header { position:sticky; top:0; }
+  .tv-tools > :not(#tvSymbol,#tvStyle,#tvIndicators,.tv-static,.tv-interval) { display:none; }
+  .tv-tools #tvIndicators span,.tv-overview-link { display:none; }
+  .tv-terminal { display:flex; flex-direction:column; }
+  .tv-drawbar { flex-direction:row; order:0; padding:0 4px; overflow-x:auto; overflow-y:hidden; }
+  .tv-drawbar-group { flex-direction:row; }
+  .tv-drawbar .tv-btn { width:38px; }
+  .tv-hdivider { width:1px; height:22px; margin:0 4px; }
+  .tv-terminal .chart-panel { height:clamp(380px,72dvh,640px); }
+  .tv-terminal .dock { flex-direction:column; }
+  .tv-terminal .dock-rail { order:-1; flex-direction:row; width:auto; padding:0 4px; }
+  .tv-terminal .dock-group { flex-direction:row; }
+  .tv-terminal .dock-panel { width:auto; }
+  .tv-terminal .screener { height:max(380px,calc(100dvh - var(--tv-header) - 100px)); }
+}
+@container chart (max-width:520px) {
+  .tv-terminal .chart-head { max-width:calc(100% - 64px); }
+  .tv-legend-int { display:none; }
+  .tv-terminal #side button { min-width:64px; min-height:36px; }
+  .tv-terminal .head-line h2,.tv-terminal .symbol-last { font-size:15px; }
+}
+@media (max-width:600px) {
+  .tv-header .site-home span,.tv-header .site-github { display:none; }
+  .tv-bottom .through,.tv-bottom .tv-divider { display:none; }
+  .tv-terminal .ranges button { padding:0 6px; }
+  .tv-symbol span { display:none; }
+  .tv-symbol { padding:0; width:34px; }
+}
+/* Phones: the bottom toolbar keeps the ranges and the scale modes, as TradingView's mobile chart does. */
+@media (max-width:480px) {
+  .tv-clock { display:none; }
+  .tv-tools > :not(#tvSymbol,.tv-interval) { display:none; }
+  .tv-terminal .ranges button { padding:0 5px; }
+  .tv-scale button { min-width:24px; padding:0 4px; }
+}

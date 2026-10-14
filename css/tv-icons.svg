@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+<!-- TradingView-style toolbar icons: 28x28, 1px strokes on half pixels, currentColor. Used as <use href="css/tv-icons.svg#name">. -->
+<symbol id="search" viewBox="0 0 28 28"><circle cx="12.5" cy="12.5" r="6" fill="none" stroke="currentColor"/><path d="M17 17l5.5 5.5" fill="none" stroke="currentColor"/></symbol>
+<symbol id="plus" viewBox="0 0 28 28"><path d="M14 7.5v13M7.5 14h13" fill="none" stroke="currentColor"/></symbol>
+<symbol id="chevron" viewBox="0 0 28 28"><path d="M10 12l4 4 4-4" fill="none" stroke="currentColor"/></symbol>
+<symbol id="close" viewBox="0 0 28 28"><path d="M8.5 8.5l11 11M19.5 8.5l-11 11" fill="none" stroke="currentColor"/></symbol>
+<symbol id="line" viewBox="0 0 28 28"><path d="M5.5 19.5l5-6 4 3 8-9" fill="none" stroke="currentColor"/></symbol>
+<symbol id="line-markers" viewBox="0 0 28 28"><path d="M5.5 19.5l5-6 4 3 8-9" fill="none" stroke="currentColor"/><circle cx="10.5" cy="13.5" r="1.5" fill="currentColor"/><circle cx="14.5" cy="16.5" r="1.5" fill="currentColor"/><circle cx="22.5" cy="7.5" r="1.5" fill="currentColor"/></symbol>
+<symbol id="step" viewBox="0 0 28 28"><path d="M5.5 19.5h4v-6h5v3h4v-9h4" fill="none" stroke="currentColor"/></symbol>
+<symbol id="area" viewBox="0 0 28 28"><path d="M5.5 19.5l5-6 4 3 8-9" fill="none" stroke="currentColor"/><path d="M5.5 19.5l5-6 4 3 8-9v14h-17z" fill="currentColor" opacity=".18"/></symbol>
+<symbol id="baseline" viewBox="0 0 28 28"><path d="M4.5 14.5h19" fill="none" stroke="currentColor" stroke-dasharray="2 2"/><path d="M5.5 18.5l5-7 4 5 8-10" fill="none" stroke="currentColor"/></symbol>
+<symbol id="indicators" viewBox="0 0 28 28"><path d="M6.5 20.5c3-1 3.5-13 7.5-13s3.5 9 7.5 9" fill="none" stroke="currentColor"/><path d="M5.5 22.5h17" fill="none" stroke="currentColor"/></symbol>
+<symbol id="templates" viewBox="0 0 28 28"><rect x="6.5" y="6.5" width="6" height="6" rx="1" fill="none" stroke="currentColor"/><rect x="15.5" y="6.5" width="6" height="6" rx="1" fill="none" stroke="currentColor"/><rect x="6.5" y="15.5" width="6" height="6" rx="1" fill="none" stroke="currentColor"/><rect x="15.5" y="15.5" width="6" height="6" rx="1" fill="none" stroke="currentColor"/></symbol>
+<symbol id="replay" viewBox="0 0 28 28"><path d="M13.5 9.5l-6 4.5 6 4.5zM21.5 9.5l-6 4.5 6 4.5z" fill="none" stroke="currentColor" stroke-linejoin="round"/></symbol>
+<symbol id="undo" viewBox="0 0 28 28"><path d="M9.5 11.5h8a4 4 0 0 1 0 8h-5" fill="none" stroke="currentColor"/><path d="M12.5 8.5l-3 3 3 3" fill="none" stroke="currentColor"/></symbol>
+<symbol id="redo" viewBox="0 0 28 28"><path d="M18.5 11.5h-8a4 4 0 0 0 0 8h5" fill="none" stroke="currentColor"/><path d="M15.5 8.5l3 3-3 3" fill="none" stroke="currentColor"/></symbol>
+<symbol id="sun" viewBox="0 0 28 28"><circle cx="14" cy="14" r="4" fill="none" stroke="currentColor"/><path d="M14 5.5v2M14 20.5v2M5.5 14h2M20.5 14h2M8 8l1.4 1.4M18.6 18.6L20 20M8 20l1.4-1.4M18.6 9.4L20 8" fill="none" stroke="currentColor"/></symbol>
+<symbol id="moon" viewBox="0 0 28 28"><path d="M19.5 17.5a7 7 0 0 1-9-9 7 7 0 1 0 9 9z" fill="none" stroke="currentColor" stroke-linejoin="round"/></symbol>
+<symbol id="camera" viewBox="0 0 28 28"><path d="M6.5 10.5h3l2-2.5h5l2 2.5h3v10h-15z" fill="none" stroke="currentColor" stroke-linejoin="round"/><circle cx="14" cy="15" r="3" fill="none" stroke="currentColor"/></symbol>
+<symbol id="expand" viewBox="0 0 28 28"><path d="M7.5 12V7.5H12M16 7.5h4.5V12M20.5 16v4.5H16M12 20.5H7.5V16" fill="none" stroke="currentColor"/></symbol>
+<symbol id="collapse" viewBox="0 0 28 28"><path d="M12 7.5V12H7.5M20.5 12H16V7.5M16 20.5V16h4.5M7.5 16H12v4.5" fill="none" stroke="currentColor"/></symbol>
+<symbol id="gear" viewBox="0 0 28 28"><circle cx="14" cy="14" r="2.5" fill="none" stroke="currentColor"/><path d="M14 5.5l1.6 2.3 2.7-.8.6 2.7 2.6 1-1 2.6 1.6 2.3-2.3 1.6.3 2.8-2.8.1-1.1 2.6-2.6-1.1-2.6 1.1-1.1-2.6-2.8-.1.3-2.8-2.3-1.6 1.6-2.3-1-2.6 2.6-1 .6-2.7 2.7.8z" fill="none" stroke="currentColor" stroke-linejoin="round"/></symbol>
+<symbol id="cross" viewBox="0 0 28 28"><path d="M14 5.5v17M5.5 14h17" fill="none" stroke="currentColor"/></symbol>
+<symbol id="dot" viewBox="0 0 28 28"><circle cx="14" cy="14" r="2" fill="currentColor"/></symbol>
+<symbol id="arrow" viewBox="0 0 28 28"><path d="M10.5 6.5v13l3.5-3.5 2.5 5.5 2-1-2.5-5.5h5z" fill="none" stroke="currentColor" stroke-linejoin="round"/></symbol>
+<symbol id="trend" viewBox="0 0 28 28"><path d="M7.5 20.5l13-13" fill="none" stroke="currentColor"/><circle cx="7.5" cy="20.5" r="1.5" fill="none" stroke="currentColor"/><circle cx="20.5" cy="7.5" r="1.5" fill="none" stroke="currentColor"/></symbol>
+<symbol id="ray" viewBox="0 0 28 28"><path d="M7.5 20.5l16-16" fill="none" stroke="currentColor"/><circle cx="7.5" cy="20.5" r="1.5" fill="none" stroke="currentColor"/></symbol>
+<symbol id="hline" viewBox="0 0 28 28"><path d="M4.5 14.5h19" fill="none" stroke="currentColor"/><circle cx="14" cy="14.5" r="1.5" fill="none" stroke="currentColor"/></symbol>
+<symbol id="hray" viewBox="0 0 28 28"><path d="M9.5 14.5h14" fill="none" stroke="currentColor"/><circle cx="8" cy="14.5" r="1.5" fill="none" stroke="currentColor"/></symbol>
+<symbol id="vline" viewBox="0 0 28 28"><path d="M14.5 4.5v19" fill="none" stroke="currentColor"/><circle cx="14.5" cy="14" r="1.5" fill="none" stroke="currentColor"/></symbol>
+<symbol id="crossline" viewBox="0 0 28 28"><path d="M14.5 4.5v19M4.5 14.5h19" fill="none" stroke="currentColor"/></symbol>
+<symbol id="channel" viewBox="0 0 28 28"><path d="M5.5 16.5l12-9M10.5 21.5l12-9" fill="none" stroke="currentColor"/><path d="M8 19l12-9" fill="none" stroke="currentColor" stroke-dasharray="2 2"/></symbol>
+<symbol id="fib" viewBox="0 0 28 28"><path d="M4.5 6.5h19M4.5 11.5h19M4.5 15.5h19M4.5 21.5h19" fill="none" stroke="currentColor"/><path d="M6.5 21.5l15-15" fill="none" stroke="currentColor" stroke-dasharray="2 2"/></symbol>
+<symbol id="rect" viewBox="0 0 28 28"><rect x="6.5" y="8.5" width="15" height="11" fill="none" stroke="currentColor"/><circle cx="6.5" cy="8.5" r="1.5" fill="var(--tv-bg, #fff)" stroke="currentColor"/><circle cx="21.5" cy="19.5" r="1.5" fill="var(--tv-bg, #fff)" stroke="currentColor"/></symbol>
+<symbol id="text" viewBox="0 0 28 28"><path d="M8.5 8.5h11M14 8.5v12M11.5 20.5h5" fill="none" stroke="currentColor"/></symbol>
+<symbol id="measure" viewBox="0 0 28 28"><path d="M14.5 5.5v17M10.5 9.5l4-4 4 4M10.5 18.5l4 4 4-4M6.5 5.5h4M18.5 22.5h4" fill="none" stroke="currentColor"/></symbol>
+<symbol id="arrowup" viewBox="0 0 28 28"><path d="M14 7.5l6 7h-3.5v6h-5v-6H8z" fill="none" stroke="currentColor" stroke-linejoin="round"/></symbol>
+<symbol id="magnet" viewBox="0 0 28 28"><path d="M8.5 7.5v7a5.5 5.5 0 0 0 11 0v-7h-3.5v7a2 2 0 0 1-4 0v-7z" fill="none" stroke="currentColor" stroke-linejoin="round"/><path d="M8.5 10.5h3.5M16 10.5h3.5" fill="none" stroke="currentColor"/></symbol>
+<symbol id="lock" viewBox="0 0 28 28"><rect x="8.5" y="12.5" width="11" height="9" rx="1" fill="none" stroke="currentColor"/><path d="M10.5 12.5v-2.5a3.5 3.5 0 0 1 7 0v2.5" fill="none" stroke="currentColor"/></symbol>
+<symbol id="eye" viewBox="0 0 28 28"><path d="M4.5 14s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z" fill="none" stroke="currentColor"/><circle cx="14" cy="14" r="2.5" fill="none" stroke="currentColor"/></symbol>
+<symbol id="trash" viewBox="0 0 28 28"><path d="M7.5 9.5h13M11.5 9.5V7.5h5v2M9.5 9.5l1 12h7l1-12M12.5 12.5v6M15.5 12.5v6" fill="none" stroke="currentColor"/></symbol>
+<symbol id="zoom" viewBox="0 0 28 28"><circle cx="12.5" cy="12.5" r="6" fill="none" stroke="currentColor"/><path d="M17 17l5.5 5.5M12.5 9.5v6M9.5 12.5h6" fill="none" stroke="currentColor"/></symbol>
+<symbol id="watchlist" viewBox="0 0 28 28"><path d="M7.5 6.5h13v15h-13z" fill="none" stroke="currentColor"/><path d="M10.5 10.5h7M10.5 14h7M10.5 17.5h5" fill="none" stroke="currentColor"/></symbol>
+<symbol id="screener" viewBox="0 0 28 28"><path d="M6.5 7.5h15l-6 7.5v6l-3-1.5v-4.5z" fill="none" stroke="currentColor" stroke-linejoin="round"/></symbol>
+<symbol id="calendar" viewBox="0 0 28 28"><rect x="6.5" y="8.5" width="15" height="13" rx="1.5" fill="none" stroke="currentColor"/><path d="M6.5 12.5h15M10.5 6.5v4M17.5 6.5v4" fill="none" stroke="currentColor"/></symbol>
+<symbol id="projection" viewBox="0 0 28 28"><path d="M5.5 19.5l4.5-4.5 3.5 2.5 2-2" fill="none" stroke="currentColor"/><path d="M15.5 15.5l7-7" fill="none" stroke="currentColor" stroke-dasharray="2 2"/><path d="M15.5 5.5v17" fill="none" stroke="currentColor"/></symbol>
+<symbol id="history" viewBox="0 0 28 28"><path d="M7.5 14a6.5 6.5 0 1 0 2-4.7" fill="none" stroke="currentColor"/><path d="M7.5 7.5v3.5H11M14 10.5V14l2.5 1.5" fill="none" stroke="currentColor"/></symbol>
+<symbol id="layers" viewBox="0 0 28 28"><path d="M14 6.5l8.5 4.5-8.5 4.5-8.5-4.5z" fill="none" stroke="currentColor" stroke-linejoin="round"/><path d="M5.5 15l8.5 4.5 8.5-4.5" fill="none" stroke="currentColor" stroke-linejoin="round"/></symbol>
+<symbol id="help" viewBox="0 0 28 28"><circle cx="14" cy="14" r="7.5" fill="none" stroke="currentColor"/><path d="M11.8 11.8a2.3 2.3 0 1 1 3.2 2.1c-.6.3-1 .8-1 1.5v.6M14 18.2v.3" fill="none" stroke="currentColor"/></symbol>
+<symbol id="creatures" viewBox="0 0 28 28"><path d="M6.5 21.5h15M8.5 21.5v-7M13 21.5v-12M17.5 21.5v-9" fill="none" stroke="currentColor"/></symbol>
+<symbol id="sliders" viewBox="0 0 28 28"><path d="M6.5 10.5h15M6.5 17.5h15" fill="none" stroke="currentColor"/><circle cx="11" cy="10.5" r="2" fill="var(--tv-bg, #fff)" stroke="currentColor"/><circle cx="17" cy="17.5" r="2" fill="var(--tv-bg, #fff)" stroke="currentColor"/></symbol>
+<symbol id="document" viewBox="0 0 28 28"><path d="M8.5 5.5h8l4 4v13h-12z" fill="none" stroke="currentColor" stroke-linejoin="round"/><path d="M16.5 5.5v4h4M11 13.5h7M11 17h7" fill="none" stroke="currentColor"/></symbol>
+<symbol id="overview" viewBox="0 0 28 28"><rect x="5.5" y="6.5" width="17" height="15" rx="1.5" fill="none" stroke="currentColor"/><path d="M8.5 17.5l3-3 2.5 2 5-5" fill="none" stroke="currentColor"/></symbol>
+<symbol id="logo" viewBox="0 0 28 28"><circle cx="14" cy="14" r="10" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M9.5 11h9M14 11v8" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+<symbol id="github" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .75a11.25 11.25 0 0 0-3.56 21.92c.56.1.77-.24.77-.54v-2.1c-3.13.68-3.79-1.33-3.79-1.33-.51-1.3-1.25-1.65-1.25-1.65-1.02-.7.08-.69.08-.69 1.13.08 1.72 1.16 1.72 1.16 1 1.72 2.64 1.22 3.28.93.1-.73.4-1.22.71-1.5-2.5-.28-5.13-1.25-5.13-5.56 0-1.23.44-2.23 1.16-3.02-.12-.28-.5-1.43.11-2.98 0 0 .95-.3 3.1 1.15a10.8 10.8 0 0 1 5.64 0c2.15-1.46 3.1-1.15 3.1-1.15.61 1.55.23 2.7.11 2.98.72.79 1.16 1.79 1.16 3.02 0 4.32-2.63 5.27-5.14 5.55.4.35.76 1.03.76 2.09v3.1c0 .3.2.65.77.54A11.25 11.25 0 0 0 12 .75Z"/></symbol>
+</svg>

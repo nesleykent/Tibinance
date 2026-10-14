@@ -13,10 +13,10 @@ const price = {
   },
   draw(s, view, side, c) {
     const points = view.prices.map(p => ({ time: p.day, value: p.close })), split = lineLayers(points);
-    for (const series of Object.values(s)) series.applyOptions({ color: c.sell });
+    for (const series of Object.values(s)) series.applyOptions({ color: c.line ?? c.sell });
     s.solid.setData(split.solid); s.dotted.setData(split.dotted); s.points.setData(points);
   },
-  keys: (side, c) => [{ mark: 'dot', color: c.sell, label: 'Daily close (USD / TIB)' }, { mark: 'dotted', color: c.sell, label: 'Days not observed' }]
+  keys: (side, c) => [{ mark: 'dot', color: c.line ?? c.sell, label: 'Daily close (USD / TIB)' }, { mark: 'dotted', color: c.line ?? c.sell, label: 'Days not observed' }]
 };
 const volume = {
   id: 'token-volume', depth: -1,
@@ -25,10 +25,10 @@ const volume = {
     s.priceScale().applyOptions({ scaleMargins: { top: 0.8, bottom: 0 } }); return s;
   },
   draw(s, view, side, c) {
-    s.applyOptions({ color: `${c.sell}40` });
+    s.applyOptions({ color: `${c.line ?? c.sell}40` });
     s.setData(view.grid.map(day => { const p = view.byDay.get(day); return p ? { time: day, value: p.volumeUsd } : { time: day }; }));
   },
-  keys: (side, c) => [{ mark: 'bar', color: c.sell, label: 'Pool volume (USD)' }]
+  keys: (side, c) => [{ mark: 'bar', color: c.line ?? c.sell, label: 'Pool volume (USD)' }]
 };
 export const TOKEN_PROFILE = { layers: [price, volume, eventsLayer], priceLayer: price, format: tokenPrice,
   priceFormat: { type: 'custom', minMove: 0.00001, formatter: tokenPrice } };

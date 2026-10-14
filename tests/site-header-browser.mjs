@@ -1,5 +1,5 @@
-// The shared site header (js/site-header.js, css/site-header.css) on Capture, Markets, Economy, Trade and both Research
-// editions, in a real browser: the trail and its menu of sections, keyboard and pointer use, Research's world and
+// The shared site header (js/site-header.js, css/site-header.css) on Capture, both overviews, Markets, Economy, Trade
+// and both Research editions, in a real browser: the trail and its menu of sections, keyboard and pointer use, Research's world and
 // language controls, their accessible names, and the layout at desktop and phone widths.
 // Run with the same local server / Playwright environment as markets-browser.mjs (TIBINANCE_BROWSER=webkit for WebKit).
 import {createRequire} from 'node:module';
@@ -10,22 +10,30 @@ const {chromium,webkit}=require(process.env.TIBINANCE_NODE_MODULES ? `${process.
 const engine=process.env.TIBINANCE_BROWSER ?? 'chrome';
 const root=process.env.TIBINANCE_TEST_URL ?? 'http://127.0.0.1:8765';
 const SITE='https://nesleykent.github.io/Tibinance/';
-const LOCAL=[['Capture','./'],['Markets','markets.html'],['Economy','economy.html'],['Trade','trade.html'],['Research','reports/tc-cycle/']];
+const SECTIONS_ORDER=['Capture','Markets overview','Markets','Economy overview','Economy','Trade','Research'];
+const LOCAL=[['Capture','./'],['Markets overview','markets-overview.html'],['Markets','markets.html'],['Economy overview','economy-overview.html'],['Economy','economy.html'],['Trade','trade.html'],['Research','reports/tc-cycle/']];
+const REMOTE=research=>[['Capture',SITE],['Markets overview',`${SITE}markets-overview.html`],['Markets',`${SITE}markets.html`],['Economy overview',`${SITE}economy-overview.html`],
+  ['Economy',`${SITE}economy.html`],['Trade',`${SITE}trade.html`],['Research',research]];
+// tv: the page is drawn in TradingView's idiom (css/tv.css): its 38px header runs edge to edge instead of Capture's
+// margins. links: the header's visible links besides the trail's (the project, and the TV pages' own link onward).
 const pages=[
-  {name:'Capture',path:'/',ready:'#capturesLoading[hidden]',trail:['Tibinance'],trigger:'Tibinance',home:null,links:LOCAL},
-  {name:'Markets',path:'/markets.html',ready:'#market[aria-busy="false"]',trail:['Tibinance','/','Markets'],trigger:'Markets',home:'./',links:LOCAL},
-  {name:'Economy',path:'/economy.html',ready:'#economy[aria-busy="false"]',trail:['Tibinance','/','Economy'],trigger:'Economy',home:'./',links:LOCAL},
-  {name:'Trade',path:'/trade.html',ready:'#tradeResult .trade-prompt',trail:['Tibinance','/','Trade'],trigger:'Trade',home:'./',links:LOCAL},
-  {name:'Research',path:'/reports/tc-cycle/',ready:'#report[aria-busy="false"]',trail:['Tibinance','/','Research'],trigger:'Research',home:SITE,
-    links:[['Capture',SITE],['Markets',`${SITE}markets.html`],['Economy',`${SITE}economy.html`],['Trade',`${SITE}trade.html`],['Research','./']],
+  {name:'Capture',path:'/',ready:'#capturesLoading[hidden]',trail:['Tibinance'],trigger:'Tibinance',home:null,links:LOCAL,headerLinks:1},
+  {name:'Markets overview',path:'/markets-overview.html',ready:'#summaryCards li',trail:['Tibinance','/','Markets overview'],trigger:'Markets overview',home:'./',links:LOCAL,tv:true,headerLinks:3},
+  {name:'Markets',path:'/markets.html',ready:'#market[aria-busy="false"]',trail:['Tibinance','/','Markets'],trigger:'Markets',home:'./',links:LOCAL,tv:true,headerLinks:3},
+  {name:'Economy overview',path:'/economy-overview.html',ready:'#statCards .tv-stat',trail:['Tibinance','/','Economy overview'],trigger:'Economy overview',home:'./',links:LOCAL,tv:true,headerLinks:3},
+  {name:'Economy',path:'/economy.html',ready:'#economy[aria-busy="false"]',trail:['Tibinance','/','Economy'],trigger:'Economy',home:'./',links:LOCAL,tv:true,headerLinks:3},
+  {name:'Trade',path:'/trade.html',ready:'#tradeResult .trade-prompt',trail:['Tibinance','/','Trade'],trigger:'Trade',home:'./',links:LOCAL,headerLinks:2},
+  {name:'Research',path:'/reports/tc-cycle/',ready:'#report[aria-busy="false"]',trail:['Tibinance','/','Research'],trigger:'Research',home:SITE,headerLinks:2,
+    links:REMOTE('./'),
     language:{name:'Language: EN, English',code:'EN',current:'English',empty:'No world matches.'}},
-  {name:'Research',path:'/reports/tc-cycle/pt-br.html',ready:'#report[aria-busy="false"]',trail:['Tibinance','/','Research'],trigger:'Research',home:SITE,
-    links:[['Capture',SITE],['Markets',`${SITE}markets.html`],['Economy',`${SITE}economy.html`],['Trade',`${SITE}trade.html`],['Research','pt-br.html']],
+  {name:'Research',path:'/reports/tc-cycle/pt-br.html',ready:'#report[aria-busy="false"]',trail:['Tibinance','/','Research'],trigger:'Research',home:SITE,headerLinks:2,
+    links:REMOTE('pt-br.html'),
     language:{name:'Idioma: PT, Português',code:'PT',current:'Português',empty:'Nenhum world encontrado.'}},
 ];
 const EDITIONS=[['English','./','en'],['Português','pt-br.html','pt-BR']];
-// The site's shell: one header height and one set of page margins (css/app.css, reports/tc-cycle/report.css).
-const HEADER=56;
+// The site's shell: one header height and one set of page margins (css/app.css, reports/tc-cycle/report.css); the
+// TradingView pages' 38px top toolbar (css/tv.css).
+const HEADER=56,TV_HEADER=38;
 let captureEdges;
 const browser=await (engine==='webkit' ? webkit.launch({headless:true}) : chromium.launch({headless:true,...(process.env.TIBINANCE_CHROME ? {executablePath:process.env.TIBINANCE_CHROME} : {channel:'chrome'})}));
 try {
@@ -44,8 +52,16 @@ try {
   const focused=()=>page.evaluate(()=>document.activeElement?.textContent.trim());
   const isFocused=locator=>locator.evaluate(e=>e===document.activeElement);
   const box=selector=>page.$eval(selector,e=>{const r=e.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom};});
-  // A click on the header's empty middle: outside every panel, and on nothing a page reacts to.
-  const clickOutside=async()=>{const r=await box('header.site');await page.mouse.click(r.left+(r.right-r.left)/2,r.top+4);};
+  // A click on the header's empty middle: outside every panel, and on nothing a page reacts to (the TradingView pages
+  // put their search or tools there, so the first empty point from the middle outward).
+  const clickOutside=async()=>{
+    const [x,y]=await page.evaluate(()=>{
+      const r=document.querySelector('header.site').getBoundingClientRect(),y=r.top+4,mid=(r.left+r.right)/2;
+      for (let d=0;d<r.width/2;d+=8) for (const x of [mid+d,mid-d]) if (!document.elementFromPoint(x,y)?.closest('a,button,input,select,[popover]')) return [x,y];
+      return [mid,y];
+    });
+    await page.mouse.click(x,y);
+  };
 
   for (const p of pages) {
     const label=`${p.name} ${p.path}`;
@@ -68,16 +84,22 @@ try {
     const project=page.getByRole('link',{name:'Tibinance project on GitHub'});
     assert.equal(await project.getAttribute('href'),'https://github.com/nesleykent/Tibinance');
     assert.equal(await project.isVisible(),true);
-    assert.equal(await page.locator('header.site a:visible').count(),p.home ? 2 : 1,`${label}: home and project links`);
-    assert.equal((await box('header.site')).bottom,HEADER,`${label}: the shared header height`);
-    // The same margins as Capture, and room kept for a scrollbar whether the page scrolls or not, so they stay the
-    // same where scrollbars take up width.
-    const edges=await page.$eval('.site .wrap',w=>{const r=w.getBoundingClientRect(),s=getComputedStyle(w);return [r.left+parseFloat(s.paddingLeft),r.right-parseFloat(s.paddingRight)];});
-    captureEdges??=edges;
-    assert.deepEqual(edges,captureEdges,`${label}: Capture's margins`);
-    assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).scrollbarGutter),'stable',`${label}: scrollbar room kept`);
+    assert.equal(await page.locator('header.site a:visible').count(),p.headerLinks,`${label}: home, project and onward links`);
+    assert.equal((await box('header.site')).bottom,p.tv ? TV_HEADER : HEADER,`${label}: the shared header height`);
+    if (p.tv) {
+      // TradingView's top toolbar runs from edge to edge.
+      const row=await box('.tv-header-row');
+      assert.ok(row.left<=16 && row.right>=1440-16-16,`${label}: the toolbar runs edge to edge`);
+    } else {
+      // The same margins as Capture, and room kept for a scrollbar whether the page scrolls or not, so they stay the
+      // same where scrollbars take up width.
+      const edges=await page.$eval('.site .wrap',w=>{const r=w.getBoundingClientRect(),s=getComputedStyle(w);return [r.left+parseFloat(s.paddingLeft),r.right-parseFloat(s.paddingRight)];});
+      captureEdges??=edges;
+      assert.deepEqual(edges,captureEdges,`${label}: Capture's margins`);
+      assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).scrollbarGutter),'stable',`${label}: scrollbar room kept`);
+    }
 
-    // Pointer: the menu opens under its button, lists the five sections and marks this one.
+    // Pointer: the menu opens under its button, lists the seven sections and marks this one.
     assert.equal(await trigger.getAttribute('aria-expanded'),'false');
     await trigger.click();
     assert.deepEqual(await open(),['site-menu']);
@@ -96,9 +118,7 @@ try {
     await page.keyboard.press('ArrowDown');
     assert.equal(await focused(),p.name);
     await page.keyboard.press('Home'); assert.equal(await focused(),'Capture');
-    await page.keyboard.press('ArrowDown'); assert.equal(await focused(),'Markets');
-    await page.keyboard.press('ArrowDown'); assert.equal(await focused(),'Economy');
-    await page.keyboard.press('ArrowDown'); assert.equal(await focused(),'Trade');
+    for (const name of SECTIONS_ORDER.slice(1,-1)) { await page.keyboard.press('ArrowDown'); assert.equal(await focused(),name); }
     await page.keyboard.press('End'); assert.equal(await focused(),'Research');
     await page.keyboard.press('ArrowDown'); assert.equal(await focused(),'Capture');
     await page.keyboard.press('ArrowUp'); assert.equal(await focused(),'Research');
@@ -206,7 +226,7 @@ try {
         return {overflow:document.documentElement.scrollWidth-innerWidth,truncated:v ? v.scrollWidth>v.clientWidth : false,
           apart:!r('.site-controls') || r('.site-nav').right<=r('.site-controls').left,header:Math.round(r('header.site').height)};
       });
-      assert.deepEqual(fit,{overflow:0,truncated:false,apart:true,header:HEADER},`${label} at ${width}px`);
+      assert.deepEqual(fit,{overflow:0,truncated:false,apart:true,header:p.tv ? TV_HEADER : HEADER},`${label} at ${width}px`);
       for (const [button,panel] of [[SECTIONS,'#site-menu'],...(p.language ? [['#site-world .site-control','#world-picker'],['.site-language .site-control','#language-menu']] : [])]) {
         await page.click(button);
         assert.deepEqual(await open(),[panel.slice(1)]);
@@ -228,7 +248,7 @@ try {
   await page.setViewportSize({width:1440,height:900});
   await page.goto(`${root}/`);
   await page.getByRole('button',{name:'Tibinance',exact:true}).click();
-  await page.locator('#site-menu').getByRole('link',{name:'Markets'}).click();
+  await page.locator('#site-menu').getByRole('link',{name:'Markets',exact:true}).click();
   await page.waitForSelector('#market[aria-busy="false"]',{state:'attached',timeout:60000});
   assert.equal(new URL(page.url()).pathname,'/markets.html');
   await page.getByRole('navigation',{name:'Site'}).getByRole('link',{name:'Tibinance'}).click();
@@ -236,7 +256,7 @@ try {
   assert.equal(new URL(page.url()).pathname,'/');
 
   assert.deepEqual(errors,[]);
-  console.log(`PASS ${engine}: shared trail and menu on Capture, Markets, Economy, Trade and Research (EN, PT); keyboard, pointer, focus, Research world and language controls, deep links, 1440/768/390/375 layouts`);
+  console.log(`PASS ${engine}: shared trail and menu on Capture, both overviews, Markets, Economy, Trade and Research (EN, PT); keyboard, pointer, focus, Research world and language controls, deep links, 1440/768/390/375 layouts`);
 } finally {
   await browser.close();
 }

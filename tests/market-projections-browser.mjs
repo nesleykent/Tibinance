@@ -177,7 +177,8 @@ try {
     const r=image.width/1200,box=(x0,y0,x1,y1)=>ctx.getImageData(x0*r,y0*r,(x1-x0)*r,(y1-y0)*r).data;
     const count=(data,[R,G,B],t=24)=>{let k=0;for(let i=0;i<data.length;i+=4) if(Math.abs(data[i]-R)+Math.abs(data[i+1]-G)+Math.abs(data[i+2]-B)<t) k++;return k;};
     const right=box(620,140,1100,640),left=box(40,140,560,640);
-    return {height:image.height/r,bandRight:count(right,[237,222,216]),bandLeft:count(left,[237,222,216]),inkRight:count(right,[36,35,42],60),tintRight:count(right,[247,247,248],4)};
+    // The Sell band (16% of TradingView's red over the projected days' tint), the deep-purple central line, the tint.
+    return {height:image.height/r,bandRight:count(right,[245,213,222]),bandLeft:count(left,[245,213,222]),inkRight:count(right,[103,58,183],60),tintRight:count(right,[246,243,251],4)};
   },png);
   await page.click('#eventsToggle');
   await page.click('#eventMarkers');

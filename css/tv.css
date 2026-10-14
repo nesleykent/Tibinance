@@ -1,0 +1,168 @@
+/*
+ * TradingView's design system, for the pages built in its idiom (the Markets and Economy terminals and the overview
+ * pages). Values are TradingView's own, read from its live stylesheets and runtime tokens (2026-10-14 build; see the
+ * reverse-engineering report): a primitive palette, semantic tokens that rebind per theme, and its system font stack.
+ *
+ * Loaded after css/app.css (and css/markets.css where the terminal uses it), it rebinds the tokens those files draw
+ * with, so every existing component takes TradingView's colours, type and density without new markup. The theme is
+ * html[data-theme="dark"|"light"], set before first paint by js/tv-theme.js; charts re-read the tokens on change.
+ */
+:root {
+  /* ---- primitives (TradingView's ramps, light and dark share them) ---- */
+  --tv-white:#fff; --tv-black:#000;
+  --tv-gray-50:#f9f9f9; --tv-gray-100:#f2f2f2; --tv-gray-150:#ebebeb; --tv-gray-200:#dbdbdb; --tv-gray-250:#c9c9c9;
+  --tv-gray-300:#b8b8b8; --tv-gray-350:#a8a8a8; --tv-gray-400:#9c9c9c; --tv-gray-450:#8c8c8c; --tv-gray-500:#808080;
+  --tv-gray-550:#707070; --tv-gray-600:#636363; --tv-gray-650:#575757; --tv-gray-700:#4a4a4a; --tv-gray-750:#3d3d3d;
+  --tv-gray-800:#2e2e2e; --tv-gray-850:#1f1f1f; --tv-gray-900:#0f0f0f;
+  --tv-red-50:#ffebec; --tv-red-100:#fccbcd; --tv-red-300:#f77c80; --tv-red-400:#f7525f; --tv-red-500:#f23645; --tv-red-600:#cc2f3c; --tv-red-700:#b22833;
+  --tv-green-50:#daf2ee; --tv-green-100:#ace5dc; --tv-green-300:#42bda8; --tv-green-400:#22ab94; --tv-green-500:#089981; --tv-green-600:#06806b; --tv-green-700:#056656;
+  --tv-blue-50:#e3effd; --tv-blue-100:#bbd9fb; --tv-blue-200:#90bff9; --tv-blue-300:#5b9cf6; --tv-blue-400:#3179f5; --tv-blue-500:#2962ff; --tv-blue-600:#1e53e5; --tv-blue-700:#1848cc;
+  --tv-orange-50:#fff3e0; --tv-orange-300:#ffb74d; --tv-orange-500:#ff9800; --tv-orange-700:#f57c00;
+  --tv-purple-500:#9c27b0; --tv-deep-purple-500:#673ab7; --tv-pink-500:#e91e63; --tv-cyan-500:#00bcd4; --tv-lime-500:#4caf50; --tv-yellow-700:#fbc02d;
+
+  /* ---- semantic, light (TradingView's --color-* tokens) ---- */
+  --tv-bg:var(--tv-white);                 /* background-primary */
+  --tv-bg-2:var(--tv-gray-50);             /* background-secondary */
+  --tv-bg-3:var(--tv-gray-100);            /* background-tertiary */
+  --tv-pane:var(--tv-white);               /* pane-bg: the chart */
+  --tv-page:var(--tv-gray-150);            /* chart-page-bg: gaps between terminal blocks */
+  --tv-text:var(--tv-gray-900);
+  --tv-text-2:var(--tv-gray-550);
+  --tv-text-3:var(--tv-gray-400);
+  --tv-text-disabled:var(--tv-gray-300);
+  --tv-border:var(--tv-gray-150);
+  --tv-border-hover:var(--tv-gray-250);
+  --tv-divider:var(--tv-gray-150);
+  --tv-link:var(--tv-blue-500); --tv-link-hover:var(--tv-blue-600);
+  --tv-brand:var(--tv-blue-500);
+  --tv-up:var(--tv-green-500); --tv-down:var(--tv-red-500);
+  --tv-btn-hover:var(--tv-gray-100);       /* toolbar-button-background-hover */
+  --tv-btn-active-bg:var(--tv-blue-50);    /* toolbar-button-background-active */
+  --tv-btn-active:var(--tv-blue-500);      /* toolbar-button-text-active */
+  --tv-popup:var(--tv-white);
+  --tv-popup-hover:var(--tv-gray-100);
+  --tv-tooltip:var(--tv-gray-800);
+  --tv-row-hover:var(--tv-blue-50);        /* list-item-hover-bg */
+  --tv-row-selected:var(--tv-blue-100);    /* list-item-bg-selected */
+  --tv-input:var(--tv-white);
+  --tv-placeholder:var(--tv-gray-350);
+  --tv-shadow:0 2px 4px rgb(0 0 0 / .2);
+  --tv-popup-shadow:0 2px 4px rgb(0 0 0 / .08), 0 4px 24px rgb(0 0 0 / .12);
+  /* chart canvas, as TradingView paints it (verified on its canvases) */
+  --tv-chart-text:var(--tv-gray-900);
+  --tv-chart-grid:rgb(46 46 46 / .06);
+  --tv-crosshair:var(--tv-gray-400);
+  --tv-crosshair-label:var(--tv-gray-800);
+  --tv-up-soft:rgb(8 153 129 / .12); --tv-down-soft:rgb(242 54 69 / .12);
+
+  /* ---- type and density: TradingView's system stack, 14px base, 13px data ---- */
+  --tv-font:-apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,Ubuntu,sans-serif;
+  --tv-header:38px;      /* the terminal's top toolbar */
+  --tv-left:52px;        /* the drawing toolbar */
+  --tv-right:45px;       /* the right icon rail */
+  --tv-widget:300px;     /* the widget bar */
+  --tv-bottom:38px;      /* the bottom toolbar */
+  --tv-gap:4px;          /* chart-page-bg between blocks */
+
+  /* ---- Tibinance's tokens, rebound to TradingView's ---- */
+  --canvas:var(--tv-bg); --surface:var(--tv-popup); --surface-soft:var(--tv-bg-3); --surface-hover:var(--tv-row-hover);
+  --line:var(--tv-border); --line-strong:var(--tv-border-hover); --line-faint:var(--tv-chart-grid);
+  --ink:var(--tv-text); --muted:var(--tv-text-2);
+  --accent:var(--tv-brand); --accent-soft:var(--tv-blue-50); --on-accent:#fff;
+  --control-track:var(--tv-btn-hover); --control-track-hover:var(--tv-gray-150);
+  --control-thumb-shadow:var(--tv-shadow);
+  --positive:var(--tv-up); --negative:var(--tv-down); --caution:var(--tv-orange-500);
+  --sell:var(--tv-red-500); --buy:var(--tv-blue-500);   /* TradingView's SELL and BUY buttons */
+  --average:var(--tv-gray-400);
+  --event-world:var(--tv-purple-500); --event-game:var(--tv-orange-500); --event-market:var(--tv-gray-550);   /* world events apart from the Buy blue */
+  --projection:var(--tv-deep-purple-500); --projection-region:rgb(103 58 183 / .06);
+  /* Economy's measures: the default line blue for the gross, gold for coins, green for NPC potential. */
+  --eco-gross:var(--tv-blue-500); --eco-coins:var(--tv-orange-500); --eco-npc:var(--tv-green-500);
+  --font-ui:var(--tv-font); --font-editorial:var(--tv-font);
+  --type-base:.875rem; --type-ratio:1.143;
+  --weight-strong:600; --tracking-tight:0; --tracking-caps:0;
+  --radius:6px; --radius-sm:4px;
+  --control-height:32px;
+  color-scheme:light;
+}
+
+:root[data-theme="dark"] {
+  --tv-bg:var(--tv-black);
+  --tv-bg-2:var(--tv-gray-850);
+  --tv-bg-3:var(--tv-gray-800);
+  --tv-pane:var(--tv-gray-900);
+  --tv-page:var(--tv-gray-800);
+  --tv-text:var(--tv-gray-200);
+  --tv-text-2:var(--tv-gray-450);
+  --tv-text-3:var(--tv-gray-400);
+  --tv-text-disabled:var(--tv-gray-650);
+  --tv-border:var(--tv-gray-750);
+  --tv-border-hover:var(--tv-gray-650);
+  --tv-divider:var(--tv-gray-700);
+  --tv-link:var(--tv-blue-300); --tv-link-hover:var(--tv-blue-400);
+  --tv-btn-hover:var(--tv-gray-800);
+  --tv-btn-active-bg:#132042;
+  --tv-popup:var(--tv-gray-850);
+  --tv-popup-hover:var(--tv-gray-800);
+  --tv-tooltip:var(--tv-gray-750);
+  --tv-row-hover:var(--tv-gray-800);
+  --tv-row-selected:#142e61;
+  --tv-input:var(--tv-gray-800);
+  --tv-placeholder:var(--tv-gray-700);
+  --tv-shadow:0 2px 4px rgb(0 0 0 / .5);
+  --tv-popup-shadow:0 2px 4px rgb(0 0 0 / .4), 0 4px 24px rgb(0 0 0 / .5);
+  --tv-chart-text:var(--tv-gray-300);
+  --tv-chart-grid:rgb(242 242 242 / .06);
+  --tv-crosshair:var(--tv-gray-650);
+  --tv-crosshair-label:var(--tv-gray-750);
+  --accent-soft:#132042;
+  --control-track-hover:var(--tv-gray-750);
+  --event-market:var(--tv-gray-400);
+  color-scheme:dark;
+}
+
+/* ---- base ---- */
+html { scrollbar-gutter:auto; }
+body { background:var(--tv-bg); color:var(--tv-text); font:400 14px/1.43 var(--tv-font); -webkit-font-smoothing:antialiased; }
+a { color:var(--tv-link); text-decoration:none; }
+a:hover { color:var(--tv-link-hover); }
+:focus-visible { outline:2px solid var(--tv-brand); outline-offset:-2px; }
+* { scrollbar-width:thin; scrollbar-color:var(--tv-border-hover) transparent; }
+.up { color:var(--tv-up); } .down { color:var(--tv-down); }
+
+/* ---- TradingView controls ---- */
+/* A toolbar button: text or icon on nothing, the hover fill on hover, blue text on a light-blue fill when active. */
+.tv-btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; min-width:34px; height:34px; padding:0 8px; border:0; border-radius:4px;
+  background:transparent; color:var(--tv-text); font:inherit; font-size:14px; white-space:nowrap; cursor:pointer; }
+.tv-btn:hover { background:var(--tv-btn-hover); }
+.tv-btn:is([aria-pressed="true"],[aria-checked="true"],.is-active) { background:var(--tv-btn-active-bg); color:var(--tv-btn-active); }
+.tv-btn:disabled { color:var(--tv-text-disabled); background:transparent; cursor:default; }
+.tv-btn svg { width:28px; height:28px; fill:none; stroke:currentColor; stroke-width:1; }
+.tv-btn.tv-icon { width:34px; padding:0; }
+.tv-divider { flex:none; width:1px; height:22px; margin:0 4px; background:var(--tv-divider); }
+.tv-chip { display:inline-flex; align-items:center; gap:4px; height:24px; padding:0 8px; border-radius:4px; background:var(--tv-bg-3); color:var(--tv-text); font-size:13px; }
+
+/* A popup menu, as TradingView draws its dropdowns. */
+.tv-popup { margin:0; padding:6px 0; min-width:200px; border:0; border-radius:6px; background:var(--tv-popup); color:var(--tv-text); box-shadow:var(--tv-popup-shadow); font:14px/20px var(--tv-font); }
+.tv-popup [role="menuitem"],.tv-popup [role="menuitemradio"],.tv-popup [role="menuitemcheckbox"],.tv-popup .tv-item {
+  display:flex; align-items:center; gap:10px; width:100%; min-height:36px; padding:0 16px; border:0; background:none; color:inherit; font:inherit; text-align:left; cursor:pointer; }
+.tv-popup :is([role^="menuitem"],.tv-item):hover { background:var(--tv-popup-hover); }
+.tv-popup :is([aria-checked="true"],.is-active) { background:var(--tv-brand); color:#fff; }
+.tv-popup hr { height:1px; margin:6px 0; border:0; background:var(--tv-divider); }
+.tv-popup .tv-hint { margin-left:auto; color:var(--tv-text-2); font-size:13px; }
+.tv-popup :is([aria-checked="true"],.is-active) .tv-hint { color:#fff; }
+
+/* Inputs and dialogs. */
+.tv-input { height:34px; padding:0 12px; border:1px solid var(--tv-border-hover); border-radius:6px; background:var(--tv-input); color:var(--tv-text); font:inherit; }
+.tv-input::placeholder { color:var(--tv-placeholder); }
+.tv-input:focus { border-color:var(--tv-brand); outline:0; }
+.tv-dialog { padding:0; border:0; border-radius:8px; background:var(--tv-popup); color:var(--tv-text); box-shadow:var(--tv-popup-shadow); }
+.tv-dialog::backdrop { background:rgb(0 0 0 / .35); }
+.tv-tooltip { position:fixed; z-index:50; padding:4px 8px; border-radius:4px; background:var(--tv-tooltip); color:#fff; font-size:13px; pointer-events:none; white-space:nowrap; }
+.tv-kbd { padding:0 4px; border-radius:3px; background:rgb(255 255 255 / .15); font-size:12px; }
+
+/* Performance tiles, as the details widget draws them: tinted by the sign of the change. */
+.tv-perf { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
+.tv-perf > * { display:grid; justify-items:center; gap:2px; padding:8px 4px; border:0; border-radius:6px; font:inherit; line-height:1.2; cursor:pointer; }
+.tv-perf .up { background:var(--tv-up-soft); }
+.tv-perf .down { background:var(--tv-down-soft); }

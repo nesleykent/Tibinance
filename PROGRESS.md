@@ -1,3 +1,31 @@
+# TradingView clone of Markets and Economy, 2026-10-14
+
+- **Instruction:** clone the TradingView chart terminal into the Markets and Economy views and add TradingView
+  /markets/-style overview pages (user chose "both"), with TradingView's colours; account features adapted to
+  the browser (drawings, templates, watchlists in localStorage; no alerts or publishing). The user rejects the
+  current design. Source of truth for TradingView behaviour: ../TradingView/REPORT.md and its captures.
+- **Commit and push to main:** authorized by the user on review ("sim"); no release without a new instruction (deploys only via tools/release.mjs).
+- **Plan / status** (update as steps land):
+  | # | Step | State |
+  |---|------|-------|
+  | 1 | `css/tv.css`: TradingView tokens (light/dark, exact values from the RE captures) remapping Tibinance tokens; `css/tv-icons.svg` sprite | done |
+  | 2 | Terminal shell (`css/tv-terminal.css` + markup) on markets.html and economy.html, all original ids kept | done, verified in browser |
+  | 3 | Theme switch (`js/tv-theme.js`, early, stored, `tv:theme`) and chart re-theme (`market-chart.js`, `economy-chart.js` retheme/setStyle, `--eco-*` tokens) | done |
+  | 4 | `js/tv-drawings.js`: 12 tools on one LWC series primitive, axis labels, select/drag/handles, magnet/lock/hide, undo/redo, per-symbol localStorage; object tree | done, verified (trend, hline, fib, range, undo) |
+  | 5 | `js/tv-terminal.js` (hotkeys, world search Mod+K, chart style, scale modes, clock, replay, floating toolbar) + `js/tv-indicators.js` (MA/EMA/BB/RSI, templates) + `js/tv-bridge.js` | done, verified (search, MA, RSI) |
+  | 6 | `markets-overview.html` + `economy-overview.html` (`js/markets-overview.js`, `js/economy-overview.js`, `js/tv-overview.js`, `css/tv-overview.css`): summary chart and cards, hotlists, squarified heatmap, regions, sortable table, events calendar, world search; overview links in every page's site menu (Capture, Trade, Research EN/PT too) and README | done, verified in browser |
+  | 7 | Tests: new `tests/tv.test.mjs` (indicators, treemap, heat colours, tool defaults), `tests/tv-terminal-browser.mjs`, `tests/overviews-browser.mjs`; updated markets, economy, site-header, trade, market-events and market-projections browser tests to the TV layout and colours | done: units 220/220; 17 Chrome browser suites pass (WebKit not installed here, not run) |
+- **Page hooks:** markets.js `connectTools()`, tibia-token-markets.js and economy.js `connect({...})` give the bridge context; `changed()` after a world, side or draw.
+- **Copy rule:** no middle dot anywhere (tests/copy-rules.test.mjs); the TV legend separators are layout gaps.
+- **Backups of the pre-clone pages:** /tmp/claude-501/tib/{markets,economy}.orig.html (economy.orig2.html = pre-shell).
+- **Fixes found by the tests:** scale buttons now read the chart's own mode (Economy's accumulated log scale was being reset); clicks on chart overlays (drawing toolbar, legend buttons, event markers) no longer reach the drawing layer; overview search focuses its field; full-screen exit tool in the rail; phone header/bottom bar fit at 390px; summary grid minmax(0,1fr).
+- **Colours:** world events now TradingView purple (#9c27b0) so they differ from the Buy blue; projection deep purple; tests probe the new tokens.
+- **Environment:** browser tests run with TIBINANCE_NODE_MODULES=/Users/nesleykent/Code/Bestie/node_modules (Playwright) and system Chrome; WebKit is not installed here, so canonical-events runs with TIBINANCE_BROWSER=chrome. Local server: .claude/launch.json "tibinance-static" (python http.server on 8765).
+- **Scale buttons (user-reported):** auto now toggles as TradingView's; Economy applies its gold mode's scale (log for accumulated) only when the mode changes, so the viewer's log or % survives redraws. Pinned in tests/tv-terminal-browser.mjs.
+- **Exact next step:** none in this plan. A release (tools/release.mjs) only on the user's instruction.
+
+---
+
 # Economy audit integration checkpoint, 2026-10-14
 
 A concurrent owner-authored Economy terminal redesign and release/0006 reached GitHub before this audit's push.

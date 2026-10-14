@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tibinance Economy overview</title>
+<meta name="description" content="Gold generated across Tibia worlds: the whole game by month, a heatmap of the worlds, highlights, regions and every world.">
+<script src="js/tv-theme.js"></script>
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/site-header.css?v=20261004-github">
+<link rel="stylesheet" href="css/tv.css?v=20261014-tv">
+<link rel="stylesheet" href="css/tv-terminal.css?v=20261014-tv">
+<link rel="stylesheet" href="css/tv-overview.css?v=20261014-tv">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪙</text></svg>">
+</head>
+<body class="tv-page">
+<header class="site tv-header">
+  <div class="tv-header-row">
+    <nav class="site-nav" aria-label="Site">
+      <a class="site-crumb site-home" href="./"><svg class="tv-logo" aria-hidden="true"><use href="css/tv-icons.svg#logo"/></svg><span>Tibinance</span></a>
+      <span class="site-slash" aria-hidden="true">/</span>
+      <button type="button" class="site-crumb site-section" popovertarget="site-menu" data-site-menu>Economy overview<svg class="site-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg></button>
+      <ul id="site-menu" class="site-panel site-menu" popover>
+        <li><a href="./">Capture</a></li>
+        <li><a href="markets-overview.html">Markets overview</a></li>
+        <li><a href="markets.html">Markets</a></li>
+        <li><a href="economy-overview.html" aria-current="page">Economy overview</a></li>
+        <li><a href="economy.html">Economy</a></li>
+        <li><a href="trade.html">Trade</a></li>
+        <li><a href="reports/tc-cycle/">Research</a></li>
+      </ul>
+    </nav>
+    <button type="button" id="pageSearch" class="tv-page-search" aria-haspopup="dialog"><svg aria-hidden="true"><use href="css/tv-icons.svg#search"/></svg><span>Search worlds</span><kbd>⌘K</kbd></button>
+    <div class="site-controls tv-header-end">
+      <a class="tv-btn" href="economy.html"><svg aria-hidden="true"><use href="css/tv-icons.svg#line"/></svg><span>Chart</span></a>
+      <button type="button" id="tvTheme" class="tv-btn tv-icon" aria-pressed="false" aria-label="Dark theme" title="Dark theme"><svg class="icon-moon" aria-hidden="true"><use href="css/tv-icons.svg#moon"/></svg><svg class="icon-sun" aria-hidden="true"><use href="css/tv-icons.svg#sun"/></svg></button>
+      <a class="site-control site-github tv-btn tv-icon" href="https://github.com/nesleykent/Tibinance" target="_blank" rel="noopener" aria-label="Tibinance project on GitHub" title="Tibinance on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .75a11.25 11.25 0 0 0-3.56 21.92c.56.1.77-.24.77-.54v-2.1c-3.13.68-3.79-1.33-3.79-1.33-.51-1.3-1.25-1.65-1.25-1.65-1.02-.7.08-.69.08-.69 1.13.08 1.72 1.16 1.72 1.16 1 1.72 2.64 1.22 3.28.93.1-.73.4-1.22.71-1.5-2.5-.28-5.13-1.25-5.13-5.56 0-1.23.44-2.23 1.16-3.02-.12-.28-.5-1.43.11-2.98 0 0 .95-.3 3.1 1.15a10.8 10.8 0 0 1 5.64 0c2.15-1.46 3.1-1.15 3.1-1.15.61 1.55.23 2.7.11 2.98.72.79 1.16 1.79 1.16 3.02 0 4.32-2.63 5.27-5.14 5.55.4.35.76 1.03.76 2.09v3.1c0 .3.2.65.77.54A11.25 11.25 0 0 0 12 .75Z"/></svg></a>
+    </div>
+  </div>
+</header>
+<main class="tv-main">
+  <section class="tv-hero" aria-labelledby="heroTitle">
+    <h1 id="heroTitle">Tibia's economy, every world</h1>
+    <p>Gold generated across the game, from creature kills, their loot and its NPC prices, through server day <span data-through></span>.</p>
+    <nav id="sectionChips" class="tv-chips" aria-label="Sections">
+      <a href="#summary">Summary</a><a href="#heat">Heatmap</a><a href="#highlights">Highlights</a><a href="#regions-section">Regions</a><a href="#worlds">All worlds</a>
+    </nav>
+  </section>
+
+  <section id="summary" class="tv-section" aria-labelledby="summaryTitle">
+    <div class="tv-section-head"><h2 id="summaryTitle"><a href="economy.html">Economy summary</a></h2><span id="activeWorlds" class="tv-muted"></span></div>
+    <div id="statCards" class="tv-stats" role="group" aria-label="Headline figures"></div>
+    <div style="margin-top:32px">
+      <div class="tv-summary-quote" aria-live="polite">
+        <span id="summaryName" class="tv-summary-name">Loading the economy…</span>
+        <span id="summaryLast" class="tv-summary-last"></span><span id="summaryUnit" class="tv-summary-unit"></span><span id="summaryChange" class="tv-summary-change"></span>
+      </div>
+      <div id="summaryChart" class="tv-summary-chart" role="img" aria-label="The chosen measure for the whole game, per day in each month"></div>
+      <div id="summaryRanges" class="tv-summary-ranges" role="group" aria-label="Range"><button type="button" data-range="6M" aria-pressed="false">6M</button><button type="button" data-range="YTD" aria-pressed="false">YTD</button><button type="button" data-range="1Y" aria-pressed="false">1Y</button><button type="button" data-range="All" aria-pressed="true">All</button></div>
+    </div>
+    <p class="tv-section-note">Headline figures sum every active world's latest complete week. The chart sums, for each month, every world's month total divided by its days with data; the latest month is still running.</p>
+  </section>
+
+  <section id="heat" class="tv-section" aria-labelledby="heatTitle">
+    <div class="tv-section-head"><h2 id="heatTitle"><a href="economy.html">Heatmap</a></h2>
+      <div class="tv-heat-tools">
+        <label>Size and measure <select id="heatMeasure"><option value="gross">Gross potential</option><option value="coins">Direct gold</option><option value="npc">NPC potential</option></select></label>
+        <label>Change <select id="heatRange"><option>1M</option><option>3M</option><option>6M</option><option>YTD</option><option>1Y</option><option>All</option></select></label>
+      </div>
+    </div>
+    <div id="heatmap" class="tv-heatmap" role="group" aria-label="Worlds by gold per day and change"></div>
+    <div id="heatScale" class="tv-heat-scale" aria-hidden="true"></div>
+  </section>
+
+  <section id="highlights" class="tv-section" aria-labelledby="highlightsTitle">
+    <div class="tv-section-head"><h2 id="highlightsTitle"><a href="economy.html">Highlights</a></h2></div>
+    <div class="tv-hotlists">
+      <div class="tv-hotlist"><h3><a href="economy.html">Most gold per day</a></h3><ol id="hotRichest"></ol></div>
+      <div class="tv-hotlist"><h3><a href="economy.html?range=1M">Fastest growing, 1M</a></h3><ol id="hotGrowing"></ol></div>
+      <div class="tv-hotlist"><h3><a href="economy.html?range=1M">Fastest shrinking, 1M</a></h3><ol id="hotShrinking"></ol></div>
+      <div class="tv-hotlist"><h3><a href="economy.html?measure=npc&amp;series=npc">Highest NPC share</a></h3><ol id="hotNpc"></ol></div>
+    </div>
+  </section>
+
+  <section id="regions-section" class="tv-section" aria-labelledby="regionsTitle">
+    <div class="tv-section-head"><h2 id="regionsTitle">Regions</h2></div>
+    <ul id="regions" class="tv-bars"></ul>
+    <p class="tv-section-note">Gross potential per day by server location, the latest complete week, with its 1M change.</p>
+  </section>
+
+  <section id="worlds" class="tv-section" aria-labelledby="worldsTitle">
+    <div class="tv-section-head"><h2 id="worldsTitle"><a href="economy.html">All worlds</a></h2>
+      <div class="tv-table-tools"><span id="worldsCount" class="tv-muted"></span><input id="worldsFilter" class="tv-input" type="search" placeholder="Filter worlds" aria-label="Filter worlds"></div>
+    </div>
+    <div class="tv-table-wrap"><table id="worldsTable" class="tv-table"></table></div>
+  </section>
+  <footer class="tv-footer">Gold from valued creatures only, through <span data-through></span>. Weekly figures are the latest complete Monday to Sunday week of each world. Not affiliated with CipSoft. Tibia is a trademark of CipSoft GmbH.</footer>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.1/dist/lightweight-charts.standalone.production.js"
+        integrity="sha384-KkYqTZlM13Zya6fVUF3IGCBOQ1ehFeJVVgxaVvD/0MebineF9EI8Jkd3NnWNChqN" crossorigin="anonymous"></script>
+<script type="module" src="js/site-header.js"></script>
+<script type="module" src="js/economy-overview.js?v=20261014-tv"></script>
+</body>
+</html>

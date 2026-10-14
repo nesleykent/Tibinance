@@ -48,7 +48,7 @@ try {
   const captureEdges=await pageEdges();
   assert.ok(captureEdges[0]>100,`Capture's margin at 1440px: ${captureEdges[0]}`);
   assert.deepEqual(await page.$$eval('#site-menu a',as=>as.map(a=>[a.textContent,a.getAttribute('href')])),
-    [['Capture','./'],['Markets','markets.html'],['Economy','economy.html'],['Trade','trade.html'],['Research','reports/tc-cycle/']]);
+    [['Capture','./'],['Markets overview','markets-overview.html'],['Markets','markets.html'],['Economy overview','economy-overview.html'],['Economy','economy.html'],['Trade','trade.html'],['Research','reports/tc-cycle/']]);
   await page.click('header.site [data-site-menu]');
   await page.click('#site-menu a[href="markets.html"]');
   await shown('Antica');
@@ -59,9 +59,9 @@ try {
   // One market, not two sources: no source is named anywhere in the page.
   assert.doesNotMatch(await page.content(),/tibiamarket/i);
 
-  // Terminal layout: the chart leads, ranges below it, the rail and the list beside it. The chart's status, over its
-  // top left, reads the world, its quote and the market side, with both sides' latest best offers and the spread
-  // between them; the rail launches tools and holds no chart state.
+  // Terminal layout, TradingView's: the drawing toolbar at the left edge, the chart, its ranges below it, the widget
+  // bar and the rail at the right edge. The chart's legend, over its top left, reads the world, its quote and the
+  // market side, with both sides' latest best offers and the spread between them; the rail holds no chart state.
   const tools=page.getByRole('group',{name:'Tools'});
   const sides=page.locator('#chartHead').getByRole('radiogroup',{name:'Market side'});
   assert.deepEqual(await sides.getByRole('radio').evaluateAll(rs=>rs.map(r=>[r.querySelector('.side-name').textContent,r.getAttribute('aria-checked')])),[['Sell','true'],['Buy','false']]);
@@ -74,20 +74,25 @@ try {
   // One left edge for the world, the side and the readout.
   const lefts=await page.evaluate(()=>['#world','#side','#legend .day','#legend .label'].map(s=>document.querySelector(s).getBoundingClientRect().left));
   assert.ok(lefts.every(l=>Math.abs(l-lefts[0])<=1),`the world, the side, the day and the series share a left edge: ${lefts}`);
-  assert.deepEqual(await tools.getByRole('button').evaluateAll(bs=>bs.map(b=>[b.getAttribute('aria-label'),b.hasAttribute('data-dock-target') ? 'panel' : 'action'])),
-    [['Worlds','panel'],['Screener','action'],['Events','panel'],['Projections','action'],['Forecast history','panel'],['Help','panel'],['Export chart image','action'],['Full screen','action']]);
+  assert.deepEqual(await tools.getByRole('button').filter({visible:true}).evaluateAll(bs=>bs.map(b=>[b.getAttribute('aria-label'),b.hasAttribute('data-dock-target') ? 'panel' : 'action'])),
+    [['Worlds','panel'],['Screener','action'],['Events','panel'],['Projections','action'],['Forecast history','panel'],['Object tree','panel'],['Help','panel']]);
+  // Export and full screen are the top toolbar's, as TradingView's snapshot and full-screen buttons.
+  assert.equal(await page.$eval('#exportButton',b=>!!b.closest('header.site')),true);
+  assert.equal(await page.$eval('#expand',b=>!!b.closest('header.site')),true);
   assert.ok(await page.$('.toolbar-bottom #range'));
-  // Inside Capture's margins, with or without the panel: the chart, then the Worlds panel, then the rail at the edge.
+  // Edge to edge, with or without the panel: the drawing toolbar, the chart, the Worlds panel, then the rail at the edge.
   const frame=()=>page.evaluate(()=>{
-    const r=s=>document.querySelector(s).getBoundingClientRect(),area=r('.chart-area'),list=r('.watchlist'),rail=r('.dock-rail'),header=r('header.site');
+    const r=s=>document.querySelector(s).getBoundingClientRect(),area=r('.chart-area'),list=r('.watchlist'),rail=r('.dock-rail'),header=r('header.site'),draw=r('#drawbar');
     const scroll=document.querySelector('.watch-scroll');
     return {pageScroll:document.documentElement.scrollHeight-innerHeight,overflow:document.documentElement.scrollWidth-innerWidth,
-      areaShare:area.height/(innerHeight-header.height),edges:[area.left,rail.right],chart:area.width,rail:rail.width,list:list.width,
+      areaShare:area.height/(innerHeight-header.height),edges:[draw.left,Math.round(rail.right)],chart:area.width,rail:rail.width,list:list.width,drawbar:draw.width,
       beside:list.width>0 && list.left>=area.right && rail.left>=list.right,ownScroll:scroll.scrollHeight>scroll.clientHeight};
   });
+  const viewportEdges=[0,1440];
   const open=await frame();
-  assert.equal(await pageEdges().then(String),String(captureEdges),'the header keeps Capture\'s margins');
-  assert.deepEqual(open.edges,captureEdges,'the terminal keeps Capture\'s margins');
+  assert.equal(await page.$eval('header.site',h=>h.getBoundingClientRect().height),38,'TradingView\'s 38px top toolbar');
+  assert.deepEqual(open.edges,viewportEdges,'the terminal runs edge to edge');
+  assert.equal(open.drawbar,52,'TradingView\'s 52px drawing toolbar');
   assert.ok(open.pageScroll<=0 && open.overflow<=0,'the terminal fits the viewport');
   assert.ok(open.areaShare>0.75,`chart area is ${open.areaShare} of the height under the header`);
   assert.ok(open.beside && open.ownScroll,'the Worlds panel is open beside the chart, with its own scrolling');
@@ -115,8 +120,9 @@ try {
   const closed=await frame();
   assert.equal(await rail.getAttribute('aria-expanded'),'false');
   assert.equal(await page.isVisible('#worldsPanel'),false);
-  assert.deepEqual(closed.edges,captureEdges,'the margins stay with the panel closed');
-  assert.ok(Math.abs(closed.chart-(open.chart+open.list))<=1,`the chart takes the panel's width: ${open.chart}+${open.list} to ${closed.chart}`);
+  assert.deepEqual(closed.edges,viewportEdges,'the edges stay with the panel closed');
+  // The chart takes the panel's width and the 4px gap that framed it.
+  assert.ok(Math.abs(closed.chart-(open.chart+open.list+4))<=1,`the chart takes the panel's width: ${open.chart}+${open.list} to ${closed.chart}`);
   assert.ok(closed.rail<=48 && closed.overflow<=0 && closed.pageScroll<=0);
   const after=await firstDay();
   assert.ok(Math.abs(Date.parse(after)-Date.parse(before))<=2*864e5,`the same days stay in view: ${before} then ${after}`);
@@ -129,7 +135,7 @@ try {
   await page.keyboard.press('Enter');
   assert.equal(await rail.getAttribute('aria-expanded'),'true');
   assert.equal(await page.isVisible('#worlds tr[data-world="Antica"][aria-selected="true"]'),true);
-  assert.deepEqual((await frame()).edges,captureEdges);
+  assert.deepEqual((await frame()).edges,viewportEdges);
 
   // Defaults: Antica, Sell, 1Y; every world listed with its latest best offer and absolute and percentage change.
   assert.deepEqual([param('world'),param('side'),param('range')],['Antica','sell','1Y']);
@@ -163,8 +169,9 @@ try {
   // Copy rule: no middle dots anywhere, generated text included; the metadata is separate items instead.
   assert.doesNotMatch(await page.content(),/\u00b7|&middot;/);
   assert.deepEqual(await page.$$eval('#worldMeta > span',spans=>spans.map(s=>s.textContent)),['Optional PvP','BattlEye Yellow']);
-  // The bottom toolbar holds the ranges and the day the history runs through; the world's line keeps to one row.
-  assert.equal(await text('.toolbar-bottom'),`1M 3M 6M YTD 1Y All Server days through ${index.through}`);
+  // The bottom toolbar holds the ranges, the day the history runs through, the server clock and the price-scale modes;
+  // the world's line keeps to one row.
+  assert.match(await text('.toolbar-bottom'),new RegExp(`^1M 3M 6M YTD 1Y All Server days through ${index.through} \\d\\d:\\d\\d:\\d\\d \\(CES?T\\) % log auto$`));
   assert.ok(await page.$eval('#chartHead .head-line',e=>e.getBoundingClientRect().height)<=40,'the world\'s line height');
   assert.equal(await page.getAttribute('#worlds tr[data-world="Gentebra"]','aria-selected'),'true');
   assert.match(await page.getAttribute('#chart','aria-label'),/^Gentebra, Best Sell Offer history and daily transaction activity \(count\), range 1Y\./);
@@ -252,16 +259,19 @@ try {
   assert.deepEqual([await helpTool.getAttribute('aria-expanded'),await page.isVisible('#helpPanel'),await page.isVisible('#worldsPanel')],['false',false,true]);
 
   // Full screen takes the whole terminal: the chart grows and the rail keeps its way back.
-  const fullScreen=tools.getByRole('button',{name:'Full screen',exact:true});
-  const pageChart=(await chartBox()).w;
+  const fullScreen=page.locator('#expand');
+  const pageChart=(({w,h})=>w*h)(await chartBox());
   await fullScreen.click();
   await page.waitForFunction(()=>document.getElementById('expand').getAttribute('aria-pressed')==='true');
   const expanded=await page.evaluate(()=>{const t=document.getElementById('market').getBoundingClientRect(),rail=document.querySelector('.dock-rail').getBoundingClientRect();
     return {w:t.width/innerWidth,h:t.height/innerHeight,rail:rail.right<=innerWidth && rail.width>0,mode:document.fullscreenElement?.id ?? (document.getElementById('market').classList.contains('expanded') ? 'expanded' : null)};});
   assert.ok(expanded.mode && expanded.w>0.99 && expanded.h>0.99 && expanded.rail,`expanded ${JSON.stringify(expanded)}`);
-  assert.ok((await chartBox()).w>pageChart,'the chart grows at full screen');
+  // Without the header above it, the chart takes the whole screen's height.
+  assert.ok((({w,h})=>w*h)(await chartBox())>pageChart,'the chart grows at full screen');
+  // The header is out of view at full screen: the rail keeps the way back.
   const exitFullScreen=tools.getByRole('button',{name:'Exit full screen',exact:true});
-  assert.equal(await exitFullScreen.getAttribute('aria-pressed'),'true');
+  assert.equal(await page.getAttribute('#expand','aria-pressed'),'true');
+  assert.equal(await exitFullScreen.isVisible(),true);
   await exitFullScreen.click();
   await page.waitForFunction(()=>document.getElementById('expand').getAttribute('aria-pressed')==='false' && !document.fullscreenElement);
   // Where element full screen is unavailable (iPhone), the terminal covers the viewport instead, and Escape returns.
@@ -291,8 +301,8 @@ try {
     const count=(data,test)=>{let n=0;for(let i=0;i<data.length;i+=4) if(test(data[i],data[i+1],data[i+2])) n++;return n;};
     const near=([R,G,B])=>(r,g,b)=>Math.abs(r-R)+Math.abs(g-G)+Math.abs(b-B)<60;
     const chart=box(32,136,1168,696),dark=(r,g,b)=>r+g+b<200;
-    const xs=[];{const d=chart,w=1136*r;for(let i=0;i<d.length;i+=4) if(near([180,83,42])(d[i],d[i+1],d[i+2])||near([47,109,181])(d[i],d[i+1],d[i+2])) xs.push((i/4)%w);}
-    return {width:image.width,height:image.height,sell:count(chart,near([180,83,42])),buy:count(chart,near([47,109,181])),probe:count(chart,near([0,255,0])),
+    const xs=[];{const d=chart,w=1136*r;for(let i=0;i<d.length;i+=4) if(near([242,54,69])(d[i],d[i+1],d[i+2])||near([41,98,255])(d[i],d[i+1],d[i+2])) xs.push((i/4)%w);}
+    return {width:image.width,height:image.height,sell:count(chart,near([242,54,69])),buy:count(chart,near([41,98,255])),probe:count(chart,near([0,255,0])),
       span:xs.length ? (Math.max(...xs)-Math.min(...xs))/(1136*r) : 0,title:count(box(32,32,600,90),dark),footer:count(box(32,708,400,750),dark)};
   },png);
   // The series alone, in the image's fixed layout: events, shown by default, add notes under the chart and are
@@ -451,7 +461,7 @@ try {
   await page.setViewportSize({width:390,height:844});
   // On a phone the rail is a row under the chart, without the Worlds tool: the worlds are always listed.
   assert.equal(await page.isVisible('.dock-rail'),true);
-  assert.deepEqual(await tools.getByRole('button').filter({visible:true}).evaluateAll(bs=>bs.map(b=>b.getAttribute('aria-label'))),['Screener','Events','Projections','Forecast history','Help','Export chart image','Full screen']);
+  assert.deepEqual(await tools.getByRole('button').filter({visible:true}).evaluateAll(bs=>bs.map(b=>b.getAttribute('aria-label'))),['Screener','Events','Projections','Forecast history','Object tree','Help']);
   assert.ok(await page.evaluate(()=>{const c=document.getElementById('chartPanel').getBoundingClientRect(),r=document.querySelector('.dock-rail').getBoundingClientRect();return r.top>=c.bottom && r.height<60;}),'the rail is a row under the chart');
   assert.equal(await page.isVisible('#worlds tr[data-world="Antica"]'),true,'phones list the worlds with the rail closed');
   // Help opens between the rail and the worlds.
@@ -467,10 +477,10 @@ try {
   await page.click('#eventsToggle');
   assert.deepEqual([pixels.width,pixels.height],[2400,1560]);
   assert.ok(pixels.sell>2000 && pixels.span>0.85,`phone export ${JSON.stringify(pixels)}`);
-  // At full screen a phone shows the chart and the rail's actions.
+  // At full screen a phone shows the chart and the rail's actions, with the way back.
   await page.evaluate(()=>Object.defineProperty(document,'fullscreenEnabled',{value:false,configurable:true}));
   await fullScreen.click();
-  assert.deepEqual(await tools.getByRole('button').filter({visible:true}).evaluateAll(bs=>bs.map(b=>b.getAttribute('aria-label'))),['Screener','Projections','Export chart image','Exit full screen']);
+  assert.deepEqual(await tools.getByRole('button').filter({visible:true}).evaluateAll(bs=>bs.map(b=>b.getAttribute('aria-label'))),['Screener','Projections','Exit full screen']);
   assert.ok(await page.evaluate(()=>{const c=document.getElementById('chartPanel').getBoundingClientRect(),r=document.querySelector('.dock-rail').getBoundingClientRect();return c.height>innerHeight*0.8 && r.bottom<=innerHeight+1;}));
   await exitFullScreen.click();
   await page.evaluate(()=>delete document.fullscreenEnabled);

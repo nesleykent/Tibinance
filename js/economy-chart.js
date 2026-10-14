@@ -20,9 +20,11 @@ const token = name => getComputedStyle(document.documentElement).getPropertyValu
 export const dayOf = time => typeof time === 'string' ? time
   : typeof time === 'object' ? `${time.year}-${String(time.month).padStart(2, '0')}-${String(time.day).padStart(2, '0')}`
   : new Date(time * 1000).toISOString().slice(0, 10);
-export const colors = () => ({ gross: token('--ink'), coins: token('--sell'), npc: token('--buy'), stable: token('--accent'),
-  scenario: token('--caution'), price: token('--average') || token('--muted'), text: token('--muted'), grid: token('--line-faint'),
-  rule: token('--line'), crosshair: token('--line-strong'), ink: token('--ink') });
+// Economy's own measure tokens where the page defines them (css/tv.css), else the Market's inks.
+const either = (a, b) => token(a) || token(b);
+export const colors = () => ({ gross: either('--eco-gross', '--ink'), coins: either('--eco-coins', '--sell'), npc: either('--eco-npc', '--buy'), stable: token('--accent'),
+  scenario: token('--caution'), price: token('--average') || token('--muted'), text: either('--tv-chart-text', '--muted'), grid: token('--line-faint'),
+  rule: token('--line'), crosshair: either('--tv-crosshair', '--line-strong'), ink: token('--ink'), label: either('--tv-crosshair-label', '--ink') });
 
 // rows: [{time, value}] for every period in order, value null where the period is not complete. Returns the layers
 // over the real points only: `solid` joins neighbouring periods, `dotted` spans the periods between two values.
@@ -57,7 +59,7 @@ export function economyChart(container, { onCrosshair } = {}) {
     // The library preserves the time window across container and optional-axis width changes.
     // https://tradingview.github.io/lightweight-charts/docs/api/interfaces/TimeScaleOptions#lockvisibletimerangeonresize
     timeScale: { borderVisible: false, rightOffset: 4, minBarSpacing: 0.1, lockVisibleTimeRangeOnResize: true },
-    crosshair: { mode: L.CrosshairMode.Normal, vertLine: { color: c.crosshair, labelBackgroundColor: c.ink }, horzLine: { color: c.crosshair, labelBackgroundColor: c.ink } },
+    crosshair: { mode: L.CrosshairMode.Normal, vertLine: { color: c.crosshair, labelBackgroundColor: c.label }, horzLine: { color: c.crosshair, labelBackgroundColor: c.label } },
     localization: { priceFormatter: v => axis.format(v), timeFormatter: dayOf },
   });
   const line = options => chart.addSeries(L.LineSeries, { priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false, ...options });
@@ -74,12 +76,18 @@ export function economyChart(container, { onCrosshair } = {}) {
     points: line({ color: c[k], lineVisible: false, pointMarkersVisible: true, pointMarkersRadius: 3, crosshairMarkerVisible: true,
       lastValueVisible: true, priceLineVisible: true, priceLineWidth: 1, priceLineStyle: L.LineStyle.LargeDashed }),
   }]));
+  // 'line' | 'markers' | 'step' | 'curved', the chart style; markers show the dots.
+  // The gold mode's own scale (accumulated gold is logarithmic), set when the mode changes; between changes the scale
+  // is the viewer's (the terminal's %, log and auto).
+  let style = 'markers', last = null, scaleFor = null;
   // Dots shrink, then give way to the line, as more periods share the same width (as on Markets).
-  chart.timeScale().subscribeVisibleLogicalRangeChange(range => {
+  const markers = () => {
+    const range = chart.timeScale().getVisibleLogicalRange();
     if (!range) return;
     const spacing = chart.timeScale().width() / Math.max(1, range.to - range.from);
-    for (const { points } of Object.values(measures)) points.applyOptions({ pointMarkersVisible: spacing >= 2, pointMarkersRadius: Math.min(3, Math.max(1.5, spacing / 2)) });
-  });
+    for (const { points } of Object.values(measures)) points.applyOptions({ pointMarkersVisible: style === 'markers' && spacing >= 2, pointMarkersRadius: Math.min(3, Math.max(1.5, spacing / 2)) });
+  };
+  chart.timeScale().subscribeVisibleLogicalRangeChange(markers);
   chart.subscribeCrosshairMove(p => onCrosshair?.(p.time === undefined ? null : dayOf(p.time)));
   let topFraction = null, leftShown = false;
   const whitespaceOrValue = (p, v) => (v === null || v === undefined ? { time: p.start } : { time: p.start, value: v });
@@ -88,25 +96,49 @@ export function economyChart(container, { onCrosshair } = {}) {
     chart,
     // Gold values are either daily averages or exact-range running sums. Kills and TC keep their own units.
     draw(view) {
-      chart.priceScale('right').applyOptions({ mode: view.mode === 'accumulated' ? L.PriceScaleMode.Logarithmic : L.PriceScaleMode.Normal });
+      last = view;
+      // Replay: nothing after `until` is drawn; the periods keep their place on the axis.
+      const cut = p => view.until && p.start > view.until;
+      if (view.mode !== scaleFor) {
+        scaleFor = view.mode;
+        chart.priceScale('right').applyOptions({ mode: view.mode === 'accumulated' ? L.PriceScaleMode.Logarithmic : L.PriceScaleMode.Normal });
+      }
       const color = c[view.measure];
       for (const [k, m] of Object.entries(MEASURES)) {
-        const layers = periodLayers(view.periods.map(p => ({ time: p.start, value: view.values.get(p.start)[m.field] })));
+        const layers = periodLayers(view.periods.map(p => ({ time: p.start, value: cut(p) ? null : view.values.get(p.start)[m.field] })));
         for (const [layer, s] of Object.entries(measures[k])) {
           s.applyOptions({ visible: view.measures.includes(k) });
           s.setData(layers[layer]);
         }
       }
       kills.applyOptions({ color: `${color}40`, visible: view.kills });
-      kills.setData(view.periods.map(p => whitespaceOrValue(p, p.rate.kills)));
-      stable.setData(view.stable ? view.periods.map(p => whitespaceOrValue(p, view.values.get(p.start).grossStable)) : []);
+      kills.setData(view.periods.map(p => whitespaceOrValue(p, cut(p) ? null : p.rate.kills)));
+      stable.setData(view.stable ? view.periods.map(p => whitespaceOrValue(p, cut(p) ? null : view.values.get(p.start).grossStable)) : []);
       scenario.setData(view.rate === null ? [] : view.periods.map(p => whitespaceOrValue(p,
-        view.values.get(p.start).directCoins === null ? null : view.values.get(p.start).directCoins + view.rate * view.values.get(p.start).npcPotential)));
-      price.setData(view.price ? view.periods.map(p => whitespaceOrValue(p, view.price.get(p.start)?.sell ?? null)) : []);
+        cut(p) || view.values.get(p.start).directCoins === null ? null : view.values.get(p.start).directCoins + view.rate * view.values.get(p.start).npcPotential)));
+      price.setData(view.price ? view.periods.map(p => whitespaceOrValue(p, cut(p) ? null : view.price.get(p.start)?.sell ?? null)) : []);
       leftShown = Boolean(view.price);
       chart.applyOptions({ leftPriceScale: { visible: leftShown } });
     },
     show(from, to) { chart.timeScale().setVisibleRange({ from, to }); },
+    // The series drawings attach to and indicators read: the measure shown.
+    main: () => measures[last?.measure ?? 'gross'].points,
+    replay(until) { if (last) this.draw({ ...last, until: until ?? null }); },
+    // The tokens again, after the theme changes.
+    retheme() {
+      Object.assign(c, colors());
+      chart.applyOptions({ layout: { textColor: c.text, panes: { separatorColor: c.rule } }, grid: { horzLines: { color: c.grid } },
+        crosshair: { vertLine: { color: c.crosshair, labelBackgroundColor: c.label }, horzLine: { color: c.crosshair, labelBackgroundColor: c.label } } });
+      for (const [k, m] of Object.entries(measures)) for (const s of Object.values(m)) s.applyOptions({ color: c[k] });
+      price.applyOptions({ color: c.price }); stable.applyOptions({ color: c.stable }); scenario.applyOptions({ color: c.scenario });
+      if (last) this.draw(last);
+    },
+    setStyle(next) {
+      style = next;
+      const lineType = { step: L.LineType.WithSteps, curved: L.LineType.Curved }[style] ?? L.LineType.Simple;
+      for (const m of Object.values(measures)) { m.solid.applyOptions({ lineType }); m.dotted.applyOptions({ lineType }); }
+      markers();
+    },
     // The status block stands over the chart's top: the price scale starts below it (as js/market-chart.js fitTop).
     fitTop(element) {
       if (getComputedStyle(element).position !== 'absolute') {

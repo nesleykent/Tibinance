@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tibinance Markets overview</title>
+<meta name="description" content="Tibia Coin across every Tibia world: indices, highlights, a heatmap, regions and the events calendar.">
+<script src="js/tv-theme.js"></script>
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/site-header.css?v=20261004-github">
+<link rel="stylesheet" href="css/tv.css?v=20261014-tv">
+<link rel="stylesheet" href="css/tv-terminal.css?v=20261014-tv">
+<link rel="stylesheet" href="css/tv-overview.css?v=20261014-tv">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪙</text></svg>">
+</head>
+<body class="tv-page">
+<header class="site tv-header">
+  <div class="tv-header-row">
+    <nav class="site-nav" aria-label="Site">
+      <a class="site-crumb site-home" href="./"><svg class="tv-logo" aria-hidden="true"><use href="css/tv-icons.svg#logo"/></svg><span>Tibinance</span></a>
+      <span class="site-slash" aria-hidden="true">/</span>
+      <button type="button" class="site-crumb site-section" popovertarget="site-menu" data-site-menu>Markets overview<svg class="site-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg></button>
+      <ul id="site-menu" class="site-panel site-menu" popover>
+        <li><a href="./">Capture</a></li>
+        <li><a href="markets-overview.html" aria-current="page">Markets overview</a></li>
+        <li><a href="markets.html">Markets</a></li>
+        <li><a href="economy-overview.html">Economy overview</a></li>
+        <li><a href="economy.html">Economy</a></li>
+        <li><a href="trade.html">Trade</a></li>
+        <li><a href="reports/tc-cycle/">Research</a></li>
+      </ul>
+    </nav>
+    <button type="button" id="pageSearch" class="tv-page-search" aria-haspopup="dialog"><svg aria-hidden="true"><use href="css/tv-icons.svg#search"/></svg><span>Search worlds</span><kbd>⌘K</kbd></button>
+    <div class="site-controls tv-header-end">
+      <a class="tv-btn" href="markets.html"><svg aria-hidden="true"><use href="css/tv-icons.svg#line"/></svg><span>Chart</span></a>
+      <button type="button" id="tvTheme" class="tv-btn tv-icon" aria-pressed="false" aria-label="Dark theme" title="Dark theme"><svg class="icon-moon" aria-hidden="true"><use href="css/tv-icons.svg#moon"/></svg><svg class="icon-sun" aria-hidden="true"><use href="css/tv-icons.svg#sun"/></svg></button>
+      <a class="site-control site-github tv-btn tv-icon" href="https://github.com/nesleykent/Tibinance" target="_blank" rel="noopener" aria-label="Tibinance project on GitHub" title="Tibinance on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .75a11.25 11.25 0 0 0-3.56 21.92c.56.1.77-.24.77-.54v-2.1c-3.13.68-3.79-1.33-3.79-1.33-.51-1.3-1.25-1.65-1.25-1.65-1.02-.7.08-.69.08-.69 1.13.08 1.72 1.16 1.72 1.16 1 1.72 2.64 1.22 3.28.93.1-.73.4-1.22.71-1.5-2.5-.28-5.13-1.25-5.13-5.56 0-1.23.44-2.23 1.16-3.02-.12-.28-.5-1.43.11-2.98 0 0 .95-.3 3.1 1.15a10.8 10.8 0 0 1 5.64 0c2.15-1.46 3.1-1.15 3.1-1.15.61 1.55.23 2.7.11 2.98.72.79 1.16 1.79 1.16 3.02 0 4.32-2.63 5.27-5.14 5.55.4.35.76 1.03.76 2.09v3.1c0 .3.2.65.77.54A11.25 11.25 0 0 0 12 .75Z"/></svg></a>
+    </div>
+  </div>
+</header>
+<main class="tv-main">
+  <section class="tv-hero" aria-labelledby="heroTitle">
+    <h1 id="heroTitle">Tibia Coin markets, every world</h1>
+    <p>Best offers, spreads and trading activity across every active Tibia world, from the Markets history through server day <span data-through></span>.</p>
+    <nav id="sectionChips" class="tv-chips" aria-label="Sections">
+      <a href="#summary">Summary</a><a href="#highlights">Highlights</a><a href="#heat">Heatmap</a><a href="#regions-section">Regions</a><a href="#worlds">All worlds</a><a href="#events">Events</a>
+    </nav>
+  </section>
+
+  <section id="summary" class="tv-section" aria-labelledby="summaryTitle">
+    <div class="tv-section-head"><h2 id="summaryTitle"><a href="markets.html">Market summary</a></h2></div>
+    <div class="tv-summary">
+      <div>
+        <div class="tv-summary-quote" aria-live="polite">
+          <span id="summaryName" class="tv-summary-name">Loading the market…</span>
+          <span id="summaryLast" class="tv-summary-last"></span><span id="summaryUnit" class="tv-summary-unit"></span><span id="summaryChange" class="tv-summary-change"></span>
+        </div>
+        <div id="summaryChart" class="tv-summary-chart" role="img" aria-label="The chosen index over the chosen range"></div>
+        <div id="summaryRanges" class="tv-summary-ranges" role="group" aria-label="Range"><button type="button" data-range="1M" aria-pressed="false">1M</button><button type="button" data-range="3M" aria-pressed="false">3M</button><button type="button" data-range="6M" aria-pressed="false">6M</button><button type="button" data-range="YTD" aria-pressed="false">YTD</button><button type="button" data-range="1Y" aria-pressed="true">1Y</button><button type="button" data-range="All" aria-pressed="false">All</button></div>
+      </div>
+      <ul id="summaryCards" class="tv-cards" aria-label="Indices"></ul>
+    </div>
+    <p class="tv-section-note">An index is the median, on each server day, of every active world's latest Best Offer observed in the 14 days before it. Activity sums the completed server days' transaction counters of every world.</p>
+  </section>
+
+  <section id="highlights" class="tv-section" aria-labelledby="highlightsTitle">
+    <div class="tv-section-head"><h2 id="highlightsTitle"><a href="markets.html?view=screener">Highlights</a></h2></div>
+    <div class="tv-hotlists">
+      <div class="tv-hotlist"><h3><a href="markets.html?view=screener&amp;range=1M">Top gainers, 1M</a></h3><ol id="hotGainers"></ol></div>
+      <div class="tv-hotlist"><h3><a href="markets.html?view=screener&amp;range=1M">Top losers, 1M</a></h3><ol id="hotLosers"></ol></div>
+      <div class="tv-hotlist"><h3><a href="markets.html?view=screener">Most active, 30 days</a></h3><ol id="hotActive"></ol></div>
+      <div class="tv-hotlist"><h3><a href="markets.html?view=screener">Widest spreads</a></h3><ol id="hotSpread"></ol></div>
+    </div>
+    <a class="tv-more" href="markets.html?view=screener">See every world in the Screener</a>
+  </section>
+
+  <section id="heat" class="tv-section" aria-labelledby="heatTitle">
+    <div class="tv-section-head"><h2 id="heatTitle"><a href="markets.html?view=screener">Heatmap</a></h2>
+      <div class="tv-heat-tools">
+        <label>Size <select id="heatSize"><option value="activity">Transactions, 30 days</option><option value="equal">Equal</option></select></label>
+        <label>Change <select id="heatRange"><option>1M</option><option>3M</option><option>6M</option><option>YTD</option><option>1Y</option><option>All</option></select></label>
+        <label>Side <select id="heatSide"><option value="sell">Sell</option><option value="buy">Buy</option></select></label>
+      </div>
+    </div>
+    <div id="heatmap" class="tv-heatmap" role="group" aria-label="Worlds by activity and change"></div>
+    <div id="heatScale" class="tv-heat-scale" aria-hidden="true"></div>
+  </section>
+
+  <section id="regions-section" class="tv-section" aria-labelledby="regionsTitle">
+    <div class="tv-section-head"><h2 id="regionsTitle">Regions</h2></div>
+    <ul id="regions" class="tv-bars"></ul>
+    <p class="tv-section-note">Transactions in the last 30 days by server location, with the median 1M change of the region's Best Sell Offers.</p>
+  </section>
+
+  <section id="worlds" class="tv-section" aria-labelledby="worldsTitle">
+    <div class="tv-section-head"><h2 id="worldsTitle"><a href="markets.html">All worlds</a></h2>
+      <div class="tv-table-tools"><span id="worldsCount" class="tv-muted"></span><input id="worldsFilter" class="tv-input" type="search" placeholder="Filter worlds" aria-label="Filter worlds"></div>
+    </div>
+    <div class="tv-table-wrap"><table id="worldsTable" class="tv-table"></table></div>
+  </section>
+
+  <section id="events" class="tv-section" aria-labelledby="eventsTitle">
+    <div class="tv-section-head"><h2 id="eventsTitle">Events calendar</h2>
+      <div id="calendarTabs" class="tv-chips" style="margin:0" role="group" aria-label="Period"><button type="button" data-period="upcoming" aria-pressed="true">Upcoming</button><button type="button" data-period="recent" aria-pressed="false">Last 90 days</button></div>
+    </div>
+    <div id="calendar" class="tv-calendar"></div>
+  </section>
+  <footer class="tv-footer">Data through server day <span data-through></span>. Server days run from 10:00 to 10:00 CET/CEST. Not affiliated with CipSoft. Tibia is a trademark of CipSoft GmbH.</footer>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.1/dist/lightweight-charts.standalone.production.js"
+        integrity="sha384-KkYqTZlM13Zya6fVUF3IGCBOQ1ehFeJVVgxaVvD/0MebineF9EI8Jkd3NnWNChqN" crossorigin="anonymous"></script>
+<script type="module" src="js/site-header.js"></script>
+<script type="module" src="js/markets-overview.js?v=20261014-tv"></script>
+</body>
+</html>

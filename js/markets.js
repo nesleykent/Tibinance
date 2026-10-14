@@ -27,6 +27,7 @@ import { PROJECTIONS, forwardEnd, pointText, projectionFor, weekOf } from './mar
 import { screenerPanel } from './market-screener-panel.js?v=20261004-chart-first';
 import { historyPanel } from './market-forecast-history.js?v=20261014-rebuild';
 import { historyAhead, weekEnding } from './forecast-archive.js?v=20261014-rebuild';
+import { connect, changed } from './tv-bridge.js';
 // The shared chart, its export and the Screener are imported at one versioned address everywhere (also in
 // js/market-export.js and js/tibia-token-markets.js): one copy of each module per page, refreshed past browser caches
 // when it changes. Bump the version in every importer together.
@@ -386,6 +387,7 @@ async function select(world, { focus = false } = {}) {
   // A current world without market data yet says so instead of drawing an empty chart.
   $('status').hidden = state.view.grid.length > 0;
   chartTools();
+  changed();
   if (!state.view.grid.length) $('status').textContent = `No market data for ${world} yet.`;
   // The filled details panel shortens the list; keep the selection in view once it has.
   revealRow(document.querySelector(`#worlds tr[data-world="${CSS.escape(world)}"]`));
@@ -539,6 +541,7 @@ function setSide(side) {
   setChoice('screenerSide', 'side', side);
   saveUrl(); drawWatchlist(); drawChart(); showQuote(); showLegend(null); drawScreener();
   if (state.view) forecastHistory.update(historyContext()).catch(historyFailed);
+  changed();
 }
 
 // One range for the chart and the Screener: the list, the quote and the grid follow it.
@@ -666,6 +669,35 @@ function wire() {
   });
 }
 
+/* ------------------------------------------------------- TradingView tools */
+// The terminal's toolbars (js/tv-terminal.js) reach the chart through this context only (js/tv-bridge.js).
+// Replay draws the world as of a day: the same axis, nothing after the day.
+function asOf(view, day) {
+  const closes = view.closes.filter(c => c.serverDay <= day), daily = view.daily.filter(d => d.serverDay <= day);
+  return { ...view, closes, closeDays: closes.map(c => c.serverDay), daily, dailyByDay: new Map(daily.map(d => [d.serverDay, d])), projection: null, history: null };
+}
+function connectTools() {
+  connect({
+    page: 'markets', chart,
+    series: () => market.part('best-offer').points,
+    key: () => state.world && `markets:${ASSET}:${state.world}`,
+    symbol: () => state.world ?? 'World',
+    times: () => state.view?.grid ?? [],
+    values: () => state.view ? state.view.closes.map(c => ({ time: c.serverDay, value: c[state.side] })) : [],
+    format: v => fmt(Math.round(v)),
+    worlds: () => state.index ? watchRows().map(r => {
+      const w = state.index.worlds.find(x => x.world === r.world);
+      return { world: r.world, last: r.last, ratio: r.ratio, retired: r.retired, meta: [w?.type, w?.location].filter(Boolean).join(', ') };
+    }) : [],
+    open: world => { $('filter').value = state.filter = ''; openWorld(world).catch(failed); },
+    screener: () => showScreener(!state.screen),
+    reset: () => { chart.priceScale('right').applyOptions({ autoScale: true }); applyRange(); },
+    setStyle: style => market.setStyle(style),
+    retheme: () => market.retheme(),
+    replay: day => { if (!state.view) return; market.draw(day ? asOf(state.view, day) : state.view, state.side); if (!day) applyRange(); },
+  });
+}
+
 function failed(error) {
   console.error(error);
   $('status').hidden = false;
@@ -734,6 +766,7 @@ async function main() {
   // Initial ranges use the settled font metrics and dock width, just like later range selections.
   await document.fonts.ready;
   wire();
+  connectTools();
   await new Promise(requestAnimationFrame);
   if (params.get('view') === 'screener') showScreener(true);
   await select(asked ?? (names.includes('Antica') ? 'Antica' : names[0]));

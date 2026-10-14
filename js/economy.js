@@ -15,13 +15,14 @@ import { fmt, esc, num } from './format.js';
 import { dock } from './markets-dock.js';
 import { MEASURES, INTERVALS, ratePeriods, accumulatedPeriods, rangeChange, rangeStartOf, overviewRows, periodOf, contributions, lastDay, median,
   LIQUIDATION_SCENARIOS } from './economy-data.js?v=20261014-series';
-import { economyChart, colors } from './economy-chart.js?v=20261014-series';
+import { economyChart, colors } from './economy-chart.js?v=20261014-tv';
+import { connect, changed } from './tv-bridge.js';
 
 const $ = id => document.getElementById(id);
 const RANGES = ['1M', '3M', '6M', 'YTD', '1Y', 'All'];
 const ROOMY = '(min-width: 1280px)';
 const REPO = 'https://github.com/nesleykent/Tibinance';   // notes and methodology are read there, rendered
-const KEY = { gross: 'var(--ink)', coins: 'var(--sell)', npc: 'var(--buy)' };
+const KEY = { gross: 'var(--eco-gross, var(--ink))', coins: 'var(--eco-coins, var(--sell))', npc: 'var(--eco-npc, var(--buy))' };
 const percent = new Intl.NumberFormat('en-US', { style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2, signDisplay: 'exceptZero' });
 const signedNumber = new Intl.NumberFormat('en-US', { signDisplay: 'exceptZero', maximumFractionDigits: 0 });
 const tone = v => (v > 0 ? 'up' : v < 0 ? 'down' : '');
@@ -160,6 +161,7 @@ function draw({ preserveRange = false } = {}) {
   else applyRange();
   saveUrl();
   requestAnimationFrame(fitHead);
+  changed();
 }
 
 function applyRange(attempt = 0) {
@@ -539,6 +541,27 @@ function failed() {
   $('economy').setAttribute('aria-busy', 'false');
 }
 
+// The terminal's toolbars (js/tv-terminal.js) reach the chart through this context only (js/tv-bridge.js).
+function connectTools() {
+  if (!chart) return;
+  connect({
+    page: 'economy', chart: chart.chart,
+    series: () => chart.main(),
+    key: () => `economy:${state.world}`,
+    symbol: () => state.world,
+    times: () => view?.periods.map(p => p.start) ?? [],
+    values: () => view ? view.periods.map(p => ({ time: p.start, value: view.values.get(p.start)?.[field()] })).filter(v => Number.isFinite(v.value)) : [],
+    format: v => gold(v),
+    worlds: () => data.index ? overviewRows(data.overview, state.interval, state.measure, state.range, '').map(r => ({ world: r.world, last: r.value, ratio: r.change, retired: !!r.ended,
+      meta: [marketOf(r.world)?.type, marketOf(r.world)?.location, r.ended && `ended ${r.ended}`].filter(Boolean).join(', ') })) : [],
+    open: world => { $('filter').value = state.filter = ''; select(world).catch(failed); },
+    reset: () => { chart.chart.priceScale('right').applyOptions({ autoScale: true }); applyRange(); },
+    setStyle: style => chart.setStyle(style),
+    retheme: () => chart.retheme(),
+    replay: day => { chart.replay(day); if (!day) applyRange(); },
+  });
+}
+
 async function main() {
   const controller = requests;
   try {
@@ -551,7 +574,7 @@ async function main() {
   setChoice('liquidation', 'rate', state.rate === null ? '' : String(state.rate));
   $('stable').setAttribute('aria-pressed', String(state.stable));
   const startupRequest = request;
-  if (!wired) { wire(); wired = true; }
+  if (!wired) { wire(); connectTools(); wired = true; }
   renderFindings();
   renderProvenance();
   await document.fonts.ready;

@@ -113,7 +113,7 @@ try {
     for (const c of canvases) { const b=c.getBoundingClientRect(); ctx.drawImage(c,b.left-r.left,b.top-r.top,b.width,b.height); }
     // The upper half of the price pane: where only an active marker's line or band reaches.
     const d=ctx.getImageData(0,0,out.width,Math.round(out.height*0.5)).data;
-    let n=0;for(let i=0;i<d.length;i+=4) if(Math.abs(d[i]-117)+Math.abs(d[i+1]-57)+Math.abs(d[i+2]-166)<80) n++;return n;});
+    let n=0;for(let i=0;i<d.length;i+=4) if(Math.abs(d[i]-156)+Math.abs(d[i+1]-39)+Math.abs(d[i+2]-176)<80) n++;return n;});   // --event-world, TradingView's purple
   const before=await chartPixels();
   const mergeButton=page.locator(`#eventMarks [data-events~="${merge.id}"]`);
   await mergeButton.hover();
@@ -216,8 +216,9 @@ try {
     const count=(data,[R,G,B])=>{let n=0;for(let i=0;i<data.length;i+=4) if(Math.abs(data[i]-R)+Math.abs(data[i+1]-G)+Math.abs(data[i+2]-B)<60) n++;return n;};
     // The chart's foot (where markers stand), and everything under the chart (the notes).
     const foot=box(32,640,1168,696),under=box(32,700,1168,image.height/r-90);
-    return {height:image.height/r,game:count(foot,[128,89,9]),world:count(foot,[117,57,166]),notesGame:count(under,[128,89,9]),notesWorld:count(under,[117,57,166]),
-      notesInk:count(under,[36,35,42])};
+    // TradingView's orange for the game's events, its purple for a world's, its ink for text (css/tv.css).
+    return {height:image.height/r,game:count(foot,[255,152,0]),world:count(foot,[156,39,176]),notesGame:count(under,[255,152,0]),notesWorld:count(under,[156,39,176]),
+      notesInk:count(under,[15,15,15])};
   },png);
   await open('Terribra','1Y');
   const visible=(await marks()).flatMap(m=>m.ids).map(id=>({...byId.get(id),category:{...dataset.categories.find(c=>c.id===byId.get(id).category),rank:dataset.categories.findIndex(c=>c.id===byId.get(id).category)}}));

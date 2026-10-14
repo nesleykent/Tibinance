@@ -1,0 +1,165 @@
+/*
+ * The overview pages (markets-overview.html, economy-overview.html) in the idiom of TradingView's /markets/ page:
+ * a page of sections, each a heading with a link onward, then its widget: the market summary (a large chart and the
+ * symbol cards that switch it), hotlists, a heatmap, tables and a calendar. Tokens and controls are css/tv.css.
+ */
+body.tv-page { min-height:100dvh; background:var(--tv-bg); color:var(--tv-text); }
+.tv-page .tv-header { position:sticky; top:0; margin:0; border-bottom:1px solid var(--tv-border); }
+.tv-page .tv-header-row { max-width:1440px; margin:0 auto; padding:0 16px; }
+.tv-page-search { display:flex; align-items:center; gap:8px; width:min(360px,40vw); height:34px; margin:0 auto; padding:0 12px; border:0; border-radius:18px;
+  background:var(--tv-bg-3); color:var(--tv-text-2); font:14px var(--tv-font); cursor:pointer; }
+.tv-page-search:hover { background:var(--tv-btn-hover); color:var(--tv-text); }
+.tv-page-search svg { width:22px; height:22px; flex:none; fill:none; stroke:currentColor; }
+.tv-page-search kbd { margin-left:auto; padding:0 6px; border:1px solid var(--tv-border-hover); border-radius:4px; font:12px var(--tv-font); }
+/* Phones: the search and the link onward keep their icons. */
+@media (max-width:600px) {
+  .tv-page-search { width:34px; margin:0 0 0 auto; padding:0; justify-content:center; background:transparent; }
+  .tv-page-search :is(span,kbd),.tv-page .tv-header-end .tv-btn span { display:none; }
+  .tv-page .tv-header-row { padding:0 8px; }
+}
+@media (max-width:360px) { .tv-page .site-section { display:block; max-width:132px; overflow:hidden; text-overflow:ellipsis; } }
+
+.tv-main { max-width:1440px; margin:0 auto; padding:0 40px 96px; }
+@media (max-width:900px) { .tv-main { padding:0 16px 64px; } }
+
+/* The hero: a large heading, a line under it, then the page's sections as chips. */
+.tv-hero { padding:56px 0 24px; }
+.tv-hero h1 { margin:0; font:700 clamp(32px,5vw,56px)/1.1 var(--tv-font); letter-spacing:-.02em; }
+.tv-hero p { max-width:760px; margin:14px 0 0; color:var(--tv-text-2); font-size:18px; line-height:28px; }
+.tv-chips { display:flex; flex-wrap:wrap; gap:8px; margin-top:28px; }
+.tv-chips a,.tv-chips button { display:inline-flex; align-items:center; gap:6px; height:36px; padding:0 16px; border:1px solid var(--tv-border-hover); border-radius:18px;
+  background:transparent; color:var(--tv-text); font:500 15px var(--tv-font); cursor:pointer; }
+.tv-chips a:hover,.tv-chips button:hover { background:var(--tv-bg-3); color:var(--tv-text); }
+.tv-chips [aria-pressed="true"],.tv-chips [aria-selected="true"] { border-color:var(--tv-text); background:var(--tv-text); color:var(--tv-bg); }
+
+/* A section: its heading links onward, a chevron after it, as TradingView heads every widget. */
+.tv-section { margin-top:56px; scroll-margin-top:56px; }
+.tv-section-head { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; margin-bottom:20px; }
+.tv-section-head h2 { margin:0; font:700 28px/36px var(--tv-font); letter-spacing:-.01em; }
+.tv-section-head h2 a { color:var(--tv-text); }
+.tv-section-head h2 a::after { content:""; display:inline-block; width:10px; height:10px; margin-left:10px; border:solid currentColor; border-width:2.5px 2.5px 0 0; transform:translateY(-2px) rotate(45deg); }
+.tv-section-head h2 a:hover { color:var(--tv-brand); }
+.tv-section-note { margin:8px 0 0; color:var(--tv-text-2); font-size:14px; }
+
+/* Market summary: the large chart beside the symbol cards that choose it. */
+.tv-summary { display:grid; grid-template-columns:minmax(0,1fr) 340px; gap:32px; }
+@media (max-width:1000px) { .tv-summary { grid-template-columns:minmax(0,1fr); } }
+.tv-summary-quote { display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 12px; }
+.tv-summary-name { width:100%; color:var(--tv-text-2); font-size:14px; }
+.tv-summary-last { font:600 36px/44px var(--tv-font); font-variant-numeric:tabular-nums; }
+.tv-summary-unit { color:var(--tv-text-2); font-size:14px; }
+.tv-summary-change { font-size:16px; font-weight:600; font-variant-numeric:tabular-nums; }
+.tv-summary-chart { position:relative; min-width:0; height:380px; margin-top:12px; overflow:hidden; }
+.tv-summary-ranges { display:flex; gap:4px; margin-top:12px; }
+.tv-summary-ranges button { height:30px; padding:0 12px; border:0; border-radius:15px; background:transparent; color:var(--tv-text); font:500 14px var(--tv-font); cursor:pointer; }
+.tv-summary-ranges button:hover { background:var(--tv-bg-3); }
+.tv-summary-ranges button[aria-pressed="true"] { background:var(--tv-bg-3); color:var(--tv-text); font-weight:700; }
+.tv-cards { display:grid; gap:4px; align-content:start; margin:0; padding:0; list-style:none; }
+.tv-card { display:grid; grid-template-columns:36px minmax(0,1fr) auto; align-items:center; gap:4px 12px; padding:12px; border:0; border-radius:12px;
+  background:transparent; color:var(--tv-text); font:inherit; text-align:left; cursor:pointer; width:100%; }
+.tv-card:hover { background:var(--tv-bg-2); }
+.tv-card[aria-pressed="true"] { background:var(--tv-bg-3); }
+.tv-card-name { min-width:0; overflow:hidden; font-weight:600; text-overflow:ellipsis; white-space:nowrap; }
+.tv-card-desc { display:block; overflow:hidden; color:var(--tv-text-2); font-size:13px; font-weight:400; text-overflow:ellipsis; white-space:nowrap; }
+.tv-card-value { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.tv-card-value small { display:block; font-size:13px; }
+
+/* A symbol's round logo: its initial on a colour of its own. */
+.tv-logo-chip { display:grid; place-items:center; width:32px; height:32px; border-radius:50%; background:var(--c,var(--tv-brand)); color:#fff; font:700 14px var(--tv-font); flex:none; }
+.tv-logo-chip.sm { width:28px; height:28px; font-size:12px; }
+
+/* Change, as TradingView's pill: the sign's colour on its soft tint. */
+.tv-pill { display:inline-flex; align-items:center; justify-content:center; min-width:68px; height:24px; padding:0 8px; border-radius:6px; background:var(--tv-bg-3);
+  color:var(--tv-text-2); font:600 13px var(--tv-font); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.tv-pill.up { background:var(--tv-up-soft); color:var(--tv-up); }
+.tv-pill.down { background:var(--tv-down-soft); color:var(--tv-down); }
+
+/* Hotlists: TradingView's highlights, lists of six beside each other. */
+.tv-hotlists { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr)); gap:32px 40px; }
+.tv-hotlist h3 { display:flex; align-items:center; justify-content:space-between; margin:0 0 8px; font:700 18px/26px var(--tv-font); }
+.tv-hotlist h3 a { color:var(--tv-text); }
+.tv-hotlist h3 a:hover { color:var(--tv-brand); }
+.tv-hotlist ol { margin:0; padding:0; list-style:none; }
+.tv-hotlist li a { display:grid; grid-template-columns:28px minmax(0,1fr) auto auto; align-items:center; gap:12px; min-height:52px; padding:0 8px; margin:0 -8px; border-radius:8px; color:var(--tv-text); }
+.tv-hotlist li a:hover { background:var(--tv-bg-2); color:var(--tv-text); }
+.tv-hotlist .tv-row-name { min-width:0; overflow:hidden; font-weight:600; text-overflow:ellipsis; white-space:nowrap; }
+.tv-hotlist .tv-row-name small { display:block; overflow:hidden; color:var(--tv-text-2); font-size:12px; font-weight:400; text-overflow:ellipsis; }
+.tv-hotlist .tv-row-value { font-variant-numeric:tabular-nums; text-align:right; white-space:nowrap; }
+.tv-more { display:inline-flex; align-items:center; gap:6px; margin-top:12px; color:var(--tv-text); font-weight:600; }
+.tv-more::after { content:""; width:7px; height:7px; border:solid currentColor; border-width:2px 2px 0 0; transform:rotate(45deg); }
+
+/* The heatmap: a squarified treemap, each tile a world sized by its weight and coloured by its change. */
+.tv-heat-tools { display:flex; flex-wrap:wrap; align-items:center; gap:8px 16px; }
+.tv-heat-tools label { display:inline-flex; align-items:center; gap:8px; color:var(--tv-text-2); font-size:13px; }
+.tv-heat-tools select { height:30px; padding:0 28px 0 10px; border:1px solid var(--tv-border-hover); border-radius:6px; appearance:none; -webkit-appearance:none;
+  background:var(--tv-input) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath fill='none' stroke='%23808080' d='M5.5 7.5 9 11l3.5-3.5'/%3E%3C/svg%3E") right 6px center/18px no-repeat;
+  color:var(--tv-text); font:13px var(--tv-font); }
+.tv-heatmap { position:relative; height:560px; overflow:hidden; border-radius:8px; background:var(--tv-bg-3); }
+@media (max-width:700px) { .tv-heatmap { height:440px; } }
+.tv-tile { position:absolute; display:grid; place-content:center; justify-items:center; overflow:hidden; padding:2px; border:1px solid var(--tv-bg); color:#fff; text-align:center;
+  font:600 13px/1.2 var(--tv-font); text-decoration:none; text-shadow:0 1px 1px rgb(0 0 0 / .25); }
+.tv-tile:hover { z-index:1; outline:2px solid var(--tv-text); outline-offset:-2px; color:#fff; }
+.tv-tile span { display:block; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.tv-tile .tv-tile-change { font-weight:400; opacity:.95; }
+.tv-heat-scale { display:flex; flex-wrap:wrap; align-items:center; gap:2px; margin-top:12px; color:var(--tv-text-2); font-size:12px; }
+@media (max-width:600px) { .tv-heat-scale span { min-width:40px; font-size:11px; } }
+.tv-heat-scale span { display:grid; place-items:center; min-width:52px; height:22px; color:#fff; font-weight:600; }
+.tv-heat-scale span:first-of-type { border-radius:4px 0 0 4px; } .tv-heat-scale span:last-of-type { border-radius:0 4px 4px 0; }
+.tv-tip-float { position:fixed; z-index:70; display:grid; gap:2px; min-width:180px; padding:10px 12px; border-radius:8px; background:var(--tv-popup); color:var(--tv-text);
+  box-shadow:var(--tv-popup-shadow); font-size:13px; pointer-events:none; }
+.tv-tip-float strong { font-size:15px; }
+.tv-tip-float .tv-muted { font-size:12px; }
+
+/* Tables: TradingView's screener rows, sticky heads, sortable columns. */
+.tv-table-wrap { overflow:auto; border-top:1px solid var(--tv-border); }
+table.tv-table { width:100%; border-collapse:collapse; font-size:14px; font-variant-numeric:tabular-nums; }
+table.tv-table th { position:sticky; top:0; z-index:1; height:40px; padding:0 12px; border-bottom:1px solid var(--tv-border); background:var(--tv-bg);
+  color:var(--tv-text-2); font-size:13px; font-weight:400; text-align:right; white-space:nowrap; }
+table.tv-table th:first-child,table.tv-table td:first-child { text-align:left; }
+table.tv-table th button { padding:0; border:0; background:none; color:inherit; font:inherit; cursor:pointer; }
+table.tv-table th button:hover { color:var(--tv-text); }
+table.tv-table th[aria-sort="ascending"] button::after { content:" ↑"; }
+table.tv-table th[aria-sort="descending"] button::after { content:" ↓"; }
+table.tv-table td { height:52px; padding:0 12px; border-bottom:1px solid var(--tv-border); text-align:right; white-space:nowrap; }
+table.tv-table tbody tr { cursor:pointer; }
+table.tv-table tbody tr:hover { background:var(--tv-bg-2); }
+table.tv-table .tv-cell-sym { display:flex; align-items:center; gap:10px; }
+table.tv-table .tv-cell-sym a { color:var(--tv-text); font-weight:600; }
+table.tv-table .tv-cell-sym small { display:block; color:var(--tv-text-2); font-size:12px; font-weight:400; }
+table.tv-table .tv-text-left { text-align:left; }
+.tv-table-tools { display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; margin-bottom:12px; }
+.tv-table-tools .tv-input { height:34px; width:220px; }
+
+/* Regions: a bar per region, its share of the whole. */
+.tv-bars { display:grid; gap:14px; margin:0; padding:0; list-style:none; }
+.tv-bars li { display:grid; grid-template-columns:240px minmax(0,1fr) 220px 64px; align-items:center; gap:16px; font-variant-numeric:tabular-nums; }
+.tv-bars .tv-bar { height:10px; border-radius:5px; background:var(--tv-bg-3); overflow:hidden; }
+.tv-bars .tv-bar i { display:block; height:100%; border-radius:5px; background:var(--tv-brand); }
+.tv-bars .tv-bar-value { display:flex; align-items:center; justify-content:flex-end; gap:10px; font-weight:600; white-space:nowrap; }
+.tv-bars .tv-bar-share { color:var(--tv-text-2); text-align:right; }
+@media (max-width:700px) { .tv-bars li { grid-template-columns:1fr auto; } .tv-bars .tv-bar { grid-column:1 / -1; order:3; } .tv-bars .tv-bar-share { display:none; } }
+
+/* Stat cards: the economy's headline figures, as TradingView's economic indicators. */
+.tv-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr)); gap:16px; }
+.tv-stat { display:grid; gap:6px; padding:20px; border-radius:16px; background:var(--tv-bg-2); border:0; color:var(--tv-text); font:inherit; text-align:left; cursor:pointer; }
+.tv-stat:hover { background:var(--tv-bg-3); }
+.tv-stat[aria-pressed="true"] { box-shadow:inset 0 0 0 2px var(--tv-text); }
+.tv-stat-name { display:flex; align-items:center; gap:8px; color:var(--tv-text-2); font-size:14px; }
+.tv-stat-name i { width:10px; height:10px; border-radius:50%; background:var(--c); }
+.tv-stat-value { font:700 28px/34px var(--tv-font); font-variant-numeric:tabular-nums; }
+.tv-stat-sub { display:flex; align-items:center; gap:8px; color:var(--tv-text-2); font-size:13px; }
+
+/* The calendar: TradingView's economic calendar, a day per group, an event per row. */
+.tv-calendar { display:grid; gap:24px; }
+.tv-cal-day h3 { position:sticky; top:38px; z-index:1; margin:0; padding:8px 0; border-bottom:1px solid var(--tv-border); background:var(--tv-bg); font:700 15px var(--tv-font); }
+.tv-cal-day ul { margin:0; padding:0; list-style:none; }
+.tv-cal-day li { display:grid; grid-template-columns:120px 28px minmax(0,1fr) auto; align-items:center; gap:12px; min-height:52px; padding:6px 0; border-bottom:1px solid var(--tv-border); }
+.tv-cal-day .tv-cal-when { color:var(--tv-text-2); font-size:13px; font-variant-numeric:tabular-nums; }
+.tv-cal-day .tv-cal-title { min-width:0; font-weight:600; }
+.tv-cal-day .tv-cal-title small { display:block; overflow:hidden; color:var(--tv-text-2); font-size:13px; font-weight:400; text-overflow:ellipsis; white-space:nowrap; }
+.tv-cal-day .tv-cal-scope { color:var(--tv-text-2); font-size:13px; text-align:right; }
+.tv-cal-mark { display:grid; place-items:center; width:24px; height:24px; border:1.5px solid var(--c); border-radius:12px; color:var(--c); font:700 11px var(--tv-font); }
+@media (max-width:700px) { .tv-cal-day li { grid-template-columns:28px minmax(0,1fr); } .tv-cal-day .tv-cal-when,.tv-cal-day .tv-cal-scope { grid-column:2; text-align:left; } }
+
+.tv-footer { margin-top:96px; padding:24px 0; border-top:1px solid var(--tv-border); color:var(--tv-text-2); font-size:13px; }
+.tv-skeleton { color:var(--tv-text-2); }

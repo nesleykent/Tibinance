@@ -29,7 +29,7 @@ try {
   await page.route('**/data/observations.json',r=>r.fulfill({json:[]}));
   await page.goto(`${root}/`);
   assert.deepEqual(await page.$$eval('#site-menu a',as=>as.map(a=>[a.textContent,a.getAttribute('href')])),
-    [['Capture','./'],['Markets','markets.html'],['Economy','economy.html'],['Trade','trade.html'],['Research','reports/tc-cycle/']]);
+    [['Capture','./'],['Markets overview','markets-overview.html'],['Markets','markets.html'],['Economy overview','economy-overview.html'],['Economy','economy.html'],['Trade','trade.html'],['Research','reports/tc-cycle/']]);
   // From here on, every request the page makes is recorded: none may reach the market history or the captures.
   const requests=[];page.on('request',r=>requests.push(new URL(r.url()).pathname));
   // What Capture keeps in this browser (its column choices); Trade must add nothing to it.

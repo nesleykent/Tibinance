@@ -5,48 +5,99 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tibinance Markets</title>
 <meta name="description" content="Tibia Coin offers by world and Tibia Token daily USD price history.">
+<script src="js/tv-theme.js"></script>
 <link rel="stylesheet" href="css/app.css">
 <link rel="stylesheet" href="css/markets.css?v=20261014-rebuild">
 <link rel="stylesheet" href="css/market-assets.css">
 <link rel="stylesheet" href="css/site-header.css?v=20261004-github">
+<link rel="stylesheet" href="css/tv.css?v=20261014-tv">
+<link rel="stylesheet" href="css/tv-terminal.css?v=20261014-tv">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪙</text></svg>">
 </head>
-<body>
-<header class="site">
-  <div class="wrap">
+<body class="tv-app">
+<header class="site tv-header">
+  <div class="tv-header-row">
     <nav class="site-nav" aria-label="Site">
-      <a class="site-crumb site-home" href="./">Tibinance</a>
+      <a class="site-crumb site-home" href="./"><svg class="tv-logo" aria-hidden="true"><use href="css/tv-icons.svg#logo"/></svg><span>Tibinance</span></a>
       <span class="site-slash" aria-hidden="true">/</span>
       <button type="button" class="site-crumb site-section" popovertarget="site-menu" data-site-menu>Markets<svg class="site-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg></button>
       <ul id="site-menu" class="site-panel site-menu" popover>
         <li><a href="./">Capture</a></li>
+        <li><a href="markets-overview.html">Markets overview</a></li>
         <li><a href="markets.html" aria-current="page">Markets</a></li>
+        <li><a href="economy-overview.html">Economy overview</a></li>
         <li><a href="economy.html">Economy</a></li>
         <li><a href="trade.html">Trade</a></li>
         <li><a href="reports/tc-cycle/">Research</a></li>
       </ul>
     </nav>
-    <a class="site-control site-github" href="https://github.com/nesleykent/Tibinance" target="_blank" rel="noopener" aria-label="Tibinance project on GitHub" title="Tibinance on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .75a11.25 11.25 0 0 0-3.56 21.92c.56.1.77-.24.77-.54v-2.1c-3.13.68-3.79-1.33-3.79-1.33-.51-1.3-1.25-1.65-1.25-1.65-1.02-.7.08-.69.08-.69 1.13.08 1.72 1.16 1.72 1.16 1 1.72 2.64 1.22 3.28.93.1-.73.4-1.22.71-1.5-2.5-.28-5.13-1.25-5.13-5.56 0-1.23.44-2.23 1.16-3.02-.12-.28-.5-1.43.11-2.98 0 0 .95-.3 3.1 1.15a10.8 10.8 0 0 1 5.64 0c2.15-1.46 3.1-1.15 3.1-1.15.61 1.55.23 2.7.11 2.98.72.79 1.16 1.79 1.16 3.02 0 4.32-2.63 5.27-5.14 5.55.4.35.76 1.03.76 2.09v3.1c0 .3.2.65.77.54A11.25 11.25 0 0 0 12 .75Z"/></svg><span>GitHub</span></a>
-    <div class="site-controls">
+    <div class="tv-tools" role="toolbar" aria-label="Chart">
+      <button type="button" id="tvSymbol" class="tv-btn tv-symbol" aria-haspopup="dialog" title="World search (⌘K)"><svg aria-hidden="true"><use href="css/tv-icons.svg#search"/></svg><span id="tvSymbolName">World</span></button>
+      <button type="button" id="tvCompare" class="tv-btn tv-icon" aria-label="Compare worlds" title="Compare worlds"><svg aria-hidden="true"><use href="css/tv-icons.svg#plus"/></svg></button>
+      <span class="tv-divider" aria-hidden="true"></span>
+      <span class="tv-btn tv-static" title="Interval: one server day">D</span>
+      <span class="tv-divider" aria-hidden="true"></span>
+      <button type="button" id="tvStyle" class="tv-btn tv-icon" aria-haspopup="menu" aria-label="Chart style" title="Chart style"><svg aria-hidden="true"><use href="css/tv-icons.svg#line-markers"/></svg></button>
+      <button type="button" id="tvIndicators" class="tv-btn" aria-haspopup="dialog" title="Indicators"><svg aria-hidden="true"><use href="css/tv-icons.svg#indicators"/></svg><span>Indicators</span></button>
+      <button type="button" id="tvTemplates" class="tv-btn tv-icon" aria-haspopup="menu" aria-label="Drawing templates" title="Drawing templates"><svg aria-hidden="true"><use href="css/tv-icons.svg#templates"/></svg></button>
+      <span class="tv-divider" aria-hidden="true"></span>
+      <button type="button" id="tvReplay" class="tv-btn" aria-pressed="false" title="Bar replay"><svg aria-hidden="true"><use href="css/tv-icons.svg#replay"/></svg><span>Replay</span></button>
+      <span class="tv-divider" aria-hidden="true"></span>
+      <button type="button" id="tvUndo" class="tv-btn tv-icon" aria-label="Undo" title="Undo (⌘Z)" disabled><svg aria-hidden="true"><use href="css/tv-icons.svg#undo"/></svg></button>
+      <button type="button" id="tvRedo" class="tv-btn tv-icon" aria-label="Redo" title="Redo (⇧⌘Z)" disabled><svg aria-hidden="true"><use href="css/tv-icons.svg#redo"/></svg></button>
+    </div>
+    <div class="site-controls tv-header-end">
+      <a class="tv-btn tv-overview-link" href="markets-overview.html">Overview</a>
       <label class="sr-only" for="asset">Asset</label>
-      <select id="asset" aria-label="Asset"><option value="tibia-coin">Tibia Coin</option><option value="tibia-token">Tibia Token</option></select>
+      <select id="asset" class="tv-select" aria-label="Asset"><option value="tibia-coin">Tibia Coin</option><option value="tibia-token">Tibia Token</option></select>
+      <button type="button" id="tvTheme" class="tv-btn tv-icon" aria-pressed="false" aria-label="Dark theme" title="Dark theme"><svg class="icon-moon" aria-hidden="true"><use href="css/tv-icons.svg#moon"/></svg><svg class="icon-sun" aria-hidden="true"><use href="css/tv-icons.svg#sun"/></svg></button>
+      <button type="button" id="exportButton" class="tv-btn tv-icon" aria-label="Export chart image" title="Take a snapshot"><svg aria-hidden="true"><use href="css/tv-icons.svg#camera"/></svg></button>
+      <button type="button" id="expand" class="tv-btn tv-icon" aria-pressed="false" aria-label="Full screen" title="Full screen"><svg class="icon-expand" aria-hidden="true"><use href="css/tv-icons.svg#expand"/></svg><svg class="icon-collapse" aria-hidden="true"><use href="css/tv-icons.svg#collapse"/></svg></button>
+      <a class="site-control site-github tv-btn tv-icon" href="https://github.com/nesleykent/Tibinance" target="_blank" rel="noopener" aria-label="Tibinance project on GitHub" title="Tibinance on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .75a11.25 11.25 0 0 0-3.56 21.92c.56.1.77-.24.77-.54v-2.1c-3.13.68-3.79-1.33-3.79-1.33-.51-1.3-1.25-1.65-1.25-1.65-1.02-.7.08-.69.08-.69 1.13.08 1.72 1.16 1.72 1.16 1 1.72 2.64 1.22 3.28.93.1-.73.4-1.22.71-1.5-2.5-.28-5.13-1.25-5.13-5.56 0-1.23.44-2.23 1.16-3.02-.12-.28-.5-1.43.11-2.98 0 0 .95-.3 3.1 1.15a10.8 10.8 0 0 1 5.64 0c2.15-1.46 3.1-1.15 3.1-1.15.61 1.55.23 2.7.11 2.98.72.79 1.16 1.79 1.16 3.02 0 4.32-2.63 5.27-5.14 5.55.4.35.76 1.03.76 2.09v3.1c0 .3.2.65.77.54A11.25 11.25 0 0 0 12 .75Z"/></svg></a>
     </div>
   </div>
 </header>
 
-<main id="market" class="wrap terminal" aria-busy="true">
+<main id="market" class="terminal tv-terminal" aria-busy="true">
   <h1 class="sr-only">Tibia Coin and Tibia Token Markets</h1>
+  <nav id="drawbar" class="tv-drawbar" aria-label="Drawing tools">
+    <div class="tv-drawbar-group" role="radiogroup" aria-label="Drawing tool">
+      <button type="button" class="tv-btn tv-icon" role="radio" data-tool="cursor" aria-checked="true" aria-label="Crosshair" title="Crosshair (Esc)"><svg aria-hidden="true"><use href="css/tv-icons.svg#cross"/></svg></button>
+      <span class="tv-hdivider" aria-hidden="true"></span>
+      <button type="button" class="tv-btn tv-icon" role="radio" data-tool="trend" aria-checked="false" aria-label="Trend line" title="Trend line (Alt+T)"><svg aria-hidden="true"><use href="css/tv-icons.svg#trend"/></svg></button>
+      <button type="button" class="tv-btn tv-icon" role="radio" data-tool="ray" aria-checked="false" aria-label="Ray" title="Ray"><svg aria-hidden="true"><use href="css/tv-icons.svg#ray"/></svg></button>
+      <button type="button" class="tv-btn tv-icon" role="radio" data-tool="hline" aria-checked="false" aria-label="Horizontal line" title="Horizontal line (Alt+H)"><svg aria-hidden="true"><use href="css/tv-icons.svg#hline"/></svg></button>
+      <button type="button" class="tv-btn tv-icon" role="radio" data-tool="hray" aria-checked="false" aria-label="Horizontal ray" title="Horizontal ray (Alt+J)"><svg aria-hidden="true"><use href="css/tv-icons.svg#hray"/></svg></button>
+      <button type="button" class="tv-btn tv-icon" role="radio" data-tool="vline" aria-checked="false" aria-label="Vertical line" title="Vertical line (Alt+V)"><svg aria-hidden="true"><use href="css/tv-icons.svg#vline"/></svg></button>
+      <button type="button" class="tv-btn tv-icon" role="radio" data-tool="crossline" aria-checked="false" aria-label="Cross line" title="Cross line (Alt+C)"><svg aria-hidden="true"><use href="css/tv-icons.svg#crossline"/></svg></button>
+      <span class="tv-hdivider" aria-hidden="true"></span>
+      <button type="button" class="tv-btn tv-icon" role="radio" data-tool="channel" aria-checked="false" aria-label="Parallel channel" title="Parallel channel"><svg aria-hidden="true"><use href="css/tv-icons.svg#channel"/></svg></button>
+      <span class="tv-hdivider" aria-hidden="true"></span>
+      <button type="button" class="tv-btn tv-icon" role="radio" data-tool="fib" aria-checked="false" aria-label="Fib retracement" title="Fib retracement (Alt+F)"><svg aria-hidden="true"><use href="css/tv-icons.svg#fib"/></svg></button>
+      <span class="tv-hdivider" aria-hidden="true"></span>
+      <button type="button" class="tv-btn tv-icon" role="radio" data-tool="rect" aria-checked="false" aria-label="Rectangle" title="Rectangle (Alt+Shift+R)"><svg aria-hidden="true"><use href="css/tv-icons.svg#rect"/></svg></button>
+      <button type="button" class="tv-btn tv-icon" role="radio" data-tool="measure" aria-checked="false" aria-label="Price range" title="Price range"><svg aria-hidden="true"><use href="css/tv-icons.svg#measure"/></svg></button>
+      <button type="button" class="tv-btn tv-icon" role="radio" data-tool="text" aria-checked="false" aria-label="Text" title="Text"><svg aria-hidden="true"><use href="css/tv-icons.svg#text"/></svg></button>
+      <span class="tv-hdivider" aria-hidden="true"></span>
+      <button type="button" class="tv-btn tv-icon" role="radio" data-tool="arrowup" aria-checked="false" aria-label="Arrow mark" title="Arrow mark"><svg aria-hidden="true"><use href="css/tv-icons.svg#arrowup"/></svg></button>
+    </div>
+    <div class="tv-drawbar-group">
+      <button type="button" id="drawMagnet" class="tv-btn tv-icon" aria-pressed="false" aria-label="Magnet mode" title="Magnet mode"><svg aria-hidden="true"><use href="css/tv-icons.svg#magnet"/></svg></button>
+      <button type="button" id="drawLock" class="tv-btn tv-icon" aria-pressed="false" aria-label="Lock all drawings" title="Lock all drawings"><svg aria-hidden="true"><use href="css/tv-icons.svg#lock"/></svg></button>
+      <button type="button" id="drawHide" class="tv-btn tv-icon" aria-pressed="false" aria-label="Hide all drawings" title="Hide all drawings"><svg aria-hidden="true"><use href="css/tv-icons.svg#eye"/></svg></button>
+      <button type="button" id="drawRemove" class="tv-btn tv-icon" aria-label="Remove all drawings" title="Remove all drawings"><svg aria-hidden="true"><use href="css/tv-icons.svg#trash"/></svg></button>
+    </div>
+  </nav>
 
   <section id="chartPanel" class="chart-panel" aria-labelledby="world">
     <div class="chart-area">
       <div id="chart" class="chart" role="img"></div>
-      <!-- The chart's status, one block over its top left (css/markets.css), as a market terminal reads it: the world,
-           what it is, its latest best offer and change over the range; the market side shown, with both sides' latest
-           best offers and the spread between them; then the readout of the day under the crosshair. The price scale
-           starts below the block, so no price is drawn under it. Only its controls take the pointer. -->
+      <!-- The legend, over the chart's top left as TradingView reads it: the symbol line (world, interval, market,
+           what it is, the quote), the side boxes (SELL and BUY with the spread between), then a row per series. -->
       <div id="chartHead" class="chart-head">
         <div class="head-line">
           <h2 id="world">Markets</h2>
+          <span class="tv-legend-int" aria-hidden="true"><span>1D</span><span>Tibia Coin</span></span>
           <span id="worldMeta" class="symbol-meta"></span>
           <span class="symbol-quote" aria-live="polite">
             <span id="lastPrice" class="symbol-last"></span>
@@ -54,28 +105,25 @@
             <span id="lastRange" class="symbol-range"></span>
           </span>
         </div>
-        <!-- Which side's history the chart shows: a view of the market, chosen like any other Tibinance choice of two. -->
         <div id="side" class="side-picker" role="radiogroup" aria-label="Market side">
-          <button type="button" data-side="sell" role="radio" aria-checked="true"><span class="side-name">Sell</span> <span id="sideSell" class="side-value"></span></button>
+          <button type="button" data-side="sell" role="radio" aria-checked="true"><span class="side-value" id="sideSell"></span> <span class="side-name">Sell</span></button>
           <span class="side-spread" title="Spread: the Best Sell Offer less the Best Buy Offer"><span class="sr-only">Spread </span><span id="sideSpread"></span></span>
-          <button type="button" data-side="buy" role="radio" aria-checked="false"><span class="side-name">Buy</span> <span id="sideBuy" class="side-value"></span></button>
+          <button type="button" data-side="buy" role="radio" aria-checked="false"><span class="side-value" id="sideBuy"></span> <span class="side-name">Buy</span></button>
         </div>
-        <!-- The readout, one small table: the day, then a row per series with its key, its name, its value and, for the
-             best offer, its change from the previous observation. -->
         <div class="chart-legend" aria-hidden="true">
           <div id="legend" class="legend"></div>
           <div id="volumeLegend" class="legend"></div>
           <div id="projectionLegend" class="legend"></div>
           <div id="historyLegend" class="legend"></div>
+          <div id="indicatorLegend" class="legend"></div>
         </div>
       </div>
-      <!-- Over the event markers the chart draws at its foot (js/market-events-ui.js): one tab stop, arrows between. -->
       <div id="eventMarks" class="event-marks" role="toolbar" aria-label="Events"></div>
       <div id="eventTip" class="event-tip" aria-hidden="true" hidden></div>
+      <div id="replayBar" class="tv-replay" role="toolbar" aria-label="Bar replay" hidden></div>
       <p id="status" class="chart-status">Loading…</p>
     </div>
-
-    <div class="toolbar toolbar-bottom">
+    <div class="toolbar toolbar-bottom tv-bottom">
       <div id="range" class="ranges" role="radiogroup" aria-label="Range">
         <button type="button" data-range="1M" role="radio" aria-checked="false">1M</button>
         <button type="button" data-range="3M" role="radio" aria-checked="false">3M</button>
@@ -84,12 +132,19 @@
         <button type="button" data-range="1Y" role="radio" aria-checked="true">1Y</button>
         <button type="button" data-range="All" role="radio" aria-checked="false">All</button>
       </div>
-      <span id="through" class="through"></span>
+      <span class="tv-bottom-end">
+        <span id="through" class="through"></span>
+        <span id="tvClock" class="tv-clock" title="Server time"></span>
+        <span class="tv-divider" aria-hidden="true"></span>
+        <span class="tv-scale" role="group" aria-label="Price scale">
+          <button type="button" data-scale="percent" aria-pressed="false" title="Percent scale (Alt+P)">%</button>
+          <button type="button" data-scale="log" aria-pressed="false" title="Logarithmic scale (Alt+L)">log</button>
+          <button type="button" data-scale="auto" aria-pressed="true" title="Auto scale">auto</button>
+        </span>
+      </span>
     </div>
   </section>
 
-  <!-- The Screener takes the chart's place (js/market-screener-panel.js): every world's best offers over the range as a
-       mini chart, with its figures, searched, filtered and sorted. A card opens the world's chart. -->
   <section id="screenerPanel" class="screener" aria-labelledby="screenerTitle" hidden>
     <div class="toolbar toolbar-top screener-head">
       <div class="symbol">
@@ -138,7 +193,6 @@
     </div>
   </section>
 
-  <!-- The dock: the panel open beside the chart, and the tool rail at the right edge. -->
   <div id="dock" class="dock">
     <aside id="worldsPanel" class="dock-panel watchlist" aria-label="Worlds" data-dock-default>
       <div class="watch-head">
@@ -207,6 +261,10 @@
         <p class="history-meta">An edition is public from its first website deployment, or, where none is recorded, its first push to the repository, which is labelled. Each forecast was archived with its inputs before publication and is never changed afterwards. The band is a heuristic stress band, not a confidence interval.</p>
       </div>
     </section>
+    <section id="drawingsPanel" class="dock-panel help-panel tv-objects" aria-labelledby="drawingsTitle">
+      <div class="panel-head"><h2 id="drawingsTitle" class="panel-title">Object tree</h2></div>
+      <div class="panel-body"><ul id="drawingsList" class="tv-object-list"></ul><p id="drawingsEmpty" class="tv-muted">No drawings on this world. Pick a tool on the left toolbar and click the chart.</p></div>
+    </section>
     <section id="helpPanel" class="dock-panel help-panel" aria-labelledby="helpTitle">
       <div class="panel-head"><h2 id="helpTitle" class="panel-title">Reading the chart</h2></div>
       <div class="panel-body">
@@ -229,40 +287,19 @@
         <p class="help-fine">Not affiliated with CipSoft. Tibia is a trademark of CipSoft GmbH.</p>
       </div>
     </section>
-    <!-- The tool rail launches tools and holds no chart state (the market side is the chart's own, in its status). In
-         regions by meaning, top to bottom (a row on phones, start to end): tools that analyse or navigate the market
-         (panel tools carry data-dock-target); flexible space; then utilities. A tool to come joins the region it
-         belongs to, not the end of the list. -->
-    <div class="dock-rail" role="group" aria-label="Tools">
+    <div class="dock-rail tv-rail" role="group" aria-label="Tools">
       <div class="dock-group">
-        <button type="button" class="tool dock-tool" data-dock-target="worldsPanel" aria-label="Worlds">
-          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7.5 5.5h9M7.5 10h9M7.5 14.5h9M3.5 5.5h.01M3.5 10h.01M3.5 14.5h.01"/></svg>
-        </button>
-        <button type="button" id="screenerToggle" class="tool dock-tool" aria-pressed="false" aria-label="Screener" title="Screener">
-          <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="11" y="3" width="6" height="6" rx="1"/><rect x="3" y="11" width="6" height="6" rx="1"/><rect x="11" y="11" width="6" height="6" rx="1"/></svg>
-        </button>
-        <button type="button" id="eventsToggle" class="tool dock-tool" data-dock-target="eventsPanel" aria-label="Events">
-          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 17V3.5M5 4h10l-2.5 3.5L15 11H5"/></svg>
-        </button>
-        <button type="button" id="projectionsToggle" class="tool dock-tool" aria-pressed="false" aria-label="Projections" title="Show projections">
-          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 14.5l3.5-3.5 3 2L11 11"/><path d="M11 11l6-5.5" stroke-dasharray="1.6 2.2"/><path d="M11 3.5v13"/></svg>
-        </button>
-        <button type="button" id="historyToggle" class="tool dock-tool" data-dock-target="historyPanel" aria-label="Forecast history">
-          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3.8 10a6.2 6.2 0 1 0 1.9-4.5"/><path d="M3.5 3.5v3.2h3.2"/><path d="M10 6.5V10l2.5 1.6"/></svg>
-        </button>
+        <button type="button" class="tool dock-tool" data-dock-target="worldsPanel" aria-label="Worlds"><svg aria-hidden="true"><use href="css/tv-icons.svg#watchlist"/></svg></button>
+        <button type="button" id="screenerToggle" class="tool dock-tool" aria-pressed="false" aria-label="Screener" title="Screener"><svg aria-hidden="true"><use href="css/tv-icons.svg#screener"/></svg></button>
+        <button type="button" id="eventsToggle" class="tool dock-tool" data-dock-target="eventsPanel" aria-label="Events"><svg aria-hidden="true"><use href="css/tv-icons.svg#calendar"/></svg></button>
+        <button type="button" id="projectionsToggle" class="tool dock-tool" aria-pressed="false" aria-label="Projections" title="Show projections"><svg aria-hidden="true"><use href="css/tv-icons.svg#projection"/></svg></button>
+        <button type="button" id="historyToggle" class="tool dock-tool" data-dock-target="historyPanel" aria-label="Forecast history"><svg aria-hidden="true"><use href="css/tv-icons.svg#history"/></svg></button>
+        <button type="button" id="drawingsToggle" class="tool dock-tool" data-dock-target="drawingsPanel" aria-label="Object tree"><svg aria-hidden="true"><use href="css/tv-icons.svg#layers"/></svg></button>
       </div>
       <span class="dock-space" aria-hidden="true"></span>
       <div class="dock-group">
-        <button type="button" class="tool dock-tool" data-dock-target="helpPanel" aria-label="Help">
-          <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5"/><path d="M10 9v5M10 6.2v.1"/></svg>
-        </button>
-        <button type="button" id="exportButton" class="tool dock-tool" aria-label="Export chart image" title="Export chart image">
-          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3.5v9M6.5 9l3.5 3.5L13.5 9M3.5 13v3.5h13V13"/></svg>
-        </button>
-        <button type="button" id="expand" class="tool dock-tool" aria-pressed="false" aria-label="Full screen" title="Full screen">
-          <svg class="icon-expand" viewBox="0 0 20 20" aria-hidden="true"><path d="M3.5 8V3.5H8M12 3.5h4.5V8M16.5 12v4.5H12M8 16.5H3.5V12"/></svg>
-          <svg class="icon-collapse" viewBox="0 0 20 20" aria-hidden="true"><path d="M8 3.5V8H3.5M16.5 8H12V3.5M12 16.5V12h4.5M3.5 12H8v4.5"/></svg>
-        </button>
+        <button type="button" class="tool dock-tool" data-dock-target="helpPanel" aria-label="Help"><svg aria-hidden="true"><use href="css/tv-icons.svg#help"/></svg></button>
+        <button type="button" id="tvExitFull" class="tool dock-tool tv-exit-full" aria-label="Exit full screen" title="Exit full screen (Esc)"><svg aria-hidden="true"><use href="css/tv-icons.svg#collapse"/></svg></button>
       </div>
     </div>
     <p id="exportStatus" class="sr-only" role="status"></p>
@@ -273,5 +310,6 @@
         integrity="sha384-KkYqTZlM13Zya6fVUF3IGCBOQ1ehFeJVVgxaVvD/0MebineF9EI8Jkd3NnWNChqN" crossorigin="anonymous"></script>
 <script type="module" src="js/site-header.js"></script>
 <script type="module" src="js/markets-entry.js?v=20261014-rebuild"></script>
+<script type="module" src="js/tv-terminal.js?v=20261014-tv"></script>
 </body>
 </html>

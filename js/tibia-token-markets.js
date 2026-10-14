@@ -9,6 +9,7 @@ import { loadEvents, addEventDays } from './events.js';
 import { eventsPanel } from './market-events-panel.js?v=20261014-rebuild';
 import { eventMarks } from './market-events-ui.js?v=20261014-rebuild';
 import { TOKEN_PROFILE, tokenPrice, tokenView, CONTRACT } from './tibia-token.js?v=20261014-rebuild';
+import { connect } from './tv-bridge.js';
 const $ = id => document.getElementById(id);
 const percent = new Intl.NumberFormat('en-US', { style: 'percent', maximumFractionDigits: 2, signDisplay: 'exceptZero' });
 const params = new URLSearchParams(location.search);
@@ -123,6 +124,24 @@ async function main() {
   }
   document.addEventListener('fullscreenchange', expanded);
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { $('market').classList.remove('expanded'); expanded(); } });
+  // The terminal's toolbars reach the chart through this context (js/tv-bridge.js).
+  connect({
+    page: 'token', chart,
+    series: () => market.part('token-price').points,
+    key: () => 'markets:tibia-token:TIB',
+    symbol: () => 'TIB / USD',
+    times: () => view.grid,
+    values: () => view.prices.map(p => ({ time: p.day, value: p.close })),
+    format: tokenPrice,
+    reset: () => { chart.priceScale('right').applyOptions({ autoScale: true }); applyRange(); },
+    setStyle: style => market.setStyle(style),
+    retheme: () => market.retheme(),
+    replay: day => {
+      const prices = day ? view.prices.filter(p => p.day <= day) : null;
+      market.draw(prices ? { ...view, prices, byDay: new Map(prices.map(p => [p.day, p])) } : view, 'sell');
+      if (!day) applyRange();
+    },
+  });
   $('status').hidden = !!view.grid.length; $('exportButton').disabled = !view.grid.length;
   if (!view.grid.length) $('status').textContent = 'No completed TIB candles are available.';
   $('market').setAttribute('aria-busy', 'false');

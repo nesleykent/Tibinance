@@ -33,9 +33,11 @@ export const SIDES = {
 
 const token = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 const dayTick = new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric', timeZone: 'UTC' });
-export const colors = () => ({ sell: token('--sell'), buy: token('--buy'), average: token('--average'), text: token('--muted'),
-  grid: token('--line-faint'), rule: token('--line'), crosshair: token('--line-strong'), ink: token('--ink'),
-  canvas: token('--canvas') || '#fff', font: token('--font-ui'),
+// The chart's own tokens where the page defines them (css/tv.css: TradingView's canvas colours), else the page's.
+const either = (a, b) => token(a) || token(b);
+export const colors = () => ({ sell: token('--sell'), buy: token('--buy'), line: token('--tv-brand') || null, average: token('--average'), text: either('--tv-chart-text', '--muted'),
+  grid: token('--line-faint'), rule: token('--line'), crosshair: either('--tv-crosshair', '--line-strong'), ink: token('--ink'),
+  label: either('--tv-crosshair-label', '--ink'), canvas: either('--tv-pane', '--canvas') || '#fff', font: token('--font-ui'),
   projection: token('--projection'), projectionRegion: token('--projection-region'),
   history: [token('--accent'), token('--positive'), token('--caution')],
   events: { world: token('--event-world'), game: token('--event-game'), market: token('--event-market') } });
@@ -115,6 +117,8 @@ export const LAYERS = [bestOffer, dailyAverage, activity, projectionsLayer, hist
 /* ---------------------------------------------------------------- chart */
 export function createMarketChart(container, { scale: k = 1, width, height, profile = null } = {}) {
   const L = window.LightweightCharts, c = colors();
+  // 'line' | 'markers' | 'step' | 'curved': the price lines' shape (the toolbar's chart style); markers show the dots.
+  let style = 'markers';
   const layers = profile?.layers ?? LAYERS;
   const priceFormatter = profile?.format ?? (v => fmt(Math.round(v)));
   const chart = L.createChart(container, {
@@ -130,8 +134,8 @@ export function createMarketChart(container, { scale: k = 1, width, height, prof
     timeScale: { borderVisible: false, rightOffset: 4,
       tickMarkFormatter: (time, type) => type === L.TickMarkType.DayOfMonth ? dayTick.format(new Date(`${dayOf(time)}T00:00:00Z`)) : null },
     crosshair: { mode: L.CrosshairMode.Normal,
-      vertLine: { color: c.crosshair, labelBackgroundColor: c.ink },
-      horzLine: { color: c.crosshair, labelBackgroundColor: c.ink } },
+      vertLine: { color: c.crosshair, labelBackgroundColor: c.label },
+      horzLine: { color: c.crosshair, labelBackgroundColor: c.label } },
     localization: { priceFormatter, timeFormatter: dayOf }
   });
   const line = options => chart.addSeries(L.LineSeries, { ...(profile?.priceFormat ? { priceFormat: profile.priceFormat } : {}), priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false, ...options });
@@ -141,8 +145,11 @@ export function createMarketChart(container, { scale: k = 1, width, height, prof
   chart.timeScale().subscribeVisibleLogicalRangeChange(range => {
     if (!range) return;
     const spacing = chart.timeScale().width() / Math.max(1, range.to - range.from) / k;
-    series.get(profile?.priceLayer ?? bestOffer).points.applyOptions({ pointMarkersVisible: spacing >= 2, pointMarkersRadius: k * Math.min(3, Math.max(1.5, spacing / 2)) });
+    series.get(profile?.priceLayer ?? bestOffer).points.applyOptions({ pointMarkersVisible: style === 'markers' && spacing >= 2, pointMarkersRadius: k * Math.min(3, Math.max(1.5, spacing / 2)) });
   });
+  // The line series of the price layers, whose shape the chart style sets.
+  const priceLines = () => [profile?.priceLayer ?? bestOffer, dailyAverage].map(l => series.get(l)).filter(Boolean)
+    .flatMap(part => [part.solid, part.dotted]).filter(Boolean);
   // Optional layers start shown, unless they say otherwise (`hidden: true`); hiding one redraws only that layer.
   const hidden = new Set(layers.filter(l => l.optional && l.hidden).map(l => l.id));
   const shown = layer => !(layer.optional && hidden.has(layer.id));
@@ -171,6 +178,27 @@ export function createMarketChart(container, { scale: k = 1, width, height, prof
     },
     refresh(id) { const layer = layers.find(l => l.id === id); if (last && layer) drawLayer(layer); },
     visible: id => !hidden.has(id),
+    // The tokens again, after the theme changes: the same colour object, so every layer reads the new values.
+    retheme() {
+      Object.assign(c, colors());
+      const average = series.get(dailyAverage);
+      if (average) for (const s of [average.solid, average.dotted]) s.applyOptions({ color: c.average });
+      chart.applyOptions({ layout: { textColor: c.text, panes: { separatorColor: c.rule, separatorHoverColor: c.crosshair } }, grid: { horzLines: { color: c.grid } },
+        crosshair: { vertLine: { color: c.crosshair, labelBackgroundColor: c.label }, horzLine: { color: c.crosshair, labelBackgroundColor: c.label } } });
+      if (last) layers.forEach(drawLayer);
+    },
+    setStyle(next) {
+      style = next;
+      const lineType = { step: L.LineType.WithSteps, curved: L.LineType.Curved }[style] ?? L.LineType.Simple;
+      for (const s of priceLines()) s.applyOptions({ lineType });
+      const range = chart.timeScale().getVisibleLogicalRange();
+      const points = series.get(profile?.priceLayer ?? bestOffer)?.points;
+      if (points && range) {
+        const spacing = chart.timeScale().width() / Math.max(1, range.to - range.from) / k;
+        points.applyOptions({ pointMarkersVisible: style === 'markers' && spacing >= 2 });
+      }
+    },
+    get style() { return style; },
     optional: layers.filter(l => l.optional).map(l => l.id),
     part: id => series.get(layers.find(l => l.id === id)),
     keys: side => layers.filter(shown).flatMap(layer => layer.keys(side, c)),
