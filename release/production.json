@@ -1,26 +1,43 @@
 {
  "format": 1,
- "note": "",
- "approver": "GitHub Actions economy data (validated data release)",
+ "note": "Publish Economy independent series, accumulated gold on a logarithmic scale, Gold labels, and visible Tibia Coin price; publication requested in chat.",
+ "approver": "Codex, verified integrity checks and Chrome/WebKit suites",
  "artifact": {
-  "bytes": 139232736,
-  "digest": "4c5765cd2c95ff96cfcf1a0e0907f343b582b0d99ed6fff4384d169326bbee8c",
-  "files": 930
+  "bytes": 139278883,
+  "digest": "728b4b12c4270244de9adb3bce61163f8506760a052b07de94d4914be1dbdaee",
+  "files": 931
  },
- "commit": "aa94ecdf71b9ac4f796f30f10fb1fe600592b8f1",
- "createdAt": "2026-10-14T09:06:37.519Z",
- "kind": "data",
+ "commit": "e31b29906b2d24f9d230d9a9aa50cf904a276799",
+ "createdAt": "2026-10-14T12:56:31.869Z",
+ "kind": "full",
+ "policy": {
+  "dataPaths": [
+   "data/observations.json",
+   "data/observations.csv",
+   "data/offer-observations.csv",
+   "data/market-update-*.json",
+   "data/rebuild-*.json",
+   "data/market-history/**",
+   "data/market-projections/**",
+   "data/events/events.json",
+   "data/forecast-archive/**",
+   "docs/market-chart-integration-audit.json",
+   "docs/rolling-activity-calculation.json",
+   "reports/tc-cycle/*.json",
+   "reports/tc-cycle/*.csv",
+   "reports/tc-cycle/forecast-ledger.jsonl",
+   "reports/tc-cycle/inputs/**",
+   "data/economy/**",
+   "reports/economy/results.json"
+  ],
+  "note": "Paths a data release may take from main. Everything else (pages, scripts, styles, tooling, docs) reaches production only through a full release, which also approves this file. Research outputs are forecast representations: a data release carrying them must pass the forecast-archive integrity check once the archive exists."
+ },
  "policySha256": "8598ea053fc9fba9189b10e9c9bbbd33f9b89b36ab503161a844995d81008ad9",
  "source": {
-  "base": {
-   "commit": "f2354f27f364efbf44e1ba28ea4f80406dd00502",
-   "tag": "release/0006"
-  },
-  "data": "579224e54d6384af5d6acfd5f5819c83da8f2639",
-  "policyFrom": "release/0006"
+  "commit": "e31b29906b2d24f9d230d9a9aa50cf904a276799"
  },
- "tag": "release/0007",
- "tree": "c5aaa089f610fa73f239b4a32d476420bd652427",
+ "tag": "release/0008",
+ "tree": "58e0ebbea2ef2de5e75f954a4c0a0635d3e8e3e0",
  "validation": {
   "checks": [
    {
@@ -61,12 +78,12 @@
    }
   ],
   "validator": {
-   "commit": "579224e54d6384af5d6acfd5f5819c83da8f2639",
+   "commit": "e31b29906b2d24f9d230d9a9aa50cf904a276799",
    "path": "tools/ci/validate_site.mjs"
   }
  },
  "record": {
-  "seq": 7,
-  "hash": "fa92918f7d382e2508d51c7c0c6bd9fd41cc5e6963a241ac06be03fb4985b6cb"
+  "seq": 8,
+  "hash": "820be3bdfdfb6c9decba481508c600d8966d62831b74eb2effc86d2226a1b0ac"
  }
 }
