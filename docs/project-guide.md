@@ -15,11 +15,11 @@ No backend, no build step, no API key, no cost.
 
 ## Navigation
 
-Capture, Markets, Trade and Research share one header, `Tibinance / Section`.
-Tibinance links home, and the section's name opens a small menu of the four sections
+Capture, Markets, Economy, Trade and Research share one header, `Tibinance / Section`.
+Tibinance links home, and the section's name opens a small menu of the five sections
 with the current one marked. On Capture, the home page, Tibinance itself opens the menu.
 The right of the header belongs to the section: Research keeps its world picker
-(All Worlds, searchable) and the edition's language there. The header is
+(All Worlds, searchable) and the edition's language there; Economy its world picker. The header is
 `css/site-header.css` and `js/site-header.js`.
 
 ## Research
@@ -252,6 +252,30 @@ checks every week, condition and anchor; `--check` and
 `tests/market-projections.test.mjs` fail when the file is not a fresh build.
 Rebuild it after rerunning the Research.
 
+### Forecast history
+
+The Forecast history tool in the rail opens a panel of the Research scenario
+editions Tibinance had published by a chosen date (`js/market-forecast-history.js`),
+read from the forecast archive (`data/forecast-archive/`, see
+[docs/economy.md](economy.md#forecast-archive-dataforecast-archive)). The archive
+loads only when the panel first opens. An edition is public from its first
+website deployment, or, where none is recorded, its first push to the repository,
+which is labelled; the evidence filter can require a deployment. Archived
+editions never published are listed apart on request and never drawn. Each
+edition shows its point for the page's world and side at the chosen horizon (1,
+4, 13, 26 or 52 weeks ahead), its band, model, reproducibility and supersession.
+
+Up to three editions are drawn over the chart (`js/market-forecast-history-layer.js`),
+each in its own slot (colour, line style and number) until it is unchosen: its
+weekly central path, its faint stress band and a numbered hairline on the day it
+became public. Like the projection, drawn paths extend the axis past the last
+observation as far as the range reaches back; the readout gives each edition's
+forecast for the week under the pointer, and the chart's description and an
+exported image (one note line per edition) name them. Chart paths hides them
+without losing the choice. Accuracy per horizon, kept apart for website,
+repository-only, archived-unpublished and backtest forecasts, appears as target
+weeks close (`data/forecast-archive/evaluations.jsonl`).
+
 ### Market history dataset
 
 The page reads only `data/market-history/tibia-coin/`, generated from frozen
@@ -334,6 +358,23 @@ backs off on rate limits like the research's `fetch_api.py`.
 
 `--check` fails when the committed files differ from a fresh build;
 `tests/market-history.test.mjs` runs the same check.
+
+## Economy
+
+[Economy](https://nesleykent.github.io/Tibinance/economy.html) estimates each
+world's gold generation potential: direct coin drops, potential NPC conversion
+and their sum, from valued creatures only, with kill coverage beside every figure
+(`economy.html`, `js/economy.js`, arithmetic in `js/economy-data.js`). Periods
+are days, Monday-to-Sunday weeks, months, quarters or years, defaulting to the
+latest complete one; growth is computed only between complete periods and
+unfinished periods are not drawn. The chart keeps gold, the TC Sell Offer and
+players killed in separate panes and scales. Hypothetical liquidation rates are
+labelled assumptions; the constant creature set removes coverage effects; the
+creature table and the cross-world table state comparability rather than assume
+it. The data are `data/economy/` (built by `tools/economy/`), the findings
+`reports/economy/results.json`. Sources, valuation, coverage rules, population
+data, econometrics, the forecast archive and automation:
+[docs/economy.md](economy.md).
 
 ## Trade
 
@@ -644,9 +685,14 @@ text, which is how the database orders rows without parsing anything.
 
 ## Deploying
 
-The site is static — every file is served as-is, with no build step.
-
-Settings → Pages → Source: *Deploy from a branch* → `main` / `root`.
+The site is static: every file is served as-is, with no build step. Pages
+deploys only an approved, immutable release (`release/production.json`, tags
+`release/NNNN`), never the latest commit on `main`. `tools/release.mjs --full
+<commit>` releases code and pages after validation of the exact artifact;
+`--data <commit>` releases validated data paths (`release/policy.json`) on top of
+the current production tree. `pages.yml` validates the release again and deploys
+it only if its digest matches. See [docs/releases.md](releases.md) for the model,
+the bootstrap and rollback.
 
 ## Keeping the data
 
@@ -729,6 +775,17 @@ node tests/market-projections-browser.mjs
 node tests/market-screener-browser.mjs
 node tests/trade-browser.mjs
 node tests/site-header-browser.mjs
+node tests/economy-browser.mjs
+node tests/market-forecast-history-browser.mjs
+```
+
+The Python suites use the pinned versions in `reports/tc-cycle/requirements.txt`:
+
+```bash
+python -m unittest discover -s tools/forecasts -p 'test_*.py'
+python -m unittest discover -s reports/economy -p 'test_*.py'
+python tools/forecasts/reproduce.py --all
+node tools/ci/validate_site.mjs
 ```
 
 The browser suite checks real IndexedDB, privacy whitelists, world isolation,

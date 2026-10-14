@@ -14,8 +14,9 @@ Never force-push, never reset, never redo finished work.
 
 ## Current state
 
-- **Stage:** H next (docs, full suites, full release, final report). **Stage G is committed by this commit** (gold
-  challenger, archived daily by `economy-daily.yml`). Stages A2 and B to F are done.
+- **Stage:** H, in progress. **The docs are committed by this commit**: `docs/economy.md`, plus the README,
+  technical guide and `data/economy/README.md` updates. Remaining in H: full suites, a full release with live
+  verification, the final report. Stages A2 and B to G are done.
 - **Production:** `release/0003` (a data release by the forecast-archive workflow on top of `release/0002`, live
   verified 543/543). **Awaiting a full release:** everything since `release/0002` that is code or a page: Stages C
   to F, including `economy.html` and the Economy link added to every page's menu. The Research pages link to

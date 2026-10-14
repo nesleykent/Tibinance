@@ -1,7 +1,7 @@
 # Economy data
 
 Estimated **gold generation potential** of each Tibia world, built from public kill statistics and TibiaWiki loot
-statistics. The full methodology is in `docs/economy.md` (Stage H) and the approved plan in `docs/economy-plan.md`.
+statistics. The full methodology is in [`docs/economy.md`](../../docs/economy.md) and the approved plan in `docs/economy-plan.md`.
 
 ## What the numbers are
 
@@ -28,8 +28,8 @@ are never scaled up to cover unvalued kills.
   vintage since 2022-08-23, with the wiki revision that first held each (point-in-time reconstruction).
 - `sources/versions.json`: client versions and their release dates.
 - `gold/`: the latest-evidence build (`tools/economy/build_gold.mjs`): `index.json`, daily series per world in
-  `worlds/`, monthly creature contributions in `contributions/`, and the samples behind each value in
-  `creatures.json`. `gold-versions.json` lists every build that reached main.
+  `worlds/`, monthly sums of every world in `monthly.json` (the Economy page's cross-world table), monthly creature
+  contributions in `contributions/`, and the samples behind each value in `creatures.json`. `gold-versions.json` lists every build that reached main.
 - `population/`: population and activity observations by source.
 
 ## Sources and licenses

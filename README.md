@@ -3,11 +3,13 @@
 ![Tibinance: Capture. Explore. Compare.](docs/assets/tibinance-cover.svg)
 
 **Market tools for Tibia Coin and Tibia Token.** Explore world-specific TC
-prices, follow TIB’s USD history, compare trading strategies and build an
-anonymous market dataset from your own screenshots.
+prices, follow TIB’s USD history, estimate each world’s gold generation
+potential, compare trading strategies and build an anonymous market dataset
+from your own screenshots.
 
 [**Open Tibinance**](https://nesleykent.github.io/Tibinance/) |
 [**Explore Markets**](https://nesleykent.github.io/Tibinance/markets.html) |
+[**Economy**](https://nesleykent.github.io/Tibinance/economy.html) |
 [**Read the Research**](https://nesleykent.github.io/Tibinance/reports/tc-cycle/) |
 [Documentation](#documentation)
 
@@ -20,6 +22,7 @@ API key required to use the site.**
 | --- | --- |
 | [**Capture**](https://nesleykent.github.io/Tibinance/) | Read Market Offers and 30-day Statistics screenshots, review the results and save anonymous captures locally. Import or export your dataset. |
 | [**Markets**](https://nesleykent.github.io/Tibinance/markets.html) | Explore TC Sell and Buy offers by world, daily averages and transaction activity. Compare worlds in the Screener, browse events and export charts. |
+| [**Economy**](https://nesleykent.github.io/Tibinance/economy.html) | Estimate the gold creature kills could bring into each world, from public kill statistics and TibiaWiki loot statistics: coins dropped and loot at NPC prices, by day, month and world, with coverage stated and every world side by side. |
 | [**Tibia Token**](https://nesleykent.github.io/Tibinance/markets.html?asset=tibia-token) | Follow TIB daily USD closes and pool trading volume, with its own history, shared ranges, events and PNG export. |
 | [**Trade**](https://nesleykent.github.io/Tibinance/trade.html) | Compare trading immediately with creating an offer, using the prices and quantities you enter, with the Market fee included. |
 | [**Research**](https://nesleykent.github.io/Tibinance/reports/tc-cycle/) | Explore price dynamics, cycles, model validation and execution frictions in [English](https://nesleykent.github.io/Tibinance/reports/tc-cycle/) or [Brazilian Portuguese](https://nesleykent.github.io/Tibinance/reports/tc-cycle/pt-br.html). |
@@ -61,7 +64,8 @@ Export JSON before clearing browser data or moving to another device.
 - **TC prices are world-specific offers in gold.** Best offers, daily trade averages and transaction counters remain distinct measures. Missing days are not interpolated.
 - **TIB is a separate asset.** Its chart uses completed UTC candles from a verified TIB/USDT pool, valued in USD. Pool volume is in USD; it is not TC transaction activity or global TIB volume.
 - **Coverage is explicit.** Retired worlds retain their own history. TIB’s available history and provider restrictions appear in its asset panel.
-- **Projections are scenarios.** TC projections reuse the Research report’s models and conditions; they are separate from observations, and their stress bands are not confidence intervals.
+- **Projections are scenarios.** TC projections reuse the Research report’s models and conditions; they are separate from observations, and their stress bands are not confidence intervals. Every published edition is archived before publication; Forecast history on Markets shows what was public on any date and how it fared.
+- **Gold generation potential is not money supply.** Economy values come from creatures with loot evidence only, are never scaled up, and separate coins dropped from loot that NPCs would buy. No liquidation rate is assumed. [Methodology](docs/economy.md).
 
 Official TIB contract on BNB Smart Chain:
 [`0x111B95C2b65CbA53aB4E0AaDA12f55985045E446`](https://bscscan.com/token/0x111B95C2b65CbA53aB4E0AaDA12f55985045E446).
@@ -81,8 +85,10 @@ Open [localhost:8765](http://127.0.0.1:8765). The site requires no package
 installation or production build. Public APIs and CDN-hosted libraries require
 network access.
 
-To host your own copy on GitHub Pages, select **Deploy from a branch**, then
-**main / root** in the repository’s Pages settings.
+This repository deploys only approved releases to GitHub Pages: checkpoints on
+`main` are tested but not served until `tools/release.mjs` releases them
+([release model](docs/releases.md)). A copy of your own can simply select
+**Deploy from a branch**, then **main / root**, in its Pages settings.
 
 ## Development
 
@@ -95,6 +101,7 @@ processing and research reproduction.
 | [`js/`](js/) and [`css/`](css/) | Browser application, shared chart layers and styles |
 | [`data/`](data/) | Anonymous captures, generated histories and frozen source inputs |
 | [`reports/tc-cycle/`](reports/tc-cycle/) | Research report, analysis and reproduction materials |
+| [`reports/economy/`](reports/economy/) | Econometrics of gold generation potential and TC prices |
 | [`tools/`](tools/) | Dataset builders and optional local processing tools |
 | [`tests/`](tests/) | Unit tests and browser regressions |
 
@@ -115,6 +122,9 @@ explain how published market history is reproduced from frozen inputs.
 | --- | --- |
 | [Technical guide](docs/project-guide.md) | Capture workflow, OCR, schemas, market layers, storage, dates, exports and verification |
 | [Research methodology](reports/tc-cycle/README.md) | Sources, models, limitations and report reproduction |
+| [Economy](docs/economy.md) | Gold generation potential, sources, valuation, coverage, population, econometrics, forecast archive and automation |
+| [Economy research](reports/economy/README.md) | Results of the econometrics against each hypothesis |
+| [Releases](docs/releases.md) | How production is isolated from checkpoints: full and data releases, validation, rollback |
 | [Tibia Token](docs/tibia-token.md) | Contract verification, pool history, refresh workflow and future TC comparisons |
 | [Market events](data/events/README.md) | Event sources, generation and calendar coverage |
 | [CLI and archive processing](tools/README.cli.md) | Optional local batch tools and archive review |
