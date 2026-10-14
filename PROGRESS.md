@@ -22,8 +22,12 @@ on history rewrites and moved release tags; ordinary publication continues to pr
   reproduce; archive integrity and Research invariants pass. New regression cases preserve release records,
   resolve old source IDs, reject changed trees and use the corrected parent for future data releases.
 
-Exact next action: publish the reviewed rewrite and compatibility tools together using an atomic push with exact
-old-ref leases, verify GitHub's current refs and authors, and keep the existing website deployment unchanged.
+Completed: the reviewed rewrite and compatibility tools were published atomically with exact old-ref leases.
+GitHub's branch/tag targets match the audited replacements, and its contributors API now lists only `nesleykent`.
+Both remote CI jobs passed. GitHub automatically redeployed the existing release/0005 after the force-push;
+it completed before cancellation was possible. Its artifact digest is unchanged, and all ten live-file checks
+match release/0005. Forecast upkeep passed without adding records, commits or releases. The rejected UI remains
+unreleased. No further implementation or deployment is requested.
 
 ---
 
