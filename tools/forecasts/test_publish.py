@@ -20,7 +20,8 @@ DATA = ['reports/tc-cycle/results.json', 'reports/tc-cycle/forecast-ledger.jsonl
 
 
 def sh(cwd, *args, check=True):
-    r = subprocess.run(args, cwd=cwd, capture_output=True, text=True)
+    # No bytecode caches in the fixture repositories: they have no .gitignore, and a cache would read as a change.
+    r = subprocess.run(args, cwd=cwd, capture_output=True, text=True, env={**os.environ, 'PYTHONDONTWRITEBYTECODE': '1'})
     if check and r.returncode:
         raise AssertionError(f"{' '.join(args)}: {r.stdout}{r.stderr}")
     return r

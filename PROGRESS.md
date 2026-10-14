@@ -395,6 +395,15 @@ Never force-push, never reset, never redo finished work.
   - **Page:** the Economy findings are computed from the results (verdict per horizon, quarterly counts), and the
     browser test checks the verdict against `results.json`.
 
+- **CI fix (Python job):** red from 480af15 to 1172b35, for two reasons:
+  - The checkout was shallow, but the forecast-evidence tests read earlier editions from git history. The job now
+    uses `fetch-depth: 0`.
+  - The publish test's fixture repositories have no `.gitignore`, so a bytecode cache read as a change. Their
+    subprocesses now run with `PYTHONDONTWRITEBYTECODE=1`.
+
+  The site job was green throughout. Releases validate with `validate_site.mjs`, which does not run these Python
+  tests, so `release/0003` was unaffected.
+
 ## In progress / remaining
 
 - F: Markets "Forecast history" dock panel.
