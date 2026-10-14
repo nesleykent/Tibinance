@@ -1,43 +1,26 @@
 {
  "format": 1,
- "note": "Economy as a terminal like Markets; held Markets Forecast-history and Events changes released at the user's instruction",
- "approver": "Claude Code (Opus 5.5), on the user's instruction, after the Node suite, site validation and Chrome browser suites",
+ "note": "",
+ "approver": "GitHub Actions economy data (validated data release)",
  "artifact": {
-  "bytes": 139217043,
-  "digest": "59493298e168f53b54d17b641e38f0821d1c4e412490167c99533f6250ea79a5",
-  "files": 928
+  "bytes": 139232736,
+  "digest": "4c5765cd2c95ff96cfcf1a0e0907f343b582b0d99ed6fff4384d169326bbee8c",
+  "files": 930
  },
- "commit": "f2354f27f364efbf44e1ba28ea4f80406dd00502",
- "createdAt": "2026-10-14T08:06:56.940Z",
- "kind": "full",
- "policy": {
-  "dataPaths": [
-   "data/observations.json",
-   "data/observations.csv",
-   "data/offer-observations.csv",
-   "data/market-update-*.json",
-   "data/rebuild-*.json",
-   "data/market-history/**",
-   "data/market-projections/**",
-   "data/events/events.json",
-   "data/forecast-archive/**",
-   "docs/market-chart-integration-audit.json",
-   "docs/rolling-activity-calculation.json",
-   "reports/tc-cycle/*.json",
-   "reports/tc-cycle/*.csv",
-   "reports/tc-cycle/forecast-ledger.jsonl",
-   "reports/tc-cycle/inputs/**",
-   "data/economy/**",
-   "reports/economy/results.json"
-  ],
-  "note": "Paths a data release may take from main. Everything else (pages, scripts, styles, tooling, docs) reaches production only through a full release, which also approves this file. Research outputs are forecast representations: a data release carrying them must pass the forecast-archive integrity check once the archive exists."
- },
+ "commit": "aa94ecdf71b9ac4f796f30f10fb1fe600592b8f1",
+ "createdAt": "2026-10-14T09:06:37.519Z",
+ "kind": "data",
  "policySha256": "8598ea053fc9fba9189b10e9c9bbbd33f9b89b36ab503161a844995d81008ad9",
  "source": {
-  "commit": "f2354f27f364efbf44e1ba28ea4f80406dd00502"
+  "base": {
+   "commit": "f2354f27f364efbf44e1ba28ea4f80406dd00502",
+   "tag": "release/0006"
+  },
+  "data": "579224e54d6384af5d6acfd5f5819c83da8f2639",
+  "policyFrom": "release/0006"
  },
- "tag": "release/0006",
- "tree": "546d2a44e14e13afe5fe58b54ceae10f7814c217",
+ "tag": "release/0007",
+ "tree": "c5aaa089f610fa73f239b4a32d476420bd652427",
  "validation": {
   "checks": [
    {
@@ -78,12 +61,12 @@
    }
   ],
   "validator": {
-   "commit": "f2354f27f364efbf44e1ba28ea4f80406dd00502",
+   "commit": "579224e54d6384af5d6acfd5f5819c83da8f2639",
    "path": "tools/ci/validate_site.mjs"
   }
  },
  "record": {
-  "seq": 6,
-  "hash": "291ca52b58ebe088f3d7814afd984149e0dff2e2c985531ce1384bf33c25b429"
+  "seq": 7,
+  "hash": "fa92918f7d382e2508d51c7c0c6bd9fd41cc5e6963a241ac06be03fb4985b6cb"
  }
 }
