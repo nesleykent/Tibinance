@@ -3,6 +3,7 @@ import { fmt, esc } from './format.js';
 import { chartPeriods, brokenLine, withLiquidation, periodOf, sumPeriod } from './economy-data.js?v=20261014-rebuild';
 const ink = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 const value = n => Number.isFinite(n) ? fmt(Math.round(n)) : 'N/A';
+const axis = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 });
 const dayOf = t => typeof t === 'string' ? t : `${t.year}-${String(t.month).padStart(2, '0')}-${String(t.day).padStart(2, '0')}`;
 function pixels(name) {
   const probe = document.createElement('div');
@@ -19,7 +20,18 @@ export function economyChart({ onPeriod }) {
   const lines = new Map();
   const selected = () => rows.find(p => p.start === context.period) ?? { ...sumPeriod(context.world, periodOf(context.period, context.unit)), sell: null, priceDays: 0 };
   const readout = p => {
-    document.getElementById('chartReadout').textContent = `${p.start} to ${p.end}: gross ${value(p.grossPotential)}, direct coins ${value(p.directCoins)}, NPC potential ${value(p.npcPotential)} gold; ${p.covered} of ${p.days} days${p.complete ? '' : ' (incomplete, gold and activity not plotted)'}; kill coverage ${p.killCoverage === null ? 'N/A' : `${(100 * p.killCoverage).toFixed(1)}%`}; TC median ${value(p.sell)} gold per coin from ${p.priceDays} daily closes; players killed ${value(p.playerDeaths)}.`;
+    const cells = [
+      ['Gross potential (gold)', value(p.grossPotential)],
+      ['Direct coins (gold)', value(p.directCoins)],
+      ['NPC potential (gold)', value(p.npcPotential)],
+      ...(context.stable ? [['Constant creature set (gold)', value(p.grossStable)]] : []),
+      ...(context.rate !== null ? [[`Coins + ${context.rate * 100}% NPC (assumption, gold)`, value(withLiquidation(p, context.rate))]] : []),
+      ['Kill coverage', p.killCoverage === null ? 'N/A' : `${(100 * p.killCoverage).toFixed(1)}%`],
+      ['TC median (gold per coin)', `${value(p.sell)} (${p.priceDays} daily closes)`],
+      ['Players killed by creatures', value(p.playerDeaths)],
+    ];
+    document.getElementById('chartReadout').innerHTML = `<p class="eco-readout-period">${esc(p.start)} to ${esc(p.end)}; ${p.covered} of ${p.days} days with data${p.complete ? '' : ' (incomplete, gold and activity not plotted)'}</p><dl>`
+      + cells.map(([label, v]) => `<div><dt>${esc(label)}</dt><dd>${esc(v)}</dd></div>`).join('') + '</dl>';
   };
   function render(world, closes, state, preserveRange = false) {
     const rangeBefore = chart?.timeScale().getVisibleLogicalRange();
@@ -28,9 +40,10 @@ export function economyChart({ onPeriod }) {
     const chosen = selected();
     readout(chosen);
     document.getElementById('chartContext').textContent = `${world.world}, per ${state.unit}. Selected ${chosen.start} to ${chosen.end}.${chosen.covered ? '' : ' No data in this period; the chart shows the available history.'} Latest-evidence reconstruction; values cover valued creatures only. Constant-set comparisons can still reflect revised loot values.`;
-    document.getElementById('chartUnits').textContent = `Right axis: gold per ${state.unit} from valued creatures.`
+    document.getElementById('chartUnits').textContent = `Right axis: gold per ${state.unit} from valued creatures. K = thousand, M = million, B = billion.`
       + (state.price ? ' Left axis: median TC Sell Offer, gold per coin; observed closes only.' : '')
       + (state.activity ? ' Bottom bars: players killed by creatures, on an independent count scale.' : '');
+    document.getElementById('activityScale').hidden = !state.activity;
     for (const [id, key] of [['chartPrice', 'price'], ['chartActivity', 'activity']]) document.getElementById(id).setAttribute('aria-pressed', String(state[key]));
     document.getElementById('legend').innerHTML = '<span class="eco-key gross">Gross potential = coins + NPC</span><span class="eco-key coins">Direct coins</span><span class="eco-key npc">NPC potential</span>'
       + (state.stable ? '<span class="eco-key stable">Constant creature set</span>' : '')
@@ -53,9 +66,9 @@ export function economyChart({ onPeriod }) {
         width: el.clientWidth, height: el.clientHeight,
         layout: { background: { type: 'solid', color: ink('--canvas') }, textColor: ink('--muted'), fontFamily: ink('--font-ui'), fontSize },
         grid: { vertLines: { visible: false }, horzLines: { color: ink('--line-faint') } },
-        rightPriceScale: { borderVisible: false }, leftPriceScale: { borderVisible: false },
+        rightPriceScale: { borderVisible: false, entireTextOnly: true }, leftPriceScale: { borderVisible: false, entireTextOnly: true },
         timeScale: { borderVisible: false, minBarSpacing: 0.1, rightOffset: 1 },
-        localization: { locale: 'en-US', priceFormatter: value },
+        localization: { locale: 'en-US', priceFormatter: n => axis.format(n) },
         crosshair: { mode: L.CrosshairMode.Normal, horzLine: { labelVisible: false, color: ink('--line-strong') }, vertLine: { color: ink('--line-strong') } },
       });
       chart.subscribeCrosshairMove(event => readout(event.time ? rows.find(r => r.start === dayOf(event.time)) ?? selected() : selected()));
@@ -85,8 +98,10 @@ export function economyChart({ onPeriod }) {
     add('price', ink('--muted'), p => p.sell, { scale: 'left', style: L.LineStyle.Dashed, visible: state.price });
     lines.get('activity').applyOptions({ visible: state.activity });
     lines.get('activity').setData(state.activity ? rows.map(p => p.complete ? { time: p.start, value: p.playerDeaths } : { time: p.start }) : []);
+    // Activity is an overlay on its own count scale. Keep gold's zero at the bottom: reserving a separate
+    // band with scale margins would draw impossible negative gold ticks alongside those bars.
     chart.applyOptions({ leftPriceScale: { visible: state.price }, rightPriceScale: { scaleMargins: { top: 0.1, bottom: 0 } } });
-    chart.priceScale('left').applyOptions({ scaleMargins: { top: 0.1, bottom: state.activity ? 0.25 : 0.1 } });
+    chart.priceScale('left').applyOptions({ scaleMargins: { top: 0.1, bottom: 0.1 } });
     chart.priceScale('activity').applyOptions({ scaleMargins: { top: 0.82, bottom: 0 } });
     const nextKey = `${world.world}/${state.unit}/${state.period}/${state.range}`;
     if (rangeBefore && (preserveRange || nextKey === viewKey)) chart.timeScale().setVisibleLogicalRange(rangeBefore);

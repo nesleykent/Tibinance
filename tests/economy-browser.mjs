@@ -25,8 +25,9 @@ try {
   if (shots) await mkdir(shots,{recursive:true});
   const context=await browser.newContext({locale:'en-US',viewport:{width:1440,height:900}});
   const page=await context.newPage();
+  const expectedFailures=new Set();
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
-  page.on('console',m=>{if(m.type()==='error') errors.push(m.text());});
+  page.on('console',m=>{if(m.type()==='error' && !(expectedFailures.has(m.location().url) && /503|ERR_FAILED/.test(m.text()))) errors.push(m.text());});
   await page.route('**/data/observations.json',r=>r.fulfill({json:[]}));
   const text=selector=>page.$eval(selector,e=>e.innerText.trim().replace(/\s+/g,' '));
   // Headings are set in small capitals by CSS: their words are read as written.
@@ -134,7 +135,10 @@ try {
   const num=v=>Number(v.replace(/,/g,''));
   assert.ok(w.every((r,i)=>i===0||r.gross==='N/A'||num(w[i-1].gross)>=num(r.gross)),'sorted by gross potential, largest first');
   assert.equal(await page.getAttribute('#worlds th:nth-child(2)','aria-sort'),'descending');
-  await page.click('#worlds button[data-sort="world"]');
+  await page.locator('#worlds button[data-sort="world"]').focus();
+  await page.keyboard.press('Enter');
+  // Rebuilding sorted rows must keep the active header keyboard-accessible in place.
+  assert.equal(await page.evaluate(()=>document.activeElement.dataset.sort),'world');
   w=await worldRows();
   assert.deepEqual(w.map(r=>r.world),[...w.map(r=>r.world)].sort((a,b)=>a.localeCompare(b)));
   assert.equal(await page.getAttribute('#worlds th:nth-child(1)','aria-sort'),'ascending');
@@ -219,16 +223,134 @@ try {
   if (shots) await page.screenshot({path:join(shots,`economy-${engine}-1440.png`),fullPage:true});
 
   // Phone width: nothing scrolls sideways; wide tables scroll inside their own frames.
-  for (const width of [768,390]) {
+  for (const width of [768,390,320]) {
     await page.setViewportSize({width,height:844});
     await page.waitForTimeout(200);
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth),0,`no sideways scroll at ${width}px`);
     if (shots) await page.screenshot({path:join(shots,`economy-${engine}-${width}.png`),fullPage:true});
   }
 
+  // Long annual figures remain whole, and the three same-row metrics share label/value tracks.
+  await page.goto(`${root}/economy.html?world=Antica&unit=year&period=2025-01-01&price=1&activity=1&stable=1&rate=0.75`); await ready();
+  for (const width of [320,380,381,390,600,601,768,900,901,1440]) {
+    await page.setViewportSize({width,height:900});
+    await page.waitForTimeout(100);
+    const geometry=await page.$$eval('.eco-tile',es=>es.map(e=>({
+      row:e.getBoundingClientRect().top,
+      valueTop:e.querySelector('.eco-value').getBoundingClientRect().top,
+      valueWidth:e.querySelector('.eco-value').scrollWidth,
+      width:e.clientWidth,
+    })));
+    for (const tile of geometry) {
+      assert.ok(tile.valueWidth<=tile.width,`complete numeric value at ${width}px`);
+      for (const peer of geometry.filter(p=>p.row===tile.row)) assert.equal(peer.valueTop,tile.valueTop,`aligned values at ${width}px`);
+    }
+    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth),0);
+  }
+  assert.match(await text('#chartReadout'),/Coins \+ 75% NPC \(assumption, gold\)/);
+  assert.match(await text('#chartReadout'),/Constant creature set \(gold\)/);
+  assert.equal(await page.locator('#chart table').count(),1);
+
+  // Horizontal scrolling retains the creature name; the overflow frame is explicitly keyboard-operable.
+  await page.setViewportSize({width:390,height:844});
+  const frame=page.locator('[aria-labelledby="contribTitle"].eco-table-scroll');
+  assert.equal(await frame.getAttribute('tabindex'),'0');
+  await frame.evaluate(e=>{e.scrollLeft=200;});
+  const bounds=await frame.evaluate(e=>({left:e.getBoundingClientRect().left,cell:e.querySelector('tbody td').getBoundingClientRect().left}));
+  assert.ok(Math.abs(bounds.cell-bounds.left)<2,'creature identity stays visible while reading numeric columns');
+
+  // Navigating through the world comparison preserves the current scenario and chart settings.
+  await page.locator('#worlds a').filter({hasText:'Gentebra'}).click(); await ready();
+  const shared=new URL(page.url()).searchParams;
+  for (const [key,value] of [['world','Gentebra'],['unit','year'],['period','2025-01-01'],['price','1'],['activity','1'],['stable','1'],['rate','0.75'],['range','1Y']]) assert.equal(shared.get(key),value,key);
+
+  // A failed world request must never relabel the previous world's figures, even after another control is used.
+  await page.goto(`${root}/economy.html?world=Antica&unit=month&period=2025-09-01`); await ready();
+  const failingPath=`${root}/data/economy/gold/contributions/gentebra.json`;
+  expectedFailures.add(failingPath);
+  await page.route(failingPath,r=>r.fulfill({status:503,body:'test-only unavailable'}));
+  const pick=async world=>{
+    await page.locator('#site-world .site-control').click();
+    await page.locator('#world-picker input').fill(world);
+    await page.getByRole('option',{name:world,exact:true}).click();
+  };
+  await pick('Gentebra');
+  await page.waitForSelector('#retry:not([hidden])');
+  assert.match(await text('#status'),/Gentebra.*Still showing Antica/);
+  assert.equal(await page.getAttribute('#site-world .site-control','aria-label'),'World: Antica');
+  await page.click('#liquidation [data-rate="0.5"]');
+  assert.equal(await text('#ecoWorld'),'Antica');
+  assert.match(await text('#chartContext'),/^Antica,/);
+  assert.equal(new URL(page.url()).searchParams.get('world'),'Antica');
+  assert.equal((await tiles())[0].value,gold(sep.grossPotential));
+  await page.locator('#retry').focus(); await page.keyboard.press('Enter');
+  await page.waitForSelector('#retry:not([hidden])');
+  assert.equal(await page.evaluate(()=>document.activeElement.id),'retry','failed keyboard retry retains focus');
+  await page.unroute(failingPath);
+  await page.locator('#retry').focus(); await page.keyboard.press('Enter');
+  await page.waitForFunction(()=>document.getElementById('ecoWorld').textContent==='Gentebra');
+  assert.equal(await page.locator('#feedback').isVisible(),false);
+  assert.equal(await page.getAttribute('#site-world .site-control','aria-label'),'World: Gentebra');
+  assert.equal(await page.evaluate(()=>document.activeElement.getAttribute('aria-label')),'World: Gentebra');
+
+  // An obsolete request failing after the next world loaded must not replace its state or status.
+  const stalePath=`${root}/data/economy/gold/contributions/antica.json`;
+  expectedFailures.add(stalePath);
+  let releaseStale, requestSeen, requestDone;
+  const held=new Promise(resolve=>{releaseStale=resolve;});
+  const seen=new Promise(resolve=>{requestSeen=resolve;});
+  const done=new Promise(resolve=>{requestDone=resolve;});
+  await page.route(stalePath,async r=>{requestSeen(); await held; await r.fulfill({status:503,body:'test-only stale failure'}); requestDone();});
+  await pick('Antica'); await seen;
+  await pick('Secura');
+  await page.waitForFunction(()=>document.getElementById('ecoWorld').textContent==='Secura');
+  releaseStale(); await done;
+  await page.waitForLoadState('networkidle');
+  assert.equal(await page.locator('#feedback').isVisible(),false);
+  assert.equal(await text('#ecoWorld'),'Secura');
+  assert.equal(new URL(page.url()).searchParams.get('world'),'Secura');
+  await page.unroute(stalePath);
+
+  // Browser-cache restoration cancels a pending request and restores the committed world's status.
+  // Exercise the lifecycle events directly; Chrome's automation launch disables the actual back/forward cache.
+  let releaseRestore, restoreSeen, restoreDone;
+  const restoreHold=new Promise(resolve=>{releaseRestore=resolve;});
+  const restoreStarted=new Promise(resolve=>{restoreSeen=resolve;});
+  const restoreFinished=new Promise(resolve=>{restoreDone=resolve;});
+  await page.route(stalePath,async r=>{restoreSeen(); await restoreHold; await r.fulfill({status:503,body:'test-only cancelled request'}); restoreDone();});
+  await pick('Antica'); await restoreStarted;
+  await page.evaluate(()=>{
+    dispatchEvent(new PageTransitionEvent('pagehide',{persisted:true}));
+    dispatchEvent(new PageTransitionEvent('pageshow',{persisted:true}));
+  });
+  releaseRestore(); await restoreFinished;
+  assert.equal(await page.locator('#feedback').isVisible(),false);
+  assert.equal(await page.getAttribute('#economy','aria-busy'),'false');
+  assert.equal(await text('#ecoWorld'),'Secura');
+  assert.equal(await page.getAttribute('#site-world .site-control','aria-label'),'World: Secura');
+  await page.unroute(stalePath);
+
+  // Initial data failure has an in-page retry, followed by one working picker and control wiring.
+  const indexPath=`${root}/data/economy/gold/index.json`;
+  expectedFailures.add(indexPath);
+  await page.route(indexPath,r=>r.fulfill({status:503,body:'test-only initial failure'}));
+  await page.goto(`${root}/economy.html`);
+  await page.waitForSelector('#retry:not([hidden])');
+  assert.match(await text('#status'),/could not be loaded/);
+  assert.equal(await page.locator('#economy').isVisible(),false);
+  await page.locator('#retry').focus(); await page.keyboard.press('Enter');
+  await page.waitForSelector('#retry:not([hidden])');
+  assert.equal(await page.evaluate(()=>document.activeElement.id),'retry','failed initial retry retains focus');
+  await page.unroute(indexPath);
+  await page.locator('#retry').focus(); await page.keyboard.press('Enter'); await ready();
+  assert.equal(await page.locator('#world-picker').count(),1);
+  assert.equal(await page.evaluate(()=>document.activeElement.getAttribute('aria-label')),'World: Antica');
+  await page.click('#stable');
+  assert.equal(await page.getAttribute('#stable','aria-pressed'),'true');
+
   assert.equal(await page.locator('input[type=checkbox]').count(),0);
   assert.deepEqual(errors,[]);
-  console.log(`PASS ${engine}: Economy page reached from the menu; Antica figures recomputed from the data, latest complete period by default, labelled liquidation assumption, constant creature set, contributions and changes only between complete periods, cross-world sorting and comparability, world picker, findings and provenance, 1440/768/390 layouts`);
+  console.log(`PASS ${engine}: Economy arithmetic, scenarios, single chart, exact readout, contributions, comparability, sorting focus, world failure/retry and stale requests, initial retry, keyboard table access, whole/aligned figures and 1440/768/390/320 layouts`);
 } finally {
   await browser.close();
 }

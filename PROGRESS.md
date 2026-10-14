@@ -1,3 +1,33 @@
+# Economy UI/UX repair, 2026-10-14
+
+The user requested a fresh Economy-page repair using the supplied Universal Autonomous UI/UX Fixer. This
+reopens Economy work only; the previously rejected Markets/forecast-history interface remains unreleased.
+
+- Baselines inspected in the in-app browser at desktop and phone sizes, including the live release/0005.
+  Shared fonts, palette, spacing tokens and header are retained byte-for-byte. Dense tables retain every column
+  and row; no checkboxes, replacement tokens, data changes or additional charts are introduced.
+- Fixed independently stretched metric tracks and annual figures breaking across lines on narrow screens.
+  Grouped source metadata and related controls; retained the existing editorial typography and all disclosures.
+- One chart/timeline remains, with compact labelled axes, full exact readouts including optional scenarios,
+  and independently scaled activity bars. Corner tick labels no longer clip. An attempted reserved activity
+  band was rejected during visual QA because it produced negative gold ticks; the count overlay remains explicit.
+- Reproduced and fixed failed-world identity/data mismatches, keyboard sorting focus loss, dropped world-link
+  settings, and retry recovery. Delayed/failed obsolete requests cannot replace the committed world. Keyboard
+  retries retain/restore focus in Chrome and WebKit; page-cache restoration clears cancelled loading states.
+- Full-width tables are named keyboard scroll regions, with actual-overflow hints and sticky row identifiers.
+  The source disclosure retains its native expansion marker. No data, series, scenarios, columns or controls lost.
+- Verification: 206 JS tests and all eight site-integrity checks passed. Expanded Chrome and WebKit Economy
+  suites exercise exact arithmetic, scenarios, one chart, sort focus, failure/retry/stale responses, initial
+  retry, simulated page-cache lifecycle, shared view settings, and widths 320/380/381/390/600/601/768/900/901/1440.
+  Actual screen-reader speech was not tested. Claude supplied a read-only logic critique; reproduced objections
+  were repaired and independently checked. Screenshots and transient evidence are outside the repository.
+
+Next: commit/push the reviewed repair, compose and validate an Economy-only release on the existing production
+revision (including necessary frozen-reference compatibility), and verify the published artifact. Other served
+pages/assets must remain identical to release/0005; no earlier rejected Markets work may enter this release.
+
+---
+
 # Authorized authorship history rewrite, 2026-10-14
 
 The user explicitly authorized rewriting existing bot-authored commits and release references after the bot

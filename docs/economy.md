@@ -31,7 +31,14 @@ incomplete the page says "from valued creatures" and shows the coverage beside t
 
 **No NPC liquidation rate is assumed.** The schema keeps a slot for evidence about how much loot is actually sold.
 Until such evidence exists, "coins plus a share of NPC potential" appears only as a labelled hypothetical scenario
-(0, 25, 50 or 100%), drawn dashed and marked "assumption".
+(0, 25, 50, 75 or 100%), drawn dashed and marked "assumption".
+
+The Economy page uses one chart and timeline. Gold components and their sum use the right axis; optional TC
+Sell Offers use the left axis, and optional players-killed bars overlay the plot on an independent count scale.
+Axis abbreviations use K (thousand), M (million) and B (billion). The readout and keyboard-accessible chart table
+retain exact figures, coverage and price sample counts, including selected scenarios and constant-set comparisons.
+Changing worlds through the comparison table retains these settings. Failed loads retain the last valid world
+and provide an in-page retry.
 
 ## Sources
 

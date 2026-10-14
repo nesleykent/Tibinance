@@ -8,7 +8,7 @@
 import { searchPicker } from './site-header.js';
 import { fmt, esc } from './format.js';
 import { periodOf, previousPeriod, sumPeriod, growth, series, withLiquidation, contributions, lastDay, monthlySums, LIQUIDATION_SCENARIOS } from './economy-data.js?v=20261014-rebuild';
-import { economyChart } from './economy-chart.js?v=20261014-rebuild';
+import { economyChart } from './economy-chart.js?v=20261014-fix';
 
 const $ = id => document.getElementById(id);
 let requests = new AbortController();
@@ -28,13 +28,20 @@ const state = { world: params.get('world') || 'Antica', unit: UNITS.includes(par
 const data = { index: null, monthly: null, creatures: null, market: null, vip: null, results: null, sync: null, world: null, contrib: null };
 const worldFiles = new Map();
 let worldRequest = 0, comparisonRequest = 0;
+let worldPicker = null, retryWorld = null, wired = false;
 const cancelRequests = () => { worldRequest++; comparisonRequest++; requests.abort(); };
 addEventListener('pagehide', cancelRequests);
 addEventListener('beforeunload', cancelRequests);
 addEventListener('pageshow', e => {
   if (!e.persisted) return;
   requests = new AbortController();
-  if (data.world) render();
+  worldFiles.clear();
+  if (data.world) {
+    $('economy').setAttribute('aria-busy', 'false');
+    $('feedback').hidden = true; $('status').hidden = true;
+    retryWorld = null; worldPicker?.set(state.world);
+    render();
+  } else main();
 });
 const chart = economyChart({ onPeriod: day => { state.period = day; render(true); } });
 const dailyFile = w => {
@@ -42,32 +49,67 @@ const dailyFile = w => {
   return worldFiles.get(w.dir);
 };
 
-function address() {
-  const p = new URLSearchParams({ world: state.world, unit: state.unit, ...(state.period ? { period: state.period } : {}),
+function viewParams(world = state.world) {
+  return new URLSearchParams({ world, unit: state.unit, ...(state.period ? { period: state.period } : {}),
     ...(state.rate !== null ? { rate: state.rate } : {}), ...(state.stable ? { stable: '1' } : {}),
     ...(state.comparableOnly ? { comparable: '1' } : {}), range: state.range, ...(state.price ? { price: '1' } : {}), ...(state.activity ? { activity: '1' } : {}) });
-  history.replaceState(null, '', `${location.pathname}?${p}`);
+}
+
+function address() {
+  history.replaceState(null, '', `${location.pathname}?${viewParams()}`);
 }
 
 function radio(group, attr, value) {
   for (const b of $(group).querySelectorAll('button')) { const selected = b.dataset[attr] === value; b.setAttribute('aria-checked', String(selected)); b.tabIndex = selected ? 0 : -1; }
 }
 
-async function loadWorld() {
-  const w = data.index.worlds.find(x => x.world === state.world) ?? data.index.worlds.find(x => x.world === 'Antica');
+function feedback(message, error = false) {
+  $('feedback').hidden = false;
+  $('status').hidden = false;
+  $('status').textContent = message;
+  $('status').toggleAttribute('data-error', error);
+  $('retry').hidden = !error;
+}
+// WebKit can keep a now-hidden Retry button as activeElement; Chrome moves to body.
+const retryFocusVacant = () => document.activeElement === document.body || document.activeElement === $('retry');
+
+async function loadWorld(world = state.world) {
+  const w = data.index.worlds.find(x => x.world === world) ?? data.index.worlds.find(x => x.world === 'Antica');
   const request = ++worldRequest;
-  state.world = w.world;
+  feedback(`Loading ${w.world}.${data.world ? ` Still showing ${data.world.world}.` : ''}`);
   $('economy').setAttribute('aria-busy', 'true');
-  const [file, contrib] = await Promise.all([dailyFile(w), json(`data/economy/gold/contributions/${w.dir}.json`)]);
+  let file, contrib;
+  try { [file, contrib] = await Promise.all([dailyFile(w), json(`data/economy/gold/contributions/${w.dir}.json`)]); }
+  catch (error) { if (request !== worldRequest) return false; $('economy').setAttribute('aria-busy', 'false'); throw error; }
   if (request !== worldRequest) return false;
+  // Commit the world identity and its files together. A failed/stale request must not relabel the old data.
+  state.world = w.world;
   data.world = file; data.contrib = contrib;
   // The latest complete period by default (an unfinished one would read as a fall); any period can be picked.
   const periods = series(data.world, state.unit);
   if (state.period) state.period = periodOf(state.period, state.unit)[0];
   if (!state.period) state.period = (periods.findLast(p => p.complete) ?? periods.at(-1))?.start ?? null;
   $('economy').setAttribute('aria-busy', 'false');
+  $('feedback').hidden = true;
   $('status').hidden = true;
+  retryWorld = null;
   return true;
+}
+
+async function selectWorld(world) {
+  const retryFocused = document.activeElement === $('retry');
+  let loaded;
+  try { loaded = await loadWorld(world); }
+  catch {
+    worldPicker.set(state.world);
+    retryWorld = world;
+    feedback(`${world} data could not be loaded. Still showing ${state.world}. Retry or choose another world.`, true);
+    if (retryFocused && retryFocusVacant()) $('retry').focus();
+    return;
+  }
+  if (!loaded) return;
+  worldPicker.set(state.world); render();
+  if (retryFocused && retryFocusVacant()) $('site-world').querySelector('button').focus();
 }
 
 function render(preserveChartRange = false) {
@@ -150,6 +192,7 @@ function renderContributions(period) {
 }
 
 async function renderWorlds(period) {
+  const focusedSort = $('worlds').contains(document.activeElement) ? document.activeElement.dataset.sort : null;
   const request = ++comparisonRequest;
   const worlds = data.index.worlds;
   const daily = state.unit === 'day' || state.unit === 'week';
@@ -185,8 +228,9 @@ async function renderWorlds(period) {
   const head = [['world', 'World', ''], ['gross', 'Gross potential', 'num'], ['dc', 'Direct coins', 'num'], ['np', 'NPC potential', 'num'], ['kills', 'Kills', 'num'], ['coverage', 'Kill coverage', 'num']];
   $('worlds').innerHTML = `<caption class="eco-note">${esc(period[0])} to ${esc(period[1])}, ${esc(state.unit)} totals from valued creatures; ${fmt(rows.length)} of ${fmt(worlds.length)} worlds shown. Comparable means full days and at least 95% kill coverage; world age and merger lineage are not controlled.</caption><thead><tr>${head.map(([k, t, c]) =>
     `<th class="${c}" aria-sort="${key === k ? (dir > 0 ? 'ascending' : 'descending') : 'none'}"><button type="button" data-sort="${k}">${t}</button></th>`).join('')}<th>Comparability</th></tr></thead><tbody>`
-    + rows.map(r => `<tr${r.world === state.world ? ' class="current"' : ''}><td><a href="?world=${encodeURIComponent(r.world)}&unit=${state.unit}&period=${state.period}">${esc(r.world)}</a></td><td class="num">${gold(r.gross)}</td><td class="num">${gold(r.dc)}</td><td class="num">${gold(r.np)}</td><td class="num">${gold(r.kills)}</td><td class="num">${pct(r.coverage)}</td><td class="${r.comparable ? '' : 'warn'}">${r.comparable ? 'Comparable' : esc(r.warnings.join('; '))}</td></tr>`).join('') + '</tbody>';
+    + rows.map(r => `<tr${r.world === state.world ? ' class="current"' : ''}><td><a href="?${esc(viewParams(r.world))}">${esc(r.world)}</a></td><td class="num">${gold(r.gross)}</td><td class="num">${gold(r.dc)}</td><td class="num">${gold(r.np)}</td><td class="num">${gold(r.kills)}</td><td class="num">${pct(r.coverage)}</td><td class="${r.comparable ? '' : 'warn'}">${r.comparable ? 'Comparable' : esc(r.warnings.join('; '))}</td></tr>`).join('') + '</tbody>';
   $('worlds').setAttribute('aria-busy', 'false');
+  if (focusedSort && document.activeElement === document.body) $('worlds').querySelector(`[data-sort="${focusedSort}"]`)?.focus({ preventScroll: true });
 }
 
 function renderFindings() {
@@ -238,6 +282,14 @@ let access = null;
 const dataAccess = id => access?.sources?.[id] ? `${access.sources[id].status} since ${access.sources[id].since.slice(0, 10)}` : 'unknown';
 
 function wire() {
+  // Wide tables keep their full data. Make the scroll affordance reflect the actual rendered width.
+  const tableResize = new ResizeObserver(entries => {
+    for (const { target } of entries) {
+      const frame = target.matches('table') ? target.parentElement : target;
+      frame.previousElementSibling.hidden = frame.scrollWidth <= frame.clientWidth;
+    }
+  });
+  for (const frame of document.querySelectorAll('.eco-table-scroll')) { tableResize.observe(frame); tableResize.observe(frame.querySelector('table')); }
   for (const id of ['unit', 'liquidation', 'chartRange']) $(id).addEventListener('keydown', e => {
     if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
     const buttons = [...$(id).querySelectorAll('button')], i = buttons.indexOf(e.target);
@@ -259,27 +311,35 @@ function wire() {
   });
 }
 
-async function main() {
+async function main(restoreFocus = false) {
+  const requestController = requests;
   try {
     [data.index, data.monthly, data.market, data.vip, data.results, data.sync, access, data.creatures] = await Promise.all([
       json('data/economy/gold/index.json'), json('data/economy/gold/monthly.json'), optional('data/market-history/tibia-coin/index.json'),
       optional('data/economy/population/tibiavip-snapshot/2026-10-13.json'), optional('reports/economy/results.json'), optional('data/economy/sync-status.json'),
       optional('data/economy/population/access.json'), optional('data/economy/gold/creatures.json')]);
     data.creatures = data.creatures?.creatures ?? {};
-    await loadWorld();
-    searchPicker($('site-world'), { id: 'world-picker', name: 'World', value: state.world,
+    if (requestController !== requests || !await loadWorld()) return;
+    worldPicker ??= searchPicker($('site-world'), { id: 'world-picker', name: 'World', value: state.world,
       options: data.index.worlds.map(w => ({ value: w.world, label: w.world })),
-      onPick: async world => { state.world = world; try { if (await loadWorld()) render(); } catch { $('status').hidden = false; $('status').textContent = 'World data unavailable. Choose another world to retry.'; $('economy').setAttribute('aria-busy', 'false'); } } });
-    wire();
+      onPick: selectWorld });
+    if (!wired) { wire(); wired = true; }
     $('status').hidden = true;
     $('economy').hidden = false;
     render();
     renderFindings();
     renderProvenance();
-  } catch (error) {
-    $('status').dataset.error = '';
-    $('status').textContent = `The economy data could not be loaded: ${error.message}`;
+    if (restoreFocus && retryFocusVacant()) $('site-world').querySelector('button').focus();
+  } catch {
+    if (requestController !== requests || requestController.signal.aborted) return;
+    feedback('The economy data could not be loaded. Retry to try again.', true);
+    if (restoreFocus && retryFocusVacant()) $('retry').focus();
   }
 }
 
+$('retry').addEventListener('click', () => {
+  const world = retryWorld;
+  if (world) selectWorld(world);
+  else { feedback('Loading the economy data.'); main(true); }
+});
 main();
