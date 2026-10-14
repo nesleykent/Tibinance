@@ -41,7 +41,7 @@ const state = {
   kills: params.get('kills') !== '0',
   interval: INTERVALS.includes(params.get('interval')) ? params.get('interval') : 'week',
   range: RANGES.includes(params.get('range')) ? params.get('range') : '1Y',
-  price: params.get('price') === '1',
+  price: params.get('price') !== '0',
   rate: params.has('rate') && LIQUIDATION_SCENARIOS.includes(Number(params.get('rate'))) ? Number(params.get('rate')) : null,
   stable: params.get('stable') === '1',
   sort: { key: 'world', dir: 1 }, filter: '', month: null,
@@ -87,8 +87,9 @@ function buildView(summary, daily, contrib) {
     if (!prices.has(start)) prices.set(start, []);
     prices.get(start).push(sell);
   }
+  const price = new Map([...prices].map(([start, v]) => [start, { sell: median(v), n: v.length }]));
   return { summary, daily, contrib, periods, last: periods.findLast(p => p.rate.grossPotential !== null) ?? null,
-    byStart: new Map(periods.map(p => [p.start, p])), price: new Map([...prices].map(([start, v]) => [start, { sell: median(v), n: v.length }])),
+    byStart: new Map(periods.map(p => [p.start, p])), price, lastPrice: periods.findLast(p => price.has(p.start)) ?? null,
     end: lastDay(daily), ended: summary.last < latestDay() };
 }
 
@@ -136,16 +137,18 @@ function draw({ preserveRange = false } = {}) {
   view.accumulated = new Map(accumulatedPeriods(view.daily, view.periods, [from, end]).map(p => [p.start, p]));
   view.values = state.mode === 'accumulated' ? view.accumulated : new Map(view.periods.map(p => [p.start, p.rate]));
   chart?.draw({ periods: view.periods, measure: state.measure, measures: state.measures, mode: state.mode, values: view.values,
-    kills: state.kills, rate: state.rate, stable: state.stable, price: state.price ? view.price : null });
+    kills: state.kills, rate: state.rate, stable: state.stable, price: state.price && view.lastPrice ? view.price : null });
   for (const b of $('measure').querySelectorAll('[data-measure]')) b.setAttribute('aria-pressed', String(state.measures.includes(b.dataset.measure)));
   $('killsToggle').setAttribute('aria-pressed', String(state.kills));
   setChoice('valueMode', 'mode', state.mode);
   $('chartPanel').dataset.measure = state.measure;
   setChoice('range', 'range', state.range);
   setChoice('interval', 'interval', state.interval);
-  $('priceToggle').setAttribute('aria-pressed', String(state.price));
-  $('priceToggle').title = state.price ? 'Hide the TC Sell Offer' : 'Show the TC Sell Offer';
-  $('priceToggle').disabled = !marketOf(state.world);
+  $('priceToggle').setAttribute('aria-pressed', String(state.price && Boolean(view.lastPrice)));
+  $('priceToggle').title = view.lastPrice
+    ? `${state.price ? 'Hide' : 'Show'} the Tibia Coin Sell Offer price; gold per TC on the left scale. Latest observed ${periodLabel(view.lastPrice)}.`
+    : 'No Tibia Coin price observations for this world’s recorded history.';
+  $('priceToggle').disabled = !view.lastPrice;
   showQuote();
   showLegend(null);
   showDetails();
@@ -195,6 +198,7 @@ function showQuote() {
   $('measureGross').textContent = p ? gold(view.values.get(p.start).grossPotential) : '';
   $('measureCoins').textContent = p ? gold(view.values.get(p.start).directCoins) : '';
   $('measureNpc').textContent = p ? gold(view.values.get(p.start).npcPotential) : '';
+  $('measurePrice').textContent = view.lastPrice ? gold(view.price.get(view.lastPrice.start).sell) : 'N/A';
   const a = p && view.accumulated.get(p.start);
   $('through').textContent = state.mode === 'accumulated'
     ? `Accumulated gold (log scale), ${a?.from ?? ''} to ${p?.end ?? view.end}. ${a ? `${a.covered}/${a.days} days with data${a.complete ? '' : ' (partial subtotal)'}. ` : ''}Kills per day.`
@@ -211,32 +215,32 @@ function showLegend(day) {
   if (!p) { $('legend').innerHTML = ''; return; }
   const values = view.values.get(p.start), accumulated = state.mode === 'accumulated';
   const head = `<span class="day">${esc(periodLabel(p))}${accumulated ? ' / accumulated gold (log)' : ' / gold per day'}</span>`;
-  if (values.grossPotential === null) {
-    $('legend').innerHTML = `${head} <span class="note">${accumulated ? 'No available gold in this interval within the selected range' : `${p.covered} of ${p.days} days with data${p.end > view.end ? ', unfinished' : ''}`}: not drawn</span>`;
-    return;
-  }
   const rows = [];
+  if (values.grossPotential === null) {
+    rows.push(`<span class="note">${accumulated ? 'No available gold in this interval within the selected range' : `${p.covered} of ${p.days} days with data${p.end > view.end ? ', unfinished' : ''}`}: gold not drawn</span>`);
+  }
   const extra = (label, value, rest = '', selected = false) => {
     const cls = selected ? 'eco-selected' : 'eco-extra';
     return `<span class="label ${cls}">${label}</span> <b class="value ${cls}">${value}</b> <span class="rest ${cls}">${rest}</span>`;
   };
   for (const [k, m] of Object.entries(MEASURES)) {
-    if (!state.measures.includes(k)) continue;
+    if (!state.measures.includes(k) || values[m.field] === null) continue;
     const prev = !accumulated && view.periods.slice(0, view.periods.indexOf(p)).findLast(q => q.rate[m.field] !== null);
     const delta = prev ? values[m.field] - prev.rate[m.field] : null;
     const change = prev ? `<span class="eco-delta">${signedDelta(delta)}</span> ${signedRatio(prev.rate[m.field] ? delta / prev.rate[m.field] : null)} <span class="meta">since ${esc(periodLabel(prev))}</span>` : '';
     rows.push(extra(`${key('key-dot', KEY[k])}${m.name}`, gold(values[m.field]), change, true));
   }
-  if (accumulated) {
+  if (accumulated && values.grossPotential !== null) {
     const a = view.accumulated.get(p.start);
     rows.push(`<span class="note eco-selected">From ${esc(a.from)}: ${a.covered}/${a.days} days with data${a.complete ? '' : ' / partial subtotal'}</span>`);
   }
   if (state.kills) rows.push(extra(`${key('key-volume', KEY[state.measure])}Kills/day`, gold(p.rate.kills), `<span class="meta">${pct1(p.killCoverage)} valued</span>`, true));
-  if (state.stable) rows.push(extra(`${key('eco-key-dashed', 'var(--accent)')}Constant set`, gold(values.grossStable), '<span class="meta">comparison</span>', true));
-  if (state.rate !== null) rows.push(extra(`${key('eco-key-dashed', 'var(--caution)')}Gold + ${state.rate * 100}% NPC`, gold(values.directCoins + state.rate * values.npcPotential), '<span class="meta">assumption</span>', true));
+  if (state.stable && values.grossPotential !== null) rows.push(extra(`${key('eco-key-dashed', 'var(--accent)')}Constant set`, gold(values.grossStable), '<span class="meta">comparison</span>', true));
+  if (state.rate !== null && values.grossPotential !== null) rows.push(extra(`${key('eco-key-dashed', 'var(--caution)')}Gold + ${state.rate * 100}% NPC`, gold(values.directCoins + state.rate * values.npcPotential), '<span class="meta">assumption</span>', true));
   if (state.price) {
-    const q = view.price.get(p.start);
-    rows.push(extra(`${key('key-average', 'var(--average)')}TC Sell Offer`, q ? gold(q.sell) : 'N/A', `<span class="meta">${q ? `median of ${fmt(q.n)} day${q.n === 1 ? '' : 's'}` : 'not observed'}</span>`, true));
+    const pricedPeriod = !day && !view.price.has(p.start) ? view.lastPrice : p;
+    const q = pricedPeriod && view.price.get(pricedPeriod.start);
+    rows.push(extra(`${key('key-average', 'var(--average)')}TC Sell Offer`, q ? gold(q.sell) : 'N/A', `<span class="meta">${q ? `median of ${fmt(q.n)} day${q.n === 1 ? '' : 's'}${pricedPeriod !== p ? `, last observed ${esc(periodLabel(pricedPeriod))}` : ''}` : 'not observed'}</span>`, true));
   }
   $('legend').innerHTML = `${head} ${rows.join(' ')}`;
   if (!day) fitHead();
@@ -250,7 +254,7 @@ function describeChart() {
     + (p ? `Latest complete ${UNIT[state.interval]}: ${periodLabel(p)}, ${m.name}: ${gold(view.values.get(p.start)[field()])} ${state.mode === 'daily' ? 'gold per day' : 'gold accumulated'}, kill coverage ${pct1(p.killCoverage)}.` : 'No complete period.')
     + (state.mode === 'accumulated' && a ? ` Logarithmic gold scale. Since ${a.from}: ${a.covered} of ${a.days} days with data${a.complete ? '' : ', partial subtotal'}.` : '')
     + (state.kills ? ' Kills per day in the lower pane.' : '')
-    + (state.price ? ' With the median TC Sell Offer per period on the left scale.' : '')
+    + (state.price && view.lastPrice ? ' With the median TC Sell Offer per period on the left scale.' : '')
     + (state.rate !== null ? ` With gold plus ${state.rate * 100}% of NPC potential, an assumption.` : '')
     + (state.stable ? ' With the constant creature set for comparison.' : '')
     + ' Full period values and coverage are available in Help.');
@@ -434,7 +438,7 @@ function setChoice(group, attr, value) {
 function saveUrl() {
   const p = new URLSearchParams({ world: state.world, measure: state.measure, interval: state.interval, range: state.range,
     series: state.measures.join(','), ...(state.mode === 'accumulated' ? { mode: 'accumulated' } : {}), ...(!state.kills ? { kills: '0' } : {}),
-    ...(state.price ? { price: '1' } : {}), ...(state.rate !== null ? { rate: String(state.rate) } : {}), ...(state.stable ? { stable: '1' } : {}) });
+    price: state.price ? '1' : '0', ...(state.rate !== null ? { rate: String(state.rate) } : {}), ...(state.stable ? { stable: '1' } : {}) });
   history.replaceState(null, '', `${location.pathname}?${p}`);
 }
 const tip = $('watchTip');

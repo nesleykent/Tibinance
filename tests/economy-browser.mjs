@@ -64,6 +64,10 @@ try {
   assert.equal(await page.getAttribute('#site-menu a[aria-current="page"]','href'),'economy.html');
   assert.equal(await text('#world'),'Antica');
   assert.deepEqual([param('world'),param('measure'),param('interval'),param('range')],['Antica','gross','week','1Y']);
+  assert.equal(await page.locator('#measure #priceToggle').count(),1,'Tibia Coin price has a labelled control beside the gold series');
+  assert.match(await text('#priceToggle'),/^Tibia Coin price/i);
+  assert.equal(await page.getAttribute('#priceToggle','aria-pressed'),'true','Tibia Coin price is plotted by default');
+  assert.ok(await page.evaluate(()=>window.economyTestSeries[1].data().some(p=>Number.isFinite(p.value))),'the price series contains actual observed values');
 
   // ---- The status: the latest complete week in gold per day, its change over the range, all three measures.
   let e=await expected('antica','week','gross','1Y');
@@ -146,6 +150,11 @@ try {
   await page.click('#range [data-range="1Y"]');
 
   // ---- The TC Sell Offer, on request, on its own scale; named as a median of observed days.
+  await page.click('#priceToggle');
+  assert.equal(param('price'),'0','a hidden price is explicitly retained in the URL');
+  assert.equal(param('series'),'gross','the price control does not toggle a gold series');
+  await page.reload(); await ready();
+  assert.equal(await page.getAttribute('#priceToggle','aria-pressed'),'false');
   const explored=await page.evaluate(async()=>{
     const chart=window.economyTestCharts[0],range=chart.timeScale().getVisibleLogicalRange();
     chart.timeScale().setVisibleLogicalRange({from:range.to-6,to:range.to});
@@ -245,7 +254,8 @@ try {
   await page.click('[data-dock-target="assumptionsPanel"]');
   await page.locator('#liquidation [data-rate=""]').focus(); await page.keyboard.press('End');
   assert.equal(param('rate'),'1');
-  await page.click('#stable'); await page.click('#priceToggle');
+  await page.click('#stable');
+  if (await page.getAttribute('#priceToggle','aria-pressed')!=='true') await page.click('#priceToggle');
   const allOptionsUrl=page.url();
   assert.equal(await page.evaluate(()=>window.economyTestCharts.length),1,'all comparisons reuse one chart instance');
   const selected=(await expected('antica','month','gross','1Y')).last;
@@ -294,6 +304,10 @@ try {
   assert.ok(Math.abs(modeWindow.from-initialWindow.from)<0.001 && Math.abs(modeWindow.to-initialWindow.to)<0.001,'visibility and mode retain the chart window');
   assert.equal(param('mode'),'accumulated');
   assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('right').options().mode),1,'accumulated gold uses a logarithmic scale');
+  assert.equal(await page.getAttribute('#priceToggle','aria-pressed'),'true','Tibia Coin price remains shown in accumulated mode');
+  assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('left').options().mode),0,'price keeps its independent linear gold-per-TC scale');
+  assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('left').options().visible),true,'the price axis is visible');
+  assert.ok(await page.evaluate(()=>window.economyTestSeries[1].data().some(p=>Number.isFinite(p.value))),'price is plotted alongside all accumulated gold series');
   for (const interval of ['week','month','day']) {
     await page.click(`#interval [data-interval="${interval}"]`);
     for (const range of ['1M','3M','YTD','All']) {
@@ -320,7 +334,7 @@ try {
   for (const width of [390,320]) {
     await page.setViewportSize({width,height:844}); await page.waitForTimeout(150);
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth),0);
-    for (const label of ['Gross potential','Direct gold','NPC potential']) assert.ok((await page.locator('#legend').innerText()).includes(label));
+    for (const label of ['Gross potential','Direct gold','NPC potential','TC Sell Offer']) assert.ok((await page.locator('#legend').innerText()).includes(label));
     if (shots) await page.screenshot({path:join(shots,`economy-${engine}-accumulated-${width}.png`)});
   }
   await page.setViewportSize({width:1440,height:900});

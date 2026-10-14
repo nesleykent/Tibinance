@@ -272,7 +272,12 @@ by its calendar days. The world watchlist uses the same rate functions and lates
 retired worlds appear when searched, with their end date. Missing/unfinished periods have no rate, and are never
 represented as zero. The selected range controls the comparison of complete periods, not a sum of partial periods.
 
-TC Sell Offer medians use the left gold-per-coin axis. The constant creature set and all five labelled liquidation
+Tibia Coin price is shown by default and has a labelled toggle beside the gold series. Its TC Sell Offer medians
+use the independent left gold-per-TC axis, including when accumulated gold uses the logarithmic right axis.
+Hiding the price persists as `price=0` in the URL. Worlds without overlapping price observations disable that
+control; no price is invented. The resting readout labels the latest observed price period when the latest gold
+period has no price, and crosshair readouts retain their exact period. Missing gold does not suppress observed TC
+prices. The constant creature set and all five labelled liquidation
 rates, including 75%, are separate overlays. Resizing or changing comparisons preserves the explored time window;
 All can show the full daily history at phone widths. Axis labels use K (thousand), M (million) and B (billion); full figures,
 coverage and price sample counts remain in Help's keyboard-scrollable Chart values and coverage table. Rates are

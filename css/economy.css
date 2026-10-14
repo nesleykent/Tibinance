@@ -9,6 +9,8 @@
 #measure button[aria-pressed="true"] :is(.side-name,.side-value) { color:var(--ink); }
 #measure button[data-measure="coins"][aria-pressed="true"] :is(.side-name,.side-value) { color:var(--sell); }
 #measure button[data-measure="npc"][aria-pressed="true"] :is(.side-name,.side-value) { color:var(--buy); }
+#measure #priceToggle[aria-pressed="true"] :is(.side-name,.side-value) { color:var(--average); }
+#measure button:disabled { opacity:var(--opacity-disabled); cursor:default; }
 .eco-chart-controls { display:flex; flex-wrap:wrap; align-items:center; gap:var(--space-2) var(--space-3); }
 #measure { flex-wrap:wrap; }
 
