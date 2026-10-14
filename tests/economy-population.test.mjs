@@ -51,3 +51,10 @@ test('a TibiaVIP worlds page keeps its own meanings and every listed world', () 
   assert.deepEqual(rows[1], { world: 'Gladibra', online: 24, knownCharacters: 163790, guilds: 3, location: 'South America', pvpType: 'Retro Open PvP' });
   assert.equal(rows.length, 3);
 });
+
+test('an hourly value is checked against the page\'s 15-minute samples: here the average of the hour ending at the label', () => {
+  const hourly = series('hourly');
+  assert.equal(hourly[0].meaning, 'average-of-the-hour-ending-at-label');
+  assert.equal(rows.hourlyChecks[0].meaning, 'average-of-the-hour-ending-at-label');
+  assert.ok(rows.hourlyChecks[0].medianErrorHourEnding < rows.hourlyChecks[0].medianErrorInstant);
+});

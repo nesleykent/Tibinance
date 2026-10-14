@@ -90,10 +90,32 @@ export function parseOnlineCounter(html, capturedAt) {
     }
     if (!resolved.length) { skipped.push(label); continue; }
     resolved.reverse();
-    const step = Math.round((Date.parse(resolved.at(-1).at) - Date.parse(resolved[0].at)) / 60000 / Math.max(1, resolved.length - 1));
-    const interval = step === 60 ? 'PT1H' : step === 15 ? 'PT15M' : `PT${step}M`;
-    const series = interval === 'PT1H' ? 'hourly' : format.kind === 'time' ? '24-hour' : `intraday-${interval}`;
-    for (const r of resolved) out.push({ series: series === 'intraday-PT15M' ? '7-day' : series, label: r.label, at: r.at, interval, value: r.value });
+    // Each block is its own series. Its interval is the dominant gap between labels when nine gaps in ten equal it
+    // (a sample missing around a server save stays a gap); otherwise the series is irregular and keeps each gap.
+    const gaps = resolved.slice(1).map((r, i) => Math.round((Date.parse(r.at) - Date.parse(resolved[i].at)) / 60000));
+    const mode = [...gaps.reduce((m, g) => m.set(g, (m.get(g) ?? 0) + 1), new Map())].sort((a, b) => b[1] - a[1])[0] ?? [null, 0];
+    const regular = gaps.length && mode[1] >= 0.9 * gaps.length && (mode[0] === 15 || mode[0] === 60);
+    const interval = regular ? (mode[0] === 60 ? 'PT1H' : 'PT15M') : 'irregular';
+    const series = !regular ? `intraday-irregular-${blocks.indexOf(rows)}` : interval === 'PT1H' ? 'hourly' : format.kind === 'time' ? '24-hour' : '7-day';
+    resolved.forEach((r, i) => out.push({ series, label: r.label, at: r.at, interval, value: r.value, ...(interval === 'irregular' ? { gapMinutes: gaps[i] ?? null } : {}) }));
+  }
+  // What an hourly value is: the count at the label, or the average of the hour ending at the label, checked against
+  // the page's own 15-minute samples (median relative error under 3%); otherwise unverified.
+  const fine = new Map(out.filter(r => r.interval === 'PT15M').map(r => [r.at, r.value]));
+  const hourly = out.filter(r => r.series === 'hourly');
+  if (hourly.length && fine.size) {
+    const med = xs => (xs.sort((a, b) => a - b), xs[Math.floor(xs.length / 2)]);
+    const instant = [], ending = [];
+    for (const r of hourly) {
+      const t = Date.parse(r.at), at = k => fine.get(new Date(t - k * 900000).toISOString());
+      if (at(0) !== undefined) instant.push(Math.abs(at(0) / r.value - 1));
+      const window = [3, 2, 1, 0].map(at);
+      if (window.every(v => v !== undefined)) ending.push(Math.abs(window.reduce((a, b) => a + b, 0) / 4 / r.value - 1));
+    }
+    const mi = instant.length >= 24 ? med(instant) : Infinity, me = ending.length >= 24 ? med(ending) : Infinity;
+    const meaning = Math.min(mi, me) < 0.03 ? (me <= mi ? 'average-of-the-hour-ending-at-label' : 'count-at-label') : 'unverified';
+    for (const r of hourly) r.meaning = meaning;
+    (out.hourlyChecks ??= []).push({ meaning, medianErrorInstant: Number.isFinite(mi) ? Number(mi.toFixed(4)) : null, medianErrorHourEnding: Number.isFinite(me) ? Number(me.toFixed(4)) : null });
   }
   // Daily series: what a value labelled D means, checked against the intraday values of the same page.
   // One resolution only (hourly when the page has it, else its longest intraday series), so a day's mean is not
@@ -174,26 +196,30 @@ export async function importWayback({ log = console.log } = {}) {
   mkdirSync(OUT, { recursive: true });
   const summary = [];
   for (const [scope, caps] of [...byScope].sort()) {
-    const observations = [];
-    const seen = new Map();
-    for (const cap of caps.sort((a, b) => (a.capturedAt < b.capturedAt ? -1 : 1))) {
+    caps.sort((a, b) => (a.capturedAt < b.capturedAt ? -1 : 1));
+    const series = new Map(), conflicts = [];
+    caps.forEach((cap, ci) => {
       for (const r of cap.rows) {
-        const key = `${r.series} ${r.at ?? r.day}`;
-        const prior = seen.get(key);
-        if (prior && prior.value === r.value) { prior.captures.push(cap.source.capture); continue; }
-        const o = { metric: r.series === 'daily-average' ? 'players-online-daily-average' : r.series === 'daily-peak' ? 'players-online-daily-peak' : r.series === 'daily-unverified' ? 'players-online-daily-unverified' : 'players-online', series: r.series, ...(r.meaning ? { meaning: r.meaning } : {}),
-          ...(r.at ? { observedAt: r.at } : { day: r.day }), label: r.label, interval: r.interval, value: r.value,
-          availableAt: cap.capturedAt, availability: 'exact', captures: [cap.source.capture], ...(prior ? { differsFromCapture: prior.captures[0] } : {}) };
-        seen.set(key, o);
-        observations.push(o);
+        // A series is one kind of block with one meaning: a capture whose page shows a different (or no verifiable)
+        // meaning goes to its own series rather than mixing.
+        const key = `${r.series}|${r.meaning ?? ''}`;
+        if (!series.has(key)) series.set(key, { series: r.series, interval: r.interval, meaning: r.meaning ?? null, points: new Map() });
+        const s = series.get(key), t = r.at ?? r.day, prior = s.points.get(t);
+        // A later capture showing another value for the same time is a revision by the source: the first captured
+        // value stays the point (it was available first), every revision is kept with its capture.
+        if (prior) { if (prior[1] !== r.value) conflicts.push({ series: r.series, meaning: r.meaning ?? null, time: t, values: [prior[1], r.value], captures: [caps[prior[2]].source.capture, cap.source.capture] }); continue; }
+        s.points.set(t, [t, r.value, ci, ...(r.gapMinutes !== undefined ? [r.gapMinutes] : [])]);
       }
-    }
-    const doc = { format: 1, source: 'guildstats-wayback', scope, definition: 'Players online as counted by GuildStats (characters online on tibia.com), copied from archived GuildStats pages. 15-minute and hourly values are counts at the labelled time; daily values are the average of the previous day. Times are UTC, converted from Berlin labels.',
-      captures: caps.map(c => c.source), coverage: { first: observations.map(o => o.observedAt ?? o.day).sort()[0], last: observations.map(o => o.observedAt ?? o.day).sort().at(-1),
-        bySeries: Object.fromEntries([...new Set(observations.map(o => o.series))].sort().map(s => [s, observations.filter(o => o.series === s).length])) }, observations };
+    });
+    const list = [...series.values()].map(s => ({ ...s, points: [...s.points.values()].sort((a, b) => (a[0] < b[0] ? -1 : 1)) }));
+    const all = list.flatMap(s => s.points.map(p => p[0])).sort();
+    const doc = { format: 2, source: 'guildstats-wayback', scope,
+      definition: 'Players online as counted by GuildStats (characters online on tibia.com), copied from archived GuildStats pages. Points are [UTC time or day, value, capture index, gap to the next point in minutes for irregular series]. Intraday values are counts at that time; daily-average is the average of the day (labelled one day later on the page); daily-unverified means the page did not show what its daily value measures. availableAt of a point is its capture time.',
+      captures: caps.map(c => ({ ...c.source, capturedAt: c.capturedAt })), coverage: { first: all[0], last: all.at(-1), bySeries: Object.fromEntries(list.map(s => [`${s.series}${s.meaning ? ` (${s.meaning})` : ''}`, s.points.length])) },
+      revisions: conflicts, series: list };
     writeFileSync(join(OUT, `${scope.toLowerCase()}.json`), JSON.stringify(doc) + '\n');
-    summary.push({ scope, captures: caps.length, ...doc.coverage });
-    log(`${scope}: ${caps.length} captures, ${observations.length} observations`);
+    summary.push({ scope, captures: caps.length, ...doc.coverage, revisions: conflicts.length });
+    log(`${scope}: ${caps.length} captures, ${list.reduce((n, s) => n + s.points.length, 0)} points, ${conflicts.length} later revisions kept`);
   }
   writeFileSync(join(OUT, 'index.json'), JSON.stringify({ format: 1, source: 'guildstats-wayback', captures: captures.length, skippedCaptures: skippedCaptures ?? [], scopes: summary }, null, 1) + '\n');
   return { captures: captures.length, skipped: (skippedCaptures ?? []).length, scopes: summary };

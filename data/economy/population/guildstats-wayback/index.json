@@ -1,0 +1,155 @@
+{
+ "format": 1,
+ "source": "guildstats-wayback",
+ "captures": 179,
+ "skippedCaptures": [],
+ "scopes": [
+  {
+   "scope": "Assombra",
+   "captures": 1,
+   "first": "2020-04-26",
+   "last": "2021-04-26T21:30:00.000Z",
+   "bySeries": {
+    "24-hour": 96,
+    "7-day": 670,
+    "hourly (unverified)": 728,
+    "daily-average (previous-day-average)": 333
+   },
+   "revisions": 0
+  },
+  {
+   "scope": "Bastia",
+   "captures": 1,
+   "first": "2021-12-07",
+   "last": "2022-11-08T00:15:00.000Z",
+   "bySeries": {
+    "24-hour": 93,
+    "7-day": 667,
+    "hourly (unverified)": 729,
+    "daily-average (previous-day-average)": 332
+   },
+   "revisions": 0
+  },
+  {
+   "scope": "Belobra",
+   "captures": 1,
+   "first": "2024-08-21",
+   "last": "2025-08-22T02:00:00.000Z",
+   "bySeries": {
+    "24-hour": 96,
+    "7-day": 671,
+    "hourly (unverified)": 730,
+    "daily-average (previous-day-average)": 361
+   },
+   "revisions": 0
+  },
+  {
+   "scope": "Honbra",
+   "captures": 1,
+   "first": "2024-12-04",
+   "last": "2025-12-05T02:15:00.000Z",
+   "bySeries": {
+    "24-hour": 96,
+    "7-day": 670,
+    "hourly (average-of-the-hour-ending-at-label)": 729,
+    "daily-average (previous-day-average)": 364
+   },
+   "revisions": 0
+  },
+  {
+   "scope": "Macabra",
+   "captures": 1,
+   "first": "2020-04-26",
+   "last": "2021-04-26T21:30:00.000Z",
+   "bySeries": {
+    "24-hour": 96,
+    "7-day": 670,
+    "hourly (unverified)": 728,
+    "daily-average (previous-day-average)": 333
+   },
+   "revisions": 0
+  },
+  {
+   "scope": "Ragna",
+   "captures": 1,
+   "first": "2020-11-16",
+   "last": "2021-11-15T17:00:00.000Z",
+   "bySeries": {
+    "24-hour": 95,
+    "7-day": 669,
+    "hourly (unverified)": 730,
+    "daily-unverified (unverified)": 355
+   },
+   "revisions": 0
+  },
+  {
+   "scope": "Refugia",
+   "captures": 1,
+   "first": "2024-08-27",
+   "last": "2025-08-27T16:30:00.000Z",
+   "bySeries": {
+    "24-hour": 95,
+    "7-day": 668,
+    "hourly (unverified)": 729,
+    "daily-average (previous-day-average)": 361
+   },
+   "revisions": 0
+  },
+  {
+   "scope": "Secura",
+   "captures": 2,
+   "first": "2020-11-15",
+   "last": "2025-08-27T11:00:00.000Z",
+   "bySeries": {
+    "24-hour": 190,
+    "7-day": 1337,
+    "hourly (unverified)": 730,
+    "daily-average (previous-day-average)": 716,
+    "hourly (average-of-the-hour-ending-at-label)": 730
+   },
+   "revisions": 0
+  },
+  {
+   "scope": "Serdebra",
+   "captures": 1,
+   "first": "2024-08-17",
+   "last": "2025-08-17T12:00:00.000Z",
+   "bySeries": {
+    "24-hour": 96,
+    "7-day": 671,
+    "hourly (unverified)": 729,
+    "daily-average (previous-day-average)": 361
+   },
+   "revisions": 0
+  },
+  {
+   "scope": "Victoris",
+   "captures": 1,
+   "first": "2024-04-10",
+   "last": "2024-12-16T11:30:00.000Z",
+   "bySeries": {
+    "24-hour": 94,
+    "7-day": 664,
+    "hourly (unverified)": 728,
+    "daily-average (previous-day-average)": 245
+   },
+   "revisions": 0
+  },
+  {
+   "scope": "all-worlds",
+   "captures": 155,
+   "first": "2014-12-16",
+   "last": "2025-11-16T02:45:00.000Z",
+   "bySeries": {
+    "24-hour": 11697,
+    "7-day": 67345,
+    "hourly (unverified)": 22775,
+    "daily-average (previous-day-average)": 3867,
+    "hourly (count-at-label)": 11132,
+    "hourly": 440,
+    "hourly (average-of-the-hour-ending-at-label)": 20279
+   },
+   "revisions": 90423
+  }
+ ]
+}

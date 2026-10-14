@@ -23,8 +23,6 @@ Never force-push, never reset, never redo finished work.
      50 s each, into `.cache/economy/gold-pit/`).
   2. Rerun `reports/economy/economy_research.py` (pinned venv) for the forecasting results.
   3. Write `reports/economy/README.md` (findings: empirical results vs hypotheses).
-  4. Finish the Wayback import (`node tools/economy/population/wayback_guildstats.mjs`, resumable) and commit its
-     data.
   5. Stage F (Economy page and Markets forecast-history panel).
 
 - **Caches for this data** (local only; another agent must regenerate them):
@@ -318,7 +316,18 @@ Never force-push, never reset, never redo finished work.
     is circumvented. It runs daily in `market-daily.yml`.
   - `sample_tibiadata.mjs` and `.github/workflows/online-sampler.yml`: every 30 min, on the `data/online-samples`
     branch (prospective; first local sample 2026-10-14T02:40:47Z: 96 worlds, 13,379 online).
-  - Population tests: 5. JS suite: 186 pass.
+  - Population tests: 6. JS suite: 186 pass.
+  - **Wayback import done:** 179 captures (`data/economy/population/guildstats-wayback/`, 18 MB, compact format).
+    - **All worlds:** 155 captures, 2014-12-16 to 2025-11-16; 3,867 daily averages (verified meaning: average of
+      the previous day); hourly points as average of the hour ending at the label (20,279) or count at the label
+      (11,132), each verified per page against its 15-minute samples; 22,775 unverified hourly points; 15-minute
+      counts.
+    - **Single worlds** (one year each): Assombra, Bastia, Belobra, Honbra, Macabra, Ragna (daily unverified),
+      Refugia, Secura (2 captures), Serdebra, Victoris.
+    - **Revisions:** 90,423 points where a later capture shows another value. The first captured value is kept and
+      every revision is listed. Median change 21%, mostly different definitions across page versions; use
+      verified-meaning series only.
+    - These are sparse archived windows, **not** the required continuous hourly history (still unresolved).
 - **Stage E so far:** `reports/economy/economy_research.py` (pinned venv) writes `reports/economy/results.json`.
   - **Preliminary results** (forecasting pending the point-in-time builds; 112 worlds, 5,887 world-weeks; price
     cutoff 2026-10-06):
