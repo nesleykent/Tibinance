@@ -106,6 +106,9 @@ def items_of(record: dict):
         for x in o['worldPaths']:
             if x['base'] is not None:
                 yield week_of(x['date']), weeks.index(x['date']) + 1, x['world'], x['side'], record['model']['id'], x['base'], x['low'], x['high'], x['date']
+    elif record['product'] == 'tc-gold-challenger':
+        for x in o['worldPaths']:
+            yield week_of(x['date']), x['horizon'], x['world'], x['side'], record['model']['id'], x['base'], None, None, x['date']
     elif record['product'] == 'research-ledger':
         for side, models in o['antica'].items():
             for model, values in models.items():

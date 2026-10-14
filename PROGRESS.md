@@ -14,23 +14,20 @@ Never force-push, never reset, never redo finished work.
 
 ## Current state
 
-- **Stage:** G or H next. **A2 economy automation is committed by this commit** (`economy-daily.yml`, first run
-  dispatched after the push; see Long-running jobs). Stages B to F are done; G is decided (see below).
+- **Stage:** H next (docs, full suites, full release, final report). **Stage G is committed by this commit** (gold
+  challenger, archived daily by `economy-daily.yml`). Stages A2 and B to F are done.
 - **Production:** `release/0003` (a data release by the forecast-archive workflow on top of `release/0002`, live
   verified 543/543). **Awaiting a full release:** everything since `release/0002` that is code or a page: Stages C
   to F, including `economy.html` and the Economy link added to every page's menu. The Research pages link to
   `https://nesleykent.github.io/Tibinance/economy.html`, which 404s until a full release ships the page.
-- **Stage G decision (from Stage E):** no gold-based specification beats the no-change forecast at any horizon (1, 4
-  and 13 weeks), so no gold model enters the published Projections. The plan still asks for a prospective archived
-  challenger. Candidate: specification E (gross plus activity growth), the best at 4 and 13 weeks, generated from
-  point-in-time features. It is not built yet; it needs a daily point-in-time feature build in Actions, which in
-  turn needs the kill and loot caches.
+- **Stage G:** no gold-based specification beats the no-change forecast (Stage E), so no gold model enters the
+  published Projections. Specification E is archived as a prospective challenger instead (`tc-gold-challenger`, role
+  `challenger`): never shown, scored by `evaluate.py`, reproducible from its snapshot.
 - **Exact next action:**
   1. Check the first `economy-daily.yml` run (Actions, "Economy data"). A cold cache rebuilds every kill-statistics
      month, about 2 hours. It should commit `data/economy` through the latest upstream day, and its release step
      should end with "nothing to release" (exit 3) until a full release approves the extended policy.
-  2. G challenger, if the daily point-in-time features are in place.
-  3. H: `docs/economy.md` (the Economy page already links it on GitHub), README and project-guide updates, full test
+  2. H: `docs/economy.md` (the Economy page already links it on GitHub), README and project-guide updates, full test
      and browser suites, then a full release with live verification and the final five-section report.
 
 - **Caches for this data** (local only; another agent must regenerate them):
@@ -436,9 +433,28 @@ Never force-push, never reset, never redo finished work.
   - **Policy:** `data/economy/**` and `reports/economy/results.json` are added to `release/policy.json`, effective
     with the next full release.
 
+- **Stage G, gold challenger** (`tools/forecasts/challenger.py`, `test_challenger.py`; branches in `evaluate.py`
+  and `reproduce.py`):
+  - **Model:** specification E, the log Sell Offer change over 1, 4 and 13 weeks on the 13-week log growth of gross
+    potential and of players killed. It is least squares, pooled, on every origin whose target was observed by the
+    cutoff.
+  - **Data:** everything used is available at generation, so it is point-in-time by construction. The snapshot keeps
+    the features, coefficients, origin prices, dataset and program hashes; reproduction is exact (relative difference
+    0.0).
+  - **Archiving:** idempotent by output digest. An edition is named `tc-gold-challenger/<price cutoff>/<latest
+    feature week>`, and `challenger.py` rebuilds `index.json` after archiving.
+  - **Automation:** `economy-daily.yml` archives it after the gold build, then publishes `data/economy` and the
+    archive as one `publish.py` unit, then makes a data release.
+  - **Rehearsal** in a temporary clone (no push): archived 114 points (38 worlds with a price in the origin week
+    2026-10-04), the archive check passed, 7 of 7 editions reproduced, a rerun archived nothing, and `publish.py
+    --no-push --with data/economy` built one unit.
+  - **Display:** the Markets Forecast history panel lists only the Research scenario product; the challenger is never
+    displayed.
+  - **Tests:** 4 new tests; the forecast suite passes 38 of 38, and the real archive is byte-identical afterwards.
+
 ## In progress / remaining
 
-- G (prospective challenger), H (docs, full suites, full release, final five-section report).
+- H (docs, full suites, full release, final five-section report).
 
 ## Unresolved requirements (carried, not substitutes)
 

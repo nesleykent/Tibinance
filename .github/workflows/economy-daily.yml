@@ -1,6 +1,8 @@
 # Daily economy data: the kill statistics tibiamaps added, then gold generation potential rebuilt; on Mondays (or on
 # request) the TibiaWiki loot evidence first. Only derived files and evidence are committed (data/economy/); the
-# kill-statistics archive is never republished.
+# kill-statistics archive is never republished. Then the gold challenger (tools/forecasts/challenger.py), a
+# prospective Sell Offer forecast never shown as a projection, is archived, and the economy data and the archive are
+# published as one unit by tools/forecasts/publish.py.
 #
 # Caches: the kill partitions (.cache/economy/killstats), the upstream commit lists (.cache/economy/commits) and the
 # wiki revisions (.cache/economy/wiki) live in the Actions cache as temporary storage only. When they are evicted (7
@@ -43,6 +45,12 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '26'
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: reports/tc-cycle/requirements.txt
+      - run: pip install -r reports/tc-cycle/requirements.txt
       - name: Bot identity
         run: |
           git config --global user.name 'Tibinance data bot'
@@ -79,19 +87,17 @@ jobs:
             .cache/economy/commits
             .cache/economy/wiki
           key: economy-v1-${{ github.run_id }}
+      - name: Archive the gold challenger (idempotent; never shown as a projection)
+        run: python tools/forecasts/challenger.py
       - name: Validate the whole site
         run: node tools/ci/validate_site.mjs
-      - name: Commit, push and release
+      - name: Publish (the economy data and the archive, one unit) and release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          git add data/economy
-          if git diff --cached --quiet; then echo "No new economy data."; exit 0; fi
           files=$(node -e 'const k=require("./data/economy/sources/killstats.json");console.log(Object.values(k.worlds).map(w=>w.last).sort().at(-1))')
-          git commit -q -m "Economy data: kill statistics files through ${files}, gold generation potential rebuilt"
-          git fetch -q origin main
-          git rebase -q origin/main
-          git push -q origin HEAD:main
+          python tools/forecasts/publish.py --with data/economy \
+            --message "Economy data: kill statistics files through ${files}, gold generation potential rebuilt, challenger archived"
           # A data release carries data/economy/** once release/policy.json (approved by a full release) lists it;
           # until then there is nothing to release (exit 3) and the data wait on main.
           set +e

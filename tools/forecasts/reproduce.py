@@ -129,12 +129,17 @@ def compare(rebuilt: dict, published: dict) -> dict:
 def reproduce_record(record: dict) -> dict:
     snapshot = get_object(record['inputs']['object'])
     outputs = get_object(record['outputs']['object'])
+    if record['product'] == 'tc-gold-challenger':
+        # The challenger's outputs follow from its snapshot alone (features, coefficients, origin prices).
+        import challenger
+        rebuilt = challenger.predict(snapshot)
+        return compare({'benchmarkPaths': [], 'worldPaths': rebuilt['worldPaths']}, {'benchmarkPaths': [], 'worldPaths': outputs['worldPaths']})
     return compare(scenarios(snapshot), {'benchmarkPaths': outputs['benchmarkPaths'], 'worldPaths': outputs['worldPaths']})
 
 
 def main() -> None:
     wanted = sys.argv[1] if len(sys.argv) > 1 else '--all'
-    records = [r for r in load() if r['type'] == 'forecast' and r['product'] == 'tc-world-scenarios'
+    records = [r for r in load() if r['type'] == 'forecast' and r['product'] in ('tc-world-scenarios', 'tc-gold-challenger')
                and (wanted == '--all' or r['contentHash'].startswith(wanted))]
     failed = 0
     for r in records:
