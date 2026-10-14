@@ -76,3 +76,22 @@ Pages served `main` directly ("Deploy from a branch"). The migration kept the li
 5. A test checkpoint edited a served file and was confirmed not deployed.
 
 The outcome of each step is recorded in `PROGRESS.md`.
+
+
+## Authorized author correction, 2026-10-14
+
+The repository owner explicitly approved removal of the automated bot identity from published history. Seven
+bot author/committer identities were reassigned to the owner's existing identity. Descendant parent hashes also
+changed, but every original commit's tree and timestamps were preserved. This one authorized operation updated
+release tags 0003 through 0005; it is not permission for ordinary releases to move tags or force-push.
+
+The immutable release and forecast records retain their original commit IDs and hash chains. The audited
+`release/identity-rewrite.json` maps those IDs to corrected commits with exactly the same tree. Release/artifact
+and forecast-evidence readers verify the mapped tree before using it; an unknown ID is not silently substituted,
+and a different tree is rejected. All five recorded release artifact digests remain unchanged. No website release
+was created and the unreleased UI reconstruction stays unreleased.
+
+For a historical code revision named in a frozen record, the corresponding `commits[oldId].commit` in the map
+is its current Git ID. Source-file hashes and archived inputs continue to provide the original reproducibility
+checks. Fresh clones should fetch all release tags. Existing local clones need their old branches/tags reconciled
+with the authorized rewrite before publishing; do not merge or push the obsolete bot-authored ancestry back.

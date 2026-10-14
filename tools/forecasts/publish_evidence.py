@@ -82,7 +82,7 @@ def holds(record: dict, rev: str) -> bool:
 
 
 def is_ancestor(a: str, b: str) -> bool:
-    return subprocess.run(['git', 'merge-base', '--is-ancestor', a, b], cwd=ar.ROOT, capture_output=True).returncode == 0
+    return subprocess.run(['git', 'merge-base', '--is-ancestor', ar.historical_revision(a), ar.historical_revision(b)], cwd=ar.ROOT, capture_output=True).returncode == 0
 
 
 def subjects(records):

@@ -39,6 +39,7 @@ import gzip
 import hashlib
 import json
 import os
+import re
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -247,15 +248,35 @@ def ledger_bodies(text: str, source_for) -> list[tuple[dict, dict]]:
 
 # Git -------------------------------------------------------------------------------------------------------------
 
+def historical_revision(revision: str) -> str:
+    """Resolve owner-authorized metadata rewrites without editing any frozen forecast or evidence record."""
+    match = re.match(r'^([a-f0-9]{40})(?=$|:|\^|~|\.\.)', revision, re.I)
+    path = ROOT / 'release' / 'identity-rewrite.json'
+    if not match or not path.exists():
+        return revision
+    mapping = json.loads(path.read_text())
+    if mapping.get('format') != 1:
+        raise ValueError('unsupported identity-rewrite map')
+    entry = mapping.get('commits', {}).get(match[1])
+    if not entry:
+        return revision
+    if not all(re.fullmatch(r'[a-f0-9]{40}', entry.get(key, '')) for key in ('commit', 'tree')):
+        raise ValueError('invalid identity-rewrite entry')
+    tree = subprocess.check_output(['git', 'rev-parse', f'{entry["commit"]}^{{tree}}'], cwd=ROOT).decode().strip()
+    if tree != entry['tree']:
+        raise ValueError(f'identity rewrite changed the tree of {match[1]}')
+    return entry['commit'] + revision[len(match[1]):]
+
+
 def git(*args: str, check: bool = True) -> str:
-    r = subprocess.run(['git', *args], cwd=ROOT, capture_output=True)
+    r = subprocess.run(['git', *map(historical_revision, args)], cwd=ROOT, capture_output=True)
     if check and r.returncode:
         raise RuntimeError(f"git {' '.join(args)}: {r.stderr.decode().strip()}")
     return r.stdout.decode() if r.returncode == 0 else ''
 
 
 def git_bytes(rev: str, path: str) -> bytes | None:
-    r = subprocess.run(['git', 'show', f'{rev}:{path}'], cwd=ROOT, capture_output=True)
+    r = subprocess.run(['git', 'show', f'{historical_revision(rev)}:{path}'], cwd=ROOT, capture_output=True)
     return r.stdout if r.returncode == 0 else None
 
 

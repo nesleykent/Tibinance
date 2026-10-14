@@ -30,7 +30,7 @@ import { closeSync, existsSync, mkdtempSync, openSync, readFileSync, rmSync, unl
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { git, manifestOfCommit, digestOf } from './ci/artifact.mjs';
+import { git, historicalRevision, manifestOfCommit, digestOf } from './ci/artifact.mjs';
 
 const TOOL_ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
 export const MANIFEST = 'release/production.json';
@@ -90,7 +90,7 @@ export function policyMatcher(policy) {
 
 const show = (rev, path, cwd) => { try { return git(['show', `${rev}:${path}`], { cwd }); } catch { return null; } };
 const revParse = (rev, cwd) => git(['rev-parse', '--verify', `${rev}^{commit}`], { cwd }).trim();
-const isAncestor = (a, b, cwd) => spawnSync('git', ['merge-base', '--is-ancestor', a, b], { cwd }).status === 0;
+const isAncestor = (a, b, cwd) => spawnSync('git', ['merge-base', '--is-ancestor', historicalRevision(a, cwd), historicalRevision(b, cwd)], { cwd }).status === 0;
 
 // The tree of a data release: the base (production) tree with every policy path taken from the data commit.
 export function composeDataTree(baseCommit, dataCommit, policy, cwd) {
@@ -209,8 +209,8 @@ export function release({ kind, commit, approver, note = '', withPaths = [], pus
       policy = full.policy;
       const { tree } = composeDataTree(last.commit, target, policy, cwd);
       if (tree === git(['rev-parse', `${last.commit}^{tree}`], { cwd }).trim()) throw new Error(`nothing to release: the data paths of ${target} equal production ${last.tag}`);
-      candidate = execFileSync('git', ['commit-tree', tree, '-p', last.commit, '-m', `data release: data paths of ${target} on ${last.tag}`], { cwd, encoding: 'utf8' }).trim();
-      source = { base: { tag: last.tag, commit: last.commit }, data: target, policyFrom: full.tag };
+      candidate = execFileSync('git', ['commit-tree', tree, '-p', historicalRevision(last.commit, cwd), '-m', `data release: data paths of ${target} on ${last.tag}`], { cwd, encoding: 'utf8' }).trim();
+      source = { base: { tag: last.tag, commit: historicalRevision(last.commit, cwd) }, data: target, policyFrom: full.tag };
     }
 
     const checks = validateCandidate(candidate, cwd, validator);
@@ -259,7 +259,7 @@ export function verifyReleases(cwd = process.cwd(), { digests = true } = {}) {
   for (const r of records) {
     let tagged;
     try { tagged = revParse(r.tag, cwd); } catch { problems.push(`${r.tag}: tag missing`); continue; }
-    if (tagged !== r.commit) problems.push(`${r.tag}: tag points to ${tagged}, record says ${r.commit}`);
+    if (tagged !== historicalRevision(r.commit, cwd)) problems.push(`${r.tag}: tag points to ${tagged}, record says ${r.commit}`);
     if (digests && digestOf(manifestOfCommit(r.commit, cwd)) !== r.artifact.digest) problems.push(`${r.tag}: artifact digest differs from the record`);
   }
   if (records.length) {

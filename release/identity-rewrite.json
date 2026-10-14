@@ -1,0 +1,128 @@
+{
+  "format": 1,
+  "reason": "Repository owner explicitly authorized removal of the automated bot author identity on 2026-10-14. Commit trees and timestamps are unchanged.",
+  "author": "nesleykent <nesleykent@icloud.com>",
+  "botCommitsChanged": 7,
+  "commits": {
+    "694fef6d1f5c360fc91b3a0464664be92b66a517": {
+      "commit": "73e4b13139aa2b57e1d4f1daae1087425b1db408",
+      "tree": "c9e5d28a4cb72c02a7daa8c1af3696b17dbed9df"
+    },
+    "7a1653b508d1df52a333dd2e5c86ffc1396a70d2": {
+      "commit": "bca6e153035069a03f43bdb479b87b12c463d159",
+      "tree": "52076a0bff182af5dd5a366db1de53d31f4b32a5"
+    },
+    "44f32311b5a960e3adc0bcd3f02c11ed5c8c07c3": {
+      "commit": "4bec5db4b2bc616346b8344e046c5b3f0c5ea8ba",
+      "tree": "3b65f5965a927158557ed16d09b768f0392f4724"
+    },
+    "6aded0019d168872e4b9ce7ab52976c0a31c4edd": {
+      "commit": "0e680dcd838cc33f91c3ebd7d525f2ea0e9ac4b2",
+      "tree": "94860b4f75e65020dec98f8e10297532b7dddefb"
+    },
+    "ff68ba777e76f2b898db167022a4d1ffe2b90939": {
+      "commit": "86b841bd2e3bfa72330fb818c87bb13214a16682",
+      "tree": "395c5f67ffa830bbcb841a02f7d61d2a62abfce2"
+    },
+    "a5ac73d90c076fadfd6d0d16c93454c3b672bdd2": {
+      "commit": "8bf69f9b63cfda6d1aa622d07de835bb2e5e0207",
+      "tree": "ca69a73c0e5369aa64d81215b577c8076407eb4b"
+    },
+    "252f1e534683a641bf632dedf4c716964169118a": {
+      "commit": "975fcfb4257d15138e371612b2b129388539a5b8",
+      "tree": "282c19edef6b455a44810c0bd4451580b4aa3e77"
+    },
+    "f034c7520f73ac87b59dcc26f7a7622069940b14": {
+      "commit": "d31601b1d20d97b04e88d487edf8909a213fea9f",
+      "tree": "c4bc0dfe3fe0736cd7d0b4df2763c1c97851c1aa"
+    },
+    "613d36f9f4804cbc2f369e9360507fc59246173b": {
+      "commit": "559f9f1a7f7c41c907464909313122976a20edef",
+      "tree": "2d4389a92a4f974f3a3b8bf9a09b059ce9c72770"
+    },
+    "8933581d5e7891f663500e4c672bece2c49c8f50": {
+      "commit": "b1bfb0210408409dc4c7ff87cb9c4ec6d600a92a",
+      "tree": "556cbf3b5a03e322450f71332005127909adccd1"
+    },
+    "24ce3ef14acbcba36d7f6d2b2ca7a17028776680": {
+      "commit": "e8c72c8c14ba779fe783102a982cadd615e848c7",
+      "tree": "d96df204821699ca8a2b85dabb1cd5aacf7207f3"
+    },
+    "480af15909b112effaeb88d17cf5ceb83f30f3b6": {
+      "commit": "f2a14714e6e5b4a5d710101ad9bf99c9358d9f49",
+      "tree": "85109123fed7cc8dcf894911ae5f86643570cb95"
+    },
+    "b47335626b3e8c3dbc8dd9b71cf8d49ad381c397": {
+      "commit": "dcbc3e462680e55dd7c64ea1bbea2fdb2e7961f5",
+      "tree": "61a80f178d910faf40cd2af3406469a1171fe104"
+    },
+    "45f00281d2708e9be3e24378ccc48aa3f00ed597": {
+      "commit": "6c316f58b6e07be948ed8521e44fee571113ab7e",
+      "tree": "7523cd2163b4a5a7da2190b3598d65b470e3e266"
+    },
+    "593821ed8deb43dc4a9572ac0d6f93228d042fc2": {
+      "commit": "b89ca8eb7a3f92c04da9f912aec5690897d597eb",
+      "tree": "5dc981c0f55e2091ec5d69db0a9bd442504a5966"
+    },
+    "d89109db564260f1bd4fcb8dd426b6cd608df2ec": {
+      "commit": "3752af76145e91d449dae90e3e9f5a93c3384a15",
+      "tree": "78b1971fcc6a545739eca0d8f5b6695226394995"
+    },
+    "5699edcbe880ab53178bb92bd3a0a36b5aac4e4c": {
+      "commit": "59fab2063f6bec2683c381feb741a732649e626a",
+      "tree": "a5a046f9de1b8db2af95ac2aeb4b9fa5a009570b"
+    },
+    "1172b357a122cfc53debfba8ed7048b4000e6450": {
+      "commit": "7086d20ea059cc37ecee7f7b67e0b1592bf6dab6",
+      "tree": "5cb8b81bacae03385c018215a235f86c38c90992"
+    },
+    "bf8c601076927b4cfffe82e8c47d89b06b933433": {
+      "commit": "38521d0ab294ec992210bd73e12948768d0841cb",
+      "tree": "d737d29d71bdedff052571a418ef89555a047efa"
+    },
+    "42d8aa643590a2cc01726e6f2a9d488892a92314": {
+      "commit": "1c1029fa571a49833f8ea85aca8c9d9c93a3cb5b",
+      "tree": "01d488cb40c946bbac32bb19153b1e0ba947e24b"
+    },
+    "75b5294324eb29d91c4d6ea6a6a7ea4d68adb1b3": {
+      "commit": "a7d738e9e39de33733eb2f39936d9706242cd749",
+      "tree": "d856c19370d2e30b344a608a4f402b771eaf2acf"
+    },
+    "6646d172260db518012a2634097cdbc90cf022ef": {
+      "commit": "7666649a775e8452a9988801ff454ff1582651f0",
+      "tree": "baa60b7cb6588074c80278df8d59d7f087a92d7f"
+    },
+    "d0204eb1b6571ff2b663417cca4f9b6f1f09d13d": {
+      "commit": "1c1e9f585fe74001d9c48543aab8f8f2ff159918",
+      "tree": "ecadd15272a16c13e3e1afa4300a2a58e6fc9090"
+    },
+    "1343a81f0f48dd460222cdfe19bc2ffa56291dfb": {
+      "commit": "e2797fb2debc0f195d14f2ede2fd4e51fd014edd",
+      "tree": "a2ce438b1441d0031c9cf3c4d5638cb49ded80b1"
+    },
+    "5d5be69e18759e8b7cd26fda13ee0f6eb1681c94": {
+      "commit": "5efd6e2cfb5bdef8a824e01f7f681e804c507f91",
+      "tree": "509961bfcbfc33b7c163978664001f1669b036bc"
+    },
+    "c0118b70c590c093189444fd3d7d384a2bb8f43a": {
+      "commit": "6477ba6ce19bf180f8f477e3f9965178ee327e28",
+      "tree": "6c669791e1b5173cd2576c6887e262f2f2b8a579"
+    },
+    "14c21ee1f87696ed95af4c7666240ab462b9276a": {
+      "commit": "f9f5d13f0be63551f4e24577f860278fd13b8b27",
+      "tree": "61a52c0215a80adcf5267f76f9b9f52b24ef3f3f"
+    },
+    "56a28739ded9bd7a383b1d96da12d3a265f27e57": {
+      "commit": "7b74cdfe791d2b7c3da45b763dbae9b605e47e71",
+      "tree": "b61b63477ec6b5edbc7762d71e37d5af9c225eba"
+    },
+    "ccb9ab19185cf803354f8d2bc0f2b0a8baee85bb": {
+      "commit": "448f613e9f79c5f1cb8c199e408247684fc4516a",
+      "tree": "38b47b93f9758a8123aed730a3650b8b22e72237"
+    },
+    "cc97606e61cd38a051d5666b0b150fbe3220a5d9": {
+      "commit": "02daf9f200ff6b93cf703edc666ac919d51f93b0",
+      "tree": "53d6ab149e9b3cb3c1f4af2b76abc3db7bba3ae3"
+    }
+  }
+}

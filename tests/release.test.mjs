@@ -8,7 +8,7 @@ import { mkdirSync, mkdtempSync, readFileSync, writeFileSync, existsSync } from 
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { release, readChain, appendRecord, globToRegExp, verifyReleases, composeDataTree, MANIFEST, CHAIN } from '../tools/release.mjs';
-import { manifestOfCommit, digestOf, buildArtifact, EXCLUDED } from '../tools/ci/artifact.mjs';
+import { historicalRevision, manifestOfCommit, digestOf, buildArtifact, EXCLUDED } from '../tools/ci/artifact.mjs';
 import { resolveRelease, buildRelease, compareManifests } from '../tools/ci/pages_release.mjs';
 
 const sh = (cwd, ...args) => execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }).trim();
@@ -195,4 +195,29 @@ test('--with records a working-tree file in the release commit and the local bra
   assert.equal(sh(f.origin, 'show', 'main:PROGRESS.md'), 'release 0001 recorded');
   assert.equal(sh(f.work, 'rev-parse', 'HEAD'), r.manifestCommit);
   assert.equal(sh(f.work, 'status', '--porcelain'), '');
+});
+
+test('an authorized author rewrite preserves release records, exact artifacts and future data-release parents', () => {
+  const f = fixture(), original = sh(f.work, 'rev-parse', 'HEAD');
+  const r1 = release({ ...opts(f), kind: 'full', commit: original });
+  const before = readFileSync(join(f.work, CHAIN), 'utf8');
+  const originalTag = sh(f.work, 'rev-parse', r1.tag);
+  const tree = sh(f.work, 'rev-parse', `${original}^{tree}`);
+  const corrected = sh(f.work, 'commit-tree', tree, '-m', 'corrected identity');
+  sh(f.work, 'tag', '-f', '-a', r1.tag, '-m', 'owner-authorized author correction', corrected);
+  sh(f.work, 'push', `--force-with-lease=refs/tags/${r1.tag}:${originalTag}`, 'origin', `refs/tags/${r1.tag}`);
+  write(f.work, 'release/identity-rewrite.json', JSON.stringify({ format: 1, commits: { [original]: { commit: corrected, tree } } }));
+  assert.equal(historicalRevision(`${original}:index.html`, f.work), `${corrected}:index.html`);
+  assert.equal(verifyReleases(f.work).problems.length, 0);
+  assert.equal(resolveRelease(f.work).commit, corrected);
+  assert.equal(readFileSync(join(f.work, CHAIN), 'utf8'), before, 'frozen release chain unchanged');
+  assert.equal(digestOf(manifestOfCommit(original, f.work)), r1.record.artifact.digest);
+  write(f.work, 'data/d.json', '{"v":2}\n');
+  const target = commit(f.work, 'data and authorized identity map');
+  sh(f.work, 'push', '--quiet', 'origin', 'HEAD:main');
+  const r2 = release({ ...opts(f), kind: 'data', commit: target });
+  assert.equal(sh(f.work, 'rev-parse', `${r2.record.commit}^`), corrected, 'data release uses the corrected production parent');
+  const badTree = sh(f.work, 'rev-parse', `${target}^{tree}`);
+  write(f.work, 'release/identity-rewrite.json', JSON.stringify({ format: 1, commits: { [original]: { commit: corrected, tree: badTree } } }));
+  assert.throws(() => historicalRevision(original, f.work), /changed the tree/);
 });

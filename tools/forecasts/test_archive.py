@@ -67,6 +67,26 @@ class ArchiveTest(unittest.TestCase):
         self.assertEqual(len(records), n)
         self.assertEqual(len(ar.load()), n)
 
+    def test_author_rewrite_resolves_frozen_source_ids_and_rejects_changed_trees(self):
+        ar.git('init', '--quiet')
+        ar.git('config', 'user.name', 'Test')
+        ar.git('config', 'user.email', 'test@example.invalid')
+        (self.tmp / 'input.json').write_text('{"value":1}\n')
+        ar.git('add', 'input.json')
+        ar.git('commit', '--quiet', '-m', 'original')
+        original = ar.git('rev-parse', 'HEAD').strip()
+        tree = ar.git('rev-parse', 'HEAD^{tree}').strip()
+        corrected = ar.git('commit-tree', tree, '-m', 'corrected identity').strip()
+        path = self.tmp / 'release' / 'identity-rewrite.json'
+        path.parent.mkdir()
+        path.write_text(json.dumps({'format': 1, 'commits': {original: {'commit': corrected, 'tree': tree}}}))
+        self.assertEqual(ar.historical_revision(original), corrected)
+        self.assertEqual(ar.git('rev-parse', original).strip(), corrected)
+        self.assertEqual(ar.git_bytes(original, 'input.json'), b'{"value":1}\n')
+        path.write_text(json.dumps({'format': 1, 'commits': {original: {'commit': corrected, 'tree': '0' * 40}}}))
+        with self.assertRaisesRegex(ValueError, 'changed the tree'):
+            ar.git_bytes(original, 'input.json')
+
     def test_the_same_content_has_the_same_identity_on_any_machine_at_any_time(self):
         a = self.scenario(ar.load())[0]
         shutil.rmtree(ar.ARCHIVE)

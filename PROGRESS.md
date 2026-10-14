@@ -1,3 +1,32 @@
+# Authorized authorship history rewrite, 2026-10-14
+
+The user explicitly authorized rewriting existing bot-authored commits and release references after the bot
+identity was removed from all four writing workflows. This is the specific exception to the standing prohibition
+on history rewrites and moved release tags; ordinary publication continues to prohibit force-pushes.
+
+- Seven bot author/committer identities corrected to `nesleykent <nesleykent@icloud.com>`; 30 commit IDs changed
+  including descendants. All original commit trees, messages and author/committer timestamps are preserved.
+- `release/0003`, `release/0004` and `release/0005` receive updated annotated-tag objects and commit targets;
+  release 0001/0002 are unchanged. Tag annotations identify their corrected target and retain their original dates.
+- `release/identity-rewrite.json` records the audited old/new commit IDs and identical tree hashes. Release and
+  forecast readers resolve only this explicit map and reject a different tree. Published release records,
+  forecast records, snapshots and all existing dataset files remain byte-identical; hash chains are not rewritten.
+- The approved production remains release/0005, artifact digest
+  `ec8fcf0f3aa045cac6857421711b024d6fff7628c0dba461ec768c3e9edc463d`. No release or deployment is requested.
+  The rejected UI work remains unreleased and must not be resumed or deployed without a new user instruction.
+- A complete pre-rewrite bundle was saved before any ref mutation. SHA-256:
+  `7f0789f124c25f2f22cf67e132168e3d51be12fd0d7691870fe68f6fe6739544`.
+  The calling checkout keeps a private copy under `.git/identity-rewrite-backup.bundle`; it is never published.
+- Validation in a fresh clone containing only rewritten reachable history: all original trees compared; no bot
+  identities in reachable authors/committers; all five release digests and chains valid; six forecast editions
+  reproduce; archive integrity and Research invariants pass. New regression cases preserve release records,
+  resolve old source IDs, reject changed trees and use the corrected parent for future data releases.
+
+Exact next action: publish the reviewed rewrite and compatibility tools together using an atomic push with exact
+old-ref leases, verify GitHub's current refs and authors, and keep the existing website deployment unchanged.
+
+---
+
 # Automation authorship correction, 2026-10-14
 
 The user cancelled further UI work and requested removal of the Tibinance data bot identity.

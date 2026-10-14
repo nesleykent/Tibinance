@@ -10,15 +10,31 @@
 // keeps the recorded digest equal to what is served. No hidden file is referenced by any page.
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
-import { dirname, join, relative, sep } from 'node:path';
+import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { dirname, join, relative, resolve, sep } from 'node:path';
 
 export const EXCLUDED = path => path.split('/').some(segment => segment.startsWith('.')) || path.startsWith('.github/') || path.startsWith('.cache/');
 
 const sha256 = data => createHash('sha256').update(data).digest('hex');
 
+// An explicitly authorized author correction changed commit IDs, never their trees. Frozen release and forecast
+// records keep their original IDs; resolve only entries in the audited map, and verify their exact tree identity.
+export function historicalRevision(revision, cwd = process.cwd()) {
+  const match = revision.match(/^([a-f0-9]{40})(?=$|:|\^|~|\.\.)/i);
+  const path = resolve(cwd, 'release/identity-rewrite.json');
+  if (!match || !existsSync(path)) return revision;
+  const mapping = JSON.parse(readFileSync(path, 'utf8'));
+  if (mapping.format !== 1) throw new Error('unsupported identity-rewrite map');
+  const entry = mapping.commits?.[match[1]];
+  if (!entry) return revision;
+  if (!/^[a-f0-9]{40}$/.test(entry.commit ?? '') || !/^[a-f0-9]{40}$/.test(entry.tree ?? '')) throw new Error('invalid identity-rewrite entry');
+  const tree = execFileSync('git', ['rev-parse', `${entry.commit}^{tree}`], { cwd, encoding: 'utf8' }).trim();
+  if (tree !== entry.tree) throw new Error(`identity rewrite changed the tree of ${match[1]}`);
+  return entry.commit + revision.slice(match[1].length);
+}
+
 export function git(args, { cwd, input, encoding = 'utf8' } = {}) {
-  return execFileSync('git', args, { cwd, input, encoding, maxBuffer: 1 << 30, stdio: ['pipe', 'pipe', 'pipe'] });
+  return execFileSync('git', args.map(arg => historicalRevision(arg, cwd)), { cwd, input, encoding, maxBuffer: 1 << 30, stdio: ['pipe', 'pipe', 'pipe'] });
 }
 
 // Every file of a commit's tree: [{ path, mode, blob }]. Only regular files can be served; a symlink or submodule in

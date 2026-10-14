@@ -15,7 +15,7 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { git, buildArtifact, manifestOf, manifestOfCommit, digestOf } from './artifact.mjs';
+import { git, historicalRevision, buildArtifact, manifestOf, manifestOfCommit, digestOf } from './artifact.mjs';
 import { readChain, MANIFEST, CHAIN } from '../release.mjs';
 
 const ROOT = resolve(fileURLToPath(new URL('../..', import.meta.url)));
@@ -30,8 +30,8 @@ export function resolveRelease(root = ROOT, wanted) {
   if (!last || last.tag !== production.tag || last.commit !== production.commit || last.hash !== production.record?.hash) throw new Error(`${MANIFEST} is not the last record of ${CHAIN}`);
   if (wanted && wanted !== production.tag) throw new Error(`asked to deploy ${wanted}, but the approved release is ${production.tag}`);
   const tagged = git(['rev-parse', '--verify', `${production.tag}^{commit}`], { cwd: root }).trim();
-  if (tagged !== production.commit) throw new Error(`${production.tag} points to ${tagged}, the manifest says ${production.commit}`);
-  return production;
+  if (tagged !== historicalRevision(production.commit, root)) throw new Error(`${production.tag} points to ${tagged}, the manifest says ${production.commit}`);
+  return { ...production, commit: tagged };
 }
 
 export function buildRelease(production, out, root = ROOT, validator = [process.execPath, join(ROOT, 'tools/ci/validate_site.mjs')]) {
