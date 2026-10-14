@@ -1,14 +1,14 @@
 {
  "format": 1,
- "note": "Publish Economy independent series, accumulated gold on a logarithmic scale, Gold labels, and visible Tibia Coin price; publication requested in chat.",
- "approver": "Codex, verified integrity checks and Chrome/WebKit suites",
+ "note": "Economy opens the full gold history since 2022 and states coverage boundaries; preserve explicit ranges.",
+ "approver": "Repository owner explicitly approved publication; Codex verified Chrome, WebKit and CI",
  "artifact": {
-  "bytes": 139278883,
-  "digest": "728b4b12c4270244de9adb3bce61163f8506760a052b07de94d4914be1dbdaee",
+  "bytes": 139284055,
+  "digest": "e8d39161c7c4520f72757bebc15e057a0a8e5db2719e766979d5a467c5f5c56c",
   "files": 931
  },
- "commit": "e31b29906b2d24f9d230d9a9aa50cf904a276799",
- "createdAt": "2026-10-14T12:56:31.869Z",
+ "commit": "e0cd4b67ffc3212f6cb0b1c142d49198411ea2cd",
+ "createdAt": "2026-10-14T14:06:25.797Z",
  "kind": "full",
  "policy": {
   "dataPaths": [
@@ -34,10 +34,10 @@
  },
  "policySha256": "8598ea053fc9fba9189b10e9c9bbbd33f9b89b36ab503161a844995d81008ad9",
  "source": {
-  "commit": "e31b29906b2d24f9d230d9a9aa50cf904a276799"
+  "commit": "e0cd4b67ffc3212f6cb0b1c142d49198411ea2cd"
  },
- "tag": "release/0008",
- "tree": "58e0ebbea2ef2de5e75f954a4c0a0635d3e8e3e0",
+ "tag": "release/0009",
+ "tree": "f79bbeffb828703631d662eda3226f7c838a860e",
  "validation": {
   "checks": [
    {
@@ -78,12 +78,12 @@
    }
   ],
   "validator": {
-   "commit": "e31b29906b2d24f9d230d9a9aa50cf904a276799",
+   "commit": "e0cd4b67ffc3212f6cb0b1c142d49198411ea2cd",
    "path": "tools/ci/validate_site.mjs"
   }
  },
  "record": {
-  "seq": 8,
-  "hash": "820be3bdfdfb6c9decba481508c600d8966d62831b74eb2effc86d2226a1b0ac"
+  "seq": 9,
+  "hash": "471025d7bae808df9cc34b91c7ac3b2705c60f54c9d4e143008d5a3a8d5ddab6"
  }
 }
