@@ -107,9 +107,9 @@ try {
   assert.ok(initialHistory.first);
 
   // ---- The watchlist: the active worlds, the selected one marked, its figures equal to the chart's.
-  const active=overview.worlds.filter(w=>!w.ended).map(w=>w.world).sort((a,b)=>a.localeCompare(b));
+  const active=['All',...overview.worlds.filter(w=>!w.ended && w.dir!=='all').map(w=>w.world).sort((a,b)=>a.localeCompare(b))];
   assert.deepEqual(await listed(),active);
-  assert.equal(await text('#worldCount'),String(active.length));
+  assert.equal(await text('#worldCount'),String(active.length-1));
   assert.equal(await page.getAttribute('#worlds tr[data-world="Antica"]','aria-selected'),'true');
   assert.deepEqual((await row('Antica')).slice(1),[gold(e.value),percent.format(e.change.ratio)],'the list and the chart agree');
   // Sorted by gold per day, largest first, then back by name.
@@ -125,6 +125,46 @@ try {
   assert.ok((await listed()).includes(retired.world));
   assert.equal(await page.$eval(`#worlds tr[data-world="${retired.world}"] .flag-retired`,f=>f.textContent),'R');
   await page.fill('#filter','');
+
+  // All sums the gold of the worlds present on each date; TC prices have no additive global unit.
+  await page.click('#worlds tr[data-world="All"] .pick'); await shown('All');
+  assert.equal(param('world'),'All');
+  assert.equal(await page.getAttribute('#priceToggle','disabled'),'');
+  assert.match(await page.getAttribute('#priceToggle','title'),/world-specific/);
+  assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('left').options().visible),false);
+  assert.ok(await page.evaluate(()=>window.economyTestSeries[1].data().every(p=>p.value===undefined)));
+  assert.doesNotMatch(await text('#legend'),/TC Sell Offer/);
+  assert.match(await page.locator('#chartData thead').textContent(),/World-days with data/);
+  assert.doesNotMatch(await page.locator('#chartData thead').textContent(),/TC Sell/);
+  const globalHistory=await daily('all');
+  for (const interval of ['day','month','week']) {
+    await page.click(`#interval [data-interval="${interval}"]`);
+    const total=await expected('all',interval,'gross','1Y');
+    assert.equal(await text('#lastValue'),gold(total.value));
+    assert.equal((await row('All'))[1],gold(total.value),'the global watchlist and chart agree');
+    assert.ok((await text('#detailNote')).includes(`${total.last.worldDaysCovered.toLocaleString('en-US')}/${total.last.worldDays.toLocaleString('en-US')} world-days`));
+  }
+  if (shots) await page.screenshot({path:join(shots,`economy-${engine}-all-worlds.png`)});
+  await page.click('#range [data-range="All"]');
+  await page.click('#valueMode [data-mode="accumulated"]');
+  const globalLast=(await expected('all','week','gross','All')).last;
+  const globalSum=sumPeriod(globalHistory,[globalHistory.first,globalLast.end]);
+  assert.equal(await text('#lastValue'),gold(globalSum.grossPotential));
+  assert.ok(globalSum.grossPotential>0);
+  await page.reload(); await ready();
+  assert.equal(await text('#world'),'All');
+  assert.equal(await text('#lastValue'),gold(globalSum.grossPotential),'global accumulation survives reload');
+  await page.setViewportSize({width:390,height:844}); await page.waitForTimeout(200);
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth),0,'All fits a phone viewport');
+  if (shots) await page.screenshot({path:join(shots,`economy-${engine}-all-worlds-390.png`)});
+  await page.click('[data-dock-target="creaturesPanel"]');
+  assert.match(await text('#creatureNote'),/individual world/);
+  await page.setViewportSize({width:1440,height:900}); await page.waitForTimeout(100);
+  if (!await page.locator('#worldsPanel').isVisible()) await page.click('[data-dock-target="worldsPanel"]');
+  await page.click('#worlds tr[data-world="Antica"] .pick'); await shown('Antica');
+  assert.equal(await page.getAttribute('#priceToggle','aria-pressed'),'true','world-specific price preference survives All');
+  await page.click('#valueMode [data-mode="daily"]');
+  await page.click('#range [data-range="1Y"]');
 
   // ---- Another world from the list: the chart, the status and the address follow.
   await page.click('#worlds tr[data-world="Gentebra"] .pick');

@@ -31,9 +31,11 @@ const FIELDS = ['directCoins', 'npcPotential', 'kills', 'killsValued', 'playerDe
 export function sumPeriod(world, [start, end]) {
   const from = Math.max(0, dayIndex(world, start)), to = Math.min(world.status.length - 1, dayIndex(world, end));
   const out = Object.fromEntries(FIELDS.map(f => [f, 0]));
-  let observed = 0, recovered = 0, missing = 0;
+  let observed = 0, recovered = 0, missing = 0, worldDays = 0, worldDaysCovered = 0;
   const span = Math.round((Date.parse(`${end}T00:00:00Z`) - Date.parse(`${start}T00:00:00Z`)) / DAY) + 1;
   for (let i = from; i <= to; i++) {
+    worldDays += world.worldsExpected?.[i] ?? 0;
+    worldDaysCovered += world.worldsCovered?.[i] ?? 0;
     const s = world.status[i];
     if (s === 'm') { missing++; continue; }
     s === 'r' ? recovered++ : observed++;
@@ -43,6 +45,7 @@ export function sumPeriod(world, [start, end]) {
   const outside = span - (to >= from ? to - from + 1 : 0);
   if (!covered) for (const f of FIELDS) out[f] = null;
   return { start, end, days: span, covered, observed, recovered, missing, outsideData: outside, complete: covered === span,
+    ...(world.worldsExpected ? { worldDays, worldDaysCovered } : {}),
     ...out, grossPotential: covered ? out.directCoins + out.npcPotential : null, killCoverage: out.kills ? out.killsValued / out.kills : null };
 }
 

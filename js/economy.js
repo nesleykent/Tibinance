@@ -14,7 +14,7 @@
 import { fmt, esc, num } from './format.js';
 import { dock } from './markets-dock.js';
 import { MEASURES, INTERVALS, ratePeriods, accumulatedPeriods, rangeChange, rangeStartOf, overviewRows, periodOf, contributions, lastDay, median,
-  LIQUIDATION_SCENARIOS } from './economy-data.js?v=20261014-series';
+  LIQUIDATION_SCENARIOS } from './economy-data.js?v=20261014-global';
 import { economyChart, colors } from './economy-chart.js?v=20261014-series';
 
 const $ = id => document.getElementById(id);
@@ -69,11 +69,11 @@ addEventListener('pageshow', e => {
 const json = async path => { const r = await fetch(path, { signal: requests.signal }); if (!r.ok) throw new Error(`${path}: HTTP ${r.status}`); return r.json(); };
 const optional = path => json(path).catch(() => null);
 function worldFiles(w) {
-  if (!files.has(w.dir)) files.set(w.dir, Promise.all([json(`data/economy/gold/worlds/${w.dir}.json`), json(`data/economy/gold/contributions/${w.dir}.json`)])
+  if (!files.has(w.dir)) files.set(w.dir, Promise.all([json(`data/economy/gold/worlds/${w.dir}.json`), w.dir === 'all' ? Promise.resolve({ months: [] }) : json(`data/economy/gold/contributions/${w.dir}.json`)])
     .then(([daily, contrib]) => ({ daily, contrib })).catch(e => { files.delete(w.dir); throw e; }));
   return files.get(w.dir);
 }
-const summaryOf = world => data.index.worlds.find(w => w.world === world);
+const summaryOf = world => (world === 'All' ? data.overview.worlds.find(w => w.world === 'All') : data.index.worlds.find(w => w.world === world));
 const marketOf = world => data.market?.worlds.find(w => w.world === world) ?? null;
 const latestDay = () => data.index.worlds.map(w => w.last).sort().at(-1);
 
@@ -147,7 +147,7 @@ function draw({ preserveRange = false } = {}) {
   $('priceToggle').setAttribute('aria-pressed', String(state.price && Boolean(view.lastPrice)));
   $('priceToggle').title = view.lastPrice
     ? `${state.price ? 'Hide' : 'Show'} the Tibia Coin Sell Offer price; gold per TC on the left scale. Latest observed ${periodLabel(view.lastPrice)}.`
-    : 'No Tibia Coin price observations for this world’s recorded history.';
+    : state.world === 'All' ? 'Tibia Coin prices are world-specific and are not summed for All.' : 'No Tibia Coin price observations for this world’s recorded history.';
   $('priceToggle').disabled = !view.lastPrice;
   showQuote();
   showLegend(null);
@@ -182,6 +182,7 @@ function periodLabel(p, interval = state.interval) {
   return `${d.toLocaleString('en-US', { month: 'long', timeZone: 'UTC' })} ${d.getUTCFullYear()}`;
 }
 function metaOf(world) {
+  if (world === 'All') return `<span>All worlds</span><span>${fmt(view.summary.latestWorldCount)} worlds on ${esc(view.end)}</span>`;
   const m = marketOf(world);
   return [m?.type && `<span>${esc(m.type)}</span>`, m?.battleye && `<span>BattlEye <span class="be-${esc(m.battleye)}">${esc(m.battleye)}</span></span>`,
     m?.location && `<span>${esc(m.location)}</span>`, view?.ended && `<span class="tag">Ended ${esc(view.summary.last)}</span>`].filter(Boolean).join('');
@@ -202,7 +203,7 @@ function showQuote() {
   const a = p && view.accumulated.get(p.start);
   $('through').textContent = state.mode === 'accumulated'
     ? `Accumulated gold (log scale), ${a?.from ?? ''} to ${p?.end ?? view.end}. ${a ? `${a.covered}/${a.days} days with data${a.complete ? '' : ' (partial subtotal)'}. ` : ''}Kills per day.`
-    : `Gold per day by ${UNIT[state.interval]}. History ${view.daily.first} to ${view.end}`;
+    : `Gold per day by ${UNIT[state.interval]}. History ${view.daily.first} to ${view.end}${p?.worldDays !== undefined ? `. ${p.worldDaysCovered}/${p.worldDays} world-days with data` : ''}`;
 }
 
 /*
@@ -237,7 +238,7 @@ function showLegend(day) {
   if (state.kills) rows.push(extra(`${key('key-volume', KEY[state.measure])}Kills/day`, gold(p.rate.kills), `<span class="meta">${pct1(p.killCoverage)} valued</span>`, true));
   if (state.stable && values.grossPotential !== null) rows.push(extra(`${key('eco-key-dashed', 'var(--accent)')}Constant set`, gold(values.grossStable), '<span class="meta">comparison</span>', true));
   if (state.rate !== null && values.grossPotential !== null) rows.push(extra(`${key('eco-key-dashed', 'var(--caution)')}Gold + ${state.rate * 100}% NPC`, gold(values.directCoins + state.rate * values.npcPotential), '<span class="meta">assumption</span>', true));
-  if (state.price) {
+  if (state.price && view.lastPrice) {
     const pricedPeriod = !day && !view.price.has(p.start) ? view.lastPrice : p;
     const q = pricedPeriod && view.price.get(pricedPeriod.start);
     rows.push(extra(`${key('key-average', 'var(--average)')}TC Sell Offer`, q ? gold(q.sell) : 'N/A', `<span class="meta">${q ? `median of ${fmt(q.n)} day${q.n === 1 ? '' : 's'}${pricedPeriod !== p ? `, last observed ${esc(periodLabel(pricedPeriod))}` : ''}` : 'not observed'}</span>`, true));
@@ -269,13 +270,15 @@ function drawChartData() {
   $('chartData').innerHTML = `<caption class="sr-only">${unit} at the selected interval, from valued creatures. Accumulated subtotals exclude missing days.</caption><thead><tr><th>Period</th><th class="num">Gross (${unit})</th><th class="num">Gold (${unit})</th><th class="num">NPC (${unit})</th>`
     + extras.map(e => `<th class="num">${esc(e.title)}</th>`).join('')
     + '<th class="num">Kills/day</th><th>Days with data</th><th class="num">Kill coverage</th>'
+    + (view.daily.worldsExpected ? '<th>World-days with data</th>' : '')
     + (state.mode === 'accumulated' ? '<th>Accumulated days with data</th>' : '')
-    + (state.price ? '<th class="num">TC Sell (gold/coin)</th><th class="num">Price days</th>' : '') + '</tr></thead><tbody>'
+    + (state.price && view.lastPrice ? '<th class="num">TC Sell (gold/coin)</th><th class="num">Price days</th>' : '') + '</tr></thead><tbody>'
     + [...view.periods].reverse().map(p => `<tr${p === view.last ? ' class="current"' : ''}><td>${esc(periodLabel(p))}</td>`
       + [view.values.get(p.start).grossPotential, view.values.get(p.start).directCoins, view.values.get(p.start).npcPotential, ...extras.map(e => e.value(p)), p.rate.kills].map(v => `<td class="num">${gold(v)}</td>`).join('')
       + `<td>${p.covered} / ${p.days}${p.complete ? '' : ' incomplete'}</td><td class="num">${pct1(p.killCoverage)}</td>`
+      + (view.daily.worldsExpected ? `<td>${p.worldDaysCovered} / ${p.worldDays}</td>` : '')
       + (state.mode === 'accumulated' ? `<td>${view.values.get(p.start).grossPotential === null ? 'N/A' : `${view.values.get(p.start).covered} / ${view.values.get(p.start).days}${view.values.get(p.start).complete ? '' : ' partial subtotal'}`}</td>` : '')
-      + (state.price ? `<td class="num">${gold(view.price.get(p.start)?.sell)}</td><td class="num">${view.price.get(p.start)?.n ?? 0}</td>` : '') + '</tr>').join('') + '</tbody>';
+      + (state.price && view.lastPrice ? `<td class="num">${gold(view.price.get(p.start)?.sell)}</td><td class="num">${view.price.get(p.start)?.n ?? 0}</td>` : '') + '</tr>').join('') + '</tbody>';
 }
 
 /* --------------------------------------------------------------- watchlist */
@@ -284,7 +287,7 @@ function drawChartData() {
 function watchList() {
   const list = overviewRows(data.overview, state.interval, state.measure, state.range, state.filter);
   const { key: k, dir } = state.sort;
-  return list.sort((a, b) => (k === 'world' ? a.world.localeCompare(b.world) * dir
+  return list.sort((a, b) => a.dir === 'all' ? -1 : b.dir === 'all' ? 1 : (k === 'world' ? a.world.localeCompare(b.world) * dir
     : a[k] === null ? (b[k] === null ? a.world.localeCompare(b.world) : 1) : b[k] === null ? -1 : (a[k] - b[k]) * dir));
 }
 
@@ -293,7 +296,7 @@ function drawWatchlist() {
   const active = document.activeElement;
   const focusedWorld = active.closest('#worlds tr[data-world]')?.dataset.world;
   const list = watchList();
-  $('worldCount').textContent = fmt(list.length);
+  $('worldCount').textContent = fmt(list.filter(r => r.dir !== 'all').length);
   $('noWorlds').hidden = list.length > 0;
   for (const th of document.querySelectorAll('table.watch thead th')) {
     const k = th.querySelector('button').dataset.sort;
@@ -321,7 +324,7 @@ function showDetails() {
   $('detailChange').innerHTML = change ? `${signedDelta(change.delta)} ${signedRatio(change.ratio)}` : '';
   $('detailChangeLabel').textContent = change ? `Change ${state.range}` : `Change ${state.range}: not enough complete periods`;
   const online = data.vip?.observations.find(o => o.world === state.world && o.metric === 'characters-online');
-  $('detailNote').innerHTML = (p ? `Latest complete ${UNIT[state.interval]} <span>${esc(periodLabel(p))}</span>${change ? `, against <span>${esc(periodLabel(change.from))}</span>` : ''}<br>` : '')
+  $('detailNote').innerHTML = (state.world === 'All' ? `Sum of ${fmt(s.worldCount)} world histories, each during its recorded dates. Retired worlds are included until their last record.<br>${p ? `${fmt(p.worldDaysCovered)}/${fmt(p.worldDays)} world-days with data in this period.<br>` : ''}` : '') + (p ? `Latest complete ${UNIT[state.interval]} <span>${esc(periodLabel(p))}</span>${change ? `, against <span>${esc(periodLabel(change.from))}</span>` : ''}<br>` : '')
     + `Kill days <span>${esc(s.first)}</span> to <span>${esc(s.last)}</span>: ${fmt(s.observed)} observed, ${fmt(s.recovered)} recovered exactly, ${fmt(s.missing)} missing`
     + (online ? `<br>TibiaVIP, ${esc(data.vip.observedAt.slice(0, 10))}: <span>${fmt(online.value)}</span> characters online at one instant` : '');
   $('detailCoins').textContent = p ? gold(p.rate.directCoins) : 'N/A';
@@ -339,7 +342,7 @@ function showDetails() {
 // latest complete month until another is chosen.
 function drawCreatures() {
   const months = view.contrib.months.map(m => m.month).sort().reverse();
-  if (!months.length) { $('creatureMonth').innerHTML = ''; $('creatureList').innerHTML = ''; $('creatureNote').textContent = 'No creature contributions for this world.'; return; }
+  if (!months.length) { $('creatureMonth').innerHTML = ''; $('creatureList').innerHTML = ''; $('creatureNote').textContent = state.world === 'All' ? 'Choose an individual world for its creature breakdown. Monthly world top-30 lists cannot establish a complete global creature ranking.' : 'No creature contributions for this world.'; return; }
   const complete = months.filter(m => periodOf(`${m}-01`, 'month')[1] <= view.end);
   const month = state.month && months.includes(state.month) ? state.month : (complete[0] ?? months[0]);
   $('creatureMonth').innerHTML = months.map(m => `<option value="${m}"${m === month ? ' selected' : ''}>${m}${complete.includes(m) ? '' : ' (unfinished)'}</option>`).join('');
