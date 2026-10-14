@@ -15,7 +15,7 @@ import { fmt, esc, num } from './format.js';
 import { dock } from './markets-dock.js';
 import { MEASURES, INTERVALS, ratePeriods, accumulatedPeriods, rangeChange, rangeStartOf, overviewRows, periodOf, contributions, lastDay, sellOfferPeriods,
   LIQUIDATION_SCENARIOS } from './economy-data.js?v=20261014-global-price';
-import { economyChart, colors } from './economy-chart.js?v=20261014-tv';
+import { economyChart, colors } from './economy-chart.js?v=20261014-review';
 import { connect, changed } from './tv-bridge.js';
 
 const $ = id => document.getElementById(id);

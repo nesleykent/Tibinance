@@ -17,14 +17,14 @@
  */
 import { fmt, esc, num } from './format.js';
 import { RANGES, changeOver, dayGrid, daysBetween, marketValues, neighbours, rangeStart, statisticsAt } from './market-series.js';
-import { SIDES, createMarketChart, dayOf } from './market-chart.js?v=20261014-rebuild';
+import { SIDES, createMarketChart, dayOf } from './market-chart.js?v=20261014-tv';
 import { dock } from './markets-dock.js';
-import { marketImage } from './market-export.js?v=20261014-rebuild';
+import { marketImage } from './market-export.js?v=20261014-tv';
 import { loadEvents as readEvents, eventsFor, lifecycleSpan, addEventDays } from './events.js';
 import { eventsPanel } from './market-events-panel.js?v=20261014-rebuild';
 import { eventMarks } from './market-events-ui.js?v=20261014-rebuild';
 import { PROJECTIONS, forwardEnd, pointText, projectionFor, weekOf } from './market-projections.js';
-import { screenerPanel } from './market-screener-panel.js?v=20261004-chart-first';
+import { screenerPanel } from './market-screener-panel.js?v=20261014-review';
 import { historyPanel } from './market-forecast-history.js?v=20261014-rebuild';
 import { historyAhead, weekEnding } from './forecast-archive.js?v=20261014-rebuild';
 import { connect, changed } from './tv-bridge.js';
