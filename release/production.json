@@ -1,14 +1,14 @@
 {
  "format": 1,
- "note": "Add All in Worlds with global daily and accumulated gold totals, source reconciliation and explicit world-day coverage.",
- "approver": "Repository owner approved site publication and requested adding All worlds; Codex verified Chrome and WebKit",
+ "note": "Show Tibia Coin price on All using observed daily cross-world medians, explicit quote coverage and a separate linear TC axis.",
+ "approver": "Repository owner explicitly approved publishing c99a4cd now; Codex verified Chrome, WebKit and CI",
  "artifact": {
-  "bytes": 139402940,
-  "digest": "6a849883937023ff9bfbb868a4d4b3a1659612e79d7f8b47ce68536735c1b334",
-  "files": 933
+  "bytes": 139411373,
+  "digest": "9138ac8b7ecbf68d292b2a04138f9979f2c169b32a9325832dd767c80126a7cd",
+  "files": 934
  },
- "commit": "5a57288a129d7d78f8872a5f680c9cd97071c94c",
- "createdAt": "2026-10-14T14:20:15.778Z",
+ "commit": "c99a4cd81dd7b33cc42aa73d4eb8fd20a91973e5",
+ "createdAt": "2026-10-14T14:37:07.298Z",
  "kind": "full",
  "policy": {
   "dataPaths": [
@@ -34,10 +34,10 @@
  },
  "policySha256": "8598ea053fc9fba9189b10e9c9bbbd33f9b89b36ab503161a844995d81008ad9",
  "source": {
-  "commit": "5a57288a129d7d78f8872a5f680c9cd97071c94c"
+  "commit": "c99a4cd81dd7b33cc42aa73d4eb8fd20a91973e5"
  },
- "tag": "release/0010",
- "tree": "fdcd081f15e73f8845d5f491803007021cba5bd5",
+ "tag": "release/0011",
+ "tree": "0f3307790966ac948fb1146663a08adb8e312cbe",
  "validation": {
   "checks": [
    {
@@ -78,12 +78,12 @@
    }
   ],
   "validator": {
-   "commit": "5a57288a129d7d78f8872a5f680c9cd97071c94c",
+   "commit": "c99a4cd81dd7b33cc42aa73d4eb8fd20a91973e5",
    "path": "tools/ci/validate_site.mjs"
   }
  },
  "record": {
-  "seq": 10,
-  "hash": "1dd19f091d733c0c713504811319c2ccc28f59ffe1f8ad0b4198add67a9b8652"
+  "seq": 11,
+  "hash": "c3405706d02512ee25bcde324928c79548d1a5b6cf085b925ca5d8c2bda6f465"
  }
 }
