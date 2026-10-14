@@ -42,3 +42,12 @@ test('the daily average labelled D is stored as the average of D - 1, with its l
   const mean = hourly.reduce((s, r) => s + r.value, 0) / hourly.length;
   assert.ok(Math.abs(mean / d.value - 1) < 0.002, `${mean} vs ${d.value}`);
 });
+
+import { parseWorlds } from '../tools/economy/population/import_tibiavip_snapshot.mjs';
+test('a TibiaVIP worlds page keeps its own meanings and every listed world', () => {
+  const text = 'Name Online Total Guilds Location Pvp Type\n96 worlds found.\nAntica 1,013 319,190 113 Europe Open PvP\nGladibra 24 163,790 3 South America Retro Open PvP\nZunera 12 75,915 2 North America Hardcore PvP\n';
+  const { rows, stated } = parseWorlds(text);
+  assert.equal(stated, 96);
+  assert.deepEqual(rows[1], { world: 'Gladibra', online: 24, knownCharacters: 163790, guilds: 3, location: 'South America', pvpType: 'Retro Open PvP' });
+  assert.equal(rows.length, 3);
+});

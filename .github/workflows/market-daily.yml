@@ -39,6 +39,8 @@ jobs:
         run: |
           git config --global user.name 'Tibinance data bot'
           git config --global user.email 'tibinance-bot@users.noreply.github.com'
+      - name: Population sources (access status; collected only where a source answers normally)
+        run: node tools/economy/population/collect_gated.mjs
       - name: Fetch, rebuild, evaluate, validate, publish and release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -46,4 +48,5 @@ jobs:
         run: >
           node tools/sync_market.mjs --fetch --publish --release --dispatch
           --approver "GitHub Actions market sync (validated data release)"
+          --with data/economy/population
           --message "Market data sync: TibiaMarket history, validated and archived"

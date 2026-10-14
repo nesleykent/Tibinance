@@ -1,0 +1,46 @@
+# Prospective online counts: one TibiaData request every 30 minutes, appended to the data/online-samples branch
+# (tools/economy/population/sample_tibiadata.mjs). The frequent commits stay off main, so they never deploy or
+# disturb checkpoints. Labelled prospective everywhere: it starts now and never stands in for historical data.
+name: Online sampler
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: online-sampler
+  cancel-in-progress: false
+
+jobs:
+  sample:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '26'
+      - name: Sample and append to the data branch
+        run: |
+          git config --global user.name 'Tibinance data bot'
+          git config --global user.email 'tibinance-bot@users.noreply.github.com'
+          if git ls-remote --exit-code --heads origin data/online-samples > /dev/null; then
+            git fetch -q origin data/online-samples
+            git worktree add -q ../samples -B data/online-samples origin/data/online-samples
+          else
+            git worktree add -q --orphan -b data/online-samples ../samples
+          fi
+          node tools/economy/population/sample_tibiadata.mjs ../samples/tibiadata
+          cd ../samples
+          git add -A
+          git commit -q -m "TibiaData online sample"
+          for attempt in 1 2 3; do
+            git push -q origin data/online-samples && exit 0
+            git pull -q --rebase origin data/online-samples
+          done
+          exit 1

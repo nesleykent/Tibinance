@@ -17,13 +17,12 @@ Never force-push, never reset, never redo finished work.
 - **Stage:** C. **C1 to C5 are done on real data and committed by this commit.** Next is D (population), then E.
 - **Production:** `release/0003`, a **data release** made by the forecast-archive workflow on top of
   `release/0002`. Live verified: 543/543 files.
-- **Exact next action:** Stage D.
-  1. Run `node tools/economy/population/wayback_guildstats.mjs` and commit `data/economy/population/`.
-  2. Add the TibiaVIP PDF snapshot importer.
-  3. Add the permission-gated GuildStats and TibiaVIP collectors (they log `blocked-challenge`).
-  4. Add the prospective TibiaData online sampler workflow.
+- **Exact next action:**
+  1. Finish the Wayback import (`node tools/economy/population/wayback_guildstats.mjs`; resumable, it caches each
+     capture in `.cache/economy/wayback/`). Commit `data/economy/population/guildstats-wayback/`.
+  2. Dispatch `online-sampler.yml` once and confirm the `data/online-samples` branch.
+  3. Stage E: econometrics in `reports/economy/`.
 
-  Then Stage E (econometrics in `reports/economy/`).
 - **Caches for this data** (local only; another agent must regenerate them):
   - `node tools/economy/ingest_killstats.mjs --full` (about 2 h);
   - `node tools/economy/fetch_loot.mjs` (about 2 h; 6,605 requests);
@@ -302,6 +301,20 @@ Never force-push, never reset, never redo finished work.
     - **Large daily swings** (2.4×, for example 2023-06-02 and 06-05) are kill-volume changes, probably game
       events; check them against the Events data in Stage E.
   - `tests/economy-map.test.mjs`: 3 tests. JS suite: 185 pass.
+- **Stage D so far:**
+  - `tools/economy/population/wayback_guildstats.mjs` reads every archived label format and verifies each daily
+    series' meaning against the same page's hourly data (median relative error under 1%); otherwise it stays
+    unverified. Unknown formats are skipped and reported. On the 2025-05-18 page, previous-day average:
+    25 of 28 days within 1%.
+  - `import_tibiavip_snapshot.mjs` together with `pdf_text.swift`. The snapshot
+    `data/economy/population/tibiavip-snapshot/2026-10-13.json` has 96 worlds (online, characters-known-total,
+    guilds; observedAt 2026-10-13T19:36:43Z from the saved PDF, SHA-256 recorded).
+  - `collect_gated.mjs` makes one plain request each to GuildStats and TibiaVIP. Both are `blocked-challenge`
+    (HTTP 403) since 2026-10-14T02:41Z (`data/economy/population/access.json`); nothing is collected and nothing
+    is circumvented. It runs daily in `market-daily.yml`.
+  - `sample_tibiadata.mjs` and `.github/workflows/online-sampler.yml`: every 30 min, on the `data/online-samples`
+    branch (prospective; first local sample 2026-10-14T02:40:47Z: 96 worlds, 13,379 online).
+  - Population tests: 5. JS suite: 186 pass.
 - **Incident (Stage B tests):** the first run of `test_archive.py` wrote into the working copy of the real
   archive, because default arguments bound the paths at import. The 5 stray records (basis `test`) and 4 objects were never committed;
     they were removed and the committed archive was restored. Paths now resolve at call time, and the test class

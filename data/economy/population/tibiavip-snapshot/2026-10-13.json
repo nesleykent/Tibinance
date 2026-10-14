@@ -1,0 +1,3092 @@
+{
+ "format": 1,
+ "source": "tibiavip-snapshot",
+ "page": "https://tibiavip.app/worlds",
+ "observedAt": "2026-10-13T19:36:43Z",
+ "savedFile": {
+  "name": "Worlds - TibiaVIP.pdf",
+  "sha256": "576062f595d676d0591268d17e48dbe9402407e5d30a7eb627edd1f69b355e7e",
+  "savedBy": "project owner, in a browser"
+ },
+ "definitions": {
+  "characters-online": "characters online when TibiaVIP made the page",
+  "characters-known-total": "all characters TibiaVIP knows on the world, inactive ones included; not an active population",
+  "guilds": "guilds on the world"
+ },
+ "worldFacts": [
+  {
+   "world": "Aethera",
+   "location": "North America",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Antica",
+   "location": "Europe",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Astera",
+   "location": "North America",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Belobra",
+   "location": "South America",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Blumera",
+   "location": "North America",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Bona",
+   "location": "Europe",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Bravoria",
+   "location": "Europe",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Calmera",
+   "location": "North America",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Cantabra",
+   "location": "South America",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Celebra",
+   "location": "South America",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Celesta",
+   "location": "Europe",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Citra",
+   "location": "Europe",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Collabra",
+   "location": "South America",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Descubra",
+   "location": "South America",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Dia",
+   "location": "Europe",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Dracobra",
+   "location": "South America",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Eclipta",
+   "location": "Europe",
+   "pvpType": "Retro Open PvP"
+  },
+  {
+   "world": "Epoca",
+   "location": "Europe",
+   "pvpType": "Retro Open PvP"
+  },
+  {
+   "world": "Escura",
+   "location": "Europe",
+   "pvpType": "Retro Open PvP"
+  },
+  {
+   "world": "Etebra",
+   "location": "South America",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Ferobra",
+   "location": "South America",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Firmera",
+   "location": "North America",
+   "pvpType": "Retro Open PvP"
+  },
+  {
+   "world": "Floribra",
+   "location": "South America",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Gentebra",
+   "location": "South America",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Gladera",
+   "location": "North America",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Gladibra",
+   "location": "South America",
+   "pvpType": "Retro Open PvP"
+  },
+  {
+   "world": "Harmonia",
+   "location": "Europe",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Havera",
+   "location": "North America",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Honbra",
+   "location": "South America",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Hostera",
+   "location": "North America",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Idyllia",
+   "location": "Europe",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Ignibra",
+   "location": "South America",
+   "pvpType": "Retro Open PvP"
+  },
+  {
+   "world": "Ignitera",
+   "location": "North America",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Inabra",
+   "location": "South America",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Issobra",
+   "location": "South America",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Jadebra",
+   "location": "South America",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Jinxibra",
+   "location": "South America",
+   "pvpType": "Retro Open PvP"
+  },
+  {
+   "world": "Junera",
+   "location": "North America",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Kalanta",
+   "location": "Europe",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Kalibra",
+   "location": "South America",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Kalimera",
+   "location": "North America",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Kanda",
+   "location": "Europe",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Karmeya",
+   "location": "Europe",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Lobera",
+   "location": "North America",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Luminera",
+   "location": "North America",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Lutabra",
+   "location": "South America",
+   "pvpType": "Retro Open PvP"
+  },
+  {
+   "world": "Luzibra",
+   "location": "South America",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Maligna",
+   "location": "Europe",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Menera",
+   "location": "North America",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Monstera",
+   "location": "North America",
+   "pvpType": "Retro Hardcore PvP"
+  },
+  {
+   "world": "Monza",
+   "location": "Europe",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Mystera",
+   "location": "North America",
+   "pvpType": "Retro Open PvP"
+  },
+  {
+   "world": "Nefera",
+   "location": "North America",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Nevia",
+   "location": "Europe",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Noctalia",
+   "location": "Europe",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Oceanis",
+   "location": "Oceania",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Ombra",
+   "location": "South America",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Opulera",
+   "location": "North America",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Ourobra",
+   "location": "South America",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Pacera",
+   "location": "North America",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Peloria",
+   "location": "Europe",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Penumbra",
+   "location": "South America",
+   "pvpType": "Retro Open PvP"
+  },
+  {
+   "world": "Premia",
+   "location": "Europe",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Quelibra",
+   "location": "South America",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Quidera",
+   "location": "North America",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Quintera",
+   "location": "North America",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Rasteibra",
+   "location": "South America",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Refugia",
+   "location": "Europe",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Retalia",
+   "location": "Europe",
+   "pvpType": "Retro Hardcore PvP"
+  },
+  {
+   "world": "Secura",
+   "location": "Europe",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Serdebra",
+   "location": "South America",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Sinistra",
+   "location": "Europe",
+   "pvpType": "Retro Open PvP"
+  },
+  {
+   "world": "Solidera",
+   "location": "North America",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Sombra",
+   "location": "South America",
+   "pvpType": "Retro Open PvP"
+  },
+  {
+   "world": "Sonira",
+   "location": "Europe",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Stralis",
+   "location": "Oceania",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Talera",
+   "location": "North America",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Tempestera",
+   "location": "North America",
+   "pvpType": "Retro Open PvP"
+  },
+  {
+   "world": "Terribra",
+   "location": "South America",
+   "pvpType": "Retro Hardcore PvP"
+  },
+  {
+   "world": "Thyria",
+   "location": "Europe",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Tornabra",
+   "location": "South America",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Unebra",
+   "location": "South America",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Ustebra",
+   "location": "South America",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Venebra",
+   "location": "South America",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Victoris",
+   "location": "Oceania",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Vunira",
+   "location": "Europe",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Wickera",
+   "location": "North America",
+   "pvpType": "Retro Open PvP"
+  },
+  {
+   "world": "Wintera",
+   "location": "North America",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Xybra",
+   "location": "South America",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Xyla",
+   "location": "Europe",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Xymera",
+   "location": "North America",
+   "pvpType": "Open PvP"
+  },
+  {
+   "world": "Yonabra",
+   "location": "South America",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Yovera",
+   "location": "North America",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Yubra",
+   "location": "South America",
+   "pvpType": "Optional PvP"
+  },
+  {
+   "world": "Zuna",
+   "location": "Europe",
+   "pvpType": "Hardcore PvP"
+  },
+  {
+   "world": "Zunera",
+   "location": "North America",
+   "pvpType": "Hardcore PvP"
+  }
+ ],
+ "observations": [
+  {
+   "world": "Aethera",
+   "metric": "characters-online",
+   "value": 40,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Aethera",
+   "metric": "characters-known-total",
+   "value": 6935,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Aethera",
+   "metric": "guilds",
+   "value": 10,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Antica",
+   "metric": "characters-online",
+   "value": 1013,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Antica",
+   "metric": "characters-known-total",
+   "value": 319190,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Antica",
+   "metric": "guilds",
+   "value": 113,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Astera",
+   "metric": "characters-online",
+   "value": 329,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Astera",
+   "metric": "characters-known-total",
+   "value": 108075,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Astera",
+   "metric": "guilds",
+   "value": 86,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Belobra",
+   "metric": "characters-online",
+   "value": 334,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Belobra",
+   "metric": "characters-known-total",
+   "value": 113243,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Belobra",
+   "metric": "guilds",
+   "value": 63,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Blumera",
+   "metric": "characters-online",
+   "value": 136,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Blumera",
+   "metric": "characters-known-total",
+   "value": 31135,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Blumera",
+   "metric": "guilds",
+   "value": 41,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Bona",
+   "metric": "characters-online",
+   "value": 480,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Bona",
+   "metric": "characters-known-total",
+   "value": 129108,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Bona",
+   "metric": "guilds",
+   "value": 66,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Bravoria",
+   "metric": "characters-online",
+   "value": 105,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Bravoria",
+   "metric": "characters-known-total",
+   "value": 8398,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Bravoria",
+   "metric": "guilds",
+   "value": 10,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Calmera",
+   "metric": "characters-online",
+   "value": 199,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Calmera",
+   "metric": "characters-known-total",
+   "value": 88193,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Calmera",
+   "metric": "guilds",
+   "value": 58,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Cantabra",
+   "metric": "characters-online",
+   "value": 89,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Cantabra",
+   "metric": "characters-known-total",
+   "value": 14320,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Cantabra",
+   "metric": "guilds",
+   "value": 6,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Celebra",
+   "metric": "characters-online",
+   "value": 216,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Celebra",
+   "metric": "characters-known-total",
+   "value": 50324,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Celebra",
+   "metric": "guilds",
+   "value": 39,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Celesta",
+   "metric": "characters-online",
+   "value": 545,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Celesta",
+   "metric": "characters-known-total",
+   "value": 89790,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Celesta",
+   "metric": "guilds",
+   "value": 64,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Citra",
+   "metric": "characters-online",
+   "value": 114,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Citra",
+   "metric": "characters-known-total",
+   "value": 15352,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Citra",
+   "metric": "guilds",
+   "value": 15,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Collabra",
+   "metric": "characters-online",
+   "value": 190,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Collabra",
+   "metric": "characters-known-total",
+   "value": 62142,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Collabra",
+   "metric": "guilds",
+   "value": 23,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Descubra",
+   "metric": "characters-online",
+   "value": 226,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Descubra",
+   "metric": "characters-known-total",
+   "value": 92198,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Descubra",
+   "metric": "guilds",
+   "value": 29,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Dia",
+   "metric": "characters-online",
+   "value": 366,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Dia",
+   "metric": "characters-known-total",
+   "value": 37105,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Dia",
+   "metric": "guilds",
+   "value": 33,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Dracobra",
+   "metric": "characters-online",
+   "value": 74,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Dracobra",
+   "metric": "characters-known-total",
+   "value": 14142,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Dracobra",
+   "metric": "guilds",
+   "value": 10,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Eclipta",
+   "metric": "characters-online",
+   "value": 37,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Eclipta",
+   "metric": "characters-known-total",
+   "value": 46991,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Eclipta",
+   "metric": "guilds",
+   "value": 5,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Epoca",
+   "metric": "characters-online",
+   "value": 62,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Epoca",
+   "metric": "characters-known-total",
+   "value": 58173,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Epoca",
+   "metric": "guilds",
+   "value": 8,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Escura",
+   "metric": "characters-online",
+   "value": 2,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Escura",
+   "metric": "characters-known-total",
+   "value": 2993,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Escura",
+   "metric": "guilds",
+   "value": 1,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Etebra",
+   "metric": "characters-online",
+   "value": 93,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Etebra",
+   "metric": "characters-known-total",
+   "value": 31616,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Etebra",
+   "metric": "guilds",
+   "value": 11,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Ferobra",
+   "metric": "characters-online",
+   "value": 275,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Ferobra",
+   "metric": "characters-known-total",
+   "value": 110698,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Ferobra",
+   "metric": "guilds",
+   "value": 51,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Firmera",
+   "metric": "characters-online",
+   "value": 26,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Firmera",
+   "metric": "characters-known-total",
+   "value": 77839,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Firmera",
+   "metric": "guilds",
+   "value": 17,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Floribra",
+   "metric": "characters-online",
+   "value": 108,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Floribra",
+   "metric": "characters-known-total",
+   "value": 9884,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Floribra",
+   "metric": "guilds",
+   "value": 7,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Gentebra",
+   "metric": "characters-online",
+   "value": 256,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Gentebra",
+   "metric": "characters-known-total",
+   "value": 87944,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Gentebra",
+   "metric": "guilds",
+   "value": 56,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Gladera",
+   "metric": "characters-online",
+   "value": 130,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Gladera",
+   "metric": "characters-known-total",
+   "value": 117956,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Gladera",
+   "metric": "guilds",
+   "value": 31,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Gladibra",
+   "metric": "characters-online",
+   "value": 24,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Gladibra",
+   "metric": "characters-known-total",
+   "value": 163790,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Gladibra",
+   "metric": "guilds",
+   "value": 3,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Harmonia",
+   "metric": "characters-online",
+   "value": 442,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Harmonia",
+   "metric": "characters-known-total",
+   "value": 88919,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Harmonia",
+   "metric": "guilds",
+   "value": 57,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Havera",
+   "metric": "characters-online",
+   "value": 247,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Havera",
+   "metric": "characters-known-total",
+   "value": 196121,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Havera",
+   "metric": "guilds",
+   "value": 73,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Honbra",
+   "metric": "characters-online",
+   "value": 230,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Honbra",
+   "metric": "characters-known-total",
+   "value": 102445,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Honbra",
+   "metric": "guilds",
+   "value": 28,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Hostera",
+   "metric": "characters-online",
+   "value": 26,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Hostera",
+   "metric": "characters-known-total",
+   "value": 4908,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Hostera",
+   "metric": "guilds",
+   "value": 5,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Idyllia",
+   "metric": "characters-online",
+   "value": 44,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Idyllia",
+   "metric": "characters-known-total",
+   "value": 5365,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Idyllia",
+   "metric": "guilds",
+   "value": 5,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Ignibra",
+   "metric": "characters-online",
+   "value": 6,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Ignibra",
+   "metric": "characters-known-total",
+   "value": 3638,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Ignibra",
+   "metric": "guilds",
+   "value": 1,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Ignitera",
+   "metric": "characters-online",
+   "value": 38,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Ignitera",
+   "metric": "characters-known-total",
+   "value": 7088,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Ignitera",
+   "metric": "guilds",
+   "value": 3,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Inabra",
+   "metric": "characters-online",
+   "value": 383,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Inabra",
+   "metric": "characters-known-total",
+   "value": 81536,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Inabra",
+   "metric": "guilds",
+   "value": 77,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Issobra",
+   "metric": "characters-online",
+   "value": 134,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Issobra",
+   "metric": "characters-known-total",
+   "value": 25393,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Issobra",
+   "metric": "guilds",
+   "value": 15,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Jadebra",
+   "metric": "characters-online",
+   "value": 187,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Jadebra",
+   "metric": "characters-known-total",
+   "value": 90640,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Jadebra",
+   "metric": "guilds",
+   "value": 19,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Jinxibra",
+   "metric": "characters-online",
+   "value": 29,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Jinxibra",
+   "metric": "characters-known-total",
+   "value": 2244,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Jinxibra",
+   "metric": "guilds",
+   "value": 2,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Junera",
+   "metric": "characters-online",
+   "value": 71,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Junera",
+   "metric": "characters-known-total",
+   "value": 4888,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Junera",
+   "metric": "guilds",
+   "value": 15,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Kalanta",
+   "metric": "characters-online",
+   "value": 220,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Kalanta",
+   "metric": "characters-known-total",
+   "value": 22763,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Kalanta",
+   "metric": "guilds",
+   "value": 27,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Kalibra",
+   "metric": "characters-online",
+   "value": 220,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Kalibra",
+   "metric": "characters-known-total",
+   "value": 73168,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Kalibra",
+   "metric": "guilds",
+   "value": 38,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Kalimera",
+   "metric": "characters-online",
+   "value": 42,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Kalimera",
+   "metric": "characters-known-total",
+   "value": 6468,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Kalimera",
+   "metric": "guilds",
+   "value": 10,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Kanda",
+   "metric": "characters-online",
+   "value": 163,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Kanda",
+   "metric": "characters-known-total",
+   "value": 12543,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Kanda",
+   "metric": "guilds",
+   "value": 17,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Karmeya",
+   "metric": "characters-online",
+   "value": 350,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Karmeya",
+   "metric": "characters-known-total",
+   "value": 88434,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Karmeya",
+   "metric": "guilds",
+   "value": 31,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Lobera",
+   "metric": "characters-online",
+   "value": 301,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Lobera",
+   "metric": "characters-known-total",
+   "value": 239227,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Lobera",
+   "metric": "guilds",
+   "value": 85,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Luminera",
+   "metric": "characters-online",
+   "value": 193,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Luminera",
+   "metric": "characters-known-total",
+   "value": 81321,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Luminera",
+   "metric": "guilds",
+   "value": 48,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Lutabra",
+   "metric": "characters-online",
+   "value": 17,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Lutabra",
+   "metric": "characters-known-total",
+   "value": 85749,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Lutabra",
+   "metric": "guilds",
+   "value": 2,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Luzibra",
+   "metric": "characters-online",
+   "value": 55,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Luzibra",
+   "metric": "characters-known-total",
+   "value": 12572,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Luzibra",
+   "metric": "guilds",
+   "value": 5,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Maligna",
+   "metric": "characters-online",
+   "value": 66,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Maligna",
+   "metric": "characters-known-total",
+   "value": 4926,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Maligna",
+   "metric": "guilds",
+   "value": 9,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Menera",
+   "metric": "characters-online",
+   "value": 160,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Menera",
+   "metric": "characters-known-total",
+   "value": 70249,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Menera",
+   "metric": "guilds",
+   "value": 53,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Monstera",
+   "metric": "characters-online",
+   "value": 58,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Monstera",
+   "metric": "characters-known-total",
+   "value": 53683,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Monstera",
+   "metric": "guilds",
+   "value": 9,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Monza",
+   "metric": "characters-online",
+   "value": 410,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Monza",
+   "metric": "characters-known-total",
+   "value": 111601,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Monza",
+   "metric": "guilds",
+   "value": 51,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Mystera",
+   "metric": "characters-online",
+   "value": 5,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Mystera",
+   "metric": "characters-known-total",
+   "value": 2408,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Mystera",
+   "metric": "guilds",
+   "value": 2,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Nefera",
+   "metric": "characters-online",
+   "value": 281,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Nefera",
+   "metric": "characters-known-total",
+   "value": 130478,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Nefera",
+   "metric": "guilds",
+   "value": 84,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Nevia",
+   "metric": "characters-online",
+   "value": 693,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Nevia",
+   "metric": "characters-known-total",
+   "value": 128923,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Nevia",
+   "metric": "guilds",
+   "value": 63,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Noctalia",
+   "metric": "characters-online",
+   "value": 91,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Noctalia",
+   "metric": "characters-known-total",
+   "value": 7603,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Noctalia",
+   "metric": "guilds",
+   "value": 8,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Oceanis",
+   "metric": "characters-online",
+   "value": 21,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Oceanis",
+   "metric": "characters-known-total",
+   "value": 6660,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Oceanis",
+   "metric": "guilds",
+   "value": 15,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Ombra",
+   "metric": "characters-online",
+   "value": 160,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Ombra",
+   "metric": "characters-known-total",
+   "value": 71336,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Ombra",
+   "metric": "guilds",
+   "value": 26,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Opulera",
+   "metric": "characters-online",
+   "value": 65,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Opulera",
+   "metric": "characters-known-total",
+   "value": 6497,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Opulera",
+   "metric": "guilds",
+   "value": 11,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Ourobra",
+   "metric": "characters-online",
+   "value": 224,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Ourobra",
+   "metric": "characters-known-total",
+   "value": 62287,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Ourobra",
+   "metric": "guilds",
+   "value": 31,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Pacera",
+   "metric": "characters-online",
+   "value": 223,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Pacera",
+   "metric": "characters-known-total",
+   "value": 87681,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Pacera",
+   "metric": "guilds",
+   "value": 87,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Peloria",
+   "metric": "characters-online",
+   "value": 457,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Peloria",
+   "metric": "characters-known-total",
+   "value": 186310,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Peloria",
+   "metric": "guilds",
+   "value": 67,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Penumbra",
+   "metric": "characters-online",
+   "value": 5,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Penumbra",
+   "metric": "characters-known-total",
+   "value": 7350,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Penumbra",
+   "metric": "guilds",
+   "value": 1,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Premia",
+   "metric": "characters-online",
+   "value": 222,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Premia",
+   "metric": "characters-known-total",
+   "value": 40135,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Premia",
+   "metric": "guilds",
+   "value": 40,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Quelibra",
+   "metric": "characters-online",
+   "value": 245,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Quelibra",
+   "metric": "characters-known-total",
+   "value": 75308,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Quelibra",
+   "metric": "guilds",
+   "value": 48,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Quidera",
+   "metric": "characters-online",
+   "value": 207,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Quidera",
+   "metric": "characters-known-total",
+   "value": 107414,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Quidera",
+   "metric": "guilds",
+   "value": 52,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Quintera",
+   "metric": "characters-online",
+   "value": 225,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Quintera",
+   "metric": "characters-known-total",
+   "value": 99063,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Quintera",
+   "metric": "guilds",
+   "value": 39,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Rasteibra",
+   "metric": "characters-online",
+   "value": 247,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Rasteibra",
+   "metric": "characters-known-total",
+   "value": 90468,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Rasteibra",
+   "metric": "guilds",
+   "value": 28,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Refugia",
+   "metric": "characters-online",
+   "value": 469,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Refugia",
+   "metric": "characters-known-total",
+   "value": 80288,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Refugia",
+   "metric": "guilds",
+   "value": 54,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Retalia",
+   "metric": "characters-online",
+   "value": 61,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Retalia",
+   "metric": "characters-known-total",
+   "value": 46953,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Retalia",
+   "metric": "guilds",
+   "value": 4,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Secura",
+   "metric": "characters-online",
+   "value": 979,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Secura",
+   "metric": "characters-known-total",
+   "value": 185681,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Secura",
+   "metric": "guilds",
+   "value": 92,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Serdebra",
+   "metric": "characters-online",
+   "value": 296,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Serdebra",
+   "metric": "characters-known-total",
+   "value": 82401,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Serdebra",
+   "metric": "guilds",
+   "value": 51,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Sinistra",
+   "metric": "characters-online",
+   "value": 81,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Sinistra",
+   "metric": "characters-known-total",
+   "value": 3704,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Sinistra",
+   "metric": "guilds",
+   "value": 7,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Solidera",
+   "metric": "characters-online",
+   "value": 254,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Solidera",
+   "metric": "characters-known-total",
+   "value": 154889,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Solidera",
+   "metric": "guilds",
+   "value": 86,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Sombra",
+   "metric": "characters-online",
+   "value": 17,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Sombra",
+   "metric": "characters-known-total",
+   "value": 19054,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Sombra",
+   "metric": "guilds",
+   "value": 1,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Sonira",
+   "metric": "characters-online",
+   "value": 78,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Sonira",
+   "metric": "characters-known-total",
+   "value": 8803,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Sonira",
+   "metric": "guilds",
+   "value": 9,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Stralis",
+   "metric": "characters-online",
+   "value": 13,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Stralis",
+   "metric": "characters-known-total",
+   "value": 6127,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Stralis",
+   "metric": "guilds",
+   "value": 2,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Talera",
+   "metric": "characters-online",
+   "value": 320,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Talera",
+   "metric": "characters-known-total",
+   "value": 187617,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Talera",
+   "metric": "guilds",
+   "value": 77,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Tempestera",
+   "metric": "characters-online",
+   "value": 21,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Tempestera",
+   "metric": "characters-known-total",
+   "value": 37433,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Tempestera",
+   "metric": "guilds",
+   "value": 11,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Terribra",
+   "metric": "characters-online",
+   "value": 87,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Terribra",
+   "metric": "characters-known-total",
+   "value": 100565,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Terribra",
+   "metric": "guilds",
+   "value": 15,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Thyria",
+   "metric": "characters-online",
+   "value": 400,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Thyria",
+   "metric": "characters-known-total",
+   "value": 181105,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Thyria",
+   "metric": "guilds",
+   "value": 58,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Tornabra",
+   "metric": "characters-online",
+   "value": 141,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Tornabra",
+   "metric": "characters-known-total",
+   "value": 25299,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Tornabra",
+   "metric": "guilds",
+   "value": 17,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Unebra",
+   "metric": "characters-online",
+   "value": 134,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Unebra",
+   "metric": "characters-known-total",
+   "value": 15234,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Unebra",
+   "metric": "guilds",
+   "value": 9,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Ustebra",
+   "metric": "characters-online",
+   "value": 428,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Ustebra",
+   "metric": "characters-known-total",
+   "value": 153238,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Ustebra",
+   "metric": "guilds",
+   "value": 46,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Venebra",
+   "metric": "characters-online",
+   "value": 179,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Venebra",
+   "metric": "characters-known-total",
+   "value": 58940,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Venebra",
+   "metric": "guilds",
+   "value": 35,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Victoris",
+   "metric": "characters-online",
+   "value": 17,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Victoris",
+   "metric": "characters-known-total",
+   "value": 9264,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Victoris",
+   "metric": "guilds",
+   "value": 17,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Vunira",
+   "metric": "characters-online",
+   "value": 456,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Vunira",
+   "metric": "characters-known-total",
+   "value": 190720,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Vunira",
+   "metric": "guilds",
+   "value": 70,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Wickera",
+   "metric": "characters-online",
+   "value": 57,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Wickera",
+   "metric": "characters-known-total",
+   "value": 2683,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Wickera",
+   "metric": "guilds",
+   "value": 9,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Wintera",
+   "metric": "characters-online",
+   "value": 240,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Wintera",
+   "metric": "characters-known-total",
+   "value": 151608,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Wintera",
+   "metric": "guilds",
+   "value": 76,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Xybra",
+   "metric": "characters-online",
+   "value": 59,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Xybra",
+   "metric": "characters-known-total",
+   "value": 11997,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Xybra",
+   "metric": "guilds",
+   "value": 7,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Xyla",
+   "metric": "characters-online",
+   "value": 257,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Xyla",
+   "metric": "characters-known-total",
+   "value": 104134,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Xyla",
+   "metric": "guilds",
+   "value": 34,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Xymera",
+   "metric": "characters-online",
+   "value": 84,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Xymera",
+   "metric": "characters-known-total",
+   "value": 19984,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Xymera",
+   "metric": "guilds",
+   "value": 14,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Yonabra",
+   "metric": "characters-online",
+   "value": 213,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Yonabra",
+   "metric": "characters-known-total",
+   "value": 34698,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Yonabra",
+   "metric": "guilds",
+   "value": 36,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Yovera",
+   "metric": "characters-online",
+   "value": 216,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Yovera",
+   "metric": "characters-known-total",
+   "value": 76847,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Yovera",
+   "metric": "guilds",
+   "value": 66,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Yubra",
+   "metric": "characters-online",
+   "value": 91,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Yubra",
+   "metric": "characters-known-total",
+   "value": 26220,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Yubra",
+   "metric": "guilds",
+   "value": 8,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Zuna",
+   "metric": "characters-online",
+   "value": 11,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Zuna",
+   "metric": "characters-known-total",
+   "value": 70428,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Zuna",
+   "metric": "guilds",
+   "value": 1,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Zunera",
+   "metric": "characters-online",
+   "value": 12,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Zunera",
+   "metric": "characters-known-total",
+   "value": 75915,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  },
+  {
+   "world": "Zunera",
+   "metric": "guilds",
+   "value": 2,
+   "observedAt": "2026-10-13T19:36:43Z",
+   "interval": "instant",
+   "availableAt": "2026-10-13T19:36:43Z",
+   "availability": "exact"
+  }
+ ]
+}

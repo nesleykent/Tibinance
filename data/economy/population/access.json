@@ -1,0 +1,18 @@
+{
+ "format": 1,
+ "note": "Last known access status per source; written only when a status changes. Tibinance never circumvents bot protection.",
+ "sources": {
+  "guildstats": {
+   "status": "blocked-challenge",
+   "since": "2026-10-14T02:41:10.418Z",
+   "httpStatus": 403,
+   "url": "https://guildstats.eu/online-counter"
+  },
+  "tibiavip": {
+   "status": "blocked-challenge",
+   "since": "2026-10-14T02:41:10.642Z",
+   "httpStatus": 403,
+   "url": "https://tibiavip.app/worlds"
+  }
+ }
+}

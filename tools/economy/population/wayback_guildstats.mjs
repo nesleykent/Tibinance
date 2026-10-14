@@ -44,35 +44,41 @@ export function utcToBerlinParts(iso) {
   return { y: +p.year, mo: +p.month, d: +p.day, h: +p.hour, mi: +p.minute };
 }
 
-// Parses one archived page: its four series with labels resolved to UTC instants (walking back from the capture).
+const DAILY = /^\d{4}-\d{2}-\d{2}$/;
+const FORMATS = [
+  { re: /^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}$/, kind: 'datetime' },  // 2015-01-19 05:45 (older pages)
+  { re: /^\d{1,2} [A-Z][a-z]{2} \d{1,2}:\d{2}$/, kind: 'day-month-time' }, // 11 May 18:45
+  { re: /^\d{1,2}:\d{2}$/, kind: 'time' },                           // 18:45 (the last 24 hours)
+];
+
+// Parses one archived page: every series with labels resolved to UTC instants (walking back from the capture for
+// labels without a year or a day). A daily series' meaning is verified against the page's own intraday values;
+// unknown label formats are skipped and reported, never guessed.
 export function parseOnlineCounter(html, capturedAt) {
   const blocks = [...html.matchAll(/arrayToDataTable\(\[([\s\S]*?)\]\);/g)].map(m => [...m[1].matchAll(/\['([^']+)',\s*(\d+)\]/g)].map(x => [x[1], Number(x[2])]));
   const cap = utcToBerlinParts(capturedAt);
-  const out = [];
+  const out = [], skipped = [], daily = [];
   for (const rows of blocks) {
     if (!rows.length) continue;
     const label = rows[0][0];
-    if (/^\d{4}-\d{2}-\d{2}$/.test(label)) {
-      for (const [l, v] of rows) {
-        const [y, mo, d] = l.split('-').map(Number);
-        const day = new Date(Date.UTC(y, mo - 1, d) - 86400000).toISOString().slice(0, 10);
-        out.push({ series: 'daily-average', label: l, day, interval: 'P1D', value: v });
-      }
-      continue;
-    }
-    const withDate = /^\d{1,2} [A-Z][a-z]{2} \d{2}:\d{2}$/.test(label);
-    // Walk back from the capture so each label gets its year (and, for HH:MM labels, its day).
-    let y = cap.y, mo = cap.mo, d = cap.d;
-    let prevMinutes = Infinity;
+    if (DAILY.test(label)) { daily.push(rows); continue; }
+    const format = FORMATS.find(f => f.re.test(label) && rows.every(([l]) => f.re.test(l)));
+    if (!format) { skipped.push(label); continue; }
+    let y = cap.y, mo = cap.mo, d = cap.d, prevMinutes = Infinity;
     const resolved = [];
     for (let i = rows.length - 1; i >= 0; i--) {
       const [l, v] = rows[i];
       let h, mi;
-      if (withDate) {
+      if (format.kind === 'datetime') {
+        const [date, hm] = l.split(' ');
+        [y, mo, d] = date.split('-').map(Number);
+        [h, mi] = hm.split(':').map(Number);
+      } else if (format.kind === 'day-month-time') {
         const [dd, mon, hm] = l.split(' ');
         [h, mi] = hm.split(':').map(Number);
         const lmo = MONTHS[mon];
-        if (lmo > mo + 1) y -= 1;                         // crossing back over a new year
+        if (!lmo) { resolved.length = 0; break; }
+        if (lmo > mo + 1) y -= 1;
         mo = lmo; d = Number(dd);
       } else {
         [h, mi] = l.split(':').map(Number);
@@ -82,11 +88,48 @@ export function parseOnlineCounter(html, capturedAt) {
       }
       resolved.push({ label: l, at: berlinToUtc(y, mo, d, h, mi), value: v });
     }
+    if (!resolved.length) { skipped.push(label); continue; }
     resolved.reverse();
-    const step = (Date.parse(resolved[1]?.at) - Date.parse(resolved[0].at)) / 60000;
-    const interval = step === 60 ? 'PT1H' : 'PT15M';
-    for (const r of resolved) out.push({ series: interval === 'PT1H' ? 'hourly' : withDate ? '7-day' : '24-hour', label: r.label, at: r.at, interval, value: r.value });
+    const step = Math.round((Date.parse(resolved.at(-1).at) - Date.parse(resolved[0].at)) / 60000 / Math.max(1, resolved.length - 1));
+    const interval = step === 60 ? 'PT1H' : step === 15 ? 'PT15M' : `PT${step}M`;
+    const series = interval === 'PT1H' ? 'hourly' : format.kind === 'time' ? '24-hour' : `intraday-${interval}`;
+    for (const r of resolved) out.push({ series: series === 'intraday-PT15M' ? '7-day' : series, label: r.label, at: r.at, interval, value: r.value });
   }
+  // Daily series: what a value labelled D means, checked against the intraday values of the same page.
+  // One resolution only (hourly when the page has it, else its longest intraday series), so a day's mean is not
+  // weighted by overlapping 15-minute windows.
+  const counts = new Map();
+  for (const r of out) counts.set(r.series, (counts.get(r.series) ?? 0) + 1);
+  const reference = counts.has('hourly') ? 'hourly' : [...counts].sort((a, b) => b[1] - a[1])[0]?.[0];
+  const intraday = new Map();
+  for (const r of out.filter(x => x.series === reference)) {
+    const p = utcToBerlinParts(r.at), day = `${p.y}-${String(p.mo).padStart(2, '0')}-${String(p.d).padStart(2, '0')}`;
+    if (!intraday.has(day)) intraday.set(day, []);
+    intraday.get(day).push(r.value);
+  }
+  const full = [...intraday].filter(([, v]) => v.length >= 24);
+  for (const rows of daily) {
+    const shift = (iso, k) => new Date(Date.parse(`${iso}T00:00:00Z`) + k * 86400000).toISOString().slice(0, 10);
+    const tests = { 'previous-day-average': [l => shift(l, -1), v => v.reduce((a, b) => a + b, 0) / v.length], 'same-day-average': [l => l, v => v.reduce((a, b) => a + b, 0) / v.length],
+      'previous-day-peak': [l => shift(l, -1), v => Math.max(...v)], 'same-day-peak': [l => l, v => Math.max(...v)] };
+    // The hypothesis with the smallest median relative error over the days the page covers both ways, accepted
+    // when that median is under 1% on at least three days; otherwise the series stays unverified.
+    let meaning = 'unverified', best = Infinity, check = null;
+    for (const [name, [dayOf, stat]] of Object.entries(tests)) {
+      const errors = rows.map(([l, v]) => { const values = full.find(([d]) => d === dayOf(l))?.[1]; return values ? Math.abs(stat(values) / v - 1) : null; })
+        .filter(e => e !== null).sort((a, b) => a - b);
+      if (errors.length < 3) continue;
+      const median = errors[Math.floor(errors.length / 2)];
+      if (median < 0.01 && median < best) { meaning = name; best = median; check = { days: errors.length, medianRelativeError: Number(median.toFixed(5)), within1pct: errors.filter(e => e < 0.01).length }; }
+    }
+    (out.dailyChecks ??= []).push({ series: rows[0][0], meaning, check });
+    for (const [l, v] of rows) {
+      const day = meaning.startsWith('previous-day') ? shift(l, -1) : l;
+      out.push({ series: meaning === 'unverified' ? 'daily-unverified' : meaning.endsWith('peak') ? 'daily-peak' : 'daily-average', label: l, day, interval: 'P1D', value: v, meaning });
+    }
+  }
+  out.skipped = skipped;
+  out.dailyChecks ??= [];
   return out;
 }
 
@@ -105,7 +148,7 @@ export async function importWayback({ log = console.log } = {}) {
   const captures = cdx.slice(1).map(([timestamp, original, digest]) => ({ timestamp, original, digest }));
   mkdirSync(CACHE, { recursive: true });
   const byScope = new Map();
-  let fetched = 0;
+  let fetched = 0, skippedCaptures;
   for (const c of captures) {
     const path = join(CACHE, `${c.timestamp}-${c.digest}.html.gz`);
     let html;
@@ -120,7 +163,9 @@ export async function importWayback({ log = console.log } = {}) {
     const scope = world ? world : 'all-worlds';
     const ts = c.timestamp;
     const capturedAt = `${ts.slice(0, 4)}-${ts.slice(4, 6)}-${ts.slice(6, 8)}T${ts.slice(8, 10)}:${ts.slice(10, 12)}:${ts.slice(12, 14)}Z`;
-    const rows = parseOnlineCounter(html, capturedAt);
+    let rows;
+    try { rows = parseOnlineCounter(html, capturedAt); } catch (e) { (skippedCaptures ??= []).push({ capture: c.timestamp, reason: e.message }); continue; }
+    if (rows.skipped?.length) (skippedCaptures ??= []).push({ capture: c.timestamp, reason: `unknown label formats: ${rows.skipped.join(', ')}` });
     if (!rows.length) continue;
     const source = { capture: ts, url: c.original, archive: `https://web.archive.org/web/${ts}/${c.original}`, digest: c.digest, sha256: createHash('sha256').update(html).digest('hex') };
     if (!byScope.has(scope)) byScope.set(scope, []);
@@ -136,7 +181,7 @@ export async function importWayback({ log = console.log } = {}) {
         const key = `${r.series} ${r.at ?? r.day}`;
         const prior = seen.get(key);
         if (prior && prior.value === r.value) { prior.captures.push(cap.source.capture); continue; }
-        const o = { metric: r.series === 'daily-average' ? 'players-online-daily-average' : 'players-online', series: r.series,
+        const o = { metric: r.series === 'daily-average' ? 'players-online-daily-average' : r.series === 'daily-peak' ? 'players-online-daily-peak' : r.series === 'daily-unverified' ? 'players-online-daily-unverified' : 'players-online', series: r.series, ...(r.meaning ? { meaning: r.meaning } : {}),
           ...(r.at ? { observedAt: r.at } : { day: r.day }), label: r.label, interval: r.interval, value: r.value,
           availableAt: cap.capturedAt, availability: 'exact', captures: [cap.source.capture], ...(prior ? { differsFromCapture: prior.captures[0] } : {}) };
         seen.set(key, o);
@@ -145,12 +190,13 @@ export async function importWayback({ log = console.log } = {}) {
     }
     const doc = { format: 1, source: 'guildstats-wayback', scope, definition: 'Players online as counted by GuildStats (characters online on tibia.com), copied from archived GuildStats pages. 15-minute and hourly values are counts at the labelled time; daily values are the average of the previous day. Times are UTC, converted from Berlin labels.',
       captures: caps.map(c => c.source), coverage: { first: observations.map(o => o.observedAt ?? o.day).sort()[0], last: observations.map(o => o.observedAt ?? o.day).sort().at(-1),
-        bySeries: Object.fromEntries(['24-hour', '7-day', 'hourly', 'daily-average'].map(s => [s, observations.filter(o => o.series === s).length])) }, observations };
+        bySeries: Object.fromEntries([...new Set(observations.map(o => o.series))].sort().map(s => [s, observations.filter(o => o.series === s).length])) }, observations };
     writeFileSync(join(OUT, `${scope.toLowerCase()}.json`), JSON.stringify(doc) + '\n');
     summary.push({ scope, captures: caps.length, ...doc.coverage });
     log(`${scope}: ${caps.length} captures, ${observations.length} observations`);
   }
-  return { captures: captures.length, scopes: summary };
+  writeFileSync(join(OUT, 'index.json'), JSON.stringify({ format: 1, source: 'guildstats-wayback', captures: captures.length, skippedCaptures: skippedCaptures ?? [], scopes: summary }, null, 1) + '\n');
+  return { captures: captures.length, skipped: (skippedCaptures ?? []).length, scopes: summary };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) console.log(JSON.stringify(await importWayback(), null, 1));
