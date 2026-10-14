@@ -9,7 +9,7 @@ import {mkdir,readFile} from 'node:fs/promises';
 import {join} from 'node:path';
 import assert from 'node:assert/strict';
 import {fmt} from '../js/format.js';
-import {MEASURES,ratePeriods,rangeChange,contributions,periodOf,rangeStartOf,sumPeriod} from '../js/economy-data.js';
+import {MEASURES,ratePeriods,rangeChange,contributions,periodOf,rangeStartOf,sumPeriod,sellOfferPeriods} from '../js/economy-data.js';
 const require=createRequire(import.meta.url);
 const {chromium,webkit}=require(process.env.TIBINANCE_NODE_MODULES ? `${process.env.TIBINANCE_NODE_MODULES}/playwright` : 'playwright');
 const engine=process.env.TIBINANCE_BROWSER ?? 'chrome';
@@ -126,24 +126,40 @@ try {
   assert.equal(await page.$eval(`#worlds tr[data-world="${retired.world}"] .flag-retired`,f=>f.textContent),'R');
   await page.fill('#filter','');
 
-  // All sums the gold of the worlds present on each date; TC prices have no additive global unit.
+  // All sums gold and overlays a separately labelled cross-world median TC price.
   await page.click('#worlds tr[data-world="All"] .pick'); await shown('All');
   assert.equal(param('world'),'All');
-  assert.equal(await page.getAttribute('#priceToggle','disabled'),'');
-  assert.match(await page.getAttribute('#priceToggle','title'),/world-specific/);
-  assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('left').options().visible),false);
-  assert.ok(await page.evaluate(()=>window.economyTestSeries[1].data().every(p=>p.value===undefined)));
-  assert.doesNotMatch(await text('#legend'),/TC Sell Offer/);
+  assert.equal(await page.getAttribute('#priceToggle','disabled'),null);
+  assert.equal(await page.getAttribute('#priceToggle','aria-pressed'),'true');
+  assert.match(await page.getAttribute('#priceToggle','title'),/daily median across observed worlds/);
+  assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('left').options().visible),true);
+  assert.ok(await page.evaluate(()=>window.economyTestSeries[1].data().some(p=>Number.isFinite(p.value))));
+  assert.match(await text('#legend'),/TC Sell Offer \(world median\)/);
   assert.match(await page.locator('#chartData thead').textContent(),/World-days with data/);
-  assert.doesNotMatch(await page.locator('#chartData thead').textContent(),/TC Sell/);
+  assert.match(await page.locator('#chartData thead').textContent(),/TC Sell.*Price days.*Worlds priced.*Price world-days/);
+  const globalMarket=(await load('data/market-history/tibia-coin/index.json')).worlds;
   const globalHistory=await daily('all');
   for (const interval of ['day','month','week']) {
     await page.click(`#interval [data-interval="${interval}"]`);
     const total=await expected('all',interval,'gross','1Y');
     assert.equal(await text('#lastValue'),gold(total.value));
     assert.equal((await row('All'))[1],gold(total.value),'the global watchlist and chart agree');
+    const prices=sellOfferPeriods(globalMarket,interval);
+    const plotted=await page.evaluate(()=>window.economyTestSeries[1].data().filter(p=>Number.isFinite(p.value)).map(p=>[p.time,p.value]));
+    assert.deepEqual(plotted,[...prices].map(([day,p])=>[day,p.sell]),`${interval}: All plots global TC medians`);
+    assert.equal(await text('#measurePrice'),gold([...prices.values()].at(-1).sell));
+    assert.match(await text('#legend'),/daily world medians; [\d,]+ worlds, [\d,]+ world-days/);
+
     assert.ok((await text('#detailNote')).includes(`${total.last.worldDaysCovered.toLocaleString('en-US')}/${total.last.worldDays.toLocaleString('en-US')} world-days`));
   }
+  const globalPriceWindow=await page.evaluate(()=>window.economyTestCharts[0].timeScale().getVisibleLogicalRange());
+  await page.click('#priceToggle');
+  assert.equal(await page.getAttribute('#priceToggle','aria-pressed'),'false');
+  assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('left').options().visible),false);
+  await page.click('#priceToggle');
+  assert.equal(await page.getAttribute('#priceToggle','aria-pressed'),'true');
+  const globalPriceWindowAfter=await page.evaluate(()=>window.economyTestCharts[0].timeScale().getVisibleLogicalRange());
+  assert.ok(Math.abs(globalPriceWindow.from-globalPriceWindowAfter.from)<0.001 && Math.abs(globalPriceWindow.to-globalPriceWindowAfter.to)<0.001,'global TC toggle preserves the gold timeline');
   if (shots) await page.screenshot({path:join(shots,`economy-${engine}-all-worlds.png`)});
   await page.click('#range [data-range="All"]');
   await page.click('#valueMode [data-mode="accumulated"]');
@@ -151,9 +167,13 @@ try {
   const globalSum=sumPeriod(globalHistory,[globalHistory.first,globalLast.end]);
   assert.equal(await text('#lastValue'),gold(globalSum.grossPotential));
   assert.ok(globalSum.grossPotential>0);
+  assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('left').options().mode),0,'global TC retains its linear gold-per-coin unit beside log accumulated gold');
+  assert.equal(await page.getAttribute('#priceToggle','aria-pressed'),'true');
   await page.reload(); await ready();
   assert.equal(await text('#world'),'All');
   assert.equal(await text('#lastValue'),gold(globalSum.grossPotential),'global accumulation survives reload');
+  assert.equal(await page.getAttribute('#priceToggle','aria-pressed'),'true','global TC remains enabled after reload');
+  assert.ok(await page.evaluate(()=>window.economyTestSeries[1].data().some(p=>Number.isFinite(p.value))));
   await page.setViewportSize({width:390,height:844}); await page.waitForTimeout(200);
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth),0,'All fits a phone viewport');
   if (shots) await page.screenshot({path:join(shots,`economy-${engine}-all-worlds-390.png`)});

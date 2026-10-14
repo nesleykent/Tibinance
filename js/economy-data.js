@@ -119,6 +119,31 @@ export const median = values => {
   return v.length ? (v.length % 2 ? v[m] : (v[m - 1] + v[m]) / 2) : null;
 };
 
+// One price per world and server day. All uses the cross-world median on each observed day, then the median
+// of those daily prices per interval: days have equal weight despite changes in the number of worlds sampled.
+// A single-world input preserves that world's existing period median. Counts describe quotes, not trade volume.
+export function sellOfferPeriods(worlds, interval) {
+  const days = new Map();
+  for (const w of worlds) for (const [day, sell] of w.bestOfferCloses ?? []) {
+    if (!Number.isFinite(sell) || sell <= 0) continue;
+    if (!days.has(day)) days.set(day, new Map());
+    const quotes = days.get(day);
+    if (quotes.has(w.world) && quotes.get(w.world) !== sell) throw new Error(`conflicting TC price: ${w.world} ${day}`);
+    quotes.set(w.world, sell);
+  }
+  const periods = new Map();
+  for (const [day, quotes] of [...days].sort(([a], [b]) => a.localeCompare(b))) {
+    const start = periodOf(day, interval)[0];
+    if (!periods.has(start)) periods.set(start, { daily: [], worlds: new Set(), worldDays: 0 });
+    const p = periods.get(start);
+    p.daily.push(median([...quotes.values()]));
+    for (const world of quotes.keys()) p.worlds.add(world);
+    p.worldDays += quotes.size;
+  }
+  return new Map([...periods].map(([start, p]) => [start,
+    { sell: median(p.daily), n: p.daily.length, worlds: p.worlds.size, worldDays: p.worldDays }]));
+}
+
 // Market values keep their own observation count: a sampled median is never a full-period gold total.
 export function chartPeriods(world, closes, unit) {
   const byPeriod = new Map();

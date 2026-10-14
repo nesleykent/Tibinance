@@ -13,8 +13,8 @@
  */
 import { fmt, esc, num } from './format.js';
 import { dock } from './markets-dock.js';
-import { MEASURES, INTERVALS, ratePeriods, accumulatedPeriods, rangeChange, rangeStartOf, overviewRows, periodOf, contributions, lastDay, median,
-  LIQUIDATION_SCENARIOS } from './economy-data.js?v=20261014-global';
+import { MEASURES, INTERVALS, ratePeriods, accumulatedPeriods, rangeChange, rangeStartOf, overviewRows, periodOf, contributions, lastDay, sellOfferPeriods,
+  LIQUIDATION_SCENARIOS } from './economy-data.js?v=20261014-global-price';
 import { economyChart, colors } from './economy-chart.js?v=20261014-series';
 
 const $ = id => document.getElementById(id);
@@ -81,13 +81,8 @@ const latestDay = () => data.index.worlds.map(w => w.last).sort().at(-1);
 // The periods at the interval with their rates, the latest complete one, and each period's median Sell Offer.
 function buildView(summary, daily, contrib) {
   const periods = ratePeriods(daily, state.interval);
-  const prices = new Map();
-  for (const [day, sell] of marketOf(summary.world)?.bestOfferCloses ?? []) {
-    const start = periodOf(day, state.interval)[0];
-    if (!prices.has(start)) prices.set(start, []);
-    prices.get(start).push(sell);
-  }
-  const price = new Map([...prices].map(([start, v]) => [start, { sell: median(v), n: v.length }]));
+  const sources = summary.world === 'All' ? data.market?.worlds ?? [] : [marketOf(summary.world)].filter(Boolean);
+  const price = sellOfferPeriods(sources, state.interval);
   return { summary, daily, contrib, periods, last: periods.findLast(p => p.rate.grossPotential !== null) ?? null,
     byStart: new Map(periods.map(p => [p.start, p])), price, lastPrice: periods.findLast(p => price.has(p.start)) ?? null,
     end: lastDay(daily), ended: summary.last < latestDay() };
@@ -146,8 +141,8 @@ function draw({ preserveRange = false } = {}) {
   setChoice('interval', 'interval', state.interval);
   $('priceToggle').setAttribute('aria-pressed', String(state.price && Boolean(view.lastPrice)));
   $('priceToggle').title = view.lastPrice
-    ? `${state.price ? 'Hide' : 'Show'} the Tibia Coin Sell Offer price; gold per TC on the left scale. Latest observed ${periodLabel(view.lastPrice)}.`
-    : state.world === 'All' ? 'Tibia Coin prices are world-specific and are not summed for All.' : 'No Tibia Coin price observations for this world’s recorded history.';
+    ? `${state.price ? 'Hide' : 'Show'} the Tibia Coin Sell Offer price; ${state.world === 'All' ? 'daily median across observed worlds, then median of days in each period; ' : ''}gold per TC on the left scale. Latest observed ${periodLabel(view.lastPrice)}.`
+    : 'No Tibia Coin price observations for this world’s recorded history.';
   $('priceToggle').disabled = !view.lastPrice;
   showQuote();
   showLegend(null);
@@ -241,7 +236,8 @@ function showLegend(day) {
   if (state.price && view.lastPrice) {
     const pricedPeriod = !day && !view.price.has(p.start) ? view.lastPrice : p;
     const q = pricedPeriod && view.price.get(pricedPeriod.start);
-    rows.push(extra(`${key('key-average', 'var(--average)')}TC Sell Offer`, q ? gold(q.sell) : 'N/A', `<span class="meta">${q ? `median of ${fmt(q.n)} day${q.n === 1 ? '' : 's'}${pricedPeriod !== p ? `, last observed ${esc(periodLabel(pricedPeriod))}` : ''}` : 'not observed'}</span>`, true));
+    const basis = state.world === 'All' ? `median of ${fmt(q?.n ?? 0)} daily world medians; ${fmt(q?.worlds ?? 0)} worlds, ${fmt(q?.worldDays ?? 0)} world-days` : `median of ${fmt(q?.n ?? 0)} day${q?.n === 1 ? '' : 's'}`;
+    rows.push(extra(`${key('key-average', 'var(--average)')}TC Sell Offer${state.world === 'All' ? ' (world median)' : ''}`, q ? gold(q.sell) : 'N/A', `<span class="meta">${q ? `${basis}${pricedPeriod !== p ? `, last observed ${esc(periodLabel(pricedPeriod))}` : ''}` : 'not observed'}</span>`, true));
   }
   $('legend').innerHTML = `${head} ${rows.join(' ')}`;
   if (!day) fitHead();
@@ -255,7 +251,7 @@ function describeChart() {
     + (p ? `Latest complete ${UNIT[state.interval]}: ${periodLabel(p)}, ${m.name}: ${gold(view.values.get(p.start)[field()])} ${state.mode === 'daily' ? 'gold per day' : 'gold accumulated'}, kill coverage ${pct1(p.killCoverage)}.` : 'No complete period.')
     + (state.mode === 'accumulated' && a ? ` Logarithmic gold scale. Since ${a.from}: ${a.covered} of ${a.days} days with data${a.complete ? '' : ', partial subtotal'}.` : '')
     + (state.kills ? ' Kills per day in the lower pane.' : '')
-    + (state.price && view.lastPrice ? ' With the median TC Sell Offer per period on the left scale.' : '')
+    + (state.price && view.lastPrice ? ` With the ${state.world === 'All' ? 'median of daily world-median TC Sell Offers' : 'median TC Sell Offer'} per period on the left scale.` : '')
     + (state.rate !== null ? ` With gold plus ${state.rate * 100}% of NPC potential, an assumption.` : '')
     + (state.stable ? ' With the constant creature set for comparison.' : '')
     + ' Full period values and coverage are available in Help.');
@@ -272,13 +268,13 @@ function drawChartData() {
     + '<th class="num">Kills/day</th><th>Days with data</th><th class="num">Kill coverage</th>'
     + (view.daily.worldsExpected ? '<th>World-days with data</th>' : '')
     + (state.mode === 'accumulated' ? '<th>Accumulated days with data</th>' : '')
-    + (state.price && view.lastPrice ? '<th class="num">TC Sell (gold/coin)</th><th class="num">Price days</th>' : '') + '</tr></thead><tbody>'
+    + (state.price && view.lastPrice ? '<th class="num">TC Sell (gold/coin)</th><th class="num">Price days</th>' + (state.world === 'All' ? '<th class="num">Worlds priced</th><th class="num">Price world-days</th>' : '') : '') + '</tr></thead><tbody>'
     + [...view.periods].reverse().map(p => `<tr${p === view.last ? ' class="current"' : ''}><td>${esc(periodLabel(p))}</td>`
       + [view.values.get(p.start).grossPotential, view.values.get(p.start).directCoins, view.values.get(p.start).npcPotential, ...extras.map(e => e.value(p)), p.rate.kills].map(v => `<td class="num">${gold(v)}</td>`).join('')
       + `<td>${p.covered} / ${p.days}${p.complete ? '' : ' incomplete'}</td><td class="num">${pct1(p.killCoverage)}</td>`
       + (view.daily.worldsExpected ? `<td>${p.worldDaysCovered} / ${p.worldDays}</td>` : '')
       + (state.mode === 'accumulated' ? `<td>${view.values.get(p.start).grossPotential === null ? 'N/A' : `${view.values.get(p.start).covered} / ${view.values.get(p.start).days}${view.values.get(p.start).complete ? '' : ' partial subtotal'}`}</td>` : '')
-      + (state.price && view.lastPrice ? `<td class="num">${gold(view.price.get(p.start)?.sell)}</td><td class="num">${view.price.get(p.start)?.n ?? 0}</td>` : '') + '</tr>').join('') + '</tbody>';
+      + (state.price && view.lastPrice ? `<td class="num">${gold(view.price.get(p.start)?.sell)}</td><td class="num">${view.price.get(p.start)?.n ?? 0}</td>${state.world === 'All' ? `<td class="num">${view.price.get(p.start)?.worlds ?? 0}</td><td class="num">${view.price.get(p.start)?.worldDays ?? 0}</td>` : ''}` : '') + '</tr>').join('') + '</tbody>';
 }
 
 /* --------------------------------------------------------------- watchlist */
