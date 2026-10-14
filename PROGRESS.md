@@ -14,22 +14,27 @@ Never force-push, never reset, never redo finished work.
 
 ## Current state
 
-- **Stage:** H, in progress. **The docs are committed by this commit**: `docs/economy.md`, plus the README,
-  technical guide and `data/economy/README.md` updates. Remaining in H: full suites, a full release with live
-  verification, the final report. Stages A2 and B to G are done.
-- **Production:** `release/0003` (a data release by the forecast-archive workflow on top of `release/0002`, live
-  verified 543/543). **Awaiting a full release:** everything since `release/0002` that is code or a page: Stages C
-  to F, including `economy.html` and the Economy link added to every page's menu. The Research pages link to
-  `https://nesleykent.github.io/Tibinance/economy.html`, which 404s until a full release ships the page.
+- **Stage:** all stages A0 to H are done, except where noted under "In progress / remaining". The final five-section
+  report was given in the session that made this commit.
+- **Production:** `release/0004`, a **full release** of d0204eb (2026-10-14, approved by Claude Code after the full
+  Node, Python and Chrome browser suites). The Pages run deployed it, and **all 924 live files equal the release**
+  (`node tools/ci/pages_release.mjs verify-live --all`). A browser spot-check of the live Economy page and the Markets
+  Forecast history panel worked: the Antica tiles, 96 world rows, the findings, and 6 editions drawn with band and
+  marker. `release/policy.json` with `data/economy/**` is now approved, so economy data reach production through
+  data releases.
 - **Stage G:** no gold-based specification beats the no-change forecast (Stage E), so no gold model enters the
   published Projections. Specification E is archived as a prospective challenger instead (`tc-gold-challenger`, role
   `challenger`): never shown, scored by `evaluate.py`, reproducible from its snapshot.
 - **Exact next action:**
-  1. Check the first `economy-daily.yml` run (Actions, "Economy data"). A cold cache rebuilds every kill-statistics
-     month, about 2 hours. It should commit `data/economy` through the latest upstream day, and its release step
-     should end with "nothing to release" (exit 3) until a full release approves the extended policy.
-  2. H: `docs/economy.md` (the Economy page already links it on GitHub), README and project-guide updates, full test
-     and browser suites, then a full release with live verification and the final five-section report.
+  1. Check the first `economy-daily.yml` run (38506418523, dispatched 2026-10-14 03:28 UTC, cold cache).
+     - It should push a bot commit of `data/economy` through the latest kill-statistics day.
+     - Its release step should then make a data release carrying `data/economy/**`, now that `release/0004`
+       approved the policy.
+     - The next run, scheduled or dispatched, is the first with the gold challenger. Confirm it archives one
+       `tc-gold-challenger` edition through `publish.py`, and that a rerun archives nothing.
+  2. When target weeks close, check that `forecast-archive.yml` writes `data/forecast-archive/evaluations.jsonl`
+     and that the Forecast history accuracy tables fill.
+  3. Remaining work below.
 
 - **Caches for this data** (local only; another agent must regenerate them):
   - `node tools/economy/ingest_killstats.mjs --full` (about 2 h);
@@ -455,7 +460,20 @@ Never force-push, never reset, never redo finished work.
 
 ## In progress / remaining
 
-- H (docs, full suites, full release, final five-section report).
+- **First economy workflow run:** see the exact next action.
+- **Not built from the plan:**
+  - the world registry `data/economy/sources/worlds.json` (merger lineage, BattlEye, location as dated facts);
+  - per-creature coverage-change flags and `gold/stable-sets.json` per window (only one constant set, from the
+    first kill day, exists, as `grossStable`);
+  - observed binomial and empirical uncertainty of loot values (no intervals are shown);
+  - published sensitivity builds: extended and pooled rules, coins-only, ±1 day, alternate samples. The rules exist
+    in `js/economy-value.js`; there is no CLI flag yet;
+  - a shared eligibility module (`js/economy-eligibility.js` with a Python twin). Eligibility is applied inside
+    `build_gold.mjs`, `economy-value.js` and `challenger.py`, and tested there;
+  - Economy page update and event markers with before and after comparisons;
+  - population and productivity panes beyond the TibiaVIP snapshot tile.
+- **Research baselines:** the Research models (C, S, H) were not baselines in the econometrics' out-of-sample
+  comparison (no change and drift were). The forecast archive grades them separately.
 
 ## Unresolved requirements (carried, not substitutes)
 
