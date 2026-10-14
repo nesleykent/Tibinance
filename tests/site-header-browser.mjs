@@ -10,10 +10,11 @@ const {chromium,webkit}=require(process.env.TIBINANCE_NODE_MODULES ? `${process.
 const engine=process.env.TIBINANCE_BROWSER ?? 'chrome';
 const root=process.env.TIBINANCE_TEST_URL ?? 'http://127.0.0.1:8765';
 const SITE='https://nesleykent.github.io/Tibinance/';
-const SECTIONS_ORDER=['Capture','Markets overview','Markets','Economy overview','Economy','Trade','Research'];
-const LOCAL=[['Capture','./'],['Markets overview','markets-overview.html'],['Markets','markets.html'],['Economy overview','economy-overview.html'],['Economy','economy.html'],['Trade','trade.html'],['Research','reports/tc-cycle/']];
-const REMOTE=research=>[['Capture',SITE],['Markets overview',`${SITE}markets-overview.html`],['Markets',`${SITE}markets.html`],['Economy overview',`${SITE}economy-overview.html`],
-  ['Economy',`${SITE}economy.html`],['Trade',`${SITE}trade.html`],['Research',research]];
+// The sections in alphabetical order, on every page.
+const SECTIONS_ORDER=['Capture','Economy','Economy overview','Markets','Markets overview','Research','Trade'];
+const LOCAL=[['Capture','./'],['Economy','economy.html'],['Economy overview','economy-overview.html'],['Markets','markets.html'],['Markets overview','markets-overview.html'],['Research','reports/tc-cycle/'],['Trade','trade.html']];
+const REMOTE=research=>[['Capture',SITE],['Economy',`${SITE}economy.html`],['Economy overview',`${SITE}economy-overview.html`],['Markets',`${SITE}markets.html`],
+  ['Markets overview',`${SITE}markets-overview.html`],['Research',research],['Trade',`${SITE}trade.html`]];
 // tv: the page is drawn in TradingView's idiom (css/tv.css): its 38px header runs edge to edge instead of Capture's
 // margins. links: the header's visible links besides the trail's (the project, and the TV pages' own link onward).
 const pages=[
@@ -119,9 +120,9 @@ try {
     assert.equal(await focused(),p.name);
     await page.keyboard.press('Home'); assert.equal(await focused(),'Capture');
     for (const name of SECTIONS_ORDER.slice(1,-1)) { await page.keyboard.press('ArrowDown'); assert.equal(await focused(),name); }
-    await page.keyboard.press('End'); assert.equal(await focused(),'Research');
+    await page.keyboard.press('End'); assert.equal(await focused(),SECTIONS_ORDER.at(-1));
     await page.keyboard.press('ArrowDown'); assert.equal(await focused(),'Capture');
-    await page.keyboard.press('ArrowUp'); assert.equal(await focused(),'Research');
+    await page.keyboard.press('ArrowUp'); assert.equal(await focused(),SECTIONS_ORDER.at(-1));
     await page.keyboard.press('Escape');
     assert.deepEqual(await open(),[]);
     assert.equal(await isFocused(trigger),true,`${label}: Escape returns focus to the button`);

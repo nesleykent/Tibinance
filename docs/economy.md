@@ -306,7 +306,7 @@ All's TC overlay takes the median of the observed worlds' daily best Sell Offers
 world medians in each week or month. Each observed day has equal weight; days with more world quotes do not
 receive extra weight. The legend and chart table state price days, distinct worlds and price world-days. Missing
 quotes remain missing. This is an unweighted descriptive price in gold per TC, separate from the summed gold
-components; it remains on the linear left axis beside accumulated gold on the logarithmic right axis. The price
+components; it remains on the linear right axis beside accumulated gold on the logarithmic left axis. The price
 toggle works on All and individual worlds, retaining its preference. The global view does not claim a creature ranking: the individual
 monthly files keep only each world's top 30, which cannot establish a complete global ranking.
 

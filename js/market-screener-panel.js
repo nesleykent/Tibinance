@@ -83,7 +83,7 @@ export function screenerPanel(root, { onOpen, onRange, onSide }) {
     const depth = r.depth === null
       ? { text: num(null), title: `No captured ${OFFER[side]} depth for ${r.world}.` }
       : { text: fmt(r.depth), title: `Captured ${OFFER[side]} Depth on server day ${r.depthDay}: Tibia Coins across every visible ${OFFER[side]} Offer of the latest capture that recorded it. Offer depth, not traded volume.` };
-    const meta = [r.type && `<span>${esc(r.type)}</span>`, r.battleye && `<span class="be-${esc(r.battleye)}">BattlEye ${esc(r.battleye)}</span>`,
+    const meta = [r.type && `<span>${esc(r.type)}</span>`, r.battleye && `<span class="be-${esc(r.battleye)}">${esc(r.battleye)}</span>`,
       r.location && `<span>${esc(r.location)}</span>`].filter(Boolean).join('');
     const stat = (label, value, title = '', cls = '') => `<div${cls ? ` class="${cls}"` : ''}><dt>${label}</dt><dd${title ? ` title="${esc(title)}"` : ''}>${value}</dd></div>`;
     return `<li><a class="screen-card${r.status === 'retired' ? ' is-retired' : ''}" href="${esc(href)}" data-world="${esc(r.world)}"${r.world === selected ? ' aria-current="true"' : ''}>

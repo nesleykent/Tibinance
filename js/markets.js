@@ -244,7 +244,8 @@ function showQuote() {
   $('worldMeta').innerHTML = [
     retired(summary) && `<span class="tag">Retired</span><span>Offline since ${esc(summary.offline)}, merged into <button type="button" class="world-link" data-world="${esc(summary.mergedInto)}">${esc(summary.mergedInto)}</button></span>`,
     summary.type && `<span>${esc(summary.type)}</span>`,
-    summary.battleye && `<span>BattlEye <span class="be-${esc(summary.battleye)}">${esc(summary.battleye)}</span></span>`].filter(Boolean).join('');
+    // BattlEye by its colour alone, as the type and location stand without labels.
+    summary.battleye && `<span class="be-${esc(summary.battleye)}">${esc(summary.battleye)}</span>`].filter(Boolean).join('');
   $('worldMeta').title = $('worldMeta').textContent.replace(/\s+/g, ' ').trim();   // the whole line where it is cut short
   // The side choice carries both sides' latest best offers and the spread between them, as a terminal shows its quote.
   for (const b of $('side').querySelectorAll('button')) b.title = `${SIDES[b.dataset.side].offer}: ${latest ? fmt(latest[b.dataset.side]) : 'N/A'}`;
@@ -259,8 +260,8 @@ function showQuote() {
   $('lastRange').textContent = change ? state.range : '';
 
   $('detailsWorld').innerHTML = esc(summary.world) + (retired(summary) ? ' <span class="tag">Retired</span>' : '');
-  $('detailMeta').innerHTML = [summary.type, summary.battleye && `BattlEye <span class="be-${esc(summary.battleye)}">${esc(summary.battleye)}</span>`,
-    summary.location].filter(Boolean).map(x => `<span>${x.startsWith('BattlEye') ? x : esc(x)}</span>`).join('');
+  $('detailMeta').innerHTML = [summary.type && esc(summary.type), summary.battleye && `<span class="be-${esc(summary.battleye)}">${esc(summary.battleye)}</span>`,
+    summary.location && esc(summary.location)].filter(Boolean).map(x => `<span>${x}</span>`).join('');
   $('detailLast').innerHTML = num(latest?.[side]);
   $('detailLastLabel').textContent = SIDES[side].offer;
   // Also in the details: narrow screens hide the toolbar metadata but show the details under the chart.
@@ -584,7 +585,7 @@ function imageContext() {
     world: summary.world,
     tag: retired(summary) ? 'Retired' : '',
     meta: [retired(summary) && `Offline since ${summary.offline}, merged into ${summary.mergedInto}`, summary.type,
-      summary.battleye && `BattlEye ${summary.battleye}`].filter(Boolean),
+      summary.battleye].filter(Boolean),
     value: latest ? fmt(latest[side]) : 'N/A',
     valueNote: latest ? `${SIDES[side].offer} on server day ${latest.serverDay}` : SIDES[side].offer,
     change: change && { text: `${signedNumber.format(delta)} ${percent.format(change.ratio)}`, tone: tone(delta), note: `change over ${state.range}` },

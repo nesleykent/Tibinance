@@ -142,7 +142,7 @@ function draw({ preserveRange = false } = {}) {
   setChoice('interval', 'interval', state.interval);
   $('priceToggle').setAttribute('aria-pressed', String(state.price && Boolean(view.lastPrice)));
   $('priceToggle').title = view.lastPrice
-    ? `${state.price ? 'Hide' : 'Show'} the Tibia Coin Sell Offer price; ${state.world === 'All' ? 'daily median across observed worlds, then median of days in each period; ' : ''}gold per TC on the left scale. Latest observed ${periodLabel(view.lastPrice)}.`
+    ? `${state.price ? 'Hide' : 'Show'} the Tibia Coin Sell Offer price; ${state.world === 'All' ? 'daily median across observed worlds, then median of days in each period; ' : ''}gold per TC on the right scale. Latest observed ${periodLabel(view.lastPrice)}.`
     : 'No Tibia Coin price observations for this world’s recorded history.';
   $('priceToggle').disabled = !view.lastPrice;
   showQuote();
@@ -181,7 +181,7 @@ function periodLabel(p, interval = state.interval) {
 function metaOf(world) {
   if (world === 'All') return `<span>All worlds</span><span>${fmt(view.summary.latestWorldCount)} worlds on ${esc(view.end)}</span>`;
   const m = marketOf(world);
-  return [m?.type && `<span>${esc(m.type)}</span>`, m?.battleye && `<span>BattlEye <span class="be-${esc(m.battleye)}">${esc(m.battleye)}</span></span>`,
+  return [m?.type && `<span>${esc(m.type)}</span>`, m?.battleye && `<span class="be-${esc(m.battleye)}">${esc(m.battleye)}</span>`,
     m?.location && `<span>${esc(m.location)}</span>`, view?.ended && `<span class="tag">Ended ${esc(view.summary.last)}</span>`].filter(Boolean).join('');
 }
 
@@ -253,7 +253,7 @@ function describeChart() {
     + (p ? `Latest complete ${UNIT[state.interval]}: ${periodLabel(p)}, ${m.name}: ${gold(view.values.get(p.start)[field()])} ${state.mode === 'daily' ? 'gold per day' : 'gold accumulated'}, kill coverage ${pct1(p.killCoverage)}.` : 'No complete period.')
     + (state.mode === 'accumulated' && a ? ` Logarithmic gold scale. Since ${a.from}: ${a.covered} of ${a.days} days with data${a.complete ? '' : ', partial subtotal'}.` : '')
     + (state.kills ? ' Kills per day in the lower pane.' : '')
-    + (state.price && view.lastPrice ? ` With the ${state.world === 'All' ? 'median of daily world-median TC Sell Offers' : 'median TC Sell Offer'} per period on the left scale.` : '')
+    + (state.price && view.lastPrice ? ` With the ${state.world === 'All' ? 'median of daily world-median TC Sell Offers' : 'median TC Sell Offer'} per period on the right scale.` : '')
     + (state.rate !== null ? ` With gold plus ${state.rate * 100}% of NPC potential, an assumption.` : '')
     + (state.stable ? ' With the constant creature set for comparison.' : '')
     + ' Full period values and coverage are available in Help.');
@@ -554,7 +554,8 @@ function connectTools() {
     worlds: () => data.index ? overviewRows(data.overview, state.interval, state.measure, state.range, '').map(r => ({ world: r.world, last: r.value, ratio: r.change, retired: !!r.ended,
       meta: r.dir === 'all' ? 'Every world, summed' : [marketOf(r.world)?.type, marketOf(r.world)?.location, r.ended && `ended ${r.ended}`].filter(Boolean).join(', ') })) : [],
     open: world => { $('filter').value = state.filter = ''; select(world).catch(failed); },
-    reset: () => { chart.chart.priceScale('right').applyOptions({ autoScale: true }); applyRange(); },
+    priceScaleId: 'left',   // gold's scale; the Tibia Coin price has the right one
+    reset: () => { chart.chart.priceScale('left').applyOptions({ autoScale: true }); applyRange(); },
     setStyle: style => chart.setStyle(style),
     retheme: () => chart.retheme(),
     replay: day => { chart.replay(day); if (!day) applyRange(); },

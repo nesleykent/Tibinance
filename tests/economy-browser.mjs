@@ -132,7 +132,7 @@ try {
   assert.equal(await page.getAttribute('#priceToggle','disabled'),null);
   assert.equal(await page.getAttribute('#priceToggle','aria-pressed'),'true');
   assert.match(await page.getAttribute('#priceToggle','title'),/daily median across observed worlds/);
-  assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('left').options().visible),true);
+  assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('right').options().visible),true);
   assert.ok(await page.evaluate(()=>window.economyTestSeries[1].data().some(p=>Number.isFinite(p.value))));
   assert.match(await text('#legend'),/TC Sell Offer \(world median\)/);
   assert.match(await page.locator('#chartData thead').textContent(),/World-days with data/);
@@ -155,7 +155,7 @@ try {
   const globalPriceWindow=await page.evaluate(()=>window.economyTestCharts[0].timeScale().getVisibleLogicalRange());
   await page.click('#priceToggle');
   assert.equal(await page.getAttribute('#priceToggle','aria-pressed'),'false');
-  assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('left').options().visible),false);
+  assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('right').options().visible),false);
   await page.click('#priceToggle');
   assert.equal(await page.getAttribute('#priceToggle','aria-pressed'),'true');
   const globalPriceWindowAfter=await page.evaluate(()=>window.economyTestCharts[0].timeScale().getVisibleLogicalRange());
@@ -167,7 +167,7 @@ try {
   const globalSum=sumPeriod(globalHistory,[globalHistory.first,globalLast.end]);
   assert.equal(await text('#lastValue'),gold(globalSum.grossPotential));
   assert.ok(globalSum.grossPotential>0);
-  assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('left').options().mode),0,'global TC retains its linear gold-per-coin unit beside log accumulated gold');
+  assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('right').options().mode),0,'global TC retains its linear gold-per-coin unit beside log accumulated gold');
   assert.equal(await page.getAttribute('#priceToggle','aria-pressed'),'true');
   await page.reload(); await ready();
   assert.equal(await text('#world'),'All');
@@ -246,7 +246,7 @@ try {
   assert.ok(Math.abs(compared.from-explored.from)<0.001 && Math.abs(compared.to-explored.to)<0.001,`comparison retains the explored time window: ${JSON.stringify({explored,compared})}`);
   assert.equal(await page.getAttribute('#priceToggle','aria-pressed'),'true');
   assert.match(await text('#legend'),/TC Sell Offer [\d,]+ median of \d+ days?/);
-  assert.match(await page.getAttribute('#chart','aria-label'),/median TC Sell Offer per period on the left scale/);
+  assert.match(await page.getAttribute('#chart','aria-label'),/median TC Sell Offer per period on the right scale/);
   await page.click('#priceToggle');
   await page.click('#range [data-range="1Y"]');
 
@@ -382,10 +382,10 @@ try {
   const modeWindow=await page.evaluate(()=>window.economyTestCharts[0].timeScale().getVisibleLogicalRange());
   assert.ok(Math.abs(modeWindow.from-initialWindow.from)<0.001 && Math.abs(modeWindow.to-initialWindow.to)<0.001,'visibility and mode retain the chart window');
   assert.equal(param('mode'),'accumulated');
-  assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('right').options().mode),1,'accumulated gold uses a logarithmic scale');
+  assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('left').options().mode),1,'accumulated gold uses a logarithmic scale');
   assert.equal(await page.getAttribute('#priceToggle','aria-pressed'),'true','Tibia Coin price remains shown in accumulated mode');
-  assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('left').options().mode),0,'price keeps its independent linear gold-per-TC scale');
-  assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('left').options().visible),true,'the price axis is visible');
+  assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('right').options().mode),0,'price keeps its independent linear gold-per-TC scale');
+  assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('right').options().visible),true,'the price axis is visible');
   assert.ok(await page.evaluate(()=>window.economyTestSeries[1].data().some(p=>Number.isFinite(p.value))),'price is plotted alongside all accumulated gold series');
   for (const interval of ['week','month','day']) {
     await page.click(`#interval [data-interval="${interval}"]`);
@@ -424,7 +424,7 @@ try {
   await page.click('#measure [data-measure="coins"]');
   await page.locator('#valueMode [data-mode="accumulated"]').focus(); await page.keyboard.press('Home');
   assert.equal(await text('#lastValue'),gold((await expected('antica','day','coins','3M')).value));
-  assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('right').options().mode),0,'daily averages return to a linear scale');
+  assert.equal(await page.evaluate(()=>window.economyTestCharts[0].priceScale('left').options().mode),0,'daily averages return to a linear scale');
   assert.equal(await page.evaluate(()=>window.economyTestCharts.length),1);
   await page.goto(allOptionsUrl); await ready();
 

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Tibinance">
+  <!-- The mark of docs/assets/tibinance-cover.svg: its three candles, in white on black. -->
+  <rect width="64" height="64" rx="14" fill="#000"/>
+  <g transform="translate(32 32) scale(.82) translate(-82 -83.5)" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round">
+    <path d="M66 71V99M82 61V106M98 77V96"/>
+    <path d="M62 82H70M78 74H86M94 85H102" stroke-width="8"/>
+  </g>
+</svg>

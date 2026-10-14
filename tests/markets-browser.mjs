@@ -48,7 +48,7 @@ try {
   const captureEdges=await pageEdges();
   assert.ok(captureEdges[0]>100,`Capture's margin at 1440px: ${captureEdges[0]}`);
   assert.deepEqual(await page.$$eval('#site-menu a',as=>as.map(a=>[a.textContent,a.getAttribute('href')])),
-    [['Capture','./'],['Markets overview','markets-overview.html'],['Markets','markets.html'],['Economy overview','economy-overview.html'],['Economy','economy.html'],['Trade','trade.html'],['Research','reports/tc-cycle/']]);
+    [['Capture','./'],['Economy','economy.html'],['Economy overview','economy-overview.html'],['Markets','markets.html'],['Markets overview','markets-overview.html'],['Research','reports/tc-cycle/'],['Trade','trade.html']]);
   await page.click('header.site [data-site-menu]');
   await page.click('#site-menu a[href="markets.html"]');
   await shown('Antica');
@@ -166,9 +166,10 @@ try {
   assert.deepEqual(await page.$$eval('#side button',bs=>bs.map(b=>b.title)),
     [`Best Sell Offer: ${number.format(gentebra.sell)}`,`Best Buy Offer: ${number.format(gentebra.buy)}`]);
   assert.equal(await text('#lastRange'),'1Y');
-  // Copy rule: no middle dots anywhere, generated text included; the metadata is separate items instead.
+  // Copy rule: no middle dots anywhere, generated text included; the metadata is separate items instead, BattlEye by
+  // its colour alone as the type stands without a label.
   assert.doesNotMatch(await page.content(),/\u00b7|&middot;/);
-  assert.deepEqual(await page.$$eval('#worldMeta > span',spans=>spans.map(s=>s.textContent)),['Optional PvP','BattlEye Yellow']);
+  assert.deepEqual(await page.$$eval('#worldMeta > span',spans=>spans.map(s=>s.textContent)),['Optional PvP','Yellow']);
   // The bottom toolbar holds the ranges, the day the history runs through, the server clock and the price-scale modes;
   // the world's line keeps to one row.
   assert.match(await text('.toolbar-bottom'),new RegExp(`^1M 3M 6M YTD 1Y All Server days through ${index.through} \\d\\d:\\d\\d:\\d\\d \\(CES?T\\) % log auto$`));

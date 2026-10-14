@@ -339,17 +339,19 @@ $('drawingsList')?.addEventListener('click', e => {
 /* ------------------------------------------------------------- price scale */
 // TradingView's modes: percent and logarithmic exclude each other; auto fits the visible values; invert flips.
 let scale = { mode: 'normal', invert: false };
+// The main series' scale: the right one, or the page's own (Economy's gold is on the left).
+const mainScale = () => ctx.chart.priceScale(ctx.priceScaleId ?? 'right');
 function applyScale() {
   if (!ctx) return;
   const L = window.LightweightCharts, mode = { log: L.PriceScaleMode.Logarithmic, percent: L.PriceScaleMode.Percentage }[scale.mode] ?? L.PriceScaleMode.Normal;
-  ctx.chart.priceScale('right').applyOptions({ mode, invertScale: scale.invert });
+  mainScale().applyOptions({ mode, invertScale: scale.invert });
   showScale();
   drawings?.redraw();
 }
 function showScale() {
   if (!ctx) return;
   // The page may set a mode of its own (Economy's accumulated gold is logarithmic): the buttons read the chart's.
-  const L = window.LightweightCharts, options = ctx.chart.priceScale('right').options(), auto = options.autoScale;
+  const L = window.LightweightCharts, options = mainScale().options(), auto = options.autoScale;
   scale.mode = options.mode === L.PriceScaleMode.Logarithmic ? 'log' : options.mode === L.PriceScaleMode.Percentage ? 'percent' : 'normal';
   scale.invert = !!options.invertScale;
   document.querySelectorAll('.tv-scale [data-scale]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.scale === 'auto' ? auto : b.dataset.scale === scale.mode)));
@@ -357,7 +359,7 @@ function showScale() {
 document.querySelector('.tv-scale')?.addEventListener('click', e => {
   const b = e.target.closest('[data-scale]'); if (!b || !ctx) return;
   // Auto, as TradingView's: on fits the visible values; pressed again, the scale stays where it is.
-  if (b.dataset.scale === 'auto') ctx.chart.priceScale('right').applyOptions({ autoScale: !ctx.chart.priceScale('right').options().autoScale });
+  if (b.dataset.scale === 'auto') mainScale().applyOptions({ autoScale: !mainScale().options().autoScale });
   else scale.mode = scale.mode === b.dataset.scale ? 'normal' : b.dataset.scale;
   applyScale();
 });

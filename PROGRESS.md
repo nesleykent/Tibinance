@@ -25,7 +25,8 @@
 - **Merged origin/main** (Economy "All worlds" aggregate, global TC price, full history by default): conflicts in economy.html (script version, now `economy.js?v=20261014-tv-global`) and js/economy.js imports, resolved keeping both sides. The Economy overview takes its headline figures and 1M changes from the aggregate row and leaves it out of the world lists; the terminal's search names it "Every world, summed".
 - **Release:** the user approved publishing ("sim", 2026-10-14). Full release of `2ca1fbf` by `tools/release.mjs --full`, after `validate_site` (9 checks PASS), 228 unit tests and the Chrome browser suites (Markets, Economy, site header, events, events panel, forecast history, projections, Screener, TIB, global, Trade, tables, statistics, Capture, canonical events, TV terminal, overviews). WebKit is not installed here and was not run.
 - **Live:** release/0012 (artifact 52cb9cf6…, 951 files) deployed by Pages run 38636976690; `verify-live --all` PASS, 951 live files equal the release.
-- **Exact next step:** none; the TradingView clone is live.
+- **Owner review after release/0012 (2026-10-14):** site menu in alphabetical order on every page; the Tibinance mark is the cover's three candles (docs/assets/tibinance-cover.svg) in black and white (owner: "use preto e branco"), inline in every header in the header's ink and as the favicon (`tibinance-icon.svg`, white on black); Economy reads gold and kills on the left scale and the Tibia Coin price on the right (terminal %/log/auto follow `priceScaleId`); BattlEye shown by its colour alone in the legend, details, Screener cards, Economy and the exported image. Units 228/228, validate_site PASS, Markets, Economy, site header, Trade, TV terminal, overviews, Screener, events, TIB, projections and Capture suites PASS in Chrome.
+- **Exact next step:** a release only on the owner's instruction.
 
 ---
 

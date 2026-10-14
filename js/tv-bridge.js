@@ -13,6 +13,7 @@
  *   values()          [{time, value}] of the main line, for indicators and the magnet
  *   format(v)         a price as the page writes it
  *   worlds?()         [{world, last, ratio, meta}] for the search dialog; open?(world) opens one
+ *   priceScaleId?     the main series' price scale, 'right' unless the page says otherwise
  *   reset()           the chart's default view (Alt+R)
  *   setStyle?(style)  'line' | 'markers' | 'step' | 'curved'
  *   retheme()         re-read the colour tokens

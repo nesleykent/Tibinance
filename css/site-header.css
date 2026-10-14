@@ -22,7 +22,8 @@
 }
 /* The wordmark keeps its place on the page's edge; the hover track extends past it. */
 .site-nav > :first-child { margin-inline-start:calc(var(--space-2) * -1); }
-.site-home { color:var(--ink); font-family:var(--font-ui); font-size:var(--step-1); font-weight:var(--weight-strong); letter-spacing:var(--tracking-tight); }
+.site-logo { flex:none; width:var(--space-5); height:var(--space-5); }
+.site-home { gap:var(--space-2); color:var(--ink); font-family:var(--font-ui); font-size:var(--step-1); font-weight:var(--weight-strong); letter-spacing:var(--tracking-tight); }
 .site-section,.site-slash { color:var(--muted); font-family:var(--font-editorial); font-size:var(--step-1); font-weight:var(--weight-regular); letter-spacing:var(--tracking-tight); }
 /* the crumbs' own padding spaces the slash: a clear gap on each side */
 .site-slash { margin-inline:0; }
@@ -81,6 +82,8 @@
 /* Phones: the section's controls give up their chevrons and the header's gaps tighten, so a world's name fits beside the section. */
 @media (max-width:480px) {
   .site .wrap { gap:var(--space-2); }
+  /* The wordmark alone, so a section's controls keep their room (the TradingView pages keep the mark instead). */
+  .site:not(.tv-header) .site-logo { display:none; }
   .site-controls { gap:0; }
   .site-controls .site-chevron { display:none; }
 }

@@ -8,7 +8,9 @@
  *                gold, so the gold scale never runs below zero to make room for them
  *   stable       the constant creature set's gross potential per day, dashed (when compared)
  *   scenario     gold plus a stated share of NPC potential, dashed, an assumption (when chosen)
- *   price        the median Tibia Coin Sell Offer of each period, on the left scale (when shown)
+ *   price        the median Tibia Coin Sell Offer of each period, on the right scale (when shown)
+ *
+ * Gold and kills are on the left scale, the Tibia Coin price alone on the right, so each reads against its own axis.
  *
  * Daily averages omit incomplete bins. Accumulated gold uses available daily subtotals with coverage in the page
  * readout; wholly missing bins remain whitespace. Hidden series retain their timeline and the explored range.
@@ -54,20 +56,20 @@ export function economyChart(container, { onCrosshair } = {}) {
     layout: { background: { type: 'solid', color: 'transparent' }, textColor: c.text, fontFamily: token('--font-ui'), fontSize: 11,
       panes: { separatorColor: c.rule } },
     grid: { vertLines: { visible: false }, horzLines: { color: c.grid } },
-    rightPriceScale: { borderVisible: false, entireTextOnly: true, scaleMargins: { top: 0.16, bottom: 0.06 } },
-    leftPriceScale: { visible: false, borderVisible: false, entireTextOnly: true, scaleMargins: { top: 0.16, bottom: 0.06 } },
+    leftPriceScale: { visible: true, borderVisible: false, entireTextOnly: true, scaleMargins: { top: 0.16, bottom: 0.06 } },
+    rightPriceScale: { visible: false, borderVisible: false, entireTextOnly: true, scaleMargins: { top: 0.16, bottom: 0.06 } },
     // The library preserves the time window across container and optional-axis width changes.
     // https://tradingview.github.io/lightweight-charts/docs/api/interfaces/TimeScaleOptions#lockvisibletimerangeonresize
     timeScale: { borderVisible: false, rightOffset: 4, minBarSpacing: 0.1, lockVisibleTimeRangeOnResize: true },
     crosshair: { mode: L.CrosshairMode.Normal, vertLine: { color: c.crosshair, labelBackgroundColor: c.label }, horzLine: { color: c.crosshair, labelBackgroundColor: c.label } },
     localization: { priceFormatter: v => axis.format(v), timeFormatter: dayOf },
   });
-  const line = options => chart.addSeries(L.LineSeries, { priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false, ...options });
-  const kills = chart.addSeries(L.HistogramSeries, { priceLineVisible: false, lastValueVisible: false,
+  const line = options => chart.addSeries(L.LineSeries, { priceScaleId: 'left', priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false, ...options });
+  const kills = chart.addSeries(L.HistogramSeries, { priceScaleId: 'left', priceLineVisible: false, lastValueVisible: false,
     priceFormat: { type: 'custom', minMove: 1, formatter: v => axis.format(v) } }, 1);
   kills.priceScale().applyOptions({ scaleMargins: { top: 0.1, bottom: 0 } });
   chart.panes()[1]?.setStretchFactor(0.22);
-  const price = line({ priceScaleId: 'left', color: c.price, lineWidth: 1 });
+  const price = line({ priceScaleId: 'right', color: c.price, lineWidth: 1 });
   const stable = line({ color: c.stable, lineWidth: 2, lineStyle: L.LineStyle.Dashed });
   const scenario = line({ color: c.scenario, lineWidth: 2, lineStyle: L.LineStyle.Dashed });
   const measures = Object.fromEntries(Object.keys(MEASURES).map(k => [k, {
@@ -89,7 +91,7 @@ export function economyChart(container, { onCrosshair } = {}) {
   };
   chart.timeScale().subscribeVisibleLogicalRangeChange(markers);
   chart.subscribeCrosshairMove(p => onCrosshair?.(p.time === undefined ? null : dayOf(p.time)));
-  let topFraction = null, leftShown = false;
+  let topFraction = null;
   const whitespaceOrValue = (p, v) => (v === null || v === undefined ? { time: p.start } : { time: p.start, value: v });
 
   return {
@@ -101,7 +103,7 @@ export function economyChart(container, { onCrosshair } = {}) {
       const cut = p => view.until && p.start > view.until;
       if (view.mode !== scaleFor) {
         scaleFor = view.mode;
-        chart.priceScale('right').applyOptions({ mode: view.mode === 'accumulated' ? L.PriceScaleMode.Logarithmic : L.PriceScaleMode.Normal });
+        chart.priceScale('left').applyOptions({ mode: view.mode === 'accumulated' ? L.PriceScaleMode.Logarithmic : L.PriceScaleMode.Normal });
       }
       const color = c[view.measure];
       for (const [k, m] of Object.entries(MEASURES)) {
@@ -117,8 +119,7 @@ export function economyChart(container, { onCrosshair } = {}) {
       scenario.setData(view.rate === null ? [] : view.periods.map(p => whitespaceOrValue(p,
         cut(p) || view.values.get(p.start).directCoins === null ? null : view.values.get(p.start).directCoins + view.rate * view.values.get(p.start).npcPotential)));
       price.setData(view.price ? view.periods.map(p => whitespaceOrValue(p, cut(p) ? null : view.price.get(p.start)?.sell ?? null)) : []);
-      leftShown = Boolean(view.price);
-      chart.applyOptions({ leftPriceScale: { visible: leftShown } });
+      chart.applyOptions({ rightPriceScale: { visible: Boolean(view.price) } });
     },
     show(from, to) { chart.timeScale().setVisibleRange({ from, to }); },
     // The series drawings attach to and indicators read: the measure shown.
@@ -148,9 +149,9 @@ export function economyChart(container, { onCrosshair } = {}) {
         for (const id of ['right', 'left']) chart.priceScale(id).applyOptions({ scaleMargins: { top: 0.08, bottom: 0.06 } });
         return;
       }
-      // Clear of the left scale when the TC price shows one.
+      // Clear of the gold scale, on the left.
       let left = 0;
-      try { left = leftShown ? chart.priceScale('left').width() : 0; } catch { /* not laid out yet */ }
+      try { left = chart.priceScale('left').width(); } catch { /* not laid out yet */ }
       element.style.marginLeft = left ? `${left + 8}px` : '';
       element.style.maxWidth = left ? `calc(100% - ${left + 8}px - var(--space-8) * 2)` : '';
       const area = container.getBoundingClientRect(), head = element.getBoundingClientRect();

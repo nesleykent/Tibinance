@@ -27,7 +27,7 @@ body.tv-app h1,body.tv-app h2,body.tv-app h3,body.tv-app h4 { font-family:var(--
 .tv-header .site-crumb { min-height:34px; padding:0 8px; border-radius:4px; font-family:var(--tv-font); letter-spacing:0; }
 .tv-header .site-home { gap:6px; color:var(--tv-text); font-size:15px; font-weight:600; }
 .tv-header .site-home:hover { background:var(--tv-btn-hover); }
-.tv-header .tv-logo { width:26px; height:26px; flex:none; color:var(--tv-text); }
+.tv-header .site-logo { width:24px; height:24px; }
 .tv-header .site-slash { display:none; }
 .tv-header .site-section { color:var(--tv-text); font-size:14px; }
 .tv-header .site-section:is(:hover,[aria-expanded="true"]) { background:var(--tv-btn-hover); }
