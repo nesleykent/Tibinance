@@ -1,14 +1,14 @@
 {
  "format": 1,
  "note": "",
- "approver": "Repository owner approved publishing 97135ba (\"sim\"); Claude Code verified validate_site, unit tests and Chrome browser suites",
+ "approver": "Repository owner standing approval (\"sim, sempre publique\"); Claude Code verified validate_site, unit tests and Chrome browser suites",
  "artifact": {
-  "bytes": 139672360,
-  "digest": "ea654830efe47794cad1357552753efed09efb2166efaf3443cc0020cddc099d",
+  "bytes": 139684386,
+  "digest": "5130b0df14e437ace42da377fc228cad013a56056c55412cb635b379d38ea134",
   "files": 952
  },
- "commit": "97135ba84159a4c77d70a9135583debb0a9129c7",
- "createdAt": "2026-10-14T21:20:57.114Z",
+ "commit": "77c7408c96beb92fc6326a797fb8cc6d6b4a8349",
+ "createdAt": "2026-10-14T21:43:19.278Z",
  "kind": "full",
  "policy": {
   "dataPaths": [
@@ -34,10 +34,10 @@
  },
  "policySha256": "8598ea053fc9fba9189b10e9c9bbbd33f9b89b36ab503161a844995d81008ad9",
  "source": {
-  "commit": "97135ba84159a4c77d70a9135583debb0a9129c7"
+  "commit": "77c7408c96beb92fc6326a797fb8cc6d6b4a8349"
  },
- "tag": "release/0013",
- "tree": "d3f4155109cc63512f4e0243983c3e4d4caf426c",
+ "tag": "release/0014",
+ "tree": "75af1ddc9d5877153b97abec76bdf790a53e5d56",
  "validation": {
   "checks": [
    {
@@ -78,12 +78,12 @@
    }
   ],
   "validator": {
-   "commit": "97135ba84159a4c77d70a9135583debb0a9129c7",
+   "commit": "77c7408c96beb92fc6326a797fb8cc6d6b4a8349",
    "path": "tools/ci/validate_site.mjs"
   }
  },
  "record": {
-  "seq": 13,
-  "hash": "fb17cd718eb3a7a7a82034f57a46d071d8cea72e21de4bee074e55ab6d446706"
+  "seq": 14,
+  "hash": "f8626624b9172605e82447e44c2919983adc6aa43524c9a11583c810b24c5006"
  }
 }
