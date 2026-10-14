@@ -68,3 +68,45 @@ test('cross-world rows carry the warnings that limit comparison', () => {
   assert.ok(rows[0].warnings.some(w => /kill coverage/.test(w)));
   assert.ok(rows[1].warnings.includes('no data in this period'));
 });
+
+import { median, monthlySums, chartPeriods, brokenLine } from '../js/economy-data.js';
+test('no observations are null, while an observed zero remains zero', () => {
+  const missing = sumPeriod(world, ['2025-09-04', '2025-09-04']);
+  for (const k of ['directCoins', 'npcPotential', 'grossPotential', 'kills', 'playerDeaths']) assert.equal(missing[k], null, k);
+  assert.equal(withLiquidation(missing, 1), null);
+  const zero = { ...world, directCoins: world.directCoins.map(() => 0), npcPotential: world.npcPotential.map(() => 0) };
+  assert.equal(sumPeriod(zero, ['2025-09-01', '2025-09-01']).grossPotential, 0);
+});
+test('quarterly contribution truncation conserves every component and kill in Other', () => {
+  const creatures = Array.from({ length: 40 }, (_, i) => [i, 1, i + 1, 2]);
+  const c = contributions({ months: [{ month: '2025-09', killsValued: 40, directCoins: 820, npcPotential: 80,
+    creatures, other: { kills: 0, directCoins: 0, npcPotential: 0 } }] }, ['2025-07-01', '2025-09-30']);
+  assert.equal(c.rows.length, 30);
+  for (const field of ['kills', 'directCoins', 'npcPotential']) assert.equal(c.rows.reduce((s, r) => s + r[field], 0) + c.other[field], c.total[field]);
+});
+test('monthly comparisons count calendar days, including leap February and no-data worlds', () => {
+  const m = monthlySums([['2024-02', 100, 200, 20, 19, 29, 29]], ['2024-02-01', '2024-02-29']);
+  assert.equal(m.complete, true); assert.equal(m.grossPotential, 300);
+  assert.equal(monthlySums([], ['2024-02-01', '2024-02-29']).grossPotential, null);
+});
+test('market medians average the middle pair and retain price sample counts independently', () => {
+  assert.equal(median([100, 200, null, 400, 300]), 250);
+  assert.equal(median([]), null);
+  const rows = chartPeriods(world, [['2025-09-01', 100], ['2025-09-02', 200]], 'week');
+  assert.equal(rows[1].sell, 150); assert.equal(rows[1].priceDays, 2);
+  assert.equal(rows[1].complete, false);
+});
+test('line segments stop before missing values and never invent a zero', () => {
+  assert.deepEqual(brokenLine([{ start: '2025-09-01', n: 4 }, { start: '2025-09-02', n: null }, { start: '2025-09-03', n: 0 }], p => p.n),
+    [{ time: '2025-09-01', value: 4, color: 'rgba(0,0,0,0)' }, { time: '2025-09-02' }, { time: '2025-09-03', value: 0 }]);
+});
+
+
+import { readFileSync } from 'node:fs';
+test('Economy reuses shared tokens directly and defines no replacement design tokens', () => {
+  const css = readFileSync(new URL('../css/economy.css', import.meta.url), 'utf8');
+  assert.doesNotMatch(css, /--[a-z][a-z0-9-]*\s*:/i);
+  assert.doesNotMatch(css, /#[0-9a-f]{3,8}\b|rgba?\(/i);
+  const html = readFileSync(new URL('../economy.html', import.meta.url), 'utf8');
+  assert.doesNotMatch(html, /type=["']checkbox["']/i);
+});

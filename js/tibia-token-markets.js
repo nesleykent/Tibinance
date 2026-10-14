@@ -2,13 +2,13 @@
 import { esc } from './format.js';
 import { RANGES, changeOver, rangeStart, dayGrid } from './market-series.js';
 // Version the changed shared modules: GitHub Pages can retain pre-TIB code in browser caches.
-import { createMarketChart, dayOf } from './market-chart.js?v=20261014-history';
-import { marketImage } from './market-export.js?v=20261014-history';
+import { createMarketChart, dayOf } from './market-chart.js?v=20261014-rebuild';
+import { marketImage } from './market-export.js?v=20261014-rebuild';
 import { dock } from './markets-dock.js';
 import { loadEvents, addEventDays } from './events.js';
-import { eventsPanel } from './market-events-panel.js?v=20261014-history';
-import { eventMarks } from './market-events-ui.js?v=20261014-history';
-import { TOKEN_PROFILE, tokenPrice, tokenView, CONTRACT } from './tibia-token.js?v=20261014-history';
+import { eventsPanel } from './market-events-panel.js?v=20261014-rebuild';
+import { eventMarks } from './market-events-ui.js?v=20261014-rebuild';
+import { TOKEN_PROFILE, tokenPrice, tokenView, CONTRACT } from './tibia-token.js?v=20261014-rebuild';
 const $ = id => document.getElementById(id);
 const percent = new Intl.NumberFormat('en-US', { style: 'percent', maximumFractionDigits: 2, signDisplay: 'exceptZero' });
 const params = new URLSearchParams(location.search);
@@ -30,7 +30,7 @@ const browser = eventsPanel($('eventsPanel'), {
   }
 });
 function showEvents(on) {
-  market.setVisible('events', on); $('eventMarkers').checked = on;
+  market.setVisible('events', on); $('eventMarkers').setAttribute('aria-pressed', String(on));
   if (!on) marks.hide();
   try { localStorage.setItem('tibinance.markets.events', on ? 'shown' : 'hidden'); } catch { /* this visit only */ }
 }
@@ -107,7 +107,7 @@ async function main() {
   await new Promise(requestAnimationFrame); applyRange(); legend();
   chart.subscribeCrosshairMove(p => legend(p.time === undefined ? null : dayOf(p.time)));
   $('range').addEventListener('click', e => { const next = e.target.closest('button')?.dataset.range; if (next) { range = next; applyRange(); } });
-  $('eventMarkers').addEventListener('change', e => showEvents(e.target.checked));
+  $('eventMarkers').addEventListener('click', () => showEvents($('eventMarkers').getAttribute('aria-pressed') !== 'true'));
   $('exportButton').addEventListener('click', exportImage);
   $('expand').addEventListener('click', async () => {
     try {

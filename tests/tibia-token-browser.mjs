@@ -56,7 +56,7 @@ try {
   await page.locator('#eventAgenda .event-row').first().click();
   await page.locator('#eventFocus').click();
   assert.match(await page.locator('#eventFocusStatus').textContent(), /Chart focused/);
-  await page.locator('#eventMarkers').uncheck();
+  await page.locator('#eventMarkers').click();
   assert.equal(await page.locator('#eventMarks button').count(), 0);
   await page.locator('#range [data-range="All"]').click();
   const downloadPromise = page.waitForEvent('download');

@@ -43,7 +43,7 @@ try {
     await page.waitForFunction(w=>document.getElementById('world').textContent===w && document.getElementById('market').getAttribute('aria-busy')==='false',world);
   };
   const editions=()=>page.$$eval('#historyEditions li',lis=>lis.map(li=>({title:li.querySelector('.history-draw span:last-child').textContent,
-    point:li.querySelector('.history-point').textContent.replace(/\s+/g,' '),checked:li.querySelector('input').checked,disabled:li.querySelector('input').disabled,cls:li.className})));
+    point:li.querySelector('.history-point').textContent.replace(/\s+/g,' '),checked:li.querySelector('button').getAttribute('aria-pressed')==='true',disabled:li.querySelector('button').disabled,cls:li.className})));
   const settle=()=>page.waitForFunction(()=>!document.getElementById('historyContext').textContent.startsWith('Loading'));
   const plotBox=()=>page.$eval('#chart table tr td:nth-child(2)',e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height};});
   const dayAt=async f=>{const b=await plotBox();await page.mouse.move(b.x+b.w*f,b.y+b.h*0.35);await page.waitForTimeout(40);return text('#legend .day');};
@@ -95,37 +95,37 @@ try {
   await settle();
   assert.equal((await editions()).length,listed(today,{fallback:false}).published.length,'website evidence only');
   await page.selectOption('#historyEvidence','repository');
-  await page.check('#historyArchived');
+  await page.click('#historyArchived');
   assert.match(await text('#historyUnpublished'),/^Archived, never published/);
   assert.equal(await page.$$eval('#historyUnpublished li',lis=>lis.length),now.unpublished.length);
-  await page.uncheck('#historyArchived');
+  await page.click('#historyArchived');
 
   // ---- Draw: choosing an edition shows the paths; each keeps its slot; three at most.
   await page.selectOption('#historyHorizon','4');
   const end=market.through;
   assert.equal(await dayAt(0.999),end,'before any choice the chart ends with the history');
-  await page.locator('#historyEditions input').nth(0).check();
+  await page.locator('#historyEditions button').nth(0).click();
   await page.waitForFunction(()=>document.getElementById('chart').getAttribute('aria-label').includes('Past forecasts drawn'));
-  assert.equal(await page.isChecked('#historyPaths'),true);
+  assert.equal(await page.getAttribute('#historyPaths','aria-pressed'),'true');
   const one=now.published[0];
   assert.match(await label(),new RegExp(`Past forecasts drawn: edition ${one.forecast.dataCutoff} of the Research offer scenario, public since ${one.publication.at.slice(0,10)}`));
   assert.match(await text('#historyLegend'),new RegExp(`^1\\. Edition ${one.forecast.dataCutoff}`));
   assert.ok(await dayAt(0.95)>end,'the axis runs past the history to show the path');
-  await page.locator('#historyEditions input').nth(1).check();
+  await page.locator('#historyEditions button').nth(1).click();
   await page.waitForFunction(()=>(document.getElementById('chart').getAttribute('aria-label').match(/edition \d{4}-\d\d-\d\d of/g) ?? []).length===2);
   shown=await editions();
   assert.deepEqual(shown.slice(0,2).map(e=>e.cls),['history-edition is-drawn slot-1','history-edition is-drawn slot-2']);
   // Unchoosing the first frees its slot; the second keeps its colour and number.
-  await page.locator('#historyEditions input').nth(0).uncheck();
+  await page.locator('#historyEditions button').nth(0).click();
   await page.waitForFunction(()=>(document.getElementById('chart').getAttribute('aria-label').match(/edition \d{4}-\d\d-\d\d of/g) ?? []).length===1);
   assert.equal((await editions())[1].cls,'history-edition is-drawn slot-2');
   if (now.published.length>=4) {
-    for (const i of [0,2]) await page.locator('#historyEditions input').nth(i).check();
+    for (const i of [0,2]) await page.locator('#historyEditions button').nth(i).click();
     await page.waitForTimeout(300);
     shown=await editions();
     assert.equal(shown.filter(e=>e.checked).length,3);
     assert.ok(shown.filter(e=>!e.checked).every(e=>e.disabled),'three at most');
-    await page.locator('#historyEditions input').nth(2).uncheck();
+    await page.locator('#historyEditions button').nth(2).click();
     await page.waitForTimeout(300);
   }
   const drawn=(await editions()).filter(e=>e.checked).length;
@@ -139,15 +139,15 @@ try {
     return page.evaluate(async png=>{const i=await createImageBitmap(await (await fetch(`data:image/png;base64,${png}`)).blob());return i.height/(i.width/1200);},png);
   };
   await page.click('#eventsToggle');
-  await page.uncheck('#eventMarkers');
+  await page.click('#eventMarkers');
   await page.click('#historyToggle');
   assert.equal(await exportHeight(),780+12+drawn*20,'one line of notes per drawn edition');
-  await page.uncheck('#historyPaths');
+  await page.click('#historyPaths');
   await page.waitForFunction(()=>!document.getElementById('chart').getAttribute('aria-label').includes('Past forecasts'));
   assert.equal(await exportHeight(),780,'hidden on the page, absent from the image');
   assert.equal(await dayAt(0.999),end,'hidden, the chart ends with the history again');
   assert.equal((await editions()).filter(e=>e.checked).length,drawn,'hiding keeps the choice');
-  await page.check('#historyPaths');
+  await page.click('#historyPaths');
   await page.waitForFunction(()=>document.getElementById('chart').getAttribute('aria-label').includes('Past forecasts'));
 
   // ---- The side and the world: the panel and the paths follow the page.

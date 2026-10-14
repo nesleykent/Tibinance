@@ -12,7 +12,7 @@
  * last observation that a path reaches are put on the axis one by one, so time stays proportional. Hidden, or with
  * nothing chosen, the layer draws nothing and leaves the market series untouched.
  */
-import { historyAxisDays } from './forecast-archive.js?v=20261014-history';
+import { historyAxisDays } from './forecast-archive.js?v=20261014-rebuild';
 
 export const HISTORY_SLOTS = 3;
 

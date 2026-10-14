@@ -257,3 +257,45 @@ partitions.
 - **Sensitivity rules** (extended, pooled, coins-only, alternate samples, ±1 day) are implemented or trivial, but
   not yet published as builds.
 - **Population history** is the open requirement above.
+
+
+## Interface reconstruction, 2026-10-14
+
+The token reference is `b7eb0e4`, the implementation immediately preceding the economic-intelligence expansion.
+Its shared declarations in `css/app.css` and `reports/tc-cycle/report.css` are unchanged. Economy and forecast
+history use those existing tokens directly; they define no replacement palette, sizing or typography tokens.
+The reference supplies tokens only: no earlier interface or functionality has been restored.
+
+Economy uses one persistent Lightweight Charts instance, one plot and one timeline. Its primary series are direct
+coins, potential NPC conversion and their gross sum from valued creatures. Optional TC Sell Offer medians use the
+left price axis; optional activity bars use an independent count scale at the bottom. The right axis remains gold
+per selected period. Comparisons, liquidation scenarios and constant-set overlays reuse that same chart and retain
+the visible time window. Resizing preserves the window. Exact figures, price-observation counts and coverage are
+also available in the HTML chart table. Missing and unfinished periods have no gold line segment; observed zero
+remains zero. No uncertainty interval is invented.
+
+Day and week cross-world comparisons now sum exactly the selected dates. Month, quarter and year comparisons
+use the matching complete calendar-month aggregates. Worlds without data remain listed as unavailable; they are
+not assigned zero or silently removed. Choosing a world without data at the requested date retains that date.
+Comparability means full period coverage and at least 95% valued kills only; world age and merger lineage are not
+controlled. The caption states that limitation.
+
+The constant creature set is an additional comparison, rather than a replacement for the gross total beside
+full-set components. Its loot values can still change with evidence. All five hypothetical liquidation rates are
+available, including 75%, and are labelled assumptions. Period, world, scenario, constant-set, comparison filter,
+chart window and optional chart comparisons are retained in the URL. Segmented controls support arrow keys,
+Home and End. Economy and the Markets workspace use buttons instead of checkbox controls.
+
+Creature contributions remain monthly because the source files preserve monthly top lists. Day/week views
+explicitly label this context. Quarterly/yearly lists move every omitted row into Other. A creature absent from
+a monthly top list has only its listed-month portion available; its growth is suppressed unless both compared
+periods include it in every relevant monthly list. Small gold differences from daily sums reflect source rounding.
+
+Forecast-history as-of views use repository evidence when that was available before a later website deployment.
+Website-only filtering does not misclassify repository-published editions as never published. Accuracy views
+exclude later evaluations and retain only corrections archived by the selected date. The immutable archive,
+input snapshots, published forecasts and research ledger are unchanged.
+
+The pre-existing gaps documented above remain: historical active-population inputs, dated world metadata,
+coverage-change/event markers, full shared temporal eligibility and validated loot uncertainty. The page identifies
+the version-date bounds and incomplete strict historical validation rather than presenting them as completed.

@@ -177,7 +177,7 @@ try {
   await page.click('#eventsToggle');
   await page.waitForTimeout(200);
   const toggle=page.locator('#eventMarkers');
-  assert.equal(await toggle.isChecked(),true);
+  assert.equal(await toggle.getAttribute('aria-pressed'),'true');
   const seriesState=()=>page.evaluate(()=>({url:location.search,last:document.getElementById('lastPrice').textContent,change:document.getElementById('lastChange').textContent,
     legend:document.getElementById('legend').innerText,range:document.querySelector('#range [aria-checked="true"]').dataset.range}));
   const withEvents=await seriesState();
@@ -185,7 +185,7 @@ try {
     const d=c.getContext('2d').getImageData(0,0,c.width,Math.round(c.height*0.7)).data;let n=0;for(let i=0;i<d.length;i+=4) if(Math.abs(d[i]-180)+Math.abs(d[i+1]-83)+Math.abs(d[i+2]-42)<60) n++;return n;});
   const sellBefore=await sellPixels();
   await toggle.click();
-  assert.equal(await toggle.isChecked(),false);
+  assert.equal(await toggle.getAttribute('aria-pressed'),'false');
   assert.equal((await marks()).length,0,'no markers while hidden');
   assert.deepEqual(await seriesState(),withEvents,'the market is untouched');
   assert.ok(Math.abs(await sellPixels()-sellBefore)<=sellBefore*0.01,'the series draw the same');
@@ -193,7 +193,7 @@ try {
   await page.reload();
   await page.waitForFunction(()=>document.getElementById('market').getAttribute('aria-busy')==='false');
   await page.waitForTimeout(150);
-  assert.equal(await toggle.isChecked(),false);
+  assert.equal(await toggle.getAttribute('aria-pressed'),'false');
   if (!await toggle.isVisible()) await page.click('#eventsToggle');
   assert.equal((await marks()).length,0);
   await toggle.click();

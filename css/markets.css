@@ -13,8 +13,6 @@
   --event-world:var(--accent); --event-game:var(--caution); --event-market:var(--ink);
   /* Projections: the central path in ink, as the Research draws its scenario; the projected days faintly tinted. */
   --projection:var(--ink); --projection-region:rgb(118 118 128 / .06);
-  /* Forecast history: up to three past editions, each its own colour (and line style on the chart). */
-  --history-1:#12786b; --history-2:#b02f6e; --history-3:#5c7a1f;
   --watch-width:calc(var(--unit) * 80);
   --rail-width:calc(var(--unit) * 10);
   --toolbar-height:calc(var(--unit) * 11);
@@ -148,9 +146,9 @@ body { display:flex; flex-direction:column; height:100dvh; overflow:hidden; }
 .key-average { border-top:var(--rule) solid var(--average); }
 .key-volume { width:var(--space-2); height:var(--space-3); border:0; background:var(--side); opacity:.33; }
 .key-projection { border-top:var(--rule-strong) dashed var(--projection); }
-.key-history { border-top:var(--rule-strong) dashed var(--history-1); }
-.key-history.slot-2 { border-top-style:dotted; border-top-color:var(--history-2); }
-.key-history.slot-3 { border-top-style:dotted; border-top-color:var(--history-3); }
+.key-history { border-top:var(--rule-strong) dashed var(--accent); }
+.key-history.slot-2 { border-top-style:dotted; border-top-color:var(--positive); }
+.key-history.slot-3 { border-top-style:dotted; border-top-color:var(--caution); }
 
 .up { color:var(--positive); } .down { color:var(--negative); }
 /* A retired world is labelled wherever it appears. */
@@ -339,15 +337,15 @@ table.watch td.stale { color:var(--muted); }
 .history-filters label { display:grid; gap:var(--space-1); min-width:0; }
 .history-list { list-style:none; margin:0; padding:0; display:grid; gap:var(--space-2); }
 .history-edition,.history-list > li { border:var(--rule) solid var(--line); border-radius:var(--radius); padding:var(--space-2); }
-.history-edition { border-left-width:3px; }
-.history-edition.slot-1 { border-left-color:var(--history-1); }
-.history-edition.slot-2 { border-left-color:var(--history-2); }
-.history-edition.slot-3 { border-left-color:var(--history-3); }
+.history-edition { border-left-width:var(--rule-strong); }
+.history-edition.slot-1 { border-left-color:var(--accent); }
+.history-edition.slot-2 { border-left-color:var(--positive); }
+.history-edition.slot-3 { border-left-color:var(--caution); }
 .history-list p { margin:var(--space-1) 0 0; }
 .history-draw { display:flex; align-items:center; gap:var(--space-2); font-weight:var(--weight-strong); cursor:pointer; }
-.history-draw input:disabled + .history-slot + span { color:var(--muted); }
+.history-draw:disabled { color:var(--muted); }
 .history-slot { display:inline-grid; place-items:center; min-width:1.5em; height:1.5em; border-radius:var(--radius); font-size:var(--step-n2); color:var(--canvas); }
-.slot-1 .history-slot { background:var(--history-1); } .slot-2 .history-slot { background:var(--history-2); } .slot-3 .history-slot { background:var(--history-3); }
+.slot-1 .history-slot { background:var(--accent); } .slot-2 .history-slot { background:var(--positive); } .slot-3 .history-slot { background:var(--caution); }
 .history-meta { color:var(--muted); font-size:var(--step-n2); line-height:var(--leading-text); }
 .history-flag { color:var(--caution); }
 .history-point { font-variant-numeric:lining-nums tabular-nums; }
@@ -445,3 +443,6 @@ table.watch td.stale { color:var(--muted); }
 }
 /* Dense event clusters remain inspectable on small screens. */
 .event-tip { max-height:calc(100dvh - 24px); overflow-y:auto; }
+
+.history-draw { width:100%; text-align:left; white-space:normal; padding:var(--space-2); }
+.history-panel button[aria-pressed="true"] { color:var(--accent); background:var(--accent-soft); }

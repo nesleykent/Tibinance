@@ -22,9 +22,9 @@
  */
 import { fmt } from './format.js';
 import { lineLayers, statisticsAt } from './market-series.js';
-import { eventsLayer } from './market-events-layer.js?v=20261014-history';
+import { eventsLayer } from './market-events-layer.js?v=20261014-rebuild';
 import { projectionsLayer } from './market-projections-layer.js';
-import { historyLayer } from './market-forecast-history-layer.js?v=20261014-history';
+import { historyLayer } from './market-forecast-history-layer.js?v=20261014-rebuild';
 
 export const SIDES = {
   sell: { offer: 'Best Sell Offer', offers: 'Sell Offers' },
@@ -37,7 +37,7 @@ export const colors = () => ({ sell: token('--sell'), buy: token('--buy'), avera
   grid: token('--line-faint'), rule: token('--line'), crosshair: token('--line-strong'), ink: token('--ink'),
   canvas: token('--canvas') || '#fff', font: token('--font-ui'),
   projection: token('--projection'), projectionRegion: token('--projection-region'),
-  history: [token('--history-1'), token('--history-2'), token('--history-3')],
+  history: [token('--accent'), token('--positive'), token('--caution')],
   events: { world: token('--event-world'), game: token('--event-game'), market: token('--event-market') } });
 // Lightweight Charts reports a day as the string it was given or as {year, month, day}.
 export const dayOf = time => typeof time === 'string' ? time

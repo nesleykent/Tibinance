@@ -74,10 +74,10 @@ try {
   assert.match(await page.innerText('#eventFocusStatus'), /Chart focused on 2025-11-06/);
   assert.ok(await page.locator('#eventMarks [data-events~="world-created-2025-11-06-terribra-opened"]').count());
   assert.equal(await page.isVisible('#eventTip'), true);
-  await page.uncheck('#eventMarkers');
+  await page.click('#eventMarkers');
   assert.equal(await page.locator('#eventMarks button').count(), 0);
   assert.equal(await page.locator('#eventAgenda [data-event]').count(), worldCount);
-  await page.check('#eventMarkers');
+  await page.click('#eventMarkers');
   await page.selectOption('#eventScope', '');
   await page.fill('#eventMonth', '2025-11');
   await page.click('[data-day="2025-11-06"]');

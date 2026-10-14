@@ -149,3 +149,23 @@ test('drawn paths extend the axis past the history in proportion to the range, n
   const days = historyAxisDays(paths, '2026-11-27');
   assert.deepEqual(days, ['2026-11-28', '2026-11-29', '2026-11-30']);
 });
+
+test('historical repository evidence stays visible before a later website deployment', () => {
+  const f = forecast('delayed', { repo: '2026-10-01T10:00:00Z', web: '2026-10-03T10:00:00Z' });
+  const index = { forecasts: [f] };
+  assert.equal(publishedBy(index, endOfDay('2026-10-02'))[0].publication.level, 'repository');
+  assert.equal(publishedBy(index, endOfDay('2026-10-02'), { fallback: false }).length, 0);
+  assert.equal(publishedBy(index, endOfDay('2026-10-03'))[0].publication.level, 'website');
+});
+
+test('historical accuracy excludes future evaluations and retains the correction known at that date', () => {
+  const index = { forecasts: [forecast('f', { repo: '2026-10-01T00:00:00Z', web: '2026-10-20T00:00:00Z' })] };
+  const evaluation = (actual, at) => JSON.stringify({ type: 'evaluation', forecast: 'f', weekEnding: '2026-10-11',
+    archive: { archivedAt: at }, observation: { cutoff: '2026-10-12' }, items: [{ actual, predicted: 100 }] });
+  const log = [evaluation(110, '2026-10-12T10:00:00Z'), evaluation(120, '2026-10-21T10:00:00Z')].join('\n');
+  assert.equal(evaluationPoints(log, index, { asOf: endOfDay('2026-10-11') }).length, 0);
+  const historical = evaluationPoints(log, index, { asOf: endOfDay('2026-10-15') });
+  assert.equal(historical[0].actual, 110);
+  assert.equal(historical[0].class, 'published-repository');
+  assert.equal(evaluationPoints(log, index, { asOf: endOfDay('2026-10-22') })[0].actual, 120);
+});

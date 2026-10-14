@@ -13,21 +13,22 @@
  */
 import { fmt, esc } from './format.js';
 import { SIDE_KEY, endOfDay, evaluationPoints, groupMetrics, historyEditions, horizonPoint, lifecycleLabel,
-  readObject, scenarioSeries } from './forecast-archive.js?v=20261014-history';
-import { HISTORY_SLOTS } from './market-forecast-history-layer.js?v=20261014-history';
+  readObject, scenarioSeries } from './forecast-archive.js?v=20261014-rebuild';
+import { HISTORY_SLOTS } from './market-forecast-history-layer.js?v=20261014-rebuild';
 
 const ARCHIVE = 'data/forecast-archive/';
 const OFFER = { sell: 'Sell Offer', buy: 'Buy Offer' };
 const CLASSES = [['published-website', 'Published on the website'], ['published-repository', 'Published in the repository only'],
   ['archived-unpublished', 'Archived, never published'], ['backtest', 'Backtests, never published']];
 const today = () => new Date().toISOString().slice(0, 10);
-const reproducible = f => (f.reproducibility?.prediction?.startsWith('complete') ? 'complete inputs, rebuilt by reproduce.py' : 'partial inputs');
+const reproducible = f => (f.reproducibility?.prediction?.startsWith('complete') ? 'complete inputs, prediction reproducible' : 'partial inputs');
 const signed = v => `${v > 0 ? '+' : ''}${v.toFixed(2)}%`;
 
 export function historyPanel(root, { onDraw, onShow }) {
   const $ = id => root.querySelector(`#${id}`);
   const state = { index: null, evaluations: '', loading: null, failed: false, objects: new Map(), world: null, side: 'sell', end: null,
     asOf: today(), fallback: true, horizon: 4, model: '', archived: false, chosen: Array(HISTORY_SLOTS).fill(null), shown: false };
+  let revision = 0, refreshVersion = 0;
   // Each chosen edition keeps its slot (colour, line, number) until it is unchosen.
   const anyChosen = () => state.chosen.some(Boolean);
 
@@ -53,13 +54,13 @@ export function historyPanel(root, { onDraw, onShow }) {
     if (!state.objects.has(f.outputs)) {
       state.objects.set(f.outputs, fetch(`${ARCHIVE}objects/${f.outputs}.json.gz`)
         .then(r => { if (!r.ok) throw new Error(`${f.outputs}: ${r.status}`); return r.arrayBuffer(); })
-        .then(readObject));
+        .then(readObject).catch(error => { state.objects.delete(f.outputs); throw error; }));
     }
     return state.objects.get(f.outputs);
   }
 
   const listing = () => historyEditions(state.index, endOfDay(state.asOf), { fallback: state.fallback, model: state.model || null });
-  const seriesOf = async f => scenarioSeries(await outputs(f), state.world, SIDE_KEY[state.side]);
+  const seriesOf = async (f, world = state.world, side = state.side) => scenarioSeries(await outputs(f), world, SIDE_KEY[side]);
 
   // The chosen editions still public at the date shown, for this world and side, each in its slot.
   async function paths() {
@@ -76,15 +77,22 @@ export function historyPanel(root, { onDraw, onShow }) {
 
   async function draw() {
     if (!state.index) return;
-    onDraw(await paths());
+    const ticket = refreshVersion;
+    const next = await paths();
+    if (ticket === refreshVersion) onDraw(next);
   }
 
   async function render() {
     if (state.failed) { $('historyContext').textContent = 'The forecast archive could not be loaded.'; return; }
     if (!state.index || !state.world) return;
+    const ticket = ++revision;
+    const focused = document.activeElement?.dataset?.hash;
     const { published, unpublished } = listing();
+    const listed = new Set(published.map(x => x.forecast.contentHash));
+    state.chosen = state.chosen.map(h => listed.has(h) ? h : null);
     const offer = OFFER[state.side], h = state.horizon;
     const rows = await Promise.all(published.map(async x => ({ ...x, series: await seriesOf(x.forecast) })));
+    if (ticket !== revision) return;
     const withPath = rows.filter(r => r.series.length);
     $('historyContext').textContent = !published.length
       ? `No edition of the Research offer scenario was public on ${state.asOf}.`
@@ -97,9 +105,9 @@ export function historyPanel(root, { onDraw, onShow }) {
       const at = point ? `${h} week${h === 1 ? '' : 's'} ahead, week of ${esc(point.target)}: <b>${fmt(Math.round(point.base))}</b>, band ${fmt(Math.round(point.low))} to ${fmt(Math.round(point.high))}`
         : series.length ? `No point ${h} weeks ahead (${series.length} weeks)` : `No path for ${esc(state.world)}`;
       return `<li class="history-edition${slot >= 0 ? ` is-drawn slot-${slot + 1}` : ''}">
-        <label class="history-draw"><input type="checkbox" data-hash="${esc(f.contentHash)}"${slot >= 0 ? ' checked' : ''}${!series.length || (full && slot < 0) ? ' disabled' : ''}>
+        <button type="button" class="btn history-draw" data-hash="${esc(f.contentHash)}" aria-pressed="${slot >= 0}"${!series.length || (full && slot < 0) ? ' disabled' : ''}>
           <span class="history-slot" aria-hidden="true">${slot >= 0 ? slot + 1 : ''}</span>
-          <span>Edition of ${esc(f.dataCutoff)}</span></label>
+          <span>Edition of ${esc(f.dataCutoff)}</span></button>
         <p class="history-meta">Public since ${esc(p.at.slice(0, 10))}, ${p.level === 'website' ? 'website deployment' : '<span class="history-flag">repository only: no website deployment recorded</span>'}</p>
         <p class="history-meta">${esc(f.model.id)}, ${esc(reproducible(f))}${f.superseded ? '; superseded by a later edition for the same cutoff' : ''}</p>
         <p class="history-point">${at}</p></li>`;
@@ -110,12 +118,15 @@ export function historyPanel(root, { onDraw, onShow }) {
       : `<p class="history-meta">None archived by ${esc(state.asOf)}.</p>`}` : '';
     renderAccuracy(rows);
     $('historyPaths').disabled = !anyChosen();
+    $('historyPaths').setAttribute('aria-pressed', String(state.shown));
+    $('historyArchived').setAttribute('aria-pressed', String(state.archived));
+    if (focused) [...$('historyEditions').querySelectorAll('button')].find(b => b.dataset.hash === focused)?.focus({ preventScroll: true });
   }
 
   // Accuracy for this world and side, by horizon, kept apart by what each forecast was.
   function renderAccuracy(rows) {
     const side = SIDE_KEY[state.side];
-    const points = state.evaluations ? evaluationPoints(state.evaluations, state.index).filter(p => p.product === 'tc-world-scenarios' && p.world === state.world && p.side === side
+    const points = state.evaluations ? evaluationPoints(state.evaluations, state.index, { asOf: endOfDay(state.asOf) }).filter(p => p.product === 'tc-world-scenarios' && p.world === state.world && p.side === side
       && (!state.model || state.index.forecasts.find(f => f.contentHash === p.forecast)?.model.id === state.model)) : [];
     if (!points.length) {
       const first = rows.map(r => r.series[0]?.week).filter(Boolean).sort()[0];
@@ -130,29 +141,35 @@ export function historyPanel(root, { onDraw, onShow }) {
     }).join('');
   }
 
-  const refresh = async () => { await render(); await draw(); };
+  const refresh = async () => {
+    const ticket = ++refreshVersion;
+    try { await render(); if (ticket === refreshVersion) await draw(); }
+    catch { $('historyContext').textContent = 'Forecast paths unavailable. Change a filter to retry.'; onDraw([]); }
+  };
 
   $('historyAsOf').value = state.asOf;
   $('historyAsOf').addEventListener('change', e => { state.asOf = e.target.value || today(); refresh(); });
   $('historyEvidence').addEventListener('change', e => { state.fallback = e.target.value === 'repository'; refresh(); });
-  $('historyHorizon').addEventListener('change', e => { state.horizon = Number(e.target.value); render(); });
+  $('historyHorizon').addEventListener('change', e => { state.horizon = Number(e.target.value); refresh(); });
   $('historyModel').addEventListener('change', e => { state.model = e.target.value; refresh(); });
-  $('historyArchived').addEventListener('change', e => { state.archived = e.target.checked; render(); });
-  $('historyPaths').addEventListener('change', e => { state.shown = e.target.checked; onShow(state.shown); });
-  $('historyEditions').addEventListener('change', e => {
-    const hash = e.target.dataset?.hash;
+  $('historyArchived').addEventListener('click', () => { state.archived = !state.archived; refresh(); });
+  $('historyPaths').addEventListener('click', () => { state.shown = !state.shown; $('historyPaths').setAttribute('aria-pressed', String(state.shown)); onShow(state.shown); });
+  $('historyEditions').addEventListener('click', e => {
+    const button = e.target.closest('button[data-hash]');
+    const hash = button?.dataset.hash;
     if (!hash) return;
+    const checked = button.getAttribute('aria-pressed') !== 'true';
     const free = state.chosen.indexOf(null);
-    if (e.target.checked && free >= 0) state.chosen[free] = hash;
-    else if (!e.target.checked) state.chosen = state.chosen.map(h => (h === hash ? null : h));
+    if (checked && free >= 0) state.chosen[free] = hash;
+    else if (!checked) state.chosen = state.chosen.map(h => (h === hash ? null : h));
     // Choosing an edition shows the paths; the box beside the title hides them again without losing the choice.
-    if (e.target.checked && !state.shown) { state.shown = true; $('historyPaths').checked = true; onShow(true); }
+    if (checked && !state.shown) { state.shown = true; $('historyPaths').setAttribute('aria-pressed', 'true'); onShow(true); }
     refresh();
   });
 
   return {
     // The panel opened: the archive loads the first time.
-    async open() { await load(); await render(); },
+    async open() { await load(); await refresh(); },
     // The world, side or history changed on the page.
     async update({ world, side, end }) {
       Object.assign(state, { world, side, end });

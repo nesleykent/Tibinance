@@ -21,11 +21,11 @@ export function weekEnding(iso) {
 }
 
 // When a forecast became public, with the evidence used: website first, repository as a labelled fallback.
-export function publishedAt(forecast, { fallback = true } = {}) {
+export function publishedAt(forecast, { fallback = true, asOf = null } = {}) {
   const web = forecast.evidence?.website;
-  if (web?.at) return { at: web.at, level: 'website', basis: web.basis, fallback: false };
+  if (web?.at && (!asOf || web.at <= asOf)) return { at: web.at, level: 'website', basis: web.basis, fallback: false };
   const repo = forecast.evidence?.repository;
-  if (fallback && repo?.at) return { at: repo.at, level: 'repository', basis: repo.basis, fallback: true };
+  if (fallback && repo?.at && (!asOf || repo.at <= asOf)) return { at: repo.at, level: 'repository', basis: repo.basis, fallback: true };
   return null;
 }
 
@@ -50,7 +50,7 @@ export function lifecycleLabel(forecast) {
 export function publishedBy(index, t, { product = SCENARIOS, fallback = true } = {}) {
   return index.forecasts
     .filter(f => f.product === product && f.provenance === 'authentic')
-    .map(f => ({ forecast: f, publication: publishedAt(f, { fallback }) }))
+    .map(f => ({ forecast: f, publication: publishedAt(f, { fallback, asOf: t }) }))
     .filter(x => x.publication && x.publication.at <= t)
     .sort((a, b) => (a.publication.at < b.publication.at ? 1 : a.publication.at > b.publication.at ? -1 : 0));
 }
@@ -84,11 +84,13 @@ export function sameTarget(editions, world, side, week) {
 
 // The evaluations in force: evaluations.jsonl text, parsed; a superseded evaluation is dropped from the view but
 // stays in the file. Returns flat points with their forecast's classification and model version.
-export function evaluationPoints(jsonl, index) {
+export function evaluationPoints(jsonl, index, { asOf = null } = {}) {
   const current = new Map();
   for (const line of jsonl.split('\n')) {
     if (!line) continue;
     const r = JSON.parse(line);
+    // Historical views must not reveal later outcomes or retroactive evaluation corrections.
+    if (asOf && (!r.archive?.archivedAt || r.archive.archivedAt > asOf)) continue;
     const key = `${r.forecast} ${r.weekEnding}`;
     if (r.type === 'evaluation') current.set(key, r);
     else if (r.type === 'evaluation-superseded') current.delete(key);
@@ -98,9 +100,13 @@ export function evaluationPoints(jsonl, index) {
   for (const r of current.values()) {
     const f = forecasts.get(r.forecast);
     if (!f) continue;
+    if (asOf && (endOfDay(r.weekEnding) > asOf || endOfDay(r.observation.cutoff) > asOf)) continue;
+    const publication = asOf ? publishedAt(f, { asOf }) : null;
+    const category = asOf && f.provenance !== 'backtest'
+      ? publication ? `published-${publication.level}` : 'archived-unpublished' : classify(f);
     for (const item of r.items) {
       points.push({ ...item, weekEnding: r.weekEnding, forecast: f.contentHash, edition: f.edition, product: f.product,
-        modelVersion: f.model.version, class: classify(f), observationCutoff: r.observation.cutoff });
+        modelVersion: f.model.version, class: category, observationCutoff: r.observation.cutoff });
     }
   }
   return points;
@@ -148,7 +154,7 @@ export function historyEditions(index, t, { fallback = true, model = null } = {}
   const ofModel = f => !model || f.model.id === model;
   const published = publishedBy(index, t, { fallback }).filter(x => ofModel(x.forecast));
   const unpublished = index.forecasts
-    .filter(f => f.product === SCENARIOS && f.provenance === 'authentic' && ofModel(f) && !publishedAt(f, { fallback }) && f.archivedAt && f.archivedAt <= t)
+    .filter(f => f.product === SCENARIOS && f.provenance === 'authentic' && ofModel(f) && !publishedAt(f) && f.archivedAt && f.archivedAt <= t)
     .sort((a, b) => (a.dataCutoff < b.dataCutoff ? 1 : -1));
   return { published, unpublished };
 }

@@ -17,16 +17,16 @@
  */
 import { fmt, esc, num } from './format.js';
 import { RANGES, changeOver, dayGrid, daysBetween, marketValues, neighbours, rangeStart, statisticsAt } from './market-series.js';
-import { SIDES, createMarketChart, dayOf } from './market-chart.js?v=20261014-history';
+import { SIDES, createMarketChart, dayOf } from './market-chart.js?v=20261014-rebuild';
 import { dock } from './markets-dock.js';
-import { marketImage } from './market-export.js?v=20261014-history';
+import { marketImage } from './market-export.js?v=20261014-rebuild';
 import { loadEvents as readEvents, eventsFor, lifecycleSpan, addEventDays } from './events.js';
-import { eventsPanel } from './market-events-panel.js?v=20261014-history';
-import { eventMarks } from './market-events-ui.js?v=20261014-history';
+import { eventsPanel } from './market-events-panel.js?v=20261014-rebuild';
+import { eventMarks } from './market-events-ui.js?v=20261014-rebuild';
 import { PROJECTIONS, forwardEnd, pointText, projectionFor, weekOf } from './market-projections.js';
 import { screenerPanel } from './market-screener-panel.js?v=20261004-chart-first';
-import { historyPanel } from './market-forecast-history.js?v=20261014-history';
-import { historyAhead, weekEnding } from './forecast-archive.js?v=20261014-history';
+import { historyPanel } from './market-forecast-history.js?v=20261014-rebuild';
+import { historyAhead, weekEnding } from './forecast-archive.js?v=20261014-rebuild';
 // The shared chart, its export and the Screener are imported at one versioned address everywhere (also in
 // js/market-export.js and js/tibia-token-markets.js): one copy of each module per page, refreshed past browser caches
 // when it changes. Bump the version in every importer together.
@@ -460,7 +460,7 @@ async function openHistory() {
 function showEvents(on, { remember = true } = {}) {
   market.setVisible('events', on);
   if (!on) marks.hide();
-  $('eventMarkers').checked = on;
+  $('eventMarkers').setAttribute('aria-pressed', String(on));
   if (remember) try { on ? localStorage.removeItem(EVENTS_SHOWN) : localStorage.setItem(EVENTS_SHOWN, 'hidden'); } catch { /* this visit only */ }
 }
 
@@ -627,7 +627,7 @@ function wire() {
     if (range) setRange(range);
   });
   $('expand').addEventListener('click', () => toggleExpanded().catch(failed));
-  $('eventMarkers').addEventListener('change', e => showEvents(e.target.checked));
+  $('eventMarkers').addEventListener('click', () => showEvents($('eventMarkers').getAttribute('aria-pressed') !== 'true'));
   $('projectionsToggle').addEventListener('click', () => showProjections(!market.visible('projections')));
   $('exportButton').addEventListener('click', exportImage);
   for (const host of [$('worldMeta'), $('detailStatus')]) host.addEventListener('click', e => {

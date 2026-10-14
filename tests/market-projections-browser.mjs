@@ -180,7 +180,7 @@ try {
     return {height:image.height/r,bandRight:count(right,[237,222,216]),bandLeft:count(left,[237,222,216]),inkRight:count(right,[36,35,42],60),tintRight:count(right,[247,247,248],4)};
   },png);
   await page.click('#eventsToggle');
-  await page.uncheck('#eventMarkers');
+  await page.click('#eventMarkers');
   await page.click('#eventsToggle');   // the events' own notes are tested in market-events-browser.mjs
   let image=await inspect(await exportPng());
   assert.equal(image.height,780+12+2*20,`two lines of projection notes ${JSON.stringify(image)}`);
@@ -196,7 +196,7 @@ try {
   image=await inspect(await exportPng());
   assert.equal(image.height,780+12+20);
   await page.click('#eventsToggle');
-  await page.check('#eventMarkers');
+  await page.click('#eventMarkers');
   await page.click('#eventsToggle');
 
   // ---- Phones: the tool in the rail row, the readout and the window ahead, no sideways scroll.

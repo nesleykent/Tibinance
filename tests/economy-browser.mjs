@@ -62,14 +62,14 @@ try {
   let t=await tiles();
   assert.deepEqual(t.slice(0,5).map(x=>[x.label,x.value]),[
     ['Gross potential from valued creatures',gold(sep.grossPotential)],
-    ['Direct coin drops',gold(sep.directCoins)],
-    ['Potential NPC conversion',gold(sep.npcPotential)],
+    ['Direct coin drops from valued creatures',gold(sep.directCoins)],
+    ['Potential NPC conversion from valued creatures',gold(sep.npcPotential)],
     ['Kill coverage',pct(sep.killCoverage)],
     ['Players killed by creatures',fmt(sep.playerDeaths)]]);
   const g=growth(sep,aug).value;
-  assert.equal(t[0].sub,`${g>=0?'+':''}${pct(g)} on August 2025`);
-  assert.match(t[2].sub,/potential, not gold that entered the game/);
-  assert.match(t[3].sub,new RegExp(`${fmt(sep.killsValued)} of ${fmt(sep.kills)} kills valued; 30 of 30 days with data`));
+  assert.ok(t[0].sub.startsWith(`${g>=0?'+':''}${pct(g)} on August 2025`));
+  assert.match(t[2].sub,/Potential, not observed issuance/);
+  assert.match(t[3].sub,new RegExp(`${fmt(sep.killsValued)} of ${fmt(sep.kills)} kills valued, .* unvalued; 30 of 30 days with data`));
   // No active-population history: the per-character figure says it is unavailable, and why.
   assert.equal(t.at(-1).label,'Gold per active character');
   assert.equal(t.at(-1).value,'Unavailable');
@@ -88,17 +88,18 @@ try {
   assert.ok((await tiles()).every(x=>!x.cls.includes('assumption')));
 
   // The constant creature set: creatures valued since the first day only.
-  await page.check('#stable');
+  await page.click('#stable');
   t=await tiles();
-  assert.deepEqual([t[0].label,t[0].value],['Gross potential, constant creature set',gold(sep.grossStable)]);
-  await page.uncheck('#stable');
+  assert.equal(t.find(t=>t.cls.includes('stable')).value,gold(sep.grossStable));
+  assert.equal(t[0].value,gold(sep.grossPotential),'gross always equals full-set coins plus NPC');
+  await page.click('#stable');
 
   // Contributions: the month's creatures, the rest summed as other, and a change only between complete months.
   const rows=await page.$$eval('#contrib tbody tr',trs=>trs.map(tr=>[...tr.cells].map(c=>c.textContent)));
   assert.ok(rows.length>=10);
   assert.equal(rows.at(-1)[0],'Other creatures');
   assert.match(await words('#contrib thead'),/Change on the previous month/);
-  assert.ok(rows.slice(0,-1).some(r=>/%$/.test(r[6])),'August and September are complete: changes are shown');
+  assert.ok(rows.slice(0,-1).some(r=>/%$/.test(r[8])),'August and September are complete: changes are shown');
   assert.match(await text('#contribNote'),/^Month 2025-09\. The listed creatures hold/);
 
   // A quarter: the period follows the unit, and the tiles sum the quarter.
@@ -108,7 +109,7 @@ try {
   assert.equal(new URL(page.url()).searchParams.get('unit'),'quarter');
   t=await tiles();
   assert.equal(t[0].value,gold(qs.grossPotential));
-  assert.equal(t[0].sub,`${growth(qs,qp).value>=0?'+':''}${pct(growth(qs,qp).value)} on Q2 2025`);
+  assert.ok(t[0].sub.startsWith(`${growth(qs,qp).value>=0?'+':''}${pct(growth(qs,qp).value)} on Q2 2025`));
   assert.match(await words('#contrib thead'),/Change on the previous quarter/);
 
   // An unfinished month: the figures stand with their coverage, no change and no creature change is computed.
@@ -119,7 +120,7 @@ try {
     t=await tiles();
     assert.match(t[0].sub,/^Change: not computed/);
     assert.match(await text('#contribNote'),/No change is computed/);
-    assert.ok((await page.$$eval('#contrib tbody tr td:nth-child(7)',tds=>tds.map(td=>td.textContent))).every(v=>v==='N/A'||v===''));
+    assert.ok((await page.$$eval('#contrib tbody tr td:nth-child(9)',tds=>tds.map(td=>td.textContent))).every(v=>v==='N/A'||v===''));
   }
 
   // Every world in the same month: sortable, Antica marked, comparability stated rather than assumed.
@@ -131,13 +132,13 @@ try {
   assert.deepEqual(w.filter(r=>r.current).map(r=>r.world),['Antica']);
   assert.equal(w.find(r=>r.world==='Antica').gross,gold(sep.grossPotential),'the table and the tiles agree');
   const num=v=>Number(v.replace(/,/g,''));
-  assert.ok(w.every((r,i)=>i===0||num(w[i-1].gross)>=num(r.gross)),'sorted by gross potential, largest first');
+  assert.ok(w.every((r,i)=>i===0||r.gross==='N/A'||num(w[i-1].gross)>=num(r.gross)),'sorted by gross potential, largest first');
   assert.equal(await page.getAttribute('#worlds th:nth-child(2)','aria-sort'),'descending');
   await page.click('#worlds button[data-sort="world"]');
   w=await worldRows();
   assert.deepEqual(w.map(r=>r.world),[...w.map(r=>r.world)].sort((a,b)=>a.localeCompare(b)));
   assert.equal(await page.getAttribute('#worlds th:nth-child(1)','aria-sort'),'ascending');
-  await page.check('#comparableOnly');
+  await page.click('#comparableOnly');
   const comparable=await worldRows();
   assert.ok(comparable.length>0 && comparable.length<=w.length);
   assert.ok(comparable.every(r=>r.note==='Comparable'));
@@ -153,7 +154,48 @@ try {
 
   // The chart is drawn, with its panes described.
   assert.ok(await page.$eval('#chart',e=>e.querySelectorAll('canvas').length>0));
-  assert.match(await page.getAttribute('#chart','aria-label'),/^Gold generation potential of Gentebra per month, with the Tibia Coin Sell Offer and players killed by creatures in separate panes/);
+  assert.match(await page.getAttribute('#chart','aria-label'),/^Gold generation potential of Gentebra per month, one chart/);
+
+  // Day and week comparisons must use those exact days, never the containing month.
+  for (const [unit, day] of [['day','2025-09-01'], ['week','2025-09-01']]) {
+    await page.goto(`${root}/economy.html?world=Antica&unit=${unit}&period=${day}`);
+    await ready();
+    await page.waitForSelector('#worlds[aria-busy="false"]');
+    const expected=sumPeriod(antica,periodOf(day,unit));
+    const anticaRow=await page.locator('#worlds tr.current').innerText();
+    assert.ok(anticaRow.includes(gold(expected.grossPotential)),`${unit} exact total`);
+    assert.ok((await words('#worlds caption')).includes(`${periodOf(day,unit)[0]} to ${periodOf(day,unit)[1]}`));
+    assert.match(await text('#contribNote'),/monthly context, not the selected day or week/);
+  }
+  // A world with no data at the requested date must not silently jump to a later period or report zero.
+  await page.goto(`${root}/economy.html?world=Antica&unit=month&period=1999-01-01`); await ready();
+  assert.equal(await page.$eval('#period',s=>s.value),'1999-01-01');
+  assert.equal((await tiles())[0].value,'N/A');
+  assert.match(await text('#chartContext'),/No data in this period/);
+  await page.goto(`${root}/economy.html?world=Antica&unit=week&period=2025-09-01`); await ready();
+  await page.waitForSelector('#worlds[aria-busy="false"]');
+  // Scenario, comparison and chart-window state survive a shared URL and reload.
+  await page.click('#liquidation [data-rate="0.75"]');
+  await page.click('#stable');
+  await page.click('#chartRange [data-range="All"]');
+  await page.reload(); await ready();
+  assert.equal(await page.getAttribute('#liquidation [data-rate="0.75"]','aria-checked'),'true');
+  assert.equal(await page.getAttribute('#stable','aria-pressed'),'true');
+  assert.equal(await page.getAttribute('#chartRange [data-range="All"]','aria-checked'),'true');
+  await page.locator('#liquidation [data-rate="0.75"]').focus();
+  await page.keyboard.press('ArrowLeft');
+  assert.equal(await page.getAttribute('#liquidation [data-rate="0.5"]','aria-checked'),'true');
+  // The data table is a keyboard-accessible equivalent of every plotted series.
+  await page.locator('.eco-chart-data summary').click();
+  assert.ok(await page.locator('#chartData tbody tr').count()>100);
+  assert.equal(await page.locator('#chart table').count(),1,'one chart instance');
+  await page.evaluate(()=>{ window.chartTable=document.querySelector('#chart table'); });
+  await page.click('#chartPrice'); await page.click('#chartActivity');
+  assert.equal(await page.evaluate(()=>window.chartTable===document.querySelector('#chart table')),true,'comparisons reuse the same chart');
+  assert.match(await text('#chartUnits'),/Left axis: median TC Sell Offer/);
+  assert.match(await text('#chartUnits'),/Bottom bars: players killed/);
+  assert.equal(await page.locator('#chart table').count(),1,'one chart with both comparisons');
+  await page.goto(`${root}/economy.html?world=Gentebra&unit=month&period=2025-09-01`); await ready();
 
   // Findings and provenance: associations, not causes; sources at their commits.
   const findings=await text('#findings');
@@ -184,6 +226,7 @@ try {
     if (shots) await page.screenshot({path:join(shots,`economy-${engine}-${width}.png`),fullPage:true});
   }
 
+  assert.equal(await page.locator('input[type=checkbox]').count(),0);
   assert.deepEqual(errors,[]);
   console.log(`PASS ${engine}: Economy page reached from the menu; Antica figures recomputed from the data, latest complete period by default, labelled liquidation assumption, constant creature set, contributions and changes only between complete periods, cross-world sorting and comparability, world picker, findings and provenance, 1440/768/390 layouts`);
 } finally {

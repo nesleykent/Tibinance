@@ -1,3 +1,41 @@
+# Independent audit and reconstruction, 2026-10-14
+
+- **Scope:** the economic-intelligence work begins after `b7eb0e4`, spans the ingestion/valuation/archive commits,
+  and reaches the new Economy UI in `5699edc` and Markets history in `42d8aa6`. The current task rebuilds those
+  affected interfaces and corrects their presentation arithmetic/lifecycle queries. Git position alone was not
+  used to attribute the work; the supplied plan, actual functionality and original implementation session were
+  inspected. Unrelated ingestion, market data, model outputs and immutable ledgers remain untouched.
+- **Token contract:** use the tokens from `b7eb0e4` only, directly. Shared token declarations are unchanged;
+  Economy's added `--coins`, `--npc`, `--gross`, `--eco-chart` and history's added colors have been removed.
+  No new tokens, token copies, old interface restoration or replacement design system.
+- **Reconstruction:** one persistent chart instance, one plot/timeline, optional TC prices on the left axis and
+  activity bars on an independent count scale. Gold components and their sum retain the right axis. Labelled
+  assumptions, exact HTML chart data, coverage, real gaps, responsive resizing and shared URL state. The initial
+  three-instance draft was rejected by the user and replaced; it was never committed or deployed.
+- **Additional defects corrected:** day/week comparisons had silently used whole months; no-data periods could
+  read as zero or jump to a later date; quarterly top-list truncation lost residual value; incomplete per-creature
+  histories could produce spurious growth; the stable-set toggle broke the full-set sum identity; even-sample
+  market medians used only the upper middle value; 75% liquidation was absent; asynchronous requests could race
+  or continue through navigation; historical queries could hide earlier repository publication or leak later
+  evaluations. Forecast controls now retain keyboard focus and use pressed buttons. The adjacent Markets Events
+  toggle uses the same button convention, with its existing behavior retained.
+- **Validation so far:** 205 JavaScript tests and all 8 site-integrity checks passed; forecast tools 38 passed;
+  economy research 13 passed; Research runner 39 run, 2 explicitly skipped (private hosting metadata and the
+  producing-machine exact-float variant; the tolerance variant passed). All 6 archived scenario editions reproduced;
+  `validate.py` passed with the five-record forecast ledger intact. Chrome Markets, Events, Projections/history
+  export and Economy checks; WebKit Economy/history checks. Single-chart Chrome/WebKit rendering was inspected at 1440, 768, 390 and 320 px under light/dark system
+  preferences; the existing light palette is retained. Optional comparisons were inspected together at desktop
+  and phone widths. Tibia Token, Projections and shared-header regressions passed; transient resize overflow fixed.
+- **Production:** currently `release/0005`; reconstruction is local and unreleased. The existing release isolation
+  remains in place. Main will receive the reviewed checkpoint, followed by an explicitly validated full release.
+- **Known original plan gaps:** population history remains blocked; dated world registry/merger lineage, coverage
+  change markers, shared strict eligibility and loot uncertainty are incomplete. The UI now discloses those limits.
+  No historical reconstruction, source retrieval or model rerun is claimed by this presentation task.
+- **Exact next action:** commit/push the verified rebuild directly to main, create a validated full release and verify
+  the deployed asset hashes. Code/data/token diff reviewed; all published datasets and immutable ledgers untouched.
+
+---
+
 # Economic intelligence expansion: handoff ledger
 
 Shared by Claude Code and OpenAI Codex. The latest origin/main commit and this section are the authoritative state.

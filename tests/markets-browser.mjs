@@ -298,7 +298,7 @@ try {
   // The series alone, in the image's fixed layout: events, shown by default, add notes under the chart and are
   // covered by tests/market-events-browser.mjs.
   await page.click('#eventsToggle');
-  await page.uncheck('#eventMarkers');
+  await page.click('#eventMarkers');
   await page.click('#side button[data-side="sell"]');
   await page.click('#range button[data-range="1Y"]');
   let image=await exportImage(page);
@@ -324,7 +324,7 @@ try {
   pixels=await inspect((await exportImage(page)).png);
   assert.ok(pixels.probe>1000,`the probe layer is drawn: ${pixels.probe}`);
   await page.evaluate(async()=>{const {LAYERS}=await import(chartModule());LAYERS.splice(LAYERS.indexOf(window.probeLayer),1);});
-  await page.check('#eventMarkers');
+  await page.click('#eventMarkers');
   await page.click('#eventsToggle');
   await page.click('#side button[data-side="sell"]');
   await page.click('#range button[data-range="1Y"]');
@@ -461,9 +461,9 @@ try {
   await helpTool.click();
   // The same image from a phone (the series alone, as above).
   await page.click('#eventsToggle');
-  await page.uncheck('#eventMarkers');
+  await page.click('#eventMarkers');
   pixels=await inspect((await exportImage(page)).png);
-  await page.check('#eventMarkers');
+  await page.click('#eventMarkers');
   await page.click('#eventsToggle');
   assert.deepEqual([pixels.width,pixels.height],[2400,1560]);
   assert.ok(pixels.sell>2000 && pixels.span>0.85,`phone export ${JSON.stringify(pixels)}`);
