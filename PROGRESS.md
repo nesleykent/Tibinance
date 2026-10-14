@@ -31,9 +31,15 @@ repairs, validate Chrome/WebKit and publish only verified Economy changes on rel
     must agree with the chart at each interval and measure. It passes in Chrome.
   - 3 new unit tests (209 of 209 pass).
   - The header test's Economy ready check is updated and passes.
-- **Release:** not made. A full release of main would also ship the other agent's unreleased Markets changes
-  (Forecast history controls, the Events toggle convention, `markets.css`, `markets.js`, `markets.html`). Those
-  stay held until the user decides. Production stays `release/0005`.
+- **Release:** the user chose to release main as it is. That shipped the Economy terminal and the other agent's
+  previously held Markets changes (Forecast history controls and fixes, the Events toggle convention).
+  - **Before:** all Markets, Forecast history, Projections, Events, Screener, Tibia Token, Trade and canonical-events
+    browser suites passed in Chrome on f2354f2, and CI was green.
+  - **Production:** `release/0006`, a full release of f2354f2 (928 files). The Pages run deployed it, and
+    `verify-live --all` found 928 of 928 live files equal; one file was briefly stale at the CDN on the first check.
+  - **Live check:** the Economy page loads with 96 worlds, and Antica's row equals its chart (2,547,386,519 per day,
+    +78.95% 1Y).
+  - **The UI hold is lifted** by this instruction.
 
 ---
 

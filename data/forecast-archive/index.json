@@ -1,8 +1,8 @@
 {
  "chain": {
   "evaluations": 0,
-  "head": "366392452cce9fc16a7c6fc2cc75b7b614a9b89b3d586f1a57a83bfb61e34e6c",
-  "records": 57
+  "head": "3ddea6f7100c9ec935f5567a9d47ee32222192be2e40cc0d8a0d0ad226ec7ae0",
+  "records": 58
  },
  "forecasts": [
   {
@@ -704,6 +704,57 @@
    "superseded": false,
    "supersededBy": null,
    "target": "weekly median of daily offers in the week ending on the Sunday that holds the target date"
+  },
+  {
+   "archiveBasis": "generation",
+   "archivedAt": "2026-10-14T09:05:53+00:00",
+   "contentHash": "cc286b8eef71deaed40a897ad3c6d837dd1cba2d81e12e734d9f2cc58fa20459",
+   "createdAt": {
+    "basis": "generation time",
+    "value": "2026-10-14T09:05:53+00:00"
+   },
+   "dataCutoff": "2026-10-06",
+   "edition": "tc-gold-challenger/2026-10-06/2026-10-04",
+   "evaluation": {
+    "points": 0,
+    "weeks": []
+   },
+   "evidence": {
+    "repository": null,
+    "website": null
+   },
+   "evidenceLevel": null,
+   "failures": [],
+   "horizon": {
+    "stepDays": 7,
+    "steps": 3,
+    "unit": "week",
+    "weeks": [
+     1,
+     4,
+     13
+    ]
+   },
+   "inputs": "298d494b3a3fa80997d79eecc0833887d4bad40d1535bba8c6d946a4d295bbea",
+   "interval": "none",
+   "model": {
+    "id": "E gold challenger",
+    "version": "b1553583415ea45118843aabcd7c88de06dea48e91203874262b1998f47ebb30"
+   },
+   "outputs": "f8226b9f2a641230d4eaea172d9e574850c18d7d4307adb804e89cc948e49c1d",
+   "presentations": [],
+   "product": "tc-gold-challenger",
+   "provenance": "authentic",
+   "reproducibility": {
+    "missing": [],
+    "prediction": "complete inputs (tools/forecasts/reproduce.py rebuilds the outputs)",
+    "research": "from this repository at codeCommit with the economy caches rebuilt (PROGRESS.md)"
+   },
+   "seq": 58,
+   "state": "archived",
+   "superseded": false,
+   "supersededBy": null,
+   "target": "Weekly median of daily Sell Offers (API daily median; capture median only on days without one) for the Monday to Sunday week that holds the target date; the Research scoring rule"
   }
  ],
  "format": 1,
