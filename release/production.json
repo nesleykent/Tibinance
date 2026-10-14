@@ -1,14 +1,14 @@
 {
  "format": 1,
- "note": "Show Tibia Coin price on All using observed daily cross-world medians, explicit quote coverage and a separate linear TC axis.",
- "approver": "Repository owner explicitly approved publishing c99a4cd now; Codex verified Chrome, WebKit and CI",
+ "note": "",
+ "approver": "Repository owner approved publishing 2ca1fbf (\"sim\"); Claude Code verified validate_site, unit tests and Chrome browser suites",
  "artifact": {
-  "bytes": 139411373,
-  "digest": "9138ac8b7ecbf68d292b2a04138f9979f2c169b32a9325832dd767c80126a7cd",
-  "files": 934
+  "bytes": 139667005,
+  "digest": "52cb9cf687ba58b5c47e791562c8f105560c4c6001acf0731bbed5e972de792c",
+  "files": 951
  },
- "commit": "c99a4cd81dd7b33cc42aa73d4eb8fd20a91973e5",
- "createdAt": "2026-10-14T14:37:07.298Z",
+ "commit": "2ca1fbf32e039814eacab0d71cc7730857233206",
+ "createdAt": "2026-10-14T21:01:31.661Z",
  "kind": "full",
  "policy": {
   "dataPaths": [
@@ -34,10 +34,10 @@
  },
  "policySha256": "8598ea053fc9fba9189b10e9c9bbbd33f9b89b36ab503161a844995d81008ad9",
  "source": {
-  "commit": "c99a4cd81dd7b33cc42aa73d4eb8fd20a91973e5"
+  "commit": "2ca1fbf32e039814eacab0d71cc7730857233206"
  },
- "tag": "release/0011",
- "tree": "0f3307790966ac948fb1146663a08adb8e312cbe",
+ "tag": "release/0012",
+ "tree": "b277444907cb8c81a6455943dffd0223ff955d7a",
  "validation": {
   "checks": [
    {
@@ -78,12 +78,12 @@
    }
   ],
   "validator": {
-   "commit": "c99a4cd81dd7b33cc42aa73d4eb8fd20a91973e5",
+   "commit": "2ca1fbf32e039814eacab0d71cc7730857233206",
    "path": "tools/ci/validate_site.mjs"
   }
  },
  "record": {
-  "seq": 11,
-  "hash": "c3405706d02512ee25bcde324928c79548d1a5b6cf085b925ca5d8c2bda6f465"
+  "seq": 12,
+  "hash": "eac306802c50c7fbb100842f6c950b0debd08838e5d677e2aeb725ece174bf3f"
  }
 }

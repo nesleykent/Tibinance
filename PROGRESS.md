@@ -23,7 +23,8 @@
 - **Environment:** browser tests run with TIBINANCE_NODE_MODULES=/Users/nesleykent/Code/Bestie/node_modules (Playwright) and system Chrome; WebKit is not installed here, so canonical-events runs with TIBINANCE_BROWSER=chrome. Local server: .claude/launch.json "tibinance-static" (python http.server on 8765).
 - **Scale buttons (user-reported):** auto now toggles as TradingView's; Economy applies its gold mode's scale (log for accumulated) only when the mode changes, so the viewer's log or % survives redraws. Pinned in tests/tv-terminal-browser.mjs.
 - **Merged origin/main** (Economy "All worlds" aggregate, global TC price, full history by default): conflicts in economy.html (script version, now `economy.js?v=20261014-tv-global`) and js/economy.js imports, resolved keeping both sides. The Economy overview takes its headline figures and 1M changes from the aggregate row and leaves it out of the world lists; the terminal's search names it "Every world, summed".
-- **Exact next step:** none in this plan. A release (tools/release.mjs) only on the user's instruction.
+- **Release:** the user approved publishing ("sim", 2026-10-14). Full release of `2ca1fbf` by `tools/release.mjs --full`, after `validate_site` (9 checks PASS), 228 unit tests and the Chrome browser suites (Markets, Economy, site header, events, events panel, forecast history, projections, Screener, TIB, global, Trade, tables, statistics, Capture, canonical events, TV terminal, overviews). WebKit is not installed here and was not run.
+- **Exact next step:** watch the Pages run, then `node tools/ci/pages_release.mjs verify-live`.
 
 ---
 
