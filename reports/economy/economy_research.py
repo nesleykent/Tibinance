@@ -363,12 +363,29 @@ def population(p: pd.DataFrame) -> dict:
             'note': 'One instant of TibiaVIP counts: a cross-sectional association only; "known characters" is not an active population.', 'models': res}
 
 
+def clean(o):
+    """Strict JSON: non-finite numbers become null (a browser cannot parse NaN), numpy scalars become numbers."""
+    if isinstance(o, dict):
+        return {str(k): clean(v) for k, v in o.items()}
+    if isinstance(o, (list, tuple)):
+        return [clean(v) for v in o]
+    if isinstance(o, (np.floating, float)):
+        return float(o) if math.isfinite(o) else None
+    if isinstance(o, (np.integer,)):
+        return int(o)
+    if isinstance(o, (np.bool_,)):
+        return bool(o)
+    if isinstance(o, (pd.Timestamp,)):
+        return str(o.date())
+    return o
+
+
 def main():
     p, meta = panel()
     results = {'format': 1, 'meta': meta, 'minCoverage': MIN_COVERAGE, 'levels': levels(p), 'unitRoots': unit_roots(p), 'changes': changes(p),
                'divergence': divergence(p), 'forecasting': forecasting(p), 'population': population(p),
                'reference': 'The owner recalls about 45% of TC price variation explained by gold generation in earlier work; it is a reference, not a target, and nothing here is tuned toward it.'}
-    OUT.write_text(json.dumps(results, indent=1, default=lambda o: None if isinstance(o, float) and not math.isfinite(o) else str(o)) + '\n')
+    OUT.write_text(json.dumps(clean(results), indent=1, allow_nan=False) + '\n')
     print(json.dumps(meta))
 
 

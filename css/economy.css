@@ -1,0 +1,65 @@
+/*
+ * Economy: gold generation potential per world. In Tibinance's own tokens (css/app.css): small-capital labels,
+ * tabular figures, segmented controls, data tables. Coins and NPC potential get two distinct inks; an assumption is
+ * always marked as one.
+ */
+:root { --coins:#8a6a12; --npc:#3f7f6b; --gross:var(--ink); --eco-chart:calc(var(--unit) * 160); }
+
+.economy { padding-bottom:var(--space-8); }
+.eco-status { margin:var(--space-3) 0; color:var(--muted); font-family:var(--font-ui); font-size:var(--step-n1); }
+.eco { display:grid; grid-template-columns:minmax(0, 1fr); gap:var(--space-5); font-family:var(--font-ui); }
+.eco > * { min-width:0; }
+.eco-head { display:flex; flex-wrap:wrap; align-items:baseline; gap:var(--space-3); }
+.eco-world { margin:0; font-family:var(--font-editorial); font-size:var(--step-3); font-weight:var(--weight-regular); }
+.eco-span { margin:0; color:var(--muted); font-size:var(--step-n1); }
+
+.eco-label { display:block; margin:0 0 var(--space-1); color:var(--muted); font-size:var(--step-n2); font-weight:var(--weight-strong);
+  letter-spacing:var(--tracking-caps); line-height:var(--leading-tight); text-transform:uppercase; }
+.eco-assumption { margin-left:var(--space-1); padding:0 var(--space-1); border:var(--rule) solid var(--caution); border-radius:var(--radius); color:var(--caution);
+  letter-spacing:0; text-transform:none; font-weight:var(--weight-regular); }
+.eco-controls { display:flex; flex-wrap:wrap; align-items:end; gap:var(--space-4); }
+.eco-control { display:grid; min-width:0; }
+.eco-control select { min-width:calc(var(--unit) * 40); }
+.eco-check { display:inline-flex; align-items:center; gap:var(--space-2); min-height:var(--control-height); color:var(--ink); font-size:var(--step-n1); }
+
+.eco-tiles { display:grid; grid-template-columns:repeat(auto-fit, minmax(calc(var(--unit) * 44), 1fr)); gap:var(--space-3); }
+.eco-tile { display:grid; gap:var(--space-1); padding:var(--space-3); border:var(--rule) solid var(--line); border-radius:var(--radius); background:var(--surface); }
+.eco-tile .eco-value { font-size:var(--step-2); font-variant-numeric:lining-nums tabular-nums; line-height:var(--leading-tight); }
+.eco-tile .eco-sub { color:var(--muted); font-size:var(--step-n2); line-height:var(--leading-text); }
+.eco-tile.coins { border-top:var(--rule-strong) solid var(--coins); }
+.eco-tile.npc { border-top:var(--rule-strong) solid var(--npc); }
+.eco-tile.gross { border-top:var(--rule-strong) solid var(--gross); }
+.eco-tile.assumption { border-style:dashed; border-color:var(--caution); }
+.eco-unavailable { color:var(--muted); font-size:var(--step-n1); }
+.eco-up { color:var(--positive); } .eco-down { color:var(--negative); }
+
+.eco-figure { margin:0; }
+.eco-caption { display:flex; flex-wrap:wrap; justify-content:space-between; gap:var(--space-2); margin-bottom:var(--space-2); color:var(--muted); font-size:var(--step-n1); }
+.eco-legend { display:flex; flex-wrap:wrap; gap:var(--space-3); }
+.eco-key { display:inline-flex; align-items:center; gap:var(--space-1); color:var(--ink); }
+.eco-key::before { content:""; width:var(--space-4); height:var(--rule-strong); background:currentColor; }
+.eco-key.coins { color:var(--coins); } .eco-key.npc { color:var(--npc); } .eco-key.gross { color:var(--gross); } .eco-key.assumption::before { background:repeating-linear-gradient(90deg,currentColor 0 4px,transparent 4px 7px); }
+.eco-chart { height:var(--eco-chart); border:var(--rule) solid var(--line); border-radius:var(--radius); }
+.eco-note { margin:var(--space-2) 0 0; color:var(--muted); font-size:var(--step-n2); line-height:var(--leading-text); }
+
+.eco-section h3 { margin:0 0 var(--space-2); font-family:var(--font-editorial); font-size:var(--step-1); font-weight:var(--weight-regular); }
+.eco-table th, .eco-table td { font-size:var(--step-n1); }
+.eco-table td.num, .eco-table th.num { text-align:right; font-variant-numeric:lining-nums tabular-nums; }
+.eco-table th button { all:unset; cursor:pointer; }
+.eco-table th button:focus-visible { outline:var(--rule-strong) solid var(--accent); }
+.eco-table th[aria-sort="descending"] button::after { content:" \2193"; }
+.eco-table th[aria-sort="ascending"] button::after { content:" \2191"; }
+.eco-table .warn { color:var(--caution); white-space:normal; }
+.eco-table tr.current td { background:var(--accent-soft); }
+.eco-prose { max-width:72ch; color:var(--ink); font-size:var(--step-n1); line-height:var(--leading-text); }
+.eco-prose p { margin:0 0 var(--space-3); }
+.eco-prose ul { margin:0 0 var(--space-3); padding-left:var(--space-5); }
+.eco-provenance summary { cursor:pointer; list-style:none; }
+.eco-provenance summary h3 { display:inline; }
+
+@media (max-width: 600px) {
+  :root { --eco-chart:calc(var(--unit) * 100); }
+  .eco-controls { gap:var(--space-3); }
+  .eco-control, .eco-control .segmented { max-width:100%; }
+  .eco-control .segmented { overflow-x:auto; }
+}

@@ -1,0 +1,109 @@
+// The Economy page's arithmetic, kept apart from the page so it is tested: periods, sums with coverage, growth,
+// creature contributions, hypothetical liquidation scenarios and the cross-world table.
+//
+// A world file (data/economy/gold/worlds/<dir>.json) holds daily arrays from `first`: directCoins, npcPotential,
+// kills, killsValued, playerDeaths, grossStable and status (o observed, r recovered, m missing). Every value covers
+// valued creatures only. A missing day is null and is never counted as zero; a period's sum says how many of its days
+// had data, and growth is computed only between periods that both have every day.
+
+const DAY = 86400000;
+export const addDays = (iso, k) => new Date(Date.parse(`${iso}T00:00:00Z`) + k * DAY).toISOString().slice(0, 10);
+export const dayIndex = (world, iso) => Math.round((Date.parse(`${iso}T00:00:00Z`) - Date.parse(`${world.first}T00:00:00Z`)) / DAY);
+export const lastDay = world => addDays(world.first, world.status.length - 1);
+
+// The period that holds a day, as [start, end] ISO dates: Day, Week (Monday to Sunday), Month, Quarter or Year.
+export function periodOf(iso, unit) {
+  const d = new Date(`${iso}T00:00:00Z`), y = d.getUTCFullYear(), m = d.getUTCMonth();
+  const ymd = t => t.toISOString().slice(0, 10);
+  if (unit === 'day') return [iso, iso];
+  if (unit === 'week') { const start = addDays(iso, -((d.getUTCDay() + 6) % 7)); return [start, addDays(start, 6)]; }
+  if (unit === 'month') return [ymd(new Date(Date.UTC(y, m, 1))), ymd(new Date(Date.UTC(y, m + 1, 0)))];
+  if (unit === 'quarter') { const q = Math.floor(m / 3) * 3; return [ymd(new Date(Date.UTC(y, q, 1))), ymd(new Date(Date.UTC(y, q + 3, 0)))]; }
+  if (unit === 'year') return [`${y}-01-01`, `${y}-12-31`];
+  throw new Error(`unknown period ${unit}`);
+}
+
+export const previousPeriod = ([start], unit) => periodOf(addDays(start, -1), unit);
+
+const FIELDS = ['directCoins', 'npcPotential', 'kills', 'killsValued', 'playerDeaths', 'grossStable'];
+
+// Sums over [start, end] (clipped to the world's data), with the days that had data.
+export function sumPeriod(world, [start, end]) {
+  const from = Math.max(0, dayIndex(world, start)), to = Math.min(world.status.length - 1, dayIndex(world, end));
+  const out = Object.fromEntries(FIELDS.map(f => [f, 0]));
+  let observed = 0, recovered = 0, missing = 0;
+  const span = Math.round((Date.parse(`${end}T00:00:00Z`) - Date.parse(`${start}T00:00:00Z`)) / DAY) + 1;
+  for (let i = from; i <= to; i++) {
+    const s = world.status[i];
+    if (s === 'm') { missing++; continue; }
+    s === 'r' ? recovered++ : observed++;
+    for (const f of FIELDS) out[f] += world[f][i] ?? 0;
+  }
+  const covered = observed + recovered;
+  const outside = span - (to >= from ? to - from + 1 : 0);
+  return { start, end, days: span, covered, observed, recovered, missing, outsideData: outside, complete: covered === span,
+    ...out, grossPotential: out.directCoins + out.npcPotential, killCoverage: out.kills ? out.killsValued / out.kills : null };
+}
+
+// Growth between two sums, only when both periods have every day; otherwise null with the reason.
+export function growth(current, previous, field = 'grossPotential') {
+  if (!current.complete || !previous.complete) return { value: null, reason: 'a period has missing days or falls outside the data' };
+  if (!previous[field]) return { value: null, reason: 'nothing in the previous period' };
+  return { value: current[field] / previous[field] - 1, reason: null };
+}
+
+// A series by period unit for charting: [{start, end, ...sums}] for every period overlapping the data.
+export function series(world, unit, { from = world.first, to = lastDay(world) } = {}) {
+  const out = [];
+  let p = periodOf(from, unit);
+  while (p[0] <= to) {
+    out.push(sumPeriod(world, p));
+    p = periodOf(addDays(p[1], 1), unit);
+  }
+  return out;
+}
+
+// Hypothetical NPC liquidation: coins plus a stated share of the NPC potential. An assumption, never an observation.
+export const LIQUIDATION_SCENARIOS = [0, 0.25, 0.5, 0.75, 1];
+export function withLiquidation(sum, rate) {
+  if (!LIQUIDATION_SCENARIOS.includes(rate)) throw new Error('liquidation rate must be one of the labelled scenarios');
+  return sum.directCoins + rate * sum.npcPotential;
+}
+
+// Creature contributions over a range of months: the monthly top lists summed. A creature outside a month's top 30
+// counts in that month's "other"; the result says how much of the total the listed creatures cover.
+export function contributions(file, [start, end]) {
+  const months = file.months.filter(m => `${m.month}-31` >= start && `${m.month}-01` <= end);
+  const byCreature = new Map();
+  let other = { kills: 0, directCoins: 0, npcPotential: 0 }, total = { kills: 0, directCoins: 0, npcPotential: 0 };
+  for (const m of months) {
+    for (const [page, kills, dc, np] of m.creatures) {
+      const c = byCreature.get(page) ?? { page, kills: 0, directCoins: 0, npcPotential: 0 };
+      c.kills += kills; c.directCoins += dc; c.npcPotential += np;
+      byCreature.set(page, c);
+    }
+    other = { kills: other.kills + m.other.kills, directCoins: other.directCoins + m.other.directCoins, npcPotential: other.npcPotential + m.other.npcPotential };
+    total = { kills: total.kills + m.killsValued, directCoins: total.directCoins + m.directCoins, npcPotential: total.npcPotential + m.npcPotential };
+  }
+  const gross = c => c.directCoins + c.npcPotential;
+  const rows = [...byCreature.values()].sort((a, b) => gross(b) - gross(a))
+    .map(c => ({ ...c, grossPotential: gross(c), share: gross(total) ? gross(c) / gross(total) : null,
+      coinsPerKill: c.kills ? c.directCoins / c.kills : null, npcPerKill: c.kills ? c.npcPotential / c.kills : null }));
+  return { months: months.map(m => m.month), rows, other, total: { ...total, grossPotential: gross(total) } };
+}
+
+// One row per world for a period: its sums and the warnings that limit comparison with other worlds.
+export function crossWorld(index, files, period) {
+  return index.worlds.map(w => {
+    const file = files.get(w.dir);
+    const s = file ? sumPeriod(file, period) : null;
+    const warnings = [];
+    if (!s || s.covered === 0) warnings.push('no data in this period');
+    else {
+      if (!s.complete) warnings.push(`${s.covered} of ${s.days} days`);
+      if (s.killCoverage !== null && s.killCoverage < 0.95) warnings.push(`kill coverage ${(100 * s.killCoverage).toFixed(1)}%`);
+    }
+    if (w.first > period[0]) warnings.push(`data from ${w.first}`);
+    return { world: w.world, dir: w.dir, sum: s, warnings, comparable: Boolean(s && s.complete && s.killCoverage >= 0.95) };
+  });
+}

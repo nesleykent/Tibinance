@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tibinance Economy</title>
+<meta name="description" content="Estimated gold generation potential of every Tibia world from public kill statistics and TibiaWiki loot statistics: coins dropped and loot at NPC prices, by day, month and world, with coverage stated.">
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/economy.css?v=20261014-economy">
+<link rel="stylesheet" href="css/site-header.css?v=20261004-github">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪙</text></svg>">
+</head>
+<body>
+<header class="site">
+  <div class="wrap">
+    <nav class="site-nav" aria-label="Site">
+      <a class="site-crumb site-home" href="./">Tibinance</a>
+      <span class="site-slash" aria-hidden="true">/</span>
+      <button type="button" class="site-crumb site-section" popovertarget="site-menu" data-site-menu>Economy<svg class="site-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg></button>
+      <ul id="site-menu" class="site-panel site-menu" popover>
+        <li><a href="./">Capture</a></li>
+        <li><a href="markets.html">Markets</a></li>
+        <li><a href="economy.html" aria-current="page">Economy</a></li>
+        <li><a href="trade.html">Trade</a></li>
+        <li><a href="reports/tc-cycle/">Research</a></li>
+      </ul>
+    </nav>
+    <a class="site-control site-github" href="https://github.com/nesleykent/Tibinance" target="_blank" rel="noopener" aria-label="Tibinance project on GitHub" title="Tibinance on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .75a11.25 11.25 0 0 0-3.56 21.92c.56.1.77-.24.77-.54v-2.1c-3.13.68-3.79-1.33-3.79-1.33-.51-1.3-1.25-1.65-1.25-1.65-1.02-.7.08-.69.08-.69 1.13.08 1.72 1.16 1.72 1.16 1 1.72 2.64 1.22 3.28.93.1-.73.4-1.22.71-1.5-2.5-.28-5.13-1.25-5.13-5.56 0-1.23.44-2.23 1.16-3.02-.12-.28-.5-1.43.11-2.98 0 0 .95-.3 3.1 1.15a10.8 10.8 0 0 1 5.64 0c2.15-1.46 3.1-1.15 3.1-1.15.61 1.55.23 2.7.11 2.98.72.79 1.16 1.79 1.16 3.02 0 4.32-2.63 5.27-5.14 5.55.4.35.76 1.03.76 2.09v3.1c0 .3.2.65.77.54A11.25 11.25 0 0 0 12 .75Z"/></svg><span>GitHub</span></a>
+    <div class="site-controls">
+      <div id="site-world" class="site-world"></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap economy">
+
+<div class="hero">
+  <h1>Gold Generation Potential</h1>
+  <p class="deck">How much gold the creatures killed on a world could bring in: the coins they drop, and their other loot at what NPCs pay for it. Estimated from public kill statistics and TibiaWiki loot statistics, for the creatures with loot evidence.</p>
+</div>
+
+<p id="status" class="eco-status" role="status">Loading the economy data.</p>
+
+<section id="economy" class="eco" hidden aria-labelledby="ecoWorld">
+  <div class="eco-head">
+    <h2 id="ecoWorld" class="eco-world"></h2>
+    <p id="ecoSpan" class="eco-span"></p>
+  </div>
+
+  <div class="eco-controls">
+    <div class="eco-control">
+      <span class="eco-label" id="unitLabel">Period</span>
+      <div id="unit" class="segmented" role="radiogroup" aria-labelledby="unitLabel">
+        <button type="button" role="radio" data-unit="day" aria-checked="false">Day</button>
+        <button type="button" role="radio" data-unit="week" aria-checked="false">Week</button>
+        <button type="button" role="radio" data-unit="month" aria-checked="true">Month</button>
+        <button type="button" role="radio" data-unit="quarter" aria-checked="false">Quarter</button>
+        <button type="button" role="radio" data-unit="year" aria-checked="false">Year</button>
+      </div>
+    </div>
+    <label class="eco-control">
+      <span class="eco-label">Showing</span>
+      <select id="period" class="field"></select>
+    </label>
+    <div class="eco-control">
+      <span class="eco-label" id="liqLabel">Hypothetical NPC liquidation <span class="eco-assumption">assumption</span></span>
+      <div id="liquidation" class="segmented" role="radiogroup" aria-labelledby="liqLabel">
+        <button type="button" role="radio" data-rate="" aria-checked="true">None</button>
+        <button type="button" role="radio" data-rate="0" aria-checked="false">0%</button>
+        <button type="button" role="radio" data-rate="0.25" aria-checked="false">25%</button>
+        <button type="button" role="radio" data-rate="0.5" aria-checked="false">50%</button>
+        <button type="button" role="radio" data-rate="1" aria-checked="false">100%</button>
+      </div>
+    </div>
+    <label class="eco-check"><input id="stable" type="checkbox"> Constant creature set</label>
+  </div>
+
+  <div id="tiles" class="eco-tiles" aria-live="polite"></div>
+
+  <figure class="eco-figure">
+    <figcaption class="eco-caption">
+      <span>Gold generation potential from valued creatures, gold per period</span>
+      <span id="legend" class="eco-legend"></span>
+    </figcaption>
+    <div id="chart" class="eco-chart" role="img"></div>
+    <p class="eco-note">Separate panes, separate units: gold above, the Tibia Coin Sell Offer (gold per coin) and players killed by creatures (an activity count) below. Their lines are never on one scale. Periods with missing or unfinished days are not drawn; the figures above show them with their coverage.</p>
+  </figure>
+
+  <section class="eco-section" aria-labelledby="contribTitle">
+    <h3 id="contribTitle">Creatures behind the period</h3>
+    <p id="contribNote" class="eco-note"></p>
+    <div class="table-wrap"><table id="contrib" class="data eco-table"></table></div>
+  </section>
+
+  <section class="eco-section" aria-labelledby="worldsTitle">
+    <h3 id="worldsTitle">Every world in the same period</h3>
+    <p class="eco-note">Worlds with missing days, data starting later, or kill coverage under 95% are flagged and not ranked as comparable. Values are never scaled up to cover unvalued kills.</p>
+    <label class="eco-check"><input id="comparableOnly" type="checkbox"> Comparable worlds only</label>
+    <div class="table-wrap"><table id="worlds" class="data eco-table"></table></div>
+  </section>
+
+  <section class="eco-section" aria-labelledby="findingsTitle">
+    <h3 id="findingsTitle">What the research finds</h3>
+    <div id="findings" class="eco-prose"></div>
+  </section>
+
+  <details class="eco-section eco-provenance">
+    <summary><h3>Sources, method and coverage</h3></summary>
+    <div id="provenance" class="eco-prose"></div>
+  </details>
+</section>
+
+</main>
+<script src="https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.1/dist/lightweight-charts.standalone.production.js"
+        integrity="sha384-KkYqTZlM13Zya6fVUF3IGCBOQ1ehFeJVVgxaVvD/0MebineF9EI8Jkd3NnWNChqN" crossorigin="anonymous"></script>
+<script type="module" src="js/site-header.js"></script>
+<script type="module" src="js/economy.js?v=20261014-economy"></script>
+</body>
+</html>

@@ -1,0 +1,2295 @@
+{
+ "format": 1,
+ "meta": {
+  "priceCutoff": "2026-10-06",
+  "priceFiles": 115,
+  "goldWeeks": 18786,
+  "priceWeeks": 5897,
+  "joinedWeeks": 5897,
+  "excludedLowCoverageWeeks": 0,
+  "analysedWeeks": 5887,
+  "worlds": 112
+ },
+ "minCoverage": 0.9,
+ "levels": {
+  "ask.A": {
+   "pooled": {
+    "n": 5887,
+    "r2": 0.2769824545520795,
+    "adjR2": 0.2768595968553169,
+    "coefficients": {
+     "log_directCoins": {
+      "estimate": 0.12225604483046226,
+      "se": 0.0025748112407298898,
+      "p": 0.0
+     }
+    }
+   },
+   "withinWorld": {
+    "n": 5887,
+    "r2Within": 0.07687490989089563,
+    "coefficients": {
+     "log_directCoins": {
+      "estimate": 0.09865807682170347,
+      "se": 0.034633570834074624,
+      "p": 0.004390851684153099
+     }
+    }
+   },
+   "betweenWorld": {
+    "n": 112,
+    "r2": 0.17075051955983012,
+    "adjR2": 0.16321188791946495,
+    "coefficients": {
+     "log_directCoins": {
+      "estimate": 0.08777030783302253,
+      "se": 0.018442205885209034,
+      "p": 5.951230820511198e-06
+     }
+    }
+   },
+   "worlds": 112
+  },
+  "ask.B": {
+   "pooled": {
+    "n": 5887,
+    "r2": 0.24176001812052472,
+    "adjR2": 0.24163117530287315,
+    "coefficients": {
+     "log_npcPotential": {
+      "estimate": 0.12414451177096857,
+      "se": 0.002865928768489927,
+      "p": 0.0
+     }
+    }
+   },
+   "withinWorld": {
+    "n": 5887,
+    "r2Within": 0.036216258015125846,
+    "coefficients": {
+     "log_npcPotential": {
+      "estimate": 0.08477824558920825,
+      "se": 0.0457672575999672,
+      "p": 0.06397161080294834
+     }
+    }
+   },
+   "betweenWorld": {
+    "n": 112,
+    "r2": 0.13844693357048,
+    "adjR2": 0.13061463296657527,
+    "coefficients": {
+     "log_npcPotential": {
+      "estimate": 0.08463322871132112,
+      "se": 0.020130006374379804,
+      "p": 5.353490371967395e-05
+     }
+    }
+   },
+   "worlds": 112
+  },
+  "ask.C": {
+   "pooled": {
+    "n": 5887,
+    "r2": 0.2561543105779892,
+    "adjR2": 0.2560279136893874,
+    "coefficients": {
+     "log_grossPotential": {
+      "estimate": 0.12450463249597735,
+      "se": 0.0027656859798831524,
+      "p": 0.0
+     }
+    }
+   },
+   "withinWorld": {
+    "n": 5887,
+    "r2Within": 0.05263688995944704,
+    "coefficients": {
+     "log_grossPotential": {
+      "estimate": 0.09472587212725103,
+      "se": 0.04169995026469039,
+      "p": 0.023110296565858453
+     }
+    }
+   },
+   "betweenWorld": {
+    "n": 112,
+    "r2": 0.15054265497849795,
+    "adjR2": 0.14282031547830254,
+    "coefficients": {
+     "log_grossPotential": {
+      "estimate": 0.0863665358747604,
+      "se": 0.019560959795618768,
+      "p": 2.3688767503069753e-05
+     }
+    }
+   },
+   "worlds": 112
+  },
+  "ask.D": {
+   "pooled": {
+    "n": 5887,
+    "r2": 0.30066747037763153,
+    "adjR2": 0.30042976387538056,
+    "coefficients": {
+     "log_directCoins": {
+      "estimate": 0.32559249864149065,
+      "se": 0.014624963928349976,
+      "p": 1.7350429051765334e-105
+     },
+     "log_npcPotential": {
+      "estimate": -0.22439707080358007,
+      "se": 0.015895927629472874,
+      "p": 1.5882829247352298e-44
+     }
+    }
+   },
+   "withinWorld": {
+    "n": 5887,
+    "r2Within": 0.12283701730947527,
+    "coefficients": {
+     "log_directCoins": {
+      "estimate": 0.315272239669632,
+      "se": 0.09566310641295266,
+      "p": 0.0009819381734921366
+     },
+     "log_npcPotential": {
+      "estimate": -0.28751930318583824,
+      "se": 0.12142145529870764,
+      "p": 0.017887204621221453
+     }
+    }
+   },
+   "betweenWorld": {
+    "n": 112,
+    "r2": 0.2829234517020194,
+    "adjR2": 0.2697660838433409,
+    "coefficients": {
+     "log_directCoins": {
+      "estimate": 0.7040077658756494,
+      "se": 0.15022711506478495,
+      "p": 8.086823028045132e-06
+     },
+     "log_npcPotential": {
+      "estimate": -0.6642865920922811,
+      "se": 0.16087218529051925,
+      "p": 7.151755338149238e-05
+     }
+    }
+   },
+   "worlds": 112,
+   "collinearity": {
+    "rank": 2,
+    "columns": 2,
+    "conditionNumber": 11.503008369060272,
+    "vif": [
+     33.34956070658226,
+     33.34956070658226
+    ],
+    "correlation": 0.9848931909245477
+   }
+  },
+  "bid.A": {
+   "pooled": {
+    "n": 5887,
+    "r2": 0.3508152791666338,
+    "adjR2": 0.35070496740438517,
+    "coefficients": {
+     "log_directCoins": {
+      "estimate": 0.14857464776292253,
+      "se": 0.0026346102102399837,
+      "p": 0.0
+     }
+    }
+   },
+   "withinWorld": {
+    "n": 5887,
+    "r2Within": 0.09380628617086895,
+    "coefficients": {
+     "log_directCoins": {
+      "estimate": 0.11082450104548361,
+      "se": 0.03460167656248009,
+      "p": 0.0013606771931309774
+     }
+    }
+   },
+   "betweenWorld": {
+    "n": 112,
+    "r2": 0.2385488502592512,
+    "adjR2": 0.2316265670797899,
+    "coefficients": {
+     "log_directCoins": {
+      "estimate": 0.11091923188023312,
+      "se": 0.018894824844744376,
+      "p": 4.6791606218220694e-08
+     }
+    }
+   },
+   "worlds": 112
+  },
+  "bid.B": {
+   "pooled": {
+    "n": 5887,
+    "r2": 0.31605577603990886,
+    "adjR2": 0.3159395578200346,
+    "coefficients": {
+     "log_npcPotential": {
+      "estimate": 0.1532774964865673,
+      "se": 0.002939230476067676,
+      "p": 0.0
+     }
+    }
+   },
+   "withinWorld": {
+    "n": 5887,
+    "r2Within": 0.04927082849641162,
+    "coefficients": {
+     "log_npcPotential": {
+      "estimate": 0.10055578199690543,
+      "se": 0.04594907103043853,
+      "p": 0.028639155840668108
+     }
+    }
+   },
+   "betweenWorld": {
+    "n": 112,
+    "r2": 0.20324086451699797,
+    "adjR2": 0.19599759964897068,
+    "coefficients": {
+     "log_npcPotential": {
+      "estimate": 0.10963679729258952,
+      "se": 0.02069750551269487,
+      "p": 6.097662238203475e-07
+     }
+    }
+   },
+   "worlds": 112
+  },
+  "bid.C": {
+   "pooled": {
+    "n": 5887,
+    "r2": 0.33077965103915075,
+    "adjR2": 0.33066593475215655,
+    "coefficients": {
+     "log_grossPotential": {
+      "estimate": 0.15277958156006036,
+      "se": 0.002832743549784694,
+      "p": 0.0
+     }
+    }
+   },
+   "withinWorld": {
+    "n": 5887,
+    "r2Within": 0.06778863569010474,
+    "coefficients": {
+     "log_grossPotential": {
+      "estimate": 0.10931541971462769,
+      "se": 0.04176049560777625,
+      "p": 0.008853099057996897
+     }
+    }
+   },
+   "betweenWorld": {
+    "n": 112,
+    "r2": 0.2167212583921453,
+    "adjR2": 0.20960054255934668,
+    "coefficients": {
+     "log_grossPotential": {
+      "estimate": 0.11079446299902918,
+      "se": 0.02008302492848343,
+      "p": 2.315562911421994e-07
+     }
+    }
+   },
+   "worlds": 112
+  },
+  "bid.D": {
+   "pooled": {
+    "n": 5887,
+    "r2": 0.36574813361150993,
+    "adjR2": 0.3655325483408136,
+    "coefficients": {
+     "log_directCoins": {
+      "estimate": 0.3229202788887705,
+      "se": 0.015039903959702979,
+      "p": 1.6170938178742596e-98
+     },
+     "log_npcPotential": {
+      "estimate": -0.1924035174155283,
+      "se": 0.016346927491166393,
+      "p": 1.2580276445051578e-31
+     }
+    }
+   },
+   "withinWorld": {
+    "n": 5887,
+    "r2Within": 0.13438875024396602,
+    "coefficients": {
+     "log_directCoins": {
+      "estimate": 0.3178079247664934,
+      "se": 0.09586279565395073,
+      "p": 0.0009156532858272077
+     },
+     "log_npcPotential": {
+      "estimate": -0.2747360974779073,
+      "se": 0.12150075807251139,
+      "p": 0.023747596818626374
+     }
+    }
+   },
+   "betweenWorld": {
+    "n": 112,
+    "r2": 0.3283703498605288,
+    "adjR2": 0.31604687004145604,
+    "coefficients": {
+     "log_directCoins": {
+      "estimate": 0.7005033726916747,
+      "se": 0.1554469061499274,
+      "p": 1.6653887068129568e-05
+     },
+     "log_npcPotential": {
+      "estimate": -0.6355550681636695,
+      "se": 0.16646184996766297,
+      "p": 0.0002238355707190055
+     }
+    }
+   },
+   "worlds": 112,
+   "collinearity": {
+    "rank": 2,
+    "columns": 2,
+    "conditionNumber": 11.503008369060272,
+    "vif": [
+     33.34956070658226,
+     33.34956070658226
+    ],
+    "correlation": 0.9848931909245477
+   }
+  }
+ },
+ "unitRoots": {
+  "log_ask": {
+   "worlds": 35,
+   "rejectUnitRootAt5pct": 5,
+   "medianP": 0.52852352146962
+  },
+  "log_grossPotential": {
+   "worlds": 35,
+   "rejectUnitRootAt5pct": 2,
+   "medianP": 0.9374287823138341
+  }
+ },
+ "changes": {
+  "ask.A": {
+   "n": 2876,
+   "worlds": 80,
+   "weeks": 181,
+   "r2Within": 0.015650232845101697,
+   "lagsWeeks": [
+    0,
+    1,
+    2,
+    4,
+    8,
+    13
+   ],
+   "coefficients": {
+    "d_directCoins_l0": {
+     "estimate": 0.04152375853525815,
+     "se": 0.022742310457326533,
+     "p": 0.0678747742015381
+    },
+    "d_directCoins_l1": {
+     "estimate": 0.008245321774381845,
+     "se": 0.014095634621733716,
+     "p": 0.5585775064489434
+    },
+    "d_directCoins_l2": {
+     "estimate": 0.0057231203253834155,
+     "se": 0.00696416877906355,
+     "p": 0.41119347825941077
+    },
+    "d_directCoins_l4": {
+     "estimate": 0.03247773985682581,
+     "se": 0.013910358266673866,
+     "p": 0.01955448974909548
+    },
+    "d_directCoins_l8": {
+     "estimate": -0.0030297500748313762,
+     "se": 0.009866695639497103,
+     "p": 0.7587913380648488
+    },
+    "d_directCoins_l13": {
+     "estimate": 0.008082994993802732,
+     "se": 0.013831755916943932,
+     "p": 0.5589649970298596
+    }
+   },
+   "jointF": {
+    "stat": 1.4984911040465445,
+    "p": 0.18952579890839655
+   }
+  },
+  "ask.B": {
+   "n": 2876,
+   "worlds": 80,
+   "weeks": 181,
+   "r2Within": 0.0036846385165547613,
+   "lagsWeeks": [
+    0,
+    1,
+    2,
+    4,
+    8,
+    13
+   ],
+   "coefficients": {
+    "d_npcPotential_l0": {
+     "estimate": 0.006622721851757133,
+     "se": 0.014071755775011144,
+     "p": 0.6378983092797699
+    },
+    "d_npcPotential_l1": {
+     "estimate": 0.022528435614614904,
+     "se": 0.01612314946323292,
+     "p": 0.16233160010369152
+    },
+    "d_npcPotential_l2": {
+     "estimate": 0.017089020603320914,
+     "se": 0.012042118992054193,
+     "p": 0.1558686647114974
+    },
+    "d_npcPotential_l4": {
+     "estimate": 0.018911803873979893,
+     "se": 0.013779771654398691,
+     "p": 0.169928896918484
+    },
+    "d_npcPotential_l8": {
+     "estimate": -0.002943745375287306,
+     "se": 0.010551535329085766,
+     "p": 0.7802544967031149
+    },
+    "d_npcPotential_l13": {
+     "estimate": -1.9597293795307847e-06,
+     "se": 0.009666304643666692,
+     "p": 0.9998382383069633
+    }
+   },
+   "jointF": {
+    "stat": 1.0793216235779928,
+    "p": 0.38205624700984653
+   }
+  },
+  "ask.C": {
+   "n": 2876,
+   "worlds": 80,
+   "weeks": 181,
+   "r2Within": 0.006812381809261803,
+   "lagsWeeks": [
+    0,
+    1,
+    2,
+    4,
+    8,
+    13
+   ],
+   "coefficients": {
+    "d_grossPotential_l0": {
+     "estimate": 0.0262846900170826,
+     "se": 0.020748425978664584,
+     "p": 0.2052167456595153
+    },
+    "d_grossPotential_l1": {
+     "estimate": 0.01936880590166237,
+     "se": 0.0170517255852116,
+     "p": 0.2560045351751149
+    },
+    "d_grossPotential_l2": {
+     "estimate": 0.012149361966165785,
+     "se": 0.011352323215237037,
+     "p": 0.2845251058179259
+    },
+    "d_grossPotential_l4": {
+     "estimate": 0.029513921346036955,
+     "se": 0.013713382283945346,
+     "p": 0.03138172049749729
+    },
+    "d_grossPotential_l8": {
+     "estimate": -0.004351849548613925,
+     "se": 0.009689651332996842,
+     "p": 0.6533426114857728
+    },
+    "d_grossPotential_l13": {
+     "estimate": 0.004051255756632119,
+     "se": 0.01159302774580211,
+     "p": 0.7267468262387626
+    }
+   },
+   "jointF": {
+    "stat": 1.5391446264319815,
+    "p": 0.17634996986257134
+   }
+  },
+  "ask.D": {
+   "n": 2876,
+   "worlds": 80,
+   "weeks": 181,
+   "r2Within": 0.02532577115102308,
+   "lagsWeeks": [
+    0,
+    1,
+    2,
+    4,
+    8,
+    13
+   ],
+   "coefficients": {
+    "d_directCoins_l0": {
+     "estimate": 0.06706022330584123,
+     "se": 0.028853796854445682,
+     "p": 0.02011806630087835
+    },
+    "d_directCoins_l1": {
+     "estimate": -0.005437006918543034,
+     "se": 0.015777803140273338,
+     "p": 0.7303962515840253
+    },
+    "d_directCoins_l2": {
+     "estimate": -0.005319080556135223,
+     "se": 0.008655980009749615,
+     "p": 0.5388864353148006
+    },
+    "d_directCoins_l4": {
+     "estimate": 0.04231956915230669,
+     "se": 0.025317814671422724,
+     "p": 0.0946163959410384
+    },
+    "d_directCoins_l8": {
+     "estimate": -0.0018336358477534461,
+     "se": 0.017531315027343435,
+     "p": 0.9166995382293918
+    },
+    "d_directCoins_l13": {
+     "estimate": 0.017016895364772095,
+     "se": 0.021274916341813818,
+     "p": 0.4237935282843748
+    },
+    "d_npcPotential_l0": {
+     "estimate": -0.043798247763715145,
+     "se": 0.01474465353796998,
+     "p": 0.002973643549541945
+    },
+    "d_npcPotential_l1": {
+     "estimate": 0.027712840326389328,
+     "se": 0.016605287171707415,
+     "p": 0.0951338983469673
+    },
+    "d_npcPotential_l2": {
+     "estimate": 0.02074650670812217,
+     "se": 0.01579368016280581,
+     "p": 0.1889823741629083
+    },
+    "d_npcPotential_l4": {
+     "estimate": -0.01668439869679645,
+     "se": 0.02706646053823155,
+     "p": 0.5376151361059163
+    },
+    "d_npcPotential_l8": {
+     "estimate": -0.006788604127224303,
+     "se": 0.020446776506067604,
+     "p": 0.7398791281005639
+    },
+    "d_npcPotential_l13": {
+     "estimate": -0.015751680034698724,
+     "se": 0.018744689128784475,
+     "p": 0.4007247183784226
+    }
+   },
+   "jointF": {
+    "stat": 6.268820244649507,
+    "p": 1.2162431970453995e-07
+   },
+   "collinearity": {
+    "rank": 2,
+    "columns": 2,
+    "conditionNumber": 5.125782414619402,
+    "vif": [
+     6.996450419026298,
+     6.996450419026298
+    ],
+    "correlation": 0.9257809567942498
+   }
+  },
+  "ask.E": {
+   "n": 2876,
+   "worlds": 80,
+   "weeks": 181,
+   "r2Within": 0.010162934372834442,
+   "lagsWeeks": [
+    0,
+    1,
+    2,
+    4,
+    8,
+    13
+   ],
+   "coefficients": {
+    "d_grossPotential_l0": {
+     "estimate": 0.026011814130607217,
+     "se": 0.02047075974196838,
+     "p": 0.20384200685777287
+    },
+    "d_grossPotential_l1": {
+     "estimate": 0.01969969053116287,
+     "se": 0.017202011021628605,
+     "p": 0.25212758211845
+    },
+    "d_grossPotential_l2": {
+     "estimate": 0.012815131462611332,
+     "se": 0.011388904140292257,
+     "p": 0.26049177494095266
+    },
+    "d_grossPotential_l4": {
+     "estimate": 0.02793069832289821,
+     "se": 0.01371611117307276,
+     "p": 0.04171598809464881
+    },
+    "d_grossPotential_l8": {
+     "estimate": -0.002542818385770183,
+     "se": 0.009758055215796053,
+     "p": 0.7944113279957157
+    },
+    "d_grossPotential_l13": {
+     "estimate": 0.0031396449795163886,
+     "se": 0.011474813691724125,
+     "p": 0.7843829279676808
+    },
+    "d_playerDeaths_l0": {
+     "estimate": 0.0017238926448860214,
+     "se": 0.0033289211487090293,
+     "p": 0.6045606601055253
+    },
+    "d_playerDeaths_l1": {
+     "estimate": -0.002751287001926412,
+     "se": 0.003166590635859227,
+     "p": 0.3849300915100642
+    },
+    "d_playerDeaths_l2": {
+     "estimate": -0.003148464467632449,
+     "se": 0.003120155674936604,
+     "p": 0.31293968405507544
+    },
+    "d_playerDeaths_l4": {
+     "estimate": -0.003641240183681912,
+     "se": 0.0026422937927953185,
+     "p": 0.16818467067102338
+    },
+    "d_playerDeaths_l8": {
+     "estimate": -0.0024434394242828605,
+     "se": 0.003222806899372693,
+     "p": 0.44834849072092475
+    },
+    "d_playerDeaths_l13": {
+     "estimate": 0.0024925743084417734,
+     "se": 0.002629580025433724,
+     "p": 0.3431812551449921
+    }
+   },
+   "jointF": {
+    "stat": 1.2276026759995136,
+    "p": 0.2796129677193717
+   }
+  },
+  "bid.A": {
+   "n": 2876,
+   "worlds": 80,
+   "weeks": 181,
+   "r2Within": 0.020336587691375363,
+   "lagsWeeks": [
+    0,
+    1,
+    2,
+    4,
+    8,
+    13
+   ],
+   "coefficients": {
+    "d_directCoins_l0": {
+     "estimate": 0.05095235839405715,
+     "se": 0.023369373207727258,
+     "p": 0.029234869749678576
+    },
+    "d_directCoins_l1": {
+     "estimate": 0.011160272559175132,
+     "se": 0.014177707104343608,
+     "p": 0.43118207328484315
+    },
+    "d_directCoins_l2": {
+     "estimate": 0.01230749608372964,
+     "se": 0.009671206103932233,
+     "p": 0.20316298495711282
+    },
+    "d_directCoins_l4": {
+     "estimate": 0.04473993730907783,
+     "se": 0.02104554035643363,
+     "p": 0.033514661546945664
+    },
+    "d_directCoins_l8": {
+     "estimate": 0.005023352919311268,
+     "se": 0.009722050394068035,
+     "p": 0.6053677877826318
+    },
+    "d_directCoins_l13": {
+     "estimate": 0.0011234117959499055,
+     "se": 0.016886802328336385,
+     "p": 0.9469590404341307
+    }
+   },
+   "jointF": {
+    "stat": 2.4463744821882334,
+    "p": 0.03199713265104036
+   }
+  },
+  "bid.B": {
+   "n": 2876,
+   "worlds": 80,
+   "weeks": 181,
+   "r2Within": 0.0038408768175812735,
+   "lagsWeeks": [
+    0,
+    1,
+    2,
+    4,
+    8,
+    13
+   ],
+   "coefficients": {
+    "d_npcPotential_l0": {
+     "estimate": 0.013952317828974036,
+     "se": 0.01467947782754943,
+     "p": 0.34187644729709254
+    },
+    "d_npcPotential_l1": {
+     "estimate": 0.020180910251244365,
+     "se": 0.012723320884207343,
+     "p": 0.11270858753645875
+    },
+    "d_npcPotential_l2": {
+     "estimate": 0.009066344524754789,
+     "se": 0.010378524272637784,
+     "p": 0.38235367305794876
+    },
+    "d_npcPotential_l4": {
+     "estimate": 0.019382203763948818,
+     "se": 0.016934913094199977,
+     "p": 0.252411547516327
+    },
+    "d_npcPotential_l8": {
+     "estimate": -0.016168357025642947,
+     "se": 0.012084175685019143,
+     "p": 0.18090372150409217
+    },
+    "d_npcPotential_l13": {
+     "estimate": -0.011251156871173961,
+     "se": 0.010209671352733906,
+     "p": 0.2704574543149679
+    }
+   },
+   "jointF": {
+    "stat": 1.4890067310830102,
+    "p": 0.1927226000650599
+   }
+  },
+  "bid.C": {
+   "n": 2876,
+   "worlds": 80,
+   "weeks": 181,
+   "r2Within": 0.008852348571628532,
+   "lagsWeeks": [
+    0,
+    1,
+    2,
+    4,
+    8,
+    13
+   ],
+   "coefficients": {
+    "d_grossPotential_l0": {
+     "estimate": 0.03644021052627124,
+     "se": 0.020552824134320084,
+     "p": 0.07622827685932353
+    },
+    "d_grossPotential_l1": {
+     "estimate": 0.01957852279122191,
+     "se": 0.014641880893453214,
+     "p": 0.18117074235566344
+    },
+    "d_grossPotential_l2": {
+     "estimate": 0.009900456326699114,
+     "se": 0.010871366642449195,
+     "p": 0.3624581799657399
+    },
+    "d_grossPotential_l4": {
+     "estimate": 0.036474563876212604,
+     "se": 0.018913589579448543,
+     "p": 0.05379489343519164
+    },
+    "d_grossPotential_l8": {
+     "estimate": -0.009064128522140849,
+     "se": 0.01141409867639149,
+     "p": 0.42712738684955454
+    },
+    "d_grossPotential_l13": {
+     "estimate": -0.008238737587525278,
+     "se": 0.013367693893845237,
+     "p": 0.5376852919200323
+    }
+   },
+   "jointF": {
+    "stat": 1.330861557802027,
+    "p": 0.2534067675776686
+   }
+  },
+  "bid.D": {
+   "n": 2876,
+   "worlds": 80,
+   "weeks": 181,
+   "r2Within": 0.03215271741556991,
+   "lagsWeeks": [
+    0,
+    1,
+    2,
+    4,
+    8,
+    13
+   ],
+   "coefficients": {
+    "d_directCoins_l0": {
+     "estimate": 0.08061690548564208,
+     "se": 0.03277049264077182,
+     "p": 0.013891937263949595
+    },
+    "d_directCoins_l1": {
+     "estimate": 0.0051721776930465976,
+     "se": 0.019050106131362154,
+     "p": 0.7860035173894659
+    },
+    "d_directCoins_l2": {
+     "estimate": 0.01574142327810906,
+     "se": 0.01547864530633029,
+     "p": 0.3091644628733283
+    },
+    "d_directCoins_l4": {
+     "estimate": 0.06560777732808534,
+     "se": 0.035438737453623304,
+     "p": 0.0641262329374184
+    },
+    "d_directCoins_l8": {
+     "estimate": 0.024902144684955257,
+     "se": 0.01777417563450981,
+     "p": 0.1612052469737454
+    },
+    "d_directCoins_l13": {
+     "estimate": 0.018269711485581135,
+     "se": 0.027570016567086818,
+     "p": 0.5075445157081534
+    },
+    "d_npcPotential_l0": {
+     "estimate": -0.045210654450179064,
+     "se": 0.02130324814364893,
+     "p": 0.0338173956315751
+    },
+    "d_npcPotential_l1": {
+     "estimate": 0.015943275429397913,
+     "se": 0.015455784465162818,
+     "p": 0.30228718981601876
+    },
+    "d_npcPotential_l2": {
+     "estimate": -0.004033666866161216,
+     "se": 0.01732743959426381,
+     "p": 0.815923931575278
+    },
+    "d_npcPotential_l4": {
+     "estimate": -0.034962340323053766,
+     "se": 0.03340833799256352,
+     "p": 0.29532313685677103
+    },
+    "d_npcPotential_l8": {
+     "estimate": -0.04163643337596802,
+     "se": 0.023144675659559716,
+     "p": 0.07202440922383932
+    },
+    "d_npcPotential_l13": {
+     "estimate": -0.028068287997858928,
+     "se": 0.023848309317729095,
+     "p": 0.23921512303978
+    }
+   },
+   "jointF": {
+    "stat": 1.5560758404349162,
+    "p": 0.12223883674781394
+   },
+   "collinearity": {
+    "rank": 2,
+    "columns": 2,
+    "conditionNumber": 5.125782414619402,
+    "vif": [
+     6.996450419026298,
+     6.996450419026298
+    ],
+    "correlation": 0.9257809567942498
+   }
+  },
+  "bid.E": {
+   "n": 2876,
+   "worlds": 80,
+   "weeks": 181,
+   "r2Within": 0.010626601232716304,
+   "lagsWeeks": [
+    0,
+    1,
+    2,
+    4,
+    8,
+    13
+   ],
+   "coefficients": {
+    "d_grossPotential_l0": {
+     "estimate": 0.03663348205751337,
+     "se": 0.020319767299659234,
+     "p": 0.07141185579651453
+    },
+    "d_grossPotential_l1": {
+     "estimate": 0.01985856771039967,
+     "se": 0.01473881383907083,
+     "p": 0.17786258041965974
+    },
+    "d_grossPotential_l2": {
+     "estimate": 0.01047002881680558,
+     "se": 0.010926139512875023,
+     "p": 0.33793414321868775
+    },
+    "d_grossPotential_l4": {
+     "estimate": 0.035333132863979266,
+     "se": 0.018919262993450196,
+     "p": 0.061821405462246425
+    },
+    "d_grossPotential_l8": {
+     "estimate": -0.007501296167446811,
+     "se": 0.011574287324115085,
+     "p": 0.5169202431232911
+    },
+    "d_grossPotential_l13": {
+     "estimate": -0.008978248523613069,
+     "se": 0.013458093628842684,
+     "p": 0.5046914471935515
+    },
+    "d_playerDeaths_l0": {
+     "estimate": 0.0002291387656292797,
+     "se": 0.003769535497497793,
+     "p": 0.9515288412759373
+    },
+    "d_playerDeaths_l1": {
+     "estimate": -0.0031147511678588902,
+     "se": 0.00322709633395013,
+     "p": 0.33445119765735254
+    },
+    "d_playerDeaths_l2": {
+     "estimate": -0.004278218687514151,
+     "se": 0.0031615988172305665,
+     "p": 0.17599748646706248
+    },
+    "d_playerDeaths_l4": {
+     "estimate": -0.002751634267260531,
+     "se": 0.0020073292658413927,
+     "p": 0.1704392822791766
+    },
+    "d_playerDeaths_l8": {
+     "estimate": -0.0010431609289517905,
+     "se": 0.0031567340078341795,
+     "p": 0.7410556167630631
+    },
+    "d_playerDeaths_l13": {
+     "estimate": 0.0013431369851434976,
+     "se": 0.0026444225184890503,
+     "p": 0.611514248556048
+    }
+   },
+   "jointF": {
+    "stat": 1.3480576587634223,
+    "p": 0.20923151045883145
+   }
+  }
+ },
+ "divergence": {
+  "window": [
+   "2025-08-01",
+   "2026-02-28"
+  ],
+  "worlds": [
+   {
+    "world": "Celesta",
+    "weeksChecked": 30,
+    "divergentWeeks": 9,
+    "first": "2025-08-10",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.19603613264995937,
+    "meanStableGoldGrowth13w": 0.21000846793528036,
+    "meanPlayerDeathsGrowth13w": 0.013921115564671308,
+    "meanPriceGrowth13w": 0.027358990369984498,
+    "meanGoldGrowthYoY": 0.49306947114993616
+   },
+   {
+    "world": "Dia",
+    "weeksChecked": 30,
+    "divergentWeeks": 9,
+    "first": "2025-09-07",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.19422438305315948,
+    "meanStableGoldGrowth13w": 0.19886608409519368,
+    "meanPlayerDeathsGrowth13w": 0.06724321786703318,
+    "meanPriceGrowth13w": 0.033989234059728354,
+    "meanGoldGrowthYoY": 0.789670211721499
+   },
+   {
+    "world": "Nefera",
+    "weeksChecked": 30,
+    "divergentWeeks": 9,
+    "first": "2025-08-10",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.09178586375452001,
+    "meanStableGoldGrowth13w": 0.08897313143983444,
+    "meanPlayerDeathsGrowth13w": -0.04748661285207171,
+    "meanPriceGrowth13w": 0.02509477100218525,
+    "meanGoldGrowthYoY": 0.34567798981239445
+   },
+   {
+    "world": "Nevia",
+    "weeksChecked": 30,
+    "divergentWeeks": 9,
+    "first": "2025-08-10",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.16921585173867817,
+    "meanStableGoldGrowth13w": 0.16895594481885126,
+    "meanPlayerDeathsGrowth13w": 0.13655371079084697,
+    "meanPriceGrowth13w": 0.03227641071332454,
+    "meanGoldGrowthYoY": 0.5059590379161838
+   },
+   {
+    "world": "Calmera",
+    "weeksChecked": 30,
+    "divergentWeeks": 8,
+    "first": "2025-08-10",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.11846842528119783,
+    "meanStableGoldGrowth13w": 0.12504095709638094,
+    "meanPlayerDeathsGrowth13w": -0.0022978909952370125,
+    "meanPriceGrowth13w": 0.03239061986819206,
+    "meanGoldGrowthYoY": 0.3753704033424891
+   },
+   {
+    "world": "Harmonia",
+    "weeksChecked": 30,
+    "divergentWeeks": 8,
+    "first": "2025-12-28",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.19878337830631942,
+    "meanStableGoldGrowth13w": 0.2016550404614879,
+    "meanPlayerDeathsGrowth13w": 0.1058700922577631,
+    "meanPriceGrowth13w": 0.022216473166074526,
+    "meanGoldGrowthYoY": 0.27840121735061807
+   },
+   {
+    "world": "Inabra",
+    "weeksChecked": 30,
+    "divergentWeeks": 8,
+    "first": "2025-08-10",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.05145385871334997,
+    "meanStableGoldGrowth13w": 0.05310600560874678,
+    "meanPlayerDeathsGrowth13w": -0.05861845508519983,
+    "meanPriceGrowth13w": 0.05949916767748758,
+    "meanGoldGrowthYoY": 0.1562181663728314
+   },
+   {
+    "world": "Monza",
+    "weeksChecked": 30,
+    "divergentWeeks": 8,
+    "first": "2025-12-28",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.22839550834865108,
+    "meanStableGoldGrowth13w": 0.2353544967556556,
+    "meanPlayerDeathsGrowth13w": 0.11138175053695042,
+    "meanPriceGrowth13w": 0.030083039180309714,
+    "meanGoldGrowthYoY": 0.6332534336705544
+   },
+   {
+    "world": "Peloria",
+    "weeksChecked": 30,
+    "divergentWeeks": 8,
+    "first": "2026-01-04",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.15147510382393037,
+    "meanStableGoldGrowth13w": 0.15032763964364268,
+    "meanPlayerDeathsGrowth13w": 0.14305174793354491,
+    "meanPriceGrowth13w": 0.061623003231801095,
+    "meanGoldGrowthYoY": 0.26485239187403176
+   },
+   {
+    "world": "Quelibra",
+    "weeksChecked": 21,
+    "divergentWeeks": 8,
+    "first": "2026-01-04",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.1663264448211934,
+    "meanStableGoldGrowth13w": 0.15828730396505009,
+    "meanPlayerDeathsGrowth13w": 0.196705604336337,
+    "meanPriceGrowth13w": -0.04050682350798818,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Quidera",
+    "weeksChecked": 30,
+    "divergentWeeks": 8,
+    "first": "2025-08-03",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.066551070613298,
+    "meanStableGoldGrowth13w": 0.06680345567865587,
+    "meanPlayerDeathsGrowth13w": -0.32765477240313134,
+    "meanPriceGrowth13w": 0.06579049318758791,
+    "meanGoldGrowthYoY": 0.100669230090773
+   },
+   {
+    "world": "Thyria",
+    "weeksChecked": 30,
+    "divergentWeeks": 8,
+    "first": "2026-01-04",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.1708472303850834,
+    "meanStableGoldGrowth13w": 0.17503044234522389,
+    "meanPlayerDeathsGrowth13w": 0.15339608283899114,
+    "meanPriceGrowth13w": 0.057363302818564624,
+    "meanGoldGrowthYoY": 0.5123722353988667
+   },
+   {
+    "world": "Ustebra",
+    "weeksChecked": 30,
+    "divergentWeeks": 8,
+    "first": "2025-08-10",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.058314304990331814,
+    "meanStableGoldGrowth13w": 0.05893990663772433,
+    "meanPlayerDeathsGrowth13w": -0.04644462420279445,
+    "meanPriceGrowth13w": 0.00867202164420927,
+    "meanGoldGrowthYoY": 0.28567138317906515
+   },
+   {
+    "world": "Yubra",
+    "weeksChecked": 22,
+    "divergentWeeks": 8,
+    "first": "2025-12-28",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.2637181570590168,
+    "meanStableGoldGrowth13w": 0.26439221007610225,
+    "meanPlayerDeathsGrowth13w": 0.08082661418374393,
+    "meanPriceGrowth13w": -0.09005725992771318,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Antica",
+    "weeksChecked": 30,
+    "divergentWeeks": 7,
+    "first": "2026-01-04",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.15779559917782465,
+    "meanStableGoldGrowth13w": 0.15606036773369117,
+    "meanPlayerDeathsGrowth13w": 0.05337757219116064,
+    "meanPriceGrowth13w": 0.05948484896152652,
+    "meanGoldGrowthYoY": 0.3108144294447609
+   },
+   {
+    "world": "Astera",
+    "weeksChecked": 30,
+    "divergentWeeks": 7,
+    "first": "2025-12-28",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.08666998199523732,
+    "meanStableGoldGrowth13w": 0.08673922658908838,
+    "meanPlayerDeathsGrowth13w": -0.03809971410923764,
+    "meanPriceGrowth13w": 0.028596407845479337,
+    "meanGoldGrowthYoY": 0.41524749647360387
+   },
+   {
+    "world": "Bona",
+    "weeksChecked": 30,
+    "divergentWeeks": 7,
+    "first": "2026-01-11",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.1995234955673439,
+    "meanStableGoldGrowth13w": 0.2019715159568122,
+    "meanPlayerDeathsGrowth13w": 0.11605333601619869,
+    "meanPriceGrowth13w": 0.019627567672627765,
+    "meanGoldGrowthYoY": 0.41156321959448583
+   },
+   {
+    "world": "Bravoria",
+    "weeksChecked": 22,
+    "divergentWeeks": 7,
+    "first": "2025-12-28",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.06632629551019459,
+    "meanStableGoldGrowth13w": 0.068105655205193,
+    "meanPlayerDeathsGrowth13w": -0.09159687230724314,
+    "meanPriceGrowth13w": -0.05572551253278944,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Gentebra",
+    "weeksChecked": 30,
+    "divergentWeeks": 7,
+    "first": "2025-08-10",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.06593307941720786,
+    "meanStableGoldGrowth13w": 0.049641607669745874,
+    "meanPlayerDeathsGrowth13w": -0.040841404007562004,
+    "meanPriceGrowth13w": 0.031356236816842055,
+    "meanGoldGrowthYoY": 0.3373977888024136
+   },
+   {
+    "world": "Havera",
+    "weeksChecked": 21,
+    "divergentWeeks": 7,
+    "first": "2026-01-11",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.14926724600837904,
+    "meanStableGoldGrowth13w": 0.14960406689697825,
+    "meanPlayerDeathsGrowth13w": -0.08111525264173158,
+    "meanPriceGrowth13w": -0.039482444197139754,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Honbra",
+    "weeksChecked": 30,
+    "divergentWeeks": 7,
+    "first": "2025-08-03",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.09730174324802679,
+    "meanStableGoldGrowth13w": 0.09708605426338808,
+    "meanPlayerDeathsGrowth13w": -0.08755269459842194,
+    "meanPriceGrowth13w": 0.05925202403557085,
+    "meanGoldGrowthYoY": 0.4054427501575706
+   },
+   {
+    "world": "Karmeya",
+    "weeksChecked": 30,
+    "divergentWeeks": 7,
+    "first": "2026-01-04",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.09083120040952074,
+    "meanStableGoldGrowth13w": 0.1017152261506694,
+    "meanPlayerDeathsGrowth13w": -0.16253162780854316,
+    "meanPriceGrowth13w": 0.0244816370974855,
+    "meanGoldGrowthYoY": 0.15055874789973345
+   },
+   {
+    "world": "Lobera",
+    "weeksChecked": 30,
+    "divergentWeeks": 7,
+    "first": "2026-01-11",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.13469835511659548,
+    "meanStableGoldGrowth13w": 0.13334575478179986,
+    "meanPlayerDeathsGrowth13w": 0.028972164902011325,
+    "meanPriceGrowth13w": 0.06242843520643934,
+    "meanGoldGrowthYoY": 0.2882937726341973
+   },
+   {
+    "world": "Luminera",
+    "weeksChecked": 21,
+    "divergentWeeks": 7,
+    "first": "2026-01-11",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.11067544307945143,
+    "meanStableGoldGrowth13w": 0.11928810205369311,
+    "meanPlayerDeathsGrowth13w": 0.10875662681699294,
+    "meanPriceGrowth13w": -0.05378017319798056,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Rasteibra",
+    "weeksChecked": 30,
+    "divergentWeeks": 7,
+    "first": "2025-08-10",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.0597330162435649,
+    "meanStableGoldGrowth13w": 0.04986927998751353,
+    "meanPlayerDeathsGrowth13w": -0.10484365261693422,
+    "meanPriceGrowth13w": 0.05523030780833357,
+    "meanGoldGrowthYoY": 0.2801099043797972
+   },
+   {
+    "world": "Secura",
+    "weeksChecked": 30,
+    "divergentWeeks": 7,
+    "first": "2026-01-04",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.1647875856954413,
+    "meanStableGoldGrowth13w": 0.16500431835047483,
+    "meanPlayerDeathsGrowth13w": 0.005491211762302495,
+    "meanPriceGrowth13w": 0.031877147222462376,
+    "meanGoldGrowthYoY": 0.3402395909595388
+   },
+   {
+    "world": "Yovera",
+    "weeksChecked": 22,
+    "divergentWeeks": 7,
+    "first": "2026-01-11",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.11290630446000922,
+    "meanStableGoldGrowth13w": 0.11338548879006735,
+    "meanPlayerDeathsGrowth13w": -0.047670740883197164,
+    "meanPriceGrowth13w": -0.05038798778372014,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Belobra",
+    "weeksChecked": 30,
+    "divergentWeeks": 6,
+    "first": "2025-08-17",
+    "last": "2026-02-15",
+    "meanGoldGrowth13w": 0.050731649657164694,
+    "meanStableGoldGrowth13w": 0.04831503453510303,
+    "meanPlayerDeathsGrowth13w": -0.022235508151613525,
+    "meanPriceGrowth13w": 0.025755799137482376,
+    "meanGoldGrowthYoY": 0.28282189094267307
+   },
+   {
+    "world": "Etebra",
+    "weeksChecked": 22,
+    "divergentWeeks": 6,
+    "first": "2026-01-11",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.10962932875619716,
+    "meanStableGoldGrowth13w": 0.10602967448707269,
+    "meanPlayerDeathsGrowth13w": -0.0019936762494138843,
+    "meanPriceGrowth13w": -0.06821992355371581,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Gladera",
+    "weeksChecked": 30,
+    "divergentWeeks": 6,
+    "first": "2026-01-11",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.05768244315044973,
+    "meanStableGoldGrowth13w": 0.05852898171744537,
+    "meanPlayerDeathsGrowth13w": -0.0856090153719968,
+    "meanPriceGrowth13w": 0.02160398537890287,
+    "meanGoldGrowthYoY": -0.16653988619523305
+   },
+   {
+    "world": "Kalibra",
+    "weeksChecked": 21,
+    "divergentWeeks": 6,
+    "first": "2026-01-11",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.05259462169403203,
+    "meanStableGoldGrowth13w": 0.06686876048556963,
+    "meanPlayerDeathsGrowth13w": -0.05525486254572292,
+    "meanPriceGrowth13w": -0.04906782895839815,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Menera",
+    "weeksChecked": 21,
+    "divergentWeeks": 6,
+    "first": "2026-01-11",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.07066683134131635,
+    "meanStableGoldGrowth13w": 0.11078309764350669,
+    "meanPlayerDeathsGrowth13w": 0.0302032318130645,
+    "meanPriceGrowth13w": -0.05297161610950751,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Ourobra",
+    "weeksChecked": 30,
+    "divergentWeeks": 6,
+    "first": "2026-01-11",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.039053919821133605,
+    "meanStableGoldGrowth13w": 0.009838431043491046,
+    "meanPlayerDeathsGrowth13w": -0.04832840817127403,
+    "meanPriceGrowth13w": 0.06583124740891913,
+    "meanGoldGrowthYoY": 0.20967141343342455
+   },
+   {
+    "world": "Pacera",
+    "weeksChecked": 30,
+    "divergentWeeks": 6,
+    "first": "2026-01-11",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.09316305280296938,
+    "meanStableGoldGrowth13w": 0.09162211144664366,
+    "meanPlayerDeathsGrowth13w": 0.0007069806872020028,
+    "meanPriceGrowth13w": 0.028779380994380634,
+    "meanGoldGrowthYoY": 0.3991120522203442
+   },
+   {
+    "world": "Quintera",
+    "weeksChecked": 21,
+    "divergentWeeks": 6,
+    "first": "2026-01-11",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.09524100017132195,
+    "meanStableGoldGrowth13w": 0.09369147732426646,
+    "meanPlayerDeathsGrowth13w": -0.3385947713584664,
+    "meanPriceGrowth13w": -0.04028581945247848,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Refugia",
+    "weeksChecked": 30,
+    "divergentWeeks": 6,
+    "first": "2026-01-11",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.16210731816626853,
+    "meanStableGoldGrowth13w": 0.1617680197066316,
+    "meanPlayerDeathsGrowth13w": -0.007696263367491025,
+    "meanPriceGrowth13w": 0.032621641395460615,
+    "meanGoldGrowthYoY": 0.4952381813640194
+   },
+   {
+    "world": "Talera",
+    "weeksChecked": 30,
+    "divergentWeeks": 6,
+    "first": "2025-08-03",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.13031341520111817,
+    "meanStableGoldGrowth13w": 0.13057933782052497,
+    "meanPlayerDeathsGrowth13w": 0.02647267989662001,
+    "meanPriceGrowth13w": 0.04968001932180499,
+    "meanGoldGrowthYoY": 0.3863877158147231
+   },
+   {
+    "world": "Tornabra",
+    "weeksChecked": 21,
+    "divergentWeeks": 6,
+    "first": "2026-01-11",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.12385008142539178,
+    "meanStableGoldGrowth13w": 0.12412052939490925,
+    "meanPlayerDeathsGrowth13w": -0.2674651728816446,
+    "meanPriceGrowth13w": -0.04509843872302355,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Unebra",
+    "weeksChecked": 21,
+    "divergentWeeks": 6,
+    "first": "2026-01-11",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 1.4980699113730367,
+    "meanStableGoldGrowth13w": 1.5065191107595268,
+    "meanPlayerDeathsGrowth13w": 0.7910460417602758,
+    "meanPriceGrowth13w": -0.08627586411059163,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Wintera",
+    "weeksChecked": 30,
+    "divergentWeeks": 6,
+    "first": "2026-01-11",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.0038591157323309452,
+    "meanStableGoldGrowth13w": 0.004323417897263151,
+    "meanPlayerDeathsGrowth13w": -0.00417329291992597,
+    "meanPriceGrowth13w": 0.03772407656680175,
+    "meanGoldGrowthYoY": 0.17121392504137045
+   },
+   {
+    "world": "Xyla",
+    "weeksChecked": 30,
+    "divergentWeeks": 6,
+    "first": "2026-01-11",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.17690699297243118,
+    "meanStableGoldGrowth13w": 0.17856071197045406,
+    "meanPlayerDeathsGrowth13w": 0.07103410885182353,
+    "meanPriceGrowth13w": 0.060323193359730166,
+    "meanGoldGrowthYoY": 0.2603574373484925
+   },
+   {
+    "world": "Collabra",
+    "weeksChecked": 22,
+    "divergentWeeks": 5,
+    "first": "2026-01-11",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.134872129600441,
+    "meanStableGoldGrowth13w": 0.13988044915907288,
+    "meanPlayerDeathsGrowth13w": -0.19392331999948922,
+    "meanPriceGrowth13w": -0.0741473479344317,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Descubra",
+    "weeksChecked": 30,
+    "divergentWeeks": 5,
+    "first": "2026-01-04",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.1306746091633155,
+    "meanStableGoldGrowth13w": 0.12837172386775464,
+    "meanPlayerDeathsGrowth13w": -0.06662355041437772,
+    "meanPriceGrowth13w": 0.04587863471720503,
+    "meanGoldGrowthYoY": 0.3938334650454074
+   },
+   {
+    "world": "Epoca",
+    "weeksChecked": 21,
+    "divergentWeeks": 5,
+    "first": "2026-01-11",
+    "last": "2026-02-15",
+    "meanGoldGrowth13w": 0.32632910313962116,
+    "meanStableGoldGrowth13w": 0.32696802355060095,
+    "meanPlayerDeathsGrowth13w": 0.47767505558272716,
+    "meanPriceGrowth13w": -0.019317318808019124,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Oceanis",
+    "weeksChecked": 30,
+    "divergentWeeks": 5,
+    "first": "2025-08-24",
+    "last": "2026-01-18",
+    "meanGoldGrowth13w": 0.09861288066861562,
+    "meanStableGoldGrowth13w": 0.09914176796607961,
+    "meanPlayerDeathsGrowth13w": 0.06617813035469315,
+    "meanPriceGrowth13w": 0.03267091928362568,
+    "meanGoldGrowthYoY": 0.5214332860288721
+   },
+   {
+    "world": "Ombra",
+    "weeksChecked": 21,
+    "divergentWeeks": 5,
+    "first": "2026-01-18",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.0015417378810320364,
+    "meanStableGoldGrowth13w": -0.0071957028145414525,
+    "meanPlayerDeathsGrowth13w": -0.04716294791069954,
+    "meanPriceGrowth13w": -0.04624148910758714,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Serdebra",
+    "weeksChecked": 30,
+    "divergentWeeks": 5,
+    "first": "2025-08-10",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.033785125899915516,
+    "meanStableGoldGrowth13w": 0.030191682129562854,
+    "meanPlayerDeathsGrowth13w": -0.11565469194955307,
+    "meanPriceGrowth13w": 0.058058723998668606,
+    "meanGoldGrowthYoY": 0.2508837508484234
+   },
+   {
+    "world": "Solidera",
+    "weeksChecked": 30,
+    "divergentWeeks": 5,
+    "first": "2026-01-11",
+    "last": "2026-02-15",
+    "meanGoldGrowth13w": 0.0875506718473749,
+    "meanStableGoldGrowth13w": 0.08713875198941766,
+    "meanPlayerDeathsGrowth13w": 0.05070061205074633,
+    "meanPriceGrowth13w": 0.05449601869137055,
+    "meanGoldGrowthYoY": 0.28248529442025916
+   },
+   {
+    "world": "Venebra",
+    "weeksChecked": 22,
+    "divergentWeeks": 5,
+    "first": "2026-01-18",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.13168920281446614,
+    "meanStableGoldGrowth13w": 0.13307260166336426,
+    "meanPlayerDeathsGrowth13w": -0.15421860301497123,
+    "meanPriceGrowth13w": -0.07306425078526704,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Vunira",
+    "weeksChecked": 30,
+    "divergentWeeks": 5,
+    "first": "2026-01-11",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.1466684474927904,
+    "meanStableGoldGrowth13w": 0.1524238400039383,
+    "meanPlayerDeathsGrowth13w": 0.0819052794390925,
+    "meanPriceGrowth13w": 0.06599980339137293,
+    "meanGoldGrowthYoY": 0.28155894250214547
+   },
+   {
+    "world": "Yonabra",
+    "weeksChecked": 21,
+    "divergentWeeks": 5,
+    "first": "2026-01-11",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.02286747690356959,
+    "meanStableGoldGrowth13w": 0.028232918856072535,
+    "meanPlayerDeathsGrowth13w": -0.34875934115511115,
+    "meanPriceGrowth13w": -0.05337554262272753,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Celebra",
+    "weeksChecked": 21,
+    "divergentWeeks": 4,
+    "first": "2026-01-11",
+    "last": "2026-02-01",
+    "meanGoldGrowth13w": 0.023777476198225043,
+    "meanStableGoldGrowth13w": 0.009159159372146572,
+    "meanPlayerDeathsGrowth13w": -0.17219280246846033,
+    "meanPriceGrowth13w": -0.049028653488137106,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Ferobra",
+    "weeksChecked": 22,
+    "divergentWeeks": 4,
+    "first": "2026-01-11",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.15154238103730436,
+    "meanStableGoldGrowth13w": 0.12215241522567055,
+    "meanPlayerDeathsGrowth13w": 0.0002331816481317972,
+    "meanPriceGrowth13w": -0.030050066001792074,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Luzibra",
+    "weeksChecked": 22,
+    "divergentWeeks": 4,
+    "first": "2025-12-28",
+    "last": "2026-01-25",
+    "meanGoldGrowth13w": 0.10319309275418635,
+    "meanStableGoldGrowth13w": 0.10522485605032846,
+    "meanPlayerDeathsGrowth13w": -0.16603199406789435,
+    "meanPriceGrowth13w": -0.07325285375162889,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Sonira",
+    "weeksChecked": 22,
+    "divergentWeeks": 4,
+    "first": "2025-12-28",
+    "last": "2026-02-15",
+    "meanGoldGrowth13w": 0.09629541298335731,
+    "meanStableGoldGrowth13w": 0.09857714056048177,
+    "meanPlayerDeathsGrowth13w": -0.2388069437642839,
+    "meanPriceGrowth13w": -0.07833185411347336,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Stralis",
+    "weeksChecked": 22,
+    "divergentWeeks": 4,
+    "first": "2025-12-28",
+    "last": "2026-01-25",
+    "meanGoldGrowth13w": 0.47900859809140073,
+    "meanStableGoldGrowth13w": 0.4803890404427751,
+    "meanPlayerDeathsGrowth13w": 0.35592064507602106,
+    "meanPriceGrowth13w": -0.3202477757837068,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Jadebra",
+    "weeksChecked": 21,
+    "divergentWeeks": 3,
+    "first": "2026-01-11",
+    "last": "2026-01-25",
+    "meanGoldGrowth13w": -0.027722507159171222,
+    "meanStableGoldGrowth13w": -0.0339853699854018,
+    "meanPlayerDeathsGrowth13w": -0.3003418952186827,
+    "meanPriceGrowth13w": -0.03234060006550189,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Retalia",
+    "weeksChecked": 21,
+    "divergentWeeks": 3,
+    "first": "2026-01-18",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.23631297313232302,
+    "meanStableGoldGrowth13w": 0.23721254580645157,
+    "meanPlayerDeathsGrowth13w": 0.2813170937540974,
+    "meanPriceGrowth13w": 0.014043075185695697,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Aethera",
+    "weeksChecked": 21,
+    "divergentWeeks": 2,
+    "first": "2026-02-15",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.05719643027035275,
+    "meanStableGoldGrowth13w": 0.05712245776215212,
+    "meanPlayerDeathsGrowth13w": 0.5064885567080715,
+    "meanPriceGrowth13w": -0.4961316955974887,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Noctalia",
+    "weeksChecked": 21,
+    "divergentWeeks": 2,
+    "first": "2026-01-18",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.13751713002389643,
+    "meanStableGoldGrowth13w": 0.14041743048292687,
+    "meanPlayerDeathsGrowth13w": 0.060462671056084716,
+    "meanPriceGrowth13w": -0.00783859497059236,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Blumera",
+    "weeksChecked": 14,
+    "divergentWeeks": 1,
+    "first": "2026-02-22",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.07895168932494911,
+    "meanStableGoldGrowth13w": 0.07973156808307635,
+    "meanPlayerDeathsGrowth13w": -0.043552761784169114,
+    "meanPriceGrowth13w": -0.09424691548299613,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Citra",
+    "weeksChecked": 14,
+    "divergentWeeks": 1,
+    "first": "2026-02-22",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.03515592517279842,
+    "meanStableGoldGrowth13w": 0.03492230213318592,
+    "meanPlayerDeathsGrowth13w": 1.683307761000556,
+    "meanPriceGrowth13w": -0.1252940244410059,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Kalanta",
+    "weeksChecked": 14,
+    "divergentWeeks": 1,
+    "first": "2026-02-22",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.2438445746629725,
+    "meanStableGoldGrowth13w": 0.2446217855615238,
+    "meanPlayerDeathsGrowth13w": 0.49002249613622695,
+    "meanPriceGrowth13w": -0.07643918791135285,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Kalimera",
+    "weeksChecked": 22,
+    "divergentWeeks": 1,
+    "first": "2025-12-28",
+    "last": "2025-12-28",
+    "meanGoldGrowth13w": 0.08423875578076068,
+    "meanStableGoldGrowth13w": 0.08543710762836731,
+    "meanPlayerDeathsGrowth13w": -0.15089942458451877,
+    "meanPriceGrowth13w": 0.1827961625341903,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Monstera",
+    "weeksChecked": 14,
+    "divergentWeeks": 1,
+    "first": "2026-02-22",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.3332239681385474,
+    "meanStableGoldGrowth13w": 0.33432998621886867,
+    "meanPlayerDeathsGrowth13w": -1.3146753971374041,
+    "meanPriceGrowth13w": -0.05797481930703441,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Terribra",
+    "weeksChecked": 14,
+    "divergentWeeks": 1,
+    "first": "2026-02-22",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.1673363694175194,
+    "meanStableGoldGrowth13w": 0.08550979568873984,
+    "meanPlayerDeathsGrowth13w": 0.3378775536343195,
+    "meanPriceGrowth13w": -0.0758598512611286,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Victoris",
+    "weeksChecked": 30,
+    "divergentWeeks": 1,
+    "first": "2026-01-11",
+    "last": "2026-01-11",
+    "meanGoldGrowth13w": -0.03201693790880652,
+    "meanStableGoldGrowth13w": -0.0300431537283945,
+    "meanPlayerDeathsGrowth13w": -0.2939812875993238,
+    "meanPriceGrowth13w": 0.08138106834838214,
+    "meanGoldGrowthYoY": 0.3683004111207933
+   },
+   {
+    "world": "Xymera",
+    "weeksChecked": 14,
+    "divergentWeeks": 1,
+    "first": "2026-02-22",
+    "last": "2026-02-22",
+    "meanGoldGrowth13w": 0.12852234803325402,
+    "meanStableGoldGrowth13w": 0.12964565219275315,
+    "meanPlayerDeathsGrowth13w": 0.34301107805227016,
+    "meanPriceGrowth13w": -0.027592382482417577,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Ambra",
+    "weeksChecked": 5,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": null,
+    "meanStableGoldGrowth13w": null,
+    "meanPlayerDeathsGrowth13w": null,
+    "meanPriceGrowth13w": null,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Cantabra",
+    "weeksChecked": 21,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": -0.13644129098099,
+    "meanStableGoldGrowth13w": -0.1348538203820775,
+    "meanPlayerDeathsGrowth13w": -0.3264242991126455,
+    "meanPriceGrowth13w": 0.00477554055629259,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Divina",
+    "weeksChecked": 5,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": null,
+    "meanStableGoldGrowth13w": null,
+    "meanPlayerDeathsGrowth13w": null,
+    "meanPriceGrowth13w": null,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Eclipta",
+    "weeksChecked": 14,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": -0.13301093103224204,
+    "meanStableGoldGrowth13w": -0.13227549003029537,
+    "meanPlayerDeathsGrowth13w": 1.5115905801270575,
+    "meanPriceGrowth13w": 0.012182219060845156,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Escura",
+    "weeksChecked": 21,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": -0.4010656945917326,
+    "meanStableGoldGrowth13w": -0.40243516621293196,
+    "meanPlayerDeathsGrowth13w": -0.5583049949956749,
+    "meanPriceGrowth13w": 0.03322329933200763,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Esmera",
+    "weeksChecked": 6,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": null,
+    "meanStableGoldGrowth13w": null,
+    "meanPlayerDeathsGrowth13w": null,
+    "meanPriceGrowth13w": null,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Fibera",
+    "weeksChecked": 4,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": null,
+    "meanStableGoldGrowth13w": null,
+    "meanPlayerDeathsGrowth13w": null,
+    "meanPriceGrowth13w": null,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Firmera",
+    "weeksChecked": 21,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": -0.16763717581925577,
+    "meanStableGoldGrowth13w": -0.1669821101026502,
+    "meanPlayerDeathsGrowth13w": 0.16967294882014242,
+    "meanPriceGrowth13w": -0.08599122106362896,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Gladibra",
+    "weeksChecked": 21,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": -1.5937085534847175,
+    "meanStableGoldGrowth13w": -1.5944943263927047,
+    "meanPlayerDeathsGrowth13w": -0.4211899968700103,
+    "meanPriceGrowth13w": -0.05585916606351736,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Gravitera",
+    "weeksChecked": 14,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": 0.2225503626684469,
+    "meanStableGoldGrowth13w": 0.32508351706332866,
+    "meanPlayerDeathsGrowth13w": -0.8251693200398208,
+    "meanPriceGrowth13w": 0.1714870002104245,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Ignitera",
+    "weeksChecked": 21,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": -0.14371282943582475,
+    "meanStableGoldGrowth13w": -0.14394362221801105,
+    "meanPlayerDeathsGrowth13w": -0.9486601815322148,
+    "meanPriceGrowth13w": 0.35377219188235576,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Issobra",
+    "weeksChecked": 22,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": -0.1181034180726428,
+    "meanStableGoldGrowth13w": -0.13099106949358896,
+    "meanPlayerDeathsGrowth13w": -0.23776181187331835,
+    "meanPriceGrowth13w": -0.06921534871790569,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Jacabra",
+    "weeksChecked": 5,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": null,
+    "meanStableGoldGrowth13w": null,
+    "meanPlayerDeathsGrowth13w": null,
+    "meanPriceGrowth13w": null,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Jaguna",
+    "weeksChecked": 5,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": null,
+    "meanStableGoldGrowth13w": null,
+    "meanPlayerDeathsGrowth13w": null,
+    "meanPriceGrowth13w": null,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Lutabra",
+    "weeksChecked": 21,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": -0.6233043581445129,
+    "meanStableGoldGrowth13w": -0.6232669280856058,
+    "meanPlayerDeathsGrowth13w": -0.2618921695818086,
+    "meanPriceGrowth13w": -0.04681826784585189,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Malivora",
+    "weeksChecked": 5,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": null,
+    "meanStableGoldGrowth13w": null,
+    "meanPlayerDeathsGrowth13w": null,
+    "meanPriceGrowth13w": null,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Mystera",
+    "weeksChecked": 21,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": -0.521184896655237,
+    "meanStableGoldGrowth13w": -0.525298971521126,
+    "meanPlayerDeathsGrowth13w": -1.4819200978927203,
+    "meanPriceGrowth13w": 0.10715330122006872,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Obscubra",
+    "weeksChecked": 14,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": -0.016235930243381585,
+    "meanStableGoldGrowth13w": 0.0026837905794268283,
+    "meanPlayerDeathsGrowth13w": 0.03918064762297904,
+    "meanPriceGrowth13w": 0.14869763204917438,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Penumbra",
+    "weeksChecked": 21,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": -0.2557621546427029,
+    "meanStableGoldGrowth13w": -0.2562672635642554,
+    "meanPlayerDeathsGrowth13w": -1.0056879942259844,
+    "meanPriceGrowth13w": 0.6594302772415853,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Premia",
+    "weeksChecked": 21,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": null,
+    "meanStableGoldGrowth13w": null,
+    "meanPlayerDeathsGrowth13w": null,
+    "meanPriceGrowth13w": null,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Quebra",
+    "weeksChecked": 5,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": null,
+    "meanStableGoldGrowth13w": null,
+    "meanPlayerDeathsGrowth13w": null,
+    "meanPriceGrowth13w": null,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Runera",
+    "weeksChecked": 5,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": null,
+    "meanStableGoldGrowth13w": null,
+    "meanPlayerDeathsGrowth13w": null,
+    "meanPriceGrowth13w": null,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Sombra",
+    "weeksChecked": 14,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": -0.23963414520000015,
+    "meanStableGoldGrowth13w": -0.24006144443050914,
+    "meanPlayerDeathsGrowth13w": 1.332282252969307,
+    "meanPriceGrowth13w": -0.0672056026152763,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Temera",
+    "weeksChecked": 3,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": null,
+    "meanStableGoldGrowth13w": null,
+    "meanPlayerDeathsGrowth13w": null,
+    "meanPriceGrowth13w": null,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Tempestera",
+    "weeksChecked": 14,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": 0.29961968264390393,
+    "meanStableGoldGrowth13w": 0.3011361045032679,
+    "meanPlayerDeathsGrowth13w": 0.4865329311969466,
+    "meanPriceGrowth13w": 0.12965079591626782,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Ulera",
+    "weeksChecked": 6,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": null,
+    "meanStableGoldGrowth13w": null,
+    "meanPlayerDeathsGrowth13w": null,
+    "meanPriceGrowth13w": null,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Vandera",
+    "weeksChecked": 5,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": null,
+    "meanStableGoldGrowth13w": null,
+    "meanPlayerDeathsGrowth13w": null,
+    "meanPriceGrowth13w": null,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Vitera",
+    "weeksChecked": 6,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": null,
+    "meanStableGoldGrowth13w": null,
+    "meanPlayerDeathsGrowth13w": null,
+    "meanPriceGrowth13w": null,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Wadira",
+    "weeksChecked": 6,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": null,
+    "meanStableGoldGrowth13w": null,
+    "meanPlayerDeathsGrowth13w": null,
+    "meanPriceGrowth13w": null,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Wildera",
+    "weeksChecked": 5,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": null,
+    "meanStableGoldGrowth13w": null,
+    "meanPlayerDeathsGrowth13w": null,
+    "meanPriceGrowth13w": null,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Xybra",
+    "weeksChecked": 21,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": -0.15400992507426015,
+    "meanStableGoldGrowth13w": -0.15337220795175854,
+    "meanPlayerDeathsGrowth13w": -0.5200205857627447,
+    "meanPriceGrowth13w": 0.14114392224564565,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Yara",
+    "weeksChecked": 5,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": null,
+    "meanStableGoldGrowth13w": null,
+    "meanPlayerDeathsGrowth13w": null,
+    "meanPriceGrowth13w": null,
+    "meanGoldGrowthYoY": null
+   },
+   {
+    "world": "Zephyra",
+    "weeksChecked": 6,
+    "divergentWeeks": 0,
+    "first": null,
+    "last": null,
+    "meanGoldGrowth13w": null,
+    "meanStableGoldGrowth13w": null,
+    "meanPlayerDeathsGrowth13w": null,
+    "meanPriceGrowth13w": null,
+    "meanGoldGrowthYoY": null
+   }
+  ],
+  "worldsWithMajorityDivergent": 0,
+  "worldsChecked": 101
+ },
+ "forecasting": {
+  "status": "no origin has point-in-time features yet (builds through 2024-06-01)"
+ },
+ "population": {
+  "snapshot": "2026-10-13",
+  "worlds": 92,
+  "priceWindow": "median Sell Offer over the last 13 weeks",
+  "goldWindow": "mean weekly gross potential over the same weeks",
+  "note": "One instant of TibiaVIP counts: a cross-sectional association only; \"known characters\" is not an active population.",
+  "models": {
+   "grossPerKnownCharacter": {
+    "n": 92,
+    "r2": 0.013980514213048467,
+    "adjR2": 0.003024742148749038,
+    "coefficients": {
+     "grossPerKnownCharacter": {
+      "estimate": -0.027405882707823098,
+      "se": 0.024260721706428477,
+      "p": 0.2616297155374027
+     }
+    }
+   },
+   "grossPerOnlineCharacter": {
+    "n": 92,
+    "r2": 0.23409484057721242,
+    "adjR2": 0.22558478325029263,
+    "coefficients": {
+     "grossPerOnlineCharacter": {
+      "estimate": 0.22929031708765546,
+      "se": 0.04371757227772547,
+      "p": 1.0292054801720963e-06
+     }
+    }
+   },
+   "gross": {
+    "n": 92,
+    "r2": 0.18294720375289952,
+    "adjR2": 0.17386883935015396,
+    "coefficients": {
+     "gross": {
+      "estimate": 0.08149459347152664,
+      "se": 0.018153890656392946,
+      "p": 2.111929094843129e-05
+     }
+    }
+   }
+  }
+ },
+ "reference": "The owner recalls about 45% of TC price variation explained by gold generation in earlier work; it is a reference, not a target, and nothing here is tuned toward it."
+}

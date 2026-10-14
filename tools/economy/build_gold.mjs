@@ -75,7 +75,7 @@ export function buildGold({ asOf = null, inputs = loadInputs() } = {}) {
     return memo.get(k);
   };
 
-  const worlds = [], files = new Map(), creatures = new Map();
+  const worlds = [], files = new Map(), creatures = new Map(), monthly = {};
   for (const [world, w] of Object.entries(killstats.worlds).sort()) {
     const first = previousDay(w.first), last = previousDay(w.last);
     const n = Math.round((Date.parse(last) - Date.parse(first)) / 86400000) + 1;
@@ -119,6 +119,16 @@ export function buildGold({ asOf = null, inputs = loadInputs() } = {}) {
         creatures: top.map(([page, c]) => [page, c[0], round(c[1]), round(c[2])]), other: { creatures: rest.length, kills: restSum[0], directCoins: round(restSum[1]), npcPotential: round(restSum[2]) } };
     });
     files.set(`worlds/${w.dir}.json`, { world, first, last, ...s, status });
+    // Per month: [month, directCoins, npcPotential, kills, killsValued, days with data, days in the month's span].
+    const perMonth = new Map();
+    status.split('').forEach((st, i) => {
+      const month = new Date(Date.parse(`${first}T00:00:00Z`) + i * 86400000).toISOString().slice(0, 7);
+      const m = perMonth.get(month) ?? [month, 0, 0, 0, 0, 0, 0];
+      m[6]++;
+      if (st !== 'm') { m[1] += s.directCoins[i]; m[2] += s.npcPotential[i]; m[3] += s.kills[i]; m[4] += s.killsValued[i]; m[5]++; }
+      perMonth.set(month, m);
+    });
+    monthly[w.dir] = [...perMonth.values()];
     files.set(`contributions/${w.dir}.json`, { world, note: 'Monthly totals; the 30 creatures with the largest gross potential, then the rest summed. Rows: [creature page id, kills, directCoins, npcPotential].', months: contributions });
     worlds.push({ world, dir: w.dir, first, last, days: n, observed: status.split('').filter(c => c === 'o').length, recovered: status.split('').filter(c => c === 'r').length,
       missing: status.split('').filter(c => c === 'm').length, kills: sum('kills'), killsValued: sum('killsValued'), killCoverage: sum('kills') ? sum('killsValued') / sum('kills') : null,
@@ -142,6 +152,7 @@ export function buildGold({ asOf = null, inputs = loadInputs() } = {}) {
     worlds,
   };
   files.set('index.json', index);
+  files.set('monthly.json', { note: 'Per world and month (kill days): [month, directCoins, npcPotential, kills, killsValued, days with data, days of the month within the world\'s data]. For cross-world comparison without loading every daily file.', worlds: monthly });
   files.set('creatures.json', { note: 'Each valued creature (TibiaWiki loot page id) and its samples: effective date, availability, values per kill.', creatures: creaturesOut });
   return files;
 }

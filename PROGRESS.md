@@ -14,56 +14,32 @@ Never force-push, never reset, never redo finished work.
 
 ## Current state
 
-- **Stage:** C. **C1 to C5 are done on real data and committed by this commit.** Next is D (population), then E.
-- **Production:** `release/0003`, a **data release** made by the forecast-archive workflow on top of
-  `release/0002`. Live verified: 543/543 files.
+- **Stage:** F (interface). **The Economy page is done and committed by this commit** (not yet released). The
+  Markets "Forecast history" dock panel is next. Stages B, C and D are done; E has preliminary results with the
+  forecasting part pending.
+- **Production:** `release/0003` (a data release by the forecast-archive workflow on top of `release/0002`, live
+  verified 543/543). **Awaiting a full release:** everything since `release/0002` that is code or a page: Stages C
+  to F, including `economy.html` and the Economy link added to every page's menu. The Research pages link to
+  `https://nesleykent.github.io/Tibinance/economy.html`, which 404s until a full release ships the page.
 - **Exact next action:**
-  1. Let the monthly point-in-time gold builds finish (`/private/tmp` script, local; the same as running
-     `node tools/economy/build_gold.mjs --as-of <YYYY-MM-01T00:00:00Z>` for each month 2024-01 to 2026-10, about
-     50 s each, into `.cache/economy/gold-pit/`).
-  2. Rerun `reports/economy/economy_research.py` (pinned venv) for the forecasting results.
-  3. Write `reports/economy/README.md` (findings: empirical results vs hypotheses).
-  5. Stage F (Economy page and Markets forecast-history panel).
+  1. Rerun `/Users/nesleykent/Code/Tibinance/.venv/bin/python reports/economy/economy_research.py` for the
+     forecasting results, now that every point-in-time month is built (it writes strict JSON now: non-finite numbers
+     become null). The committed `results.json` is the earlier run with NaN converted to null; forecasting there is
+     pending.
+  2. Write `reports/economy/README.md` (results against hypotheses), with a narrower late-2025 divergence check and
+     the large daily swings (2023-06-02, 2023-06-05) checked against `data/events/events.json`.
+  3. Stage F, part 2: the Markets "Forecast history" dock panel (`js/forecast-archive.js` logic exists; a pane
+     layer, filters, accuracy tables). Bump the shared `?v=` tags together.
+  4. Stage G only if Stage E shows an out-of-sample gain; A2 `economy-daily.yml`; Stage H docs (`docs/economy.md`,
+     which the Economy page already links on GitHub) and a full release.
 
 - **Caches for this data** (local only; another agent must regenerate them):
   - `node tools/economy/ingest_killstats.mjs --full` (about 2 h);
   - `node tools/economy/fetch_loot.mjs` (about 2 h; 6,605 requests);
   - then `map_creatures.mjs` and `build_gold.mjs` (50 s).
 
-  `build_gold.mjs --check` needs the kill partitions cache.
-
-- **Long-running job 2: full loot evidence fetch (C2).**
-  - **Command:** `node tools/economy/fetch_loot.mjs`. Expect about 60–90 min at about 0.7 s per request.
-  - **Resumable:** each page's history is cached in `.cache/economy/wiki/pages/<pageid>.json.gz`; a rerun fetches
-    only pages whose latest revision changed.
-  - **Inputs:** `tibia.fandom.com` MediaWiki API: namespace 112 (1,454 pages), `Module:ItemPrices/data`, and the
-    `Updates/*` pages.
-  - **Outputs** (committed only after a complete run):
-    - `data/economy/sources/loot/chunk-NNNN.jsonl.gz`;
-    - `data/economy/sources/item-prices/chunk-NNNN.jsonl.gz`;
-    - `data/economy/sources/versions.json`.
-
-    The cache is local only; another agent reruns the command to rebuild it.
-  - **Trial on 5 pages:** 114 requests, 2.5 min; 366 sample records (Acid Blob alone has 95 revisions of its single
-    sample since 2022: contributors keep adding kills, and each revision is evidence); 47 ItemPrices vintages since
-    2022-08-23; 817 versions.
-  - **Do not commit** outputs of a `--limit` trial.
-- **Long-running job 1: full kill-stats ingestion.**
-  - **Command** (resumable; the same command resumes): `node tools/economy/ingest_killstats.mjs --full`. Expect
-    about 15–20 min.
-  - **Inputs:** `tibiamaps/tibia-kill-stats-from-2022-08-23-to-2025-12-04` and `tibiamaps/tibia-kill-stats`,
-    pinned at their HEAD at run time. The run records the commits in `data/economy/sources/killstats.json`.
-  - **Checkpoint:** after each month the run writes `.cache/economy/ingest-progress.json` and
-    `data/economy/sources/races.json`; a rerun skips finished months.
-  - **Outputs:**
-    - `.cache/economy/killstats/<world>/<YYYY-MM>.bin.gz` partitions: **local cache only, never committed**;
-    - `.cache/economy/upstream/` clones: local only;
-    - `data/economy/sources/races.json` and `killstats.json`: **committed only after the full run**.
-  - **Another agent** (or GitHub Actions) has no partitions and must rerun the command to regenerate them. The
-    committed per world-month SHA-256 digests (source files and partition) prove a rebuild matches.
-  - **Validation so far:** a trial of 2025-11 and 2025-12 ran in 37 s (159 world dirs, 1,602 races, 0 conflicts,
-    87 days recovered: the missing 2025-12-05 for each active world). Recovery is exact: three real present days
-    were removed and recovered identically (every race, kills and player deaths).
+  `build_gold.mjs --check` needs the kill partitions cache. The committed per world-month SHA-256 digests prove a
+  rebuild matches.
 
 ## Completed (verified)
 
@@ -347,10 +323,39 @@ Never force-push, never reset, never redo finished work.
     they were removed and the committed archive was restored. Paths now resolve at call time, and the test class
     asserts that the repository archive is byte-identical afterwards.
 
+- **Stage F, Economy page** (`economy.html`, `css/economy.css`, `js/economy.js`, `js/economy-data.js`):
+  - **Data:** `build_gold.mjs` also writes `data/economy/gold/monthly.json` (per world and month: directCoins,
+    npcPotential, kills, killsValued, days with data, days), so the cross-world table loads one file.
+  - **Page:** the world picker in the header; Day, Week, Month, Quarter and Year periods, defaulting to the latest
+    complete period; tiles for gross potential from valued creatures, direct coins, potential NPC conversion, kill
+    coverage and players killed, each with coverage and days with data. "Gold per active character" shows as
+    unavailable, with the reason.
+  - **Assumptions and coverage:** hypothetical liquidation scenarios (0, 25, 50, 100%) appear only as a labelled
+    assumption tile and a dashed line. A constant-creature-set toggle is available.
+  - **Chart:** gold, the TC Sell Offer (median of daily closes per period) and players killed in three panes with
+    separate scales. Unfinished periods are not drawn.
+  - **Creature contributions:** change is shown only between two complete periods of the same unit.
+  - **Cross-world table:** sortable; comparability is stated (missing days, kill coverage under 95%, later start)
+    and can be filtered.
+  - **Findings and provenance:** findings come from `reports/economy/results.json`; provenance gives the kill
+    statistics commits, loot and price revisions, the methodology, access status and the last sync.
+  - **Site:** "Economy" is added to every page's menu (Capture, Markets, Trade, Research EN and PT).
+  - **Fixes:**
+    - `economy_research.py` writes strict JSON (NaN broke `JSON.parse`).
+    - The Economy grid no longer widens past the phone viewport.
+    - Contributions no longer compared an unfinished month with a full one.
+  - **Tests:**
+    - `tests/economy-data.test.mjs`: 7 tests.
+    - `tests/economy-browser.mjs` (Chrome): recomputes the Antica figures from the data files and drives every
+      control, checking 1440, 768 and 390 px with no sideways scroll.
+    - Header, Markets and Trade browser suites updated for the five-section menu, all passing in Chrome.
+    - Node suite: 194/194. `validate_site.mjs`: 8/8.
+
 ## In progress / remaining
 
-- A0 steps 3–8 (release 0001, dry run, parity, activation, live verification, isolation test).
-- Then Stages B, C, D, E, F, G, A2, H per the plan. Frequent checkpoints start after A0 step 8.
+- E: forecasting results after the point-in-time rebuild; `reports/economy/README.md`.
+- F: Markets "Forecast history" dock panel.
+- G (conditional), A2 `economy-daily.yml`, H (docs, full suites, full release, final five-section report).
 
 ## Unresolved requirements (carried, not substitutes)
 
@@ -371,12 +376,26 @@ Never force-push, never reset, never redo finished work.
 
 ## Files created or modified in this expansion
 
-- `tools/ci/` (new), `tools/release.mjs`, `tests/release.test.mjs`, `release/policy.json`, `.github/workflows/`
-- `docs/economy-plan.md`, `docs/releases.md`, this section
+- A0: `tools/ci/`, `tools/release.mjs`, `tests/release.test.mjs`, `release/`, `.github/workflows/`, `docs/releases.md`
+- B: `tools/forecasts/`, `data/forecast-archive/`, `js/forecast-archive.js`, `tests/forecast-archive.test.mjs`
+- A2: `tools/sync_tibiamarket.mjs`, `tools/sync_market.mjs`, `tests/sync-tibiamarket.test.mjs`
+- C: `js/economy-{killstats,loot,value}.js`, `tools/economy/`, `data/economy/sources/`, `data/economy/gold/`
+- D: `tools/economy/population/`, `data/economy/population/`, `tests/economy-population.test.mjs`
+- E: `reports/economy/economy_research.py`, `reports/economy/results.json`
+- F: `economy.html`, `css/economy.css`, `js/economy.js`, `js/economy-data.js`, `tests/economy-data.test.mjs`,
+  `tests/economy-browser.mjs`; the menus of `index.html`, `markets.html`, `trade.html`, `reports/tc-cycle/*.html`
+- `docs/economy-plan.md`, this section
 
 ## Long-running jobs
 
-None.
+- **Monthly point-in-time gold builds** (local only, input to Stage E forecasting):
+  - **Command:** `node --max-old-space-size=8192 tools/economy/build_gold.mjs --as-of <YYYY-MM-01T00:00:00Z>`,
+    one per month from 2024-01 to 2026-10, into `.cache/economy/gold-pit/<as-of>/`. A build whose `index.json`
+    exists is kept, so the loop resumes.
+  - **Status:** complete: all 34 months (2024-01 to 2026-10) are built locally. 2025-03 to 2025-10 were rebuilt
+    after a fixed `status.split` error.
+  - **Dependency:** needs the kill-partition and loot caches above. Another agent must regenerate all of it.
+  - **Validation:** each build passes the same checks as the latest-evidence build.
 
 ---
 
