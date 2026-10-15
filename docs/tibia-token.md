@@ -111,12 +111,21 @@ load the versioned implementation. The test also reloads with the dock closed.
 
 ## Currency conversion and official purchase costs
 
-Select **Coin costs** on the TIB chart to compare every supplied CipSoft package
-in EUR, BRL, USD or theoretical TIB units. The original TIB terminal remains
-USD-based, including its volume, replay and PNG export. Currency preference
-belongs to the comparison and is remembered locally. The comparison's history
-uses the same Markets chart builder, calendar range helper, gap conventions,
-theme and responsive tokens. The history table is an accessible canvas alternative.
+Currency and purchase comparisons are series in the original TIB chart. The
+chart's series selector includes TIB price, three FX pairs, package cost, cost
+per TC, TC per TIB, absolute/percentage savings, premium above cheapest and
+local price versus EUR, and pairwise purchasing-price differences. Currency, package and price-basis controls use the
+existing `.tv-select` and `.head-line` components. There is no separate comparison
+screen, stylesheet, chart instance or article. The same ranges, crosshair,
+events, drawings, indicators, replay, themes and PNG export apply to every series.
+
+Shared links retain `analysis`, `currency`, `package` and `basis`, for example
+`markets.html?asset=tibia-token&analysis=cost&currency=BRL&package=250&basis=scenario`.
+Default TIB/USD retains the original candles. Currency preference is remembered.
+Purchase series plot EUR, BRL and USD routes in the existing theme's blue, red
+and chart-text colours; unavailable routes stay absent. The chart legend names
+official originals, equivalents, per-coin costs, premiums and savings at the
+crosshair. Its accessible description retains the numeric readout on phones.
 
 `data/coin-prices.json` is the manual, dated price ledger. The initial record is
 exactly the user-supplied October 15, 2026 list. To update, **append** a full
@@ -133,7 +142,7 @@ GeckoTerminal USD close. Every source/target combination follows
 formatting; ordinary money has 2 decimal places, TIB 4, and per-TC values 5.
 Official originals never change. The comparison displays each route's premium
 above the cheapest, savings and savings divided by that route's original cost,
-plus pairwise BRL/EUR, USD/EUR and USD/BRL purchasing-price differences. Ties are
+and local BRL/USD purchasing-price differences against the EUR reference. Ties are
 labelled. Gas, IOF, processing fees, spreads and trading fees are all excluded.
 TIB amounts are market equivalents; they establish no TC redemption facility.
 
@@ -144,12 +153,14 @@ calendar days old, or FX over four calendar days old, is labelled stale.
 
 History offers all three FX pairs, TIB in the selected fiat currency, package
 cost, TC purchasing power per TIB, and BRL/USD premiums to the fixed EUR
-reference. Selecting TIB units for TIB's own value chart explicitly shows USD
-instead; a constant TIB/TIB line would convey no market movement. Fiat-only
+reference. Selecting TIB for its own value shows the explicit TIB/TIB identity. Fiat-only
 analyses use actual ECB publication dates. TIB analyses join each completed UTC
 candle to the most recent prior publication within four days, disclosing the
 original FX date, including over weekends and holidays. Nothing uses future
-rates; longer gaps stay missing.
+rates; longer gaps stay missing. A current purchase valuation may use the latest
+known TIB close at the latest FX date, at most two days later. Its original TIB
+close date is retained in the readout; this is a calculated valuation, never an
+additional market candle.
 
 **Dated manual observations** apply only from each effective date until the next
 manual update. No prices are asserted before October 15, 2026. **Constant-price
@@ -214,9 +225,10 @@ node tools/ci/validate_site.mjs
 TIBINANCE_NODE_MODULES=/path/to/node_modules node tests/coin-costs-browser.mjs
 ```
 
-Browser verification supports the same Chrome/WebKit external runtime convention
-as the existing TIB tests. It checks all 18 original-price rows, selected currency
-calculations, all seven analysis metrics, observation/scenario boundaries,
-320/768/1024/1440px overflow, keyboard focus/Escape, stored preferences, stale and
-cached states, failed refresh and retry, and switching back to Tibia Coin. Browser
-screenshots stay outside Git.
+Browser verification supports the existing Chrome/WebKit runtime convention.
+It verifies one original chart across all twelve metrics, every display currency,
+all package options, current-source dates, observed/scenario boundaries, shared
+links, cache/stale states, 320/768/1024/1440px layouts, native keyboard controls,
+existing ranges and PNG export, and switching back to TC. Screenshots stay
+outside Git. The original TIB browser suite also verifies event focus, source
+failures, token prices and the original USD PNG filename.

@@ -40,9 +40,22 @@ export function comparePackage(pkg, currency, fx, tibUsd) {
   });
   return { coins: pkg.coins, rows, cheapest, cheapestCurrencies: available.filter(r => Math.abs(r.eur - best) < 1e-12).map(r => r.currency) };
 }
+export function packageMetricValue(r, coins, metric) {
+  if (r.original === null) return null;
+  if (metric === 'power') return r.tib === null ? null : coins / r.tib;
+  if (metric === 'premium') return r.referencePremium === null ? null : r.referencePremium * 100;
+  if (metric === 'difference') return r.premium === null ? null : r.premium * 100;
+  if (metric === 'saving') return r.saving;
+  if (metric === 'saving-percent') return r.savingRatio === null ? null : r.savingRatio * 100;
+  if (metric === 'unit') return r.perCoin;
+  return r.converted;
+}
+export function purchaseDifferences(rows) {
+  return Object.fromEntries([[0,1],[0,2],[1,2]].map(([a,b],i)=>[FIAT[i],rows[a].eur===null||rows[b].eur===null?null:(rows[b].eur/rows[a].eur-1)*100]));
+}
 export function historicalCosts(rates, tokens, observations, { coins, currency, mode, metric }) {
   const tokenByDay = new Map(tokens.map(p => [p.day, p]));
-  const needsToken = metric === 'power' || metric === 'cost' && currency === 'TIB';
+  const needsToken = metric === 'power' || ['cost', 'unit', 'saving'].includes(metric) && currency === 'TIB';
   const days = needsToken ? tokens.map(p => p.day) : rates.map(p => p.day);
   return days.flatMap(day => {
     const fx = rateOn(rates, day), token = tokenByDay.get(day);
@@ -50,8 +63,7 @@ export function historicalCosts(rates, tokens, observations, { coins, currency, 
     const pkg = o?.packages.find(p => p.coins === coins);
     if (!fx || !pkg) return [];
     const comparison = comparePackage(pkg, currency, fx, token?.close);
-    const values = Object.fromEntries(comparison.rows.map(r => [r.currency,
-      metric === 'power' ? r.tib === null ? null : coins / r.tib : metric === 'premium' ? r.referencePremium === null ? null : r.referencePremium * 100 : r.converted]));
+    const values = metric==='pairwise'?purchaseDifferences(comparison.rows):Object.fromEntries(comparison.rows.map(r => [r.currency, packageMetricValue(r, coins, metric)]));
     return [{ day, fxDay: fx.day, effectiveFrom: o.effectiveFrom, values }];
   });
 }

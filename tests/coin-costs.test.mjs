@@ -131,3 +131,40 @@ test('tied cheapest purchase currencies have zero savings and do not lose availa
   assert.deepEqual(result.cheapestCurrencies,['EUR','BRL','USD']);
   assert.ok(result.rows.every(r=>r.saving===0&&r.savingRatio===0));
 });
+test('inline token chart keeps original USD candles, converts OHLC with same-day FX and leaves gaps',async()=>{
+  const {currencyView}=await import('../js/coin-cost-chart.js');
+  const base={prices:[{day:'2026-10-14',open:.04,high:.06,low:.03,close:.05,volumeUsd:10},{day:'2026-10-16',open:.05,high:.07,low:.04,close:.06,volumeUsd:20}],events:[]};
+  const settings={metric:'token',currency:'USD',coins:250,mode:'scenario'};
+  assert.deepEqual(currencyView(base,[],[],settings,null).prices.map(p=>p.close),[.05,.06]);
+  const brl=currencyView(base,fx,[],{...settings,currency:'BRL'},null);
+  assert.equal(brl.prices.length,1);assert.equal(brl.prices[0].fxDay,'2026-10-15');
+  assert.ok(Math.abs(brl.prices[0].high-.28)<1e-12);assert.equal(brl.prices[0].volumeUsd,20);
+  assert.deepEqual(currencyView(base,[],[],{...settings,currency:'TIB'},null).prices.map(p=>p.close),[1,1]);
+});
+test('package calculations are chart series for every available purchasing currency',async()=>{
+  const {currencyView}=await import('../js/coin-cost-chart.js');
+  const base={prices:[],events:[]};
+  const settings={currency:'BRL',coins:250,mode:'observed'};
+  for(const [metric,expected] of [['cost',58],['unit',58/250],['saving',11.64],['saving-percent',11.64/58*100],['difference',(58/46.36-1)*100]]) {
+    const view=currencyView(base,fx,[prices],{...settings,metric},null);
+    assert.equal(view.rows.length,1);assert.ok(Math.abs(view.rows[0].values.BRL-expected)<1e-10);
+  }
+});
+test('current TIB purchasing valuation keeps the prior close date instead of fabricating a candle',async()=>{
+  const {currencyView}=await import('../js/coin-cost-chart.js');
+  const base={prices:[{day:'2026-10-14',close:.04}],events:[]};
+  const view=currencyView(base,fx,[prices],{metric:'cost',currency:'TIB',coins:250,mode:'observed'},null);
+  assert.equal(view.rows.length,1);assert.equal(view.rows[0].day,'2026-10-15');
+  assert.equal(view.rows[0].tokenDay,'2026-10-14');assert.equal(view.rows[0].current,true);
+  assert.ok(Math.abs(view.rows[0].values.USD-289.75)<1e-10);
+  assert.deepEqual(base.prices,[{day:'2026-10-14',close:.04}]);
+  assert.equal(currencyView({...base,prices:[{day:'2026-10-10',close:.04}]},fx,[prices],{metric:'cost',currency:'TIB',coins:250,mode:'observed'},null).rows.length,0);
+});
+test('all three purchasing-currency percentage differences are plotted, unavailable routes stay absent',()=>{
+  const opts={metric:'pairwise',currency:'BRL',coins:250,mode:'observed'};
+  const [row]=historicalCosts(fx,[],[prices],opts);
+  assert.ok(Math.abs(row.values.EUR-(58/5/10.35-1)*100)<1e-10);
+  assert.ok(Math.abs(row.values.BRL-(11.59/1.25/10.35-1)*100)<1e-10);
+  assert.ok(Math.abs(row.values.USD-(11.59/1.25/(58/5)-1)*100)<1e-10);
+  assert.deepEqual(historicalCosts(fx,[],[prices],{...opts,coins:15000})[0].values,{EUR:null,BRL:null,USD:null});
+});

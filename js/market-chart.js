@@ -151,7 +151,7 @@ export function createMarketChart(container, { scale: k = 1, width, height, prof
   });
   // The line series of the price layers, whose shape the chart style sets.
   const priceLines = () => [profile?.priceLayer ?? bestOffer, dailyAverage].map(l => series.get(l)).filter(Boolean)
-    .flatMap(part => [part.solid, part.dotted]).filter(Boolean);
+    .flatMap(part => part.lines ?? [part.solid, part.dotted]).filter(Boolean);
   // Optional layers start shown, unless they say otherwise (`hidden: true`); hiding one redraws only that layer.
   const hidden = new Set(layers.filter(l => l.optional && l.hidden).map(l => l.id));
   const shown = layer => !(layer.optional && hidden.has(layer.id));
@@ -173,7 +173,7 @@ export function createMarketChart(container, { scale: k = 1, width, height, prof
       const area = container.getBoundingClientRect(), head = element.getBoundingClientRect();
       const pane = area.height - chart.timeScale().height();
       if (pane <= 0 || !head.height) return;
-      const top = Math.min(0.5, Math.max(0.08, (head.bottom - area.top + 12 * k) / pane));
+      const top = Math.min(profile?.maxTopMargin ?? 0.5, Math.max(0.08, (head.bottom - area.top + 12 * k) / pane));
       if (topFraction !== null && Math.abs(top - topFraction) < 0.004) return;
       topFraction = top;
       chart.priceScale('right').applyOptions({ scaleMargins: { top, bottom: 0.22 } });
