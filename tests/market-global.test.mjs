@@ -25,31 +25,36 @@ test('all world histories: chart bars, legend, averages and prices trace to cano
  const activity=LAYERS.find(l=>l.id==='activity'),average=LAYERS.find(l=>l.id==='daily-average'),price=LAYERS.find(l=>l.id==='best-offer');
  for(const file of files){
   const data=JSON.parse(await readFile(new URL(file,dir)));const view=marketValues(data);
-  assert.deepEqual(view.daily,data.dailyStatistics,`${data.world}: generated projection differs from loader`);
-  assert.equal(view.daily.length,new Set(data.dailyStatisticsObservations.map(d=>d.serverDay)).size);
+  assert.equal(view.daily.length,new Set([...data.dailyStatistics.map(d=>d.serverDay),...(data.estimatedDailyStatistics??[]).map(d=>d.serverDay)]).size);
   assert.deepEqual(view.closes,bestOfferCloses(data.observations));
   for(const o of data.observations)assert.equal(o.serverDay,serverDay(Date.parse(o.capturedAtUtc)));
   for(const r of data.dailyStatisticsObservations)assert.equal(r.serverDay,addDays(serverDay(Date.parse(r.capturedAtUtc)),-1));
   const days=[...view.daily.map(d=>d.serverDay),...view.closes.map(d=>d.serverDay)].sort();
   view.grid=days.length?dayGrid(days[0],days.at(-1)):[];
   for(const s of ['buy','sell']){
-   let bars,averages,prices;
+   let bars,averages,estimatedAverages,prices;
    const recorder=setter=>({applyOptions(){},setData(p){setter(p);}});
    activity.draw(recorder(p=>bars=p),view,s,{[s]:'#fff'});
-   average.draw({solid:recorder(p=>averages=p),dotted:recorder(()=>{})},view,s);
+   average.draw({solid:recorder(p=>averages=p),dotted:recorder(()=>{}),estimated:recorder(p=>estimatedAverages=p)},view,s);
    price.draw({solid:recorder(()=>{}),dotted:recorder(()=>{}),points:recorder(p=>prices=p)},view,s,{[s]:'#fff'});
    for(const bar of bars){
     const stats=statisticsAt(view,bar.time,s);
     assert.equal(bar.value,stats?.transactions,`${data.world}/${bar.time}/${s}: histogram/legend mismatch`);
     if(stats){
-     const source=data.dailyStatisticsObservations.find(r=>r.serverDay===bar.time&&r.capturedAtUtc===view.dailyByDay.get(bar.time).provenance[s].capturedAtUtc&&r[s]);
-     assert.ok(source);for(const k of fields)assert.equal(stats[k],source[s][k]);
+     const provenance=view.dailyByDay.get(bar.time).provenance[s];
+     const source=provenance.kind==='estimated'
+      ? data.estimatedDailyStatistics?.find(r=>r.serverDay===bar.time&&r[s])
+      : data.dailyStatisticsObservations.find(r=>r.serverDay===bar.time&&r.capturedAtUtc===provenance.capturedAtUtc&&r[s]);
+     assert.ok(source);
+     for(const k of provenance.kind==='estimated'?['transactions','averagePrice']:fields)if(k in stats)assert.equal(stats[k],source[s][k]);
      assert.ok(!('tcVolume' in stats));
     }
    }
-   const expected=view.daily.filter(d=>d[s]?.transactions>0);
-   assert.equal(averages.length,expected.length);
+   const expected=view.daily.filter(d=>d[s]?.transactions>0&&Number.isSafeInteger(d[s].averagePrice)&&d.provenance[s].kind!=='estimated');
+   const expectedEstimated=view.daily.filter(d=>d[s]?.transactions>0&&Number.isSafeInteger(d[s].averagePrice)&&d.provenance[s].kind==='estimated');
+   assert.equal(averages.length,expected.length);assert.equal(estimatedAverages.length,expectedEstimated.length);
    for(let i=0;i<averages.length;i++)assert.equal(averages[i].value,expected[i][s].averagePrice);
+   for(let i=0;i<estimatedAverages.length;i++)assert.equal(estimatedAverages[i].value,expectedEstimated[i][s].averagePrice);
    for(const p of prices){
     const candidates=data.observations.filter(o=>o.serverDay===p.time&&o.sell!==undefined);
     assert.equal(p.value,candidates.at(-1)[s]);

@@ -1,7 +1,8 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {serverDay,addDays,validBook,plausibleCaptureSpread,fromTibiaMarket,fromCapture,mergeDaily,mergeObservations} from '../js/market-history.js';
+import {serverDay,addDays,validBook,plausibleCaptureSpread,fromTibiaMarket,fromCapture,mergeDaily,mergeObservations,
+  estimateDailyStatistics,marketDailyStatistics} from '../js/market-history.js';
 import {buildMarketHistory,formatJson,staleFiles} from '../tools/build_market_history.mjs';
 
 const at = iso => Date.parse(iso);
@@ -14,6 +15,7 @@ const full = {id:22118,time:1788657386.2663367,is_full_data:true,buy_offer:41103
 const MONTH = ['month_average_sell','month_average_buy','month_sold','month_bought','month_highest_sell','month_lowest_buy','month_lowest_sell','month_highest_buy'];
 const DAY = ['day_average_sell','day_average_buy','day_sold','day_bought','day_highest_sell','day_lowest_sell','day_highest_buy','day_lowest_buy'];
 const without = (row, keys) => ({...row, ...Object.fromEntries(keys.map(k => [k,-1]))});
+const statsSide = {transactions:2,highestPrice:50000,averagePrice:45000,lowestPrice:40000};
 
 test('server days open at the 10:00 Berlin save in CET and CEST', () => {
   assert.equal(serverDay(at('2026-01-15T08:59:59.999Z')), '2026-01-14');
@@ -24,6 +26,45 @@ test('server days open at the 10:00 Berlin save in CET and CEST', () => {
   assert.equal(serverDay(at('2025-10-26T08:30:00Z')), '2025-10-25');
   assert.equal(serverDay(at('2025-10-26T09:00:00Z')), '2025-10-26');
   assert.equal(addDays('2024-03-01', -1), '2024-02-29');
+});
+
+test('consecutive comparable 30-day counters estimate the reference day without claiming an observation',()=>{
+  const observations=[
+    {serverDay:'2026-10-14',capturedAtUtc:'2026-10-14T12:00:00Z',statistics30d:{
+      buy:{transactions:2200,highestPrice:50000,averagePrice:45000,lowestPrice:40000},
+      sell:{transactions:4100,highestPrice:52000,averagePrice:47000,lowestPrice:42000}}},
+    {serverDay:'2026-10-15',capturedAtUtc:'2026-10-15T12:00:00Z',statistics30d:{
+      buy:{transactions:2244,highestPrice:50500,averagePrice:45100,lowestPrice:40000},
+      sell:{transactions:4150,highestPrice:52500,averagePrice:47100,lowestPrice:42000}}}
+  ];
+  const [day]=estimateDailyStatistics(observations);
+  assert.equal(day.serverDay,'2026-10-15');
+  assert.equal(day.buy.transactions,117);
+  assert.equal(day.sell.transactions,187);
+  assert.equal(day.provenance.buy.kind,'estimated');
+  assert.equal(day.provenance.buy.method,'rolling-30d-mean-outflow');
+  assert.equal(day.provenance.buy.intervalHours,24);
+  assert.ok(Number.isSafeInteger(day.buy.averagePrice));
+  assert.ok(!('highestPrice' in day.buy));
+});
+
+test('daily observations override estimates per side and mismatched capture times stay empty',()=>{
+  const rolling=(serverDay,capturedAtUtc,transactions)=>({serverDay,capturedAtUtc,statistics30d:{
+    buy:{...statsSide,transactions},sell:{...statsSide,transactions}}});
+  const comparable=[rolling('2026-10-14','2026-10-14T12:00:00Z',2200),rolling('2026-10-15','2026-10-15T12:00:00Z',2244)];
+  const observed={serverDay:'2026-10-15',provenance:{buy:{source:'tibiamarket'}},buy:statsSide};
+  const result=marketDailyStatistics({observations:comparable,dailyStatistics:[observed]})[0];
+  assert.deepEqual(result.buy,statsSide);
+  assert.equal(result.provenance.buy.source,'tibiamarket');
+  assert.equal(result.sell.transactions,117);
+  assert.equal(result.provenance.sell.kind,'estimated');
+  assert.deepEqual(estimateDailyStatistics([
+    rolling('2026-10-14','2026-10-14T02:00:00Z',2200),rolling('2026-10-15','2026-10-15T18:00:00Z',2244)
+  ]),[]);
+  assert.equal(estimateDailyStatistics([
+    rolling('2026-10-14','2026-10-14T12:00:00Z',2200),rolling('2026-10-14','2026-10-14T23:00:00Z',9999),
+    rolling('2026-10-15','2026-10-15T12:00:00Z',2244)
+  ])[0].buy.transactions,117,'the closest comparable pair wins instead of the latest capture of each day');
 });
 
 test('a complete TibiaMarket row maps to Tibinance fields and reports the previous server day', () => {
@@ -121,6 +162,19 @@ test('updated daily values select the latest timestamp without discarding source
   assert.equal(data.observations.length, 2);
 });
 
+test('the market build stores estimated days separately and includes them in chart and overview coverage',()=>{
+  const first=without({...full,time:full.time,month_bought:2200,month_sold:4100},DAY);
+  const second=without({...full,time:full.time+86400,month_bought:2244,month_sold:4150},DAY);
+  const {worlds,index,overview}=buildMarketHistory({captures:[],tibiaMarket:[{world:'Antica',rows:[first,second]}],registry,inputs:[]});
+  const data=worlds.get('Antica');
+  assert.deepEqual(data.dailyStatistics,[]);
+  assert.equal(data.estimatedDailyStatistics.length,1);
+  assert.equal(data.estimatedDailyStatistics[0].buy.transactions,117);
+  assert.equal(index.worlds[0].dailyStatisticsDays.days,1);
+  assert.equal(index.dailyStatistics.estimatedDays,1);
+  assert.equal(overview.worlds[0].transactions.buy[0],117);
+});
+
 test('both sources merge in time order per world; inputs are checked', () => {
   const capture = {world:'Antica',type:'Open PvP',battleye:'Yellow',viewType:'offers',sell:41000,buy:40000,
     capturedAtUtc:'2026-09-21T12:00:00.000Z'};
@@ -135,7 +189,7 @@ test('both sources merge in time order per world; inputs are checked', () => {
   assert.equal(antica.dailyStatistics.length, 31);
   assert.equal(antica.dailyStatisticsObservations.length, 31);
   assert.ok(antica.dailyStatisticsObservations.every(d => d.source === 'tibiamarket' && Number.isFinite(d.sourceTimestamp) && d.capturedAtUtc));
-  assert.deepEqual(index.dailyStatistics, {days:31, conflictingDaysDropped:0, conflictingDaysResolved:0, checked30dTotals:1, matching30dTotals:1});
+  assert.deepEqual(index.dailyStatistics, {days:31,estimatedDays:0,estimatedSides:0,conflictingDaysDropped:0,conflictingDaysResolved:0,checked30dTotals:1,matching30dTotals:1});
   assert.deepEqual(index.worlds[0].latestBestOffer, {capturedAtUtc:'2026-09-21T12:00:00.000Z',serverDay:'2026-09-21',sell:41000,buy:40000});
   assert.equal(index.worlds[0].type, 'Open PvP');
   assert.throws(() => buildMarketHistory({captures:[{...capture, world:'antica'}], tibiaMarket:[{world:'Antica', rows:[]}], registry, inputs:[]}), /spelled two ways/);
@@ -231,7 +285,7 @@ test('every current world is listed; retired worlds keep separate histories; cop
   assert.deepEqual([of('Ambra').status, of('Ambra').offline, of('Ambra').mergedInto, of('Ambra').battleye], ['retired', '2025-11-06', 'Sombra', 'Green']);
   assert.equal(worlds.get('Sombra').observations.length, 0, 'a successor never absorbs its predecessor');
   assert.deepEqual([of('Jinxibra').observations, of('Jinxibra').bestOfferCloses, of('Jinxibra').latestBestOffer], [0, [], undefined]);
-  assert.deepEqual(worlds.get('Jinxibra'), {asset:'tibia-coin', world:'Jinxibra', observations:[], dailyStatistics:[], dailyStatisticsObservations:[]});
+  assert.deepEqual(worlds.get('Jinxibra'), {asset:'tibia-coin',world:'Jinxibra',observations:[],dailyStatistics:[],dailyStatisticsObservations:[]});
   const build = changes => () => buildMarketHistory({captures:[], tibiaMarket, registry, inputs:[], ...changes});
   assert.throws(build({tibiaMarket:[...tibiaMarket, {world:'Antica', rows:[{...later, sell_offer:42001}]}]}), /two different rows/);
   assert.throws(build({tibiaMarket:[...tibiaMarket, {world:'Yonabra', rows:[later]}]}), /neither a current world nor a known retired one/);

@@ -1105,7 +1105,7 @@ the review fixtures contain independently transcribed ground truth.
 
 ### Market metric semantics and compatibility
 
-Statistics counters measure raw transaction activity, with daily and last-30-day windows kept separate. Actual traded TC quantity and executed gold turnover are unknown. Legacy `tcVolume` fields are ignored during import; new normalized records, CSVs and generated history omit them. No replacement quantity is estimated.
+Statistics counters measure raw transaction activity, with observed daily, estimated daily and last-30-day windows kept separate. When two rolling captures have consecutive reference days and their capture times differ by 18 to 30 hours, Tibinance estimates the entering day's transaction count as the counter change plus one thirtieth of the prior counter. It can also estimate that day's weighted average price; implausible price results stay unavailable. These records live in `estimatedDailyStatistics`, carry `kind: "estimated"` provenance and never override observed daily Statistics. Actual traded TC quantity and executed gold turnover remain unknown. Legacy `tcVolume` fields are ignored during import; no TC quantity is inferred from a transaction count.
 
 `buyVolume` and `sellVolume` retain their compatible field keys and actual TC values, but are displayed as Captured Buy/Sell Depth. Best-price quantities include only captured rows at that price. `goldSupply` and `goldDemand` are Quoted Buy/Sell Gold Notional over captured rows, not turnover or total world gold. Complete order-book coverage is not established.
 

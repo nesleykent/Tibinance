@@ -16,7 +16,7 @@ try{
  const audit=JSON.parse(await readFile(new URL('../docs/market-chart-integration-audit.json',import.meta.url)));
  const cases=[...audit.affected.map(x=>({world:x.world,day:x.serverDay})),
   {world:'Antica',day:'2026-10-02'},{world:'Gentebra',day:'2026-10-03'},
-  {world:'Floribra',day:'2026-10-03'},{world:'Jinxibra',day:null}];
+  {world:'Floribra',day:'2026-10-03'},{world:'Astera',day:'2026-10-04'},{world:'Jinxibra',day:null}];
  const fmt=new Intl.NumberFormat('en-US');
  for(const range of ['All','3M'])for(const world of [...new Set(cases.map(c=>c.world))]){
   await page.goto(`${root}/markets.html?world=${world}&range=${range}`);
@@ -26,12 +26,14 @@ try{
    const result=await page.evaluate(({day,side})=>{
     const {state,showLegend}=window.__marketAudit;showLegend(day);
     const stats=day?state.view.dailyByDay.get(day)?.[side]:undefined;
-    return {stats,legend:document.querySelector('#legend').innerText,activity:document.querySelector('#volumeLegend').innerText,
+    return {stats,provenance:day?state.view.dailyByDay.get(day)?.provenance?.[side]:undefined,
+      legend:document.querySelector('#legend').innerText,activity:document.querySelector('#volumeLegend').innerText,
       count:state.view.observations?.length};
    },{day:c.day,side});
-   if(c.day){assert.match(result.activity,new RegExp('Transactions\\s+'+(result.stats?fmt.format(result.stats.transactions):'N/A')+'$'));
+   if(c.day){assert.match(result.activity,new RegExp((result.provenance?.kind==='estimated'?'Estimated transactions':'Transactions')+'\\s+'+(result.stats?fmt.format(result.stats.transactions):'N/A')+'$'));
     // A trading day's readout: its average, then the day's traded high and low, all exactly the canonical values.
-    if(result.stats?.transactions>0)assert.match(result.legend,new RegExp('Daily average\\s+'+fmt.format(result.stats.averagePrice)
+    if(result.provenance?.kind==='estimated'&&result.stats?.averagePrice){assert.match(result.legend,new RegExp('Estimated daily average\\s+'+fmt.format(result.stats.averagePrice)+'$'));assert.doesNotMatch(result.legend,/High|Low/);}
+    else if(result.stats?.transactions>0)assert.match(result.legend,new RegExp('Daily average\\s+'+fmt.format(result.stats.averagePrice)
       +'\\s+High\\s+'+fmt.format(result.stats.highestPrice)+'\\s+Low\\s+'+fmt.format(result.stats.lowestPrice)+'$'));
     else if(!result.stats)assert.match(result.legend,/Daily average\s+N\/A$/);
    }
@@ -40,5 +42,5 @@ try{
  await page.setViewportSize({width:390,height:844});await page.goto(`${root}/markets.html?world=Gentebra`);
  await page.waitForFunction(()=>document.querySelector('#market').getAttribute('aria-busy')==='false');
  assert(await page.locator('#chart').isVisible());assert.deepEqual(errors,[]);
- console.log(`PASS ${process.env.TIBINANCE_BROWSER??'chrome'}: all 22 restored dates, ${new Set(cases.map(c=>c.world)).size} worlds, both sides, All/3M, rolling-only and empty worlds, exact legend values, mobile.`);
+ console.log(`PASS ${process.env.TIBINANCE_BROWSER??'chrome'}: restored and estimated dates, ${new Set(cases.map(c=>c.world)).size} worlds, both sides, All/3M, rolling-only and empty worlds, exact legend values, mobile.`);
 }finally{await browser.close();}

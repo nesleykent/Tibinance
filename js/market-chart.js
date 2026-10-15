@@ -79,14 +79,21 @@ const dailyAverage = {
   depth: 0,
   add: (chart, { line, k, L }, c) => ({
     solid: line({ color: c.average, lineWidth: k }),
-    dotted: line({ color: c.average, lineWidth: k, lineStyle: L.LineStyle.Dotted })
+    dotted: line({ color: c.average, lineWidth: k, lineStyle: L.LineStyle.Dotted }),
+    estimated: line({ color: c.average, lineVisible: false, pointMarkersVisible: true, pointMarkersRadius: 2 * k })
   }),
   draw(s, view, side) {
-    const average = lineLayers(view.daily.filter(d => d[side]?.transactions > 0).map(d => ({ time: d.serverDay, value: d[side].averagePrice })));
+    const observed = view.daily.filter(d => d[side]?.transactions > 0 && Number.isSafeInteger(d[side].averagePrice)
+      && d.provenance?.[side]?.kind !== 'estimated');
+    const estimated = view.daily.filter(d => d[side]?.transactions > 0 && Number.isSafeInteger(d[side].averagePrice)
+      && d.provenance?.[side]?.kind === 'estimated');
+    const average = lineLayers(observed.map(d => ({ time: d.serverDay, value: d[side].averagePrice })));
     s.solid.setData(average.solid);
     s.dotted.setData(average.dotted);
+    s.estimated.setData(estimated.map(d => ({ time: d.serverDay, value: d[side].averagePrice })));
   },
-  keys: (side, c) => [{ mark: 'line', color: c.average, label: 'Daily average' }]
+  keys: (side, c) => [{ mark: 'line', color: c.average, label: 'Daily average' },
+    { mark: 'dot', color: c.average, label: 'Estimated daily average' }]
 };
 
 // Raw transaction activity per completed server day, on a separate hidden scale below prices.
@@ -103,11 +110,12 @@ const activity = {
   draw(s, view, side, c) {
     s.applyOptions({ color: `${c[side]}55` });
     s.setData(view.grid.map(day => {
-      const value = statisticsAt(view, day, side)?.transactions;
-      return value === undefined ? { time: day } : { time: day, value };
+      const record = view.dailyByDay.get(day), value = record?.[side]?.transactions;
+      return value === undefined ? { time: day } : { time: day, value,
+        ...(record.provenance?.[side]?.kind === 'estimated' ? { color: `${c[side]}33` } : {}) };
     }));
   },
-  keys: (side, c) => [{ mark: 'bar', color: c[side], label: 'Transactions (count)' }]
+  keys: (side, c) => [{ mark: 'bar', color: c[side], label: 'Transactions (count; lighter bars estimated)' }]
 };
 
 // Read in this order; drawn by depth: activity behind the price series, the projection and past editions between the
@@ -189,7 +197,7 @@ export function createMarketChart(container, { scale: k = 1, width, height, prof
     retheme() {
       Object.assign(c, colors());
       const average = series.get(dailyAverage);
-      if (average) for (const s of [average.solid, average.dotted]) s.applyOptions({ color: c.average });
+      if (average) for (const s of [average.solid, average.dotted, average.estimated]) s.applyOptions({ color: c.average });
       chart.applyOptions({ layout: { textColor: c.text, panes: { separatorColor: c.rule, separatorHoverColor: c.crosshair } }, grid: { horzLines: { color: c.grid } },
         crosshair: { vertLine: { color: c.crosshair, labelBackgroundColor: c.label }, horzLine: { color: c.crosshair, labelBackgroundColor: c.label } } });
       if (last) layers.forEach(drawLayer);

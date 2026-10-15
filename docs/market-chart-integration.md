@@ -38,8 +38,11 @@ observation deduplication and legacy chart dependencies are zero after correctio
 
 The Gentebra 2026-10-03 example has Best Sell Offer 46,794 and rolling Sell
 Statistics of 6,137 transactions and Average Price 46,140. It has no daily Statistics.
-Daily Average and daily Transactions therefore correctly remain N/A on that date.
-Rolling 30-day data is preserved; neither source is reinterpreted as daily data.
+A rolling counter is never copied into a daily field. When the prior day's rolling
+capture is consecutive and within six hours of the same capture time, the chart may
+instead show an explicitly labelled estimate derived from the two counters. Otherwise
+Daily Average and Transactions remain N/A. Observed and estimated records are stored
+separately, and observed daily Statistics always take precedence.
 
 All 13,240 compiled observations and 45,968 daily acquisition reports are unchanged.
 All previously selected daily values are unchanged. Daily chart records increase

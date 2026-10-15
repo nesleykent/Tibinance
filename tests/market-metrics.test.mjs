@@ -36,7 +36,23 @@ test('daily histogram uses raw counts and leaves rolling-only days empty',()=>{
  let points;const series={applyOptions(){},setData(p){points=p;}};
  activity.draw(series,{grid:['2026-10-01','2026-10-02'],dailyByDay:new Map([['2026-10-01',{buy:side}]]),observations:[{serverDay:'2026-10-02',statistics30d:{buy:side,sell:side}}]},'buy',{buy:'#fff'});
  assert.deepEqual(points,[{time:'2026-10-01',value:2},{time:'2026-10-02'}]);
- assert.equal(activity.keys('buy',{buy:'#fff'})[0].label,'Transactions (count)');
+ assert.equal(activity.keys('buy',{buy:'#fff'})[0].label,'Transactions (count; lighter bars estimated)');
+});
+test('estimated daily activity and averages are visually distinct from observed values',()=>{
+ const activity=LAYERS.find(l=>l.id==='activity'),average=LAYERS.find(l=>l.id==='daily-average');
+ const estimated={transactions:117,averagePrice:45123};
+ const view={grid:['2026-10-14','2026-10-15'],daily:[
+  {serverDay:'2026-10-14',buy:side,provenance:{buy:{source:'tibiamarket'}}},
+  {serverDay:'2026-10-15',buy:estimated,provenance:{buy:{kind:'estimated'}}}
+ ],dailyByDay:new Map()};
+ view.dailyByDay=new Map(view.daily.map(d=>[d.serverDay,d]));
+ let bars,observed,estimates;
+ activity.draw({applyOptions(){},setData(p){bars=p;}},view,'buy',{buy:'#abcdef'});
+ const recorder=setter=>({setData:setter});
+ average.draw({solid:recorder(p=>observed=p),dotted:recorder(()=>{}),estimated:recorder(p=>estimates=p)},view,'buy');
+ assert.deepEqual(bars,[{time:'2026-10-14',value:2},{time:'2026-10-15',value:117,color:'#abcdef33'}]);
+ assert.deepEqual(observed,[{time:'2026-10-14',value:45000,color:'rgba(0,0,0,0)'}]);
+ assert.deepEqual(estimates,[{time:'2026-10-15',value:45123}]);
 });
 test('captured depth sums actual TC Amount independently on each side',()=>{
  const offer=(amount,price)=>({amount,price,total:amount*price,endsAt:'2026-11-01T12:00:00'});

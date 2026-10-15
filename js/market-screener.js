@@ -44,13 +44,15 @@ export const endOf = (w, through) => retired(w)
  * from the overview's day arrays. Days without a figure are left out, never counted as zero.
  */
 export function transactionsOver(series, side, from, to) {
-  if (!series) return { perDay: null, days: 0, total: null };
+  if (!series) return { perDay: null, days: 0, estimatedDays: 0, total: null };
   const values = series[side], first = series.first;
   const start = from ? Math.max(0, daysBetween(first, from)) : 0, end = Math.min(values.length - 1, daysBetween(first, to));
   let total = 0, days = 0, lo = -1, hi = -1;
   for (let i = start; i <= end; i++) if (values[i] !== null) { total += values[i]; days++; if (lo === -1) lo = i; hi = i; }
+  const estimatedDays = (series.estimated?.[side] ?? []).filter(i => i >= start && i <= end).length;
   // first and last: the days with a figure that bound the mean.
-  return days ? { perDay: total / days, days, total, first: addDays(first, lo), last: addDays(first, hi) } : { perDay: null, days: 0, total: null };
+  return days ? { perDay: total / days, days, estimatedDays, total, first: addDays(first, lo), last: addDays(first, hi) }
+    : { perDay: null, days: 0, estimatedDays: 0, total: null };
 }
 
 export function screenerRows(index, overview, { side, range }) {
@@ -69,7 +71,7 @@ export function screenerRows(index, overview, { side, range }) {
       last: latest ? latest[i] : null, lastDay: latest?.[0] ?? null,
       sell: latest?.[1] ?? null, buy: latest?.[2] ?? null, spread: latest ? latest[1] - latest[2] : null,
       delta: change ? change.to.value - change.from.value : null, ratio: change?.ratio ?? null, change,
-      txPerDay: tx.perDay, txDays: tx.days, txFirst: tx.first ?? null, txLast: tx.last ?? null,
+      txPerDay: tx.perDay, txDays: tx.days, txEstimatedDays: tx.estimatedDays, txFirst: tx.first ?? null, txLast: tx.last ?? null,
       depth, depthDay: depth === null ? null : o.depth.serverDay,
       stale: !retired(w) && (!latest || daysBetween(latest[0], index.through) > STALE_DAYS),
       start, end, points: closesInView(closes, start),

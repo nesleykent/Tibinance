@@ -3,12 +3,12 @@
  * one record vocabulary (Tibinance field names) for the Markets page. Pure
  * functions only; tools/build_market_history.mjs does the reading and writing.
  *
- * Two different measures are kept apart, never substituted for one another:
- *   observations     point-in-time best Sell/Buy Offer prices (and, when the
- *                    snapshot carried them, rolling 30-day Statistics)
- *   dailyStatistics  completed server days of executed transactions, per side
+ * Three record types are kept apart, never substituted for one another:
+ *   observations             point-in-time offers and rolling 30-day Statistics
+ *   dailyStatistics          observed completed server-day Statistics, per side
+ *   estimatedDailyStatistics capture-to-capture estimates derived from rolling Statistics
  *
- * Nothing is interpolated. A field absent from a record was not observed.
+ * Nothing is interpolated. A field absent from an observed record was not observed.
  */
 import { STATISTICS_FIELDS, statisticsIssues, validatedStatistics } from './statistics.js';
 
@@ -152,10 +152,75 @@ export function latestDailyStatistics(reports) {
   return [...days.values()].sort((a, b) => a.serverDay.localeCompare(b.serverDay));
 }
 
-// Daily acquisition reports are authoritative. A rolling Statistics observation
-// cannot supply a daily value, regardless of its acquisition source.
-export const marketDailyStatistics = file => file.dailyStatisticsObservations
-  ? latestDailyStatistics(file.dailyStatisticsObservations) : file.dailyStatistics;
+const ESTIMATE_WINDOW_DAYS = 30;
+const MAX_ESTIMATE_CLOCK_DRIFT_HOURS = 6;
+
+// Estimate the completed day entering a rolling 30-day window. This deliberately
+// remains a separate record type: the outgoing day is approximated by the prior
+// window mean, so neither its count nor its weighted price is an observation.
+export function estimateDailyStatistics(observations) {
+  const byDay = new Map();
+  for (const observation of observations ?? []) {
+    if (!observation.statistics30d) continue;
+    byDay.set(observation.serverDay, [...(byDay.get(observation.serverDay) ?? []), observation]);
+  }
+  const days = [...byDay.keys()].sort();
+  const estimates = [];
+  for (let i = 1; i < days.length; i++) {
+    if (addDays(days[i - 1], 1) !== days[i]) continue;
+    const pairs = byDay.get(days[i - 1]).flatMap(previous => byDay.get(days[i]).map(current => ({ previous, current,
+      intervalHours: (Date.parse(current.capturedAtUtc) - Date.parse(previous.capturedAtUtc)) / 3600000 })));
+    const pair = pairs.filter(p => Math.abs(p.intervalHours - 24) <= MAX_ESTIMATE_CLOCK_DRIFT_HOURS)
+      .sort((a, b) => Math.abs(a.intervalHours - 24) - Math.abs(b.intervalHours - 24)
+        || b.current.capturedAtUtc.localeCompare(a.current.capturedAtUtc))[0];
+    if (!pair) continue;
+    const { previous, current, intervalHours } = pair;
+    // Attribute the capture-to-capture estimate to the current reference day,
+    // matching the day shown by the chart. It is an interval approximation,
+    // not the API's separately reported prior completed-day observation.
+    const estimate = { serverDay: current.serverDay, provenance: {} };
+    for (const name of ['buy', 'sell']) {
+      const before = previous.statistics30d[name], after = current.statistics30d[name];
+      const estimatedTransactions = after.transactions - before.transactions + before.transactions / ESTIMATE_WINDOW_DAYS;
+      if (!Number.isFinite(estimatedTransactions) || estimatedTransactions < 0) continue;
+      const side = { transactions: Math.round(estimatedTransactions) };
+      if (estimatedTransactions > 0) {
+        const remainingValue = (before.transactions - before.transactions / ESTIMATE_WINDOW_DAYS) * before.averagePrice;
+        const estimatedAverage = (after.transactions * after.averagePrice - remainingValue) / estimatedTransactions;
+        const low = Math.min(before.lowestPrice, after.lowestPrice), high = Math.max(before.highestPrice, after.highestPrice);
+        if (Number.isFinite(estimatedAverage) && estimatedAverage >= low && estimatedAverage <= high) side.averagePrice = Math.round(estimatedAverage);
+      }
+      estimate[name] = side;
+      estimate.provenance[name] = { kind: 'estimated', method: 'rolling-30d-mean-outflow', windowDays: ESTIMATE_WINDOW_DAYS,
+        previousCapturedAtUtc: previous.capturedAtUtc, capturedAtUtc: current.capturedAtUtc, intervalHours };
+    }
+    if (estimate.buy || estimate.sell) estimates.push(estimate);
+  }
+  return estimates;
+}
+
+// Daily acquisition reports are authoritative. Estimates only supplement a
+// missing side/day and retain their own provenance so the UI cannot present
+// them as measured daily Statistics.
+export function mergeDailyStatistics(observed, estimated) {
+  const days = new Map();
+  for (const source of [estimated, observed]) for (const report of source ?? []) {
+    const day = days.get(report.serverDay) ?? { serverDay: report.serverDay, provenance: {} };
+    for (const name of ['buy', 'sell']) if (report[name]) {
+      day[name] = report[name];
+      day.provenance[name] = report.provenance?.[name] ?? {};
+    }
+    days.set(report.serverDay, day);
+  }
+  return [...days.values()].sort((a, b) => a.serverDay.localeCompare(b.serverDay));
+}
+
+export function marketDailyStatistics(file) {
+  const observed = file.dailyStatisticsObservations
+    ? latestDailyStatistics(file.dailyStatisticsObservations) : (file.dailyStatistics ?? []);
+  const estimated = file.estimatedDailyStatistics ?? estimateDailyStatistics(file.observations);
+  return mergeDailyStatistics(observed, estimated);
+}
 
 // One point per server day with best offers: the day's last observation and how
 // many the day had. Expects observations in time order, as mergeObservations
@@ -180,11 +245,14 @@ export function dailyTransactionSeries(daily) {
   if (!daily.length) return null;
   const first = daily[0].serverDay, at = day => Math.round((Date.parse(`${day}T00:00:00Z`) - Date.parse(`${first}T00:00:00Z`)) / 86400000);
   const length = at(daily.at(-1).serverDay) + 1, sell = Array(length).fill(null), buy = Array(length).fill(null);
+  const estimated = { sell: [], buy: [] };
   for (const d of daily) {
-    if (d.sell) sell[at(d.serverDay)] = d.sell.transactions;
-    if (d.buy) buy[at(d.serverDay)] = d.buy.transactions;
+    const index = at(d.serverDay);
+    if (d.sell) sell[index] = d.sell.transactions;
+    if (d.buy) buy[index] = d.buy.transactions;
+    for (const side of ['sell', 'buy']) if (d[side] && d.provenance?.[side]?.kind === 'estimated') estimated[side].push(index);
   }
-  return { first, sell, buy };
+  return { first, sell, buy, ...(estimated.sell.length || estimated.buy.length ? { estimated } : {}) };
 }
 
 // The latest captured offer depth: Tibia Coins across every visible offer on

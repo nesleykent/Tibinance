@@ -8,11 +8,13 @@ const dir=new URL('../data/market-history/tibia-coin/worlds/',import.meta.url);
 const fields=['transactions','highestPrice','averagePrice','lowestPrice'];
 const empty=()=>({transactions:0,averagePrice:0,highestPrice:0,lowestPrice:0,dailyAveragePoints:0,bestSell:0,bestBuy:0});
 const counts={before:empty(),after:empty()};const affected=[];
-let worlds=0,observations=0,reports=0,rolling=0,missingBefore=0,missingAfter=0,unsupported=0,misaligned=0,barsMissing=0,duplicates=0;
+let worlds=0,observations=0,reports=0,rolling=0,estimatedDays=0,estimatedSides=0,missingBefore=0,missingAfter=0,unsupported=0,misaligned=0,barsMissing=0,duplicates=0;
 const sourceCounts={};
 for(const filename of (await readdir(dir)).filter(f=>f.endsWith('.json')).sort()){
  const data=JSON.parse(await readFile(new URL(filename,dir)));worlds++;observations+=data.observations.length;
  reports+=data.dailyStatisticsObservations.length;
+ estimatedDays+=(data.estimatedDailyStatistics??[]).length;
+ estimatedSides+=(data.estimatedDailyStatistics??[]).reduce((n,d)=>n+Number(Boolean(d.buy))+Number(Boolean(d.sell)),0);
  duplicates+=data.observations.length-new Set(data.observations.map(o=>`${o.source}|${o.capturedAtUtc}`)).size;
  for(const o of data.observations){sourceCounts[o.source]=(sourceCounts[o.source]??0)+1;if(o.statistics30d)rolling++;
   if(o.serverDay!==serverDay(Date.parse(o.capturedAtUtc)))misaligned++;}
@@ -45,15 +47,16 @@ const chartFiles=['market-chart.js','markets.js','market-series.js','market-expo
 let legacyDependencies=0;
 for(const path of chartFiles)if(/tcVolume|transactions\s*\*\s*25/.test(await readFile(new URL(`../js/${path}`,import.meta.url),'utf8')))legacyDependencies++;
 const result={worlds,observations,dailyAcquisitionReports:reports,rollingStatisticsObservations:rolling,sourceCounts,
- qualification:'Daily reports only. Rolling last-30-days Statistics are not eligible for daily series, independent of source.',
- selection:'Latest acquisition timestamp per side and completed reference day; conflicting equal timestamps fail explicitly.',
+ qualification:'Observed daily reports remain authoritative. Comparable consecutive rolling 30-day Statistics may supplement a missing side/day only as an explicitly labelled estimate.',
+ selection:'Latest acquisition timestamp per observed side and completed reference day; otherwise the closest eligible capture pair to 24 hours (18-30 hours). Conflicting equal observed timestamps fail explicitly.',
+ estimatedDailyStatistics:{days:estimatedDays,sides:estimatedSides,method:'rolling-30d-mean-outflow'},
  availability:counts,affectedWorlds:new Set(affected.map(a=>a.world)).size,affectedWorldDays:affected.length,
  canonicalValuesMissing:{before:missingBefore,after:missingAfter},marketsValuesWithoutCanonicalSource:unsupported,
  plottedBarsWithMissingLegendValue:barsMissing,validStatisticsDroppedBySource:0,serverDayMisalignments:misaligned,
  observationsIncorrectlyCollapsed:duplicates,screenshotsIncorrectlyExcluded:0,tibiaMarketObservationsIncorrectlyExcluded:0,
  legacyChartFieldDependencies:legacyDependencies,affected,
  gentebraExample:{serverDay:'2026-10-03',bestSell:46794,dailyAverage:null,dailyTransactions:null,
-  reason:'Only rolling Statistics exist for this reference date; daily N/A is correct.'}};
+  reason:'Rolling Statistics exist, but no comparable consecutive capture pair supports an estimate for this date; daily N/A is correct.'}};
 if(missingAfter||unsupported||misaligned||barsMissing||duplicates||legacyDependencies)throw new Error('Global audit failed');
 const output=JSON.stringify(result,null,2)+'\n';
 if(process.argv.includes('--write'))await writeFile(new URL('../docs/market-chart-integration-audit.json',import.meta.url),output);

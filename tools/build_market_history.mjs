@@ -13,8 +13,8 @@ import { gunzipSync } from 'node:zlib';
 import { mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { join, relative } from 'node:path';
-import { ASSETS, addDays, bestOfferCloses, dailyTransactionSeries, fromCapture, fromTibiaMarket, latestCapturedDepth, latestDailyStatistics,
-  mergeDaily, mergeObservations } from '../js/market-history.js';
+import { ASSETS, addDays, bestOfferCloses, dailyTransactionSeries, estimateDailyStatistics, fromCapture, fromTibiaMarket,
+  latestCapturedDepth, latestDailyStatistics, mergeDaily, mergeDailyStatistics, mergeObservations } from '../js/market-history.js';
 import { battleyeColour } from '../js/tibiadata.js';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
@@ -129,13 +129,25 @@ export function buildMarketHistory({ captures, tibiaMarket, registry, inputs, ex
   }
   const worlds = new Map(), summaries = [], overview = [];
   let through = ''; // the latest server day anything in the dataset describes
-  const dailyTotals = { days: 0, conflictingDaysDropped: 0, conflictingDaysResolved: 0, checked30dTotals: 0, matching30dTotals: 0 };
+  const dailyTotals = { days: 0, estimatedDays: 0, estimatedSides: 0, conflictingDaysDropped: 0, conflictingDaysResolved: 0,
+    checked30dTotals: 0, matching30dTotals: 0 };
   for (const key of [...perWorld.keys()].sort()) {
     const world = names.get(key), entry = perWorld.get(key);
     const observations = mergeObservations(entry.observations);
     const { conflicts } = mergeDaily(entry.daily);
     const daily = latestDailyStatistics(entry.dailyObservations);
+    const observedByDay = new Map(daily.map(d => [d.serverDay, d]));
+    const estimatedDaily = estimateDailyStatistics(observations).map(estimate => {
+      const observed = observedByDay.get(estimate.serverDay), supplemental = { serverDay: estimate.serverDay, provenance: {} };
+      for (const side of ['buy', 'sell']) if (estimate[side] && !observed?.[side]) {
+        supplemental[side] = estimate[side]; supplemental.provenance[side] = estimate.provenance[side];
+      }
+      return supplemental;
+    }).filter(d => d.buy || d.sell);
+    const chartDaily = mergeDailyStatistics(daily, estimatedDaily);
     dailyTotals.days += daily.length;
+    dailyTotals.estimatedDays += estimatedDaily.length;
+    dailyTotals.estimatedSides += estimatedDaily.reduce((count, d) => count + Number(Boolean(d.buy)) + Number(Boolean(d.sell)), 0);
     dailyTotals.conflictingDaysResolved += conflicts.length;
 
     // Evidence for the day alignment: the 30 completed days before a snapshot's
@@ -164,16 +176,17 @@ export function buildMarketHistory({ captures, tibiaMarket, registry, inputs, ex
       ...(formedFrom.has(world) ? { formedFrom: formedFrom.get(world) } : {}),
       observations: observations.length,
       bestOfferDays: span(closes.map(c => c.serverDay)),
-      dailyStatisticsDays: span(daily.map(d => d.serverDay)),
+      dailyStatisticsDays: span(chartDaily.map(d => d.serverDay)),
       ...(latest ? { latestBestOffer: { capturedAtUtc: latest.capturedAtUtc, serverDay: latest.serverDay, sell: latest.sell, buy: latest.buy } } : {}),
       // [serverDay, sell, buy] per observed day, so the watchlist needs no world file.
       bestOfferCloses: closes.map(c => [c.serverDay, c.sell, c.buy])
     });
-    const transactions = dailyTransactionSeries(daily), depth = latestCapturedDepth(observations);
+    const transactions = dailyTransactionSeries(chartDaily), depth = latestCapturedDepth(observations);
     if (transactions || depth) overview.push({ world, ...(transactions ? { transactions } : {}), ...(depth ? { depth } : {}) });
     // Keep acquisition-level daily reports even when the derived chart projection
     // cannot choose a unique value for a server day. Never discard source evidence.
     worlds.set(world, { asset: asset.id, world, observations, dailyStatistics: daily,
+      ...(estimatedDaily.length ? { estimatedDailyStatistics: estimatedDaily } : {}),
       dailyStatisticsObservations: mergeObservations(entry.dailyObservations) });
   }
   for (const source of Object.values(conversion)) source.notConverted = sorted(source.notConverted);

@@ -18,7 +18,7 @@
 import { config } from './config.js';
 import { fmt, esc, num } from './format.js';
 import { RANGES, changeOver, dayGrid, daysBetween, marketValues, neighbours, rangeStart, statisticsAt } from './market-series.js';
-import { SIDES, createMarketChart, dayOf } from './market-chart.js?v=20261015-quality';
+import { SIDES, createMarketChart, dayOf } from './market-chart.js?v=20261015-quality-estimates';
 import { dock } from './markets-dock.js';
 import { marketImage, pageDetails } from './market-export.js?v=20261015-shot';
 import { loadEvents as readEvents, eventsFor, lifecycleSpan, addEventDays } from './events.js';
@@ -186,13 +186,16 @@ function showLegend(day) {
     best = `<span class="note">not observed since ${esc(closes[before].serverDay)}</span>`;
   } else best = '<span class="note">not observed</span>';
   const stats = statisticsAt(view, day, side);
-  const average = !stats ? num(null) : stats.transactions ? fmt(stats.averagePrice) : 'no trades';
+  const estimated = stats && view.dailyByDay.get(day)?.provenance?.[side]?.kind === 'estimated';
+  const average = !stats || (stats.transactions && !Number.isSafeInteger(stats.averagePrice)) ? num(null)
+    : stats.transactions ? fmt(stats.averagePrice) : 'no trades';
   // The day's traded range beside its average, as a terminal reads a bar: the highest and lowest prices of the trades
   // that filled this side's offers. Read out only; never drawn, since a Buy low of 1 is common.
-  const range = stats?.transactions ? ` <span class="rest ohlc"><span><span class="meta-label">High</span> ${fmt(stats.highestPrice)}</span> <span><span class="meta-label">Low</span> ${fmt(stats.lowestPrice)}</span></span>` : '';
+  const range = stats?.transactions && !estimated ? ` <span class="rest ohlc"><span><span class="meta-label">High</span> ${fmt(stats.highestPrice)}</span> <span><span class="meta-label">Low</span> ${fmt(stats.lowestPrice)}</span></span>` : '';
+  const estimateTitle = 'Estimated from consecutive comparable 30-day counters; the outgoing day is approximated by the prior 30-day mean.';
   $('legend').innerHTML = `<span class="day">${esc(day)}</span> <span class="label"><i class="key key-dot"></i>${labels.offer}</span> ${best} `
-    + `<span class="label"><i class="key key-average"></i>Daily average</span> <b class="value">${average}</b>${range}`;
-  $('volumeLegend').innerHTML = ` <span class="label"><i class="key key-volume"></i>Transactions</span> <b class="value">${stats ? fmt(stats.transactions) : num(null)}</b>`;
+    + `<span class="label"${estimated ? ` title="${estimateTitle}"` : ''}><i class="key key-average"></i>${estimated ? 'Estimated daily average' : 'Daily average'}</span> <b class="value">${average}</b>${range}`;
+  $('volumeLegend').innerHTML = ` <span class="label"${estimated ? ` title="${estimateTitle}"` : ''}><i class="key key-volume"></i>${estimated ? 'Estimated transactions' : 'Transactions'}</span> <b class="value">${stats ? fmt(stats.transactions) : num(null)}</b>`;
   if (market.visible('projections') && view.projection) $('projectionLegend').innerHTML = projectionRow(view.projection[side]);
   if (rest) fitHead();
 }

@@ -43,6 +43,8 @@ test('the encoders keep absent days absent and name depth only where a capture c
   assert.equal(dailyTransactionSeries([]), null);
   assert.deepEqual(dailyTransactionSeries([{serverDay:'2026-02-27', sell:tx(5), buy:tx(0)}, {serverDay:'2026-03-02', buy:tx(7)}]),
     {first:'2026-02-27', sell:[5, null, null, null], buy:[0, null, null, 7]});
+  assert.deepEqual(dailyTransactionSeries([{serverDay:'2026-02-27',sell:tx(5),provenance:{sell:{kind:'estimated'}}}]),
+    {first:'2026-02-27',sell:[5],buy:[null],estimated:{sell:[0],buy:[]}});
   assert.equal(latestCapturedDepth([{sell:1, buy:1}]), null);
   assert.deepEqual(latestCapturedDepth([{capturedAtUtc:'a', serverDay:'d1', sellVolume:10, buyVolume:20}, {capturedAtUtc:'b', serverDay:'d2', sell:5, buy:4}]),
     {capturedAtUtc:'a', serverDay:'d1', sell:10, buy:20});
@@ -50,9 +52,10 @@ test('the encoders keep absent days absent and name depth only where a capture c
 
 test('transactions per day average only the days with a figure, inside the range', () => {
   const series = {first:'2026-01-01', sell:[10, null, 30, 0, 50], buy:[1, 1, 1, 1, 1]};
-  assert.deepEqual(transactionsOver(series, 'sell', null, '2026-01-05'), {perDay:90 / 4, days:4, total:90, first:'2026-01-01', last:'2026-01-05'});
+  assert.deepEqual(transactionsOver(series, 'sell', null, '2026-01-05'), {perDay:90 / 4, days:4,estimatedDays:0,total:90,first:'2026-01-01',last:'2026-01-05'});
   // A zero is a real day without trades; a null day is unobserved and does not count.
-  assert.deepEqual(transactionsOver(series, 'sell', '2026-01-02', '2026-01-04'), {perDay:15, days:2, total:30, first:'2026-01-03', last:'2026-01-04'});
+  assert.deepEqual(transactionsOver({...series,estimated:{sell:[2]}},'sell','2026-01-02','2026-01-04'),
+    {perDay:15,days:2,estimatedDays:1,total:30,first:'2026-01-03',last:'2026-01-04'});
   assert.equal(transactionsOver(series, 'sell', '2025-12-01', '2026-01-01').perDay, 10);
   assert.equal(transactionsOver(series, 'sell', '2026-01-02', '2026-01-02').perDay, null);
   assert.equal(transactionsOver(series, 'buy', '2026-02-01', '2026-03-01').days, 0);
@@ -80,6 +83,7 @@ test('every row matches the index and the world files for every side and range',
       // Transactions per day, straight from the world file's daily figures over the range.
       const days = marketValues(files.get(r.world)).daily.filter(d => (!r.start || d.serverDay >= r.start) && d.serverDay <= r.end && d[side]);
       assert.equal(r.txDays, days.length, `${r.world} ${side} ${range}`);
+      assert.equal(r.txEstimatedDays,days.filter(d=>d.provenance[side]?.kind==='estimated').length);
       if (days.length) assert.ok(Math.abs(r.txPerDay - days.reduce((t, d) => t + d[side].transactions, 0) / days.length) < 1e-9);
       else assert.equal(r.txPerDay, null);
       const depth = files.get(r.world).observations.findLast(o => 'sellVolume' in o || 'buyVolume' in o);

@@ -79,7 +79,7 @@ export function screenerPanel(root, { onOpen, onRange, onSide }) {
       : `<span class="screen-spark screen-none">${r.last === null ? 'No market data yet' : 'No best offer in this range'}</span>`;
     const tx = r.txPerDay === null
       ? { text: num(null), title: `No daily figures for the ${OFFER[side]} side in this range.` }
-      : { text: fmt(Math.round(r.txPerDay)), title: `Mean Number of Transactions per completed server day on the ${OFFER[side]} side, over the ${r.txDays} ${r.txDays === 1 ? 'day' : 'days'} with daily figures from ${r.txFirst} to ${r.txLast}. Raw activity counters; actual traded TC quantity is unknown.` };
+      : { text: fmt(Math.round(r.txPerDay)), title: `Mean Number of Transactions per server day on the ${OFFER[side]} side, over ${r.txDays} ${r.txDays === 1 ? 'day' : 'days'} with figures from ${r.txFirst} to ${r.txLast}.${r.txEstimatedDays ? ` Includes ${r.txEstimatedDays} explicitly estimated ${r.txEstimatedDays === 1 ? 'day' : 'days'} derived from consecutive 30-day counters.` : ''} Raw activity counters; actual traded TC quantity is unknown.` };
     const depth = r.depth === null
       ? { text: num(null), title: `No captured ${OFFER[side]} depth for ${r.world}.` }
       : { text: fmt(r.depth), title: `Captured ${OFFER[side]} Depth on server day ${r.depthDay}: Tibia Coins across every visible ${OFFER[side]} Offer of the latest capture that recorded it. Offer depth, not traded volume.` };
@@ -94,7 +94,7 @@ export function screenerPanel(root, { onOpen, onRange, onSide }) {
       <dl class="screen-stats">
         ${stat('Sell', num(r.sell), '', side === 'sell' ? 'on' : '')}${stat('Buy', num(r.buy), '', side === 'buy' ? 'on' : '')}
         ${stat('Spread', r.spread === null ? num(null) : fmt(r.spread), r.spread === null ? '' : `Best Sell Offer less Best Buy Offer: ${share.format(r.spread / r.sell)} of the Sell Offer`)}
-        ${stat('Tx/day', tx.text, tx.title)}${stat('Depth', depth.text, depth.title)}
+        ${stat(r.txEstimatedDays ? 'Est. Tx/day' : 'Tx/day', tx.text, tx.title)}${stat('Depth', depth.text, depth.title)}
       </dl>
       <span class="screen-meta">${meta}</span></a></li>`;
   }
