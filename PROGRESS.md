@@ -9,7 +9,7 @@ Latest user instructions authorize committing and pushing directly to GitHub mai
 - [x] Done — Phase 3 logic: linear Economy gap scan, shared cached price formatter/precision and theme access, popup/clock/poll timer cleanup, regression tests and reproducible development/CI gates.
 - [x] Done — Phase 4 verification: lint, strict boundary typecheck, 237 unit tests and all nine integrity/build checks; 17 affected Chrome browser suites. Economy/overviews/terminal/quality rerun in Chrome and WebKit after upstream integration and asset refresh; final contrast/terminal checks rerun in both engines. Screenshots inspected against TV_REF; dependency audit and 24-release integrity verification pass.
 - [x] Done — reviewable commits and CHANGES.md record implementation, source gaps, retained domain constants, risks and verification. Final diff reviewed; datasets and immutable histories preserved.
-- [ ] Pending — commit final refinements/documentation, push main normally and verify remote commit plus GitHub checks.
+- [x] Done — final refinements/documentation committed and pushed normally to main; remote 5f0cfd1d788c616289fe587a7926c4f9d8494f53 verified. GitHub CI run 38677383592 was pending at this checkpoint; hosted result is reported in the final delivery.
 
 Resume at first unchecked item. Prior Documents-copy drafts were superseded and removed without changing the user's edits. Browser plugin absent; used the existing Playwright workflow. Screenshots: /tmp/tibinance-quality-final-shots/. Production release/0024 remains unchanged.
 
