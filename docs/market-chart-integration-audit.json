@@ -1,11 +1,11 @@
 {
   "worlds": 116,
-  "observations": 13322,
+  "observations": 13372,
   "dailyAcquisitionReports": 46009,
-  "rollingStatisticsObservations": 12338,
+  "rollingStatisticsObservations": 12363,
   "sourceCounts": {
     "tibiamarket": 12780,
-    "screenshot": 542
+    "screenshot": 592
   },
   "qualification": "Daily reports only. Rolling last-30-days Statistics are not eligible for daily series, independent of source.",
   "selection": "Latest acquisition timestamp per side and completed reference day; conflicting equal timestamps fail explicitly.",
@@ -16,8 +16,8 @@
       "highestPrice": 90788,
       "lowestPrice": 90788,
       "dailyAveragePoints": 90408,
-      "bestSell": 12762,
-      "bestBuy": 12762
+      "bestSell": 12787,
+      "bestBuy": 12787
     },
     "after": {
       "transactions": 90832,
@@ -25,8 +25,8 @@
       "highestPrice": 90832,
       "lowestPrice": 90832,
       "dailyAveragePoints": 90452,
-      "bestSell": 12762,
-      "bestBuy": 12762
+      "bestSell": 12787,
+      "bestBuy": 12787
     }
   },
   "affectedWorlds": 5,
