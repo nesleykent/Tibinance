@@ -1,35 +1,31 @@
 {
-  "filesScanned": 1786,
-  "imageFiles": 1785,
-  "eligibleScreenshots": 621,
-  "uniqueEligible": 581,
-  "duplicates": 40,
+  "filesScanned": 76,
+  "imageFiles": 75,
+  "eligibleScreenshots": 50,
+  "uniqueEligible": 50,
+  "duplicates": 0,
   "statuses": {
-    "ready": 544,
-    "excluded_manual": 5,
-    "excluded_other_item": 3,
-    "excluded_market": 29
+    "ready": 50
   },
   "views": {
-    "offers": 466,
-    "unidentified": 37,
-    "statistics": 78
+    "offers": 25,
+    "statistics": 25
   },
-  "capturesAccepted": 544,
+  "capturesAccepted": 50,
   "capturesRequiringReview": 0,
   "runtimeFailures": 0,
-  "offerExtractionsAttempted": 466,
-  "statisticsExtractionsAttempted": 78,
-  "offerCaptures": 466,
-  "statisticsCaptures": 78,
-  "offerRows": 8193,
-  "uniqueOffers": 5945,
-  "statisticsRecords": 78,
-  "statisticsSideRecords": 156,
-  "filenameRejected": 1164,
+  "offerExtractionsAttempted": 25,
+  "statisticsExtractionsAttempted": 25,
+  "offerCaptures": 25,
+  "statisticsCaptures": 25,
+  "offerRows": 471,
+  "uniqueOffers": 471,
+  "statisticsRecords": 25,
+  "statisticsSideRecords": 50,
+  "filenameRejected": 25,
   "chronologicalRange": {
-    "oldest": "2024-10-10T21:23:56.092",
-    "newest": "2026-10-05T00:14:08.499"
+    "oldest": "2026-10-15T00:06:53.584",
+    "newest": "2026-10-15T00:12:31.065"
   },
   "captureTimeZone": "America/Sao_Paulo",
   "checksPassed": [

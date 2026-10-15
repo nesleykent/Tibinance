@@ -1,8 +1,8 @@
 {
  "chain": {
-  "evaluations": 10,
-  "head": "f5d2ef86368bca195c671fc642a4de8e34bed126539c8418ac20ca6373fcbd91",
-  "records": 61
+  "evaluations": 14,
+  "head": "f16803d14c277638c0592421705d9e08ac8aa109b8cda58cd0aedcfae8f84678",
+  "records": 62
  },
  "forecasts": [
   {
@@ -166,8 +166,8 @@
       "coverage": 0.9,
       "mape": 3.502640795345786,
       "n": 50,
-      "observationCutoff": "2026-10-14",
-      "record": "33d2d3f1f73d689ec6d367528ec393558872d159ec41795b1d9614a40986a220",
+      "observationCutoff": "2026-10-15",
+      "record": "e43a212b423713a19311dc4b1c79c3e6211acc16cd22bbfcf9d7434a45a806b9",
       "weekEnding": "2026-10-11"
      }
     ]
@@ -308,8 +308,8 @@
       "coverage": 0.8653846153846154,
       "mape": 3.751225867519157,
       "n": 52,
-      "observationCutoff": "2026-10-14",
-      "record": "28418fc7a410d382410a27ce3368074d3a01f20702e812c14e8ba28fd7227897",
+      "observationCutoff": "2026-10-15",
+      "record": "6b1b4d41fac76e2e6c7bca31b18e04f9b997fec150eba3e0db0cd1c5fdaa0421",
       "weekEnding": "2026-10-11"
      }
     ]
@@ -720,6 +720,10 @@
     {
      "sha256": "5b3f50741f9e1fa0426891c5ad382ed1c2622d33847e11e42697b4584e082e0f",
      "surface": "markets-projections"
+    },
+    {
+     "sha256": "b218bccd0e8751ac821a615fef22afc9d70230d3f5a02555ce1bcbc7c7d755dd",
+     "surface": "markets-projections"
     }
    ],
    "product": "tc-world-scenarios",
@@ -1043,6 +1047,22 @@
    "forecast": "073bbb981ac794ad3c0c6b6bdedaac74596517ad16b0f0883a916e89d52ab04f",
    "sha256": "5b3f50741f9e1fa0426891c5ad382ed1c2622d33847e11e42697b4584e082e0f",
    "state": "published",
+   "superseded": false,
+   "supersededBy": null,
+   "surface": "markets-projections"
+  },
+  {
+   "contentHash": "f808e5fc7aa65915c3bfa462fbbe091f79c2a760a58070a0628d56bdb3bfad76",
+   "edition": "tc-world-scenarios/2026-10-05",
+   "evidence": {
+    "repository": null,
+    "website": null
+   },
+   "evidenceLevel": null,
+   "failures": [],
+   "forecast": "073bbb981ac794ad3c0c6b6bdedaac74596517ad16b0f0883a916e89d52ab04f",
+   "sha256": "b218bccd0e8751ac821a615fef22afc9d70230d3f5a02555ce1bcbc7c7d755dd",
+   "state": "archived",
    "superseded": false,
    "supersededBy": null,
    "surface": "markets-projections"
