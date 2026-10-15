@@ -1,14 +1,14 @@
 {
  "format": 1,
- "note": "Release Tibia Token currency conversions, purchasing-cost comparisons and dated history. Verified calculations, persistence, Chrome/WebKit layouts, accessibility and GitHub CI.",
- "approver": "Codex, production deployment explicitly authorized by user",
+ "note": "Integrate all currency and purchasing-cost series into the original TIB chart. Remove the separate screen and stylesheet. Verified original tools/export, 261 tests, Chrome/WebKit, responsive legend clearance and source-date consistency.",
+ "approver": "Codex, user-authorized correction and production deployment",
  "artifact": {
-  "bytes": 142046050,
-  "digest": "4e4ab77f9f90c99bcded178d33b067c8f864bf9776e2e646adca4fc433528d65",
-  "files": 991
+  "bytes": 142045231,
+  "digest": "a6126ef84918d117d6cd33cf3ee54667e1631e0eb693db3d4f397f46121acd98",
+  "files": 990
  },
- "commit": "462b3073c6ef144a3a7301cc570dd17fde51d8f3",
- "createdAt": "2026-10-15T16:14:15.947Z",
+ "commit": "cd4b7a8f2210cb7ea3b1ac89b5364b57ba9b5109",
+ "createdAt": "2026-10-15T16:49:16.361Z",
  "kind": "full",
  "policy": {
   "dataPaths": [
@@ -36,10 +36,10 @@
  },
  "policySha256": "68d95fbce8c90529b2ad839b7a8572e131b797cf430968bb4a64d90eb2bd0de5",
  "source": {
-  "commit": "462b3073c6ef144a3a7301cc570dd17fde51d8f3"
+  "commit": "cd4b7a8f2210cb7ea3b1ac89b5364b57ba9b5109"
  },
- "tag": "release/0045",
- "tree": "27d8a7bda6d4d558dcbb04e97464e5985ffd7c89",
+ "tag": "release/0046",
+ "tree": "26cdcf29f5f2fad6372b1ace2c04d8a399406c6b",
  "validation": {
   "checks": [
    {
@@ -84,12 +84,12 @@
    }
   ],
   "validator": {
-   "commit": "462b3073c6ef144a3a7301cc570dd17fde51d8f3",
+   "commit": "cd4b7a8f2210cb7ea3b1ac89b5364b57ba9b5109",
    "path": "tools/ci/validate_site.mjs"
   }
  },
  "record": {
-  "seq": 40,
-  "hash": "860e024a836279409050a220c61060703cb282582ea9504be671ca430ae92adc"
+  "seq": 41,
+  "hash": "1fcef61936ef1e3adf45687512b61b8749b204d09ce254d9cd5027027c23665a"
  }
 }
