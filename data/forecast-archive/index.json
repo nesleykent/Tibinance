@@ -1,8 +1,8 @@
 {
  "chain": {
   "evaluations": 18,
-  "head": "a49356d0fce9dbafdeab0ad22923391360098ce791b5a9b88995ed55f59b8a05",
-  "records": 91
+  "head": "3135d4a16cb42b0df352901988ec45be7da6e263575f2fc89c18ad6c3cd4308b",
+  "records": 92
  },
  "forecasts": [
   {
@@ -1446,13 +1446,19 @@
    "edition": "tc-world-scenarios/2026-10-15",
    "evidence": {
     "repository": null,
-    "website": null
+    "website": {
+     "at": "2026-10-15T08:56:26Z",
+     "basis": "github-pages-deployment-success",
+     "deployment": 7088266656,
+     "release": "release/0042",
+     "uncertainty": "time of the successful deployment status; caches may serve the previous site for a few minutes"
+    }
    },
-   "evidenceLevel": null,
+   "evidenceLevel": "website",
    "failures": [],
    "forecast": "29adf6a097e2876da11ee71594f567b87426f9292e989dccc87a455baf8cc858",
    "sha256": "4c06ee2cf2edb860cf862fb7fd05b5483bf65bfc6aa3b7040fbe389d47b60b92",
-   "state": "archived",
+   "state": "published",
    "superseded": false,
    "supersededBy": null,
    "surface": "markets-projections"
