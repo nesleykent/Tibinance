@@ -48,6 +48,8 @@ try {
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   page.on('console',m=>{if(m.type()==='error' && !(expectedFailures.has(m.location().url) && /503|ERR_FAILED/.test(m.text()))) errors.push(m.text());});
   await page.route('**/data/observations.json',r=>r.fulfill({json:[]}));
+  // Characters online come live from TibiaData; a fixed answer keeps the checks offline.
+  await page.route('https://api.tibiadata.com/v4/worlds',r=>r.fulfill({json:{worlds:{players_online:12345,regular_worlds:[{name:'Antica',players_online:178}]}},headers:{'access-control-allow-origin':'*'}}));
   const text=sel=>page.$eval(sel,e=>e.innerText.trim().replace(/\s+/g,' '));
   const ready=()=>page.waitForFunction(()=>document.getElementById('economy').getAttribute('aria-busy')==='false',{timeout:60000});
   const param=name=>new URL(page.url()).searchParams.get(name);
@@ -153,6 +155,7 @@ try {
     assert.equal(await text('#measurePrice'),gold([...prices.values()].at(-1).sell));
     assert.match(await text('#legend'),/daily world medians; [\d,]+ worlds, [\d,]+ world-days/);
 
+    assert.match(await text('#detailNote'),/Characters online 12,345/,'All reads every world online, live');
     assert.ok((await text('#detailNote')).includes(`${total.last.worldDaysCovered.toLocaleString('en-US')}/${total.last.worldDays.toLocaleString('en-US')} world-days`));
   }
   const globalPriceWindow=await page.evaluate(()=>window.economyTestCharts[0].timeScale().getVisibleLogicalRange());

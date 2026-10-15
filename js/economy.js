@@ -331,6 +331,22 @@ function drawWatchlist() {
 }
 
 /* ----------------------------------------------------------------- details */
+// Characters online now, read live from TibiaData (api.tibiadata.com/v4/worlds, tibia.com's world list, CORS *):
+// {at, total, worlds: Map(name -> count)}, refreshed every five minutes while the page is open. Null until it answers
+// or when it fails; the details then fall back to the stored TibiaVIP observation, with its date.
+let online = null;
+async function loadOnline() {
+  try {
+    const r = await fetch('https://api.tibiadata.com/v4/worlds');
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const w = (await r.json()).worlds ?? {};
+    online = { at: new Date(), total: w.players_online, worlds: new Map((w.regular_worlds ?? []).map(x => [x.name, x.players_online])) };
+    if (view) showDetails();
+  } catch (error) { console.warn('Characters online are unavailable from TibiaData.', error); }
+}
+loadOnline();
+setInterval(loadOnline, 5 * 60 * 1000);
+
 function showDetails() {
   const active = document.activeElement;
   const focusedRange = active.closest('#detailPerformance button')?.dataset.range;
@@ -343,7 +359,8 @@ function showDetails() {
   // The range alone after the change, as the chart's legend writes it; the caption below says what the figure is.
   $('detailChangeLabel').textContent = change ? state.range : `${state.range}: not enough complete periods`;
   $('detailChangeLabel').title = `Change over ${state.range}`;
-  const online = data.vip?.observations.find(o => o.world === state.world && o.metric === 'characters-online');
+  const live = online && (state.world === 'All' ? online.total : online.worlds.get(state.world));
+  const stored = data.vip?.observations.find(o => o.world === state.world && o.metric === 'characters-online');
   // Key stats, as TradingView lists a symbol's: a label at the left, the figure at the right.
   const stat = (label, value, title = '') => `<div${title ? ` title="${esc(title)}"` : ''}><dt>${label}</dt><dd>${value}</dd></div>`;
   const unit = UNIT[state.interval];
@@ -355,7 +372,8 @@ function showDetails() {
     stat('Kill days', `${esc(s.first)} to ${esc(s.last)}`),
     stat('Days with data', `${fmt(s.observed + s.recovered)} of ${fmt(s.observed + s.recovered + s.missing)}`,
       `${fmt(s.observed)} observed, ${fmt(s.recovered)} recovered exactly, ${fmt(s.missing)} missing`),
-    online && stat('Characters online', fmt(online.value), `TibiaVIP, ${data.vip.observedAt.slice(0, 10)}, at one instant`),
+    Number.isFinite(live) ? stat('Characters online', fmt(live), `Now, from tibia.com through TibiaData, read at ${online.at.toTimeString().slice(0, 5)}`)
+      : stored && stat(`Characters online, ${esc(data.vip.observedAt.slice(0, 10))}`, fmt(stored.value), 'TibiaVIP, at one instant; the live count is unavailable'),
   ].filter(Boolean).join('');
   $('detailCoins').textContent = p ? gold(p.rate.directCoins) : 'N/A';
   $('detailNpc').textContent = p ? gold(p.rate.npcPotential) : 'N/A';

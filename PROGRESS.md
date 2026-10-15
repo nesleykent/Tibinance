@@ -42,6 +42,7 @@
 - **Rebased on release/0016 (data sync):** the projections test measured "markers stay in the history" against Secura's anchor (2026-10-04); the history now runs to 2026-10-14, so past events (10-09, 10-12) stand after the anchor, failing on 0016's own code too. The boundary is now the history's last day.
 - **Released:** release/0017 (`5fb7612`, full, 956 files); CI and Pages PASS. The forecast archive then published release/0018 (data, on 0017); verify-live --all PASS against 0018. Live Top stories load from TibiaData on github.io.
 - **Event popup (owner: "o popup dos events ta bugado qnd clica neles"):** the tip sat at z-index 3, under the legend and the marker strip (4), so it showed through or not at all, and a 14-event group grew to the window's height. Now z-index 25 in the terminal (under the header menus), at most 420px with its own scroll, reset on each marker, and clicks inside it keep it open. Economy test: TC prices are plotted on the gold data's periods, so it no longer expects a market day after the gold data's last (data sync of 0016).
+- **Characters online (owner):** was the stored TibiaVIP snapshot; now live from TibiaData /v4/worlds (world count, or the total for All), refreshed every 5 minutes; the snapshot, dated, only if TibiaData fails. Economy test routes a fixture.
 - **Exact next step:** none; await the owner's review.
 
 ---
