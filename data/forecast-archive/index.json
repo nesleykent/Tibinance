@@ -1,8 +1,8 @@
 {
  "chain": {
   "evaluations": 18,
-  "head": "2238369639565cc3b0dc067df58fd28ce96bab496a64a942cc2c0ad78efd7812",
-  "records": 88
+  "head": "b9fab06094f6691d197d1ae3a2bc52fb8bc8cb18626c6ceb4983c700fa5ffede",
+  "records": 89
  },
  "forecasts": [
   {
@@ -1004,6 +1004,57 @@
    "superseded": false,
    "supersededBy": null,
    "target": "weekly median of daily offers in the week ending on the Sunday that holds the target date"
+  },
+  {
+   "archiveBasis": "generation",
+   "archivedAt": "2026-10-15T08:39:50+00:00",
+   "contentHash": "791bcd28f00abf26654af9c0f952cca5b806e6477a2feb3f701c1f02f9e2386d",
+   "createdAt": {
+    "basis": "generation time",
+    "value": "2026-10-15T08:39:50+00:00"
+   },
+   "dataCutoff": "2026-10-15",
+   "edition": "tc-gold-challenger/2026-10-15/2026-10-11",
+   "evaluation": {
+    "points": 0,
+    "weeks": []
+   },
+   "evidence": {
+    "repository": null,
+    "website": null
+   },
+   "evidenceLevel": null,
+   "failures": [],
+   "horizon": {
+    "stepDays": 7,
+    "steps": 3,
+    "unit": "week",
+    "weeks": [
+     1,
+     4,
+     13
+    ]
+   },
+   "inputs": "ef5c32a0c365fa423fdec728a2c76343a1d8b2796188882eee0c44362584ebec",
+   "interval": "none",
+   "model": {
+    "id": "E gold challenger",
+    "version": "b1553583415ea45118843aabcd7c88de06dea48e91203874262b1998f47ebb30"
+   },
+   "outputs": "705dd689defad6b51b056e38550346f09461356d0abf46a459e61ea4a21ae8c9",
+   "presentations": [],
+   "product": "tc-gold-challenger",
+   "provenance": "authentic",
+   "reproducibility": {
+    "missing": [],
+    "prediction": "complete inputs (tools/forecasts/reproduce.py rebuilds the outputs)",
+    "research": "from this repository at codeCommit with the economy caches rebuilt (PROGRESS.md)"
+   },
+   "seq": 89,
+   "state": "archived",
+   "superseded": false,
+   "supersededBy": null,
+   "target": "Weekly median of daily Sell Offers (API daily median; capture median only on days without one) for the Monday to Sunday week that holds the target date; the Research scoring rule"
   }
  ],
  "format": 1,
