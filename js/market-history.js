@@ -154,55 +154,61 @@ export function latestDailyStatistics(reports) {
 
 const ESTIMATE_WINDOW_DAYS = 30;
 
-// The completed day entering a rolling 30-day window. A rolling observation on server day S covers the completed
-// days S-30 to S-1, so two consecutive observations S-1 and S differ by day S-1 coming in and day S-31 leaving:
-//   D(S-1) = T(S) - T(S-1) + D(S-31), and the same for transactions x Average Price (the average is weighted).
-// When D(S-31) has a daily report (`daily`), the day is reconstructed: across all worlds 99.98% of 5,504 checks equal
-// the reported count, averages within 0.3% at the median. Otherwise the leaving day is approximated by the prior
-// window mean and the day is an estimate (about 12% from the reported count at the median). Both remain a separate
-// record type, never a daily observation.
+// Daily values recovered from rolling 30-day Statistics. A rolling reading on server day S covers the completed days
+// S-30 to S-1 and only changes at the server save, so any two readings a < b (at most 30 days apart, any clock time) give
+//   D(a) + ... + D(b-1) = T(b) - T(a) + D(a-30) + ... + D(b-31)
+// and the same for transactions x Average Price (the average is transaction-weighted). Days in a..b-1 with a daily
+// report are subtracted; what remains belongs to the days without one.
+//   rolling-30d-reconstructed  one day is missing and every day leaving the window is known: exact (99.98% of 5,504
+//                              checks equal the reported count, averages within 0.3% at the median)
+//   rolling-30d-mean-outflow   otherwise: an unknown leaving day is taken as T(a)/30 at the window average, and the
+//                              remainder is shared evenly between the missing days (about 12% off at the median)
+// Recovered days count as known for later intervals only when reconstructed. Never a daily observation.
 export function estimateDailyStatistics(observations, daily = []) {
-  const byDay = new Map(), reported = new Map(daily.map(d => [d.serverDay, d]));
-  for (const observation of observations ?? []) {
-    if (!observation.statistics30d) continue;
-    byDay.set(observation.serverDay, [...(byDay.get(observation.serverDay) ?? []), observation]);
-  }
+  const byDay = new Map();
+  for (const observation of observations ?? []) if (observation.statistics30d) byDay.set(observation.serverDay, observation);
   const days = [...byDay.keys()].sort();
-  const estimates = [];
+  const known = new Map(daily.map(d => [d.serverDay, d])), estimates = new Map();
+  const knownSide = (day, name) => known.get(day)?.[name] ?? (estimates.get(day)?.provenance[name]?.method === 'rolling-30d-reconstructed' ? estimates.get(day)[name] : null);
+  const exactValue = side => side.transactions === 0 || Number.isSafeInteger(side.averagePrice);
   for (let i = 1; i < days.length; i++) {
-    if (addDays(days[i - 1], 1) !== days[i]) continue;
-    const pairs = byDay.get(days[i - 1]).flatMap(previous => byDay.get(days[i]).map(current => ({ previous, current,
-      intervalHours: (Date.parse(current.capturedAtUtc) - Date.parse(previous.capturedAtUtc)) / 3600000 })));
-    // The rolling counters change only at the server save (137 same-day repeats across worlds, all identical), so any
-    // capture on each of two consecutive server days is comparable, whatever the clock time.
-    const pair = pairs
-      .sort((a, b) => Math.abs(a.intervalHours - 24) - Math.abs(b.intervalHours - 24)
-        || b.current.capturedAtUtc.localeCompare(a.current.capturedAtUtc))[0];
-    if (!pair) continue;
-    const { previous, current, intervalHours } = pair;
-    const estimate = { serverDay: previous.serverDay, provenance: {} };
-    const leaving = reported.get(addDays(previous.serverDay, -ESTIMATE_WINDOW_DAYS));
+    const previous = byDay.get(days[i - 1]), current = byDay.get(days[i]);
+    const span = Math.round((Date.parse(`${days[i]}T00:00:00Z`) - Date.parse(`${days[i - 1]}T00:00:00Z`)) / 86400000);
+    if (span > ESTIMATE_WINDOW_DAYS) continue;
+    const entering = Array.from({ length: span }, (_, k) => addDays(days[i - 1], k));
     for (const name of ['buy', 'sell']) {
       const before = previous.statistics30d[name], after = current.statistics30d[name];
       if (!before || !after) continue;
-      const out = leaving?.[name], exact = Boolean(out) && (out.transactions === 0 || Number.isSafeInteger(out.averagePrice));
-      const outCount = exact ? out.transactions : before.transactions / ESTIMATE_WINDOW_DAYS;
-      const outValue = exact ? (out.transactions ? out.transactions * out.averagePrice : 0) : outCount * before.averagePrice;
-      const estimatedTransactions = after.transactions - before.transactions + outCount;
-      if (!Number.isFinite(estimatedTransactions) || estimatedTransactions < 0) continue;
-      const side = { transactions: Math.round(estimatedTransactions) };
-      if (estimatedTransactions > 0) {
-        const estimatedAverage = (after.transactions * after.averagePrice - before.transactions * before.averagePrice + outValue) / estimatedTransactions;
-        const low = Math.min(before.lowestPrice, after.lowestPrice), high = Math.max(before.highestPrice, after.highestPrice);
-        if (Number.isFinite(estimatedAverage) && estimatedAverage >= low && estimatedAverage <= high) side.averagePrice = Math.round(estimatedAverage);
+      const missing = entering.filter(day => !knownSide(day, name));
+      if (!missing.length) continue;
+      let count = after.transactions - before.transactions, value = after.transactions * after.averagePrice - before.transactions * before.averagePrice;
+      let exact = missing.length === 1;
+      for (const day of entering) {
+        const leaving = knownSide(addDays(day, -ESTIMATE_WINDOW_DAYS), name);
+        if (leaving && exactValue(leaving)) { count += leaving.transactions; value += leaving.transactions ? leaving.transactions * leaving.averagePrice : 0; }
+        else { exact = false; count += before.transactions / ESTIMATE_WINDOW_DAYS; value += before.transactions / ESTIMATE_WINDOW_DAYS * before.averagePrice; }
+        const reported = knownSide(day, name);
+        if (reported) {
+          if (!exactValue(reported)) exact = false;
+          count -= reported.transactions; value -= reported.transactions ? reported.transactions * (reported.averagePrice ?? before.averagePrice) : 0;
+        }
       }
-      estimate[name] = side;
-      estimate.provenance[name] = { kind: 'estimated', method: exact ? 'rolling-30d-reconstructed' : 'rolling-30d-mean-outflow',
-        windowDays: ESTIMATE_WINDOW_DAYS, previousCapturedAtUtc: previous.capturedAtUtc, capturedAtUtc: current.capturedAtUtc, intervalHours };
+      if (!Number.isFinite(count) || count < 0) continue;
+      const perDay = count / missing.length, low = Math.min(before.lowestPrice, after.lowestPrice), high = Math.max(before.highestPrice, after.highestPrice);
+      const average = count > 0 ? value / count : null;
+      for (const day of missing) {
+        const side = { transactions: Math.round(perDay) };
+        if (side.transactions > 0 && Number.isFinite(average) && average >= low && average <= high) side.averagePrice = Math.round(average);
+        const estimate = estimates.get(day) ?? { serverDay: day, provenance: {} };
+        estimate[name] = side;
+        estimate.provenance[name] = { kind: 'estimated', method: exact ? 'rolling-30d-reconstructed' : 'rolling-30d-mean-outflow',
+          windowDays: ESTIMATE_WINDOW_DAYS, previousCapturedAtUtc: previous.capturedAtUtc, capturedAtUtc: current.capturedAtUtc,
+          intervalDays: span, ...(missing.length > 1 ? { sharedWithDays: missing.length } : {}) };
+        estimates.set(day, estimate);
+      }
     }
-    if (estimate.buy || estimate.sell) estimates.push(estimate);
   }
-  return estimates;
+  return [...estimates.values()].sort((x, y) => x.serverDay.localeCompare(y.serverDay));
 }
 
 // Daily acquisition reports are authoritative. Estimates only supplement a

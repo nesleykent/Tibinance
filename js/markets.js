@@ -194,8 +194,9 @@ function showLegend(day) {
   const range = stats?.transactions && !estimated ? ` <span class="rest ohlc"><span><span class="meta-label">High</span> ${fmt(stats.highestPrice)}</span> <span><span class="meta-label">Low</span> ${fmt(stats.lowestPrice)}</span></span>` : '';
   const reconstructed = estimated && view.dailyByDay.get(day).provenance[side].method === 'rolling-30d-reconstructed';
   const estimateTitle = reconstructed
-    ? 'Reconstructed from consecutive 30-day counters and the reported day that left the window.'
-    : 'Estimated from consecutive comparable 30-day counters; the outgoing day is approximated by the prior 30-day mean.';
+    ? 'Reconstructed from two 30-day counters, the reported days between them and the reported days that left the window.'
+    : `Estimated from two 30-day counters; days leaving the window without a report are approximated by the 30-day mean${
+      view.dailyByDay.get(day)?.provenance?.[side]?.sharedWithDays ? `, and the interval is shared evenly over ${view.dailyByDay.get(day).provenance[side].sharedWithDays} days without a report` : ''}.`;
   const kind = reconstructed ? 'Reconstructed' : 'Estimated';
   $('legend').innerHTML = `<span class="day">${esc(day)}</span> <span class="label"><i class="key key-dot"></i>${labels.offer}</span> ${best} `
     + `<span class="label"${estimated ? ` title="${estimateTitle}"` : ''}><i class="key key-average"></i>${estimated ? `${kind} daily average` : 'Daily average'}</span> <b class="value">${average}</b>${range}`;
