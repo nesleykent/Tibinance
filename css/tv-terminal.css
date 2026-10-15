@@ -319,9 +319,8 @@ body.tv-app h1,body.tv-app h2,body.tv-app h3,body.tv-app h4 { font-family:var(--
 .tv-terminal #measure { gap:var(--tv-size-4); padding:0; border-radius:0; background:none; }
 .tv-terminal #measure button { --m:var(--tv-text-2); display:inline-flex; flex-direction:row; align-items:center; gap:var(--tv-size-6); min-height:var(--tv-size-26); padding:0 var(--tv-size-8);
   border:var(--tv-size-1) solid var(--tv-border-hover); border-radius:var(--tv-size-4); background:var(--tv-pane); box-shadow:none; color:var(--tv-text-2); font:var(--tv-size-13) var(--tv-font); }
-.tv-terminal #measure button::before { content:""; flex:none; width:var(--tv-size-8); height:var(--tv-size-8); border:var(--tv-size-1_5) solid transparent; border-radius:0; background:linear-gradient(var(--m),var(--m)) center / 100% var(--tv-size-2) no-repeat content-box; opacity:.55; }
+.tv-terminal #measure button::before { content:none; }
 .tv-terminal #measure button[aria-pressed="true"] { border-color:var(--m); color:var(--tv-text); font-weight:var(--tv-weight-400); }
-.tv-terminal #measure button[aria-pressed="true"]::before { opacity:1; }
 .tv-terminal #measure button[aria-pressed="true"] :is(.side-name,.side-value) { color:var(--tv-text); }
 .tv-terminal #measure button:not([aria-pressed="true"]):hover { background:var(--tv-btn-hover); }
 .tv-terminal #measure .side-name { color:inherit; font-size:var(--tv-size-13); font-weight:var(--tv-weight-400); letter-spacing:0; text-transform:none; }
