@@ -205,6 +205,8 @@ body.tv-app h1,body.tv-app h2,body.tv-app h3,body.tv-app h4 { font-family:var(--
 #economy table.watch tr[data-world="All"] :is(th,td) { border-bottom:1px solid var(--tv-border); }
 .tv-terminal .watch-tip,.tv-terminal .event-tip { border:0; border-radius:4px; background:var(--tv-tooltip); color:#fff; box-shadow:var(--tv-shadow); font-size:13px; }
 .tv-terminal .event-tip :is(.event-tip-days,.event-tip-text) { color:rgb(255 255 255 / .7); }
+/* Above the chart's layers (legend, marker strip), under the header's menus; a long list scrolls inside it. */
+.tv-terminal .event-tip { z-index:25; max-height:min(420px, calc(100dvh - 24px)); overflow-y:auto; overscroll-behavior:contain; }
 
 /* The details widget, under the list, as TradingView's symbol details: a widget of its own (the page's gap above it),
    16px side padding. The symbol and its facts, dotted apart; the quote at 28px with its change on a 16px line and

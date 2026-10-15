@@ -9,7 +9,7 @@ import {mkdir,readFile} from 'node:fs/promises';
 import {join} from 'node:path';
 import assert from 'node:assert/strict';
 import {fmt} from '../js/format.js';
-import {MEASURES,ratePeriods,rangeChange,contributions,periodOf,rangeStartOf,sumPeriod,sellOfferPeriods} from '../js/economy-data.js';
+import {MEASURES,ratePeriods,rangeChange,contributions,periodOf,rangeStartOf,sumPeriod,sellOfferPeriods,lastDay} from '../js/economy-data.js';
 const require=createRequire(import.meta.url);
 const {chromium,webkit}=require(process.env.TIBINANCE_NODE_MODULES ? `${process.env.TIBINANCE_NODE_MODULES}/playwright` : 'playwright');
 const engine=process.env.TIBINANCE_BROWSER ?? 'chrome';
@@ -145,7 +145,9 @@ try {
     const total=await expected('all',interval,'gross','1Y');
     assert.equal(await text('#lastValue'),gold(total.value));
     assert.equal((await row('All'))[1],gold(total.value),'the global watchlist and chart agree');
-    const prices=sellOfferPeriods(globalMarket,interval);
+    // Prices stand on the gold data's periods: a market day after the gold data's last (syncs run apart) is not plotted.
+    const goldEnd=periodOf(lastDay(globalHistory),interval)[0];
+    const prices=new Map([...sellOfferPeriods(globalMarket,interval)].filter(([start])=>start<=goldEnd));
     const plotted=await page.evaluate(()=>window.economyTestSeries[1].data().filter(p=>Number.isFinite(p.value)).map(p=>[p.time,p.value]));
     assert.deepEqual(plotted,[...prices].map(([day,p])=>[day,p.sell]),`${interval}: All plots global TC medians`);
     assert.equal(await text('#measurePrice'),gold([...prices.values()].at(-1).sell));

@@ -62,6 +62,7 @@ export function eventMarks({ chart, part, strip, tip }) {
       + `<b class="event-tip-title"><i class="event-tip-mark" data-group="${esc(e.category.group)}">${esc(e.category.mark)}</i>${esc(e.title)}</b>`
       + `<span class="event-tip-text">${esc(e.description)}</span></div>`).join('');
     tip.hidden = false;
+    tip.scrollTop = 0;
     position(button);
     part.setActive(key);
   }
@@ -103,7 +104,7 @@ export function eventMarks({ chart, part, strip, tip }) {
     e.preventDefault();
     buttons.get(groups[to].key).focus();
   });
-  document.addEventListener('pointerdown', e => { if (pinned && !strip.contains(e.target)) hide(); });
+  document.addEventListener('pointerdown', e => { if (pinned && !strip.contains(e.target) && !tip.contains(e.target)) hide(); });
   new ResizeObserver(place).observe(strip.parentElement);
   addEventListener('scroll', () => shown && position(buttons.get(shown)), { passive: true });
   part.onLayout(render);

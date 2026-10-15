@@ -22,7 +22,7 @@ import { dock } from './markets-dock.js';
 import { marketImage } from './market-export.js?v=20261014-events';
 import { loadEvents as readEvents, eventsFor, lifecycleSpan, addEventDays } from './events.js';
 import { eventsPanel } from './market-events-panel.js?v=20261014-rebuild';
-import { eventMarks } from './market-events-ui.js?v=20261014-events';
+import { eventMarks } from './market-events-ui.js?v=20261015-tip';
 import { PROJECTIONS, forwardEnd, pointText, projectionFor, weekOf } from './market-projections.js';
 import { screenerPanel } from './market-screener-panel.js?v=20261014-review';
 import { historyPanel } from './market-forecast-history.js?v=20261014-rebuild';

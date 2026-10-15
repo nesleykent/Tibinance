@@ -18,7 +18,7 @@ import { MEASURES, INTERVALS, ratePeriods, accumulatedPeriods, rangeChange, rang
 import { economyChart, colors } from './economy-chart.js?v=20261014-events';
 import { connect, changed } from './tv-bridge.js';
 import { loadEvents, eventsFor, within } from './events.js';
-import { eventMarks } from './market-events-ui.js?v=20261014-events';
+import { eventMarks } from './market-events-ui.js?v=20261015-tip';
 
 const $ = id => document.getElementById(id);
 const RANGES = ['1M', '3M', '6M', 'YTD', '1Y', 'All'];
