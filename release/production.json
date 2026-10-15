@@ -1,26 +1,43 @@
 {
  "format": 1,
  "note": "",
- "approver": "GitHub Actions forecast archive (validated data release)",
+ "approver": "Owner standing approval (publish-to-main); Claude verified 243 JS tests, validate_site 9/9, D/W/M in browser",
  "artifact": {
-  "bytes": 141815672,
-  "digest": "d7399a991558dea48172480da3841db54c24946d3ebc8bfd39842868d875f235",
-  "files": 977
+  "bytes": 141825392,
+  "digest": "f677d0ff8b27dfc7fcaa7a57f00cb2cbfccbaa04105232986a67eb51b9a7e2ce",
+  "files": 978
  },
- "commit": "143eb4313bb549356509db18cbf70b4264e5b45f",
- "createdAt": "2026-10-15T08:32:02.401Z",
- "kind": "data",
+ "commit": "650b73ebccb89e2f8f5e04bf5ea9b5f7344d296a",
+ "createdAt": "2026-10-15T08:39:59.528Z",
+ "kind": "full",
+ "policy": {
+  "dataPaths": [
+   "data/observations.json",
+   "data/observations.csv",
+   "data/offer-observations.csv",
+   "data/market-update-*.json",
+   "data/rebuild-*.json",
+   "data/market-history/**",
+   "data/market-projections/**",
+   "data/events/events.json",
+   "data/forecast-archive/**",
+   "docs/market-chart-integration-audit.json",
+   "docs/rolling-activity-calculation.json",
+   "reports/tc-cycle/*.json",
+   "reports/tc-cycle/*.csv",
+   "reports/tc-cycle/forecast-ledger.jsonl",
+   "reports/tc-cycle/inputs/**",
+   "data/economy/**",
+   "reports/economy/results.json"
+  ],
+  "note": "Paths a data release may take from main. Everything else (pages, scripts, styles, tooling, docs) reaches production only through a full release, which also approves this file. Research outputs are forecast representations: a data release carrying them must pass the forecast-archive integrity check once the archive exists."
+ },
  "policySha256": "8598ea053fc9fba9189b10e9c9bbbd33f9b89b36ab503161a844995d81008ad9",
  "source": {
-  "base": {
-   "commit": "1789dc8e3b1fd98621bf41002ed3953f4576e7b3",
-   "tag": "release/0037"
-  },
-  "data": "516de2b9a52ebef0e3ff9c76f7a7fec1c9d3d093",
-  "policyFrom": "release/0037"
+  "commit": "650b73ebccb89e2f8f5e04bf5ea9b5f7344d296a"
  },
- "tag": "release/0038",
- "tree": "ce9b63b2c7009881002a2654a61fb31358ed9ad1",
+ "tag": "release/0039",
+ "tree": "1b24bed6fe91b6de2e4930133202e073f9608ef8",
  "validation": {
   "checks": [
    {
@@ -61,12 +78,12 @@
    }
   ],
   "validator": {
-   "commit": "516de2b9a52ebef0e3ff9c76f7a7fec1c9d3d093",
+   "commit": "650b73ebccb89e2f8f5e04bf5ea9b5f7344d296a",
    "path": "tools/ci/validate_site.mjs"
   }
  },
  "record": {
-  "seq": 33,
-  "hash": "b2975b235b0655e3c69514a759f83d93806f37a7eab8eca7840bb6ae15134803"
+  "seq": 34,
+  "hash": "24d8cd42a07139f8d738423880df7ab4f3ac6bff0ab50d44f5b82fa533ed809a"
  }
 }
