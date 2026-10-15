@@ -11,6 +11,7 @@
  * sums of every world, creatures), data/market-history/tibia-coin/index.json (world facts, daily Sell Offers),
  * reports/economy/results.json (findings), data/economy/ (sync and access status). The address keeps the view.
  */
+import { config } from './config.js';
 import { fmt, esc, num } from './format.js';
 import { dock } from './markets-dock.js';
 import { MEASURES, INTERVALS, ratePeriods, accumulatedPeriods, rangeChange, rangeStartOf, overviewRows, periodOf, contributions, lastDay, sellOfferPeriods,
@@ -40,14 +41,14 @@ const key = (cls, color) => `<i class="key ${cls}" style="--side:${color}"></i>`
 
 const params = new URLSearchParams(location.search);
 const state = {
-  world: params.get('world') || 'Antica',
+  world: params.get('world') || config.defaultWorld,
   measure: Object.hasOwn(MEASURES, params.get('measure')) ? params.get('measure') : 'gross',
   measures: params.has('series') ? [...new Set(params.get('series').split(',').filter(k => Object.hasOwn(MEASURES, k)))]
     : [Object.hasOwn(MEASURES, params.get('measure')) ? params.get('measure') : 'gross'],
   mode: params.get('mode') === 'accumulated' ? 'accumulated' : 'daily',
   kills: params.get('kills') !== '0',
   interval: INTERVALS.includes(params.get('interval')) ? params.get('interval') : 'week',
-  range: RANGES.includes(params.get('range')) ? params.get('range') : 'All',
+  range: RANGES.includes(params.get('range')) ? params.get('range') : config.economyRange,
   price: params.get('price') !== '0',
   rate: params.has('rate') && LIQUIDATION_SCENARIOS.includes(Number(params.get('rate'))) ? Number(params.get('rate')) : null,
   stable: params.get('stable') === '1',
@@ -108,7 +109,7 @@ function buildView(summary, daily, contrib) {
 }
 
 async function select(world, { focus = false } = {}) {
-  const summary = summaryOf(world) ?? summaryOf('Antica');
+  const summary = summaryOf(world) ?? summaryOf(config.defaultWorld) ?? data.index.worlds[0];
   const mine = ++request;
   pendingWorld = summary.world; retryWorld = null;
   const retryFocused = document.activeElement === $('retry');
@@ -338,7 +339,7 @@ function drawWatchlist() {
 let online = null;
 async function loadOnline() {
   try {
-    const r = await fetch('https://api.tibiadata.com/v4/worlds');
+    const r = await fetch(`${config.apiBaseUrl}/worlds`);
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const w = (await r.json()).worlds ?? {};
     online = { at: new Date(), total: w.players_online, worlds: new Map((w.regular_worlds ?? []).map(x => [x.name, x.players_online])) };
@@ -349,7 +350,11 @@ async function loadOnline() {
   if (view) showDetails();
 }
 loadOnline();
-setInterval(loadOnline, 5 * 60 * 1000);
+let onlineTimer = setInterval(loadOnline, config.onlineRefreshMs);
+addEventListener('pagehide', () => clearInterval(onlineTimer));
+addEventListener('pageshow', e => {
+  if (e.persisted) { loadOnline(); onlineTimer = setInterval(loadOnline, config.onlineRefreshMs); }
+});
 
 function showDetails() {
   const active = document.activeElement;
@@ -547,7 +552,7 @@ async function exportImage() {
   const blob = await new Promise((resolve, reject) => canvas.toBlob(b => (b ? resolve(b) : reject(new Error('The image could not be encoded.'))), 'image/png'));
   const link = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: name });
   document.body.append(link); link.click(); link.remove();
-  setTimeout(() => URL.revokeObjectURL(link.href), 10000);
+  setTimeout(() => URL.revokeObjectURL(link.href), config.downloadRevokeMs);
   $('exportStatus').textContent = `Saved ${name}.`;
 }
 

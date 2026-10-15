@@ -7,6 +7,7 @@
  * It reads nothing from the market history and keeps nothing: what is entered lasts this visit, since a remembered
  * book would describe a market that has moved on.
  */
+import { config } from './config.js';
 import { fmt, esc } from './format.js';
 import { adviseTrade, readInteger, RULES, MAX_AMOUNT } from './trade-strategies.js';
 
@@ -198,7 +199,7 @@ function update() {
   const lines = [...$('tradeResult').querySelectorAll('.trade-verdict > p, .trade-prompt')].map(e => e.textContent.replace(/\s+/g, ' ').trim().replace(/[.:]$/, ''));
   const text = lines.length ? `${lines.join('. ')}.` : '';
   clearTimeout(saying);
-  saying = setTimeout(() => { if (text !== said) $('tradeStatus').textContent = said = text; }, 700);
+  saying = setTimeout(() => { if (text !== said) $('tradeStatus').textContent = said = text; }, config.announcementDelayMs);
 }
 
 $('tradeIntent').addEventListener('click', e => {

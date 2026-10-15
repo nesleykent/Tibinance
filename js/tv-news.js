@@ -6,7 +6,8 @@
  *
  * Copy rule: Tibinance never shows a middle dot, quoted text included; one in a headline or story becomes a comma.
  */
-const API = 'https://api.tibiadata.com/v4/news';
+import { config } from './config.js';
+const API = `${config.apiBaseUrl}/news`;
 const KINDS = { news: 'News', ticker: 'Ticker', article: 'Featured article' };
 const CATEGORIES = { development: 'Development', community: 'Community', support: 'Support', technical: 'Technical', useful: 'Useful info', 'useful info': 'Useful info', cipsoft: 'CipSoft' };
 const capital = s => s ? s[0].toUpperCase() + s.slice(1) : s;

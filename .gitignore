@@ -31,3 +31,9 @@ data/rebuilt-market/
 data/forecast-archive/.lock
 data/market-projections/*.pending
 .cache/
+
+# Local deployment environment; only .env.example is public.
+.env
+.env.*
+!.env.example
+js/public-config.js.pending

@@ -15,6 +15,7 @@
  * The Screener (js/market-screener-panel.js) takes the chart's place to set every world side by side for the same side
  * and range; opening a world from it, or from anywhere else, brings its chart back.
  */
+import { config } from './config.js';
 import { fmt, esc, num } from './format.js';
 import { RANGES, changeOver, dayGrid, daysBetween, marketValues, neighbours, rangeStart, statisticsAt } from './market-series.js';
 import { SIDES, createMarketChart, dayOf } from './market-chart.js?v=20261014-events';
@@ -38,7 +39,7 @@ const EVENTS_SHOWN = 'tibinance.markets.events';   // 'hidden' while the viewer 
 // 'shown' while the viewer keeps projections on. Like events, a viewing preference, not part of a linked view: the
 // address keeps the world, side and range only.
 const PROJECTIONS_SHOWN = 'tibinance.markets.projections';
-const STALE_DAYS = 7;   // a world whose latest best offer is older than this is marked
+const STALE_DAYS = config.staleDays;   // a world whose latest best offer is older than this is marked
 // Where the Worlds panel opens by default: from here up, the chart keeps at least 600px beside it
 // (the page's gutters and maximum width, css/app.css, less the panel and the rail, css/markets.css).
 const ROOMY = '(min-width: 1280px)';
@@ -49,7 +50,7 @@ const tone = value => value > 0 ? 'up' : value < 0 ? 'down' : '';
 const signedRatio = ratio => ratio == null ? num(null) : `<span class="${tone(ratio)}">${percent.format(ratio)}</span>`;
 const signedDelta = delta => delta == null ? num(null) : `<span class="${tone(delta)}">${signedNumber.format(delta)}</span>`;
 
-const state = { index: null, events: null, projections: null, overview: null, world: null, side: 'sell', range: '1Y', sort: { key: 'world', dir: 1 }, filter: '',
+const state = { index: null, events: null, projections: null, overview: null, world: null, side: 'sell', range: config.marketRange, sort: { key: 'world', dir: 1 }, filter: '',
   files: new Map(), view: null, screen: false };
 let tools = null;   // the dock (js/markets-dock.js), once wired
 
@@ -611,7 +612,7 @@ async function exportImage() {
     document.body.append(link);
     link.click();
     link.remove();
-    setTimeout(() => URL.revokeObjectURL(link.href), 10000);
+    setTimeout(() => URL.revokeObjectURL(link.href), config.downloadRevokeMs);
     $('exportStatus').textContent = `Saved ${name}.`;
   } catch (error) {
     console.error(error);
@@ -759,7 +760,7 @@ async function main() {
   const params = new URLSearchParams(location.search);
   const names = state.index.worlds.map(w => w.world);
   state.side = SIDES[params.get('side')] ? params.get('side') : 'sell';
-  state.range = RANGES.includes(params.get('range')) ? params.get('range') : '1Y';
+  state.range = RANGES.includes(params.get('range')) ? params.get('range') : config.marketRange;
   const asked = names.find(n => n.toLowerCase() === params.get('world')?.toLowerCase());
   setChoice('side', 'side', state.side);
   setChoice('screenerSide', 'side', state.side);
@@ -771,7 +772,7 @@ async function main() {
   connectTools();
   await new Promise(requestAnimationFrame);
   if (params.get('view') === 'screener') showScreener(true);
-  await select(asked ?? (names.includes('Antica') ? 'Antica' : names[0]));
+  await select(asked ?? (names.includes(config.defaultWorld) ? config.defaultWorld : names[0]));
   $('market').setAttribute('aria-busy', 'false');
 }
 

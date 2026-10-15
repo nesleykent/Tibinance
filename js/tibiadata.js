@@ -1,7 +1,8 @@
 // TibiaData API v4. Sends Access-Control-Allow-Origin: *, so the browser can
 // call it directly - no proxy, no server, nothing to pay for.
-const API = 'https://api.tibiadata.com/v4';
-const WORLDS_TTL = 6 * 60 * 60 * 1000;
+import { config } from './config.js';
+const API = config.apiBaseUrl;
+const WORLDS_TTL = config.worldsCacheMs;
 
 async function getJSON(url) {
   let r;
@@ -51,7 +52,7 @@ async function loadWorlds(force = false) {
   if (!list.length) throw new Error('TibiaData returned an empty worlds list');
   const map = Object.fromEntries(list.map(w => [w.name, w]));
   worldsCache = { at: Date.now(), map };
-  try { sessionStorage.setItem('tc_worlds', JSON.stringify(worldsCache)); } catch { /* ignore */ }
+  try { sessionStorage.setItem('tc_worlds', JSON.stringify(worldsCache)); } catch { /* storage unavailable: keep the in-memory cache */ }
   return map;
 }
 

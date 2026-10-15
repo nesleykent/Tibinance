@@ -1,4 +1,5 @@
 // Asset-specific presentation over the same Markets chart, range, dock, events and PNG export.
+import { config } from './config.js';
 import { esc } from './format.js';
 import { RANGES, changeOver, rangeStart, dayGrid } from './market-series.js';
 // Version the changed shared modules: GitHub Pages can retain pre-TIB code in browser caches.
@@ -13,7 +14,7 @@ import { connect } from './tv-bridge.js';
 const $ = id => document.getElementById(id);
 const percent = new Intl.NumberFormat('en-US', { style: 'percent', maximumFractionDigits: 2, signDisplay: 'exceptZero' });
 const params = new URLSearchParams(location.search);
-let range = RANGES.includes(params.get('range')) ? params.get('range') : '1Y';
+let range = RANGES.includes(params.get('range')) ? params.get('range') : config.marketRange;
 let view, file;
 const market = createMarketChart($('chart'), { profile: TOKEN_PROFILE }), chart = market.chart;
 const marks = eventMarks({ chart, part: market.part('events'), strip: $('eventMarks'), tip: $('eventTip') });
@@ -78,7 +79,7 @@ async function exportImage() {
     const blob = await new Promise((resolve, reject) => canvas.toBlob(b => b ? resolve(b) : reject(new Error('PNG encoding failed.')), 'image/png'));
     const url = URL.createObjectURL(blob), name = `tibinance-tib-usd-${range.toLowerCase()}-${view.end}.png`;
     const link = Object.assign(document.createElement('a'), { href: url, download: name }); document.body.append(link); link.click(); link.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 10000); $('exportStatus').textContent = `Saved ${name}.`;
+    setTimeout(() => URL.revokeObjectURL(url), config.downloadRevokeMs); $('exportStatus').textContent = `Saved ${name}.`;
   } catch (e) { console.error(e); $('exportStatus').textContent = 'The chart image could not be exported.'; }
   finally { $('exportButton').disabled = !view.grid.length; }
 }
