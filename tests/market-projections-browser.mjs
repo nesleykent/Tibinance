@@ -159,7 +159,10 @@ try {
   const eventRight=()=>page.$$eval('#eventMarks .event-mark',bs=>Math.max(...bs.map(b=>b.getBoundingClientRect().right)));
   await open(W,'1Y');
   const withProjection=await eventIds();
-  const boundary=await (async()=>{for (let f=0.4;f<0.7;f+=0.002){if(await dayAt(f)>anchorDay){const b=await plotBox();return b.x+b.w*f;}}return Infinity;})();
+  // The history ends at the market history's last server day, which can be later than the world's anchor (other worlds
+  // observed since): events between the two have happened and stand in the history; none stands in the future.
+  const boundary=await (async()=>{for (let f=0.4;f<0.8;f+=0.002){if(await dayAt(f)>historyEnd){const b=await plotBox();return b.x+b.w*f;}}return Infinity;})();
+  assert.ok(Number.isFinite(boundary),'the projection runs past the history');
   assert.ok(await eventRight()<=boundary+12,'event markers stand in the history');
   await page.locator('#eventMarks .event-mark').first().hover();
   assert.equal(await page.$eval('#eventTip',t=>t.hidden),false,'an event marker still shows its details');

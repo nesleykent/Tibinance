@@ -39,7 +39,8 @@
 - **Widget scroll (owner):** the details no longer scroll on their own; the list gives up the room.
 - **Research validation:** robustness.py rerun, `validate.py --reproduce` PASS (complement.json byte for byte). test_export.cjs closed Chrome on its second edition, at the last release too (both editions' 142 rasterizations in one browser); each edition alone passed, so it now launches a browser per edition: both PASS.
 - **Sweep:** units 228/228, validate_site PASS; Chrome suites PASS: Markets, Economy, site header, Trade, tables, statistics, projections, Screener, events, events panel, forecast history, global, TV terminal, overviews, TIB, canonical events (TIBINANCE_TEST_URL=http://127.0.0.1:8765), Capture. Trade's browser expectations recomputed by hand for 2.5% (sell: offer at 38,900 nets 386,500,000, +2,300,000 or +0.60%, break-even 38,670; split 384,580,000; buying 2,000: buying 500 now and offering 1,500 at 38,050 now beats one Buy Offer, 77,901,875 against 78,002,500, by 100,625 or 0.13%; 100 large offers pay 250,000,000, saving 390,000,000). Research's maker card subtitle reads the fee then and now from `C.fee`.
-- **Exact next step:** commit, push and release full.
+- **Rebased on release/0016 (data sync):** the projections test measured "markers stay in the history" against Secura's anchor (2026-10-04); the history now runs to 2026-10-14, so past events (10-09, 10-12) stand after the anchor, failing on 0016's own code too. The boundary is now the history's last day.
+- **Exact next step:** push and release full.
 
 ---
 
