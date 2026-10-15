@@ -1,17 +1,17 @@
 # GitHub-main quality refactor — 2026-10-15
 
-Latest user instructions authorize committing and pushing directly to GitHub main. Work was sequential; TV_REF remained read-only reference data. Baseline: GitHub main 1c14ec237f2ce9632da78fa11b9913d97fad341e in a clean clone at /tmp/tibinance-quality-github. Merged upstream 899c8ba (release/0022) without discarding either side. Both user local checkouts remain untouched by application changes. No production release is requested.
+Latest user instructions authorize committing and pushing directly to GitHub main. Work was sequential; TV_REF remained read-only reference data. Baseline: GitHub main 1c14ec237f2ce9632da78fa11b9913d97fad341e in a clean clone at /tmp/tibinance-quality-github. Merged upstream 899c8ba (release/0022) and 2901859 (release/0023) without discarding either side. Both user local checkouts remain untouched by application changes. No production release is requested.
 
 - [x] Done — Phase 1 AUDIT.md saved before application edits; 886 matching-line inventory entries, reviewed priorities and resolution notes.
 - [x] Done — Phase 2 DESIGN_TOKENS.md: palette, scales, component states, behavior, exact sources and explicit evidence gaps.
 - [x] Done — Phase 3 theme: 66 shared measurement tokens, weights/layers, AA text shades, focus, reduced motion and disabled states. Desktop terminal geometry matches baseline; the 320px asset-picker overflow is fixed.
 - [x] Done — Phase 3 public config: validated settings, safe defaults, atomic env whitelist bridge, .env.example and six config tests.
 - [x] Done — Phase 3 logic: linear Economy gap scan, shared cached price formatter/precision and theme access, popup/clock/poll timer cleanup, regression tests and reproducible development/CI gates.
-- [x] Done — Phase 4 verification: lint, strict boundary typecheck, 237 unit tests and all nine integrity/build checks; 17 affected Chrome browser suites. Economy/overviews/terminal/quality rerun in Chrome and WebKit after upstream integration and asset refresh; final contrast/terminal checks rerun in both engines. Screenshots inspected against TV_REF; dependency audit and 22-release integrity verification pass.
+- [x] Done — Phase 4 verification: lint, strict boundary typecheck, 237 unit tests and all nine integrity/build checks; 17 affected Chrome browser suites. Economy/overviews/terminal/quality rerun in Chrome and WebKit after upstream integration and asset refresh; final contrast/terminal checks rerun in both engines. Screenshots inspected against TV_REF; dependency audit and 23-release integrity verification pass.
 - [x] Done — reviewable commits and CHANGES.md record implementation, source gaps, retained domain constants, risks and verification. Final diff reviewed; datasets and immutable histories preserved.
 - [ ] Pending — commit final refinements/documentation, push main normally and verify remote commit plus GitHub checks.
 
-Resume at first unchecked item. Prior Documents-copy drafts were superseded and removed without changing the user's edits. Browser plugin absent; used the existing Playwright workflow. Screenshots: /tmp/tibinance-quality-final-shots/. Production release/0022 remains unchanged.
+Resume at first unchecked item. Prior Documents-copy drafts were superseded and removed without changing the user's edits. Browser plugin absent; used the existing Playwright workflow. Screenshots: /tmp/tibinance-quality-final-shots/. Production release/0023 remains unchanged.
 
 ---
 

@@ -1,6 +1,6 @@
 # GitHub-main quality refactor
 
-Started from GitHub main 1c14ec237f2ce9632da78fa11b9913d97fad341e (release/0021) in a clean clone, not either existing local checkout. Merged 899c8ba (release/0022) published during the task, preserving the world links, Economy event hit targets, tests and release records. TV_REF remained read-only; no proprietary implementation or assets were copied.
+Started from GitHub main 1c14ec237f2ce9632da78fa11b9913d97fad341e (release/0021) in a clean clone, not either existing local checkout. Merged upstream 899c8ba (release/0022), then 2901859 (release/0023) published during the task, preserving the world links, Economy event hit targets, latest market observations, tests and release records. TV_REF remained read-only; no proprietary implementation or assets were copied.
 
 ## What changed
 
@@ -36,7 +36,7 @@ Screenshots are local QA evidence outside the repository: /tmp/tibinance-quality
 - No i18n system exists: UI copy remains unchanged. Full strict typing of the legacy application is a separate migration; the new configuration boundary and theme helper are checked now.
 - Real-image OCR and numerical research reproduction were not rerun: extraction/math code and source data were not changed. Existing browser fixtures cover Capture/Statistics/storage behavior. No full WCAG certification or exhaustive third-party news-content audit is claimed.
 - Invalid deployment overrides are rejected before replacing the previous public module. All emitted settings are public; deployment credentials must stay outside that whitelist.
-- This task updates GitHub main. It does not create a production release or change the approved live artifact; the upstream release/0022 record remains intact.
+- This task updates GitHub main. It does not create a production release or change the approved live artifact; the upstream release/0023 record remains intact.
 
 ## Reviewable commit split
 
@@ -44,6 +44,6 @@ Screenshots are local QA evidence outside the repository: /tmp/tibinance-quality
 2. Shared theme measurements, states and accessibility (6f04a6f).
 3. Public config, defaults, env bridge and consumers (ef1121b).
 4. Chart performance/precision/lifecycle, tests and development/CI gates (f3556ec).
-5. Non-destructive upstream integration (54c9038), followed by overview palette reuse, refreshed asset URLs, final contrast checks and delivery documentation.
+5. Non-destructive upstream integration (54c9038), overview palette reuse/refreshed asset URLs/final contrast checks (ff7ee14), and delivery documentation (6e3e513). A second ordinary merge preserves release/0023 and its data update.
 
 PROGRESS.md keeps the resumable task checklist above the historical project ledger.
