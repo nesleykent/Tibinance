@@ -68,8 +68,9 @@ export function summaryChart(container, { format = short } = {}) {
 const HEAT = ['#f23645', '#f7525f', '#f77c80', '#8c8c8c', '#42bda8', '#22ab94', '#089981'];
 export function heatColor(r, steps) {
   if (r == null || !Number.isFinite(r)) return '#707070';
-  const [a, b, c] = steps;
-  return r <= -c ? HEAT[0] : r <= -b ? HEAT[1] : r <= -a ? HEAT[2] : r < a ? HEAT[3] : r < b ? HEAT[4] : r < c ? HEAT[5] : HEAT[6];
+  const [, b, c] = steps;
+  // Grey only for a change that shows as 0.00%; any visible fall or rise takes its side's lightest step.
+  return r <= -c ? HEAT[0] : r <= -b ? HEAT[1] : r <= -0.00005 ? HEAT[2] : r < 0.00005 ? HEAT[3] : r < b ? HEAT[4] : r < c ? HEAT[5] : HEAT[6];
 }
 export const heatScale = steps => `<span style="background:${HEAT[0]}">${percent.format(-steps[2])}</span><span style="background:${HEAT[1]}">${percent.format(-steps[1])}</span>`
   + `<span style="background:${HEAT[2]}">${percent.format(-steps[0])}</span><span style="background:${HEAT[3]}">0%</span><span style="background:${HEAT[4]}">${percent.format(steps[0])}</span>`
