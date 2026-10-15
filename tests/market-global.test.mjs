@@ -42,11 +42,11 @@ test('all world histories: chart bars, legend, averages and prices trace to cano
     assert.equal(bar.value,stats?.transactions,`${data.world}/${bar.time}/${s}: histogram/legend mismatch`);
     if(stats){
      const provenance=view.dailyByDay.get(bar.time).provenance[s];
-     const source=provenance.kind==='estimated'
+     const source=provenance.kind
       ? data.estimatedDailyStatistics?.find(r=>r.serverDay===bar.time&&r[s])
       : data.dailyStatisticsObservations.find(r=>r.serverDay===bar.time&&r.capturedAtUtc===provenance.capturedAtUtc&&r[s]);
      assert.ok(source);
-     for(const k of provenance.kind==='estimated'?['transactions','averagePrice']:fields)if(k in stats)assert.equal(stats[k],source[s][k]);
+     for(const k of provenance.kind?['transactions','averagePrice']:fields)if(k in stats)assert.equal(stats[k],source[s][k]);
      assert.ok(!('tcVolume' in stats));
     }
    }
@@ -67,8 +67,8 @@ test('Gentebra recent rolling Statistics remain visible source evidence without 
  const view=marketValues(data),day='2026-10-03';
  assert.equal(view.closes.find(c=>c.serverDay===day).sell,46794);
  assert.ok(data.observations.some(o=>o.serverDay===day&&o.statistics30d?.sell.transactions===6137));
- // The rolling counters of 10-03 and 10-04 with the reported 09-03 reconstruct the day, kept apart from reports.
+ // The rolling counters solve the day exactly; it stays apart from the acquisition reports.
  assert.deepEqual(statisticsAt(view,day,'sell'),{transactions:181,averagePrice:46643});
- assert.equal(view.dailyByDay.get(day).provenance.sell.method,'rolling-30d-reconstructed');
+ assert.equal(view.dailyByDay.get(day).provenance.sell.kind,'reconstructed');
  assert.ok(!data.dailyStatisticsObservations.some(r=>r.serverDay===day));
 });

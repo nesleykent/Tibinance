@@ -1,8 +1,8 @@
 {
  "chain": {
   "evaluations": 18,
-  "head": "655c1b4727af292aca20d6dcc0f95dd574a89898bdd86df4e61f5d5e8034c64f",
-  "records": 85
+  "head": "a299fd388ca1e93e1f8c883572dc9ec7a9edd433c2e1999b50efba83a77dd957",
+  "records": 87
  },
  "forecasts": [
   {
@@ -927,6 +927,10 @@
     {
      "sha256": "66f6842c7721ae196d6811fd86e82e3c1a304251b81b7eced93dd26082f2e1a1",
      "surface": "markets-projections"
+    },
+    {
+     "sha256": "f1219f4b48b1f5eeea380078c5e26d23b4260ff77ccc2aa50fee5029b8376046",
+     "surface": "markets-projections"
     }
    ],
    "product": "tc-world-scenarios",
@@ -1332,7 +1336,12 @@
    "contentHash": "8b8f84999b56438884ff78980ee32adb3e51529c8aca7b7d83ca3aba432a8c75",
    "edition": "tc-world-scenarios/2026-10-15",
    "evidence": {
-    "repository": null,
+    "repository": {
+     "at": "2026-10-15T08:07:21Z",
+     "basis": "git-committer-date",
+     "commit": "fd7e03d189eb1950e962b31f15b5835e7b722536",
+     "uncertainty": "older than the listed push events; published at or after this committer date"
+    },
     "website": {
      "at": "2026-10-15T08:12:14Z",
      "basis": "github-pages-deployment-success",
@@ -1346,6 +1355,22 @@
    "forecast": "29adf6a097e2876da11ee71594f567b87426f9292e989dccc87a455baf8cc858",
    "sha256": "66f6842c7721ae196d6811fd86e82e3c1a304251b81b7eced93dd26082f2e1a1",
    "state": "published",
+   "superseded": false,
+   "supersededBy": null,
+   "surface": "markets-projections"
+  },
+  {
+   "contentHash": "353cf9732c2ad6b96d1bdcdf1992c78e4f9c650b4adc56ee6bb3e0cd51b11164",
+   "edition": "tc-world-scenarios/2026-10-15",
+   "evidence": {
+    "repository": null,
+    "website": null
+   },
+   "evidenceLevel": null,
+   "failures": [],
+   "forecast": "29adf6a097e2876da11ee71594f567b87426f9292e989dccc87a455baf8cc858",
+   "sha256": "f1219f4b48b1f5eeea380078c5e26d23b4260ff77ccc2aa50fee5029b8376046",
+   "state": "archived",
    "superseded": false,
    "supersededBy": null,
    "surface": "markets-projections"

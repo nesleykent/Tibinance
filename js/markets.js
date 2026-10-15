@@ -191,13 +191,9 @@ function showLegend(day) {
     : stats.transactions ? fmt(stats.averagePrice) : 'no trades';
   // The day's traded range beside its average, as a terminal reads a bar: the highest and lowest prices of the trades
   // that filled this side's offers. Read out only; never drawn, since a Buy low of 1 is common.
-  const range = stats?.transactions && !estimated ? ` <span class="rest ohlc"><span><span class="meta-label">High</span> ${fmt(stats.highestPrice)}</span> <span><span class="meta-label">Low</span> ${fmt(stats.lowestPrice)}</span></span>` : '';
-  const reconstructed = estimated && view.dailyByDay.get(day).provenance[side].method === 'rolling-30d-reconstructed';
-  const estimateTitle = reconstructed
-    ? 'Reconstructed from two 30-day counters, the reported days between them and the reported days that left the window.'
-    : `Estimated from two 30-day counters; days leaving the window without a report are approximated by the 30-day mean${
-      view.dailyByDay.get(day)?.provenance?.[side]?.sharedWithDays ? `, and the interval is shared evenly over ${view.dailyByDay.get(day).provenance[side].sharedWithDays} days without a report` : ''}.`;
-  const kind = reconstructed ? 'Reconstructed' : 'Estimated';
+  const range = stats?.transactions && Number.isSafeInteger(stats.highestPrice) ? ` <span class="rest ohlc"><span><span class="meta-label">High</span> ${fmt(stats.highestPrice)}</span> <span><span class="meta-label">Low</span> ${fmt(stats.lowestPrice)}</span></span>` : '';
+  const estimateTitle = 'Approximate: the day that left the 30-day window has no figure, so it is taken as the window average.';
+  const kind = 'Estimated';
   $('legend').innerHTML = `<span class="day">${esc(day)}</span> <span class="label"><i class="key key-dot"></i>${labels.offer}</span> ${best} `
     + `<span class="label"${estimated ? ` title="${estimateTitle}"` : ''}><i class="key key-average"></i>${estimated ? `${kind} daily average` : 'Daily average'}</span> <b class="value">${average}</b>${range}`;
   $('volumeLegend').innerHTML = ` <span class="label"${estimated ? ` title="${estimateTitle}"` : ''}><i class="key key-volume"></i>${estimated ? `${kind} transactions` : 'Transactions'}</span> <b class="value">${stats ? fmt(stats.transactions) : num(null)}</b>`;

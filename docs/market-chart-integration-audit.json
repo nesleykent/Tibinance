@@ -10,9 +10,9 @@
   "qualification": "Observed daily reports remain authoritative. Comparable consecutive rolling 30-day Statistics may supplement a missing side/day only as an explicitly labelled estimate.",
   "selection": "Latest acquisition timestamp per observed side and completed reference day; otherwise the closest eligible capture pair to 24 hours (18-30 hours). Conflicting equal observed timestamps fail explicitly.",
   "estimatedDailyStatistics": {
-    "days": 1412,
-    "sides": 2813,
-    "method": "rolling-30d-reconstructed when the leaving day is reported, else rolling-30d-mean-outflow"
+    "days": 475,
+    "sides": 948,
+    "method": "rolling-30d-difference (reconstructed, shown as daily values) or rolling-30d-mean-outflow (estimated)"
   },
   "availability": {
     "before": {
@@ -29,7 +29,7 @@
       "averagePrice": 90832,
       "highestPrice": 90832,
       "lowestPrice": 90832,
-      "dailyAveragePoints": 93264,
+      "dailyAveragePoints": 91399,
       "bestSell": 12798,
       "bestBuy": 12798
     }

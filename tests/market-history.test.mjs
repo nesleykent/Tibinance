@@ -44,8 +44,7 @@ test('consecutive comparable 30-day counters estimate the reference day without 
   assert.equal(day.sell.transactions,187);
   assert.equal(day.provenance.buy.kind,'estimated');
   assert.equal(day.provenance.buy.method,'rolling-30d-mean-outflow');
-  assert.equal(day.provenance.buy.intervalDays,1);
-  assert.ok(Number.isSafeInteger(day.buy.averagePrice));
+    assert.ok(Number.isSafeInteger(day.buy.averagePrice));
   assert.ok(!('highestPrice' in day.buy));
   // With the day leaving the window reported (09-14), the entering day is reconstructed exactly.
   const leaving={serverDay:'2026-09-14',buy:{transactions:180,highestPrice:46000,averagePrice:44000,lowestPrice:43000},
@@ -53,7 +52,7 @@ test('consecutive comparable 30-day counters estimate the reference day without 
   const [exact]=estimateDailyStatistics(observations,[leaving]);
   assert.equal(exact.buy.transactions,224);
   assert.equal(exact.sell.transactions,200);
-  assert.equal(exact.provenance.buy.method,'rolling-30d-reconstructed');
+  assert.equal(exact.provenance.buy.kind,'reconstructed');
   assert.equal(exact.buy.averagePrice,Math.round((2244*45100-2200*45000+180*44000)/224));
 });
 
@@ -80,12 +79,15 @@ test('daily observations override estimates per side and mismatched capture time
   assert.equal(gap.length,1);
   assert.equal(gap[0].serverDay,'2026-10-12');
   assert.equal(gap[0].buy.transactions,3050-3000+400-300);
-  assert.equal(gap[0].provenance.buy.method,'rolling-30d-reconstructed');
-  // With no reports, the interval's total is shared between its days as an estimate.
-  const shared=estimateDailyStatistics([rolling('2026-10-10','2026-10-10T12:00:00Z',3000),rolling('2026-10-14','2026-10-14T20:00:00Z',3000)]);
-  assert.deepEqual(shared.map(d=>d.serverDay),['2026-10-10','2026-10-11','2026-10-12','2026-10-13']);
-  assert.equal(shared[0].buy.transactions,100);
-  assert.equal(shared[0].provenance.buy.sharedWithDays,4);
+  assert.equal(gap[0].provenance.buy.kind,'reconstructed');
+  // The day that left the window is solved too, when the day that entered is reported.
+  const back=estimateDailyStatistics([rolling('2026-10-14','2026-10-14T12:00:00Z',2200),rolling('2026-10-15','2026-10-15T12:00:00Z',2244)],
+    [reported('2026-10-14')]);
+  assert.equal(back[0].serverDay,'2026-09-14');
+  assert.equal(back[0].buy.transactions,100-44);
+  assert.equal(back[0].provenance.buy.kind,'reconstructed');
+  // An interval with several unknown days is never shared out or copied between them.
+  assert.deepEqual(estimateDailyStatistics([rolling('2026-10-10','2026-10-10T12:00:00Z',3000),rolling('2026-10-14','2026-10-14T20:00:00Z',3000)]),[]);
 });
 
 test('a complete TibiaMarket row maps to Tibinance fields and reports the previous server day', () => {

@@ -154,61 +154,86 @@ export function latestDailyStatistics(reports) {
 
 const ESTIMATE_WINDOW_DAYS = 30;
 
-// Daily values recovered from rolling 30-day Statistics. A rolling reading on server day S covers the completed days
-// S-30 to S-1 and only changes at the server save, so any two readings a < b (at most 30 days apart, any clock time) give
-//   D(a) + ... + D(b-1) = T(b) - T(a) + D(a-30) + ... + D(b-31)
-// and the same for transactions x Average Price (the average is transaction-weighted). Days in a..b-1 with a daily
-// report are subtracted; what remains belongs to the days without one.
-//   rolling-30d-reconstructed  one day is missing and every day leaving the window is known: exact (99.98% of 5,504
-//                              checks equal the reported count, averages within 0.3% at the median)
-//   rolling-30d-mean-outflow   otherwise: an unknown leaving day is taken as T(a)/30 at the window average, and the
-//                              remainder is shared evenly between the missing days (about 12% off at the median)
-// Recovered days count as known for later intervals only when reconstructed. Never a daily observation.
+// Daily values recovered from rolling 30-day Statistics, from screenshots or TibiaMarket alike. A rolling reading on
+// server day S covers the completed days S-30 to S-1 and only changes at the server save, so every two readings a < b
+// at most 30 days apart (any clock time) give one equation over days:
+//   D(a) + ... + D(b-1) - D(a-30) - ... - D(b-31) = T(b) - T(a)
+// and the same for transactions x Average Price (the average is transaction-weighted). Reported days are known. Any
+// equation left with exactly one unknown day solves that day exactly, whether it entered or left the window; solved
+// days feed the other equations until nothing more resolves. This is the same arithmetic TibiaMarket's daily figures
+// follow (99.98% of 5,504 checks equal), so a solved day is a daily value like any other: kind 'reconstructed'.
+// A consecutive pair whose two days both stay unknown gives the entering day only approximately, taking the leaving
+// day as T(a)/30 at the window average: kind 'estimated'. Nothing is ever shared out or copied between days.
 export function estimateDailyStatistics(observations, daily = []) {
   const byDay = new Map();
   for (const observation of observations ?? []) if (observation.statistics30d) byDay.set(observation.serverDay, observation);
-  const days = [...byDay.keys()].sort();
-  const known = new Map(daily.map(d => [d.serverDay, d])), estimates = new Map();
-  const knownSide = (day, name) => known.get(day)?.[name] ?? (estimates.get(day)?.provenance[name]?.method === 'rolling-30d-reconstructed' ? estimates.get(day)[name] : null);
-  const exactValue = side => side.transactions === 0 || Number.isSafeInteger(side.averagePrice);
-  for (let i = 1; i < days.length; i++) {
-    const previous = byDay.get(days[i - 1]), current = byDay.get(days[i]);
-    const span = Math.round((Date.parse(`${days[i]}T00:00:00Z`) - Date.parse(`${days[i - 1]}T00:00:00Z`)) / 86400000);
-    if (span > ESTIMATE_WINDOW_DAYS) continue;
-    const entering = Array.from({ length: span }, (_, k) => addDays(days[i - 1], k));
-    for (const name of ['buy', 'sell']) {
-      const before = previous.statistics30d[name], after = current.statistics30d[name];
+  const days = [...byDay.keys()].sort(), results = new Map();
+  const reported = new Map(daily.map(d => [d.serverDay, d]));
+  const set = (day, name, side, provenance) => {
+    const r = results.get(day) ?? { serverDay: day, provenance: {} };
+    r[name] = side; r.provenance[name] = provenance; results.set(day, r);
+  };
+  for (const name of ['buy', 'sell']) {
+    // Known days: count and transaction-weighted gold.
+    const known = new Map();
+    for (const d of daily) {
+      const v = d[name];
+      if (v && (v.transactions === 0 || Number.isSafeInteger(v.averagePrice))) known.set(d.serverDay, { count: v.transactions, gold: v.transactions ? v.transactions * v.averagePrice : 0 });
+    }
+    const equations = [];
+    for (let i = 0; i < days.length; i++) for (let j = i + 1; j < days.length; j++) {
+      const a = byDay.get(days[i]), b = byDay.get(days[j]);
+      const span = Math.round((Date.parse(`${days[j]}T00:00:00Z`) - Date.parse(`${days[i]}T00:00:00Z`)) / 86400000);
+      if (span > ESTIMATE_WINDOW_DAYS) break;
+      const before = a.statistics30d[name], after = b.statistics30d[name];
       if (!before || !after) continue;
-      const missing = entering.filter(day => !knownSide(day, name));
-      if (!missing.length) continue;
-      let count = after.transactions - before.transactions, value = after.transactions * after.averagePrice - before.transactions * before.averagePrice;
-      let exact = missing.length === 1;
-      for (const day of entering) {
-        const leaving = knownSide(addDays(day, -ESTIMATE_WINDOW_DAYS), name);
-        if (leaving && exactValue(leaving)) { count += leaving.transactions; value += leaving.transactions ? leaving.transactions * leaving.averagePrice : 0; }
-        else { exact = false; count += before.transactions / ESTIMATE_WINDOW_DAYS; value += before.transactions / ESTIMATE_WINDOW_DAYS * before.averagePrice; }
-        const reported = knownSide(day, name);
-        if (reported) {
-          if (!exactValue(reported)) exact = false;
-          count -= reported.transactions; value -= reported.transactions ? reported.transactions * (reported.averagePrice ?? before.averagePrice) : 0;
-        }
-      }
-      if (!Number.isFinite(count) || count < 0) continue;
-      const perDay = count / missing.length, low = Math.min(before.lowestPrice, after.lowestPrice), high = Math.max(before.highestPrice, after.highestPrice);
-      const average = count > 0 ? value / count : null;
-      for (const day of missing) {
-        const side = { transactions: Math.round(perDay) };
-        if (side.transactions > 0 && Number.isFinite(average) && average >= low && average <= high) side.averagePrice = Math.round(average);
-        const estimate = estimates.get(day) ?? { serverDay: day, provenance: {} };
-        estimate[name] = side;
-        estimate.provenance[name] = { kind: 'estimated', method: exact ? 'rolling-30d-reconstructed' : 'rolling-30d-mean-outflow',
-          windowDays: ESTIMATE_WINDOW_DAYS, previousCapturedAtUtc: previous.capturedAtUtc, capturedAtUtc: current.capturedAtUtc,
-          intervalDays: span, ...(missing.length > 1 ? { sharedWithDays: missing.length } : {}) };
-        estimates.set(day, estimate);
+      const entering = Array.from({ length: span }, (_, k) => addDays(days[i], k));
+      equations.push({ a, b, before, after, span, entering, leaving: entering.map(d => addDays(d, -ESTIMATE_WINDOW_DAYS)),
+        count: after.transactions - before.transactions, gold: after.transactions * after.averagePrice - before.transactions * before.averagePrice });
+    }
+    const provenance = (e, kind) => ({ kind, method: kind === 'reconstructed' ? 'rolling-30d-difference' : 'rolling-30d-mean-outflow',
+      windowDays: ESTIMATE_WINDOW_DAYS, previousCapturedAtUtc: e.a.capturedAtUtc, capturedAtUtc: e.b.capturedAtUtc,
+      ...(e.a.source ? { previousSource: e.a.source } : {}), ...(e.b.source ? { source: e.b.source } : {}) });
+    const side = (count, gold, low, high) => {
+      const out = { transactions: Math.round(count) }, average = count > 0 ? gold / count : null;
+      if (out.transactions > 0 && Number.isFinite(average) && average >= low && average <= high) out.averagePrice = Math.round(average);
+      return out;
+    };
+    // Shorter intervals first: fewer rounded averages enter each solved day.
+    equations.sort((x, y) => x.span - y.span);
+    for (let changed = true; changed;) {
+      changed = false;
+      for (const e of equations) {
+        const unknown = [...e.entering.filter(d => !known.has(d)).map(d => [d, 1]), ...e.leaving.filter(d => !known.has(d)).map(d => [d, -1])];
+        if (unknown.length !== 1) continue;
+        const [day, sign] = unknown[0];
+        let count = e.count, gold = e.gold;
+        for (const d of e.entering) if (d !== day) { count -= known.get(d).count; gold -= known.get(d).gold; }
+        for (const d of e.leaving) if (d !== day) { count += known.get(d).count; gold += known.get(d).gold; }
+        count *= sign; gold *= sign;
+        if (!Number.isFinite(count) || count < -0.5) continue;
+        count = Math.max(0, Math.round(count));
+        known.set(day, { count, gold: count ? gold : 0 });
+        const low = Math.min(e.before.lowestPrice, e.after.lowestPrice), high = Math.max(e.before.highestPrice, e.after.highestPrice);
+        set(day, name, side(count, gold, low, high), provenance(e, 'reconstructed'));
+        changed = true;
+        break;
       }
     }
+    // What stays unsolved: only a consecutive pair names a single entering day; approximate its leaving day.
+    for (const e of equations) {
+      if (e.span !== 1 || known.has(e.entering[0]) || results.get(e.entering[0])?.[name]) continue;
+      const out = e.before.transactions / ESTIMATE_WINDOW_DAYS, count = e.count + out;
+      if (!(count >= 0)) continue;
+      const low = Math.min(e.before.lowestPrice, e.after.lowestPrice), high = Math.max(e.before.highestPrice, e.after.highestPrice);
+      set(e.entering[0], name, side(count, e.gold + out * e.before.averagePrice, low, high), provenance(e, 'estimated'));
+    }
   }
-  return [...estimates.values()].sort((x, y) => x.serverDay.localeCompare(y.serverDay));
+  // Only days with no daily report on that side.
+  return [...results.values()].map(r => {
+    for (const name of ['buy', 'sell']) if (reported.get(r.serverDay)?.[name]) { delete r[name]; delete r.provenance[name]; }
+    return r;
+  }).filter(r => r.buy || r.sell).sort((x, y) => x.serverDay.localeCompare(y.serverDay));
 }
 
 // Daily acquisition reports are authoritative. Estimates only supplement a

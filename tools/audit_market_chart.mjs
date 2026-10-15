@@ -49,7 +49,7 @@ for(const path of chartFiles)if(/tcVolume|transactions\s*\*\s*25/.test(await rea
 const result={worlds,observations,dailyAcquisitionReports:reports,rollingStatisticsObservations:rolling,sourceCounts,
  qualification:'Observed daily reports remain authoritative. Comparable consecutive rolling 30-day Statistics may supplement a missing side/day only as an explicitly labelled estimate.',
  selection:'Latest acquisition timestamp per observed side and completed reference day; otherwise the closest eligible capture pair to 24 hours (18-30 hours). Conflicting equal observed timestamps fail explicitly.',
- estimatedDailyStatistics:{days:estimatedDays,sides:estimatedSides,method:'rolling-30d-reconstructed when the leaving day is reported, else rolling-30d-mean-outflow'},
+ estimatedDailyStatistics:{days:estimatedDays,sides:estimatedSides,method:'rolling-30d-difference (reconstructed, shown as daily values) or rolling-30d-mean-outflow (estimated)'},
  availability:counts,affectedWorlds:new Set(affected.map(a=>a.world)).size,affectedWorldDays:affected.length,
  canonicalValuesMissing:{before:missingBefore,after:missingAfter},marketsValuesWithoutCanonicalSource:unsupported,
  plottedBarsWithMissingLegendValue:barsMissing,validStatisticsDroppedBySource:0,serverDayMisalignments:misaligned,
