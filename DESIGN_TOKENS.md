@@ -124,3 +124,23 @@ Normal and secondary/placeholder text, links, active labels and status text use 
 Retained gaps are marked TODO in CSS: APP local stacking, responsive fit thresholds, compound popup shadows, grid/tint alpha and publication layout ratios. Values in SVG paths, chart geometry and immutable drawing defaults remain meaningful geometry/domain constants, not unsourced new design tokens. No new toast/modal system or keyboard bindings were introduced.
 
 AA surface adaptation: captured secondary semantic defaults are #707070 / #8c8c8c, but they fall short on hover/selected fills. APP secondary/placeholder ink uses runtime --color-cold-gray-650 (#575757) in light and --color-cold-gray-400 (#9c9c9c) in dark. Negative text uses --color-ripe-red-800 (#991f29), warning --color-tan-orange-a800 (#593a1b), light links/active text --color-tv-blue-700 (#1848cc), hover --color-tv-blue-800 (#143eb2); dark active/hover labels use --color-tv-blue-200 (#90bff9). These are existing captured ramp values, explicitly adapted for 4.5:1 across base, hover, popup and selected backgrounds; graphic fills retain their original values.
+
+
+## Phase 14 component contracts applied on 2026-10-15
+
+This section supersedes older preserved popup-shadow/dialog-radius/heading gaps above. Reference REPORT.md §26; paths relative to TV_REF. Tokens remain in css/tv.css, implementations in css/tv-components.css and js/tv-ui.js.
+
+| Contract/token | Value | Verified source |
+| --- | --- | --- |
+| --tv-radius-popup / --tv-popup-shadow | 6px; 0 2px 4px, black .2 light/.4 dark | captures/B_chart_design/css/202_49050.2927a177231fdd0e24c1.css .menuWrap-lBIxIwtz; --color-shadow-primary-neutral-extra-heavy |
+| --tv-layer-popup / --tv-layer-dialog / --tv-layer-tooltip | 100 / 150 / 1000 | same menu CSS; css/161_88550.ed76caf2ffe014460ba6.css .dialog-GHUH6_1X; css/109_11709.bcd0312befc95fb040a8.css .common-tooltip-Hp4KzOJw |
+| --tv-dialog-width / --tv-dialog-height | 840px / 680px; tablet max640; phone fullscreen | css/268_34640.acb9f1151f07184a6ed6.css .desktopDialog-miP9eTAe; L_symbol_dialog.json / L_phone_symbol_dialog.json |
+| --tv-menu-row / neutral selection | 40px; light gray800/white; dark gray200/gray900 | L_menu_focus_verified.json .button-XNUivTou / css/022_3941.e2495691cea17b3a81c2.css selected background/text roles |
+| Popup icon bounds | 18px, constrained flex child | css/066_59830.736f471a8d64a8122fd8.css .iconWrapper-GZLykNQP small variant; L_chart_type_menu.json .icon-GZLykNQP |
+| Search tabs / --tv-tab-padding | 28px high / radius14 / padding11; 14/18 weight400 | css/243_33838.70b5126495f7adccaf2f.css .roundTabButton-Wa6TmGN3.xsmall-Wa6TmGN3 |
+| Tooltip | 13/18, padding3×8, radius2, max420, .15s linear | css/109_11709.bcd0312befc95fb040a8.css .common-tooltip-Hp4KzOJw and body modifiers |
+| Hero / --tv-heading-size / --tv-heading-line | 600, desktop48/52, phone32/36, tracking -.02em | captures/A_markets_design/css/001_51889.659a35c515aee892d8b2.css .header-q4dkGMX6; L_desktop_light.json / L_phone.json |
+| Section / --tv-section-size / --tv-section-line | 600, desktop36/44, phone28/36 | css/286_98158.4628d48ffa24449c8154.css .title-l-QjjAoTcT |
+| Visible keyboard focus | 2px blue500 | chart css/022_3941.e2495691cea17b3a81c2.css .button-XNUivTou:focus-visible::after; APP uses native outline |
+
+Desktop hero uses the expanded-widgetbar measurement, not the 56px unconstrained TV variant. System font is an intentional licensed-safe adaptation. Captured watchlist rect31 includes borders around content29; APP's existing30px domain table is retained, not mislabeled as exact TV geometry. Native dialogs/popovers occupy the browser top layer, so numeric layers only apply within compatible stacking contexts. No source supports a universal APP toast layer.

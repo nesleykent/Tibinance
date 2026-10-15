@@ -1,3 +1,18 @@
+# TradingView Phase 14 implementation — 2026-10-15
+
+Target: /Users/nesleykent/Code/Tibinance, starting main 6f3d34f. Preserve the untracked Tibinance_Roadmap.md. TV_REF is read-only reference data for this implementation. Sequential work; no subagents. Commit/push to main authorized; production release is a separate operation.
+
+- [x] Inspect current app, all eight routes, existing shared styles/interaction modules, tests and new TV_REF §26 evidence. Baseline lint/typecheck, 241 unit tests and nine integrity gates pass; capture before screenshots with Chrome Beta 156.0.8078.12.
+- [x] Reproduce shared popup mismatch in a Chrome Beta regression: Capture used 0 8px 32px /.12 instead of the captured simple 0 2px 4px /.2 shadow.
+- [x] Implement shared sourced popup/dialog/heading/tab/focus/tooltip contracts and accessible dialog/menu/listbox helpers across terminals, overviews, Capture, Trade and Research.
+- [x] Chrome Beta all-route visual/interaction checks, functional browser suites, iterative layout corrections, all 17 functional suites pass. Corrected mobile cascade and search-input Escape ownership; Markets expectations now follow the existing estimated-statistics feature.
+- [x] Final asset-refresh regression, lint/typecheck, 241 units, nine integrity gates and diff review. Visual review also reproduced/fixed unconstrained chart-menu SVGs (150px versus 40px rows) and duplicate queued dialog focus restoration. All-eight-route design matrix passes; affected functional checks rerun after final corrections.
+- [x] Updated CHANGES.md and DESIGN_TOKENS.md with applied §26 contracts, exact sources, verification and remaining intentional adaptations.
+- [x] Implementation committed as a58c7da; delivery/token records updated. Release verifier passes after fetching the existing missing local release/0024 tag; immutable artifacts unchanged.
+- [ ] In progress — push implementation and delivery commits to main; confirm hosted checks.
+
+---
+
 # GitHub-main quality refactor — 2026-10-15
 
 Latest user instructions authorize committing and pushing directly to GitHub main. Work was sequential; TV_REF remained read-only reference data. Baseline: GitHub main 1c14ec237f2ce9632da78fa11b9913d97fad341e in a clean clone at /tmp/tibinance-quality-github. Merged upstream 899c8ba (release/0022) , 2901859 (release/0023) and 914612f (release/0024) without discarding either side. Both user local checkouts remain untouched by application changes. No production release is requested.
