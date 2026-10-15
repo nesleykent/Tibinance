@@ -3,7 +3,7 @@ import { config } from './config.js';
 import { esc } from './format.js';
 import { RANGES, changeOver, rangeStart, dayGrid } from './market-series.js';
 // Version the changed shared modules: GitHub Pages can retain pre-TIB code in browser caches.
-import { createMarketChart, dayOf } from './market-chart.js?v=20261015-interval';
+import { createMarketChart, dayOf } from './market-chart.js?v=20261015-plain';
 import { marketImage, pageDetails } from './market-export.js?v=20261015-shot';
 import { dock } from './markets-dock.js';
 import { loadEvents, addEventDays } from './events.js';

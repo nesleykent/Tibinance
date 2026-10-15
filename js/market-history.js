@@ -236,6 +236,40 @@ export function estimateDailyStatistics(observations, daily = []) {
   }).filter(r => r.buy || r.sell).sort((x, y) => x.serverDay.localeCompare(y.serverDay));
 }
 
+// Between two 30-day readings further apart than a day, the days with no daily value can only be known together:
+// their total is T(b) - T(a) plus the days that left the window (the window average where those have no figure)
+// minus the days in between that have a value. One record per interval and side, for the legend; never spread
+// over the days.
+export function rollingIntervals(observations, daily) {
+  const byDay = new Map();
+  for (const o of observations ?? []) if (o.statistics30d) byDay.set(o.serverDay, o.statistics30d);
+  const days = [...byDay.keys()].sort(), known = new Map(daily.map(d => [d.serverDay, d])), out = { buy: [], sell: [] };
+  for (let i = 1; i < days.length; i++) {
+    const span = Math.round((Date.parse(`${days[i]}T00:00:00Z`) - Date.parse(`${days[i - 1]}T00:00:00Z`)) / 86400000);
+    if (span < 2 || span > ESTIMATE_WINDOW_DAYS) continue;
+    for (const name of ['buy', 'sell']) {
+      const before = byDay.get(days[i - 1])[name], after = byDay.get(days[i])[name];
+      if (!before || !after) continue;
+      const entering = Array.from({ length: span }, (_, k) => addDays(days[i - 1], k));
+      const missing = entering.filter(d => !known.get(d)?.[name]);
+      if (!missing.length) continue;
+      let count = after.transactions - before.transactions, gold = after.transactions * after.averagePrice - before.transactions * before.averagePrice;
+      for (const d of entering) {
+        const leaving = known.get(addDays(d, -ESTIMATE_WINDOW_DAYS))?.[name];
+        const lc = leaving && (leaving.transactions === 0 || Number.isSafeInteger(leaving.averagePrice)) ? leaving.transactions : before.transactions / ESTIMATE_WINDOW_DAYS;
+        count += lc; gold += leaving && lc === leaving.transactions ? (lc ? lc * leaving.averagePrice : 0) : lc * before.averagePrice;
+        const v = known.get(d)?.[name];
+        if (v) { count -= v.transactions; gold -= v.transactions ? v.transactions * (v.averagePrice ?? before.averagePrice) : 0; }
+      }
+      if (!(count >= 0)) continue;
+      const average = count > 0 ? gold / count : null;
+      out[name].push({ first: missing[0], last: missing.at(-1), days: missing.length, transactions: Math.round(count),
+        ...(average && average >= Math.min(before.lowestPrice, after.lowestPrice) && average <= Math.max(before.highestPrice, after.highestPrice) ? { averagePrice: Math.round(average) } : {}) });
+    }
+  }
+  return out;
+}
+
 // Daily acquisition reports are authoritative. Estimates only supplement a
 // missing side/day and retain their own provenance so the UI cannot present
 // them as measured daily Statistics.

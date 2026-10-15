@@ -7,14 +7,14 @@
  * are joined by a dotted segment, so the interval reads as not observed.
  * Nothing is added inside a gap.
  */
-import { addDays, bestOfferCloses, marketDailyStatistics } from './market-history.js';
+import { addDays, bestOfferCloses, marketDailyStatistics, rollingIntervals } from './market-history.js';
 
 // One shared canonical dataset for lines, histogram, legend and image exports.
 export function marketValues(file) {
   const closes = bestOfferCloses(file.observations);
   const daily = marketDailyStatistics(file);
   return { closes, closeDays: closes.map(c => c.serverDay), daily,
-    dailyByDay: new Map(daily.map(d => [d.serverDay, d])) };
+    dailyByDay: new Map(daily.map(d => [d.serverDay, d])), intervals: rollingIntervals(file.observations, daily) };
 }
 export const statisticsAt = (view, day, side) => view.dailyByDay.get(day)?.[side];
 

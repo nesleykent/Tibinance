@@ -79,21 +79,16 @@ const dailyAverage = {
   depth: 0,
   add: (chart, { line, k, L }, c) => ({
     solid: line({ color: c.average, lineWidth: k }),
-    dotted: line({ color: c.average, lineWidth: k, lineStyle: L.LineStyle.Dotted }),
-    estimated: line({ color: c.average, lineVisible: false, pointMarkersVisible: true, pointMarkersRadius: 2 * k })
+    dotted: line({ color: c.average, lineWidth: k, lineStyle: L.LineStyle.Dotted })
   }),
+  // Days recovered from the 30-day Statistics are daily values like the reported ones, drawn the same way.
   draw(s, view, side) {
-    const observed = view.daily.filter(d => d[side]?.transactions > 0 && Number.isSafeInteger(d[side].averagePrice)
-      && d.provenance?.[side]?.kind !== 'estimated');
-    const estimated = view.daily.filter(d => d[side]?.transactions > 0 && Number.isSafeInteger(d[side].averagePrice)
-      && d.provenance?.[side]?.kind === 'estimated');
+    const observed = view.daily.filter(d => d[side]?.transactions > 0 && Number.isSafeInteger(d[side].averagePrice));
     const average = lineLayers(observed.map(d => ({ time: d.serverDay, value: d[side].averagePrice })), view.step);
     s.solid.setData(average.solid);
     s.dotted.setData(average.dotted);
-    s.estimated.setData(estimated.map(d => ({ time: d.serverDay, value: d[side].averagePrice })));
   },
-  keys: (side, c) => [{ mark: 'line', color: c.average, label: 'Daily average' },
-    { mark: 'dot', color: c.average, label: 'Estimated daily average' }]
+  keys: (side, c) => [{ mark: 'line', color: c.average, label: 'Daily average' }]
 };
 
 // Raw transaction activity per completed server day, on a separate hidden scale below prices.
@@ -110,12 +105,11 @@ const activity = {
   draw(s, view, side, c) {
     s.applyOptions({ color: `${c[side]}55` });
     s.setData(view.grid.map(day => {
-      const record = view.dailyByDay.get(day), value = record?.[side]?.transactions;
-      return value === undefined ? { time: day } : { time: day, value,
-        ...(record.provenance?.[side]?.kind === 'estimated' ? { color: `${c[side]}33` } : {}) };
+      const value = view.dailyByDay.get(day)?.[side]?.transactions;
+      return value === undefined ? { time: day } : { time: day, value };
     }));
   },
-  keys: (side, c) => [{ mark: 'bar', color: c[side], label: 'Transactions (count; lighter bars estimated)' }]
+  keys: (side, c) => [{ mark: 'bar', color: c[side], label: 'Transactions (count)' }]
 };
 
 // Read in this order; drawn by depth: activity behind the price series, the projection and past editions between the

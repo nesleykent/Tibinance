@@ -32,10 +32,10 @@ test('all world histories: chart bars, legend, averages and prices trace to cano
   const days=[...view.daily.map(d=>d.serverDay),...view.closes.map(d=>d.serverDay)].sort();
   view.grid=days.length?dayGrid(days[0],days.at(-1)):[];
   for(const s of ['buy','sell']){
-   let bars,averages,estimatedAverages,prices;
+   let bars,averages,prices;
    const recorder=setter=>({applyOptions(){},setData(p){setter(p);}});
    activity.draw(recorder(p=>bars=p),view,s,{[s]:'#fff'});
-   average.draw({solid:recorder(p=>averages=p),dotted:recorder(()=>{}),estimated:recorder(p=>estimatedAverages=p)},view,s);
+   average.draw({solid:recorder(p=>averages=p),dotted:recorder(()=>{})},view,s);
    price.draw({solid:recorder(()=>{}),dotted:recorder(()=>{}),points:recorder(p=>prices=p)},view,s,{[s]:'#fff'});
    for(const bar of bars){
     const stats=statisticsAt(view,bar.time,s);
@@ -50,11 +50,9 @@ test('all world histories: chart bars, legend, averages and prices trace to cano
      assert.ok(!('tcVolume' in stats));
     }
    }
-   const expected=view.daily.filter(d=>d[s]?.transactions>0&&Number.isSafeInteger(d[s].averagePrice)&&d.provenance[s].kind!=='estimated');
-   const expectedEstimated=view.daily.filter(d=>d[s]?.transactions>0&&Number.isSafeInteger(d[s].averagePrice)&&d.provenance[s].kind==='estimated');
-   assert.equal(averages.length,expected.length);assert.equal(estimatedAverages.length,expectedEstimated.length);
+   const expected=view.daily.filter(d=>d[s]?.transactions>0&&Number.isSafeInteger(d[s].averagePrice));
+   assert.equal(averages.length,expected.length);
    for(let i=0;i<averages.length;i++)assert.equal(averages[i].value,expected[i][s].averagePrice);
-   for(let i=0;i<estimatedAverages.length;i++)assert.equal(estimatedAverages[i].value,expectedEstimated[i][s].averagePrice);
    for(const p of prices){
     const candidates=data.observations.filter(o=>o.serverDay===p.time&&o.sell!==undefined);
     assert.equal(p.value,candidates.at(-1)[s]);
