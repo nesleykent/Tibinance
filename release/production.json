@@ -1,26 +1,26 @@
 {
  "format": 1,
- "note": "50 validated October 15 captures across 25 worlds; 471 offer rows; prior captures preserved.",
- "approver": "Codex, verified screenshot import and browser checks",
+ "note": "",
+ "approver": "GitHub Actions forecast archive (validated data release)",
  "artifact": {
-  "bytes": 140426730,
-  "digest": "324f6eb4b3f1a25b241b4bb545173c8255752faf585f67d4b6dabb2528e7b741",
+  "bytes": 140459320,
+  "digest": "318a659b4333249a1c2f213f803f4a681a5d25d91bff4fe5a1843c1705062741",
   "files": 957
  },
- "commit": "ac0d006747e07200bbeb1c21c4c06f057ceed0ea",
- "createdAt": "2026-10-15T03:36:53.756Z",
+ "commit": "4ca2f052b62bcf7a5856c9d7558d851e074c7870",
+ "createdAt": "2026-10-15T03:38:04.799Z",
  "kind": "data",
  "policySha256": "8598ea053fc9fba9189b10e9c9bbbd33f9b89b36ab503161a844995d81008ad9",
  "source": {
   "base": {
-   "commit": "3c254b276c555b7e47506ac6a183f433acc73615",
-   "tag": "release/0022"
+   "commit": "ac0d006747e07200bbeb1c21c4c06f057ceed0ea",
+   "tag": "release/0023"
   },
-  "data": "5550a4d094cd8659c08df8f25b8ec0da5a90fcda",
+  "data": "ca121d205529ac9c03b6acf06c28b19810bb4045",
   "policyFrom": "release/0022"
  },
- "tag": "release/0023",
- "tree": "0ade749d18bf9f924c56fd0004b425040a89ffb2",
+ "tag": "release/0024",
+ "tree": "801fc8988c2e65fcdb376158498f67e2595e9bad",
  "validation": {
   "checks": [
    {
@@ -61,12 +61,12 @@
    }
   ],
   "validator": {
-   "commit": "5550a4d094cd8659c08df8f25b8ec0da5a90fcda",
+   "commit": "ca121d205529ac9c03b6acf06c28b19810bb4045",
    "path": "tools/ci/validate_site.mjs"
   }
  },
  "record": {
-  "seq": 23,
-  "hash": "7bca80c2075e785503a498b05483d50e65e6516b99daa40a5c96941bfe11ac68"
+  "seq": 24,
+  "hash": "15d708de3ae6bb66094db152a0803e424b5fc2c0578dca9b54f3b4f28c5b8929"
  }
 }
