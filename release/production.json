@@ -1,14 +1,14 @@
 {
  "format": 1,
  "note": "",
- "approver": "Owner standing approval (publish-to-main); Claude verified 243 JS tests, validate_site 9/9, Astera legend in browser",
+ "approver": "Owner standing approval (publish-to-main); Claude verified 243 JS tests, validate_site 9/9",
  "artifact": {
-  "bytes": 141844697,
-  "digest": "73c3b09b8c0f7635796c0d46900b235df3923e34ba682d5c370b0341fb460e38",
+  "bytes": 141948373,
+  "digest": "ba9a0122477a74f9b18b31f9d12d7c5730faf346a64aa4991bfb05d08bf749d4",
   "files": 980
  },
- "commit": "8796c331897bf0872a1fa78cbabe03888ae24c4d",
- "createdAt": "2026-10-15T08:46:10.593Z",
+ "commit": "3d94c26a8cd6d1003889e6ec51bd7a93294a935e",
+ "createdAt": "2026-10-15T08:55:10.151Z",
  "kind": "full",
  "policy": {
   "dataPaths": [
@@ -34,10 +34,10 @@
  },
  "policySha256": "8598ea053fc9fba9189b10e9c9bbbd33f9b89b36ab503161a844995d81008ad9",
  "source": {
-  "commit": "8796c331897bf0872a1fa78cbabe03888ae24c4d"
+  "commit": "3d94c26a8cd6d1003889e6ec51bd7a93294a935e"
  },
- "tag": "release/0041",
- "tree": "c362e44d75a26bdeb68d2f7b6357db1a54aebee9",
+ "tag": "release/0042",
+ "tree": "0e76f517e922676ff916ef4823bc7157fdeca69b",
  "validation": {
   "checks": [
    {
@@ -78,12 +78,12 @@
    }
   ],
   "validator": {
-   "commit": "8796c331897bf0872a1fa78cbabe03888ae24c4d",
+   "commit": "3d94c26a8cd6d1003889e6ec51bd7a93294a935e",
    "path": "tools/ci/validate_site.mjs"
   }
  },
  "record": {
-  "seq": 36,
-  "hash": "ceb368d4eb55884b8de528fe3a30cc80b54e1ab5e1871c9474efed4a443e607b"
+  "seq": 37,
+  "hash": "5b126e217eae550a1a8032a09e315825aecba98a7c196943a799e22002ad4191"
  }
 }
