@@ -36,10 +36,10 @@ try {
   assert.equal(await page.textContent('[data-through]'),index.through);
   // The summary: an index per card, the chart following the card and the range chosen.
   assert.deepEqual(await page.$$eval('#summaryCards .tv-card-name',c=>c.map(e=>e.childNodes[0].textContent)),['TC Sell index','TC Buy index','Spread index','Market activity','Tibia Token']);
-  assert.match(await text('#summaryName'),/^TC Sell index: /);
+  assert.match(await text('#summaryName'),/^TC Sell index$/);
   assert.match(await text('#summaryLast'),/^\d{2},\d{3}$/);
   await page.click('#summaryCards [data-id="buy"]');
-  assert.match(await text('#summaryName'),/^TC Buy index: /);
+  assert.match(await text('#summaryName'),/^TC Buy index$/);
   assert.equal(await page.getAttribute('#summaryCards [data-id="buy"]','aria-pressed'),'true');
   await page.click('#summaryRanges [data-range="3M"]');
   assert.match(await text('#summaryChange'),/3M$/);
@@ -100,14 +100,14 @@ try {
   const monthly=await load('data/economy/gold/monthly.json');
   const grossTotal=Object.values(monthly.worlds).flat().filter(r=>r[5]).reduce((a,r)=>a+r[1]+r[2],0);
   await page.click('#summaryMode [data-mode="accumulated"]');
-  assert.match(await text('#summaryName'),/^Gross potential, the whole game: accumulated since \d{4}-\d{2}$/);
+  assert.match(await text('#summaryName'),/^Gross potential, accumulated$/);
   assert.equal(await page.textContent('#summaryLast'),shortFormat.format(grossTotal));
-  assert.match(await text('#summaryUnit'),/^gold accumulated to \d{4}-\d{2}, \d+ worlds$/);
+  assert.match(await text('#summaryUnit'),/^gold, since \d{4}-\d{2} to \d{4}-\d{2}, \d+ worlds$/);
   await page.click('#summaryMode [data-mode="daily"]');
-  assert.match(await text('#summaryName'),/per day in each month$/);
+  assert.match(await text('#summaryName'),/^Gross potential$/);
   await page.click('#statCards [data-id="kills"]');
   assert.match(await text('#summaryName'),/^Creature kills/);
-  assert.match(await text('#summaryUnit'),/^kills per day, \d{4}-\d{2}, \d+ worlds$/);
+  assert.match(await text('#summaryUnit'),/^kills per day in \d{4}-\d{2}, \d+ worlds$/);
   assert.deepEqual(await page.$$eval('#heatmap .tv-tile',t=>t.map(e=>e.dataset.name).sort()),goldWorlds);
   assert.equal(await page.$$eval('#worldsTable tbody tr',r=>r.length),goldWorlds.length);
   for (const id of ['hotRichest','hotGrowing','hotShrinking','hotNpc']) assert.equal(await page.$$eval(`#${id} li`,l=>l.length),6,id);

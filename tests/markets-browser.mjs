@@ -298,10 +298,10 @@ try {
     const r=image.width/1200,box=(x0,y0,x1,y1)=>ctx.getImageData(x0*r,y0*r,(x1-x0)*r,(y1-y0)*r).data;
     const count=(data,test)=>{let n=0;for(let i=0;i<data.length;i+=4) if(test(data[i],data[i+1],data[i+2])) n++;return n;};
     const near=([R,G,B])=>(r,g,b)=>Math.abs(r-R)+Math.abs(g-G)+Math.abs(b-B)<60;
-    const chart=box(32,136,1168,696),dark=(r,g,b)=>r+g+b<200;
+    const chart=box(32,168,1168,728),dark=(r,g,b)=>r+g+b<200;
     const xs=[];{const d=chart,w=1136*r;for(let i=0;i<d.length;i+=4) if(near([242,54,69])(d[i],d[i+1],d[i+2])||near([41,98,255])(d[i],d[i+1],d[i+2])) xs.push((i/4)%w);}
     return {width:image.width,height:image.height,sell:count(chart,near([242,54,69])),buy:count(chart,near([41,98,255])),probe:count(chart,near([0,255,0])),
-      span:xs.length ? (Math.max(...xs)-Math.min(...xs))/(1136*r) : 0,title:count(box(32,32,600,90),dark),footer:count(box(32,708,400,750),dark)};
+      span:xs.length ? (Math.max(...xs)-Math.min(...xs))/(1136*r) : 0,title:count(box(32,32,600,90),dark),footer:count(box(32,740,400,782),dark)};
   },png);
   // The series alone, in the image's fixed layout: events, shown by default, add notes under the chart and are
   // covered by tests/market-events-browser.mjs.
@@ -315,7 +315,7 @@ try {
   let pixels=await inspect(image.png);
   // The Key stats and Performance band and the export line add to the image: as many rows as the page's details have.
   const band=()=>page.evaluate(async()=>{const m=await import(new URL('js/market-export.js?v=20261015-shot',location.href).href);return m.detailsHeight(m.pageDetails())+16;});
-  assert.deepEqual([pixels.width,pixels.height],[2400,(780+await band())*2],'twice the image layout from a 1x screen');
+  assert.deepEqual([pixels.width,pixels.height],[2400,(812+await band())*2],'twice the image layout from a 1x screen');
   assert.ok(pixels.sell>2000 && pixels.buy<50,`the Sell series ${JSON.stringify(pixels)}`);
   assert.ok(pixels.span>0.85,`the days shown fill the plot: ${pixels.span}`);
   assert.ok(pixels.title>300 && pixels.footer>100,`title and branding ${JSON.stringify(pixels)}`);
@@ -475,7 +475,7 @@ try {
   pixels=await inspect((await exportImage(page)).png);
   await page.click('#eventMarkers');
   await page.click('#eventsToggle');
-  assert.deepEqual([pixels.width,pixels.height],[2400,(780+await band())*2]);
+  assert.deepEqual([pixels.width,pixels.height],[2400,(812+await band())*2]);
   assert.ok(pixels.sell>2000 && pixels.span>0.85,`phone export ${JSON.stringify(pixels)}`);
   // At full screen a phone shows the chart and the rail's actions, with the way back.
   await page.evaluate(()=>Object.defineProperty(document,'fullscreenEnabled',{value:false,configurable:true}));

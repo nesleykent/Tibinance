@@ -11,23 +11,25 @@
  * sums of every world, creatures), data/market-history/tibia-coin/index.json (world facts, daily Sell Offers),
  * reports/economy/results.json (findings), data/economy/ (sync and access status). The address keeps the view.
  */
+import { seriesStyle, layoutLegend, drawLegend, wrapLines } from './chart-legend.js';
+import { context as toolContext } from './tv-bridge.js';
 import { cssToken as token } from './theme.js';
 import { config } from './config.js';
 import { fmt, esc, num } from './format.js';
 import { dock } from './markets-dock.js';
 import { MEASURES, INTERVALS, ratePeriods, accumulatedPeriods, rangeChange, rangeStartOf, overviewRows, periodOf, contributions, lastDay, sellOfferPeriods,
   LIQUIDATION_SCENARIOS } from './economy-data.js?v=20261014-global-price';
-import { economyChart, colors } from './economy-chart.js?v=20261015-quality';
+import { economyChart, colors, dayOf } from './economy-chart.js?v=20261015-quality';
 import { connect, changed } from './tv-bridge.js';
 import { loadEvents, eventsFor, within } from './events.js';
 import { eventMarks } from './market-events-ui.js?v=20261015-left2';
-import { pageDetails, detailsHeight, drawDetails, exportedLine } from './market-export.js?v=20261015-shot';
+import { pageDetails, detailsHeight, drawDetails, exportedLine } from './market-export.js?v=20261015-legends';
 
 const $ = id => document.getElementById(id);
 const RANGES = ['1M', '3M', '6M', 'YTD', '1Y', 'All'];
 const ROOMY = '(min-width: 1280px)';
 const REPO = 'https://github.com/nesleykent/Tibinance';   // notes and methodology are read there, rendered
-const KEY = { gross: 'var(--eco-gross, var(--ink))', coins: 'var(--eco-coins, var(--sell))', npc: 'var(--eco-npc, var(--buy))' };
+
 const percent = new Intl.NumberFormat('en-US', { style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2, signDisplay: 'exceptZero' });
 const signedNumber = new Intl.NumberFormat('en-US', { signDisplay: 'exceptZero', maximumFractionDigits: 0 });
 const worldLink = world => `<a class="details-link" href="https://www.tibia.com/community/?subtopic=worlds${world === 'All' ? '' : `&world=${encodeURIComponent(world)}`}" target="_blank" rel="noopener noreferrer" aria-label="${world === 'All' ? 'Game worlds' : esc(world)} on tibia.com" title="Open on tibia.com"><svg aria-hidden="true"><use href="css/tv-icons.svg#external"/></svg></a>`;
@@ -39,7 +41,7 @@ const compactGold = v => (Number.isFinite(v) ? compactFormat.format(v) : 'N/A');
 const pct1 = v => (Number.isFinite(v) ? `${(100 * v).toFixed(1)}%` : 'N/A');
 const signedRatio = r => (r == null ? num(null) : `<span class="${tone(r)}">${percent.format(r)}</span>`);
 const signedDelta = d => (d == null ? num(null) : `<span class="${tone(d)}">${signedNumber.format(Math.round(d))}</span>`);
-const key = (cls, color) => `<i class="key ${cls}" style="--side:${color}"></i>`;
+
 
 const params = new URLSearchParams(location.search);
 const state = {
@@ -192,7 +194,8 @@ function applyRange(attempt = 0) {
   chart.show(!start || start < first ? first : periodOf(start, state.interval)[0], lastStart);
 }
 const fitHead = () => chart?.fitTop($('chartHead'));
-new ResizeObserver(() => requestAnimationFrame(fitHead)).observe($('chart'));
+const headResize = new ResizeObserver(() => requestAnimationFrame(fitHead));
+headResize.observe($('chart')); headResize.observe($('chartHead'));
 
 /* ------------------------------------------------------------------ status */
 const UNIT = { day: 'day', week: 'week', month: 'month' };
@@ -210,7 +213,11 @@ function metaOf(world) {
 }
 
 function showQuote() {
-  const p = view.last, change = rangeChange(view.periods, field(), state.range);
+  const p = view.last, change = rangeChange(view.periods, field(), state.range), palette = colors();
+  for (const button of $('measure').querySelectorAll('button')) {
+    const id = button.dataset.measure ?? ({ killsToggle: state.measure, priceToggle: 'price', eventsShown: 'events' }[button.id]);
+    button.style.cssText = seriesStyle(id === 'events' ? palette.events.world : palette[id]);
+  }
   $('world').textContent = state.world;
   $('worldMeta').innerHTML = metaOf(state.world);
   $('lastValue').textContent = state.measures.length && p ? gold(view.values.get(p.start)[field()]) : '';
@@ -233,6 +240,7 @@ function showQuote() {
  */
 function showLegend(day) {
   if (!view) return;
+  $('chartHead').classList.toggle('is-crosshair', Boolean(day));
   const p = day ? view.byStart.get(day) : view.last;
   if (!p) { $('legend').innerHTML = ''; return; }
   const values = view.values.get(p.start), accumulated = state.mode === 'accumulated';
@@ -241,29 +249,30 @@ function showLegend(day) {
   if (values.grossPotential === null) {
     rows.push(`<span class="note">${accumulated ? 'No available gold in this interval within the selected range' : `${p.covered} of ${p.days} days with data${p.end > view.end ? ', unfinished' : ''}`}: gold not drawn</span>`);
   }
-  const extra = (label, value, rest = '', selected = false) => {
+  const palette = colors();
+  const extra = (label, value, rest = '', selected = false, color = palette.gross) => {
     const cls = selected ? 'eco-selected' : 'eco-extra';
-    return `<span class="label ${cls}">${label}</span> <b class="value ${cls}">${value}</b> <span class="rest ${cls}">${rest}</span>`;
+    return `<span class="label series-label ${cls}" style="${seriesStyle(color)}">${label}</span> <b class="value ${cls}">${value}</b> <span class="rest ${cls}">${rest}</span>`;
   };
   for (const [k, m] of Object.entries(MEASURES)) {
     if (!state.measures.includes(k) || values[m.field] === null) continue;
     const prev = !accumulated && view.periods.slice(0, view.periods.indexOf(p)).findLast(q => q.rate[m.field] !== null);
     const delta = prev ? values[m.field] - prev.rate[m.field] : null;
     const change = prev ? `<span class="eco-delta">${signedDelta(delta)}</span> ${signedRatio(prev.rate[m.field] ? delta / prev.rate[m.field] : null)} <span class="meta">since ${esc(periodLabel(prev))}</span>` : '';
-    rows.push(extra(`${key('key-dot', KEY[k])}${m.name}`, gold(values[m.field]), change, true));
+    rows.push(extra(m.name, gold(values[m.field]), change, true, palette[k]));
   }
   if (accumulated && values.grossPotential !== null) {
     const a = view.accumulated.get(p.start);
     rows.push(`<span class="note eco-selected">From ${esc(a.from)}: ${a.covered}/${a.days} days with data${a.complete ? '' : ' / partial subtotal'}</span>`);
   }
-  if (state.kills) rows.push(extra(`${key('key-volume', KEY[state.measure])}Kills/day`, gold(p.rate.kills), `<span class="meta">${pct1(p.killCoverage)} valued</span>`, true));
-  if (state.stable && values.grossPotential !== null) rows.push(extra(`${key('eco-key-dashed', 'var(--accent)')}Constant set`, gold(values.grossStable), '<span class="meta">comparison</span>', true));
-  if (state.rate !== null && values.grossPotential !== null) rows.push(extra(`${key('eco-key-dashed', 'var(--caution)')}Gold + ${state.rate * 100}% NPC`, gold(values.directCoins + state.rate * values.npcPotential), '<span class="meta">assumption</span>', true));
+  if (state.kills) rows.push(extra('Kills/day', gold(p.rate.kills), `<span class="meta">${pct1(p.killCoverage)} valued</span>`, true, palette[state.measure]));
+  if (state.stable && values.grossPotential !== null) rows.push(extra('Constant set', gold(values.grossStable), '<span class="meta">comparison</span>', true, palette.stable));
+  if (state.rate !== null && values.grossPotential !== null) rows.push(extra(`Gold + ${state.rate * 100}% NPC`, gold(values.directCoins + state.rate * values.npcPotential), '<span class="meta">assumption</span>', true, palette.scenario));
   if (state.price && view.lastPrice) {
     const pricedPeriod = !day && !view.price.has(p.start) ? view.lastPrice : p;
     const q = pricedPeriod && view.price.get(pricedPeriod.start);
     const basis = state.world === 'All' ? `median of ${fmt(q?.n ?? 0)} daily world medians; ${fmt(q?.worlds ?? 0)} worlds, ${fmt(q?.worldDays ?? 0)} world-days` : `median of ${fmt(q?.n ?? 0)} day${q?.n === 1 ? '' : 's'}`;
-    rows.push(extra(`${key('key-average', 'var(--average)')}TC Sell Offer${state.world === 'All' ? ' (world median)' : ''}`, q ? gold(q.sell) : 'N/A', `<span class="meta">${q ? `${basis}${pricedPeriod !== p ? `, last observed ${esc(periodLabel(pricedPeriod))}` : ''}` : 'not observed'}</span>`, true));
+    rows.push(extra(`TC Sell Offer${state.world === 'All' ? ' (world median)' : ''}`, q ? gold(q.sell) : 'N/A', `<span class="meta">${q ? `${basis}${pricedPeriod !== p ? `, last observed ${esc(periodLabel(pricedPeriod))}` : ''}` : 'not observed'}</span>`, true, palette.price));
   }
   $('legend').innerHTML = `${head} ${rows.join(' ')}`;
   if (!day) fitHead();
@@ -532,23 +541,41 @@ async function exportImage() {
   const shot = chartCanvas($('chart')), c = colors(), pad = 24, ratio = window.devicePixelRatio || 1;
   const canvas = document.createElement('canvas');
   const details = pageDetails();
-  canvas.width = shot.width + pad * 2 * ratio; canvas.height = shot.height + (126 + detailsHeight(details)) * ratio;
-  const ctx = canvas.getContext('2d'), font = getComputedStyle(document.documentElement).getPropertyValue('--font-ui');
-  // The chart's own ground (its pane), not the page's: the terminal's page colour is only the gap between its blocks.
-  ctx.fillStyle = getComputedStyle(document.querySelector('.chart-area') ?? document.body).backgroundColor; ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.scale(ratio, ratio);
-  ctx.fillStyle = c.ink; ctx.font = `600 18px ${font}`;
-  ctx.fillText(`${state.world}: ${state.measures.map(k => MEASURES[k].short).join(', ') || 'gold hidden'}, ${state.mode === 'daily' ? 'gold per day' : 'accumulated gold (log scale)'} (${state.range})`, pad, 32);
-  ctx.fillStyle = c.text; ctx.font = `400 12px ${font}`;
+  const unit = state.mode === 'daily' ? 'gold/day' : 'gold accumulated';
+  const shown = chart.chart.timeScale().getVisibleRange();
+  const eventGroups = new Set(eventsShown ? chartEvents().filter(e => !shown || (e.end >= dayOf(shown.from) && e.start <= dayOf(shown.to))).map(e => e.category.group) : []);
+  const entries = [...state.measures.map(k => ({ label: `${MEASURES[k].name} (${unit}, left)`, color: c[k] })),
+    ...(state.kills ? [{ label: 'Kills/day (lower pane)', color: c[state.measure] }] : []),
+    ...(state.price && view.lastPrice ? [{ label: 'TC Sell Offer (gold/TC, right)', color: c.price }] : []),
+    ...(state.stable ? [{ label: `Constant set (${unit}, dashed comparison)`, color: c.stable }] : []),
+    ...(state.rate !== null ? [{ label: `Gold + ${state.rate * 100}% NPC (${unit}, dashed assumption)`, color: c.scenario }] : []),
+    ...[...eventGroups].map(group => ({ label: `${group[0].toUpperCase()}${group.slice(1)} events (numbered markers)`, color: c.events[group] })),
+    ...(toolContext()?.indicatorKeys?.() ?? [])];
+  const font = token('--font-ui'), measure = canvas.getContext('2d'), width = shot.width / ratio;
+  measure.font = `400 13px ${font}`;
+  const legend = layoutLegend(entries, text => measure.measureText(text).width, width);
   const a = view.accumulated.get(view.last.start);
-  ctx.fillText(`From valued creatures, by ${UNIT[state.interval]}; ${state.mode === 'accumulated' ? `since ${a.from}, ${a.covered}/${a.days} days${a.complete ? '' : ', partial subtotal'}` : `kill coverage ${pct1(view.last.killCoverage)}`}. Not money supply${state.rate !== null ? `; dashed: gold + ${state.rate * 100}% NPC, assumption` : ''}.`, pad, 52);
-  ctx.drawImage(shot, pad, 64, shot.width / ratio, shot.height / ratio);
-  const right = shot.width / ratio + pad;
-  const y = drawDetails(ctx, details, { x: pad, y: 64 + shot.height / ratio, right, ui: font,
+  const lines = (text, size) => { measure.font = `${size === 18 ? 600 : 400} ${size}px ${font}`; return wrapLines(text, t => measure.measureText(t).width, width); };
+  const title = lines(`${state.world}: Economy, ${state.mode === 'daily' ? 'daily averages' : 'accumulated gold (log scale)'} (${state.range})`, 18);
+  const method = lines(`From valued creatures, by ${UNIT[state.interval]}; ${state.mode === 'accumulated' ? `since ${a.from}, ${a.covered}/${a.days} days${a.complete ? '' : ', partial subtotal'}` : `kill coverage ${pct1(view.last.killCoverage)}`}. Not money supply.`, 12);
+  const source = lines(`Tibinance / Economy. Kill statistics through ${view.end}; TibiaWiki loot statistics, CC-BY-SA.`, 12);
+  const stamp = lines(exportedLine(), 11);
+  const legendTop = pad + title.length * 22 + method.length * 18 + 8;
+  const plotTop = legendTop + legend.height + (legend.height ? 12 : 0);
+  const footerHeight = 24 + (source.length + stamp.length) * 16;
+  canvas.width = shot.width + pad * 2 * ratio;
+  canvas.height = shot.height + (plotTop + detailsHeight(details) + footerHeight) * ratio;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = getComputedStyle(document.querySelector('.chart-area') ?? document.body).backgroundColor;
+  ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.scale(ratio, ratio);
+  const put = (rows, y, size, height, color) => { ctx.fillStyle = color; ctx.font = `${size === 18 ? 600 : 400} ${size}px ${font}`; ctx.textAlign = 'left'; rows.forEach((row, i) => ctx.fillText(row, pad, y + i * height)); };
+  put(title, pad + 18, 18, 22, c.ink); put(method, pad + title.length * 22 + 12, 12, 18, c.text);
+  drawLegend(ctx, legend, { x: pad, y: legendTop, font: `400 13px ${font}` });
+  ctx.drawImage(shot, pad, plotTop, width, shot.height / ratio);
+  const right = width + pad;
+  const y = drawDetails(ctx, details, { x: pad, y: plotTop + shot.height / ratio, right, ui: font,
     c: { ink: c.ink, muted: c.text, line: token('--tv-border') || c.grid, lineStrong: token('--tv-border-hover') || c.text, up: token('--tv-up-text'), down: token('--tv-down-text') } });
-  ctx.fillStyle = c.text; ctx.font = `400 12px ${font}`; ctx.textAlign = 'left';
-  ctx.fillText(`Tibinance / Economy. Kill statistics through ${view.end}; TibiaWiki loot statistics, CC-BY-SA.`, pad, y + 28);
-  ctx.font = `400 11px ${font}`; ctx.fillText(exportedLine(), pad, y + 46);
+  put(source, y + 24, 12, 16, c.text); put(stamp, y + 24 + source.length * 16, 11, 16, c.text);
   const name = `tibinance-economy-${state.world.toLowerCase()}-${state.measures.map(k => MEASURES[k].short.toLowerCase()).join('-') || 'hidden'}-${state.mode}-${state.interval}-${state.range.toLowerCase()}-${view.end}.png`;
   const blob = await new Promise((resolve, reject) => canvas.toBlob(b => (b ? resolve(b) : reject(new Error('The image could not be encoded.'))), 'image/png'));
   const link = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: name });
@@ -755,3 +782,5 @@ $('retry').addEventListener('click', async () => {
   }
 });
 main().catch(failed);
+
+addEventListener('tv:theme', () => { if (view) { showQuote(); showLegend(null); } });

@@ -1,3 +1,13 @@
+# Legend hierarchy and export corrections — 2026-10-15
+
+- [x] Audit all chart/legend/export paths; save LEGEND_AUDIT.md. Preserve the original untracked roadmap and numerical data.
+- [x] Reproduce dot controls (Chrome Beta before screenshot + failing pseudo-element regression) and missing PNG legend path. Implement compact series-colored text labels, consolidated latest/readout hierarchy and wrapped PNG legends without inventing filled chips.
+- [x] Research EN/PT: 71 figures each rasterized with pixel-verified whole-label colors. Markets exports now reconstruct EMA/BB/RSI; the RSI line is verified in actual PNG plot pixels.
+- [ ] Verify themes, narrow layouts, keyboard/toggles, numerical regressions and real PNGs across terminals, overviews and Research.
+- [ ] Update delivery record, review diff, commit/push main and verify CI.
+
+---
+
 # TradingView Phase 14 implementation — 2026-10-15
 
 Target: /Users/nesleykent/Code/Tibinance, starting main 6f3d34f. Preserve the untracked Tibinance_Roadmap.md. TV_REF is read-only reference data for this implementation. Sequential work; no subagents. Commit/push to main authorized; production release is a separate operation.

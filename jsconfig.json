@@ -9,5 +9,5 @@
     "moduleResolution": "bundler",
     "lib": ["ES2022", "DOM"]
   },
-  "include": ["js/config.js", "js/public-config.js", "js/theme.js", "js/tv-ui.js"]
+  "include": ["js/config.js", "js/public-config.js", "js/theme.js", "js/tv-ui.js", "js/chart-legend.js"]
 }

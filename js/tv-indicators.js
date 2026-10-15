@@ -1,3 +1,4 @@
+import { seriesStyle } from './chart-legend.js';
 /*
  * Indicators computed in the browser from the chart's main line, as TradingView defines them: a simple and an
  * exponential moving average, Bollinger Bands (a simple average and its population standard deviation times a
@@ -55,18 +56,18 @@ export function createIndicators({ legend, onChange }) {
   let list = [];   // [{ id, type, params, series: [] }]
   let hoverTime = null;
 
-  function seriesFor(ind) {
+  function seriesFor(ind, target = chart, scale = 1) {
     const spec = INDICATORS[ind.type], common = { priceLineVisible: false, lastValueVisible: true, crosshairMarkerVisible: false };
     if (ind.type === 'rsi') {
-      const pane = chart.panes().length;
-      const s = chart.addSeries(L.LineSeries, { ...common, color: spec.colors[0], lineWidth: 1, priceFormat: { type: 'price', precision: 2, minMove: 0.01 } }, pane);
-      s.createPriceLine({ price: 70, color: '#787b86', lineWidth: 1, lineStyle: L.LineStyle.Dashed, axisLabelVisible: false });
-      s.createPriceLine({ price: 50, color: 'rgba(120,123,134,.5)', lineWidth: 1, lineStyle: L.LineStyle.Dotted, axisLabelVisible: false });
-      s.createPriceLine({ price: 30, color: '#787b86', lineWidth: 1, lineStyle: L.LineStyle.Dashed, axisLabelVisible: false });
-      chart.panes()[pane]?.setStretchFactor?.(0.3);
+      const pane = target.panes().length;
+      const s = target.addSeries(L.LineSeries, { ...common, color: spec.colors[0], lineWidth: scale, priceFormat: { type: 'price', precision: 2, minMove: 0.01 } }, pane);
+      s.createPriceLine({ price: 70, color: '#787b86', lineWidth: scale, lineStyle: L.LineStyle.Dashed, axisLabelVisible: false });
+      s.createPriceLine({ price: 50, color: 'rgba(120,123,134,.5)', lineWidth: scale, lineStyle: L.LineStyle.Dotted, axisLabelVisible: false });
+      s.createPriceLine({ price: 30, color: '#787b86', lineWidth: scale, lineStyle: L.LineStyle.Dashed, axisLabelVisible: false });
+      target.panes()[pane]?.setStretchFactor?.(0.3);
       return [s];
     }
-    return spec.colors.map(color => chart.addSeries(L.LineSeries, { ...common, color, lineWidth: 1, lastValueVisible: false }));
+    return spec.colors.map(color => target.addSeries(L.LineSeries, { ...common, color, lineWidth: scale, lastValueVisible: false }));
   }
   function compute(ind) {
     const values = ctx.values?.() ?? [], p = ind.params;
@@ -90,8 +91,8 @@ export function createIndicators({ legend, onChange }) {
         const data = s.data(), at = hoverTime ? data.find(d => d.time === hoverTime) : data.at(-1);
         return at?.value;
       });
-      const text = values.map((v, i) => v === undefined ? '' : `<span style="color:${INDICATORS[ind.type].colors[i]}">${ind.type === 'rsi' ? v.toFixed(2) : ctx.format(v)}</span>`).join(' ');
-      return ` <span class="label">${label(ind)} <button type="button" data-ind-remove="${ind.id}" aria-label="Remove ${INDICATORS[ind.type].name}" title="Remove">×</button></span> <b class="value">${text || '—'}</b> <span class="rest"></span>`;
+      const text = values.map((v, i) => v === undefined ? '' : `<span class="series-label" style="${seriesStyle(INDICATORS[ind.type].colors[i])}">${ind.type === 'bb' ? ['Basis ', 'Upper ', 'Lower '][i] : ''}${ind.type === 'rsi' ? v.toFixed(2) : ctx.format(v)}</span>`).join(' ');
+      return ` <span class="label series-label" style="${seriesStyle(INDICATORS[ind.type].colors[0])}">${label(ind)} <button type="button" data-ind-remove="${ind.id}" aria-label="Remove ${INDICATORS[ind.type].name}" title="Remove">×</button></span> <b class="value">${text || '—'}</b> <span class="rest"></span>`;
     }).join('');
   }
   function persist() { if (page) write(STORE(page), list.map(({ type, params }) => ({ type, params }))); onChange?.(); }
@@ -116,7 +117,14 @@ export function createIndicators({ legend, onChange }) {
   }
   legend?.addEventListener('click', e => { const id = e.target.closest('[data-ind-remove]')?.dataset.indRemove; if (id) remove(id); });
 
+  const keys = () => list.flatMap(ind => ind.series.map((series, i) => ({ color: INDICATORS[ind.type].colors[i],
+    label: `${label(ind)}${ind.type === 'bb' ? [' basis', ' upper', ' lower'][i] : ''}${ind.type === 'rsi' ? ' (RSI, 0–100)' : ` (${page === 'token' ? 'USD/TIB' : page === 'economy' ? 'gold' : 'gold/TC'})`}` })));
   return {
+    keys,
+    exportTo(target, scale = 1) {
+      for (const ind of list) seriesFor(ind, target, scale).forEach((series, i) => series.setData(ind.series[i].data()));
+      return keys();
+    },
     attach(context) {
       ctx = context; chart = context.chart; L = window.LightweightCharts; page = context.page;
       for (const { type, params } of read(STORE(page), [])) add(type, params, { save: false });

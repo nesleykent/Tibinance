@@ -217,7 +217,7 @@ try {
     const r=image.width/1200,box=(x0,y0,x1,y1)=>ctx.getImageData(x0*r,y0*r,(x1-x0)*r,(y1-y0)*r).data;
     const count=(data,[R,G,B])=>{let n=0;for(let i=0;i<data.length;i+=4) if(Math.abs(data[i]-R)+Math.abs(data[i+1]-G)+Math.abs(data[i+2]-B)<60) n++;return n;};
     // The chart's foot (where markers stand), and everything under the chart (the notes).
-    const foot=box(32,640,1168,696),under=box(32,700,1168,image.height/r-90);
+    const foot=box(32,672,1168,728),under=box(32,732,1168,image.height/r-90);
     // TradingView's orange for the game's events, its purple for a world's, its ink for text (css/tv.css).
     return {height:image.height/r,game:count(foot,[255,152,0]),world:count(foot,[156,39,176]),notesGame:count(under,[255,152,0]),notesWorld:count(under,[156,39,176]),
       notesInk:count(under,[15,15,15])};
@@ -227,7 +227,7 @@ try {
   const notes=exportNotes(visible);
   const lines=1+notes.rows.length+(notes.more?1:0);
   let image=await inspect(await exportPng());
-  assert.ok(image.height >= 780+12+lines*20,`the image grows by its notes: ${JSON.stringify(image)} for ${lines} lines`);
+  assert.ok(image.height >= 812+12+lines*20,`the image grows by its notes: ${JSON.stringify(image)} for ${lines} lines`);
   // Terribra's opening and merge share a marker with the next day's XP/Skill Event: a mixed marker is drawn in ink.
   assert.ok(image.game>40,`markers drawn at the chart's foot ${JSON.stringify(image)}`);
   assert.ok(image.notesGame>40 && image.notesWorld>20 && image.notesInk>500,`keys and lines under the chart ${JSON.stringify(image)}`);
@@ -236,14 +236,14 @@ try {
   image=await inspect(await exportPng());
   // The Key stats and Performance band and the export line add to the image: as many rows as the page's details have.
   const band=()=>page.evaluate(async()=>{const m=await import(new URL('js/market-export.js?v=20261015-shot',location.href).href);return m.detailsHeight(m.pageDetails())+16;});
-  assert.equal(image.height,780+await band(),'hidden on the page, absent from the image');
+  assert.equal(image.height,812+await band(),'hidden on the page, absent from the image');
   assert.ok(image.game<5 && image.world<5,`no markers ${JSON.stringify(image)}`);
   await toggle.click();
   // The busiest view keeps its notes short: recurring events counted, the rest listed up to six, then how many more.
   await open('Antica','All');
   const all=exportNotes((await marks()).flatMap(m=>m.ids).map(id=>({...byId.get(id),category:dataset.categories.find(c=>c.id===byId.get(id).category)})));
   image=await inspect(await exportPng());
-  assert.ok(image.height >= 780+12+(1+all.rows.length+(all.more?1:0))*20, 'legend wraps into additional export rows');
+  assert.ok(image.height >= 812+12+(1+all.rows.length+(all.more?1:0))*20, 'legend wraps into additional export rows');
   assert.ok(all.rows.length===6 && all.more>0 && image.height<1600,`notes stay short: ${image.height}`);
 
   // ---- A world without market data plots nothing, events included.

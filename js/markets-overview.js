@@ -7,6 +7,7 @@
  * The index: on each server day, the median of every active world's latest Best Offer observed within the previous
  * 14 days (a world without one in that window is left out that day).
  */
+import { seriesStyle } from './chart-legend.js';
 import { cssToken } from './theme.js';
 import { tokenPrice as usd } from './tibia-token.js?v=20261015-quality';
 import { RANGES, changeOver, rangeStart } from './market-series.js';
@@ -94,15 +95,16 @@ async function main() {
   const changeOf = (s, r) => { const d = s.data; if (d.length < 2) return null; return changeOver(d.map(p => ({ day: p.time, value: p.value })), rangeStart(d.at(-1).time, r))?.ratio ?? null; };
   function showSymbol() {
     const last = current.data.at(-1), ch = changeOf(current, range);
-    $('summaryName').textContent = `${current.name}: ${current.desc}`;
+    $('summaryName').textContent = current.name;
     $('summaryLast').textContent = last ? current.format(last.value) : 'N/A';
-    $('summaryUnit').textContent = current.unit;
+    $('summaryUnit').textContent = `${current.unit}, ${current.desc}`;
+    $('summaryName').classList.add('series-label'); $('summaryName').style.cssText = seriesStyle(current.color);
     $('summaryChange').innerHTML = ch == null ? '' : `<span class="${tone(ch)}">${percent.format(ch)}</span> <span class="tv-muted">${range}</span>`;
     chart?.set(current.data, { color: current.color, format: current.format });
     chart?.show(last ? rangeStart(last.time, range) : null);
     $('summaryCards').innerHTML = SYMBOLS.map(s => {
       const l = s.data.at(-1), c = changeOf(s, range);
-      return `<li><button type="button" class="tv-card" data-id="${s.id}" aria-pressed="${s === current}"><span class="tv-logo-chip" style="--c:${s.color}">${esc(s.name[0])}</span>`
+      return `<li><button type="button" class="tv-card" style="${seriesStyle(s.color)}" data-id="${s.id}" aria-pressed="${s === current}">`
         + `<span class="tv-card-name">${esc(s.name)}<span class="tv-card-desc">${esc(s.desc)}</span></span>`
         + `<span class="tv-card-value">${l ? s.format(l.value) : 'N/A'}<small class="${tone(c)}">${c == null ? '' : percent.format(c)}</small></span></button></li>`;
     }).join('');

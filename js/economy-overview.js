@@ -7,6 +7,7 @@
  * The whole game per day in a month: each world's month total divided by its days with data, summed over the worlds.
  * A change of a sum over worlds: today's sum against the sum of each world's value at the start of the range.
  */
+import { seriesStyle } from './chart-legend.js';
 import { cssToken } from './theme.js';
 import { $, esc, pill, tone, short, whole, logo, percent, summaryChart, heatmap, heatScale, sortableTable, worldSearch, sectionChips } from './tv-overview.js?v=20261015-design';
 import { topStories } from './tv-news.js?v=20261015-design';
@@ -67,7 +68,7 @@ async function main() {
   ];
   $('statCards').innerHTML = CARDS.map(c => {
     const ch = c.measure ? all?.week?.[c.measure]?.[1] ?? sumChange(rows, c.measure, '1M') : null;
-    return `<button type="button" class="tv-stat" data-id="${c.id}" aria-pressed="${c.id === 'gross'}"><span class="tv-stat-name"><i style="--c:${COLOR[c.id]}"></i>${esc(c.name)}</span>`
+    return `<button type="button" class="tv-stat" style="${seriesStyle(COLOR[c.id])}" data-id="${c.id}" aria-pressed="${c.id === 'gross'}"><span class="tv-stat-name">${esc(c.name)}</span>`
       + `<span class="tv-stat-value">${short(c.value)}</span><span class="tv-stat-sub">${c.measure ? `${pill(ch)} 1M` : ''}<span>${esc(c.desc)}</span></span></button>`;
   }).join('');
   $('activeWorlds').textContent = `${rows.length} active worlds, latest complete weeks through ${overview.through}`;
@@ -87,17 +88,18 @@ async function main() {
     if (mode === 'accumulated') {
       let sum = 0;
       data = series.filter(m => !first || m.time >= first).map(m => ({ time: m.time, value: (sum += m[`${current}Total`]) }));
-      $('summaryName').textContent = `${name}, the whole game: accumulated since ${data[0].time.slice(0, 7)}`;
-      $('summaryUnit').textContent = `${what} accumulated to ${lastTime.slice(0, 7)}, ${worlds} worlds`;
+      $('summaryName').textContent = `${name}, accumulated`;
+      $('summaryUnit').textContent = `${what}, since ${data[0].time.slice(0, 7)} to ${lastTime.slice(0, 7)}, ${worlds} worlds`;
       $('summaryChange').innerHTML = `<span class="tv-muted">${range}, log scale</span>`;
     } else {
       data = series.map(m => ({ time: m.time, value: m[current] }));
       const base = first ? data.find(d => d.time >= first) : data[0], last = data.at(-1);
       const ch = base && last && base !== last ? last.value / base.value - 1 : null;
-      $('summaryName').textContent = `${name}, the whole game: per day in each month`;
-      $('summaryUnit').textContent = `${what} per day, ${lastTime.slice(0, 7)}, ${worlds} worlds`;
+      $('summaryName').textContent = name;
+      $('summaryUnit').textContent = `${what} per day in ${lastTime.slice(0, 7)}, ${worlds} worlds`;
       $('summaryChange').innerHTML = ch == null ? '' : `<span class="${tone(ch)}">${percent.format(ch)}</span> <span class="tv-muted">${range}</span>`;
     }
+    $('summaryName').classList.add('series-label'); $('summaryName').style.cssText = seriesStyle(COLOR[current]);
     $('summaryLast').textContent = short(data.at(-1)?.value);
     chart?.log(mode === 'accumulated');
     chart?.set(data, { color: COLOR[current] });

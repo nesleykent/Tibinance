@@ -9,12 +9,14 @@
  * The image has the same layout from any window or phone (WIDTH by the height of its parts, in image pixels) and at
  * least twice as many device pixels: on a screen of lower density the offscreen chart is drawn larger instead.
  */
+import { layoutLegend, drawLegend } from './chart-legend.js';
+import { context as toolContext } from './tv-bridge.js';
 import { createMarketChart } from './market-chart.js?v=20261015-quality-estimates';
 import { dateText } from './events.js';
 import { drawMarker } from './market-events-layer.js?v=20261014-events';
 
 const WIDTH = 1200, PAD = 32, CHART_HEIGHT = 560;
-const HEAD = 104;     // title, quote, legend and rule above the chart
+const HEAD = 80;     // title, quote, legend and rule above the chart
 const FOOT = 68;      // rule and footer (conventions, then when and where it was exported) below it
 const LINE = 20;      // a line of notes under the chart
 
@@ -41,10 +43,11 @@ export async function marketImage({ view, side, logicalRange, context, hidden = 
     market.draw(view, side);
     if (logicalRange) market.chart.timeScale().setVisibleLogicalRange(logicalRange);
     else market.chart.timeScale().fitContent();
+    const indicators = toolContext()?.exportIndicators?.(market.chart, k) ?? [];
     await frames(2);
     // With the top layer, where layers draw their primitives; without the crosshair.
     const shot = market.chart.takeScreenshot(true, false);
-    return compose({ shot, ratio: dpr * k, k, plotWidth, market, keys: market.keys(side), notes: market.notes(), context, side });
+    return compose({ shot, ratio: dpr * k, k, plotWidth, market, keys: [...market.keys(side), ...indicators], notes: market.notes(), context: { priceUnit: view.profile ? 'USD per TIB' : 'Gold per TC', ...context }, side });
   } finally {
     market.chart.remove();
     host.remove();
@@ -73,7 +76,10 @@ function compose({ shot, ratio, k, plotWidth, market, keys, notes, context, side
   };
   const noteLines = notes.reduce((n, note) => n + (note.lines ? note.lines.length : keyLines(note) + note.rows.length + (note.more ? 1 : 0)), 0);
   const details = context.details ?? null;
-  const height = HEAD + CHART_HEIGHT + (noteLines ? 12 + noteLines * LINE : 0) + detailsHeight(details) + FOOT + PAD * 2;
+  measure.font = `400 13px ${ui}`;
+  const legend = layoutLegend(keys, text => measure.measureText(text).width, WIDTH - PAD * 2);
+  const head = HEAD + legend.height + 28;
+  const height = head + CHART_HEIGHT + (noteLines ? 12 + noteLines * LINE : 0) + detailsHeight(details) + FOOT + PAD * 2;
   canvas.width = Math.round(WIDTH * ratio);
   canvas.height = Math.round(height * ratio);
   const ctx = canvas.getContext('2d');
@@ -97,7 +103,7 @@ function compose({ shot, ratio, k, plotWidth, market, keys, notes, context, side
     ctx.strokeRect(x + 0.5, y + 13.5, w, 17);
     text(context.tag.toUpperCase(), x + 5, y + 26, { font: `600 11px ${ui}`, color: c.muted });
   }
-  text(context.meta.join('   '), PAD, y + 52, { font: `400 13px ${ui}`, color: c.muted });
+  text([...context.meta, context.priceUnit].filter(Boolean).join('   '), PAD, y + 52, { font: `400 13px ${ui}`, color: c.muted });
   let qx = right;
   if (context.change) {
     qx -= text(context.change.text, qx, y + 28, { font: `400 15px ${ui}`, color: c[context.change.tone] || c.muted, align: 'right' }) + 10;
@@ -106,14 +112,9 @@ function compose({ shot, ratio, k, plotWidth, market, keys, notes, context, side
   text([context.valueNote, context.change?.note].filter(Boolean).join(', '), right, y + 52, { font: `400 13px ${ui}`, color: c.muted, align: 'right' });
 
   // The legend, from the chart's layers, and the days shown.
-  const ky = y + 80;
-  let kx = PAD;
-  for (const key of keys) {
-    drawKey(ctx, key, kx, ky - 4);
-    kx += 24 + text(key.label, kx + 22, ky, { font: `400 13px ${ui}`, color: c.ink }) + 20;
-  }
-  if (context.shown) text(context.shown, right, ky, { font: `400 13px ${ui}`, color: c.muted, align: 'right' });
-  y += HEAD;
+  const legendEnd = drawLegend(ctx, legend, { x: PAD, y: y + 64, font: `400 13px ${ui}` });
+  if (context.shown) text(context.shown, PAD, legendEnd + 20, { font: `400 13px ${ui}`, color: c.muted });
+  y += head;
   rule(ctx, PAD, right, y - 8, c.line);
 
   // The chart, then whatever its layers write over it, in the chart's own pixels.
@@ -150,9 +151,8 @@ function drawNotes(ctx, notes, { x, y, right, c, ui, text }) {
     // Plain lines (a projection): a key, then the text, cut short where it would pass the edge.
     if (note.lines) {
       for (const line of note.lines) {
-        if (line.mark !== 'none') drawKey(ctx, { mark: line.mark, color: line.color ?? (line.mark === 'band' ? c.band : c.ink) }, x, y + 10);
-        const tx = line.mark === 'none' ? x : x + 28;
-        text(fit(ctx, line.text, right - tx, font), tx, y + 14, { font, color: line.mark === 'none' ? c.muted : c.ink });
+        const color = line.color ?? (line.mark === 'band' ? c.band : c.ink);
+        text(fit(ctx, line.text, right - x, font), x, y + 14, { font: line.mark === 'none' ? font : `600 13px ${ui}`, color: line.mark === 'none' ? c.muted : color });
         y += LINE;
       }
       continue;
@@ -163,8 +163,8 @@ function drawNotes(ctx, notes, { x, y, right, c, ui, text }) {
       ctx.font = font;
       const width = 55 + ctx.measureText(label).width;
       if (kx > x && kx + width > right) { kx = x; y += LINE; }
-      const w = drawMarker(ctx, { x: kx + 10, y: y + 10, label: category.mark, color: colorOf(category), background: c.canvas, font: ui });
-      text(label, kx + 10 + w / 2 + 6, y + 14, { font, color: c.ink });
+      const color = colorOf(category);
+      text(label, kx, y + 14, { font: `600 13px ${ui}`, color });
       kx += width;
     }
     y += LINE;
@@ -197,35 +197,6 @@ function rule(ctx, from, to, y, color) {
   ctx.fillRect(from, y, to - from, 1);
 }
 
-// The same marks as the legends on the page: a dot on its line, a dotted line, a plain line, a bar.
-function drawKey(ctx, { mark, color }, x, y) {
-  ctx.save();
-  ctx.strokeStyle = ctx.fillStyle = color;
-  ctx.lineCap = 'round';
-  if (mark === 'band') {
-    ctx.globalAlpha = 0.25;
-    ctx.fillRect(x, y - 5, 18, 10);
-  } else if (mark === 'dashed') {
-    ctx.lineWidth = 2;
-    ctx.setLineDash([5, 3]);
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-    ctx.lineTo(x + 18, y);
-    ctx.stroke();
-  } else if (mark === 'bar') {
-    ctx.globalAlpha = 0.45;
-    ctx.fillRect(x + 5, y - 6, 8, 12);
-  } else {
-    ctx.lineWidth = mark === 'line' ? 1 : 2;
-    if (mark === 'dotted') ctx.setLineDash([0.1, 4]);
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-    ctx.lineTo(x + 18, y);
-    ctx.stroke();
-    if (mark === 'dot') { ctx.beginPath(); ctx.arc(x + 9, y, 3.5, 0, Math.PI * 2); ctx.fill(); }
-  }
-  ctx.restore();
-}
 
 /*
  * The page's details beside the chart, as the image's band under it: the Key stats (every label and figure of the
