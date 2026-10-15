@@ -1,8 +1,8 @@
 {
  "chain": {
   "evaluations": 18,
-  "head": "99fb039b696c5c96f05b67eea6f89795a166b1b629c0964ac05ceafd288e793e",
-  "records": 80
+  "head": "fecf982d8fcc625187ecf3b8aead6d91651ffc57fe4cf9056fe0be6405cf6427",
+  "records": 81
  },
  "forecasts": [
   {
@@ -919,6 +919,10 @@
     {
      "sha256": "19b9a8011ab00ae776f3b20f0ca91b6b6baadb0c3fa7283a7a987d6349b34436",
      "surface": "markets-projections"
+    },
+    {
+     "sha256": "cfe76f9f8695083cebbf252718f03c3b11914b3324b9097129fb2ff3038f1979",
+     "surface": "markets-projections"
     }
    ],
    "product": "tc-world-scenarios",
@@ -1289,6 +1293,22 @@
    "forecast": "29adf6a097e2876da11ee71594f567b87426f9292e989dccc87a455baf8cc858",
    "sha256": "19b9a8011ab00ae776f3b20f0ca91b6b6baadb0c3fa7283a7a987d6349b34436",
    "state": "published",
+   "superseded": false,
+   "supersededBy": null,
+   "surface": "markets-projections"
+  },
+  {
+   "contentHash": "aa8d9326919b7654ea92a7f795774c58adfe80bab9fddefc9a565b5780e3dfe4",
+   "edition": "tc-world-scenarios/2026-10-15",
+   "evidence": {
+    "repository": null,
+    "website": null
+   },
+   "evidenceLevel": null,
+   "failures": [],
+   "forecast": "29adf6a097e2876da11ee71594f567b87426f9292e989dccc87a455baf8cc858",
+   "sha256": "cfe76f9f8695083cebbf252718f03c3b11914b3324b9097129fb2ff3038f1979",
+   "state": "archived",
    "superseded": false,
    "supersededBy": null,
    "surface": "markets-projections"

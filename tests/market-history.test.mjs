@@ -67,9 +67,10 @@ test('daily observations override estimates per side and mismatched capture time
   assert.equal(result.provenance.buy.source,'tibiamarket');
   assert.equal(result.sell.transactions,117);
   assert.equal(result.provenance.sell.kind,'estimated');
-  assert.deepEqual(estimateDailyStatistics([
-    rolling('2026-10-14','2026-10-14T02:00:00Z',2200),rolling('2026-10-15','2026-10-15T18:00:00Z',2244)
-  ]),[]);
+  // Counters are frozen between server saves, so captures at any time of consecutive server days pair.
+  assert.equal(estimateDailyStatistics([
+    rolling('2026-10-14','2026-10-14T09:00:00Z',2200),rolling('2026-10-15','2026-10-16T07:00:00Z',2244)
+  ])[0].buy.transactions,117);
   assert.equal(estimateDailyStatistics([
     rolling('2026-10-14','2026-10-14T12:00:00Z',2200),rolling('2026-10-14','2026-10-14T23:00:00Z',9999),
     rolling('2026-10-15','2026-10-15T12:00:00Z',2244)

@@ -153,7 +153,6 @@ export function latestDailyStatistics(reports) {
 }
 
 const ESTIMATE_WINDOW_DAYS = 30;
-const MAX_ESTIMATE_CLOCK_DRIFT_HOURS = 6;
 
 // The completed day entering a rolling 30-day window. A rolling observation on server day S covers the completed
 // days S-30 to S-1, so two consecutive observations S-1 and S differ by day S-1 coming in and day S-31 leaving:
@@ -174,7 +173,9 @@ export function estimateDailyStatistics(observations, daily = []) {
     if (addDays(days[i - 1], 1) !== days[i]) continue;
     const pairs = byDay.get(days[i - 1]).flatMap(previous => byDay.get(days[i]).map(current => ({ previous, current,
       intervalHours: (Date.parse(current.capturedAtUtc) - Date.parse(previous.capturedAtUtc)) / 3600000 })));
-    const pair = pairs.filter(p => Math.abs(p.intervalHours - 24) <= MAX_ESTIMATE_CLOCK_DRIFT_HOURS)
+    // The rolling counters change only at the server save (137 same-day repeats across worlds, all identical), so any
+    // capture on each of two consecutive server days is comparable, whatever the clock time.
+    const pair = pairs
       .sort((a, b) => Math.abs(a.intervalHours - 24) - Math.abs(b.intervalHours - 24)
         || b.current.capturedAtUtc.localeCompare(a.current.capturedAtUtc))[0];
     if (!pair) continue;
