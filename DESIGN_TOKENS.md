@@ -114,3 +114,13 @@ The table extracts measurement primitives. A selector establishes a measured val
 ## Gaps
 
 No TV source proves APP world/asset default choices, data units, OCR thresholds, Fibonacci/domain formulas, SVG coordinates, viewport fit thresholds, news image constraints, chart scale fractions or exported report geometry. Preserve these meanings; do not replace them with arbitrary theme values. Breakpoint literals stay in media/container conditions because native CSS var() is invalid there; annotate them TODO(design): no TV reference. Primitive occurrences inside SVG data URLs are image geometry, not CSS declarations.
+
+## Applied contract and remaining differences
+
+The implemented shared source is css/tv.css: 66 measured length primitives, weights 400/500/600/700, named local layers, source-cited palette primitives, text/graph color separation and motion. css/app.css and css/markets.css no longer repeat overridden publication palette defaults. js/theme.js supplies canvas consumers; overview series take the same primitives rather than independent hex colors.
+
+Normal and secondary/placeholder text, links, active labels and status text use sourced shades that also pass AA on hover and selected surfaces; heatmap text uses captured black/white according to its existing ramp/missing state to meet AA. This is an intentional accessibility adaptation from TV's white labels. All finite seven-step heatmap fills exceed 4.5:1 with black; the unavailable gray uses white. The APP's gaps, toolbar lengths, row density, component roles and article reading scale retain their previous measurements. The app-specific 320px asset picker may shrink; no tools are removed.
+
+Retained gaps are marked TODO in CSS: APP local stacking, responsive fit thresholds, compound popup shadows, grid/tint alpha and publication layout ratios. Values in SVG paths, chart geometry and immutable drawing defaults remain meaningful geometry/domain constants, not unsourced new design tokens. No new toast/modal system or keyboard bindings were introduced.
+
+AA surface adaptation: captured secondary semantic defaults are #707070 / #8c8c8c, but they fall short on hover/selected fills. APP secondary/placeholder ink uses runtime --color-cold-gray-650 (#575757) in light and --color-cold-gray-400 (#9c9c9c) in dark. Negative text uses --color-ripe-red-800 (#991f29), warning --color-tan-orange-a800 (#593a1b), light links/active text --color-tv-blue-700 (#1848cc), hover --color-tv-blue-800 (#143eb2); dark active/hover labels use --color-tv-blue-200 (#90bff9). These are existing captured ramp values, explicitly adapted for 4.5:1 across base, hover, popup and selected backgrounds; graphic fills retain their original values.

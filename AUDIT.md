@@ -926,3 +926,9 @@ Matching lines: config URL=57, design color=93, design dimension=460, design lay
 | tools/website_ingestion.mjs:37 | config URL | `http://127.0.0.1:8766/` | Centralize operational endpoints, retain attribution/documentation URLs. | MEDIUM |
 | trade.html:37 | config URL | `https://github.com/nesleykent/Tibinance` | Centralize operational endpoints, retain attribution/documentation URLs. | MEDIUM |
 | trade.html:114 | config URL | `https://www.tibia.com/gameguides/?section=controls_trading&amp;subtopic=manual` | Centralize operational endpoints, retain attribution/documentation URLs. | MEDIUM |
+
+## Resolution checkpoint
+
+The inventory above is deliberately preserved as baseline evidence. Shared active UI dimensions, weights, layers and palette consumers were consolidated; validated public endpoint/duration/view configuration was implemented and tested; focus, normal text/heatmap contrast and reduced motion were checked in Chrome/WebKit; chart gap work was made linear and token price precision/formatting shared. Baseline had 228 tests; final suite has 237.
+
+GitHub main advanced to 899c8ba (release/0022) during this work. Its world links, left-axis event-marker fix, browser assertions, data and release records were merged without rewriting history. The new world-link measurements consume the existing shared size scale. Refer to CHANGES.md for exact checks, retained reference gaps and remaining scope boundaries. Audit line numbers remain the initial 1c14ec2 baseline.

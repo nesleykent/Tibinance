@@ -1,15 +1,17 @@
-# GitHub-main quality refactor — 2026-10-14
+# GitHub-main quality refactor — 2026-10-15
 
-This task explicitly requests no commit/push/release and sequential work. Historic instructions below do not override that. TV_REF is read-only data. Baseline: GitHub main 1c14ec237f2ce9632da78fa11b9913d97fad341e in /tmp/tibinance-quality-github, initially clean. Both user local checkouts remain untouched by application changes.
+Latest user instructions authorize committing and pushing directly to GitHub main. Work was sequential; TV_REF remained read-only reference data. Baseline: GitHub main 1c14ec237f2ce9632da78fa11b9913d97fad341e in a clean clone at /tmp/tibinance-quality-github. Merged upstream 899c8ba (release/0022) without discarding either side. Both user local checkouts remain untouched by application changes. No production release is requested.
 
-- [x] Done — clone the actual GitHub version, inspect its existing TV system and modules, save Phase 1 AUDIT.md before application edits.
-- [x] Done — GitHub baseline: 228 units, all nine integrity/build checks. Phase 2 DESIGN_TOKENS.md saved.
-- [x] Done — shared tokens: 66 dimensions with sources/gaps, named stacking, text contrast shades, visible field focus and reduced motion. Group 1 desktop terminal geometry exactly matches baseline; state group lint/typecheck, 233 units and all nine integrity/build checks pass. Terminal interaction suites pass in Chrome and WebKit.
-- [x] Done — typed validated public config + env-to-static whitelist bridge; API/cache/polling/download/debounce/world/range/staleness consumers updated with defaults preserved. Five config tests pass, strict checkJs passes, lint and all nine site gates pass.
-- [x] Done — linear chart gap calculation (reproduction failed at 42,250 reads for 500 rows; fixed scan preserves zero/gaps/order), cached token formatter and derived precision, CSS canvas measurement reader, popup/clock/poll lifecycle cleanup. Targeted tests pass; final gates running.
-- [ ] In progress — rendered Chrome terminal suite passed; WebKit, responsive/contrast/focus/config/lifecycle checks, diff review and CHANGES.md remain. 320px Markets header overflow fixed by allowing its asset picker to shrink; initial regression reproduced before the fix. Baseline GitHub also fails the old forecast export height assertion (994 vs 832); corrected test isolates the notes-height difference from the newer common details band. Updated user instructions authorize commit and push to GitHub main after verification; no deployment requested.
+- [x] Done — Phase 1 AUDIT.md saved before application edits; 886 matching-line inventory entries, reviewed priorities and resolution notes.
+- [x] Done — Phase 2 DESIGN_TOKENS.md: palette, scales, component states, behavior, exact sources and explicit evidence gaps.
+- [x] Done — Phase 3 theme: 66 shared measurement tokens, weights/layers, AA text shades, focus, reduced motion and disabled states. Desktop terminal geometry matches baseline; the 320px asset-picker overflow is fixed.
+- [x] Done — Phase 3 public config: validated settings, safe defaults, atomic env whitelist bridge, .env.example and six config tests.
+- [x] Done — Phase 3 logic: linear Economy gap scan, shared cached price formatter/precision and theme access, popup/clock/poll timer cleanup, regression tests and reproducible development/CI gates.
+- [x] Done — Phase 4 verification: lint, strict boundary typecheck, 237 unit tests and all nine integrity/build checks; 17 affected Chrome browser suites. Economy/overviews/terminal/quality rerun in Chrome and WebKit after upstream integration and asset refresh; final contrast/terminal checks rerun in both engines. Screenshots inspected against TV_REF; dependency audit and 22-release integrity verification pass.
+- [x] Done — reviewable commits and CHANGES.md record implementation, source gaps, retained domain constants, risks and verification. Final diff reviewed; datasets and immutable histories preserved.
+- [ ] Pending — commit final refinements/documentation, push main normally and verify remote commit plus GitHub checks.
 
-Resume at first unchecked item. Prior Documents-copy audit/design draft was superseded; do not use it as evidence. Preserve data/ and immutable release/forecast histories. Browser plugin absent; use existing Playwright workflow.
+Resume at first unchecked item. Prior Documents-copy drafts were superseded and removed without changing the user's edits. Browser plugin absent; used the existing Playwright workflow. Screenshots: /tmp/tibinance-quality-final-shots/. Production release/0022 remains unchanged.
 
 ---
 
