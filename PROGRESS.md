@@ -9,7 +9,9 @@ Target: /Users/nesleykent/Code/Tibinance, starting main 6f3d34f. Preserve the un
 - [x] Final asset-refresh regression, lint/typecheck, 241 units, nine integrity gates and diff review. Visual review also reproduced/fixed unconstrained chart-menu SVGs (150px versus 40px rows) and duplicate queued dialog focus restoration. All-eight-route design matrix passes; affected functional checks rerun after final corrections.
 - [x] Updated CHANGES.md and DESIGN_TOKENS.md with applied §26 contracts, exact sources, verification and remaining intentional adaptations.
 - [x] Implementation committed as a58c7da; delivery/token records updated. Release verifier passes after fetching the existing missing local release/0024 tag; immutable artifacts unchanged.
-- [ ] In progress — push implementation and delivery commits to main; confirm hosted checks.
+- [x] Implementation a58c7da and delivery df85802 pushed normally to main; remote df85802092d2d71b4e2ad6f8ac7b0d45ec895c5b verified. Only the original untracked roadmap remains.
+
+Hosted CI status is tracked on GitHub for the delivery revision; the final response reports the completed result. No implementation work remains.
 
 ---
 
