@@ -1,8 +1,8 @@
 {
  "chain": {
   "evaluations": 18,
-  "head": "c2038d34bd369d9b6994cab93caab56d6f6b4b2e3e4154eaee40a5014a5faa49",
-  "records": 76
+  "head": "99fb039b696c5c96f05b67eea6f89795a166b1b629c0964ac05ceafd288e793e",
+  "records": 80
  },
  "forecasts": [
   {
@@ -889,9 +889,15 @@
      "commit": "1301bc769549ddbfa42dc6d5a32b2a7181d27b6b",
      "uncertainty": "older than the listed push events; published at or after this committer date"
     },
-    "website": null
+    "website": {
+     "at": "2026-10-15T07:53:47Z",
+     "basis": "github-pages-deployment-success",
+     "deployment": 7087041155,
+     "release": "release/0028",
+     "uncertainty": "time of the successful deployment status; caches may serve the previous site for a few minutes"
+    }
    },
-   "evidenceLevel": "repository",
+   "evidenceLevel": "website",
    "failures": [],
    "horizon": {
     "stepDays": 7,
@@ -949,9 +955,15 @@
      "commit": "1301bc769549ddbfa42dc6d5a32b2a7181d27b6b",
      "uncertainty": "older than the listed push events; published at or after this committer date"
     },
-    "website": null
+    "website": {
+     "at": "2026-10-15T07:53:47Z",
+     "basis": "github-pages-deployment-success",
+     "deployment": 7087041155,
+     "release": "release/0028",
+     "uncertainty": "time of the successful deployment status; caches may serve the previous site for a few minutes"
+    }
    },
-   "evidenceLevel": "repository",
+   "evidenceLevel": "website",
    "failures": [],
    "horizon": {
     "stepDays": 7,
@@ -1237,9 +1249,15 @@
      "commit": "1301bc769549ddbfa42dc6d5a32b2a7181d27b6b",
      "uncertainty": "older than the listed push events; published at or after this committer date"
     },
-    "website": null
+    "website": {
+     "at": "2026-10-15T07:53:47Z",
+     "basis": "github-pages-deployment-success",
+     "deployment": 7087041155,
+     "release": "release/0028",
+     "uncertainty": "time of the successful deployment status; caches may serve the previous site for a few minutes"
+    }
    },
-   "evidenceLevel": "repository",
+   "evidenceLevel": "website",
    "failures": [],
    "forecast": "29adf6a097e2876da11ee71594f567b87426f9292e989dccc87a455baf8cc858",
    "sha256": "2eed8793b78fdf8f20520b30b5e962547f6bc87b14e0c656a48600b95c810140",
@@ -1258,9 +1276,15 @@
      "commit": "627cde5d3dcb0dd89fb88795e49e409eb4d8b09d",
      "uncertainty": "older than the listed push events; published at or after this committer date"
     },
-    "website": null
+    "website": {
+     "at": "2026-10-15T07:56:04Z",
+     "basis": "github-pages-deployment-success",
+     "deployment": 7087084988,
+     "release": "release/0029",
+     "uncertainty": "time of the successful deployment status; caches may serve the previous site for a few minutes"
+    }
    },
-   "evidenceLevel": "repository",
+   "evidenceLevel": "website",
    "failures": [],
    "forecast": "29adf6a097e2876da11ee71594f567b87426f9292e989dccc87a455baf8cc858",
    "sha256": "19b9a8011ab00ae776f3b20f0ca91b6b6baadb0c3fa7283a7a987d6349b34436",
