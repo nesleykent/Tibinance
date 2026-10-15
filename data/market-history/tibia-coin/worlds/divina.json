@@ -65,6 +65,9 @@
     {"serverDay":"2025-10-27","provenance":{"buy":{"source":"tibiamarket","capturedAtUtc":"2025-10-28T21:42:32.317Z","sourceTimestamp":1761687752.3169856},"sell":{"source":"tibiamarket","capturedAtUtc":"2025-10-28T21:42:32.317Z","sourceTimestamp":1761687752.3169856}},"buy":{"transactions":10,"highestPrice":30117,"averagePrice":30099,"lowestPrice":30080},"sell":{"transactions":1,"highestPrice":33922,"averagePrice":33922,"lowestPrice":33922}},
     {"serverDay":"2025-10-28","provenance":{"buy":{"source":"tibiamarket","capturedAtUtc":"2025-10-29T21:42:32.318Z","sourceTimestamp":1761774152.3181767},"sell":{"source":"tibiamarket","capturedAtUtc":"2025-10-29T21:42:32.318Z","sourceTimestamp":1761774152.3181767}},"buy":{"transactions":0,"highestPrice":0,"averagePrice":0,"lowestPrice":0},"sell":{"transactions":0,"highestPrice":0,"averagePrice":0,"lowestPrice":0}}
   ],
+  "estimatedDailyStatistics": [
+    {"serverDay":"2025-10-29","provenance":{"buy":{"kind":"estimated","method":"rolling-30d-mean-day","windowDays":30,"capturedAtUtc":"2025-10-29T21:42:32.318Z","source":"tibiamarket"},"sell":{"kind":"estimated","method":"rolling-30d-mean-day","windowDays":30,"capturedAtUtc":"2025-10-29T21:42:32.318Z","source":"tibiamarket"}},"buy":{"transactions":3,"averagePrice":30519},"sell":{"transactions":2,"averagePrice":33929}}
+  ],
   "dailyStatisticsObservations": [
     {"serverDay":"2025-09-02","sell":{"transactions":0,"highestPrice":0,"averagePrice":0,"lowestPrice":0},"buy":{"transactions":0,"highestPrice":0,"averagePrice":0,"lowestPrice":0},"source":"tibiamarket","sourceTimestamp":1756935749.3110304,"capturedAtUtc":"2025-09-03T21:42:29.311Z"},
     {"serverDay":"2025-09-03","sell":{"transactions":4,"highestPrice":19983,"averagePrice":19983,"lowestPrice":19983},"buy":{"transactions":6,"highestPrice":18946,"averagePrice":18944,"lowestPrice":18944},"source":"tibiamarket","sourceTimestamp":1757022149.3109927,"capturedAtUtc":"2025-09-04T21:42:29.311Z"},

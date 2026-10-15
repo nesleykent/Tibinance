@@ -229,6 +229,16 @@ export function estimateDailyStatistics(observations, daily = []) {
       set(e.entering[0], name, side(count, e.gold + out * e.before.averagePrice, low, high), provenance(e, 'estimated'));
     }
   }
+  // A day with a 30-day reading and still no value on a side takes the reading's mean day: transactions / 30 at its
+  // Average Price.
+  for (const [day, o] of byDay) for (const name of ['buy', 'sell']) {
+    const v = o.statistics30d[name];
+    if (!v || reported.get(day)?.[name] || results.get(day)?.[name]) continue;
+    const side = { transactions: Math.round(v.transactions / ESTIMATE_WINDOW_DAYS) };
+    if (side.transactions > 0 && Number.isSafeInteger(v.averagePrice)) side.averagePrice = v.averagePrice;
+    set(day, name, side, { kind: 'estimated', method: 'rolling-30d-mean-day', windowDays: ESTIMATE_WINDOW_DAYS,
+      capturedAtUtc: o.capturedAtUtc, ...(o.source ? { source: o.source } : {}) });
+  }
   // Only days with no daily report on that side.
   return [...results.values()].map(r => {
     for (const name of ['buy', 'sell']) if (reported.get(r.serverDay)?.[name]) { delete r[name]; delete r.provenance[name]; }

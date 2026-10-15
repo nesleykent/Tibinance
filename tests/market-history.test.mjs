@@ -76,8 +76,9 @@ test('daily observations override estimates per side and mismatched capture time
   const leavingDays=['2026-09-10','2026-09-11','2026-09-12','2026-09-13'].map(reported);
   const gap=estimateDailyStatistics([rolling('2026-10-10','2026-10-10T12:00:00Z',3000),rolling('2026-10-14','2026-10-14T20:00:00Z',3050)],
     [...leavingDays,reported('2026-10-10'),reported('2026-10-11'),reported('2026-10-13')]);
-  assert.equal(gap.length,1);
-  assert.equal(gap[0].serverDay,'2026-10-12');
+  // The second reading's own day, with no value otherwise, takes its mean day (T / 30).
+  assert.deepEqual(gap.map(d=>d.serverDay),['2026-10-12','2026-10-14']);
+  assert.equal(gap[1].buy.transactions,Math.round(3050/30));
   assert.equal(gap[0].buy.transactions,3050-3000+400-300);
   assert.equal(gap[0].provenance.buy.kind,'reconstructed');
   // The day that left the window is solved too, when the day that entered is reported.
@@ -86,8 +87,9 @@ test('daily observations override estimates per side and mismatched capture time
   assert.equal(back[0].serverDay,'2026-09-14');
   assert.equal(back[0].buy.transactions,100-44);
   assert.equal(back[0].provenance.buy.kind,'reconstructed');
-  // An interval with several unknown days is never shared out or copied between them.
-  assert.deepEqual(estimateDailyStatistics([rolling('2026-10-10','2026-10-10T12:00:00Z',3000),rolling('2026-10-14','2026-10-14T20:00:00Z',3000)]),[]);
+  // An interval with several unknown days is never shared out: only the reading days take their mean day.
+  assert.deepEqual(estimateDailyStatistics([rolling('2026-10-10','2026-10-10T12:00:00Z',3000),rolling('2026-10-14','2026-10-14T20:00:00Z',3000)])
+    .map(d=>[d.serverDay,d.buy.transactions]),[['2026-10-10',100],['2026-10-14',100]]);
 });
 
 test('a complete TibiaMarket row maps to Tibinance fields and reports the previous server day', () => {
@@ -191,10 +193,11 @@ test('the market build stores estimated days separately and includes them in cha
   const {worlds,index,overview}=buildMarketHistory({captures:[],tibiaMarket:[{world:'Antica',rows:[first,second]}],registry,inputs:[]});
   const data=worlds.get('Antica');
   assert.deepEqual(data.dailyStatistics,[]);
-  assert.equal(data.estimatedDailyStatistics.length,1);
+  assert.equal(data.estimatedDailyStatistics.length,2);
   assert.equal(data.estimatedDailyStatistics[0].buy.transactions,117);
-  assert.equal(index.worlds[0].dailyStatisticsDays.days,1);
-  assert.equal(index.dailyStatistics.estimatedDays,1);
+  assert.equal(data.estimatedDailyStatistics[1].buy.transactions,Math.round(2244/30));
+  assert.equal(index.worlds[0].dailyStatisticsDays.days,2);
+  assert.equal(index.dailyStatistics.estimatedDays,2);
   assert.equal(overview.worlds[0].transactions.buy[0],117);
 });
 
@@ -212,7 +215,7 @@ test('both sources merge in time order per world; inputs are checked', () => {
   assert.equal(antica.dailyStatistics.length, 31);
   assert.equal(antica.dailyStatisticsObservations.length, 31);
   assert.ok(antica.dailyStatisticsObservations.every(d => d.source === 'tibiamarket' && Number.isFinite(d.sourceTimestamp) && d.capturedAtUtc));
-  assert.deepEqual(index.dailyStatistics, {days:31,estimatedDays:0,estimatedSides:0,conflictingDaysDropped:0,conflictingDaysResolved:0,checked30dTotals:1,matching30dTotals:1});
+  assert.deepEqual(index.dailyStatistics, {days:31,estimatedDays:1,estimatedSides:2,conflictingDaysDropped:0,conflictingDaysResolved:0,checked30dTotals:1,matching30dTotals:1});
   assert.deepEqual(index.worlds[0].latestBestOffer, {capturedAtUtc:'2026-09-21T12:00:00.000Z',serverDay:'2026-09-21',sell:41000,buy:40000});
   assert.equal(index.worlds[0].type, 'Open PvP');
   assert.throws(() => buildMarketHistory({captures:[{...capture, world:'antica'}], tibiaMarket:[{world:'Antica', rows:[]}], registry, inputs:[]}), /spelled two ways/);
