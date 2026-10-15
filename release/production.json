@@ -1,14 +1,14 @@
 {
  "format": 1,
  "note": "",
- "approver": "nesleykent via Claude Code (heatmap text fix)",
+ "approver": "Owner standing approval (publish-to-main); Claude verified 241 JS tests, validate_site 9/9, hidden-report check 3737/3738, Gentebra legend in browser",
  "artifact": {
-  "bytes": 142314624,
-  "digest": "95a821242730e175d6b1028672038570c877427597bb73f0427307b2fb808183",
+  "bytes": 141812191,
+  "digest": "99cf93787abdb922b23e83825e6ce598f316bc078be3f3c1b74a5a9963b67576",
   "files": 977
  },
- "commit": "7be5c3d5f041ea59a635ea8541f063b6d328445d",
- "createdAt": "2026-10-15T08:14:49.154Z",
+ "commit": "064242495c6cf9be9905b9baa6d525fff5c0a272",
+ "createdAt": "2026-10-15T08:22:41.879Z",
  "kind": "full",
  "policy": {
   "dataPaths": [
@@ -34,10 +34,10 @@
  },
  "policySha256": "8598ea053fc9fba9189b10e9c9bbbd33f9b89b36ab503161a844995d81008ad9",
  "source": {
-  "commit": "7be5c3d5f041ea59a635ea8541f063b6d328445d"
+  "commit": "064242495c6cf9be9905b9baa6d525fff5c0a272"
  },
- "tag": "release/0035",
- "tree": "e13ad077253cbfe70d6ab971f8981b9758cf855b",
+ "tag": "release/0036",
+ "tree": "0a726cb2f22c54124a584b1982dffab54bb581a2",
  "validation": {
   "checks": [
    {
@@ -78,12 +78,12 @@
    }
   ],
   "validator": {
-   "commit": "7be5c3d5f041ea59a635ea8541f063b6d328445d",
+   "commit": "064242495c6cf9be9905b9baa6d525fff5c0a272",
    "path": "tools/ci/validate_site.mjs"
   }
  },
  "record": {
-  "seq": 30,
-  "hash": "0271864109a64a82d5e3445718699c8c762992b439dc21439697c73e12927c82"
+  "seq": 31,
+  "hash": "56ead66021ef20cde8aacb34cbf389992e2ab5bd5d4dc80885c0b3c0645996d5"
  }
 }
