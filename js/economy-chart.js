@@ -16,6 +16,7 @@
  * readout; wholly missing bins remain whitespace. Hidden series retain their timeline and the explored range.
  */
 import { MEASURES } from './economy-data.js?v=20261014-series';
+import { eventsLayer } from './market-events-layer.js?v=20261014-events';
 
 const HIDDEN = 'rgba(0,0,0,0)';   // Lightweight Charts colours a segment with its first point's colour
 const token = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -26,7 +27,9 @@ export const dayOf = time => typeof time === 'string' ? time
 const either = (a, b) => token(a) || token(b);
 export const colors = () => ({ gross: either('--eco-gross', '--ink'), coins: either('--eco-coins', '--sell'), npc: either('--eco-npc', '--buy'), stable: token('--accent'),
   scenario: token('--caution'), price: token('--average') || token('--muted'), text: either('--tv-chart-text', '--muted'), grid: token('--line-faint'),
-  rule: token('--line'), crosshair: either('--tv-crosshair', '--line-strong'), ink: token('--ink'), label: either('--tv-crosshair-label', '--ink') });
+  rule: token('--line'), crosshair: either('--tv-crosshair', '--line-strong'), ink: token('--ink'), label: either('--tv-crosshair-label', '--ink'),
+  canvas: either('--tv-pane', '--canvas') || '#fff', font: token('--font-ui'),
+  events: { world: token('--event-world'), game: token('--event-game'), market: token('--event-market') } });
 
 // rows: [{time, value}] for every period in order, value null where the period is not complete. Returns the layers
 // over the real points only: `solid` joins neighbouring periods, `dotted` spans the periods between two values.
@@ -90,6 +93,8 @@ export function economyChart(container, { onCrosshair } = {}) {
     for (const { points } of Object.values(measures)) points.applyOptions({ pointMarkersVisible: style === 'markers' && spacing >= 2, pointMarkersRadius: Math.min(3, Math.max(1.5, spacing / 2)) });
   };
   chart.timeScale().subscribeVisibleLogicalRangeChange(markers);
+  // Events, as on Markets (js/market-events-layer.js): markers standing on the gold shown, at the periods that hold them.
+  const events = eventsLayer.add(chart, { k: 1 }, c);
   chart.subscribeCrosshairMove(p => onCrosshair?.(p.time === undefined ? null : dayOf(p.time)));
   let topFraction = null;
   const whitespaceOrValue = (p, v) => (v === null || v === undefined ? { time: p.start } : { time: p.start, value: v });
@@ -119,9 +124,13 @@ export function economyChart(container, { onCrosshair } = {}) {
       scenario.setData(view.rate === null ? [] : view.periods.map(p => whitespaceOrValue(p,
         cut(p) || view.values.get(p.start).directCoins === null ? null : view.values.get(p.start).directCoins + view.rate * view.values.get(p.start).npcPotential)));
       price.setData(view.price ? view.periods.map(p => whitespaceOrValue(p, cut(p) ? null : view.price.get(p.start)?.sell ?? null)) : []);
+      events.set(view.events ?? []);
+      const shown = view.measures.includes(view.measure) ? view.measure : view.measures[0];
+      events.anchorTo(shown ? measures[shown].points : null, shown ? view.periods.filter(p => !cut(p)).map(p => ({ time: p.start, value: view.values.get(p.start)[MEASURES[shown].field] })) : []);
       chart.applyOptions({ rightPriceScale: { visible: Boolean(view.price) } });
     },
     show(from, to) { chart.timeScale().setVisibleRange({ from, to }); },
+    events,
     // The series drawings attach to and indicators read: the measure shown.
     main: () => measures[last?.measure ?? 'gross'].points,
     replay(until) { if (last) this.draw({ ...last, until: until ?? null }); },

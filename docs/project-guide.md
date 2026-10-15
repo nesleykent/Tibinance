@@ -444,10 +444,13 @@ figures hold only if it fills completely at its price: the page does not estimat
 whether or when it will, and says so.
 
 Rules applied (CipSoft, ["The Market"](https://www.tibia.com/gameguides/?section=controls_trading&subtopic=manual),
-Tibia Manual, the research's source for the same fee):
+Tibia Manual, the research's source for the same fee, and
+["Adjustment of Market Fee and Exercise Weapons"](https://www.tibia.com/news/?subtopic=newsarchive&id=8990),
+tibia.com news, 2026-10-01):
 
-- Accepting an offer has no fee. Placing one pays 2% of its Total Price, at least
-  20 and at most 1,000,000 gold, taken from the bank when it is placed (with the
+- Accepting an offer has no fee. Placing one pays 2.5% of its Total Price, at least
+  20 and at most 2,500,000 gold, since the server save of 2026-10-06 (2% and at
+  most 1,000,000 gold before it), taken from the bank when it is placed (with the
   price itself, for a Buy Offer) and lost if it is cancelled.
 - One offer holds at most 64,000 items, so a larger amount takes several offers,
   each paying its own fee; one character holds at most 100 offers.
@@ -456,7 +459,7 @@ Tibia Manual, the research's source for the same fee):
   against it at once, fee included, so it is refused as an offer: trading now does
   the same without the fee. A Buy Offer at or above a Sell Offer is a crossed book
   and is refused, as the market history refuses one.
-- The manual does not say how 2% is rounded to whole gold. The fee is rounded up,
+- The manual does not say how 2.5% is rounded to whole gold. The fee is rounded up,
   so it is never understated; it can differ from the client's by 1 gold.
 
 The arithmetic is `js/trade-strategies.js` (pure functions, BigInt gold, so the

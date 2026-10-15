@@ -70,7 +70,7 @@ try {
   const lefts=await page.evaluate(()=>['#world','#side','#legend .day','#legend .label'].map(s=>document.querySelector(s).getBoundingClientRect().left));
   assert.ok(lefts.every(l=>Math.abs(l-lefts[0])<=1),`the world, the side, the day and the series share a left edge: ${lefts}`);
   assert.deepEqual(await tools.getByRole('button').filter({visible:true}).evaluateAll(bs=>bs.map(b=>[b.getAttribute('aria-label'),b.hasAttribute('data-dock-target') ? 'panel' : 'action'])),
-    [['Worlds','panel'],['Screener','action'],['Events','panel'],['Projections','action'],['Forecast history','panel'],['Object tree','panel'],['Help','panel']]);
+    [['Worlds','panel'],['Screener','action'],['Events','panel'],['Projections','action'],['Forecast history','panel'],['News','panel'],['Object tree','panel'],['Help','panel']]);
   // Export and full screen are the top toolbar's, as TradingView's snapshot and full-screen buttons.
   assert.equal(await page.$eval('#exportButton',b=>!!b.closest('header.site')),true);
   assert.equal(await page.$eval('#expand',b=>!!b.closest('header.site')),true);
@@ -457,7 +457,7 @@ try {
   await page.setViewportSize({width:390,height:844});
   // On a phone the rail is a row under the chart, without the Worlds tool: the worlds are always listed.
   assert.equal(await page.isVisible('.dock-rail'),true);
-  assert.deepEqual(await tools.getByRole('button').filter({visible:true}).evaluateAll(bs=>bs.map(b=>b.getAttribute('aria-label'))),['Screener','Events','Projections','Forecast history','Object tree','Help']);
+  assert.deepEqual(await tools.getByRole('button').filter({visible:true}).evaluateAll(bs=>bs.map(b=>b.getAttribute('aria-label'))),['Screener','Events','Projections','Forecast history','News','Object tree','Help']);
   assert.ok(await page.evaluate(()=>{const c=document.getElementById('chartPanel').getBoundingClientRect(),r=document.querySelector('.dock-rail').getBoundingClientRect();return r.top>=c.bottom && r.height<60;}),'the rail is a row under the chart');
   assert.equal(await page.isVisible('#worlds tr[data-world="Antica"]'),true,'phones list the worlds with the rail closed');
   // Help opens between the rail and the worlds.

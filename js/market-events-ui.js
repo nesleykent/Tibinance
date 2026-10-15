@@ -1,7 +1,7 @@
 /*
  * Inspecting the chart's event markers (js/market-events-layer.js) by pointer, touch and keyboard. The layer draws the
- * markers into the chart; this lays a transparent button over each one, in a strip at the foot of the price pane, so
- * a marker can be hovered, tapped or focused. The strip is one tab stop (a toolbar): the arrow keys, Home and End move
+ * markers into the chart, each standing on the main line; this lays a transparent button over each one, in a strip
+ * over the price pane, so a marker can be hovered, tapped or focused. The strip is one tab stop (a toolbar): the arrow keys, Home and End move
  * between markers, Escape closes the details.
  *
  * Hovering, focusing or tapping a marker shows its events' days, titles and descriptions beside it and marks it
@@ -10,15 +10,16 @@
 import { dateText, groupLabel } from './events.js';
 import { esc } from './format.js';
 
-const HEIGHT = 14, FOOT = 4;   // the marker's size and its gap above the pane's foot, as the layer draws them
+const HEIGHT = 14;   // the marker's size, as the layer draws it
 
 export function eventMarks({ chart, part, strip, tip }) {
   const buttons = new Map();
   let groups = [], shown = null, pinned = false, chosen = null;   // chosen: the marker last focused
 
-  // The strip lies over the markers, at the foot of the price pane; it spans the chart area (css/markets.css).
+  // The strip covers the price pane, where the markers stand; only its buttons take the pointer (css/markets.css).
   function place() {
-    strip.style.top = `${chart.paneSize(0).height - FOOT - HEIGHT}px`;
+    strip.style.top = '0px';
+    strip.style.height = `${chart.paneSize(0).height}px`;
   }
 
   function render(next) {
@@ -35,6 +36,8 @@ export function eventMarks({ chart, part, strip, tip }) {
       }
       button.style.left = `${g.x - g.width / 2}px`;
       button.style.width = `${g.width}px`;
+      button.style.top = `${g.y - HEIGHT / 2}px`;
+      button.style.height = `${HEIGHT}px`;
       button.setAttribute('aria-label', groupLabel(g.events));
       button.dataset.events = g.events.map(e => e.id).join(' ');
       // In marker order, so the arrows follow the time axis; moved only when out of place, so focus stays.

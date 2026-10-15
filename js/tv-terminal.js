@@ -7,6 +7,7 @@
 import { bridge, whenConnected } from './tv-bridge.js';
 import { createDrawings, TOOLS, PALETTE } from './tv-drawings.js?v=20261014-tv';
 import { createIndicators, INDICATORS } from './tv-indicators.js?v=20261014-tv';
+import { newsList } from './tv-news.js?v=20261014-news';
 
 const $ = id => document.getElementById(id);
 const icon = (name, cls = '') => `<svg${cls ? ` class="${cls}"` : ''} aria-hidden="true"><use href="css/tv-icons.svg#${name}"/></svg>`;
@@ -269,6 +270,11 @@ document.getElementById('drawbar')?.addEventListener('click', e => {
   if (b.id === 'drawHide') drawings.setFlag('hide', !drawings.flags.hide);
   if (b.id === 'drawRemove') drawings.removeAll();
 });
+// News, as TradingView's widget bar lists a symbol's: loaded the first time the panel opens (or opens remembered).
+const news = $('newsList') && newsList($('newsList'));
+$('newsToggle')?.addEventListener('click', () => news?.load());
+if ($('newsPanel')?.classList.contains('is-open')) news?.load();
+new MutationObserver(() => { if ($('newsPanel')?.classList.contains('is-open')) news?.load(); }).observe($('newsPanel') ?? document.createElement('i'), { attributes: true, attributeFilter: ['class'] });
 $('tvUndo')?.addEventListener('click', () => drawings?.undo());
 // At full screen the header is out of view: the rail's own button leaves it, as the header's would.
 $('tvExitFull')?.addEventListener('click', () => $('expand')?.click());

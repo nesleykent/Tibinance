@@ -56,9 +56,11 @@ try {
   await page.mouse.move((mergeMark.left+mergeMark.right)/2,box.y+box.h/3);
   assert.ok((await day()) <= merge.start);
   assert.ok(mergeMark.label.includes('2025-11-06'));
-  // Every marker lies along the foot of the price pane, in the chart, none over another.
+  // Every marker stands on the line in the price pane, inside the chart, none over another: they follow the best offer,
+  // so they are not all at one height.
   const overlapFree=list=>list.every((a,i)=>list.slice(i+1).every(b=>a.right<=b.left+0.5 || b.right<=a.left+0.5));
-  assert.ok(shown.every(m=>m.left>=box.x-1 && m.right<=box.x+box.w+1 && m.bottom<=box.y+box.h && m.top>box.y+box.h*0.75),'markers along the foot of the chart');
+  assert.ok(shown.every(m=>m.left>=box.x-1 && m.right<=box.x+box.w+1 && m.bottom<=box.y+box.h && m.top>=box.y),'markers inside the chart');
+  assert.ok(new Set(shown.map(m=>Math.round(m.top))).size>1,'markers follow the line, not one row');
 
   // ---- Every world receives the canonical collection, including other worlds' metadata.
   await open('Antica','All');

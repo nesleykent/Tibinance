@@ -9,8 +9,8 @@
 <link rel="stylesheet" href="css/app.css">
 <link rel="stylesheet" href="css/site-header.css?v=20261014-details">
 <link rel="stylesheet" href="css/tv.css?v=20261014-tv">
-<link rel="stylesheet" href="css/tv-terminal.css?v=20261014-pages">
-<link rel="stylesheet" href="css/tv-overview.css?v=20261014-details">
+<link rel="stylesheet" href="css/tv-terminal.css?v=20261014-news">
+<link rel="stylesheet" href="css/tv-overview.css?v=20261014-news">
 <link rel="icon" href="tibinance-icon.svg" type="image/svg+xml">
 </head>
 <body class="tv-page">
@@ -43,7 +43,7 @@
     <h1 id="heroTitle">Tibia's economy, every world</h1>
     <p>Gold generated across the game, from creature kills, their loot and its NPC prices, through server day <span data-through></span>.</p>
     <nav id="sectionChips" class="tv-chips" aria-label="Sections">
-      <a href="#summary">Summary</a><a href="#heat">Heatmap</a><a href="#highlights">Highlights</a><a href="#regions-section">Regions</a><a href="#worlds">All worlds</a>
+      <a href="#summary">Summary</a><a href="#heat">Heatmap</a><a href="#highlights">Highlights</a><a href="#news">News</a><a href="#regions-section">Regions</a><a href="#worlds">All worlds</a>
     </nav>
   </section>
 
@@ -85,6 +85,12 @@
     </div>
   </section>
 
+  <section id="news" class="tv-section" aria-labelledby="newsTitle">
+    <div class="tv-section-head"><h2 id="newsTitle"><a href="https://www.tibia.com/news/?subtopic=latestnews" target="_blank" rel="noopener">Top stories</a></h2></div>
+    <ul id="topStories" class="tv-stories" aria-label="Tibia news"></ul>
+    <p class="tv-section-note">From tibia.com, through the TibiaData API. A story opens here; every story links to tibia.com.</p>
+  </section>
+
   <section id="regions-section" class="tv-section" aria-labelledby="regionsTitle">
     <div class="tv-section-head"><h2 id="regionsTitle">Regions</h2></div>
     <ul id="regions" class="tv-bars"></ul>
@@ -102,6 +108,6 @@
 <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.1/dist/lightweight-charts.standalone.production.js"
         integrity="sha384-KkYqTZlM13Zya6fVUF3IGCBOQ1ehFeJVVgxaVvD/0MebineF9EI8Jkd3NnWNChqN" crossorigin="anonymous"></script>
 <script type="module" src="js/site-header.js"></script>
-<script type="module" src="js/economy-overview.js?v=20261014-details"></script>
+<script type="module" src="js/economy-overview.js?v=20261014-news"></script>
 </body>
 </html>

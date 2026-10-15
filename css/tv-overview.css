@@ -165,3 +165,10 @@ table.tv-table .tv-text-left { text-align:left; }
 
 .tv-footer { margin-top:96px; padding:24px 0; border-top:1px solid var(--tv-border); color:var(--tv-text-2); font-size:13px; }
 .tv-skeleton { color:var(--tv-text-2); }
+
+/* Top stories: the latest of Tibia's news as cards, each opening its story (js/tv-news.js). */
+.tv-stories { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(260px,100%),1fr)); gap:16px; margin:0; padding:0; list-style:none; }
+.tv-story { display:grid; align-content:start; gap:8px; width:100%; height:100%; min-height:120px; padding:16px; border:0; border-radius:12px; background:var(--tv-bg-2);
+  color:var(--tv-text); font:inherit; text-align:left; cursor:pointer; }
+.tv-story:hover { background:var(--tv-bg-3); }
+.tv-story-headline { font:600 17px/24px var(--tv-font); }

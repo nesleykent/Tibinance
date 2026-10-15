@@ -25,7 +25,14 @@ from research_data import research_cutoff, load_daily, load_captures, weekly_ser
 ASOF = research_cutoff()
 T0 = pd.Timestamp('2023-01-01')
 WEEKDAYS = ['seg', 'ter', 'qua', 'qui', 'sex', 'sáb', 'dom']
-FEE = 0.02          # tibia.com manual: 2% of the offer price, min 20 gp, max 1,000,000 gp, paid when the offer is placed
+# The Market fee for placing an offer, by date (tibia.com manual; tibia.com news 2026-10-01, "Adjustment of Market Fee
+# and Exercise Weapons"): 2% of the offer price, at least 20 and at most 1,000,000 gp, until the server save of
+# 2026-10-06; 2.5%, at least 20 and at most 2,500,000 gp, from it on. Paid when the offer is placed.
+FEE_SCHEDULE = [(pd.Timestamp('2026-10-06'), 0.025, 2_500_000), (pd.Timestamp('1900-01-01'), 0.02, 1_000_000)]
+fee_on = lambda day: next(rate for since, rate, _ in FEE_SCHEDULE if pd.Timestamp(day) >= since)
+fee_cap_on = lambda day: next(cap for since, _, cap in FEE_SCHEDULE if pd.Timestamp(day) >= since)
+# Every decision the report weighs is an offer placed after the data: at the fee in force from the day after the cutoff.
+FEE = fee_on(ASOF + pd.Timedelta(days=1))
 MIN_LEG_WEEKS = 8   # swings shorter than this are counter-moves inside a phase, not cycle legs
 BREAK_PCT = 15      # a premium level shift at least this large splits a world's series
 N_DRAWS = 300       # parameter vectors drawn from the fitted distribution per simulation
@@ -451,9 +458,12 @@ for rt in results['roundtrips']:
     d = daily[rt['world']]; yr = int(rt['cycle'][:4]); mo = rt['sellMonth']
     sell_ask = d[(d.index.year == yr) & (d.index.month == mo)].ask.median()
     rebuy_bid = d[(d.index.year == yr + 1) & (d.index.month.isin([5, 6, 7]))].bid.median()
+    # A past round trip pays the fee in force when each offer was placed: the sale's month, then the rebuy's.
+    sell_fee, rebuy_fee = fee_on(pd.Timestamp(year=yr, month=mo, day=1)), fee_on(pd.Timestamp(year=yr + 1, month=5, day=1))
     maker.append({'world': rt['world'], 'cycle': rt['cycle'], 'sellMonth': mo, 'acceptPct': rt['tcGainPct'],
                   'makerGrossPct': float((sell_ask / rebuy_bid - 1) * 100),
-                  'makerNetPct': float((sell_ask * (1 - FEE) / (rebuy_bid * (1 + FEE)) - 1) * 100),
+                  'makerNetPct': float((sell_ask * (1 - sell_fee) / (rebuy_bid * (1 + rebuy_fee)) - 1) * 100),
+                  'sellFee': sell_fee, 'rebuyFee': rebuy_fee,
                   'sellAskMedian': float(sell_ask), 'rebuyBidMedian': float(rebuy_bid)})
 
 
@@ -599,7 +609,7 @@ for side in SIDES:
 
 # Sell now, buy back in the week of 28/06/2027, from the same seed-11 paths. Accepting: sell at today's
 # Buy Offers, rebuy at the simulated Sell Offers. Creating offers: sell at today's Sell Offers and rebuy at the
-# simulated Buy Offers, paying 2% on each placement, and assuming both offers fill.
+# simulated Buy Offers, paying the current fee (FEE) on each placement, and assuming both offers fill.
 jun = pd.Timestamp(PKG_WEEK['jun28']); prob['roundtrip'] = []
 for label in ('main', 'since2024'):
     for mode, side, now in (('aceitando', 'ask', latest[A]['bid']), ('criando ofertas', 'bid', latest[A]['ask'] * (1 - FEE))):
@@ -844,7 +854,11 @@ context = {'captureVsYearAgo': [{'side': side, 'yearAgoWeek': str(year_ago.date(
                     'days': int(daily[A][side][str(k.date())[:7]].size)}
                    for side in SIDES for k in monthly.index if k.year == 2026]}
 
-out = js({'asOf': str(ASOF.date()), 'context': context, 'fee': {'rate': FEE, 'min': 20, 'max': 1_000_000, 'capBindsAboveTc': 1_000_000 / (FEE * latest[A]['ask'])},
+FEE_CAP = fee_cap_on(ASOF + pd.Timedelta(days=1))
+out = js({'asOf': str(ASOF.date()), 'context': context,
+          'fee': {'rate': FEE, 'min': 20, 'max': FEE_CAP, 'capBindsAboveTc': FEE_CAP / (FEE * latest[A]['ask']), 'since': '2026-10-06',
+                  'previous': {'rate': 0.02, 'min': 20, 'max': 1_000_000, 'until': '2026-10-05'},
+                  'source': 'https://www.tibia.com/news/?subtopic=newsarchive&id=8990'},
           'swings': swings, 'volatility': volatility, 'momentum': momentum, 'spread': spread, 'weekday': weekday,
           'crossWorld': cross, 'roundtripMaker': maker, 'probabilistic': prob,
           'sources': [{'file': str(p.relative_to(ROOT)), 'sha256': hashlib.sha256(p.read_bytes()).hexdigest()}

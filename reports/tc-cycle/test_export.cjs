@@ -3,11 +3,13 @@
 const assert = require('node:assert/strict');
 const {chromium} = require('playwright');
 (async () => {
-  const browser = await chromium.launch({channel: 'chrome', headless: true});
-  try {
-    const page = await browser.newPage({viewport: {width: 1440, height: 1000}});
-    const errors = []; page.on('pageerror', e => errors.push(e.message));
-    for (const lang of ['', 'pt-br.html']) {
+  const errors = [];
+  // A browser per language: rasterizing both editions' 142 exhibits in one Chrome exhausts it, and it closes the page.
+  for (const lang of ['', 'pt-br.html']) {
+    const browser = await chromium.launch({channel: 'chrome', headless: true});
+    try {
+      const page = await browser.newPage({viewport: {width: 1440, height: 1000}});
+      page.on('pageerror', e => errors.push(e.message));
       // The report shows one page at a time; the inflation exhibits are on chapter 03 (#s01).
       await page.goto((process.env.REPORT_URL || 'http://localhost:8765/reports/tc-cycle/') + lang + '#s01');
       await page.waitForSelector('#ch-inflation-prices svg');
@@ -64,7 +66,7 @@ const {chromium} = require('playwright');
       checks.forEach(c => { assert.ok(c.size > 1000); assert.ok(c.width >= 1200); assert.ok(c.height > 100); });
       assert.ok(checks.some(c => c.rows >= 40));
       console.log(`PASS ${lang || 'en'}: ${checks.length} figures rasterized at 2x, complete table snapshots, selected range and actual PNG download.`);
-    }
-    assert.deepEqual(errors, []);
-  } finally { await browser.close(); }
+    } finally { await browser.close(); }
+  }
+  assert.deepEqual(errors, []);
 })().catch(e => { console.error(e); process.exitCode = 1; });

@@ -12,6 +12,15 @@ const root=process.env.TIBINANCE_TEST_URL ?? 'http://127.0.0.1:8765';
 const browser=await (engine==='webkit' ? webkit.launch({headless:true}) : chromium.launch({headless:true,...(process.env.TIBINANCE_CHROME ? {executablePath:process.env.TIBINANCE_CHROME} : {channel:'chrome'})}));
 try {
   const context=await browser.newContext({locale:'en-US',viewport:{width:1440,height:900},colorScheme:'light'});
+  // Tibia's news from TibiaData, fixed here: a story with what must never reach the page (a script, a handler, a
+  // javascript: link) and a headline with a middle dot, which Tibinance writes as a comma.
+  await context.route('https://api.tibiadata.com/v4/news/**',route=>{
+    const url=route.request().url();
+    if (url.endsWith('/latest')) return route.fulfill({json:{news:[
+      {id:9019,date:'2026-10-13',news:'Fixes and Changes\u00a0',category:'development',type:'news',url:'https://www.tibia.com/news/?subtopic=newsarchive&id=9019'},
+      {id:8990,date:'2026-10-01',news:'Adjustment of Market Fee \u00b7 Exercise Weapons',category:'cipsoft',type:'ticker',url:'https://www.tibia.com/news/?subtopic=newsarchive&id=8990'}]}});
+    return route.fulfill({json:{news:{id:8990,title:'Adjustment of Market Fee',content_html:'<p>The Market fee will be raised to <b>2.5%</b>.</p><script>window.pwned=1<\/script><img src="x" onerror="window.pwned=2"><a href="javascript:window.pwned=3">bad</a> <a href="https://www.tibia.com/">tibia.com</a>'}}});
+  });
   const page=await context.newPage();
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   page.on('console',m=>{if(m.type()==='error') errors.push(m.text());});
@@ -187,6 +196,21 @@ try {
   assert.deepEqual(await corner(),[15,15,15],'Markets image on the dark pane');
   await page.click('#tvTheme');
 
+  // ---- News, as TradingView's widget bar: the latest headlines, a story in a dialog, its HTML reduced to safe structure.
+  await page.click('#newsToggle');
+  await page.waitForSelector('#newsList .tv-news-item');
+  assert.deepEqual(await page.$$eval('#newsList .tv-news-headline',h=>h.map(e=>e.textContent)),['Fixes and Changes','Adjustment of Market Fee, Exercise Weapons']);
+  assert.match(await page.$eval('#newsList li:nth-child(2) .tv-news-meta',e=>e.textContent),/2026-10-01\s*Ticker\s*CipSoft/);
+  await page.click('#newsList li:nth-child(2) .tv-news-item');
+  await page.waitForSelector('dialog.tv-news-story[open] .tv-news-body b');
+  assert.equal(await page.$eval('dialog.tv-news-story .tv-news-body p',p=>p.textContent),'The Market fee will be raised to 2.5%.');
+  assert.deepEqual(await page.evaluate(()=>({pwned:window.pwned??null,scripts:document.querySelectorAll('.tv-news-body script').length,
+    handlers:[...document.querySelectorAll('.tv-news-body *')].some(e=>[...e.attributes].some(a=>a.name.startsWith('on'))),
+    links:[...document.querySelectorAll('.tv-news-body a')].map(a=>[a.getAttribute('href'),a.target])})),
+    {pwned:null,scripts:0,handlers:false,links:[[null,''],['https://www.tibia.com/','_blank']]});
+  await page.keyboard.press('Escape');
+  assert.equal(await page.isVisible('dialog.tv-news-story'),false);
+
   // ---- Economy: the same terminal; its interval in the top toolbar; drawings kept per world.
   await page.goto(`${root}/economy.html?world=Antica`);
   await page.waitForFunction(()=>document.getElementById('economy').getAttribute('aria-busy')==='false');
@@ -194,6 +218,13 @@ try {
   await page.click('header.site #interval [data-interval="month"]');
   assert.equal(new URL(page.url()).searchParams.get('interval'),'month');
   assert.deepEqual(await corner(),[255,255,255],'Economy image on the light pane, not the page grey');
+  // Events stand on the gold line, as on Markets; the legend's Events chip hides and shows them.
+  await page.waitForFunction(()=>document.querySelectorAll('#eventMarks .event-mark').length>0);
+  await page.click('#eventsShown');
+  assert.equal(await page.getAttribute('#eventsShown','aria-pressed'),'false');
+  await page.waitForFunction(()=>document.querySelectorAll('#eventMarks .event-mark').length===0);
+  await page.click('#eventsShown');
+  await page.waitForFunction(()=>document.querySelectorAll('#eventMarks .event-mark').length>0);
   // The viewer's log survives every redraw; the gold mode applies its own scale only when it changes.
   const scaleShown=()=>page.$$eval('.tv-scale button',bs=>bs.map(b=>b.getAttribute('aria-pressed')));
   await page.click('.tv-scale [data-scale="log"]');

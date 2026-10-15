@@ -1,6 +1,6 @@
 // Token history uses completed UTC pool candles, never Tibia server days or best offers.
 import { dayGrid, lineLayers } from './market-series.js';
-import { eventsLayer } from './market-events-layer.js?v=20261014-rebuild';
+import { eventsLayer } from './market-events-layer.js?v=20261014-events';
 import { eventsFor } from './events.js';
 export const CONTRACT = '0x111B95C2b65CbA53aB4E0AaDA12f55985045E446';
 export const POOL = '0xd2acfaec0e3b556f285fbb9026ede7e87885e611';
@@ -31,6 +31,7 @@ const volume = {
   keys: (side, c) => [{ mark: 'bar', color: c.line ?? c.sell, label: 'Pool volume (USD)' }]
 };
 export const TOKEN_PROFILE = { layers: [price, volume, eventsLayer], priceLayer: price, format: tokenPrice,
+  anchor: view => view.prices.map(p => ({ time: p.day, value: p.close })),   // event markers stand on the close
   priceFormat: { type: 'custom', minMove: 0.00001, formatter: tokenPrice } };
 export function tokenView(file, dataset) {
   if (file.asset !== 'tibia-token' || file.contract !== CONTRACT || file.pool !== POOL || file.quote !== 'USD' || file.timezone !== 'UTC') throw new Error('Unexpected TIB history identity or units.');

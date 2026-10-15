@@ -1,7 +1,8 @@
 /*
- * The Events layer of the Markets chart (js/market-chart.js): a marker per event along the foot of the price pane, at
- * its actual day, drawn by a pane primitive into the chart's own canvas, so the page and an exported image show the
- * same markers. A marker carries its category's mark in its group's colour; an event lasting several days underlines
+ * The Events layer of the Markets and Economy charts (js/market-chart.js, js/economy-chart.js): a marker per event at
+ * its actual day, standing on the chart's main line (the best offer, the token's close, the gold shown) with a stem to
+ * its point, drawn by a pane primitive into the chart's own canvas, so the page and an exported image show the same
+ * markers. Before the line is known, or where it has no value near, a marker stands at the foot of the pane. A marker carries its category's mark in its group's colour; an event lasting several days underlines
  * them. Markers that would overlap become one marker with their count (js/events.js `cluster`).
  *
  * The layer draws; it does not listen. A page subscribes to its layout (`onLayout`) to make markers inspectable
@@ -10,7 +11,7 @@
  */
 import { cluster, exportNotes, within } from './events.js';
 
-const HEIGHT = 14, PAD = 4, FONT = 9, FOOT = 4;   // marker size, inset of its label, type, gap above the pane's foot
+const HEIGHT = 14, PAD = 4, FONT = 9, FOOT = 4, LIFT = 8;   // marker size, label inset, type, gap above the foot, above the line
 
 // One marker, centred on (x, y), in the units of `ctx` (k scales it). Shared by the chart and the exported legend.
 export function drawMarker(ctx, { x, y, label, color, background, k = 1, font, active = false }) {
@@ -48,7 +49,7 @@ const colorOf = (events, c) => {
 
 class EventsPrimitive {
   constructor(k, c) {
-    Object.assign(this, { k, c, events: [], groups: [], active: null, listeners: new Set(), signature: '' });
+    Object.assign(this, { k, c, events: [], groups: [], active: null, listeners: new Set(), signature: '', series: null, values: [] });
     this.measure = document.createElement('canvas').getContext('2d');
     const renderer = { draw: target => this.paint(target) };
     this.views = [{ zOrder: () => 'top', renderer: () => renderer }];
@@ -59,6 +60,24 @@ class EventsPrimitive {
   updateAllViews() { this.layout(); }
 
   set(events) { this.events = events; this.layout(); this.requestUpdate?.(); }
+  // The line markers stand on: its series (for the price scale) and its [{time, value}] in time order.
+  anchorTo(series, values) {
+    this.series = series ?? null;
+    this.values = (values ?? []).filter(v => Number.isFinite(v.value)).sort((a, b) => (a.time < b.time ? -1 : a.time > b.time ? 1 : 0));
+    this.layout(); this.requestUpdate?.();
+  }
+  // The line's value on a day: its own, or between the observations around it (as the dotted line runs), or the nearest.
+  valueAt(day) {
+    const v = this.values;
+    if (!v.length) return null;
+    let lo = 0, hi = v.length - 1;
+    if (day <= v[0].time) return v[0].value;
+    if (day >= v[hi].time) return v[hi].value;
+    while (hi - lo > 1) { const mid = (lo + hi) >> 1; v[mid].time <= day ? (lo = mid) : (hi = mid); }
+    if (v[lo].time === day) return v[lo].value;
+    const t = d => Date.parse(`${d}T00:00:00Z`), f = (t(day) - t(v[lo].time)) / (t(v[hi].time) - t(v[lo].time));
+    return v[lo].value + (v[hi].value - v[lo].value) * f;
+  }
   setActive(key) { if (key !== this.active) { this.active = key; this.requestUpdate?.(); } }
   onLayout(listener) { this.listeners.add(listener); listener(this.groups); return () => this.listeners.delete(listener); }
   // The markers in view, as last laid out: [{key, x, width, events}] in pane pixels.
@@ -73,7 +92,9 @@ class EventsPrimitive {
     const spacing = range ? width / Math.max(1, range.to - range.from) : 0;
     const items = [];
     for (const event of this.events) {
-      const x = time.timeToCoordinate(event.start), xe = event.end === event.start ? x : time.timeToCoordinate(event.end);
+      // Plotted at its own days, or where a chart of periods places them (at, atEnd: the periods that hold them).
+      const at = event.at ?? event.start, atEnd = event.atEnd ?? event.end;
+      const x = time.timeToCoordinate(at), xe = atEnd === at ? x : time.timeToCoordinate(atEnd);
       if (x === null || xe === null || xe + spacing / 2 < 0 || x - spacing / 2 > width) continue;
       items.push({ x, end: xe, width: markerWidth(this.measure, event.category.mark, k, font), event });
     }
@@ -83,7 +104,18 @@ class EventsPrimitive {
     // Whatever overlaps the days in view is marked, kept whole inside the plot: an event already under way at the
     // left edge is marked at the edge, and a marker at either edge is moved in, still covering its day.
     this.groups = cluster(items, { gap: 2 * k, bounds: [0, width], widthOf: events => markerWidth(this.measure, labelOf(events), k, font) });
-    const signature = this.groups.map(g => `${g.key}@${Math.round(g.x)}`).join('|');
+    // Each marker stands on the line at its first event's day: its point (py) and its own centre (y) above it, kept
+    // inside the pane; with no line, at the pane's foot.
+    let pane = 0;
+    try { pane = chart.paneSize(0).height; } catch { /* not laid out yet */ }
+    const h = HEIGHT * k, foot = pane - FOOT * k - h / 2;
+    for (const g of this.groups) {
+      const day = g.events[0].at ?? g.events[0].start, value = this.series ? this.valueAt(day) : null;
+      const py = value === null ? null : this.series.priceToCoordinate(value);
+      g.py = py === null || py === undefined || !Number.isFinite(py) ? null : py;
+      g.y = g.py === null ? foot : Math.max(h / 2 + 2 * k, Math.min(foot, g.py - LIFT * k - h / 2));
+    }
+    const signature = this.groups.map(g => `${g.key}@${Math.round(g.x)},${Math.round(g.y)}`).join('|');
     if (signature !== this.signature) {
       this.signature = signature;
       for (const listener of this.listeners) listener(this.groups);
@@ -93,7 +125,7 @@ class EventsPrimitive {
   paint(target) {
     if (!this.groups.length) return;
     target.useMediaCoordinateSpace(({ context: ctx, mediaSize }) => {
-      const { k, c } = this, half = this.spacing / 2, y = mediaSize.height - FOOT * k - HEIGHT * k / 2;
+      const { k, c } = this, half = this.spacing / 2, h = HEIGHT * k;
       // The active marker's days, across the pane: a band for a span of days, a line for one day.
       const active = this.groups.find(g => g.key === this.active);
       for (const event of active?.events ?? []) {
@@ -114,7 +146,20 @@ class EventsPrimitive {
         }
         ctx.restore();
       }
-      // Each event of several days underlines them, from its marker on.
+      for (const g of this.groups) {
+        const color = colorOf(g.events, c);
+        // The stem from the marker to its point on the line, and the point.
+        if (g.py !== null && g.py > g.y + h / 2) {
+          ctx.save();
+          ctx.strokeStyle = color; ctx.lineWidth = k; ctx.globalAlpha = 0.7;
+          ctx.beginPath(); ctx.moveTo(Math.round(g.x) + 0.5, g.y + h / 2); ctx.lineTo(Math.round(g.x) + 0.5, g.py); ctx.stroke();
+          ctx.globalAlpha = 1; ctx.fillStyle = color;
+          ctx.beginPath(); ctx.arc(g.x, g.py, 2 * k, 0, Math.PI * 2); ctx.fill();
+          ctx.restore();
+        }
+      }
+      // Each event of several days underlines them at the pane's foot, as a timeline: drawn by the line it would read as
+      // a price.
       for (const span of this.spans.values()) {
         if (span.end <= span.x) continue;
         ctx.save();
@@ -124,7 +169,7 @@ class EventsPrimitive {
         ctx.restore();
       }
       for (const g of this.groups) {
-        drawMarker(ctx, { x: g.x, y, label: labelOf(g.events), color: colorOf(g.events, c), background: c.canvas, k, font: c.font, active: g.key === this.active });
+        drawMarker(ctx, { x: g.x, y: g.y, label: labelOf(g.events), color: colorOf(g.events, c), background: c.canvas, k, font: c.font, active: g.key === this.active });
       }
     });
   }

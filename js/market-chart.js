@@ -22,7 +22,7 @@
  */
 import { fmt } from './format.js';
 import { lineLayers, statisticsAt } from './market-series.js';
-import { eventsLayer } from './market-events-layer.js?v=20261014-rebuild';
+import { eventsLayer } from './market-events-layer.js?v=20261014-events';
 import { projectionsLayer } from './market-projections-layer.js';
 import { historyLayer } from './market-forecast-history-layer.js?v=20261014-rebuild';
 
@@ -155,6 +155,13 @@ export function createMarketChart(container, { scale: k = 1, width, height, prof
   const shown = layer => !(layer.optional && hidden.has(layer.id));
   let last = null, topFraction = null;
   const drawLayer = layer => layer.draw(series.get(layer), last.view, last.side, c, { visible: shown(layer) });
+  // Event markers stand on the main line: the best offer of the side shown, or the profile's own (the token's close).
+  const anchorEvents = () => {
+    const events = series.get(eventsLayer), line = series.get(profile?.priceLayer ?? bestOffer)?.points;
+    if (!events?.anchorTo || !last) return;
+    const values = profile?.anchor ? profile.anchor(last.view, last.side) : last.view.closes.map(close => ({ time: close.serverDay, value: close[last.side] }));
+    events.anchorTo(line, values);
+  };
   return {
     chart,
     // Over the chart's top stands the page's status: the price scale starts below it, so no price is drawn under it.
@@ -169,7 +176,7 @@ export function createMarketChart(container, { scale: k = 1, width, height, prof
       topFraction = top;
       chart.priceScale('right').applyOptions({ scaleMargins: { top, bottom: 0.22 } });
     },
-    draw(view, side) { last = { view, side }; layers.forEach(drawLayer); },
+    draw(view, side) { last = { view, side }; layers.forEach(drawLayer); anchorEvents(); },
     setVisible(id, on) {
       const layer = layers.find(l => l.id === id && l.optional);
       if (!layer || on === !hidden.has(id)) return;

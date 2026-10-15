@@ -15,8 +15,10 @@ import { fmt, esc, num } from './format.js';
 import { dock } from './markets-dock.js';
 import { MEASURES, INTERVALS, ratePeriods, accumulatedPeriods, rangeChange, rangeStartOf, overviewRows, periodOf, contributions, lastDay, sellOfferPeriods,
   LIQUIDATION_SCENARIOS } from './economy-data.js?v=20261014-global-price';
-import { economyChart, colors } from './economy-chart.js?v=20261014-review';
+import { economyChart, colors } from './economy-chart.js?v=20261014-events';
 import { connect, changed } from './tv-bridge.js';
+import { loadEvents, eventsFor, within } from './events.js';
+import { eventMarks } from './market-events-ui.js?v=20261014-events';
 
 const $ = id => document.getElementById(id);
 const RANGES = ['1M', '3M', '6M', 'YTD', '1Y', 'All'];
@@ -52,12 +54,24 @@ const state = {
 };
 // Old links retain their single measure; new links retain independent visibility, including all gold hidden.
 if (state.measures.length && !state.measures.includes(state.measure)) state.measure = state.measures[0];
-const data = { index: null, overview: null, market: null, results: null, sync: null, access: null, creatures: {}, vip: null };
+const data = { index: null, overview: null, market: null, results: null, sync: null, access: null, creatures: {}, vip: null, events: null };
 const files = new Map();   // world dir -> promise of {daily, contrib}
 let view = null, request = 0, retryWorld = null, pendingWorld = null, wired = false;
 let requests = new AbortController();
 
 const chart = economyChart($('chart'), { onCrosshair: day => showLegend(day) });
+// Events, as on Markets: the canonical collection, shown until the viewer hides them (remembered in this browser).
+const EVENTS_SHOWN = 'tibinance.economy.events';
+let eventsShown = true;
+try { eventsShown = localStorage.getItem(EVENTS_SHOWN) !== 'hidden'; } catch { /* storage unavailable */ }
+const marks = chart ? eventMarks({ chart: chart.chart, part: chart.events, strip: $('eventMarks'), tip: $('eventTip') }) : null;
+// Each event in view, placed at the period that holds its day (a week or a month), its own days kept for its details.
+function chartEvents() {
+  if (!eventsShown || !data.events || !view?.periods.length) return [];
+  const first = view.periods[0].start, last = view.periods.at(-1).end ?? view.end;
+  return within(eventsFor(data.events), first, last)
+    .map(e => ({ ...e, at: periodOf(e.start, state.interval)[0], atEnd: periodOf(e.end, state.interval)[0] }));
+}
 $('exportButton').disabled = !chart;
 const field = () => MEASURES[state.measure].field;
 const cancelRequests = () => { request++; requests.abort(); };
@@ -136,7 +150,10 @@ function draw({ preserveRange = false } = {}) {
   view.accumulated = new Map(accumulatedPeriods(view.daily, view.periods, [from, end]).map(p => [p.start, p]));
   view.values = state.mode === 'accumulated' ? view.accumulated : new Map(view.periods.map(p => [p.start, p.rate]));
   chart?.draw({ periods: view.periods, measure: state.measure, measures: state.measures, mode: state.mode, values: view.values,
-    kills: state.kills, rate: state.rate, stable: state.stable, price: state.price && view.lastPrice ? view.price : null });
+    kills: state.kills, rate: state.rate, stable: state.stable, price: state.price && view.lastPrice ? view.price : null, events: chartEvents() });
+  $('eventsShown').setAttribute('aria-pressed', String(eventsShown));
+  $('eventsShown').title = eventsShown ? 'Hide the events on the chart' : 'Show the events on the chart';
+  $('eventsShown').disabled = !data.events;
   for (const b of $('measure').querySelectorAll('[data-measure]')) b.setAttribute('aria-pressed', String(state.measures.includes(b.dataset.measure)));
   $('killsToggle').setAttribute('aria-pressed', String(state.kills));
   setChoice('valueMode', 'mode', state.mode);
@@ -468,6 +485,12 @@ function showTip(flag) {
 }
 
 function wire() {
+  $('eventsShown').addEventListener('click', () => {
+    eventsShown = !eventsShown;
+    try { eventsShown ? localStorage.removeItem(EVENTS_SHOWN) : localStorage.setItem(EVENTS_SHOWN, 'hidden'); } catch { /* this visit only */ }
+    if (!eventsShown) marks?.hide();
+    draw({ preserveRange: true });
+  });
   // WebKit does not consistently scroll a focused overflow region with Left/Right. Keep this table's
   // horizontal keyboard navigation explicit; events from any descendant retain their native behavior.
   const dataFrame = $('chartData').parentElement;
@@ -581,11 +604,14 @@ function connectTools() {
 async function main() {
   const controller = requests;
   try {
+  // Events are an optional layer: the economy loads without them and says nothing of their absence on the chart.
+  const eventsLoad = loadEvents().catch(error => { console.warn('Events are unavailable.', error); return null; });
   [data.index, data.overview, data.market, data.results, data.sync, data.access, data.creatures, data.vip] = await Promise.all([
     json('data/economy/gold/index.json'), json('data/economy/gold/overview.json'), optional('data/market-history/tibia-coin/index.json'),
     optional('reports/economy/results.json'), optional('data/economy/sync-status.json'), optional('data/economy/population/access.json'),
     optional('data/economy/gold/creatures.json'), optional('data/economy/population/tibiavip-snapshot/2026-10-13.json')]);
   data.creatures = data.creatures?.creatures ?? {};
+  data.events = await eventsLoad;
   if (controller !== requests) return;
   setChoice('liquidation', 'rate', state.rate === null ? '' : String(state.rate));
   $('stable').setAttribute('aria-pressed', String(state.stable));

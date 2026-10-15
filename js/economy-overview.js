@@ -8,6 +8,7 @@
  * A change of a sum over worlds: today's sum against the sum of each world's value at the start of the range.
  */
 import { $, esc, pill, tone, short, whole, logo, percent, summaryChart, heatmap, heatScale, sortableTable, worldSearch, sectionChips } from './tv-overview.js?v=20261014-details';
+import { topStories } from './tv-news.js?v=20261014-news';
 
 const RANGES = ['1M', '3M', '6M', 'YTD', '1Y', 'All'];
 const MEASURE = { gross: 'Gross potential', coins: 'Direct gold', npc: 'NPC potential' };
@@ -164,6 +165,7 @@ async function main() {
   $('worldsCount').textContent = `${rows.length} active worlds, weekly`;
 
   worldSearch($('pageSearch'), () => rows.map(r => ({ name: r.world, meta: `${r.type}, ${r.location}`, value: `${short(r.gross)} / day`, change: r.chg('gross', '1M') })), href);
+  topStories($('topStories'));
   sectionChips($('sectionChips'));
 }
 

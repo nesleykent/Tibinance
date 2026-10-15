@@ -8,25 +8,26 @@ const sell = (amount, book, offerPrice = null) => adviseTrade({intent:'sell', am
 const buy = (amount, book, offerPrice = null) => adviseTrade({intent:'buy', amount, book, offerPrice});
 const codes = result => result.issues.map(i => `${i.field}:${i.code}`);
 
-test('the Market fee is 2% of the Total Price, at least 20 and at most 1,000,000, rounded up to whole gold', () => {
-  assert.deepEqual(RULES.feePercent, 2n);
+test('the Market fee is 2.5% of the Total Price, at least 20 and at most 2,500,000, rounded up to whole gold', () => {
+  // Since the server save of 2026-10-06 (tibia.com news, 2026-10-01): 2% and at most 1,000,000 before it.
+  assert.deepEqual([RULES.feePerMille, RULES.minFee, RULES.maxFee], [25n, 20n, 2_500_000n]);
   assert.equal(marketFee(25n), 20n, 'the minimum');
-  assert.equal(marketFee(999n), 20n);
-  assert.equal(marketFee(1_000n), 20n, '2% of 1,000 is exactly the minimum');
-  assert.equal(marketFee(1_050n), 21n);
-  assert.equal(marketFee(1_025n), 21n, '20.5 is rounded up');
-  assert.equal(marketFee(1_000_000n), 20_000n);
-  assert.equal(marketFee(49_999_950n), 999_999n);
-  assert.equal(marketFee(50_000_000n), 1_000_000n, '2% of 50,000,000 is exactly the cap');
-  assert.equal(marketFee(50_000_050n), 1_000_000n);
-  assert.equal(marketFee(999_999_999_999n * 64_000n), 1_000_000n);
+  assert.equal(marketFee(799n), 20n);
+  assert.equal(marketFee(800n), 20n, '2.5% of 800 is exactly the minimum');
+  assert.equal(marketFee(840n), 21n);
+  assert.equal(marketFee(820n), 21n, '20.5 is rounded up');
+  assert.equal(marketFee(1_000_000n), 25_000n);
+  assert.equal(marketFee(99_999_960n), 2_499_999n);
+  assert.equal(marketFee(100_000_000n), 2_500_000n, '2.5% of 100,000,000 is exactly the cap');
+  assert.equal(marketFee(100_000_040n), 2_500_000n);
+  assert.equal(marketFee(999_999_999_999n * 64_000n), 2_500_000n);
 });
 
 test('an amount past 64,000 takes several offers, full ones first, each paying its own fee', () => {
-  assert.deepEqual(offerCost(64_000, 40_000), {total:2_560_000_000n, fee:1_000_000n, offers:1});
-  // 64,025: one full offer at the cap and an offer of 25 at 2% of 1,000,000.
-  assert.deepEqual(offerCost(64_025, 40_000), {total:2_561_000_000n, fee:1_020_000n, offers:2});
-  assert.deepEqual(offerCost(MAX_AMOUNT, 40_000), {total:256_000_000_000n, fee:100_000_000n, offers:100});
+  assert.deepEqual(offerCost(64_000, 40_000), {total:2_560_000_000n, fee:2_500_000n, offers:1});
+  // 64,025: one full offer at the cap and an offer of 25 at 2.5% of 1,000,000.
+  assert.deepEqual(offerCost(64_025, 40_000), {total:2_561_000_000n, fee:2_525_000n, offers:2});
+  assert.deepEqual(offerCost(MAX_AMOUNT, 40_000), {total:256_000_000_000n, fee:250_000_000n, offers:100});
   assert.equal(MAX_AMOUNT, 6_400_000);
   assert.equal(RULES.lot, 25, 'Tibia Coins trade in lots of 25, as the market history counts them');
 });
@@ -95,7 +96,7 @@ test('an own offer that meets the best offer on the other side would be matched 
     assert.deepEqual(r.issues, [{field:'offerPrice', code:'crosses', price:38_400}]);
     assert.equal(r.make, null);
     assert.equal(r.take.net, 3_840_000n, 'selling now is still worked out');
-    assert.equal(r.breakEven.price, 39_184);
+    assert.equal(r.breakEven.price, 39_385);
   }
   assert.deepEqual(codes(sell(100, book, 38_401)), []);
   assert.deepEqual(codes(buy(100, book, 38_800)), ['offerPrice:crosses']);
@@ -115,22 +116,22 @@ test('selling into enough Buy Offers: an offer that fills nets more past the bre
   assert.equal(r.take.fee, 0n, 'accepting offers has no fee');
   assert.equal(r.take.net, 384_200_000n);
   assert.equal(r.make.total, 389_000_000n);
-  assert.equal(r.make.fee, 1_000_000n, 'the cap binds');
-  assert.equal(r.make.net, 388_000_000n);
+  assert.equal(r.make.fee, 2_500_000n, 'the cap binds');
+  assert.equal(r.make.net, 386_500_000n);
   assert.equal(r.make.offers, 1);
   assert.deepEqual(r.make.standing, {entered:true, best:38_900, ahead:0, same:500, atLeast:false});
   assert.equal(r.split, null, 'the Buy Offer holds the whole amount');
   assert.equal(r.best, 'make');
-  assert.deepEqual(r.comparison, {best:'make', other:'take', difference:3_800_000n, ratio:0.009891, equal:false});
-  assert.deepEqual(r.breakEven, {price:38_520, partial:false});
+  assert.deepEqual(r.comparison, {best:'make', other:'take', difference:2_300_000n, ratio:0.005986, equal:false});
+  assert.deepEqual(r.breakEven, {price:38_670, partial:false});
   assert.deepEqual(r.needs, []);
 
   // Below the break-even price selling now nets more, even if the offer filled.
   const low = sell(10_000, book, 38_500);
   assert.equal(low.best, 'take');
-  assert.deepEqual(low.comparison, {best:'take', other:'make', difference:200_000n, ratio:0.000521, equal:false});
+  assert.deepEqual(low.comparison, {best:'take', other:'make', difference:1_700_000n, ratio:0.004444, equal:false});
   // At it the two are equal, and selling now leads: it does not depend on an offer filling.
-  const even = sell(10_000, book, 38_520);
+  const even = sell(10_000, book, 38_670);
   assert.equal(even.make.net, even.take.net);
   assert.equal(even.best, 'take');
   assert.deepEqual(even.comparison, {best:'take', other:'make', difference:0n, ratio:0, equal:true});
@@ -144,25 +145,25 @@ test('selling more than the Buy Offers hold: only their amount is priced, the re
   assert.equal(r.take.gold, 153_680_000n);
   assert.equal(r.take.complete, false);
   assert.deepEqual(r.take.fills, [{price:38_420, amount:4_000}]);
-  // Sell the 4,000 now, offer the 6,000 left: 153,680,000 + 233,400,000 - 1,000,000 (capped).
+  // Sell the 4,000 now, offer the 6,000 left: 153,680,000 + 233,400,000 - 2,500,000 (capped).
   assert.equal(r.split.now, 4_000);
   assert.equal(r.split.offered, 6_000);
   assert.equal(r.split.total, 233_400_000n);
-  assert.equal(r.split.fee, 1_000_000n);
-  assert.equal(r.split.net, 386_080_000n);
-  assert.equal(r.make.net, 388_000_000n);
+  assert.equal(r.split.fee, 2_500_000n);
+  assert.equal(r.split.net, 384_580_000n);
+  assert.equal(r.make.net, 386_500_000n);
   // Selling now covers only part of the amount, so it is not compared; the offer for all of it and the split are.
-  assert.deepEqual(r.comparison, {best:'make', other:'split', difference:1_920_000n, ratio:0.004973, equal:false});
+  assert.deepEqual(r.comparison, {best:'make', other:'split', difference:1_920_000n, ratio:0.004992, equal:false});
   // Offering the 4,000 too pays no extra fee here (both offers are capped), so it would break even at 38,420 itself;
   // a Sell Offer there would be matched at once, so the first price it can be placed at is the break-even.
   assert.deepEqual(r.breakEven, {price:38_421, partial:true});
 
   // Below the cap the extra fee counts: 100 now at 38,000, 100 offered.
   const small = sell(200, {buy:[level(38_000, 100)]}, 38_500);
-  assert.equal(small.split.net, 3_800_000n + 3_850_000n - 77_000n);
-  assert.equal(small.make.net, 7_700_000n - 154_000n);
+  assert.equal(small.split.net, 3_800_000n + 3_850_000n - 96_250n);
+  assert.equal(small.make.net, 7_700_000n - 192_500n);
   assert.equal(small.best, 'split');
-  assert.equal(small.breakEven.price, 38_776);
+  assert.equal(small.breakEven.price, 38_975);
 });
 
 test('buying: the same comparison on cost, with the fee added to the offer', () => {
@@ -170,24 +171,25 @@ test('buying: the same comparison on cost, with the fee added to the offer', () 
   const r = buy(1_000, book, 38_000);
   assert.equal(r.take.net, 38_800_000n);
   assert.equal(r.make.total, 38_000_000n);
-  assert.equal(r.make.fee, 760_000n);
-  assert.equal(r.make.net, 38_760_000n, 'a Buy Offer takes its price and fee from the bank when placed');
+  assert.equal(r.make.fee, 950_000n);
+  assert.equal(r.make.net, 38_950_000n, 'a Buy Offer takes its price and fee from the bank when placed');
   assert.deepEqual(r.make.standing, {entered:true, best:38_000, ahead:0, same:300, atLeast:false});
-  assert.deepEqual(r.comparison, {best:'make', other:'take', difference:40_000n, ratio:0.001031, equal:false});
-  // The highest Buy Offer that costs no more than buying now: 1,000 × 38,039 + 760,780.
-  assert.deepEqual(r.breakEven, {price:38_039, partial:false});
-  assert.equal(buy(1_000, book, 38_039).best, 'make');
-  assert.equal(buy(1_000, book, 38_040).best, 'take');
+  // At 2.5% the fee outweighs the 800 saved on the price: buying now costs less.
+  assert.deepEqual(r.comparison, {best:'take', other:'make', difference:150_000n, ratio:0.003851, equal:false});
+  // The highest Buy Offer that costs no more than buying now: 1,000 × 37,853 + 946,325.
+  assert.deepEqual(r.breakEven, {price:37_853, partial:false});
+  assert.equal(buy(1_000, book, 37_853).best, 'make');
+  assert.equal(buy(1_000, book, 37_854).best, 'take');
 
   // Partial: 2,000 wanted, 500 on offer.
   const p = buy(2_000, {sell:[level(38_800, 500)]}, 38_000);
   assert.equal(p.take.now, 500);
   assert.equal(p.take.remainder, 1_500);
   assert.equal(p.take.gold, 19_400_000n);
-  assert.equal(p.split.net, 19_400_000n + 57_000_000n + 1_000_000n);
-  assert.equal(p.make.net, 76_000_000n + 1_000_000n);
-  assert.equal(p.best, 'make');
-  assert.equal(p.comparison.other, 'split');
+  assert.equal(p.split.net, 19_400_000n + 57_000_000n + 1_425_000n);
+  assert.equal(p.make.net, 76_000_000n + 1_900_000n);
+  assert.equal(p.best, 'split', 'below the cap, the smaller offer pays the smaller fee');
+  assert.equal(p.comparison.other, 'make');
 });
 
 test('without the other side or an own price, each strategy stands alone and says what is missing', () => {
@@ -204,7 +206,7 @@ test('without the other side or an own price, each strategy stands alone and say
   assert.equal(nowOnly.best, 'take');
   assert.equal(nowOnly.comparison, null);
   assert.equal(nowOnly.make, null);
-  assert.deepEqual(nowOnly.breakEven, {price:39_184, partial:false});
+  assert.deepEqual(nowOnly.breakEven, {price:39_385, partial:false});
   assert.deepEqual(nowOnly.needs, ['offerPrice']);
 
   const partialOnly = sell(500, {buy:[level(38_400, 100)]});
@@ -238,10 +240,10 @@ test('deeper rows: only entered rows are taken, and the split keeps the rows wor
   assert.equal(r.take.complete, true);
   assert.equal(r.split.now, 100);
   assert.deepEqual(r.split.fills, [{price:40_000, amount:100}]);
-  assert.equal(r.split.net, 4_000_000n + 36_450_000n - 729_000n);
-  assert.equal(r.make.net, 40_500_000n - 810_000n);
+  assert.equal(r.split.net, 4_000_000n + 36_450_000n - 911_250n);
+  assert.equal(r.make.net, 40_500_000n - 1_012_500n);
   assert.equal(r.best, 'split');
-  assert.deepEqual(r.comparison, {best:'split', other:'make', difference:31_000n, ratio:0.000781, equal:false});
+  assert.deepEqual(r.comparison, {best:'split', other:'make', difference:51_250n, ratio:0.001298, equal:false});
   // Both rows close to the top: selling now beats either.
   assert.equal(sell(1_000, {buy:[level(40_000, 100), level(39_900, 900)]}, 40_100).best, 'take');
 });
@@ -251,11 +253,11 @@ test('very large orders stay exact past the range Number holds', () => {
   assert.equal(r.take.net, 6_399_999_999_993_600_000n);
   assert.ok(r.take.net > BigInt(Number.MAX_SAFE_INTEGER));
   assert.equal(r.make.offers, 100);
-  assert.equal(r.make.fee, 100_000_000n);
-  assert.equal(r.make.net, 6_399_999_999_353_600_000n + 100_000_000n);
+  assert.equal(r.make.fee, 250_000_000n);
+  assert.equal(r.make.net, 6_399_999_999_353_600_000n + 250_000_000n);
   assert.equal(r.best, 'make');
-  assert.equal(r.comparison.difference, 540_000_000n);
-  // One gold under the Sell Offer saves 6,400,000 and pays 100 fees of 1,000,000: buying now is cheaper.
+  assert.equal(r.comparison.difference, 390_000_000n);
+  // One gold under the Sell Offer saves 6,400,000 and pays 100 fees of 2,500,000: buying now is cheaper.
   assert.equal(buy(MAX_AMOUNT, {sell:[level(RULES.maxPrice, MAX_AMOUNT)]}, RULES.maxPrice - 1).best, 'take');
   // A sale at the top price leaves no price inside the limit to place an offer at; a purchase at 1, none below it.
   assert.equal(breakEvenPrice('sell', 100, takeOffers([level(RULES.maxPrice, 100)], 100)), null);

@@ -10,6 +10,7 @@
 import { RANGES, changeOver, rangeStart } from './market-series.js';
 import { loadEvents, eventsFor, queryEvents, addEventDays } from './events.js';
 import { $, esc, pill, tone, short, whole, logo, percent, summaryChart, heatmap, heatScale, sortableTable, worldSearch, sectionChips } from './tv-overview.js?v=20261014-details';
+import { topStories } from './tv-news.js?v=20261014-news';
 
 const DATA = 'data/market-history/';
 const STALE = 14;
@@ -182,6 +183,7 @@ async function main() {
   }
   $('calendarTabs').addEventListener('click', e => { const p = e.target.closest('[data-period]')?.dataset.period; if (p) { period = p; drawEvents(); } });
   drawEvents();
+  topStories($('topStories'));
   sectionChips($('sectionChips'));
 }
 

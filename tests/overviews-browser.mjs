@@ -18,6 +18,10 @@ const goldWorlds=gold.worlds.filter(w=>w!==goldAll && !w.ended && w.week?.gross)
 const browser=await (engine==='webkit' ? webkit.launch({headless:true}) : chromium.launch({headless:true,...(process.env.TIBINANCE_CHROME ? {executablePath:process.env.TIBINANCE_CHROME} : {channel:'chrome'})}));
 try {
   const context=await browser.newContext({locale:'en-US',viewport:{width:1440,height:900},colorScheme:'light'});
+  await context.route('https://api.tibiadata.com/v4/news/**',route=>route.request().url().endsWith('/latest')
+    ? route.fulfill({json:{news:[{id:9019,date:'2026-10-13',news:'Fixes and Changes',category:'development',type:'news',url:'https://www.tibia.com/news/?subtopic=newsarchive&id=9019'},
+        {id:8990,date:'2026-10-01',news:'Adjustment of Market Fee and Exercise Weapons',category:'development',type:'news',url:'https://www.tibia.com/news/?subtopic=newsarchive&id=8990'}]}})
+    : route.fulfill({json:{news:{id:8990,content_html:'<p>The Market fee will be raised to 2.5%.</p>'}}}));
   const page=await context.newPage();
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   page.on('console',m=>{if(m.type()==='error') errors.push(m.text());});
@@ -62,6 +66,13 @@ try {
   const before=await colours();
   await page.selectOption('#heatRange','1Y');
   assert.notEqual(await colours(),before);
+  // Top stories, as the /markets/ page leads its news: the latest headlines, each opening its story.
+  await page.waitForSelector('#topStories .tv-story');
+  assert.deepEqual(await page.$$eval('#topStories .tv-story-headline',h=>h.map(e=>e.textContent)),['Fixes and Changes','Adjustment of Market Fee and Exercise Weapons']);
+  await page.click('#topStories li:nth-child(2) .tv-story');
+  await page.waitForFunction(()=>document.querySelector('dialog.tv-news-story[open] .tv-news-body')?.textContent.includes('2.5%'));
+  assert.equal(await page.$eval('dialog.tv-news-story .tv-news-body p',p=>p.textContent),'The Market fee will be raised to 2.5%.');
+  await page.keyboard.press('Escape');
   // Regions and the calendar.
   assert.ok(await page.$$eval('#regions li',l=>l.length)>=3);
   assert.ok(await page.$$eval('#calendar li',l=>l.length)>0);

@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="css/market-assets.css">
 <link rel="stylesheet" href="css/site-header.css?v=20261014-details">
 <link rel="stylesheet" href="css/tv.css?v=20261014-tv">
-<link rel="stylesheet" href="css/tv-terminal.css?v=20261014-pages">
+<link rel="stylesheet" href="css/tv-terminal.css?v=20261014-news">
 <link rel="icon" href="tibinance-icon.svg" type="image/svg+xml">
 </head>
 <body class="tv-app">
@@ -264,6 +264,10 @@
         <p class="history-meta">An edition is public from its first website deployment, or, where none is recorded, its first push to the repository, which is labelled. Each forecast was archived with its inputs before publication and is never changed afterwards. The band is a heuristic stress band, not a confidence interval.</p>
       </div>
     </section>
+    <section id="newsPanel" class="dock-panel help-panel tv-news" aria-labelledby="newsTitle">
+      <div class="panel-head"><h2 id="newsTitle" class="panel-title">News</h2><a class="tv-news-all" href="https://www.tibia.com/news/?subtopic=latestnews" target="_blank" rel="noopener">tibia.com</a></div>
+      <div class="panel-body"><ul id="newsList" class="tv-news-list" aria-label="Tibia news"></ul><p class="tv-news-credit">From tibia.com, through the TibiaData API.</p></div>
+    </section>
     <section id="drawingsPanel" class="dock-panel help-panel tv-objects" aria-labelledby="drawingsTitle">
       <div class="panel-head"><h2 id="drawingsTitle" class="panel-title">Object tree</h2></div>
       <div class="panel-body"><ul id="drawingsList" class="tv-object-list"></ul><p id="drawingsEmpty" class="tv-muted">No drawings on this world. Pick a tool on the left toolbar and click the chart.</p></div>
@@ -297,6 +301,7 @@
         <button type="button" id="eventsToggle" class="tool dock-tool" data-dock-target="eventsPanel" aria-label="Events"><svg aria-hidden="true"><use href="css/tv-icons.svg#calendar"/></svg></button>
         <button type="button" id="projectionsToggle" class="tool dock-tool" aria-pressed="false" aria-label="Projections" title="Show projections"><svg aria-hidden="true"><use href="css/tv-icons.svg#projection"/></svg></button>
         <button type="button" id="historyToggle" class="tool dock-tool" data-dock-target="historyPanel" aria-label="Forecast history"><svg aria-hidden="true"><use href="css/tv-icons.svg#history"/></svg></button>
+        <button type="button" id="newsToggle" class="tool dock-tool" data-dock-target="newsPanel" aria-label="News"><svg aria-hidden="true"><use href="css/tv-icons.svg#news"/></svg></button>
         <button type="button" id="drawingsToggle" class="tool dock-tool" data-dock-target="drawingsPanel" aria-label="Object tree"><svg aria-hidden="true"><use href="css/tv-icons.svg#layers"/></svg></button>
       </div>
       <span class="dock-space" aria-hidden="true"></span>
@@ -312,7 +317,7 @@
 <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.1/dist/lightweight-charts.standalone.production.js"
         integrity="sha384-KkYqTZlM13Zya6fVUF3IGCBOQ1ehFeJVVgxaVvD/0MebineF9EI8Jkd3NnWNChqN" crossorigin="anonymous"></script>
 <script type="module" src="js/site-header.js"></script>
-<script type="module" src="js/markets-entry.js?v=20261014-details"></script>
-<script type="module" src="js/tv-terminal.js?v=20261014-review"></script>
+<script type="module" src="js/markets-entry.js?v=20261014-events"></script>
+<script type="module" src="js/tv-terminal.js?v=20261014-news"></script>
 </body>
 </html>

@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="css/economy.css?v=20261014-tc-price">
 <link rel="stylesheet" href="css/site-header.css?v=20261014-details">
 <link rel="stylesheet" href="css/tv.css?v=20261014-tv">
-<link rel="stylesheet" href="css/tv-terminal.css?v=20261014-pages">
+<link rel="stylesheet" href="css/tv-terminal.css?v=20261014-news">
 <link rel="icon" href="tibinance-icon.svg" type="image/svg+xml">
 </head>
 <body class="tv-app">
@@ -93,6 +93,8 @@
   <section id="chartPanel" class="chart-panel" aria-labelledby="world">
     <div class="chart-area">
       <div id="chart" class="chart" role="img"></div>
+      <div id="eventMarks" class="event-marks" role="toolbar" aria-label="Events"></div>
+      <div id="eventTip" class="event-tip" aria-hidden="true" hidden></div>
       <!-- The legend over the chart's top left, as TradingView reads it: the world and its latest period in gold per
            day; the measures shown, each a toggle with its latest value; then the readout under the crosshair. -->
       <div id="chartHead" class="chart-head">
@@ -114,6 +116,7 @@
           <button type="button" data-measure="npc" aria-pressed="false" title="Show or hide potential NPC conversion"><span class="side-name">NPC</span> <span id="measureNpc" class="side-value"></span></button>
           <button id="killsToggle" type="button" aria-pressed="true" title="Show or hide kills per day"><span class="side-name">Kills</span></button>
           <button id="priceToggle" type="button" aria-pressed="true" title="Hide the Tibia Coin Sell Offer price"><span class="side-name">Tibia Coin price</span> <span id="measurePrice" class="side-value"></span></button>
+          <button id="eventsShown" type="button" aria-pressed="true" title="Hide the events on the chart"><span class="side-name">Events</span></button>
         </div>
         <div id="valueMode" class="ranges" role="radiogroup" aria-label="Gold values">
           <button type="button" data-mode="daily" role="radio" aria-checked="true">Daily avg</button>
@@ -247,6 +250,10 @@
         <p class="help-fine">Not affiliated with CipSoft. Tibia is a trademark of CipSoft GmbH.</p>
       </div>
     </section>
+    <section id="newsPanel" class="dock-panel help-panel tv-news" aria-labelledby="newsTitle">
+      <div class="panel-head"><h2 id="newsTitle" class="panel-title">News</h2><a class="tv-news-all" href="https://www.tibia.com/news/?subtopic=latestnews" target="_blank" rel="noopener">tibia.com</a></div>
+      <div class="panel-body"><ul id="newsList" class="tv-news-list" aria-label="Tibia news"></ul><p class="tv-news-credit">From tibia.com, through the TibiaData API.</p></div>
+    </section>
     <section id="drawingsPanel" class="dock-panel help-panel tv-objects" aria-labelledby="drawingsTitle">
       <div class="panel-head"><h2 id="drawingsTitle" class="panel-title">Object tree</h2></div>
       <div class="panel-body"><ul id="drawingsList" class="tv-object-list"></ul><p id="drawingsEmpty" class="tv-muted">No drawings on this world. Pick a tool on the left toolbar and click the chart.</p></div>
@@ -257,6 +264,7 @@
         <button type="button" class="tool dock-tool" data-dock-target="creaturesPanel" aria-label="Creatures"><svg aria-hidden="true"><use href="css/tv-icons.svg#creatures"/></svg></button>
         <button type="button" class="tool dock-tool" data-dock-target="assumptionsPanel" aria-label="Assumptions"><svg aria-hidden="true"><use href="css/tv-icons.svg#sliders"/></svg></button>
         <button type="button" class="tool dock-tool" data-dock-target="findingsPanel" aria-label="Research"><svg aria-hidden="true"><use href="css/tv-icons.svg#document"/></svg></button>
+        <button type="button" id="newsToggle" class="tool dock-tool" data-dock-target="newsPanel" aria-label="News"><svg aria-hidden="true"><use href="css/tv-icons.svg#news"/></svg></button>
         <button type="button" id="drawingsToggle" class="tool dock-tool" data-dock-target="drawingsPanel" aria-label="Object tree"><svg aria-hidden="true"><use href="css/tv-icons.svg#layers"/></svg></button>
       </div>
       <span class="dock-space" aria-hidden="true"></span>
@@ -272,7 +280,7 @@
 <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.1/dist/lightweight-charts.standalone.production.js"
         integrity="sha384-KkYqTZlM13Zya6fVUF3IGCBOQ1ehFeJVVgxaVvD/0MebineF9EI8Jkd3NnWNChqN" crossorigin="anonymous"></script>
 <script type="module" src="js/site-header.js"></script>
-<script type="module" src="js/economy.js?v=20261014-details"></script>
-<script type="module" src="js/tv-terminal.js?v=20261014-review"></script>
+<script type="module" src="js/economy.js?v=20261014-events"></script>
+<script type="module" src="js/tv-terminal.js?v=20261014-news"></script>
 </body>
 </html>

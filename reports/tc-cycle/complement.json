@@ -141,10 +141,18 @@
   ]
  },
  "fee": {
-  "rate": 0.02,
+  "rate": 0.025,
   "min": 20,
-  "max": 1000000,
-  "capBindsAboveTc": 1155.9357299734133
+  "max": 2500000,
+  "capBindsAboveTc": 2311.871459946827,
+  "since": "2026-10-06",
+  "previous": {
+   "rate": 0.02,
+   "min": 20,
+   "max": 1000000,
+   "until": "2026-10-05"
+  },
+  "source": "https://www.tibia.com/news/?subtopic=newsarchive&id=8990"
  },
  "swings": {
   "threshold": 0.05,
@@ -10138,6 +10146,8 @@
    "acceptPct": 22.276312749595697,
    "makerGrossPct": 26.568181818181813,
    "makerNetPct": 21.604723707664885,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 37590.75,
    "rebuyBidMedian": 29700.0
   },
@@ -10148,6 +10158,8 @@
    "acceptPct": 27.39694379352453,
    "makerGrossPct": 32.5016835016835,
    "makerNetPct": 27.30553905063711,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 39353.0,
    "rebuyBidMedian": 29700.0
   },
@@ -10158,6 +10170,8 @@
    "acceptPct": 28.86728934948348,
    "makerGrossPct": 33.49663299663299,
    "makerNetPct": 28.261470918333664,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 39648.5,
    "rebuyBidMedian": 29700.0
   },
@@ -10168,6 +10182,8 @@
    "acceptPct": 22.822535397207822,
    "makerGrossPct": 27.737373737373726,
    "makerNetPct": 22.728064963359085,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 37938.0,
    "rebuyBidMedian": 29700.0
   },
@@ -10178,6 +10194,8 @@
    "acceptPct": 2.370657960528244,
    "makerGrossPct": 6.51442307692307,
    "makerNetPct": 2.3373868778280515,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 35448.0,
    "rebuyBidMedian": 33280.0
   },
@@ -10188,6 +10206,8 @@
    "acceptPct": 13.832759787052563,
    "makerGrossPct": 19.275841346153854,
    "makerNetPct": 14.598357371794869,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 39695.0,
    "rebuyBidMedian": 33280.0
   },
@@ -10198,6 +10218,8 @@
    "acceptPct": 14.560722374187485,
    "makerGrossPct": 19.214242788461533,
    "makerNetPct": 14.539174443816005,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 39674.5,
    "rebuyBidMedian": 33280.0
   },
@@ -10208,6 +10230,8 @@
    "acceptPct": 13.859231153857476,
    "makerGrossPct": 18.686899038461547,
    "makerNetPct": 14.032510840874801,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 39499.0,
    "rebuyBidMedian": 33280.0
   },
@@ -10218,6 +10242,8 @@
    "acceptPct": -3.0008002133902423,
    "makerGrossPct": 0.7626659441885675,
    "makerNetPct": -3.1888111516619633,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 37191.5,
    "rebuyBidMedian": 36910.0
   },
@@ -10228,6 +10254,8 @@
    "acceptPct": 4.339823953054145,
    "makerGrossPct": 8.041181251693308,
    "makerNetPct": 3.8042721829994575,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 39878.0,
    "rebuyBidMedian": 36910.0
   },
@@ -10238,6 +10266,8 @@
    "acceptPct": 6.161643104827963,
    "makerGrossPct": 8.909509617989709,
    "makerNetPct": 4.6385484564999135,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40198.5,
    "rebuyBidMedian": 36910.0
   },
@@ -10248,6 +10278,8 @@
    "acceptPct": 5.629501200320086,
    "makerGrossPct": 8.83906800325116,
    "makerNetPct": 4.570869258025634,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40172.5,
    "rebuyBidMedian": 36910.0
   },
@@ -10258,6 +10290,8 @@
    "acceptPct": -2.492624631231566,
    "makerGrossPct": 7.051282051282048,
    "makerNetPct": 2.853192559074902,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 41750.0,
    "rebuyBidMedian": 39000.0
   },
@@ -10268,6 +10302,8 @@
    "acceptPct": 3.8176908845442226,
    "makerGrossPct": 11.216666666666676,
    "makerNetPct": 6.855228758169929,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 43374.5,
    "rebuyBidMedian": 39000.0
   },
@@ -10278,6 +10314,8 @@
    "acceptPct": 4.155207760388024,
    "makerGrossPct": 10.666666666666668,
    "makerNetPct": 6.326797385620897,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 43160.0,
    "rebuyBidMedian": 39000.0
   },
@@ -10288,6 +10326,8 @@
    "acceptPct": 4.355217760888053,
    "makerGrossPct": 11.053846153846148,
    "makerNetPct": 6.698793363499234,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 43311.0,
    "rebuyBidMedian": 39000.0
   },
@@ -10298,6 +10338,8 @@
    "acceptPct": -3.868310797943253,
    "makerGrossPct": 1.799024965308904,
    "makerNetPct": -2.193093660781653,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 41449.0,
    "rebuyBidMedian": 40716.5
   },
@@ -10308,6 +10350,8 @@
    "acceptPct": 2.0127118644067687,
    "makerGrossPct": 8.572691660628973,
    "makerNetPct": 4.314939046486677,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44207.0,
    "rebuyBidMedian": 40716.5
   },
@@ -10318,6 +10362,8 @@
    "acceptPct": 4.159921919634346,
    "makerGrossPct": 10.726609605442516,
    "makerNetPct": 6.384389620915343,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 45084.0,
    "rebuyBidMedian": 40716.5
   },
@@ -10328,6 +10374,8 @@
    "acceptPct": 0.34041135021900537,
    "makerGrossPct": 7.516608745840148,
    "makerNetPct": 3.300271147964051,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 43777.0,
    "rebuyBidMedian": 40716.5
   },
@@ -10338,6 +10386,8 @@
    "acceptPct": 0.8389551980626297,
    "makerGrossPct": 6.774989301986056,
    "makerNetPct": 2.5877348195552097,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 42418.5,
    "rebuyBidMedian": 39727.0
   },
@@ -10348,6 +10398,8 @@
    "acceptPct": 5.724417426545081,
    "makerGrossPct": 11.276965288091212,
    "makerNetPct": 6.913162727773914,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44207.0,
    "rebuyBidMedian": 39727.0
   },
@@ -10358,6 +10410,8 @@
    "acceptPct": 4.7804383818914165,
    "makerGrossPct": 12.136582173333,
    "makerNetPct": 7.739069146927768,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44548.5,
    "rebuyBidMedian": 39727.0
   },
@@ -10368,6 +10422,8 @@
    "acceptPct": -1.2137599161445523,
    "makerGrossPct": 3.3299968262493485,
    "makerNetPct": -0.7221599120349365,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 42325.0,
    "rebuyBidMedian": 40961.0
   },
@@ -10378,6 +10434,8 @@
    "acceptPct": 3.9867070062176824,
    "makerGrossPct": 8.627719049827887,
    "makerNetPct": 4.367808498854231,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44495.0,
    "rebuyBidMedian": 40961.0
   },
@@ -10388,6 +10446,8 @@
    "acceptPct": 4.9932105676918415,
    "makerGrossPct": 9.782476013769204,
    "makerNetPct": 5.477280875974322,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44968.0,
    "rebuyBidMedian": 40961.0
   },
@@ -10398,6 +10458,8 @@
    "acceptPct": 3.6436620053839075,
    "makerGrossPct": 8.094284807499807,
    "makerNetPct": 3.8552932464213985,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44276.5,
    "rebuyBidMedian": 40961.0
   },
@@ -10408,6 +10470,8 @@
    "acceptPct": -22.783946884208085,
    "makerGrossPct": -8.70354578714274,
    "makerNetPct": -12.283798893529285,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 33189.0,
    "rebuyBidMedian": 36353.0
   },
@@ -10418,6 +10482,8 @@
    "acceptPct": -27.21154959661335,
    "makerGrossPct": -7.988336588452127,
    "makerNetPct": -11.59663711439518,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 33449.0,
    "rebuyBidMedian": 36353.0
   },
@@ -10428,6 +10494,8 @@
    "acceptPct": -34.34641069521469,
    "makerGrossPct": -20.245921932165157,
    "makerNetPct": -23.373532836786126,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 28993.0,
    "rebuyBidMedian": 36353.0
   },
@@ -10438,6 +10506,8 @@
    "acceptPct": 2.1017504829927924,
    "makerGrossPct": 8.975772274074622,
    "makerNetPct": 4.702212577052078,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44485.0,
    "rebuyBidMedian": 40821.0
   },
@@ -10448,6 +10518,8 @@
    "acceptPct": 3.0817867806334442,
    "makerGrossPct": 11.343426177702653,
    "makerNetPct": 6.977017307988831,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 45451.5,
    "rebuyBidMedian": 40821.0
   },
@@ -10458,6 +10530,8 @@
    "acceptPct": 0.6966805222176742,
    "makerGrossPct": 7.769285416819782,
    "makerNetPct": 3.543038929885678,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 43992.5,
    "rebuyBidMedian": 40821.0
   },
@@ -10468,6 +10542,8 @@
    "acceptPct": 10.138837662679801,
    "makerGrossPct": 19.77111819704913,
    "makerNetPct": 15.074211601086397,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44322.5,
    "rebuyBidMedian": 37006.0
   },
@@ -10478,6 +10554,8 @@
    "acceptPct": 11.470572738289686,
    "makerGrossPct": 18.88882883856673,
    "makerNetPct": 14.226521825289584,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 43996.0,
    "rebuyBidMedian": 37006.0
   },
@@ -10488,6 +10566,8 @@
    "acceptPct": 10.85410190210232,
    "makerGrossPct": 17.541749986488675,
    "makerNetPct": 12.932269594861644,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 43497.5,
    "rebuyBidMedian": 37006.0
   },
@@ -10498,6 +10578,8 @@
    "acceptPct": 2.3136145808783093,
    "makerGrossPct": 9.211274469986197,
    "makerNetPct": 4.928479392731822,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40335.0,
    "rebuyBidMedian": 36933.0
   },
@@ -10508,6 +10590,8 @@
    "acceptPct": 8.489800193783225,
    "makerGrossPct": 19.34313486583814,
    "makerNetPct": 14.663011929922899,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44077.0,
    "rebuyBidMedian": 36933.0
   },
@@ -10518,6 +10602,8 @@
    "acceptPct": 9.843664074161374,
    "makerGrossPct": 18.034007527143746,
    "makerNetPct": 13.405222918236138,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 43593.5,
    "rebuyBidMedian": 36933.0
   },
@@ -10528,6 +10614,8 @@
    "acceptPct": 8.212218817922334,
    "makerGrossPct": 15.327755665664844,
    "makerNetPct": 10.805098580736816,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 42594.0,
    "rebuyBidMedian": 36933.0
   },
@@ -10538,6 +10626,8 @@
    "acceptPct": 8.436419217367641,
    "makerGrossPct": 18.682297076717624,
    "makerNetPct": 14.028089348218886,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 43989.0,
    "rebuyBidMedian": 37064.5
   },
@@ -10548,6 +10638,8 @@
    "acceptPct": 8.159220735482698,
    "makerGrossPct": 19.01145300759486,
    "makerNetPct": 14.344337203375446,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44111.0,
    "rebuyBidMedian": 37064.5
   },
@@ -10558,6 +10650,8 @@
    "acceptPct": 6.889807126850678,
    "makerGrossPct": 16.769415478422744,
    "makerNetPct": 12.190222714563026,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 43280.0,
    "rebuyBidMedian": 37064.5
   },
@@ -10568,6 +10662,8 @@
    "acceptPct": 4.032353833770963,
    "makerGrossPct": 10.177021207222147,
    "makerNetPct": 5.8563537088996975,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40549.0,
    "rebuyBidMedian": 36803.5
   },
@@ -10578,6 +10674,8 @@
    "acceptPct": 4.639318088854294,
    "makerGrossPct": 11.530153382151154,
    "makerNetPct": 7.156421876968744,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 41047.0,
    "rebuyBidMedian": 36803.5
   },
@@ -10588,6 +10686,8 @@
    "acceptPct": 4.061382559014071,
    "makerGrossPct": 11.05057942858696,
    "makerNetPct": 6.6956547451129556,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40870.5,
    "rebuyBidMedian": 36803.5
   },
@@ -10598,6 +10698,8 @@
    "acceptPct": 5.17200914088074,
    "makerGrossPct": 10.135859624336163,
    "makerNetPct": 5.816806305734734,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 43654.0,
    "rebuyBidMedian": 39636.5
   },
@@ -10608,6 +10710,8 @@
    "acceptPct": -2.6147354447183746,
    "makerGrossPct": 3.0917933130699016,
    "makerNetPct": -0.951022110972044,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 42396.5,
    "rebuyBidMedian": 41125.0
   },
@@ -10618,6 +10722,8 @@
    "acceptPct": 1.8514128579556255,
    "makerGrossPct": 7.49908814589666,
    "makerNetPct": 3.2834376303712887,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44209.0,
    "rebuyBidMedian": 41125.0
   },
@@ -10628,6 +10734,8 @@
    "acceptPct": 4.319173146216571,
    "makerGrossPct": 10.3951367781155,
    "makerNetPct": 6.065915727993332,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 45400.0,
    "rebuyBidMedian": 41125.0
   },
@@ -10638,6 +10746,8 @@
    "acceptPct": 2.7818604210127162,
    "makerGrossPct": 8.795136778115499,
    "makerNetPct": 4.528660826032538,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44742.0,
    "rebuyBidMedian": 41125.0
   },
@@ -10648,6 +10758,8 @@
    "acceptPct": -3.323450776927761,
    "makerGrossPct": 4.322404371584709,
    "makerNetPct": 0.23132969034609374,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 38182.0,
    "rebuyBidMedian": 36600.0
   },
@@ -10658,6 +10770,8 @@
    "acceptPct": 5.900415596791708,
    "makerGrossPct": 13.306010928961754,
    "makerNetPct": 8.862637951355401,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 41470.0,
    "rebuyBidMedian": 36600.0
   },
@@ -10668,6 +10782,8 @@
    "acceptPct": 5.674087407681916,
    "makerGrossPct": 12.008196721311482,
    "makerNetPct": 7.6157184185149385,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40995.0,
    "rebuyBidMedian": 36600.0
   },
@@ -10678,6 +10794,8 @@
    "acceptPct": 5.75482436403103,
    "makerGrossPct": 10.371584699453562,
    "makerNetPct": 6.043287260259289,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40396.0,
    "rebuyBidMedian": 36600.0
   },
@@ -10688,6 +10806,8 @@
    "acceptPct": -0.16863649466705155,
    "makerGrossPct": 6.171231851519243,
    "makerNetPct": 2.0076541318518215,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 35466.5,
    "rebuyBidMedian": 33405.0
   },
@@ -10698,6 +10818,8 @@
    "acceptPct": 14.707408475064865,
    "makerGrossPct": 22.281095644364623,
    "makerNetPct": 17.485758560271904,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40848.0,
    "rebuyBidMedian": 33405.0
   },
@@ -10708,6 +10830,8 @@
    "acceptPct": 13.699913519746332,
    "makerGrossPct": 20.53285436311929,
    "makerNetPct": 15.806075760644035,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40264.0,
    "rebuyBidMedian": 33405.0
   },
@@ -10718,6 +10842,8 @@
    "acceptPct": -4.259664286278952,
    "makerGrossPct": 1.381014093633559,
    "makerNetPct": -2.594711949254025,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 37549.5,
    "rebuyBidMedian": 37038.0
   },
@@ -10728,6 +10854,8 @@
    "acceptPct": 4.6140873277293215,
    "makerGrossPct": 11.207408607376212,
    "makerNetPct": 6.846333760028123,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 41189.0,
    "rebuyBidMedian": 37038.0
   },
@@ -10738,6 +10866,8 @@
    "acceptPct": 4.969827926954595,
    "makerGrossPct": 10.425778929747832,
    "makerNetPct": 6.095356226620452,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40899.5,
    "rebuyBidMedian": 37038.0
   },
@@ -10748,6 +10878,8 @@
    "acceptPct": 4.2056444175077035,
    "makerGrossPct": 9.484853393811754,
    "makerNetPct": 5.191329731309313,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40551.0,
    "rebuyBidMedian": 37038.0
   },
@@ -10758,6 +10890,8 @@
    "acceptPct": 9.175174286534894,
    "makerGrossPct": 18.57464284746131,
    "makerNetPct": 13.924656853443217,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 43741.0,
    "rebuyBidMedian": 36889.0
   },
@@ -10768,6 +10902,8 @@
    "acceptPct": 8.402308154259908,
    "makerGrossPct": 17.457778741630303,
    "makerNetPct": 12.851591339997736,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 43329.0,
    "rebuyBidMedian": 36889.0
   },
@@ -10778,6 +10914,8 @@
    "acceptPct": 9.71696388939658,
    "makerGrossPct": 17.227357748922433,
    "makerNetPct": 12.630206464650984,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 43244.0,
    "rebuyBidMedian": 36889.0
   },
@@ -10788,6 +10926,8 @@
    "acceptPct": -1.8269612382590283,
    "makerGrossPct": 10.697764604858584,
    "makerNetPct": 6.356675796824907,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 39963.0,
    "rebuyBidMedian": 36101.0
   },
@@ -10798,6 +10938,8 @@
    "acceptPct": 2.4431858574847753,
    "makerGrossPct": 9.572574549533064,
    "makerNetPct": 5.275610841708245,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44939.0,
    "rebuyBidMedian": 41013.0
   },
@@ -10808,6 +10950,8 @@
    "acceptPct": 4.038010379392887,
    "makerGrossPct": 9.581108429034702,
    "makerNetPct": 5.283810059268634,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44942.5,
    "rebuyBidMedian": 41013.0
   },
@@ -10818,6 +10962,8 @@
    "acceptPct": 3.387521031304064,
    "makerGrossPct": 8.725282227586373,
    "makerNetPct": 4.461545669641809,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44591.5,
    "rebuyBidMedian": 41013.0
   },
@@ -10828,6 +10974,8 @@
    "acceptPct": 1.0375464903477072,
    "makerGrossPct": 10.542491055319413,
    "makerNetPct": 6.207491406091181,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 36148.5,
    "rebuyBidMedian": 32701.0
   },
@@ -10838,6 +10986,8 @@
    "acceptPct": 12.990731448137428,
    "makerGrossPct": 20.633925568025436,
    "makerNetPct": 15.903183388887165,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 39448.5,
    "rebuyBidMedian": 32701.0
   },
@@ -10848,6 +10998,8 @@
    "acceptPct": 11.045516264242284,
    "makerGrossPct": 20.485612060793244,
    "makerNetPct": 15.760686097624866,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 39400.0,
    "rebuyBidMedian": 32701.0
   },
@@ -10858,6 +11010,8 @@
    "acceptPct": 11.041088612078642,
    "makerGrossPct": 19.565150912816122,
    "makerNetPct": 14.876321465254684,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 39099.0,
    "rebuyBidMedian": 32701.0
   },
@@ -10868,6 +11022,8 @@
    "acceptPct": -4.168506697713004,
    "makerGrossPct": 2.041125929194987,
    "makerNetPct": -1.9604868523420693,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 36994.5,
    "rebuyBidMedian": 36254.5
   },
@@ -10878,6 +11034,8 @@
    "acceptPct": 4.164492084520988,
    "makerGrossPct": 12.770828448882199,
    "makerNetPct": 8.348443019514251,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40884.5,
    "rebuyBidMedian": 36254.5
   },
@@ -10888,6 +11046,8 @@
    "acceptPct": 5.625811286415883,
    "makerGrossPct": 12.027472451695642,
    "makerNetPct": 7.634238237903657,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40615.0,
    "rebuyBidMedian": 36254.5
   },
@@ -10898,6 +11058,8 @@
    "acceptPct": 4.379942992492669,
    "makerGrossPct": 10.606959136107253,
    "makerNetPct": 6.269431326848118,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40100.0,
    "rebuyBidMedian": 36254.5
   },
@@ -10908,6 +11070,8 @@
    "acceptPct": 3.4371643394199847,
    "makerGrossPct": 8.356871530145128,
    "makerNetPct": 4.107582450531599,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44500.0,
    "rebuyBidMedian": 41068.0
   },
@@ -10918,6 +11082,8 @@
    "acceptPct": 5.442176870748305,
    "makerGrossPct": 10.02483685594624,
    "makerNetPct": 5.710137371399315,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 45185.0,
    "rebuyBidMedian": 41068.0
   },
@@ -10928,6 +11094,8 @@
    "acceptPct": 1.3557703783267705,
    "makerGrossPct": 7.062676536476098,
    "makerNetPct": 2.8641402017123063,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 43968.5,
    "rebuyBidMedian": 41068.0
   },
@@ -10938,6 +11106,8 @@
    "acceptPct": -11.931716082659483,
    "makerGrossPct": 7.464825170650169,
    "makerNetPct": 3.2505183012129013,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 27000.0,
    "rebuyBidMedian": 25124.5
   },
@@ -10948,6 +11118,8 @@
    "acceptPct": -23.324348607367472,
    "makerGrossPct": -6.91556050866684,
    "makerNetPct": -10.565930684797564,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 23387.0,
    "rebuyBidMedian": 25124.5
   },
@@ -10958,6 +11130,8 @@
    "acceptPct": -38.37196765498653,
    "makerGrossPct": -21.240223686043503,
    "makerNetPct": -24.328842365022208,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 19788.0,
    "rebuyBidMedian": 25124.5
   },
@@ -10968,6 +11142,8 @@
    "acceptPct": -2.571449928986125,
    "makerGrossPct": 5.8952669981274575,
    "makerNetPct": 1.7425114295734456,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 41000.0,
    "rebuyBidMedian": 38717.5
   },
@@ -10978,6 +11154,8 @@
    "acceptPct": 3.0374006428624867,
    "makerGrossPct": 11.920965971459928,
    "makerNetPct": 7.531908482383076,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 43333.0,
    "rebuyBidMedian": 38717.5
   },
@@ -10988,6 +11166,8 @@
    "acceptPct": 4.035332519373092,
    "makerGrossPct": 11.04668431587783,
    "makerNetPct": 6.6919123819218385,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 42994.5,
    "rebuyBidMedian": 38717.5
   },
@@ -10998,6 +11178,8 @@
    "acceptPct": 3.8197991677671794,
    "makerGrossPct": 10.802608639504108,
    "makerNetPct": 6.457408300700029,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 42900.0,
    "rebuyBidMedian": 38717.5
   },
@@ -11008,6 +11190,8 @@
    "acceptPct": -3.0057047777513612,
    "makerGrossPct": 2.078409395482561,
    "makerNetPct": -1.924665482771648,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 41894.0,
    "rebuyBidMedian": 41041.0
   },
@@ -11018,6 +11202,8 @@
    "acceptPct": 1.7720465890183057,
    "makerGrossPct": 7.982261640798227,
    "makerNetPct": 3.7476631450806375,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44317.0,
    "rebuyBidMedian": 41041.0
   },
@@ -11028,6 +11214,8 @@
    "acceptPct": 4.354647016876645,
    "makerGrossPct": 9.605029117224229,
    "makerNetPct": 5.306792681254646,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44983.0,
    "rebuyBidMedian": 41041.0
   },
@@ -11038,6 +11226,8 @@
    "acceptPct": 0.3874494889470004,
    "makerGrossPct": 7.982261640798227,
    "makerNetPct": 3.7476631450806375,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44317.0,
    "rebuyBidMedian": 41041.0
   },
@@ -11048,6 +11238,8 @@
    "acceptPct": 1.1973250397106172,
    "makerGrossPct": 7.934259386604325,
    "makerNetPct": 3.7015433322276747,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 39239.5,
    "rebuyBidMedian": 36355.0
   },
@@ -11058,6 +11250,8 @@
    "acceptPct": 8.391953762163462,
    "makerGrossPct": 14.97730711043872,
    "makerNetPct": 10.46839310610781,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 41800.0,
    "rebuyBidMedian": 36355.0
   },
@@ -11068,6 +11262,8 @@
    "acceptPct": 10.127207442903474,
    "makerGrossPct": 16.67446018429377,
    "makerNetPct": 12.098991157458716,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 42417.0,
    "rebuyBidMedian": 36355.0
   },
@@ -11078,6 +11274,8 @@
    "acceptPct": 8.92320835057463,
    "makerGrossPct": 16.352633750515743,
    "makerNetPct": 11.789785368142592,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 42300.0,
    "rebuyBidMedian": 36355.0
   },
@@ -11088,6 +11286,8 @@
    "acceptPct": 5.965969139716765,
    "makerGrossPct": 11.78699967281056,
    "makerNetPct": 7.403195764072867,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40999.0,
    "rebuyBidMedian": 36676.0
   },
@@ -11098,6 +11298,8 @@
    "acceptPct": 5.371485943775101,
    "makerGrossPct": 11.60568218998801,
    "makerNetPct": 7.228988770772782,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40932.5,
    "rebuyBidMedian": 36676.0
   },
@@ -11108,6 +11310,8 @@
    "acceptPct": 4.636968928344953,
    "makerGrossPct": 10.332369942196529,
    "makerNetPct": 6.005610336620193,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40465.5,
    "rebuyBidMedian": 36676.0
   },
@@ -11118,6 +11322,8 @@
    "acceptPct": -3.035975585641404,
    "makerGrossPct": 3.2272968161867643,
    "makerNetPct": -0.8208324707225434,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 37983.0,
    "rebuyBidMedian": 36795.5
   },
@@ -11128,6 +11334,8 @@
    "acceptPct": 4.981741961849262,
    "makerGrossPct": 11.527224796510449,
    "makerNetPct": 7.153608137823753,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 41037.0,
    "rebuyBidMedian": 36795.5
   },
@@ -11138,6 +11346,8 @@
    "acceptPct": 5.079293934640172,
    "makerGrossPct": 10.605916484352695,
    "makerNetPct": 6.268429563397682,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40698.0,
    "rebuyBidMedian": 36795.5
   },
@@ -11148,6 +11358,8 @@
    "acceptPct": 5.4642287461935,
    "makerGrossPct": 10.355885909961815,
    "makerNetPct": 6.028204109571145,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40606.0,
    "rebuyBidMedian": 36795.5
   },
@@ -11158,6 +11370,8 @@
    "acceptPct": -3.3921433660592415,
    "makerGrossPct": 3.4991621019984542,
    "makerNetPct": -0.5596285686681579,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 41380.0,
    "rebuyBidMedian": 39981.0
   },
@@ -11168,6 +11382,8 @@
    "acceptPct": 2.7726454853941096,
    "makerGrossPct": 11.64177984542658,
    "makerNetPct": 7.263670831880442,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44635.5,
    "rebuyBidMedian": 39981.0
   },
@@ -11178,6 +11394,8 @@
    "acceptPct": 5.065874482242272,
    "makerGrossPct": 12.826092393887102,
    "makerNetPct": 8.401539750989562,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 45109.0,
    "rebuyBidMedian": 39981.0
   },
@@ -11188,6 +11406,8 @@
    "acceptPct": 3.2496467775241733,
    "makerGrossPct": 9.549536029614059,
    "makerNetPct": 5.253475793158602,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 43799.0,
    "rebuyBidMedian": 39981.0
   },
@@ -11198,6 +11418,8 @@
    "acceptPct": 1.434024553801705,
    "makerGrossPct": 9.9394218234798,
    "makerNetPct": 5.628071948049196,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 35843.0,
    "rebuyBidMedian": 32602.5
   },
@@ -11208,6 +11430,8 @@
    "acceptPct": 11.086056211404394,
    "makerGrossPct": 21.06740280653323,
    "makerNetPct": 16.319661520002526,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 39471.0,
    "rebuyBidMedian": 32602.5
   },
@@ -11218,6 +11442,8 @@
    "acceptPct": 12.05140675892764,
    "makerGrossPct": 21.665516448125132,
    "makerNetPct": 16.894319724669238,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 39666.0,
    "rebuyBidMedian": 32602.5
   },
@@ -11228,6 +11454,8 @@
    "acceptPct": 12.307851026513973,
    "makerGrossPct": 21.06740280653323,
    "makerNetPct": 16.319661520002526,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 39471.0,
    "rebuyBidMedian": 32602.5
   },
@@ -11238,6 +11466,8 @@
    "acceptPct": -3.7202976238099095,
    "makerGrossPct": 3.551165919904564,
    "makerNetPct": -0.5096641161701165,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 37324.5,
    "rebuyBidMedian": 36044.5
   },
@@ -11248,6 +11478,8 @@
    "acceptPct": 5.637784356081821,
    "makerGrossPct": 12.72732316997045,
    "makerNetPct": 8.306643829971616,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40632.0,
    "rebuyBidMedian": 36044.5
   },
@@ -11258,6 +11490,8 @@
    "acceptPct": 4.8963917113369115,
    "makerGrossPct": 12.189099585234908,
    "makerNetPct": 7.789527052480594,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40438.0,
    "rebuyBidMedian": 36044.5
   },
@@ -11268,6 +11502,8 @@
    "acceptPct": 4.14166466650665,
    "makerGrossPct": 10.973934997017576,
    "makerNetPct": 6.622015977526696,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40000.0,
    "rebuyBidMedian": 36044.5
   },
@@ -11278,6 +11514,8 @@
    "acceptPct": 4.513568395791023,
    "makerGrossPct": 12.396320932906303,
    "makerNetPct": 7.988622072792317,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 41059.5,
    "rebuyBidMedian": 36531.0
   },
@@ -11288,6 +11526,8 @@
    "acceptPct": 5.362746907882587,
    "makerGrossPct": 12.05688319509457,
    "makerNetPct": 7.662495618816356,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40935.5,
    "rebuyBidMedian": 36531.0
   },
@@ -11298,6 +11538,8 @@
    "acceptPct": 3.5232996650755632,
    "makerGrossPct": 11.115217212778195,
    "makerNetPct": 6.757757714237855,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40591.5,
    "rebuyBidMedian": 36531.0
   },
@@ -11308,6 +11550,8 @@
    "acceptPct": -3.1531174965038655,
    "makerGrossPct": 2.2383610644409524,
    "makerNetPct": -1.7709864282822174,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 37728.0,
    "rebuyBidMedian": 36902.0
   },
@@ -11318,6 +11562,8 @@
    "acceptPct": 5.939470698435323,
    "makerGrossPct": 10.548208769172396,
    "makerNetPct": 6.212984895871521,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40794.5,
    "rebuyBidMedian": 36902.0
   },
@@ -11328,6 +11574,8 @@
    "acceptPct": 5.427583841262296,
    "makerGrossPct": 10.094303831770635,
    "makerNetPct": 5.776880152093344,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40627.0,
    "rebuyBidMedian": 36902.0
   },
@@ -11338,6 +11586,8 @@
    "acceptPct": 3.770548035568222,
    "makerGrossPct": 9.718985420844394,
    "makerNetPct": 5.416280110223037,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40488.5,
    "rebuyBidMedian": 36902.0
   },
@@ -11348,6 +11598,8 @@
    "acceptPct": -4.533953443539451,
    "makerGrossPct": 1.9961977186311763,
    "makerNetPct": -2.0036531722955386,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 41310.5,
    "rebuyBidMedian": 40502.0
   },
@@ -11358,6 +11610,8 @@
    "acceptPct": 0.03614632030459752,
    "makerGrossPct": 6.414498049479045,
    "makerNetPct": 2.2413804789112257,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 43100.0,
    "rebuyBidMedian": 40502.0
   },
@@ -11368,6 +11622,8 @@
    "acceptPct": 4.633958263048821,
    "makerGrossPct": 10.363685743913887,
    "makerNetPct": 6.0356980676819605,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44699.5,
    "rebuyBidMedian": 40502.0
   },
@@ -11378,6 +11634,8 @@
    "acceptPct": 0.8506434045014277,
    "makerGrossPct": 8.289714088193168,
    "makerNetPct": 4.043058633754226,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 43859.5,
    "rebuyBidMedian": 40502.0
   },
@@ -11388,6 +11646,8 @@
    "acceptPct": 0.32192857677622033,
    "makerGrossPct": 6.307902597073856,
    "makerNetPct": 2.138965240325863,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 41998.0,
    "rebuyBidMedian": 39506.0
   },
@@ -11398,6 +11658,8 @@
    "acceptPct": 3.611090314691423,
    "makerGrossPct": 8.515162253834863,
    "makerNetPct": 4.259665694860937,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 42870.0,
    "rebuyBidMedian": 39506.0
   },
@@ -11408,6 +11670,8 @@
    "acceptPct": 6.114147388385605,
    "makerGrossPct": 9.413759935199707,
    "makerNetPct": 5.123024251466379,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 43225.0,
    "rebuyBidMedian": 39506.0
   },
@@ -11418,6 +11682,8 @@
    "acceptPct": 5.016096428838801,
    "makerGrossPct": 8.578443780691547,
    "makerNetPct": 4.320465593213441,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 42895.0,
    "rebuyBidMedian": 39506.0
   },
@@ -11428,6 +11694,8 @@
    "acceptPct": -1.2226404238486754,
    "makerGrossPct": 1.6067385641599818,
    "makerNetPct": -2.37783941874824,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 41737.0,
    "rebuyBidMedian": 41077.0
   },
@@ -11438,6 +11706,8 @@
    "acceptPct": 3.9292306954666456,
    "makerGrossPct": 7.588188037101062,
    "makerNetPct": 3.369043408195127,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44194.0,
    "rebuyBidMedian": 41077.0
   },
@@ -11448,6 +11718,8 @@
    "acceptPct": 5.24296981756287,
    "makerGrossPct": 8.547362270857173,
    "makerNetPct": 4.290602966117674,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44588.0,
    "rebuyBidMedian": 41077.0
   },
@@ -11458,6 +11730,8 @@
    "acceptPct": 5.945388727734757,
    "makerGrossPct": 9.31786644594299,
    "makerNetPct": 5.0308912912001125,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44904.5,
    "rebuyBidMedian": 41077.0
   },
@@ -11468,6 +11742,8 @@
    "acceptPct": -4.5028979045920625,
    "makerGrossPct": 2.4729729729729755,
    "makerNetPct": -1.5455749867514634,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 37915.0,
    "rebuyBidMedian": 37000.0
   },
@@ -11478,6 +11754,8 @@
    "acceptPct": 4.4425795284676495,
    "makerGrossPct": 10.35810810810811,
    "makerNetPct": 6.030339162692111,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40832.5,
    "rebuyBidMedian": 37000.0
   },
@@ -11488,6 +11766,8 @@
    "acceptPct": 4.536990899792825,
    "makerGrossPct": 10.770270270270267,
    "makerNetPct": 6.426338102808682,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40985.0,
    "rebuyBidMedian": 37000.0
   },
@@ -11498,6 +11778,8 @@
    "acceptPct": 3.0185413443130305,
    "makerGrossPct": 9.454054054054062,
    "makerNetPct": 5.16173820879704,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40498.0,
    "rebuyBidMedian": 37000.0
   },
@@ -11508,6 +11790,8 @@
    "acceptPct": -5.061333333333328,
    "makerGrossPct": 4.178511301851895,
    "makerNetPct": 0.093079486092984,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 37747.0,
    "rebuyBidMedian": 36233.0
   },
@@ -11518,6 +11802,8 @@
    "acceptPct": 5.629333333333331,
    "makerGrossPct": 14.377777164463335,
    "makerNetPct": 9.892374138405934,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 41442.5,
    "rebuyBidMedian": 36233.0
   },
@@ -11528,6 +11814,8 @@
    "acceptPct": 4.84,
    "makerGrossPct": 11.776557282035704,
    "makerNetPct": 7.3931628788186154,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40500.0,
    "rebuyBidMedian": 36233.0
   },
@@ -11538,6 +11826,8 @@
    "acceptPct": 2.405333333333326,
    "makerGrossPct": 9.430629536610269,
    "makerNetPct": 5.139232299880447,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 39650.0,
    "rebuyBidMedian": 36233.0
   },
@@ -11548,6 +11838,8 @@
    "acceptPct": 3.084241823587708,
    "makerGrossPct": 9.137236636620184,
    "makerNetPct": 4.857345003811542,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 39834.0,
    "rebuyBidMedian": 36499.0
   },
@@ -11558,6 +11850,8 @@
    "acceptPct": 3.1635318704284154,
    "makerGrossPct": 12.578804347826079,
    "makerNetPct": 8.163949275362302,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 41429.0,
    "rebuyBidMedian": 36800.0
   },
@@ -11568,6 +11862,8 @@
    "acceptPct": 3.717345872518285,
    "makerGrossPct": 12.873641304347828,
    "makerNetPct": 8.447223998294962,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 41537.5,
    "rebuyBidMedian": 36800.0
   },
@@ -11578,6 +11874,8 @@
    "acceptPct": 1.384535005224663,
    "makerGrossPct": 10.741847826086959,
    "makerNetPct": 6.399030264279637,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40753.0,
    "rebuyBidMedian": 36800.0
   },
@@ -11588,6 +11886,8 @@
    "acceptPct": 3.687467087941032,
    "makerGrossPct": 17.944993483927018,
    "makerNetPct": 13.31969962181223,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 43441.5,
    "rebuyBidMedian": 36832.0
   },
@@ -11598,6 +11898,8 @@
    "acceptPct": -2.4697209057398584,
    "makerGrossPct": 16.716442224152917,
    "makerNetPct": 12.139326842813581,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 42989.0,
    "rebuyBidMedian": 36832.0
   },
@@ -11608,6 +11910,8 @@
    "acceptPct": -1.2559241706161184,
    "makerGrossPct": 12.671046915725448,
    "makerNetPct": 8.252574487657792,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 41499.0,
    "rebuyBidMedian": 36832.0
   },
@@ -11618,6 +11922,8 @@
    "acceptPct": 2.396090589038935,
    "makerGrossPct": 9.748682610458047,
    "makerNetPct": 5.444812704165569,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40612.5,
    "rebuyBidMedian": 37005.0
   },
@@ -11628,6 +11934,8 @@
    "acceptPct": 10.117702695601904,
    "makerGrossPct": 18.897446291041753,
    "makerNetPct": 14.234801338451874,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 43998.0,
    "rebuyBidMedian": 37005.0
   },
@@ -11638,6 +11946,8 @@
    "acceptPct": 11.402448636435292,
    "makerGrossPct": 17.44358870422915,
    "makerNetPct": 12.837957774651532,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 43460.0,
    "rebuyBidMedian": 37005.0
   },
@@ -11648,6 +11958,8 @@
    "acceptPct": 7.747885029688395,
    "makerGrossPct": 14.879070395892446,
    "makerNetPct": 10.374008811739799,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 42511.0,
    "rebuyBidMedian": 37005.0
   },
@@ -11658,6 +11970,8 @@
    "acceptPct": 7.620776574764587,
    "makerGrossPct": 18.878757176629524,
    "makerNetPct": 14.216845130487176,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44000.0,
    "rebuyBidMedian": 37012.5
   },
@@ -11668,6 +11982,8 @@
    "acceptPct": 11.079185549910541,
    "makerGrossPct": 17.900709219858157,
    "makerNetPct": 13.277151995549996,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 43638.0,
    "rebuyBidMedian": 37012.5
   },
@@ -11678,6 +11994,8 @@
    "acceptPct": 8.420076534277165,
    "makerGrossPct": 16.676798378926037,
    "makerNetPct": 12.101237658183827,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 43185.0,
    "rebuyBidMedian": 37012.5
   },
@@ -11688,6 +12006,8 @@
    "acceptPct": 28.89378276661134,
    "makerGrossPct": 36.94170172576629,
    "makerNetPct": 31.571438912991123,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 39874.0,
    "rebuyBidMedian": 29117.5
   },
@@ -11698,6 +12018,8 @@
    "acceptPct": 21.98793695662893,
    "makerGrossPct": 30.57611402077789,
    "makerNetPct": 25.455482098394413,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 38020.5,
    "rebuyBidMedian": 29117.5
   },
@@ -11708,6 +12030,8 @@
    "acceptPct": 0.0,
    "makerGrossPct": 8.779035870999419,
    "makerNetPct": 4.513191327038668,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 35450.0,
    "rebuyBidMedian": 32589.0
   },
@@ -11718,6 +12042,8 @@
    "acceptPct": 12.832352941176461,
    "makerGrossPct": 21.961398017736045,
    "makerNetPct": 17.178598095471887,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 39746.0,
    "rebuyBidMedian": 32589.0
   },
@@ -11728,6 +12054,8 @@
    "acceptPct": 13.570588235294112,
    "makerGrossPct": 23.323820921169713,
    "makerNetPct": 18.487592649751306,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40190.0,
    "rebuyBidMedian": 32589.0
   },
@@ -11738,6 +12066,8 @@
    "acceptPct": 12.364705882352943,
    "makerGrossPct": 21.059253122219147,
    "makerNetPct": 16.311831431151735,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 39452.0,
    "rebuyBidMedian": 32589.0
   },
@@ -11748,6 +12078,8 @@
    "acceptPct": -4.121794271495272,
    "makerGrossPct": 2.1602346105657366,
    "makerNetPct": -1.8460490996525247,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 37100.0,
    "rebuyBidMedian": 36315.5
   },
@@ -11758,6 +12090,8 @@
    "acceptPct": 5.954594710297134,
    "makerGrossPct": 10.696534537594138,
    "makerNetPct": 6.3554939674924205,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40200.0,
    "rebuyBidMedian": 36315.5
   },
@@ -11768,6 +12102,8 @@
    "acceptPct": 5.309770030368299,
    "makerGrossPct": 11.512990320937334,
    "makerNetPct": 7.139931876979011,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 40496.5,
    "rebuyBidMedian": 36315.5
   },
@@ -11778,6 +12114,8 @@
    "acceptPct": 1.6816278478641866,
    "makerGrossPct": 9.856672770580065,
    "makerNetPct": 5.548567956047501,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 39895.0,
    "rebuyBidMedian": 36315.5
   },
@@ -11788,6 +12126,8 @@
    "acceptPct": -18.931952662721898,
    "makerGrossPct": -1.9867333267980292,
    "makerNetPct": -5.830390843394195,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 29995.0,
    "rebuyBidMedian": 30603.0
   },
@@ -11798,6 +12138,8 @@
    "acceptPct": -13.609467455621305,
    "makerGrossPct": 7.822762474267231,
    "makerNetPct": 3.5944188478253647,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 32997.0,
    "rebuyBidMedian": 30603.0
   },
@@ -11808,6 +12150,8 @@
    "acceptPct": -22.602071005917157,
    "makerGrossPct": -6.917622455314842,
    "makerNetPct": -10.567911770792692,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 28486.0,
    "rebuyBidMedian": 30603.0
   },
@@ -11818,6 +12162,8 @@
    "acceptPct": 3.564853556485348,
    "makerGrossPct": 9.000341430104374,
    "makerNetPct": 4.725818236766943,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44694.5,
    "rebuyBidMedian": 41004.0
   },
@@ -11828,6 +12174,8 @@
    "acceptPct": 5.6784219964136184,
    "makerGrossPct": 10.718466491074041,
    "makerNetPct": 6.376565844365234,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 45399.0,
    "rebuyBidMedian": 41004.0
   },
@@ -11838,6 +12186,8 @@
    "acceptPct": 5.013747758517639,
    "makerGrossPct": 8.360159984391768,
    "makerNetPct": 4.110741945788154,
+   "sellFee": 0.02,
+   "rebuyFee": 0.02,
    "sellAskMedian": 44432.0,
    "rebuyBidMedian": 41004.0
   }
@@ -15319,21 +15669,21 @@
    {
     "sample": "main",
     "mode": "criando ofertas",
-    "pGain": 0.6271666666666667,
+    "pGain": 0.6006666666666667,
     "gainPct": [
-     -11.567676720543659,
-     4.310565215837969,
-     23.530101001716424
+     -12.448038326113164,
+     3.2721325108520216,
+     22.300333943461403
     ],
-    "pLoss": 0.37283333333333335,
-    "pLossGt10": 0.12783333333333333,
-    "pGainGt10": 0.34,
+    "pLoss": 0.3993333333333333,
+    "pLossGt10": 0.14366666666666666,
+    "pGainGt10": 0.31283333333333335,
     "quantiles": [
-     -11.567676720543659,
-     -4.402598275446703,
-     4.310565215837969,
-     13.771636767262414,
-     23.530101001716424
+     -12.448038326113164,
+     -5.354289681365588,
+     3.2721325108520216,
+     12.639017187697826,
+     22.300333943461403
     ]
    },
    {
@@ -15359,21 +15709,21 @@
    {
     "sample": "since2024",
     "mode": "criando ofertas",
-    "pGain": 0.8133333333333334,
+    "pGain": 0.7888333333333334,
     "gainPct": [
-     -4.350927114962022,
-     10.963351388235111,
-     28.580542477762812
+     -5.303132917700064,
+     9.858688855748953,
+     27.300497256480963
     ],
-    "pLoss": 0.18666666666666668,
-    "pLossGt10": 0.03866666666666667,
-    "pGainGt10": 0.5341666666666667,
+    "pLoss": 0.21116666666666667,
+    "pLossGt10": 0.04633333333333333,
+    "pGainGt10": 0.496,
     "quantiles": [
-     -4.350927114962022,
-     2.47582309561572,
-     10.963351388235111,
-     19.86520978292899,
-     28.580542477762812
+     -5.303132917700064,
+     1.4556556183074554,
+     9.858688855748953,
+     18.671927455572813,
+     27.300497256480963
     ]
    }
   ],
@@ -16680,625 +17030,625 @@
     "sample": "main",
     "date": "2026-10-11",
     "taker": 0.0035,
-    "maker": 0.24116666666666667
+    "maker": 0.10583333333333333
    },
    {
     "sample": "main",
     "date": "2026-10-18",
     "taker": 0.020166666666666666,
-    "maker": 0.21733333333333332
+    "maker": 0.12566666666666668
    },
    {
     "sample": "main",
     "date": "2026-10-25",
     "taker": 0.04133333333333333,
-    "maker": 0.2005
+    "maker": 0.13533333333333333
    },
    {
     "sample": "main",
     "date": "2026-11-01",
     "taker": 0.057166666666666664,
-    "maker": 0.2085
+    "maker": 0.143
    },
    {
     "sample": "main",
     "date": "2026-11-08",
     "taker": 0.079,
-    "maker": 0.22933333333333333
+    "maker": 0.16966666666666666
    },
    {
     "sample": "main",
     "date": "2026-11-15",
     "taker": 0.10233333333333333,
-    "maker": 0.25533333333333336
+    "maker": 0.19216666666666668
    },
    {
     "sample": "main",
     "date": "2026-11-22",
     "taker": 0.13716666666666666,
-    "maker": 0.293
+    "maker": 0.23
    },
    {
     "sample": "main",
     "date": "2026-11-29",
     "taker": 0.17316666666666666,
-    "maker": 0.32766666666666666
+    "maker": 0.27266666666666667
    },
    {
     "sample": "main",
     "date": "2026-12-06",
     "taker": 0.22283333333333333,
-    "maker": 0.3825
+    "maker": 0.3215
    },
    {
     "sample": "main",
     "date": "2026-12-13",
     "taker": 0.2675,
-    "maker": 0.42733333333333334
+    "maker": 0.36966666666666664
    },
    {
     "sample": "main",
     "date": "2026-12-20",
     "taker": 0.3125,
-    "maker": 0.4656666666666667
+    "maker": 0.4105
    },
    {
     "sample": "main",
     "date": "2026-12-27",
     "taker": 0.3516666666666667,
-    "maker": 0.504
+    "maker": 0.452
    },
    {
     "sample": "main",
     "date": "2027-01-03",
     "taker": 0.3923333333333333,
-    "maker": 0.5346666666666666
+    "maker": 0.4856666666666667
    },
    {
     "sample": "main",
     "date": "2027-01-10",
     "taker": 0.415,
-    "maker": 0.5571666666666667
+    "maker": 0.5098333333333334
    },
    {
     "sample": "main",
     "date": "2027-01-17",
     "taker": 0.4385,
-    "maker": 0.5736666666666667
+    "maker": 0.5283333333333333
    },
    {
     "sample": "main",
     "date": "2027-01-24",
     "taker": 0.4555,
-    "maker": 0.5876666666666667
+    "maker": 0.542
    },
    {
     "sample": "main",
     "date": "2027-01-31",
     "taker": 0.4603333333333333,
-    "maker": 0.5883333333333334
+    "maker": 0.5483333333333333
    },
    {
     "sample": "main",
     "date": "2027-02-07",
     "taker": 0.4583333333333333,
-    "maker": 0.5868333333333333
+    "maker": 0.5448333333333333
    },
    {
     "sample": "main",
     "date": "2027-02-14",
     "taker": 0.4568333333333333,
-    "maker": 0.5828333333333333
+    "maker": 0.5388333333333334
    },
    {
     "sample": "main",
     "date": "2027-02-21",
     "taker": 0.4528333333333333,
-    "maker": 0.568
+    "maker": 0.5268333333333334
    },
    {
     "sample": "main",
     "date": "2027-02-28",
     "taker": 0.437,
-    "maker": 0.5563333333333333
+    "maker": 0.5091666666666667
    },
    {
     "sample": "main",
     "date": "2027-03-07",
     "taker": 0.424,
-    "maker": 0.5416666666666666
+    "maker": 0.501
    },
    {
     "sample": "main",
     "date": "2027-03-14",
     "taker": 0.4105,
-    "maker": 0.5233333333333333
+    "maker": 0.48283333333333334
    },
    {
     "sample": "main",
     "date": "2027-03-21",
     "taker": 0.39466666666666667,
-    "maker": 0.5075
+    "maker": 0.4693333333333333
    },
    {
     "sample": "main",
     "date": "2027-03-28",
     "taker": 0.3873333333333333,
-    "maker": 0.49433333333333335
+    "maker": 0.4528333333333333
    },
    {
     "sample": "main",
     "date": "2027-04-04",
     "taker": 0.379,
-    "maker": 0.48333333333333334
+    "maker": 0.4445
    },
    {
     "sample": "main",
     "date": "2027-04-11",
     "taker": 0.37866666666666665,
-    "maker": 0.47883333333333333
+    "maker": 0.43783333333333335
    },
    {
     "sample": "main",
     "date": "2027-04-18",
     "taker": 0.379,
-    "maker": 0.4795
+    "maker": 0.44333333333333336
    },
    {
     "sample": "main",
     "date": "2027-04-25",
     "taker": 0.3858333333333333,
-    "maker": 0.4815
+    "maker": 0.4455
    },
    {
     "sample": "main",
     "date": "2027-05-02",
     "taker": 0.3993333333333333,
-    "maker": 0.498
+    "maker": 0.46216666666666667
    },
    {
     "sample": "main",
     "date": "2027-05-09",
     "taker": 0.4116666666666667,
-    "maker": 0.5106666666666667
+    "maker": 0.4786666666666667
    },
    {
     "sample": "main",
     "date": "2027-05-16",
     "taker": 0.43383333333333335,
-    "maker": 0.528
+    "maker": 0.49416666666666664
    },
    {
     "sample": "main",
     "date": "2027-05-23",
     "taker": 0.4498333333333333,
-    "maker": 0.55
+    "maker": 0.5136666666666667
    },
    {
     "sample": "main",
     "date": "2027-05-30",
     "taker": 0.4705,
-    "maker": 0.567
+    "maker": 0.5375
    },
    {
     "sample": "main",
     "date": "2027-06-06",
     "taker": 0.4871666666666667,
-    "maker": 0.588
+    "maker": 0.5556666666666666
    },
    {
     "sample": "main",
     "date": "2027-06-13",
     "taker": 0.5065,
-    "maker": 0.6068333333333333
+    "maker": 0.5766666666666667
    },
    {
     "sample": "main",
     "date": "2027-06-20",
     "taker": 0.5176666666666667,
-    "maker": 0.6181666666666666
+    "maker": 0.5901666666666666
    },
    {
     "sample": "main",
     "date": "2027-06-27",
     "taker": 0.5266666666666666,
-    "maker": 0.6215
+    "maker": 0.5946666666666667
    },
    {
     "sample": "main",
     "date": "2027-07-04",
     "taker": 0.5266666666666666,
-    "maker": 0.6271666666666667
+    "maker": 0.6006666666666667
    },
    {
     "sample": "main",
     "date": "2027-07-11",
     "taker": 0.5233333333333333,
-    "maker": 0.6311666666666667
+    "maker": 0.5975
    },
    {
     "sample": "main",
     "date": "2027-07-18",
     "taker": 0.5065,
-    "maker": 0.6195
+    "maker": 0.5871666666666666
    },
    {
     "sample": "main",
     "date": "2027-07-25",
     "taker": 0.4891666666666667,
-    "maker": 0.6016666666666667
+    "maker": 0.5733333333333334
    },
    {
     "sample": "main",
     "date": "2027-08-01",
     "taker": 0.4686666666666667,
-    "maker": 0.5821666666666667
+    "maker": 0.5521666666666667
    },
    {
     "sample": "main",
     "date": "2027-08-08",
     "taker": 0.4375,
-    "maker": 0.5545
+    "maker": 0.5211666666666667
    },
    {
     "sample": "main",
     "date": "2027-08-15",
     "taker": 0.4063333333333333,
-    "maker": 0.5138333333333334
+    "maker": 0.4831666666666667
    },
    {
     "sample": "main",
     "date": "2027-08-22",
     "taker": 0.3725,
-    "maker": 0.4705
+    "maker": 0.4465
    },
    {
     "sample": "main",
     "date": "2027-08-29",
     "taker": 0.3325,
-    "maker": 0.43166666666666664
+    "maker": 0.4018333333333333
    },
    {
     "sample": "main",
     "date": "2027-09-05",
     "taker": 0.30266666666666664,
-    "maker": 0.3903333333333333
+    "maker": 0.3645
    },
    {
     "sample": "main",
     "date": "2027-09-12",
     "taker": 0.272,
-    "maker": 0.3561666666666667
+    "maker": 0.3315
    },
    {
     "sample": "main",
     "date": "2027-09-19",
     "taker": 0.24016666666666667,
-    "maker": 0.3225
+    "maker": 0.29983333333333334
    },
    {
     "sample": "main",
     "date": "2027-09-26",
     "taker": 0.21383333333333332,
-    "maker": 0.2916666666666667
+    "maker": 0.27316666666666667
    },
    {
     "sample": "main",
     "date": "2027-10-03",
     "taker": 0.194,
-    "maker": 0.2675
+    "maker": 0.24783333333333332
    },
    {
     "sample": "since2024",
     "date": "2026-10-11",
     "taker": 0.0003333333333333333,
-    "maker": 0.09483333333333334
+    "maker": 0.034166666666666665
    },
    {
     "sample": "since2024",
     "date": "2026-10-18",
     "taker": 0.0006666666666666666,
-    "maker": 0.09266666666666666
+    "maker": 0.03783333333333333
    },
    {
     "sample": "since2024",
     "date": "2026-10-25",
     "taker": 0.0023333333333333335,
-    "maker": 0.089
+    "maker": 0.0455
    },
    {
     "sample": "since2024",
     "date": "2026-11-01",
     "taker": 0.004333333333333333,
-    "maker": 0.09466666666666666
+    "maker": 0.051333333333333335
    },
    {
     "sample": "since2024",
     "date": "2026-11-08",
     "taker": 0.009333333333333334,
-    "maker": 0.107
+    "maker": 0.06633333333333333
    },
    {
     "sample": "since2024",
     "date": "2026-11-15",
     "taker": 0.015,
-    "maker": 0.129
+    "maker": 0.0855
    },
    {
     "sample": "since2024",
     "date": "2026-11-22",
     "taker": 0.025833333333333333,
-    "maker": 0.15933333333333333
+    "maker": 0.11333333333333333
    },
    {
     "sample": "since2024",
     "date": "2026-11-29",
     "taker": 0.041666666666666664,
-    "maker": 0.20183333333333334
+    "maker": 0.149
    },
    {
     "sample": "since2024",
     "date": "2026-12-06",
     "taker": 0.06166666666666667,
-    "maker": 0.24316666666666667
+    "maker": 0.18883333333333333
    },
    {
     "sample": "since2024",
     "date": "2026-12-13",
     "taker": 0.0885,
-    "maker": 0.2826666666666667
+    "maker": 0.22816666666666666
    },
    {
     "sample": "since2024",
     "date": "2026-12-20",
     "taker": 0.12283333333333334,
-    "maker": 0.3238333333333333
+    "maker": 0.26616666666666666
    },
    {
     "sample": "since2024",
     "date": "2026-12-27",
     "taker": 0.15783333333333333,
-    "maker": 0.3725
+    "maker": 0.312
    },
    {
     "sample": "since2024",
     "date": "2027-01-03",
     "taker": 0.19866666666666666,
-    "maker": 0.4096666666666667
+    "maker": 0.3491666666666667
    },
    {
     "sample": "since2024",
     "date": "2027-01-10",
     "taker": 0.23383333333333334,
-    "maker": 0.442
+    "maker": 0.3815
    },
    {
     "sample": "since2024",
     "date": "2027-01-17",
     "taker": 0.26516666666666666,
-    "maker": 0.4665
+    "maker": 0.4093333333333333
    },
    {
     "sample": "since2024",
     "date": "2027-01-24",
     "taker": 0.293,
-    "maker": 0.49266666666666664
+    "maker": 0.43633333333333335
    },
    {
     "sample": "since2024",
     "date": "2027-01-31",
     "taker": 0.31616666666666665,
-    "maker": 0.4995
+    "maker": 0.447
    },
    {
     "sample": "since2024",
     "date": "2027-02-07",
     "taker": 0.33,
-    "maker": 0.5128333333333334
+    "maker": 0.4625
    },
    {
     "sample": "since2024",
     "date": "2027-02-14",
     "taker": 0.3468333333333333,
-    "maker": 0.5243333333333333
+    "maker": 0.471
    },
    {
     "sample": "since2024",
     "date": "2027-02-21",
     "taker": 0.3536666666666667,
-    "maker": 0.5308333333333334
+    "maker": 0.48
    },
    {
     "sample": "since2024",
     "date": "2027-02-28",
     "taker": 0.3685,
-    "maker": 0.5411666666666667
+    "maker": 0.49233333333333335
    },
    {
     "sample": "since2024",
     "date": "2027-03-07",
     "taker": 0.37816666666666665,
-    "maker": 0.5485
+    "maker": 0.49683333333333335
    },
    {
     "sample": "since2024",
     "date": "2027-03-14",
     "taker": 0.3883333333333333,
-    "maker": 0.5608333333333333
+    "maker": 0.5136666666666667
    },
    {
     "sample": "since2024",
     "date": "2027-03-21",
     "taker": 0.402,
-    "maker": 0.567
+    "maker": 0.5205
    },
    {
     "sample": "since2024",
     "date": "2027-03-28",
     "taker": 0.41233333333333333,
-    "maker": 0.5756666666666667
+    "maker": 0.5348333333333334
    },
    {
     "sample": "since2024",
     "date": "2027-04-04",
     "taker": 0.43633333333333335,
-    "maker": 0.597
+    "maker": 0.5536666666666666
    },
    {
     "sample": "since2024",
     "date": "2027-04-11",
     "taker": 0.4603333333333333,
-    "maker": 0.6183333333333333
+    "maker": 0.5783333333333334
    },
    {
     "sample": "since2024",
     "date": "2027-04-18",
     "taker": 0.4871666666666667,
-    "maker": 0.6391666666666667
+    "maker": 0.6001666666666666
    },
    {
     "sample": "since2024",
     "date": "2027-04-25",
     "taker": 0.5211666666666667,
-    "maker": 0.664
+    "maker": 0.6283333333333333
    },
    {
     "sample": "since2024",
     "date": "2027-05-02",
     "taker": 0.5558333333333333,
-    "maker": 0.6883333333333334
+    "maker": 0.6573333333333333
    },
    {
     "sample": "since2024",
     "date": "2027-05-09",
     "taker": 0.5951666666666666,
-    "maker": 0.7186666666666667
+    "maker": 0.6888333333333333
    },
    {
     "sample": "since2024",
     "date": "2027-05-16",
     "taker": 0.6278333333333334,
-    "maker": 0.7428333333333333
+    "maker": 0.7113333333333334
    },
    {
     "sample": "since2024",
     "date": "2027-05-23",
     "taker": 0.665,
-    "maker": 0.759
+    "maker": 0.7336666666666667
    },
    {
     "sample": "since2024",
     "date": "2027-05-30",
     "taker": 0.6935,
-    "maker": 0.7843333333333333
+    "maker": 0.7573333333333333
    },
    {
     "sample": "since2024",
     "date": "2027-06-06",
     "taker": 0.718,
-    "maker": 0.8008333333333333
+    "maker": 0.7733333333333333
    },
    {
     "sample": "since2024",
     "date": "2027-06-13",
     "taker": 0.7385,
-    "maker": 0.8091666666666667
+    "maker": 0.7816666666666666
    },
    {
     "sample": "since2024",
     "date": "2027-06-20",
     "taker": 0.7505,
-    "maker": 0.8176666666666667
+    "maker": 0.79
    },
    {
     "sample": "since2024",
     "date": "2027-06-27",
     "taker": 0.753,
-    "maker": 0.8186666666666667
+    "maker": 0.7903333333333333
    },
    {
     "sample": "since2024",
     "date": "2027-07-04",
     "taker": 0.7513333333333333,
-    "maker": 0.8133333333333334
+    "maker": 0.7888333333333334
    },
    {
     "sample": "since2024",
     "date": "2027-07-11",
     "taker": 0.739,
-    "maker": 0.8021666666666667
+    "maker": 0.7813333333333333
    },
    {
     "sample": "since2024",
     "date": "2027-07-18",
     "taker": 0.7153333333333334,
-    "maker": 0.7873333333333333
+    "maker": 0.7611666666666667
    },
    {
     "sample": "since2024",
     "date": "2027-07-25",
     "taker": 0.6866666666666666,
-    "maker": 0.764
+    "maker": 0.7373333333333333
    },
    {
     "sample": "since2024",
     "date": "2027-08-01",
     "taker": 0.6503333333333333,
-    "maker": 0.732
+    "maker": 0.7053333333333334
    },
    {
     "sample": "since2024",
     "date": "2027-08-08",
     "taker": 0.598,
-    "maker": 0.6978333333333333
+    "maker": 0.6673333333333333
    },
    {
     "sample": "since2024",
     "date": "2027-08-15",
     "taker": 0.5461666666666667,
-    "maker": 0.6491666666666667
+    "maker": 0.6195
    },
    {
     "sample": "since2024",
     "date": "2027-08-22",
     "taker": 0.4861666666666667,
-    "maker": 0.5956666666666667
+    "maker": 0.5628333333333333
    },
    {
     "sample": "since2024",
     "date": "2027-08-29",
     "taker": 0.41933333333333334,
-    "maker": 0.5338333333333334
+    "maker": 0.5031666666666667
    },
    {
     "sample": "since2024",
     "date": "2027-09-05",
     "taker": 0.3515,
-    "maker": 0.48233333333333334
+    "maker": 0.4498333333333333
    },
    {
     "sample": "since2024",
     "date": "2027-09-12",
     "taker": 0.2931666666666667,
-    "maker": 0.4201666666666667
+    "maker": 0.39166666666666666
    },
    {
     "sample": "since2024",
     "date": "2027-09-19",
     "taker": 0.24083333333333334,
-    "maker": 0.37116666666666664
+    "maker": 0.3435
    },
    {
     "sample": "since2024",
     "date": "2027-09-26",
     "taker": 0.20466666666666666,
-    "maker": 0.32566666666666666
+    "maker": 0.29533333333333334
    },
    {
     "sample": "since2024",
     "date": "2027-10-03",
     "taker": 0.175,
-    "maker": 0.287
+    "maker": 0.26466666666666666
    }
   ],
   "breakEven": [
@@ -17316,12 +17666,12 @@
    {
     "targetPct": 0,
     "mode": "criando ofertas",
-    "rebuyAtMost": 41558.72549019608,
-    "vsSamePct": -0.34834670488184116,
-    "vsSellPct": -3.9215686274509887,
+    "rebuyAtMost": 41145.0,
+    "vsSamePct": -1.340399002493764,
+    "vsSellPct": -4.878048780487809,
     "pByJune": {
-     "main": 0.6271666666666667,
-     "since2024": 0.8133333333333334
+     "main": 0.6006666666666667,
+     "since2024": 0.7888333333333334
     }
    },
    {
@@ -17338,12 +17688,12 @@
    {
     "targetPct": 5,
     "mode": "criando ofertas",
-    "rebuyAtMost": 39579.7385620915,
-    "vsSamePct": -5.093663528458903,
-    "vsSellPct": -8.496732026143794,
+    "rebuyAtMost": 39185.71428571429,
+    "vsSamePct": -6.038475240470243,
+    "vsSellPct": -9.40766550522647,
     "pByJune": {
-     "main": 0.4781666666666667,
-     "since2024": 0.6841666666666667
+     "main": 0.44816666666666666,
+     "since2024": 0.652
     }
    },
    {
@@ -17360,12 +17710,12 @@
    {
     "targetPct": 10,
     "mode": "criando ofertas",
-    "rebuyAtMost": 37780.65953654189,
-    "vsSamePct": -9.407587913528936,
-    "vsSellPct": -12.655971479500893,
+    "rebuyAtMost": 37404.545454545456,
+    "vsSamePct": -10.309453638630695,
+    "vsSellPct": -13.52549889135255,
     "pByJune": {
-     "main": 0.34,
-     "since2024": 0.5341666666666667
+     "main": 0.31283333333333335,
+     "since2024": 0.496
     }
    }
   ],
@@ -17410,17 +17760,17 @@
      },
      {
       "plan": "junMake",
-      "pBetter": 0.6855,
+      "pBetter": 0.6715,
       "quantiles": [
-       -9.76293542912618,
-       -2.4516308933129674,
-       6.439352261059151,
-       16.093506905369814,
-       26.051123471139196
+       -10.203116231910936,
+       -2.9274765962723936,
+       5.920135908566182,
+       15.52719711558751,
+       25.436239942011685
       ],
-      "mean": 7.394433184983125,
-      "gainIfBetter": 12.106017100661548,
-      "lossIfWorse": -6.473696737978951
+      "mean": 6.8705579011539495,
+      "gainIfBetter": 11.935326138977608,
+      "lossIfWorse": -6.480944051424631
      },
      {
       "plan": "half",
@@ -17515,17 +17865,17 @@
      },
      {
       "plan": "junMake",
-      "pBetter": 0.858,
+      "pBetter": 0.8451666666666666,
       "quantiles": [
-       -2.3989052193489995,
-       4.567166424097674,
-       13.227909579831742,
-       22.31143855400917,
-       31.20463518139062
+       -2.8750081207180136,
+       4.057082685443553,
+       12.675578313588666,
+       21.714797390331086,
+       30.5646125707497
       ],
-      "mean": 13.905925570745035,
-      "gainIfBetter": 15.786393601302894,
-      "lossIfWorse": -4.620784318835897
+      "mean": 13.35028690942434,
+      "gainIfBetter": 15.419230385695815,
+      "lossIfWorse": -4.474943799327735
      },
      {
       "plan": "half",
@@ -17608,17 +17958,17 @@
      },
      {
       "plan": "novMake",
-      "pBetter": 0.7175,
+      "pBetter": 0.6871666666666667,
       "quantiles": [
-       -3.9332492418153944,
-       -0.5429816599384796,
-       3.409292049236745,
-       7.449213042093944,
-       11.326882827092035
+       -4.423385725275518,
+       -1.0504154269796173,
+       2.8816936204141053,
+       6.901002771471027,
+       10.75888852695381
       ],
-      "mean": 3.563892728842719,
-      "gainIfBetter": 5.570813562200239,
-      "lossIfWorse": -2.775602945069955
+      "mean": 3.0355055210425004,
+      "gainIfBetter": 5.290268414960964,
+      "lossIfWorse": -2.88189986331866
      },
      {
       "plan": "jun",
@@ -17713,17 +18063,17 @@
      },
      {
       "plan": "novMake",
-      "pBetter": 0.8983333333333333,
+      "pBetter": 0.8765,
       "quantiles": [
-       -0.0237665955179112,
-       2.565367131047175,
-       5.541300635480595,
-       8.550903034952494,
-       11.299853984857565
+       -0.5338494190101739,
+       2.0420744416030647,
+       5.00282461183017,
+       7.997071897019042,
+       10.73199758697562
       ],
-      "mean": 5.59641245020786,
-      "gainIfBetter": 6.088230470798628,
-      "lossIfWorse": -1.5416803915736577
+      "mean": 5.057655243829249,
+      "gainIfBetter": 5.696319833553765,
+      "lossIfWorse": -1.6048556122258417
      },
      {
       "plan": "jun",

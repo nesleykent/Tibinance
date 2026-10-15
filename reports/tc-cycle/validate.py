@@ -112,11 +112,13 @@ for side,sw in c['swings']['sides'].items():
  for l in legs:assert math.isclose(l['changePct'],100*(l['endLevel']/l['startLevel']-1))
  cur=sw['current'];assert math.isclose(cur['changePct'],100*(cur['endLevel']/cur['startLevel']-1)) and cur['start']==legs[-1]['end']
  assert all(not d['short'] and d['direction']=='queda' for d in sw['declines'])
-# Round trips with Create Offer: accept column is the edition's, maker arithmetic uses the 2% fee on both placements.
+# Round trips with Create Offer: accept column is the edition's, maker arithmetic uses the fee in force at each placement
+# (2% until the server save of 2026-10-06, 2.5% from it on).
 acc={(x['world'],x['cycle'],x['sellMonth']):x['tcGainPct'] for x in r['roundtrips']}
 for x in c['roundtripMaker']:
  assert math.isclose(x['acceptPct'],acc[(x['world'],x['cycle'],x['sellMonth'])])
- assert math.isclose(x['makerNetPct'],100*(x['sellAskMedian']*.98/(x['rebuyBidMedian']*1.02)-1))
+ assert x['sellFee']==(.025 if f"{x['cycle'][:4]}-{x['sellMonth']:02d}-01">='2026-10-06' else .02) and x['rebuyFee'] in (.02,.025)
+ assert math.isclose(x['makerNetPct'],100*(x['sellAskMedian']*(1-x['sellFee'])/(x['rebuyBidMedian']*(1+x['rebuyFee']))-1))
  assert math.isclose(x['makerGrossPct'],100*(x['sellAskMedian']/x['rebuyBidMedian']-1))
 # Relative value: the current premium is the median of same-day capture pairs.
 for x in c['crossWorld']['worlds']:
@@ -158,7 +160,8 @@ for side,samples in pr['downside'].items():
 # Sell-and-rebuy: the break-even arithmetic, and its probability by the week of 28/06 equal to the round trip's P(gain).
 ask0,bid0=next((w['ask'],w['bid']) for w in r['worlds'] if w['world']==r['benchmark'])
 for b in pr['breakEven']:
- most=bid0/(1+b['targetPct']/100) if b['mode']=='aceitando' else ask0*.98/(1.02*(1+b['targetPct']/100))
+ fee=c['fee']['rate']
+ most=bid0/(1+b['targetPct']/100) if b['mode']=='aceitando' else ask0*(1-fee)/((1+fee)*(1+b['targetPct']/100))
  assert math.isclose(b['rebuyAtMost'],most) and math.isclose(b['vsSellPct'],100*(most/ask0-1))
  if b['targetPct']==0:
   for label,v in b['pByJune'].items():assert math.isclose(v,next(x['pGain'] for x in pr['roundtrip'] if (x['sample'],x['mode'])==(label,b['mode'])))

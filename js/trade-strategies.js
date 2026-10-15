@@ -5,14 +5,16 @@
  * prices, no chance or time of an offer filling). The Trade page (trade.html, js/trade.js) reads its fields here and
  * draws the result.
  *
- * Market rules (CipSoft, "The Market", Tibia Manual, sec. 4.3.3, the source the research cites for its fee):
+ * Market rules (CipSoft, "The Market", Tibia Manual, sec. 4.3.3, the source the research cites for its fee; and
+ * "Adjustment of Market Fee and Exercise Weapons", tibia.com news, 2026-10-01):
  *   - Accepting an existing offer has no fee.
- *   - Placing an offer pays 2% of its total price, at least 20 and at most 1,000,000 gold. The fee is taken from
+ *   - Placing an offer pays 2.5% of its total price, at least 20 and at most 2,500,000 gold, since the server save of
+ *     2026-10-06 (2% and at most 1,000,000 gold before it). The fee is taken from
  *     the bank when the offer is placed (with the whole price, for a Buy Offer) and is lost if it is cancelled.
  *   - One offer holds at most 64,000 items, so a larger amount takes several offers, each paying its own fee.
  *   - A new offer priced to meet an existing one on the other side is matched against it at once.
  *   - 999,999,999,999 is the highest price an offer can carry.
- * The manual does not say how 2% is rounded to whole gold. Here it is rounded up, so a fee is never understated;
+ * The manual does not say how 2.5% is rounded to whole gold. Here it is rounded up, so a fee is never understated;
  * the difference is at most 1 gold. Tibia Coin offer quantities use increments of 25 TC; this is not a Statistics-counter unit.
  *
  * Every gold figure is a BigInt: amount × price for a large order passes the range Number holds exactly. Amounts and
@@ -22,7 +24,7 @@ import { validBook } from './market-history.js';
 import { fmt } from './format.js';
 
 export const RULES = Object.freeze({
-  feePercent: 2n, minFee: 20n, maxFee: 1_000_000n,
+  feePerMille: 25n, minFee: 20n, maxFee: 2_500_000n,   // 2.5%, from the server save of 2026-10-06
   maxOfferAmount: 64_000,
   maxOffers: 100,            // offers one character can hold at a time
   maxPrice: 999_999_999_999,
@@ -76,7 +78,7 @@ function problem(value, { max, lot }) {
 
 // The fee for placing one offer of this total price.
 export function marketFee(total) {
-  const fee = (total * RULES.feePercent + 99n) / 100n;
+  const fee = (total * RULES.feePerMille + 999n) / 1000n;
   return fee < RULES.minFee ? RULES.minFee : fee > RULES.maxFee ? RULES.maxFee : fee;
 }
 
