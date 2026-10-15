@@ -1,26 +1,45 @@
 {
  "format": 1,
- "note": "",
- "approver": "GitHub Actions forecast archive (validated data release)",
+ "note": "Release Tibia Token currency conversions, purchasing-cost comparisons and dated history. Verified calculations, persistence, Chrome/WebKit layouts, accessibility and GitHub CI.",
+ "approver": "Codex, production deployment explicitly authorized by user",
  "artifact": {
-  "bytes": 141953184,
-  "digest": "68826839fd820b8768d464c8c23e059936cde83c1a57cbcaf27539b6e6dcac1e",
-  "files": 981
+  "bytes": 142046050,
+  "digest": "4e4ab77f9f90c99bcded178d33b067c8f864bf9776e2e646adca4fc433528d65",
+  "files": 991
  },
- "commit": "d4ce62b1a6a626c0d666d0c5b5cd10a1db7a9ddd",
- "createdAt": "2026-10-15T16:06:40.841Z",
- "kind": "data",
- "policySha256": "8598ea053fc9fba9189b10e9c9bbbd33f9b89b36ab503161a844995d81008ad9",
+ "commit": "462b3073c6ef144a3a7301cc570dd17fde51d8f3",
+ "createdAt": "2026-10-15T16:14:15.947Z",
+ "kind": "full",
+ "policy": {
+  "dataPaths": [
+   "data/observations.json",
+   "data/observations.csv",
+   "data/offer-observations.csv",
+   "data/market-update-*.json",
+   "data/rebuild-*.json",
+   "data/market-history/**",
+   "data/foreign-exchange/**",
+   "data/coin-prices.json",
+   "data/market-projections/**",
+   "data/events/events.json",
+   "data/forecast-archive/**",
+   "docs/market-chart-integration-audit.json",
+   "docs/rolling-activity-calculation.json",
+   "reports/tc-cycle/*.json",
+   "reports/tc-cycle/*.csv",
+   "reports/tc-cycle/forecast-ledger.jsonl",
+   "reports/tc-cycle/inputs/**",
+   "data/economy/**",
+   "reports/economy/results.json"
+  ],
+  "note": "Paths a data release may take from main. Everything else (pages, scripts, styles, tooling, docs) reaches production only through a full release, which also approves this file. Research outputs are forecast representations: a data release carrying them must pass the forecast-archive integrity check once the archive exists."
+ },
+ "policySha256": "68d95fbce8c90529b2ad839b7a8572e131b797cf430968bb4a64d90eb2bd0de5",
  "source": {
-  "base": {
-   "commit": "7be7a07d7b3d66617c8171c7f393fcd5c0cfd874",
-   "tag": "release/0043"
-  },
-  "data": "383b559e6339bcf17b34f53ffebbb093ab7ba22e",
-  "policyFrom": "release/0042"
+  "commit": "462b3073c6ef144a3a7301cc570dd17fde51d8f3"
  },
- "tag": "release/0044",
- "tree": "e211790cb13e3a2c2f33de748e03337576534cd4",
+ "tag": "release/0045",
+ "tree": "27d8a7bda6d4d558dcbb04e97464e5985ffd7c89",
  "validation": {
   "checks": [
    {
@@ -48,6 +67,10 @@
     "ok": true
    },
    {
+    "name": "fetch_foreign_exchange --check",
+    "ok": true
+   },
+   {
     "name": "build_economy_overview --check",
     "ok": true
    },
@@ -61,12 +84,12 @@
    }
   ],
   "validator": {
-   "commit": "383b559e6339bcf17b34f53ffebbb093ab7ba22e",
+   "commit": "462b3073c6ef144a3a7301cc570dd17fde51d8f3",
    "path": "tools/ci/validate_site.mjs"
   }
  },
  "record": {
-  "seq": 39,
-  "hash": "4d50889094dd8b72f616204d743b0e1ce5863b6f1c25441128521f88f622fb09"
+  "seq": 40,
+  "hash": "860e024a836279409050a220c61060703cb282582ea9504be671ca430ae92adc"
  }
 }
