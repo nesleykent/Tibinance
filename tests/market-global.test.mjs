@@ -67,5 +67,8 @@ test('Gentebra recent rolling Statistics remain visible source evidence without 
  const view=marketValues(data),day='2026-10-03';
  assert.equal(view.closes.find(c=>c.serverDay===day).sell,46794);
  assert.ok(data.observations.some(o=>o.serverDay===day&&o.statistics30d?.sell.transactions===6137));
- assert.equal(statisticsAt(view,day,'sell'),undefined);
+ // The rolling counters of 10-03 and 10-04 with the reported 09-03 reconstruct the day, kept apart from reports.
+ assert.deepEqual(statisticsAt(view,day,'sell'),{transactions:181,averagePrice:46643});
+ assert.equal(view.dailyByDay.get(day).provenance.sell.method,'rolling-30d-reconstructed');
+ assert.ok(!data.dailyStatisticsObservations.some(r=>r.serverDay===day));
 });

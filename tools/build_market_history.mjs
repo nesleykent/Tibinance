@@ -137,7 +137,7 @@ export function buildMarketHistory({ captures, tibiaMarket, registry, inputs, ex
     const { conflicts } = mergeDaily(entry.daily);
     const daily = latestDailyStatistics(entry.dailyObservations);
     const observedByDay = new Map(daily.map(d => [d.serverDay, d]));
-    const estimatedDaily = estimateDailyStatistics(observations).map(estimate => {
+    const estimatedDaily = estimateDailyStatistics(observations, daily).map(estimate => {
       const observed = observedByDay.get(estimate.serverDay), supplemental = { serverDay: estimate.serverDay, provenance: {} };
       for (const side of ['buy', 'sell']) if (estimate[side] && !observed?.[side]) {
         supplemental[side] = estimate[side]; supplemental.provenance[side] = estimate.provenance[side];

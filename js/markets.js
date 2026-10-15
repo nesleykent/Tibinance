@@ -192,10 +192,14 @@ function showLegend(day) {
   // The day's traded range beside its average, as a terminal reads a bar: the highest and lowest prices of the trades
   // that filled this side's offers. Read out only; never drawn, since a Buy low of 1 is common.
   const range = stats?.transactions && !estimated ? ` <span class="rest ohlc"><span><span class="meta-label">High</span> ${fmt(stats.highestPrice)}</span> <span><span class="meta-label">Low</span> ${fmt(stats.lowestPrice)}</span></span>` : '';
-  const estimateTitle = 'Estimated from consecutive comparable 30-day counters; the outgoing day is approximated by the prior 30-day mean.';
+  const reconstructed = estimated && view.dailyByDay.get(day).provenance[side].method === 'rolling-30d-reconstructed';
+  const estimateTitle = reconstructed
+    ? 'Reconstructed from consecutive 30-day counters and the reported day that left the window.'
+    : 'Estimated from consecutive comparable 30-day counters; the outgoing day is approximated by the prior 30-day mean.';
+  const kind = reconstructed ? 'Reconstructed' : 'Estimated';
   $('legend').innerHTML = `<span class="day">${esc(day)}</span> <span class="label"><i class="key key-dot"></i>${labels.offer}</span> ${best} `
-    + `<span class="label"${estimated ? ` title="${estimateTitle}"` : ''}><i class="key key-average"></i>${estimated ? 'Estimated daily average' : 'Daily average'}</span> <b class="value">${average}</b>${range}`;
-  $('volumeLegend').innerHTML = ` <span class="label"${estimated ? ` title="${estimateTitle}"` : ''}><i class="key key-volume"></i>${estimated ? 'Estimated transactions' : 'Transactions'}</span> <b class="value">${stats ? fmt(stats.transactions) : num(null)}</b>`;
+    + `<span class="label"${estimated ? ` title="${estimateTitle}"` : ''}><i class="key key-average"></i>${estimated ? `${kind} daily average` : 'Daily average'}</span> <b class="value">${average}</b>${range}`;
+  $('volumeLegend').innerHTML = ` <span class="label"${estimated ? ` title="${estimateTitle}"` : ''}><i class="key key-volume"></i>${estimated ? `${kind} transactions` : 'Transactions'}</span> <b class="value">${stats ? fmt(stats.transactions) : num(null)}</b>`;
   if (market.visible('projections') && view.projection) $('projectionLegend').innerHTML = projectionRow(view.projection[side]);
   if (rest) fitHead();
 }

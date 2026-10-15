@@ -38,7 +38,8 @@ test('consecutive comparable 30-day counters estimate the reference day without 
       sell:{transactions:4150,highestPrice:52500,averagePrice:47100,lowestPrice:42000}}}
   ];
   const [day]=estimateDailyStatistics(observations);
-  assert.equal(day.serverDay,'2026-10-15');
+  // The 2026-10-15 window covers 09-15 to 10-14, so the change between the two counters is day 10-14 entering.
+  assert.equal(day.serverDay,'2026-10-14');
   assert.equal(day.buy.transactions,117);
   assert.equal(day.sell.transactions,187);
   assert.equal(day.provenance.buy.kind,'estimated');
@@ -46,13 +47,21 @@ test('consecutive comparable 30-day counters estimate the reference day without 
   assert.equal(day.provenance.buy.intervalHours,24);
   assert.ok(Number.isSafeInteger(day.buy.averagePrice));
   assert.ok(!('highestPrice' in day.buy));
+  // With the day leaving the window reported (09-14), the entering day is reconstructed exactly.
+  const leaving={serverDay:'2026-09-14',buy:{transactions:180,highestPrice:46000,averagePrice:44000,lowestPrice:43000},
+    sell:{transactions:150,highestPrice:48000,averagePrice:46000,lowestPrice:45000}};
+  const [exact]=estimateDailyStatistics(observations,[leaving]);
+  assert.equal(exact.buy.transactions,224);
+  assert.equal(exact.sell.transactions,200);
+  assert.equal(exact.provenance.buy.method,'rolling-30d-reconstructed');
+  assert.equal(exact.buy.averagePrice,Math.round((2244*45100-2200*45000+180*44000)/224));
 });
 
 test('daily observations override estimates per side and mismatched capture times stay empty',()=>{
   const rolling=(serverDay,capturedAtUtc,transactions)=>({serverDay,capturedAtUtc,statistics30d:{
     buy:{...statsSide,transactions},sell:{...statsSide,transactions}}});
   const comparable=[rolling('2026-10-14','2026-10-14T12:00:00Z',2200),rolling('2026-10-15','2026-10-15T12:00:00Z',2244)];
-  const observed={serverDay:'2026-10-15',provenance:{buy:{source:'tibiamarket'}},buy:statsSide};
+  const observed={serverDay:'2026-10-14',provenance:{buy:{source:'tibiamarket'}},buy:statsSide};
   const result=marketDailyStatistics({observations:comparable,dailyStatistics:[observed]})[0];
   assert.deepEqual(result.buy,statsSide);
   assert.equal(result.provenance.buy.source,'tibiamarket');
