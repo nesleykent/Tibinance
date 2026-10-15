@@ -46,6 +46,10 @@ export function sanitize(html) {
         const src = child.getAttribute('src') ?? '';
         if (!/^https:\/\//i.test(src)) continue;
         el.src = src; el.alt = child.getAttribute('alt') ?? ''; el.loading = 'lazy'; el.referrerPolicy = 'no-referrer';
+        // tibia.com floats its pictures beside the text (align); kept as a class, with the size for the layout.
+        const align = (child.getAttribute('align') ?? '').toLowerCase();
+        el.className = align === 'right' || align === 'left' ? `tv-news-float-${align}` : 'tv-news-figure';
+        for (const dim of ['width', 'height']) if (/^\d+$/.test(child.getAttribute(dim) ?? '')) el.setAttribute(dim, child.getAttribute(dim));
       }
       copy(child, el);
       into.append(el);
@@ -81,6 +85,7 @@ export async function openStory(item) {
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const story = (await r.json()).news ?? {};
     body.replaceChildren(sanitize(story.content_html || esc(story.content ?? '')));
+    body.insertAdjacentHTML('beforeend', '<div class="tv-news-clear"></div>');
   } catch (error) {
     console.warn('The story could not be loaded.', error);
     body.innerHTML = '<p class="tv-muted">The story could not be loaded. It is on tibia.com.</p>';

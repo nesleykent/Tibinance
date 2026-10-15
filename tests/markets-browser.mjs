@@ -311,7 +311,9 @@ try {
   assert.equal(image.name,`tibinance-${next.toLowerCase()}-sell-1y-${index.through}.png`);
   assert.equal(image.status,`Saved ${image.name}.`);
   let pixels=await inspect(image.png);
-  assert.deepEqual([pixels.width,pixels.height],[2400,1560],'twice the image layout from a 1x screen');
+  // The Key stats and Performance band and the export line add to the image: as many rows as the page's details have.
+  const band=()=>page.evaluate(async()=>{const m=await import(new URL('js/market-export.js?v=20261015-shot',location.href).href);return m.detailsHeight(m.pageDetails())+16;});
+  assert.deepEqual([pixels.width,pixels.height],[2400,(780+await band())*2],'twice the image layout from a 1x screen');
   assert.ok(pixels.sell>2000 && pixels.buy<50,`the Sell series ${JSON.stringify(pixels)}`);
   assert.ok(pixels.span>0.85,`the days shown fill the plot: ${pixels.span}`);
   assert.ok(pixels.title>300 && pixels.footer>100,`title and branding ${JSON.stringify(pixels)}`);
@@ -471,7 +473,7 @@ try {
   pixels=await inspect((await exportImage(page)).png);
   await page.click('#eventMarkers');
   await page.click('#eventsToggle');
-  assert.deepEqual([pixels.width,pixels.height],[2400,1560]);
+  assert.deepEqual([pixels.width,pixels.height],[2400,(780+await band())*2]);
   assert.ok(pixels.sell>2000 && pixels.span>0.85,`phone export ${JSON.stringify(pixels)}`);
   // At full screen a phone shows the chart and the rail's actions, with the way back.
   await page.evaluate(()=>Object.defineProperty(document,'fullscreenEnabled',{value:false,configurable:true}));

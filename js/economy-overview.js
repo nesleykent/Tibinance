@@ -8,7 +8,7 @@
  * A change of a sum over worlds: today's sum against the sum of each world's value at the start of the range.
  */
 import { $, esc, pill, tone, short, whole, logo, percent, summaryChart, heatmap, heatScale, sortableTable, worldSearch, sectionChips } from './tv-overview.js?v=20261014-details';
-import { topStories } from './tv-news.js?v=20261014-news';
+import { topStories } from './tv-news.js?v=20261015-img';
 
 const RANGES = ['1M', '3M', '6M', 'YTD', '1Y', 'All'];
 const MEASURE = { gross: 'Gross potential', coins: 'Direct gold', npc: 'NPC potential' };

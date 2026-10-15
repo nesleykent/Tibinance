@@ -12,7 +12,7 @@ picker.addEventListener('change', () => {
 });
 // A module that cannot be fetched (a dropped connection) would otherwise leave the page loading forever.
 try {
-  await import(asset === 'tibia-token' ? './tibia-token-markets.js?v=20261015-tip' : './markets.js?v=20261015-tip');
+  await import(asset === 'tibia-token' ? './tibia-token-markets.js?v=20261015-shot' : './markets.js?v=20261015-shot');
 } catch (error) {
   console.error(error);
   const status = document.getElementById('status');

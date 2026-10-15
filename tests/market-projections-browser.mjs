@@ -187,18 +187,20 @@ try {
   await page.click('#eventMarkers');
   await page.click('#eventsToggle');   // the events' own notes are tested in market-events-browser.mjs
   let image=await inspect(await exportPng());
-  assert.equal(image.height,780+12+2*20,`two lines of projection notes ${JSON.stringify(image)}`);
+  // The Key stats and Performance band and the export line add to the image: as many rows as the page's details have.
+  const band=()=>page.evaluate(async()=>{const m=await import(new URL('js/market-export.js?v=20261015-shot',location.href).href);return m.detailsHeight(m.pageDetails())+16;});
+  assert.equal(image.height,780+12+2*20+await band(),`two lines of projection notes ${JSON.stringify(image)}`);
   assert.ok(image.bandRight>2000 && image.bandLeft<50,`the band after the boundary only ${JSON.stringify(image)}`);
   assert.ok(image.inkRight>150,`the dashed central line ${JSON.stringify(image)}`);
   await toggle.click();
   image=await inspect(await exportPng());
-  assert.equal(image.height,780,'hidden on the page, absent from the image');
+  assert.equal(image.height,780+await band(),'hidden on the page, absent from the image');
   assert.ok(image.bandRight<50 && image.tintRight<50,`no projection drawn ${JSON.stringify(image)}`);
   await toggle.click();
   // An unavailable projection says so in the image, in one line.
   await open('Aethera','1Y');
   image=await inspect(await exportPng());
-  assert.equal(image.height,780+12+20);
+  assert.equal(image.height,780+12+20+await band());
   await page.click('#eventsToggle');
   await page.click('#eventMarkers');
   await page.click('#eventsToggle');

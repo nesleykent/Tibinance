@@ -207,6 +207,8 @@ body.tv-app h1,body.tv-app h2,body.tv-app h3,body.tv-app h4 { font-family:var(--
 .tv-terminal .event-tip :is(.event-tip-days,.event-tip-text) { color:rgb(255 255 255 / .7); }
 /* Above the chart's layers (legend, marker strip), under the header's menus; a long list scrolls inside it. */
 .tv-terminal .event-tip { z-index:25; max-height:min(420px, calc(100dvh - 24px)); overflow-y:auto; overscroll-behavior:contain; }
+/* Clicked open, it takes the pointer: its list scrolls and the wheel no longer zooms the chart beneath it. */
+.tv-terminal .event-tip.pinned { pointer-events:auto; }
 
 /* The details widget, under the list, as TradingView's symbol details: a widget of its own (the page's gap above it),
    16px side padding. The symbol and its facts, dotted apart; the quote at 28px with its change on a 16px line and
@@ -349,6 +351,11 @@ body.tv-app h1,body.tv-app h2,body.tv-app h3,body.tv-app h4 { font-family:var(--
 .tv-news-body { color:var(--tv-text); font-size:15px; line-height:24px; }
 .tv-news-body :is(p,ul,ol,blockquote) { margin:0 0 12px; }
 .tv-news-body img { max-width:100%; height:auto; border-radius:6px; }
+.tv-news-body .tv-news-figure { display:block; margin:4px auto 12px; }
+.tv-news-body .tv-news-float-right { float:right; max-width:min(45%, 243px); margin:4px 0 8px 16px; }
+.tv-news-body .tv-news-float-left { float:left; max-width:min(45%, 243px); margin:4px 16px 8px 0; }
+.tv-news-body .tv-news-clear { clear:both; }
+@media (max-width:480px) { .tv-news-body :is(.tv-news-float-right,.tv-news-float-left) { float:none; display:block; max-width:100%; margin:4px auto 12px; } }
 .tv-news-body table { max-width:100%; border-collapse:collapse; font-size:13px; }
 .tv-news-body :is(td,th) { padding:4px 8px; border:1px solid var(--tv-border); }
 .tv-news-source { margin:16px 0 0; font-size:13px; }

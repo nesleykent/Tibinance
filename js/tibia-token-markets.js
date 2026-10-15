@@ -3,11 +3,11 @@ import { esc } from './format.js';
 import { RANGES, changeOver, rangeStart, dayGrid } from './market-series.js';
 // Version the changed shared modules: GitHub Pages can retain pre-TIB code in browser caches.
 import { createMarketChart, dayOf } from './market-chart.js?v=20261014-events';
-import { marketImage } from './market-export.js?v=20261014-events';
+import { marketImage, pageDetails } from './market-export.js?v=20261015-shot';
 import { dock } from './markets-dock.js';
 import { loadEvents, addEventDays } from './events.js';
 import { eventsPanel } from './market-events-panel.js?v=20261014-rebuild';
-import { eventMarks } from './market-events-ui.js?v=20261015-tip';
+import { eventMarks } from './market-events-ui.js?v=20261015-tip2';
 import { TOKEN_PROFILE, tokenPrice, tokenView, CONTRACT } from './tibia-token.js?v=20261014-events';
 import { connect } from './tv-bridge.js';
 const $ = id => document.getElementById(id);
@@ -74,7 +74,7 @@ async function exportImage() {
     const canvas = await marketImage({ view, side: 'sell', logicalRange: chart.timeScale().getVisibleLogicalRange(), hidden: market.visible('events') ? [] : ['events'],
       context: { world: 'Tibia Token (TIB)', tag: '', meta: [file.pair, file.venue, 'BNB Smart Chain'], value: tokenPrice(last.close),
         valueNote: `Daily close on ${last.day} UTC`, change: c && { text: changeText(c), tone: c.ratio > 0 ? 'up' : 'down', note: `change over ${range}` },
-        shown: `UTC days ${dayOf(shown.from)} to ${dayOf(shown.to)}`, footer: `Completed UTC candles. Single pool USD prices and volume. History through ${view.end}.` } });
+        shown: `UTC days ${dayOf(shown.from)} to ${dayOf(shown.to)}`, footer: `Completed UTC candles. Single pool USD prices and volume. History through ${view.end}.`, details: pageDetails() } });
     const blob = await new Promise((resolve, reject) => canvas.toBlob(b => b ? resolve(b) : reject(new Error('PNG encoding failed.')), 'image/png'));
     const url = URL.createObjectURL(blob), name = `tibinance-tib-usd-${range.toLowerCase()}-${view.end}.png`;
     const link = Object.assign(document.createElement('a'), { href: url, download: name }); document.body.append(link); link.click(); link.remove();

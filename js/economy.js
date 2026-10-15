@@ -18,7 +18,8 @@ import { MEASURES, INTERVALS, ratePeriods, accumulatedPeriods, rangeChange, rang
 import { economyChart, colors } from './economy-chart.js?v=20261014-events';
 import { connect, changed } from './tv-bridge.js';
 import { loadEvents, eventsFor, within } from './events.js';
-import { eventMarks } from './market-events-ui.js?v=20261015-tip';
+import { eventMarks } from './market-events-ui.js?v=20261015-tip2';
+import { pageDetails, detailsHeight, drawDetails, exportedLine } from './market-export.js?v=20261015-shot';
 
 const $ = id => document.getElementById(id);
 const RANGES = ['1M', '3M', '6M', 'YTD', '1Y', 'All'];
@@ -332,8 +333,8 @@ function drawWatchlist() {
 
 /* ----------------------------------------------------------------- details */
 // Characters online now, read live from TibiaData (api.tibiadata.com/v4/worlds, tibia.com's world list, CORS *):
-// {at, total, worlds: Map(name -> count)}, refreshed every five minutes while the page is open. Null until it answers
-// or when it fails; the details then fall back to the stored TibiaVIP observation, with its date.
+// {at, total, worlds: Map(name -> count)}, refreshed every five minutes while the page is open; {failed: true} when it
+// does not answer, which the details say instead of showing an older count.
 let online = null;
 async function loadOnline() {
   try {
@@ -341,8 +342,11 @@ async function loadOnline() {
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const w = (await r.json()).worlds ?? {};
     online = { at: new Date(), total: w.players_online, worlds: new Map((w.regular_worlds ?? []).map(x => [x.name, x.players_online])) };
-    if (view) showDetails();
-  } catch (error) { console.warn('Characters online are unavailable from TibiaData.', error); }
+  } catch (error) {
+    console.warn('Characters online are unavailable from TibiaData.', error);
+    online = { failed: true };
+  }
+  if (view) showDetails();
 }
 loadOnline();
 setInterval(loadOnline, 5 * 60 * 1000);
@@ -359,8 +363,10 @@ function showDetails() {
   // The range alone after the change, as the chart's legend writes it; the caption below says what the figure is.
   $('detailChangeLabel').textContent = change ? state.range : `${state.range}: not enough complete periods`;
   $('detailChangeLabel').title = `Change over ${state.range}`;
-  const live = online && (state.world === 'All' ? online.total : online.worlds.get(state.world));
-  const stored = data.vip?.observations.find(o => o.world === state.world && o.metric === 'characters-online');
+  const live = online && !online.failed ? (state.world === 'All' ? online.total : online.worlds.get(state.world)) : undefined;
+  const worldPage = state.world === 'All' ? 'https://www.tibia.com/community/?subtopic=worlds'
+    : `https://www.tibia.com/community/?subtopic=worlds&world=${encodeURIComponent(state.world)}`;
+  const onlineLink = text => `<a href="${worldPage}" target="_blank" rel="noopener noreferrer">${text}</a>`;
   // Key stats, as TradingView lists a symbol's: a label at the left, the figure at the right.
   const stat = (label, value, title = '') => `<div${title ? ` title="${esc(title)}"` : ''}><dt>${label}</dt><dd>${value}</dd></div>`;
   const unit = UNIT[state.interval];
@@ -372,8 +378,10 @@ function showDetails() {
     stat('Kill days', `${esc(s.first)} to ${esc(s.last)}`),
     stat('Days with data', `${fmt(s.observed + s.recovered)} of ${fmt(s.observed + s.recovered + s.missing)}`,
       `${fmt(s.observed)} observed, ${fmt(s.recovered)} recovered exactly, ${fmt(s.missing)} missing`),
-    Number.isFinite(live) ? stat('Characters online', fmt(live), `Now, from tibia.com through TibiaData, read at ${online.at.toTimeString().slice(0, 5)}`)
-      : stored && stat(`Characters online, ${esc(data.vip.observedAt.slice(0, 10))}`, fmt(stored.value), 'TibiaVIP, at one instant; the live count is unavailable'),
+    stat('Characters online', !online ? '<span class="tv-muted">Loading</span>'
+      : Number.isFinite(live) ? onlineLink(fmt(live))
+      : onlineLink(online.failed ? 'Unavailable, see tibia.com' : 'Not listed, see tibia.com'),
+      online?.at ? `Now, from tibia.com through TibiaData, read at ${online.at.toTimeString().slice(0, 5)}; opens the world's page` : 'Opens the world\'s page on tibia.com'),
   ].filter(Boolean).join('');
   $('detailCoins').textContent = p ? gold(p.rate.directCoins) : 'N/A';
   $('detailNpc').textContent = p ? gold(p.rate.npcPotential) : 'N/A';
@@ -388,12 +396,72 @@ function showDetails() {
 /* --------------------------------------------------------------- creatures */
 // A month's creatures (contributions are kept by month): its top 30 by gross potential, the rest summed as other. The
 // latest complete month until another is chosen.
+const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const MONTH_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const monthName = m => `${MONTH_LONG[Number(m.slice(5, 7)) - 1]} ${m.slice(0, 4)}`;
+
+// The month calendar (creature lists are kept by month): a year of twelve months, the years with data a step apart;
+// months without a list are disabled, the unfinished one is marked. Arrow keys move between months, Escape closes.
+let calendar = null;
+function drawCalendar() {
+  const { months, complete, month, year } = calendar, years = months.map(m => Number(m.slice(0, 4)));
+  const first = Math.min(...years), last = Math.max(...years);
+  $('creatureCalendar').innerHTML = `<div class="eco-calendar-head">`
+    + `<button type="button" class="tv-btn tv-icon" data-year="${year - 1}" aria-label="${year - 1}"${year <= first ? ' disabled' : ''}><svg aria-hidden="true"><use href="css/tv-icons.svg#chevron" class="eco-prev"/></svg></button>`
+    + `<b aria-live="polite">${year}</b>`
+    + `<button type="button" class="tv-btn tv-icon" data-year="${year + 1}" aria-label="${year + 1}"${year >= last ? ' disabled' : ''}><svg aria-hidden="true"><use href="css/tv-icons.svg#chevron" class="eco-next"/></svg></button></div>`
+    + `<div class="eco-calendar-grid" role="grid">${MONTH_SHORT.map((name, i) => {
+      const m = `${year}-${String(i + 1).padStart(2, '0')}`, has = months.includes(m);
+      return `<button type="button" role="gridcell" data-month="${m}" aria-label="${monthName(m)}${has ? complete.includes(m) ? '' : ', unfinished' : ', no data'}"`
+        + `${m === month ? ' aria-selected="true"' : ''}${has ? '' : ' disabled'} tabindex="${m === month || (!months.includes(month) && i === 0) ? 0 : -1}"`
+        + `>${name}${has && !complete.includes(m) ? '<i class="eco-calendar-dot" aria-hidden="true"></i>' : ''}</button>`;
+    }).join('')}</div>`;
+}
+function openCalendar() {
+  calendar.open = true; calendar.year = Number(calendar.month.slice(0, 4));
+  drawCalendar();
+  $('creatureCalendar').hidden = false;
+  $('creatureMonth').setAttribute('aria-expanded', 'true');
+  ($('creatureCalendar').querySelector('[aria-selected="true"]') ?? $('creatureCalendar').querySelector('[data-month]:not([disabled])'))?.focus();
+}
+function closeCalendar(focus = false) {
+  if (calendar) calendar.open = false;
+  $('creatureCalendar').hidden = true;
+  $('creatureMonth').setAttribute('aria-expanded', 'false');
+  if (focus) $('creatureMonth').focus();
+}
+function wireCalendar() {
+  const box = $('creatureCalendar');
+  $('creatureMonth').addEventListener('click', () => calendar && (calendar.open ? closeCalendar() : openCalendar()));
+  box.addEventListener('click', e => {
+    const y = e.target.closest('[data-year]'), m = e.target.closest('[data-month]');
+    if (y && !y.disabled) { calendar.year = Number(y.dataset.year); drawCalendar(); box.querySelector(`[data-year="${y.dataset.year > calendar.year ? calendar.year + 1 : calendar.year - 1}"]`)?.focus() ?? box.querySelector('[data-year]:not([disabled])')?.focus(); }
+    if (m && !m.disabled) { state.month = m.dataset.month; closeCalendar(true); drawCreatures(); }
+  });
+  box.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { e.stopPropagation(); closeCalendar(true); return; }
+    const cell = e.target.closest('[data-month]');
+    if (!cell) return;
+    const step = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -3, ArrowDown: 3 }[e.key];
+    if (!step) return;
+    e.preventDefault();
+    const cells = [...box.querySelectorAll('[data-month]')];
+    for (let i = cells.indexOf(cell) + step; i >= 0 && i < cells.length; i += step) if (!cells[i].disabled) { cells[i].focus(); break; }
+  });
+  document.addEventListener('pointerdown', e => { if (calendar?.open && !box.contains(e.target) && !$('creatureMonth').contains(e.target)) closeCalendar(); });
+}
+
 function drawCreatures() {
   const months = view.contrib.months.map(m => m.month).sort().reverse();
-  if (!months.length) { $('creatureMonth').innerHTML = ''; $('creatureList').innerHTML = ''; $('creatureNote').textContent = state.world === 'All' ? 'Choose an individual world for its creature breakdown. Monthly world top-30 lists cannot establish a complete global creature ranking.' : 'No creature contributions for this world.'; return; }
+  if (!months.length) { $('creatureMonth').textContent = ''; $('creatureMonth').hidden = true; closeCalendar(); $('creatureList').innerHTML = ''; $('creatureNote').textContent = state.world === 'All' ? 'Choose an individual world for its creature breakdown. Monthly world top-30 lists cannot establish a complete global creature ranking.' : 'No creature contributions for this world.'; return; }
   const complete = months.filter(m => periodOf(`${m}-01`, 'month')[1] <= view.end);
   const month = state.month && months.includes(state.month) ? state.month : (complete[0] ?? months[0]);
-  $('creatureMonth').innerHTML = months.map(m => `<option value="${m}"${m === month ? ' selected' : ''}>${m}${complete.includes(m) ? '' : ' (unfinished)'}</option>`).join('');
+  const pick = $('creatureMonth');
+  pick.hidden = false; pick.value = month;
+  pick.innerHTML = `<span>${esc(monthName(month))}${complete.includes(month) ? '' : ', unfinished'}</span><svg aria-hidden="true"><use href="css/tv-icons.svg#calendar"/></svg>`;
+  pick.setAttribute('aria-label', `Month: ${monthName(month)}. Choose another`);
+  calendar = { months, complete, month, year: calendar?.open ? calendar.year : Number(month.slice(0, 4)), open: calendar?.open ?? false };
+  if (calendar.open) drawCalendar();
   const c = contributions(view.contrib, periodOf(`${month}-01`, 'month'));
   const total = c.total.grossPotential, name = page => data.creatures[page]?.creature ?? `#${page}`;
   $('creatureNote').textContent = `${month}: ${gold(total)} gold of gross potential from ${gold(c.total.kills)} valued kills. Each month keeps its top 30 creatures; the rest are summed as other.`;
@@ -438,11 +506,27 @@ function renderProvenance() {
 
 /* ------------------------------------------------------------------- export */
 // An image of what the chart shows, with the world, measure, interval and range, and the method in a line.
+// The chart as it stands on screen, from its own canvases, each drawn where it is. Lightweight Charts' takeScreenshot
+// draws a price scale that covers one of two panes (the Tibia Coin price, right) at about twice its size.
+function chartCanvas(host) {
+  const dpr = window.devicePixelRatio || 1, box = host.getBoundingClientRect();
+  const out = document.createElement('canvas');
+  out.width = Math.round(box.width * dpr); out.height = Math.round(box.height * dpr);
+  const ctx = out.getContext('2d');
+  for (const canvas of host.querySelectorAll('canvas')) {
+    const r = canvas.getBoundingClientRect();
+    if (!r.width || !r.height) continue;
+    ctx.drawImage(canvas, (r.left - box.left) * dpr, (r.top - box.top) * dpr, r.width * dpr, r.height * dpr);
+  }
+  return out;
+}
 async function exportImage() {
   if (!view?.last) return;
-  const shot = chart.chart.takeScreenshot(), c = colors(), pad = 24, ratio = shot.width / $('chart').clientWidth;
+  const shot = chartCanvas($('chart')), c = colors(), pad = 24, ratio = window.devicePixelRatio || 1;
   const canvas = document.createElement('canvas');
-  canvas.width = shot.width + pad * 2 * ratio; canvas.height = shot.height + 110 * ratio;
+  const details = pageDetails();
+  const token = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  canvas.width = shot.width + pad * 2 * ratio; canvas.height = shot.height + (126 + detailsHeight(details)) * ratio;
   const ctx = canvas.getContext('2d'), font = getComputedStyle(document.documentElement).getPropertyValue('--font-ui');
   // The chart's own ground (its pane), not the page's: the terminal's page colour is only the gap between its blocks.
   ctx.fillStyle = getComputedStyle(document.querySelector('.chart-area') ?? document.body).backgroundColor; ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -453,7 +537,12 @@ async function exportImage() {
   const a = view.accumulated.get(view.last.start);
   ctx.fillText(`From valued creatures, by ${UNIT[state.interval]}; ${state.mode === 'accumulated' ? `since ${a.from}, ${a.covered}/${a.days} days${a.complete ? '' : ', partial subtotal'}` : `kill coverage ${pct1(view.last.killCoverage)}`}. Not money supply${state.rate !== null ? `; dashed: gold + ${state.rate * 100}% NPC, assumption` : ''}.`, pad, 52);
   ctx.drawImage(shot, pad, 64, shot.width / ratio, shot.height / ratio);
-  ctx.fillText(`Tibinance / Economy. Kill statistics through ${view.end}; TibiaWiki loot statistics, CC-BY-SA.`, pad, 64 + shot.height / ratio + 28);
+  const right = shot.width / ratio + pad;
+  const y = drawDetails(ctx, details, { x: pad, y: 64 + shot.height / ratio, right, ui: font,
+    c: { ink: c.ink, muted: c.text, line: token('--tv-border') || c.grid, lineStrong: token('--tv-border-hover') || c.text, up: token('--tv-up') || '#089981', down: token('--tv-down') || '#f23645' } });
+  ctx.fillStyle = c.text; ctx.font = `400 12px ${font}`; ctx.textAlign = 'left';
+  ctx.fillText(`Tibinance / Economy. Kill statistics through ${view.end}; TibiaWiki loot statistics, CC-BY-SA.`, pad, y + 28);
+  ctx.font = `400 11px ${font}`; ctx.fillText(exportedLine(), pad, y + 46);
   const name = `tibinance-economy-${state.world.toLowerCase()}-${state.measures.map(k => MEASURES[k].short.toLowerCase()).join('-') || 'hidden'}-${state.mode}-${state.interval}-${state.range.toLowerCase()}-${view.end}.png`;
   const blob = await new Promise((resolve, reject) => canvas.toBlob(b => (b ? resolve(b) : reject(new Error('The image could not be encoded.'))), 'image/png'));
   const link = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: name });
@@ -560,7 +649,7 @@ function wire() {
     draw({ preserveRange: true });
   });
   $('stable').addEventListener('click', () => { state.stable = !state.stable; $('stable').setAttribute('aria-pressed', String(state.stable)); draw({ preserveRange: true }); });
-  $('creatureMonth').addEventListener('change', e => { state.month = e.target.value; drawCreatures(); });
+  wireCalendar();
   $('exportButton').addEventListener('click', () => exportImage().catch(e => { console.error(e); $('exportStatus').textContent = 'The chart image could not be exported.'; }));
   $('expand').addEventListener('click', () => toggleExpanded().catch(console.error));
   $('filter').addEventListener('input', e => { state.filter = e.target.value; drawWatchlist(); });

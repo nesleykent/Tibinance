@@ -27,6 +27,21 @@
 /* Panels: the head may hold a control; a lead line, small headings and notes. */
 .eco-panel-head { justify-content:space-between; }
 .eco-month { min-height:calc(var(--control-height) - var(--space-1)); }
+/* The month calendar: a button with the month, opening a year of twelve months under it (TradingView's date picker). */
+.eco-month-pick { position:relative; }
+.tv-terminal .eco-month { display:inline-flex; align-items:center; gap:6px; height:28px; padding:0 8px; border:1px solid var(--tv-border); border-radius:6px; font:500 13px var(--tv-font); white-space:nowrap; }
+.tv-terminal .eco-month svg { width:18px; height:18px; }
+.eco-calendar { position:absolute; z-index:30; top:calc(100% + 4px); right:0; width:232px; padding:8px; border-radius:8px; background:var(--tv-popup, var(--surface)); box-shadow:var(--tv-popup-shadow, var(--control-thumb-shadow)); color:var(--tv-text, var(--ink)); }
+.eco-calendar[hidden] { display:none; }
+.eco-calendar-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; font:600 14px var(--tv-font, inherit); }
+.eco-calendar-head .tv-icon:disabled { opacity:.3; }
+.eco-calendar-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:4px; }
+.eco-calendar-grid button { position:relative; height:36px; border:0; border-radius:6px; background:none; color:inherit; font:500 13px var(--tv-font, inherit); cursor:pointer; }
+.eco-calendar-grid button:hover:not(:disabled) { background:var(--tv-btn-hover, var(--line-faint)); }
+.eco-calendar-grid button[aria-selected="true"] { background:var(--tv-brand, var(--accent)); color:var(--tv-white); }
+.eco-calendar-grid button:disabled { color:var(--tv-text-3, var(--muted)); opacity:.45; cursor:default; }
+.eco-calendar-grid button:focus-visible { outline:2px solid var(--tv-brand, var(--accent)); outline-offset:1px; }
+.eco-calendar-dot { position:absolute; top:6px; right:8px; width:5px; height:5px; border-radius:50%; background:var(--tv-orange-500); }
 .eco-panel-lead { margin-top:0; color:var(--muted); }
 .eco-panel-heading { margin:var(--space-4) 0 var(--space-2); font-size:var(--step-n2); font-weight:var(--weight-strong); letter-spacing:var(--tracking-caps); text-transform:uppercase; }
 .eco-panel-note { color:var(--muted); font-size:var(--step-n2); }
@@ -85,3 +100,5 @@
 @container chart (max-width:319.98px) {
   .eco-interval { padding-left:0; border-left:0; }
 }
+.eco-calendar-head [data-year]:first-child svg { transform:rotate(90deg); }
+.eco-calendar-head [data-year]:last-child svg { transform:rotate(-90deg); }

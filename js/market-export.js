@@ -15,7 +15,7 @@ import { drawMarker } from './market-events-layer.js?v=20261014-events';
 
 const WIDTH = 1200, PAD = 32, CHART_HEIGHT = 560;
 const HEAD = 104;     // title, quote, legend and rule above the chart
-const FOOT = 52;      // rule and footer below it
+const FOOT = 68;      // rule and footer (conventions, then when and where it was exported) below it
 const LINE = 20;      // a line of notes under the chart
 
 const token = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -72,7 +72,8 @@ function compose({ shot, ratio, k, plotWidth, market, keys, notes, context, side
     return lines;
   };
   const noteLines = notes.reduce((n, note) => n + (note.lines ? note.lines.length : keyLines(note) + note.rows.length + (note.more ? 1 : 0)), 0);
-  const height = HEAD + CHART_HEIGHT + (noteLines ? 12 + noteLines * LINE : 0) + FOOT + PAD * 2;
+  const details = context.details ?? null;
+  const height = HEAD + CHART_HEIGHT + (noteLines ? 12 + noteLines * LINE : 0) + detailsHeight(details) + FOOT + PAD * 2;
   canvas.width = Math.round(WIDTH * ratio);
   canvas.height = Math.round(height * ratio);
   const ctx = canvas.getContext('2d');
@@ -126,6 +127,7 @@ function compose({ shot, ratio, k, plotWidth, market, keys, notes, context, side
   ctx.restore();
   y += CHART_HEIGHT;
   if (noteLines) y = drawNotes(ctx, notes, { x: PAD, y: y + 12, right, c, ui, text });
+  y = drawDetails(ctx, details, { x: PAD, y, right, c, ui });
 
   // A discreet mark, as in the site header, and the conventions the chart follows.
   rule(ctx, PAD, right, y + 12, c.line);
@@ -133,6 +135,7 @@ function compose({ shot, ratio, k, plotWidth, market, keys, notes, context, side
   const brand = text('Tibinance', PAD, fy, { font: `600 13px ${ui}` });
   text('/ Markets', PAD + brand + 6, fy, { font: `400 13px ${serif}`, color: c.muted });
   text(context.footer, right, fy, { font: `400 11px ${ui}`, color: c.muted, align: 'right' });
+  text(fit(ctx, exportedLine(), right - PAD - 140, `400 11px ${ui}`), right, fy + 16, { font: `400 11px ${ui}`, color: c.muted, align: 'right' });
   return canvas;
 }
 
@@ -222,4 +225,65 @@ function drawKey(ctx, { mark, color }, x, y) {
     if (mark === 'dot') { ctx.beginPath(); ctx.arc(x + 9, y, 3.5, 0, Math.PI * 2); ctx.fill(); }
   }
   ctx.restore();
+}
+
+/*
+ * The page's details beside the chart, as the image's band under it: the Key stats (every label and figure of the
+ * page's .tv-keystats lists, as shown) and the Performance tiles. Read from the page, so the image says what it says.
+ */
+const STAT_LINE = 22, PERF_HEIGHT = 46;
+// Four columns, or three where a figure is long (a week's dates), so no figure is cut short.
+const columnsOf = details => details.stats.some(([, v]) => v.length > 16) ? 3 : 4;
+export function pageDetails(root = document) {
+  const clean = el => el.textContent.replace(/\s+/g, ' ').trim();
+  const stats = [...root.querySelectorAll('.details .tv-keystats > div')].filter(d => !d.closest('[hidden]'))
+    .map(d => [clean(d.querySelector('dt') ?? d), clean(d.querySelector('dd') ?? d)]).filter(([l, v]) => l && v);
+  const performance = [...root.querySelectorAll('#detailPerformance button')].map(b => {
+    const v = b.querySelector('.perf-value');
+    return { value: clean(v ?? b), range: clean(b.querySelector('.perf-range') ?? b), tone: v?.matches('.up, :has(.up)') ? 'up' : v?.matches('.down, :has(.down)') ? 'down' : '', selected: b.getAttribute('aria-pressed') === 'true' };
+  });
+  return stats.length || performance.length ? { stats, performance } : null;
+}
+export function detailsHeight(details) {
+  if (!details) return 0;
+  return 20 + 24 + Math.ceil(details.stats.length / columnsOf(details)) * STAT_LINE + (details.performance.length ? 12 + PERF_HEIGHT : 0);
+}
+export function drawDetails(ctx, details, { x, y, right, c, ui }) {
+  if (!details) return y;
+  const put = (value, tx, ty, font, color, align = 'left') => { ctx.font = font; ctx.fillStyle = color; ctx.textAlign = align; ctx.fillText(value, tx, ty); };
+  y += 20;
+  rule(ctx, x, right, y - 8, c.line);
+  put('Key stats', x, y + 10, `600 13px ${ui}`, c.ink);
+  y += 24;
+  const columns = columnsOf(details), gap = 24, col = (right - x - gap * (columns - 1)) / columns;
+  details.stats.forEach(([label, value], i) => {
+    const cx = x + (i % columns) * (col + gap), cy = y + Math.floor(i / columns) * STAT_LINE + 14;
+    ctx.font = `600 13px ${ui}`;
+    const vw = Math.min(ctx.measureText(value).width, col * 0.68);
+    put(fit(ctx, value, col * 0.68, `600 13px ${ui}`), cx + col, cy, `600 13px ${ui}`, c.ink, 'right');
+    put(fit(ctx, label, col - vw - 8, `400 13px ${ui}`), cx, cy, `400 13px ${ui}`, c.muted);
+  });
+  y += Math.ceil(details.stats.length / columns) * STAT_LINE;
+  if (details.performance.length) {
+    y += 12;
+    const n = details.performance.length, w = (right - x - 8 * (n - 1)) / n;
+    details.performance.forEach((p, i) => {
+      const tx = x + i * (w + 8);
+      ctx.save();
+      ctx.fillStyle = p.tone === 'up' ? c.up : p.tone === 'down' ? c.down : c.muted;
+      ctx.globalAlpha = 0.12; ctx.fillRect(tx, y, w, PERF_HEIGHT);
+      ctx.restore();
+      if (p.selected) { ctx.strokeStyle = c.lineStrong; ctx.lineWidth = 1; ctx.strokeRect(tx + 0.5, y + 0.5, w - 1, PERF_HEIGHT - 1); }
+      put(p.value, tx + w / 2, y + 20, `600 14px ${ui}`, p.tone === 'up' ? c.up : p.tone === 'down' ? c.down : c.muted, 'center');
+      put(p.range, tx + w / 2, y + 37, `400 11px ${ui}`, c.muted, 'center');
+    });
+    y += PERF_HEIGHT;
+  }
+  return y;
+}
+// When and where the image was made: the local time with its offset, and the page's address (the view it shows).
+export function exportedLine(now = new Date()) {
+  const pad = n => String(n).padStart(2, '0'), off = -now.getTimezoneOffset();
+  const zone = `UTC${off >= 0 ? '+' : '-'}${pad(Math.floor(Math.abs(off) / 60))}:${pad(Math.abs(off) % 60)}`;
+  return `Exported ${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())} ${zone} from ${location.href}`;
 }

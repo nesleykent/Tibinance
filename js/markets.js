@@ -19,10 +19,10 @@ import { fmt, esc, num } from './format.js';
 import { RANGES, changeOver, dayGrid, daysBetween, marketValues, neighbours, rangeStart, statisticsAt } from './market-series.js';
 import { SIDES, createMarketChart, dayOf } from './market-chart.js?v=20261014-events';
 import { dock } from './markets-dock.js';
-import { marketImage } from './market-export.js?v=20261014-events';
+import { marketImage, pageDetails } from './market-export.js?v=20261015-shot';
 import { loadEvents as readEvents, eventsFor, lifecycleSpan, addEventDays } from './events.js';
 import { eventsPanel } from './market-events-panel.js?v=20261014-rebuild';
-import { eventMarks } from './market-events-ui.js?v=20261015-tip';
+import { eventMarks } from './market-events-ui.js?v=20261015-tip2';
 import { PROJECTIONS, forwardEnd, pointText, projectionFor, weekOf } from './market-projections.js';
 import { screenerPanel } from './market-screener-panel.js?v=20261014-review';
 import { historyPanel } from './market-forecast-history.js?v=20261014-rebuild';
@@ -593,7 +593,8 @@ function imageContext() {
     shown: !shown ? '' : dayOf(shown.to) > end && (shownProjection() || shownHistory())
       ? `Server days ${dayOf(shown.from)} to ${end}, ${shownProjection() ? 'projected' : 'past forecasts drawn'} to ${dayOf(shown.to)}`
       : `Server days ${dayOf(shown.from)} to ${dayOf(shown.to)}`,
-    footer: `Server days run from 10:00 to 10:00 CET/CEST. Market history through ${end}.`
+    footer: `Server days run from 10:00 to 10:00 CET/CEST. Market history through ${end}.`,
+    details: pageDetails()
   };
 }
 async function exportImage() {

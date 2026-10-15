@@ -234,7 +234,9 @@ try {
   if (!await toggle.isVisible()) await page.click('#eventsToggle');
   await toggle.click();
   image=await inspect(await exportPng());
-  assert.equal(image.height,780,'hidden on the page, absent from the image');
+  // The Key stats and Performance band and the export line add to the image: as many rows as the page's details have.
+  const band=()=>page.evaluate(async()=>{const m=await import(new URL('js/market-export.js?v=20261015-shot',location.href).href);return m.detailsHeight(m.pageDetails())+16;});
+  assert.equal(image.height,780+await band(),'hidden on the page, absent from the image');
   assert.ok(image.game<5 && image.world<5,`no markers ${JSON.stringify(image)}`);
   await toggle.click();
   // The busiest view keeps its notes short: recurring events counted, the rest listed up to six, then how many more.

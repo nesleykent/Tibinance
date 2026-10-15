@@ -10,7 +10,7 @@
 import { RANGES, changeOver, rangeStart } from './market-series.js';
 import { loadEvents, eventsFor, queryEvents, addEventDays } from './events.js';
 import { $, esc, pill, tone, short, whole, logo, percent, summaryChart, heatmap, heatScale, sortableTable, worldSearch, sectionChips } from './tv-overview.js?v=20261014-details';
-import { topStories } from './tv-news.js?v=20261014-news';
+import { topStories } from './tv-news.js?v=20261015-img';
 
 const DATA = 'data/market-history/';
 const STALE = 14;

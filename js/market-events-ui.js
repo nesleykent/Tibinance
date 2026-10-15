@@ -14,7 +14,7 @@ const HEIGHT = 14;   // the marker's size, as the layer draws it
 
 export function eventMarks({ chart, part, strip, tip }) {
   const buttons = new Map();
-  let groups = [], shown = null, pinned = false, chosen = null;   // chosen: the marker last focused
+  let groups = [], shown = null, pinned = null, chosen = null;   // pinned: the marker clicked open; chosen: the marker last focused
 
   // The strip covers the price pane, where the markers stand; only its buttons take the pointer (css/markets.css).
   function place() {
@@ -57,7 +57,8 @@ export function eventMarks({ chart, part, strip, tip }) {
     const g = groups.find(x => x.key === key), button = buttons.get(key);
     if (!g || !button) return;
     shown = key;
-    pinned = pin;
+    if (pin) pinned = key;
+    tip.classList.toggle('pinned', pinned === key);
     tip.innerHTML = g.events.map(e => `<div class="event-tip-item"><span class="event-tip-days">${esc(dateText(e))}</span>`
       + `<b class="event-tip-title"><i class="event-tip-mark" data-group="${esc(e.category.group)}">${esc(e.category.mark)}</i>${esc(e.title)}</b>`
       + `<span class="event-tip-text">${esc(e.description)}</span></div>`).join('');
@@ -68,8 +69,9 @@ export function eventMarks({ chart, part, strip, tip }) {
   }
   function hide() {
     shown = null;
-    pinned = false;
+    pinned = null;
     tip.hidden = true;
+    tip.classList.remove('pinned');
     part.setActive(null);
   }
   // Fixed to the viewport, above the marker, kept on screen.
@@ -82,10 +84,13 @@ export function eventMarks({ chart, part, strip, tip }) {
   }
 
   const keyOf = e => e.target.closest('.event-mark')?.dataset.key;
-  strip.addEventListener('pointerover', e => { const key = keyOf(e); if (key && !pinned) show(key); });
+  // Hovering always shows the marker under the pointer; leaving it returns to the one clicked open, if any.
+  strip.addEventListener('pointerover', e => { const key = keyOf(e); if (key && key !== shown) show(key); });
   strip.addEventListener('pointerout', e => {
     const key = keyOf(e);
-    if (key && key === shown && !pinned && document.activeElement !== buttons.get(key)) hide();
+    if (!key || key !== shown || document.activeElement === buttons.get(key) || strip.contains(e.relatedTarget?.closest?.('.event-mark'))) return;
+    if (pinned && pinned !== key) show(pinned);
+    else if (!pinned) hide();
   });
   strip.addEventListener('focusin', e => { const key = keyOf(e); if (key) { chosen = key; setCurrent(key); show(key); } });
   strip.addEventListener('focusout', e => { if (!strip.contains(e.relatedTarget)) hide(); });
@@ -93,7 +98,7 @@ export function eventMarks({ chart, part, strip, tip }) {
   strip.addEventListener('click', e => {
     const key = keyOf(e);
     if (!key) return;
-    shown === key && pinned ? hide() : show(key, { pin: true });
+    pinned === key ? hide() : show(key, { pin: true });
   });
   strip.addEventListener('keydown', e => {
     const at = groups.findIndex(g => g.key === keyOf(e));
