@@ -62,7 +62,7 @@ const bestOffer = {
   },
   draw(s, view, side, c) {
     const points = view.closes.map(close => ({ time: close.serverDay, value: close[side] }));
-    const layers = lineLayers(points);
+    const layers = lineLayers(points, view.step);
     s.solid.applyOptions({ color: c[side] });
     s.dotted.applyOptions({ color: c[side] });
     s.points.applyOptions({ color: c[side], priceLineColor: c[side] });
@@ -87,7 +87,7 @@ const dailyAverage = {
       && d.provenance?.[side]?.kind !== 'estimated');
     const estimated = view.daily.filter(d => d[side]?.transactions > 0 && Number.isSafeInteger(d[side].averagePrice)
       && d.provenance?.[side]?.kind === 'estimated');
-    const average = lineLayers(observed.map(d => ({ time: d.serverDay, value: d[side].averagePrice })));
+    const average = lineLayers(observed.map(d => ({ time: d.serverDay, value: d[side].averagePrice })), view.step);
     s.solid.setData(average.solid);
     s.dotted.setData(average.dotted);
     s.estimated.setData(estimated.map(d => ({ time: d.serverDay, value: d[side].averagePrice })));

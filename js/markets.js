@@ -17,8 +17,8 @@
  */
 import { config } from './config.js';
 import { fmt, esc, num } from './format.js';
-import { RANGES, changeOver, dayGrid, daysBetween, marketValues, neighbours, rangeStart, statisticsAt } from './market-series.js';
-import { SIDES, createMarketChart, dayOf } from './market-chart.js?v=20261015-quality-estimates';
+import { INTERVALS, aggregateView, RANGES, changeOver, dayGrid, daysBetween, marketValues, neighbours, rangeStart, statisticsAt } from './market-series.js';
+import { SIDES, createMarketChart, dayOf } from './market-chart.js?v=20261015-interval';
 import { dock } from './markets-dock.js';
 import { marketImage, pageDetails } from './market-export.js?v=20261015-shot';
 import { loadEvents as readEvents, eventsFor, lifecycleSpan, addEventDays } from './events.js';
@@ -52,7 +52,14 @@ const signedRatio = ratio => ratio == null ? num(null) : `<span class="${tone(ra
 const signedDelta = delta => delta == null ? num(null) : `<span class="${tone(delta)}">${signedNumber.format(delta)}</span>`;
 
 const state = { index: null, events: null, projections: null, overview: null, world: null, side: 'sell', range: config.marketRange, sort: { key: 'world', dir: 1 }, filter: '',
-  files: new Map(), view: null, screen: false };
+  files: new Map(), view: null, screen: false, interval: 'day' };
+// The chart's view at the selected interval (D, W, M); the quote, Screener and ranges keep the daily view.
+let shownCache = null;
+function shown() {
+  if (!state.view) return null;
+  if (shownCache?.view !== state.view || shownCache.interval !== state.interval || shownCache.grid !== state.view.grid) shownCache = { view: state.view, interval: state.interval, grid: state.view.grid, shown: aggregateView(state.view, state.interval) };
+  return shownCache.shown;
+}
 let tools = null;   // the dock (js/markets-dock.js), once wired
 
 /* ------------------------------------------------------------------ chart */
@@ -76,7 +83,7 @@ const eventBrowser = eventsPanel($('eventsPanel'), {
     // Extend only the whitespace time grid when an event precedes or follows observed history.
     const grid = state.view.grid;
     state.view.grid = dayGrid([grid[0], event.start].sort()[0], [grid.at(-1), event.end].sort().at(-1));
-    market.draw(state.view, state.side);
+    market.draw(shown(), state.side);
     showEvents(true);
     const shift = addEventDays;
     const from = [state.view.grid[0], shift(event.start, -7)].sort().at(-1);
@@ -133,7 +140,7 @@ function worldView(summary, file) {
 const historyStart = () => state.index.worlds.flatMap(w => [w.bestOfferDays.first, w.dailyStatisticsDays.first]).filter(Boolean).sort()[0];
 
 function drawChart() {
-  market.draw(state.view, state.side);
+  market.draw(shown(), state.side);
   // Keys in the legends and the help take the side's colour from here.
   $('market').classList.toggle('side-sell', state.side === 'sell');
   $('market').classList.toggle('side-buy', state.side === 'buy');
@@ -141,7 +148,7 @@ function drawChart() {
 }
 
 function applyRange(attempt = 0) {
-  const grid = state.view?.grid;
+  const grid = shown()?.grid;
   if (!grid?.length) return;
   // The chart measures its container asynchronously; a range set at zero width is lost.
   if (chart.timeScale().width() === 0 && attempt < 30) { requestAnimationFrame(() => applyRange(attempt + 1)); return; }
@@ -162,7 +169,7 @@ function applyRange(attempt = 0) {
  * observations on either side instead of showing a value.
  */
 function showLegend(day) {
-  const view = state.view, rest = day == null;
+  const view = shown(), rest = day == null;
   if (!view) return;
   $('projectionLegend').innerHTML = '';
   $('historyLegend').innerHTML = historyRow(day ?? view.latestDay);
@@ -194,7 +201,8 @@ function showLegend(day) {
   const range = stats?.transactions && Number.isSafeInteger(stats.highestPrice) ? ` <span class="rest ohlc"><span><span class="meta-label">High</span> ${fmt(stats.highestPrice)}</span> <span><span class="meta-label">Low</span> ${fmt(stats.lowestPrice)}</span></span>` : '';
   const estimateTitle = 'Approximate: the day that left the 30-day window has no figure, so it is taken as the window average.';
   const kind = 'Estimated';
-  $('legend').innerHTML = `<span class="day">${esc(day)}</span> <span class="label"><i class="key key-dot"></i>${labels.offer}</span> ${best} `
+  const period = view.interval === 'week' ? `Week of ${day}` : view.interval === 'month' ? day.slice(0, 7) : day;
+  $('legend').innerHTML = `<span class="day">${esc(period)}</span> <span class="label"><i class="key key-dot"></i>${labels.offer}</span> ${best} `
     + `<span class="label"${estimated ? ` title="${estimateTitle}"` : ''}><i class="key key-average"></i>${estimated ? `${kind} daily average` : 'Daily average'}</span> <b class="value">${average}</b>${range}`;
   $('volumeLegend').innerHTML = ` <span class="label"${estimated ? ` title="${estimateTitle}"` : ''}><i class="key key-volume"></i>${estimated ? `${kind} transactions` : 'Transactions'}</span> <b class="value">${stats ? fmt(stats.transactions) : num(null)}</b>`;
   if (market.visible('projections') && view.projection) $('projectionLegend').innerHTML = projectionRow(view.projection[side]);
@@ -440,6 +448,7 @@ function saveUrl() {
   if (state.world) url.searchParams.set('world', state.world);
   url.searchParams.set('side', state.side);
   url.searchParams.set('range', state.range);
+  if (state.interval !== 'day') url.searchParams.set('interval', state.interval); else url.searchParams.delete('interval');
   if (state.screen) url.searchParams.set('view', 'screener'); else url.searchParams.delete('view');
   history.replaceState(null, '', url);
 }
@@ -551,6 +560,15 @@ function setSide(side) {
   changed();
 }
 
+// The chart's interval: each day, or each week or month aggregated from its days.
+function setInterval_(interval) {
+  if (!INTERVALS.includes(interval) || interval === state.interval) return;
+  state.interval = interval;
+  setChoice('interval', 'interval', interval);
+  $('intervalLabel').textContent = { day: '1D', week: '1W', month: '1M' }[interval];
+  saveUrl(); drawChart(); showLegend(null);
+}
+
 // One range for the chart and the Screener: the list, the quote and the grid follow it.
 function setRange(range) {
   state.range = range;
@@ -632,6 +650,7 @@ function wire() {
   if (tools.open === 'historyPanel') openHistory().catch(historyFailed);
   $('screenerToggle').addEventListener('click', () => showScreener(!state.screen));
   $('side').addEventListener('click', e => setSide(e.target.closest('button')?.dataset.side));
+  $('interval').addEventListener('click', e => setInterval_(e.target.closest('button')?.dataset.interval));
   $('detailPerformance').addEventListener('click', e => { const range = e.target.closest('button')?.dataset.range; if (range) setRange(range); });
   $('range').addEventListener('click', e => {
     const range = e.target.closest('button')?.dataset.range;
@@ -702,7 +721,7 @@ function connectTools() {
     reset: () => { chart.priceScale('right').applyOptions({ autoScale: true }); applyRange(); },
     setStyle: style => market.setStyle(style),
     retheme: () => market.retheme(),
-    replay: day => { if (!state.view) return; market.draw(day ? asOf(state.view, day) : state.view, state.side); if (!day) applyRange(); },
+    replay: day => { if (!state.view) return; market.draw(day ? aggregateView(asOf(state.view, day), state.interval) : shown(), state.side); if (!day) applyRange(); },
   });
 }
 
@@ -766,6 +785,9 @@ async function main() {
   const names = state.index.worlds.map(w => w.world);
   state.side = SIDES[params.get('side')] ? params.get('side') : 'sell';
   state.range = RANGES.includes(params.get('range')) ? params.get('range') : config.marketRange;
+  state.interval = INTERVALS.includes(params.get('interval')) ? params.get('interval') : 'day';
+  setChoice('interval', 'interval', state.interval);
+  $('intervalLabel').textContent = { day: '1D', week: '1W', month: '1M' }[state.interval];
   const asked = names.find(n => n.toLowerCase() === params.get('world')?.toLowerCase());
   setChoice('side', 'side', state.side);
   setChoice('screenerSide', 'side', state.side);

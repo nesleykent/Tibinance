@@ -38,11 +38,11 @@ export function dayGrid(first, last) {
  * over the same real points: `solid` draws only day-to-next-day segments,
  * `dotted` draws only segments that span unobserved days.
  */
-export function lineLayers(points) {
+export function lineLayers(points, step = day => addDays(day, 1)) {
   const solid = [], dotted = [];
   points.forEach((point, i) => {
     const next = points[i + 1];
-    const consecutive = next !== undefined && daysBetween(point.time, next.time) === 1;
+    const consecutive = next !== undefined && next.time === step(point.time);
     const spansGap = next !== undefined && !consecutive;
     solid.push(consecutive ? { ...point } : { ...point, color: HIDDEN });
     dotted.push(spansGap ? { ...point } : { ...point, color: HIDDEN });
@@ -95,4 +95,66 @@ export function changeOver(closes, start) {
   }
   if (!base || base.day === last.day) return null;
   return { from: base, to: last, ratio: last.value / base.value - 1 };
+}
+
+/*
+ * Intervals for the Markets chart. A period is labelled by its first day: Monday for a week, the 1st for a month.
+ * Aggregated from the daily values only, nothing interpolated:
+ *   best offer        the period's last observation (its close), with the observations it closes
+ *   transactions      the sum of the period's daily counts, per side
+ *   daily average     the transaction-weighted average of the period's days, per side
+ *   highest / lowest  the period's extremes, where every contributing day reports them
+ * A period with any estimated day is marked estimated.
+ */
+export const INTERVALS = ['day', 'week', 'month'];
+export function periodStart(day, interval) {
+  if (interval === 'month') return `${day.slice(0, 7)}-01`;
+  if (interval === 'week') return addDays(day, -((new Date(`${day}T00:00:00Z`).getUTCDay() + 6) % 7));
+  return day;
+}
+export function nextPeriod(day, interval) {
+  if (interval === 'month') { const d = new Date(`${day}T00:00:00Z`); d.setUTCMonth(d.getUTCMonth() + 1, 1); return d.toISOString().slice(0, 10); }
+  return addDays(day, interval === 'week' ? 7 : 1);
+}
+export function aggregateView(view, interval) {
+  if (interval === 'day' || !view) return view;
+  const at = day => periodStart(day, interval);
+  const closes = new Map();
+  for (const c of view.closes) {
+    const p = at(c.serverDay), prior = closes.get(p);
+    closes.set(p, { ...c, serverDay: p, lastDay: c.serverDay, observations: (prior?.observations ?? 0) + c.observations });
+  }
+  const daily = new Map();
+  for (const d of view.daily) {
+    const p = at(d.serverDay), r = daily.get(p) ?? { serverDay: p, provenance: {}, gold: {}, partialRange: {} };
+    for (const side of ['buy', 'sell']) {
+      const v = d[side];
+      if (!v) continue;
+      const t = r[side] ?? (r[side] = { transactions: 0 });
+      t.transactions += v.transactions;
+      if (v.transactions) {
+        if (Number.isSafeInteger(v.averagePrice)) r.gold[side] = (r.gold[side] ?? 0) + v.transactions * v.averagePrice;
+        else r.gold[side] = NaN;
+        if (Number.isSafeInteger(v.highestPrice) && Number.isSafeInteger(v.lowestPrice)) {
+          t.highestPrice = Math.max(t.highestPrice ?? -Infinity, v.highestPrice);
+          t.lowestPrice = Math.min(t.lowestPrice ?? Infinity, v.lowestPrice);
+        } else r.partialRange[side] = true;
+      }
+      if (d.provenance?.[side]?.kind === 'estimated') r.provenance[side] = { kind: 'estimated', method: 'period-with-estimated-days' };
+      else r.provenance[side] ??= { kind: 'period' };
+    }
+    daily.set(p, r);
+  }
+  const days = [...daily.values()].map(({ gold, partialRange, ...r }) => {
+    for (const side of ['buy', 'sell']) if (r[side]) {
+      if (r[side].transactions && Number.isFinite(gold[side])) r[side].averagePrice = Math.round(gold[side] / r[side].transactions);
+      if (partialRange[side]) { delete r[side].highestPrice; delete r[side].lowestPrice; }
+    }
+    return r;
+  }).sort((a, b) => a.serverDay.localeCompare(b.serverDay));
+  const closeList = [...closes.values()];
+  const grid = [...new Set(view.grid.map(at))];
+  return { ...view, interval, step: day => nextPeriod(day, interval), closes: closeList, closeDays: closeList.map(c => c.serverDay),
+    daily: days, dailyByDay: new Map(days.map(d => [d.serverDay, d])), grid,
+    latestDay: view.latestDay && at(view.latestDay), end: view.end && at(view.end) };
 }

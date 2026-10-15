@@ -35,7 +35,11 @@
       <button type="button" id="tvSymbol" class="tv-btn tv-symbol" aria-haspopup="dialog" title="World search (⌘K)"><svg aria-hidden="true"><use href="css/tv-icons.svg#search"/></svg><span id="tvSymbolName">World</span></button>
       <button type="button" id="tvCompare" class="tv-btn tv-icon" aria-label="Compare worlds" title="Compare worlds"><svg aria-hidden="true"><use href="css/tv-icons.svg#plus"/></svg></button>
       <span class="tv-divider" aria-hidden="true"></span>
-      <span class="tv-btn tv-static" title="Interval: one server day">D</span>
+      <div id="interval" class="tv-interval" role="radiogroup" aria-label="Interval">
+        <button type="button" class="tv-btn" data-interval="day" role="radio" aria-checked="true" title="Each server day">D</button>
+        <button type="button" class="tv-btn" data-interval="week" role="radio" aria-checked="false" title="Each week, Monday to Sunday: the last best offer, transactions summed, the weighted average price">W</button>
+        <button type="button" class="tv-btn" data-interval="month" role="radio" aria-checked="false" title="Each month: the last best offer, transactions summed, the weighted average price">M</button>
+      </div>
       <span class="tv-divider" aria-hidden="true"></span>
       <button type="button" id="tvStyle" class="tv-btn tv-icon" aria-haspopup="menu" aria-label="Chart style" title="Chart style"><svg aria-hidden="true"><use href="css/tv-icons.svg#line-markers"/></svg></button>
       <button type="button" id="tvIndicators" class="tv-btn" aria-haspopup="dialog" title="Indicators"><svg aria-hidden="true"><use href="css/tv-icons.svg#indicators"/></svg><span>Indicators</span></button>
@@ -97,7 +101,7 @@
       <div id="chartHead" class="chart-head">
         <div class="head-line">
           <h2 id="world">Markets</h2>
-          <span class="tv-legend-int" aria-hidden="true"><span>1D</span><span>Tibia Coin</span></span>
+          <span class="tv-legend-int" aria-hidden="true"><span id="intervalLabel">1D</span><span>Tibia Coin</span></span>
           <span id="worldMeta" class="symbol-meta"></span>
           <span class="symbol-quote" aria-live="polite">
             <span id="lastPrice" class="symbol-last"></span>
@@ -317,7 +321,7 @@
 <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.1/dist/lightweight-charts.standalone.production.js"
         integrity="sha384-KkYqTZlM13Zya6fVUF3IGCBOQ1ehFeJVVgxaVvD/0MebineF9EI8Jkd3NnWNChqN" crossorigin="anonymous"></script>
 <script type="module" src="js/site-header.js"></script>
-<script type="module" src="js/markets-entry.js?v=20261015-solved"></script>
+<script type="module" src="js/markets-entry.js?v=20261015-interval"></script>
 <script type="module" src="js/tv-terminal.js?v=20261015-design"></script>
 </body>
 </html>
