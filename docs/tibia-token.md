@@ -108,3 +108,115 @@ Returning-visitor regression: set `TIBINANCE_STALE_CHART` to a local copy of
 the pre-TIB `market-chart.js` when running the browser test. Its unversioned URL
 is served with that old module; the token page and its PNG export must still
 load the versioned implementation. The test also reloads with the dock closed.
+
+## Currency conversion and official purchase costs
+
+Select **Coin costs** on the TIB chart to compare every supplied CipSoft package
+in EUR, BRL, USD or theoretical TIB units. The original TIB terminal remains
+USD-based, including its volume, replay and PNG export. Currency preference
+belongs to the comparison and is remembered locally. The comparison's history
+uses the same Markets chart builder, calendar range helper, gap conventions,
+theme and responsive tokens. The history table is an accessible canvas alternative.
+
+`data/coin-prices.json` is the manual, dated price ledger. The initial record is
+exactly the user-supplied October 15, 2026 list. To update, **append** a full
+observation with its actual effective date, observed date, source note and all
+package prices; preserve earlier observations. Keep EUR as the fixed commercial
+reference until CipSoft explicitly changes it; enter actual BRL and USD prices
+independently. Use `null` for unavailable packages. There is no CipSoft scraper,
+API request, inferred historical price or automatic adjustment.
+
+Conversions use one ECB publication's EUR-based BRL and USD legs. USD/BRL is
+BRL-per-EUR divided by USD-per-EUR. TIB units per EUR = USD-per-EUR / the existing
+GeckoTerminal USD close. Every source/target combination follows
+`amount / unitsPerEUR[source] * unitsPerEUR[target]`. Values stay unrounded until
+formatting; ordinary money has 2 decimal places, TIB 4, and per-TC values 5.
+Official originals never change. The comparison displays each route's premium
+above the cheapest, savings and savings divided by that route's original cost,
+plus pairwise BRL/EUR, USD/EUR and USD/BRL purchasing-price differences. Ties are
+labelled. Gas, IOF, processing fees, spreads and trading fees are all excluded.
+TIB amounts are market equivalents; they establish no TC redemption facility.
+
+Current comparisons disclose separate FX and TIB observation dates and the FX
+retrieval timestamp. Both fiat legs always share a publication date. They are
+reference rates rather than executable retail quotations. A TIB close over two
+calendar days old, or FX over four calendar days old, is labelled stale.
+
+History offers all three FX pairs, TIB in the selected fiat currency, package
+cost, TC purchasing power per TIB, and BRL/USD premiums to the fixed EUR
+reference. Selecting TIB units for TIB's own value chart explicitly shows USD
+instead; a constant TIB/TIB line would convey no market movement. Fiat-only
+analyses use actual ECB publication dates. TIB analyses join each completed UTC
+candle to the most recent prior publication within four days, disclosing the
+original FX date, including over weekends and holidays. Nothing uses future
+rates; longer gaps stay missing.
+
+**Dated manual observations** apply only from each effective date until the next
+manual update. No prices are asserted before October 15, 2026. **Constant-price
+scenario** holds the latest supplied list constant across earlier market data
+and explicitly labels these values hypothetical. This is the only way the new
+price list participates in earlier purchasing-power analysis. Missing TIB closes
+and unavailable purchase currencies are not filled or treated as zero.
+
+## Foreign exchange acquisition and API decision
+
+Research and live endpoint checks were performed October 15, 2026. Primary docs:
+[Frankfurter v2](https://frankfurter.dev/),
+[ECB reference-rate methodology](https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html),
+[ECB copyright](https://www.ecb.europa.eu/services/using-our-site/disclaimer/html/index.en.html),
+[ExchangeRate-API open-access terms](https://www.exchangerate-api.com/docs/free),
+[Fawaz Ahmed API](https://github.com/fawazahmed0/exchange-api).
+
+| Source | Accuracy / provenance | Updates / history | Free access / terms | Decision |
+| --- | --- | --- | --- | --- |
+| Frankfurter, restricted to ECB | Identifiable central-bank reference publication; both tested legs matched ECB's publication exactly | Working-day observations, normally around 16:00 CET; date and range queries; coverage depends on currency/provider | No key or subscription; no daily/monthly quota, abuse throttling; open-source API; local historical storage encouraged; ECB reproduction with attribution permitted | Selected: reproducible paired observations, source attribution, history and persistence |
+| ExchangeRate-API Open | Provider aggregation, reference conversions; observation time differs from ECB | Daily; open endpoint supplies current rates, historical service is separate | No key; attribution required, rate-limited; caching/commercial conversion allowed but redistribution prohibited | Rejected for this publicly persisted historical dataset |
+| Fawaz Ahmed currency API | Community aggregation; not a single central-bank methodology | Daily dated snapshots, history through date-versioned URLs; no range query | No key; advertises no limits, CDN with alternate host; CC0 repository | Rejected: less specific provenance and many daily requests for a history backfill |
+
+All three tested latest endpoints returned HTTP 200. Results differed because
+of observation date/time and methodology; one live check does not establish an
+uptime guarantee or a retail execution price. ECB's October 15 publication and
+Frankfurter both gave EUR/BRL 5.6679 and EUR/USD 1.1208. ExchangeRate-API's daily
+snapshot at 00:02:31 UTC gave 5.627719 / 1.118043; Fawaz's October 14 snapshot gave
+5.63621674 / 1.12109235. Frankfurter's tested October 6-12, 2025 range returned five
+complete paired working-day publications and no weekend observations. The initial
+persisted backfill contains 268 paired publications from September 29, 2025
+through October 15, 2026, overlapping all 374 existing TIB candles. No paid SLA is
+assumed. Last validated persisted data and explicit age indicators handle outages.
+
+`tools/fetch_foreign_exchange.mjs` fetches only ECB EUR/BRL and EUR/USD together,
+validates positive rates, real dates, matching days, uniqueness and ordering,
+and writes atomically after validation. Incremental refresh rechecks the prior
+week for source corrections and keeps older observations. Three bounded request
+attempts handle transient failures; malformed, incomplete or regressing responses
+leave the previous snapshot intact. The API provides observation dates, not exact
+publication instants: retrieval time is stored separately, never invented.
+The browser loads the same-origin persisted snapshot (no browser API dependency),
+keeps a validated local cache as an outage fallback, and checks for refreshed
+snapshots hourly or on returning to the tab. Refresh also reloads the existing
+contract-validated TIB feed; it introduces no additional token provider.
+
+The daily token/currency workflow uses the existing acquisition and validated
+market publication/release path, sharing the repository's data-writer lock.
+`release/policy.json` includes FX and manual prices for later data releases;
+like every policy change, that inclusion takes effect with the next full release.
+A push to main is a checkpoint and does not automatically deploy new feature code.
+
+Verification commands:
+
+```sh
+node tools/fetch_foreign_exchange.mjs
+node tools/fetch_foreign_exchange.mjs --check
+node --test tests/coin-costs.test.mjs
+npm run lint
+npm run typecheck
+node tools/ci/validate_site.mjs
+TIBINANCE_NODE_MODULES=/path/to/node_modules node tests/coin-costs-browser.mjs
+```
+
+Browser verification supports the same Chrome/WebKit external runtime convention
+as the existing TIB tests. It checks all 18 original-price rows, selected currency
+calculations, all seven analysis metrics, observation/scenario boundaries,
+320/768/1024/1440px overflow, keyboard focus/Escape, stored preferences, stale and
+cached states, failed refresh and retry, and switching back to Tibia Coin. Browser
+screenshots stay outside Git.

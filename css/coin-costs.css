@@ -1,0 +1,48 @@
+/* Comparison stays inside the Markets terminal and uses its existing semantic tokens. */
+.coin-costs { grid-column:2; grid-row:1; min-width:0; min-height:0; overflow:auto; background:var(--tv-pane); color:var(--tv-text); font:var(--tv-size-13)/var(--tv-size-20) var(--tv-font); }
+.coin-costs[hidden],.tv-terminal .chart-panel[hidden] { display:none; }
+.coin-costs .cost-head { position:sticky; top:0; z-index:var(--tv-layer-inline); display:flex; flex-wrap:wrap; align-items:center; gap:var(--tv-size-8) var(--tv-size-16); padding:var(--tv-size-12) var(--tv-size-16); border-bottom:var(--tv-size-1) solid var(--tv-border); background:var(--tv-pane); }
+.coin-costs h2 { margin:0; font:var(--tv-weight-600) var(--tv-size-17)/var(--tv-size-24) var(--tv-font); }
+.coin-costs h3 { font-size:var(--tv-size-15); margin:0 0 var(--tv-size-12); }
+.cost-head label { margin-left:auto; }
+.coin-costs label { display:flex; align-items:center; gap:var(--tv-size-8); }
+.coin-costs select { max-width:100%; min-height:var(--tv-size-34); padding:var(--tv-size-4) var(--tv-size-8); border:var(--tv-size-1) solid var(--tv-border-hover); border-radius:var(--tv-size-4); background:var(--tv-input); color:var(--tv-text); font:inherit; }
+.coin-costs :is(select,button,summary,[tabindex]):focus-visible { outline:var(--tv-size-2) solid var(--tv-brand); outline-offset:var(--tv-size-2); }
+.cost-body { padding:var(--tv-size-16); }
+.cost-body p { margin:0 0 var(--tv-size-12); }
+.cost-note { color:var(--tv-text-2); }
+.cost-status { padding:var(--tv-size-8) 0; }
+.cost-status.stale { color:var(--caution); }
+.cost-rates { display:flex; flex-wrap:wrap; gap:var(--tv-size-8) var(--tv-size-24); padding:0 0 var(--tv-size-16); margin:0; }
+.cost-rates div { display:grid; gap:var(--tv-size-4); }
+.cost-rates dt { color:var(--tv-text-2); }
+.cost-rates dd { margin:0; font-variant-numeric:tabular-nums; }
+.cost-table-scroll { max-width:100%; overflow:auto; margin-bottom:var(--tv-size-16); }
+.cost-table { width:100%; border-collapse:collapse; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.cost-table caption { text-align:left; padding-bottom:var(--tv-size-8); color:var(--tv-text-2); }
+.cost-table :is(th,td) { padding:var(--tv-size-8) var(--tv-size-12); text-align:right; border-bottom:var(--tv-size-1) solid var(--tv-border); }
+.cost-table th { font-weight:var(--tv-weight-600); }
+.cost-table :is(th,td):first-child { text-align:left; }
+.cost-table tbody tr:first-child :is(th,td) { border-top:var(--tv-size-1) solid var(--tv-border-hover); }
+.cost-table .cost-best { color:var(--tv-up-text); }
+.cost-package { display:block; font-weight:var(--tv-weight-600); }
+.cost-summary { display:block; color:var(--tv-text-2); font-weight:var(--tv-weight-400); font-size:var(--tv-size-12); }
+.cost-controls { display:flex; flex-wrap:wrap; gap:var(--tv-size-8) var(--tv-size-16); margin-bottom:var(--tv-size-12); }
+.cost-chart { height:var(--tv-size-300); position:relative; min-width:0; }
+.cost-history { border-top:var(--tv-size-1) solid var(--tv-border); padding-top:var(--tv-size-16); }
+.cost-chart-key { display:flex; flex-wrap:wrap; gap:var(--tv-size-12); margin:var(--tv-size-8) 0; }
+.cost-key::before { content:''; display:inline-block; width:var(--tv-size-8); height:var(--tv-size-8); border-radius:50%; background:var(--tv-brand); margin-right:var(--tv-size-6); }
+.cost-key:nth-child(2)::before { background:var(--sell); }
+.cost-key:nth-child(3)::before { background:var(--tv-chart-text); }
+.cost-body summary { cursor:pointer; padding:var(--tv-size-8) 0; }
+.cost-empty { padding:var(--tv-size-16) 0; color:var(--tv-text-2); }
+#coinCostsOpen { margin-left:var(--tv-size-8); }
+@media (max-width:900px) {
+  .coin-costs { order:0; max-height:none; overflow:visible; }
+  .coin-costs .cost-head { position:static; padding:var(--tv-size-12); }
+  .cost-body { padding:var(--tv-size-12); }
+  .cost-controls label { flex:1 1 100%; justify-content:space-between; }
+  .cost-controls select { min-width:0; max-width:70%; }
+  .cost-head label { margin-left:0; }
+  #coinCostsOpen { font-size:var(--tv-size-12); }
+}

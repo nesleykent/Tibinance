@@ -7,6 +7,8 @@
   "data/market-update-*.json",
   "data/rebuild-*.json",
   "data/market-history/**",
+  "data/foreign-exchange/**",
+  "data/coin-prices.json",
   "data/market-projections/**",
   "data/events/events.json",
   "data/forecast-archive/**",

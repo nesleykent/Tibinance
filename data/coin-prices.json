@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "source": "User-supplied CipSoft prices; manually maintained. No automatic retrieval.",
+  "observations": [{
+    "effectiveFrom": "2026-10-15",
+    "observedOn": "2026-10-15",
+    "note": "Germany EUR is the fixed commercial reference. Brazil BRL and United States USD are independent official prices, manually updated when CipSoft changes them. No price validity is asserted before this observation.",
+    "packages": [
+      { "coins": 250, "EUR": 10.35, "BRL": 58.00, "USD": 11.59 },
+      { "coins": 750, "EUR": 28.80, "BRL": 162.58, "USD": 32.25 },
+      { "coins": 1500, "EUR": 57.61, "BRL": 325.00, "USD": 64.51 },
+      { "coins": 3000, "EUR": 115.22, "BRL": 650.00, "USD": 129.02 },
+      { "coins": 4500, "EUR": 172.83, "BRL": 975.67, "USD": 193.53 },
+      { "coins": 15000, "EUR": 576.10, "BRL": null, "USD": null }
+    ]
+  }]
+}

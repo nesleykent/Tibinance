@@ -37,3 +37,6 @@ data/market-projections/*.pending
 .env.*
 !.env.example
 js/public-config.js.pending
+
+# Atomic FX refresh temporary file.
+data/foreign-exchange/*.pending

@@ -11,6 +11,7 @@ import { eventsPanel } from './market-events-panel.js?v=20261014-rebuild';
 import { eventMarks } from './market-events-ui.js?v=20261015-left2';
 import { TOKEN_PROFILE, tokenPrice, tokenView, CONTRACT } from './tibia-token.js?v=20261015-quality';
 import { connect } from './tv-bridge.js';
+import { mountCoinCosts } from './coin-cost-panel.js?v=20261015-costs';
 const $ = id => document.getElementById(id);
 const percent = new Intl.NumberFormat('en-US', { style: 'percent', maximumFractionDigits: 2, signDisplay: 'exceptZero' });
 const params = new URLSearchParams(location.search);
@@ -95,6 +96,7 @@ async function main() {
   let dataset = null;
   try { dataset = await loadEvents(); } catch (error) { console.warn('Events are unavailable.', error); }
   view = tokenView(file, dataset);
+  mountCoinCosts(file);
   $('worldsPanel').setAttribute('aria-label', 'Tibia Token details');
   document.querySelector('[data-dock-target="worldsPanel"]').setAttribute('aria-label', 'Asset details');
   $('worldsPanel').innerHTML = `<div class="panel-head"><h2 class="panel-title">Tibia Token</h2></div><div class="panel-body"><p>TIB / USD</p><p>${esc(file.venue)} ${esc(file.pair)} pool on BNB Smart Chain.</p><p><a href="https://bscscan.com/token/${CONTRACT}" target="_blank" rel="noopener">Official token contract</a><br><code style="overflow-wrap:anywhere">${CONTRACT}</code></p><p>History: ${view.prices[0]?.day ?? 'N/A'} to ${view.end ?? 'N/A'} UTC.</p><p>${esc(file.coverageNote)}</p><p><a href="${esc(file.sourceUrl)}" target="_blank" rel="noopener">Pool and data source</a></p><p>One pool's USD prices and trading volume. Liquidity and prices may differ between pools.</p></div>`;
