@@ -4,6 +4,7 @@
  * tooltip and the world search that opens a world in its terminal.
  */
 import { cssToken as token, cssPixels } from './theme.js';
+import { openDialog, updateListbox } from './tv-ui.js';
 
 export const $ = id => document.getElementById(id);
 export const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -178,24 +179,23 @@ export function worldSearch(button, items, hrefOf) {
         list.innerHTML = items().filter(w => !q || `${w.name} ${w.meta}`.toLowerCase().includes(q))
           .sort((a, b) => (q && b.name.toLowerCase().startsWith(q)) - (q && a.name.toLowerCase().startsWith(q)) || a.name.localeCompare(b.name)).slice(0, 200)
           .map((w, i) => `<li role="option" class="${i ? '' : 'active'}" data-name="${esc(w.name)}"><span><span class="tv-r-name">${esc(w.name)}</span><br><span class="tv-r-desc">${esc(w.meta)}</span></span><span class="tv-r-last">${esc(w.value ?? '')}</span><span class="tv-r-meta ${tone(w.change)}">${w.change == null ? '' : percent.format(w.change)}</span></li>`).join('')
-          || '<li aria-disabled="true"><span class="tv-r-desc">No world matches.</span></li>';
+          || '<li class="tv-empty" role="status">'+icon('search')+'<span>No world matches.</span></li>';
+        updateListbox(input, list);
       };
       const go = li => { if (li) location.assign(hrefOf(li.dataset.name)); };
       input.addEventListener('input', draw);
       input.addEventListener('keydown', e => {
         const all = [...list.querySelectorAll('li[data-name]')], at = all.findIndex(li => li.classList.contains('active'));
-        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); all[at]?.classList.remove('active'); const n = all[Math.max(0, Math.min(all.length - 1, at + (e.key === 'ArrowDown' ? 1 : -1)))]; n?.classList.add('active'); n?.scrollIntoView({ block: 'nearest' }); }
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); all[at]?.classList.remove('active'); const n = all[Math.max(0, Math.min(all.length - 1, at + (e.key === 'ArrowDown' ? 1 : -1)))]; n?.classList.add('active'); n?.scrollIntoView({ block: 'nearest' }); updateListbox(input, list); }
         if (e.key === 'Enter') { e.preventDefault(); go(list.querySelector('li.active')); }
       });
       list.addEventListener('click', e => go(e.target.closest('li[data-name]')));
-      dialog.addEventListener('click', e => { if (e.target === dialog || e.target.closest('[data-close]')) dialog.close(); });
       dialog.draw = draw;
     }
     const input = dialog.querySelector('input');
     input.value = prefill;
     dialog.draw();
-    dialog.showModal();
-    input.focus();   // the field, not the dialog's first button
+    openDialog(dialog, { opener: button, focus: input });
   }
   button?.addEventListener('click', () => open());
   document.addEventListener('keydown', e => {

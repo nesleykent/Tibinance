@@ -7,6 +7,7 @@
  * Copy rule: Tibinance never shows a middle dot, quoted text included; one in a headline or story becomes a comma.
  */
 import { config } from './config.js';
+import { openDialog } from './tv-ui.js';
 const API = `${config.apiBaseUrl}/news`;
 const KINDS = { news: 'News', ticker: 'Ticker', article: 'Featured article' };
 const CATEGORIES = { development: 'Development', community: 'Community', support: 'Support', technical: 'Technical', useful: 'Useful info', 'useful info': 'Useful info', cipsoft: 'CipSoft' };
@@ -71,15 +72,14 @@ let dialog = null;
 export async function openStory(item) {
   if (!dialog) {
     dialog = Object.assign(document.createElement('dialog'), { className: 'tv-dialog tv-news-story' });
-    dialog.addEventListener('click', e => { if (e.target === dialog || e.target.closest('[data-close]')) dialog.close(); });
     document.body.append(dialog);
   }
   const head = `<div class="tv-dialog-head"><span class="tv-news-meta">Tibia, ${esc(item.kind)}, ${esc(item.category)}, ${esc(item.date)}</span>`
     + `<button type="button" class="tv-btn tv-icon tv-dialog-close" aria-label="Close" data-close>${icon('close')}</button></div>`;
-  dialog.innerHTML = `${head}<h2 class="tv-news-title">${esc(item.title)}</h2><div class="tv-news-body"><p class="tv-muted">Loading the story…</p></div>`
+  dialog.innerHTML = `${head}<h2 class="tv-news-title">${esc(item.title)}</h2><div class="tv-news-body"><p class="tv-status" role="status">Loading the story…</p></div>`
     + `<p class="tv-news-source"><a href="${esc(item.url)}" target="_blank" rel="noopener noreferrer">Read on tibia.com</a></p>`;
   dialog.setAttribute('aria-label', item.title);
-  dialog.showModal();
+  openDialog(dialog);
   const body = dialog.querySelector('.tv-news-body');
   try {
     const r = await fetch(`${API}/id/${encodeURIComponent(item.id)}`);
@@ -89,7 +89,7 @@ export async function openStory(item) {
     body.insertAdjacentHTML('beforeend', '<div class="tv-news-clear"></div>');
   } catch (error) {
     console.warn('The story could not be loaded.', error);
-    body.innerHTML = '<p class="tv-muted">The story could not be loaded. It is on tibia.com.</p>';
+    body.innerHTML = '<p class="tv-status is-error" role="status">The story could not be loaded. It is on tibia.com.</p>';
   }
 }
 
@@ -103,16 +103,16 @@ export function newsList(container, { limit = 30 } = {}) {
   return {
     async load() {
       if (container.dataset.loaded) return;
-      container.innerHTML = '<li class="tv-muted">Loading the news…</li>';
+      container.innerHTML = '<li class="tv-status" role="status">Loading the news…</li>';
       try {
         items = (await latestNews()).slice(0, limit);
         container.dataset.loaded = 'true';
         container.innerHTML = items.map(n => `<li><button type="button" class="tv-news-item" data-news="${esc(n.id)}">`
           + `<span class="tv-news-meta">${esc(ago(n.date))}<span>${esc(n.kind)}</span><span>${esc(n.category)}</span></span>`
-          + `<span class="tv-news-headline">${esc(n.title)}</span></button></li>`).join('') || '<li class="tv-muted">No recent news.</li>';
+          + `<span class="tv-news-headline">${esc(n.title)}</span></button></li>`).join('') || '<li class="tv-status" role="status">No recent news.</li>';
       } catch (error) {
         console.warn('Tibia news are unavailable.', error);
-        container.innerHTML = '<li class="tv-muted">The news could not be loaded. They are on tibia.com.</li>';
+        container.innerHTML = '<li class="tv-status is-error" role="status">The news could not be loaded. They are on tibia.com.</li>';
       }
     },
   };
@@ -124,13 +124,13 @@ export async function topStories(container, { limit = 8 } = {}) {
     const items = (await latestNews()).slice(0, limit);
     container.innerHTML = items.map(n => `<li><button type="button" class="tv-story" data-news="${esc(n.id)}">`
       + `<span class="tv-news-meta">${esc(ago(n.date))}<span>${esc(n.kind)}</span><span>${esc(n.category)}</span></span>`
-      + `<span class="tv-story-headline">${esc(n.title)}</span></button></li>`).join('');
+      + `<span class="tv-story-headline">${esc(n.title)}</span></button></li>`).join('') || '<li class="tv-status" role="status">No recent news.</li>';
     container.addEventListener('click', e => {
       const id = e.target.closest('[data-news]')?.dataset.news, item = items.find(n => String(n.id) === id);
       if (item) openStory(item);
     });
   } catch (error) {
     console.warn('Tibia news are unavailable.', error);
-    container.innerHTML = '<li class="tv-muted">The news could not be loaded. They are on tibia.com.</li>';
+    container.innerHTML = '<li class="tv-status is-error" role="status">The news could not be loaded. They are on tibia.com.</li>';
   }
 }

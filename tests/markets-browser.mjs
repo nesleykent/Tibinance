@@ -156,7 +156,7 @@ try {
   assert.equal(await text('#detailsWorld'),'Gentebra');
   assert.deepEqual([await text('#detailSell'),await text('#detailBuy'),await text('#detailSpread')],
     [number.format(gentebra.sell),number.format(gentebra.buy),number.format(gentebra.sell-gentebra.buy)]);
-  assert.equal(await text('#detailDaily'),'through 2026-09-11');
+  assert.equal(await text('#detailDaily'),`through ${summary('Gentebra').dailyStatisticsDays.last}`);
   // The side choice names each side's latest best offer on hover; the quote names the range its change covers.
   assert.deepEqual(await page.$$eval('#side button',bs=>bs.map(b=>b.title)),
     [`Best Sell Offer: ${number.format(gentebra.sell)}`,`Best Buy Offer: ${number.format(gentebra.buy)}`]);
@@ -173,10 +173,12 @@ try {
   assert.match(await page.getAttribute('#chart','aria-label'),/^Gentebra, Best Sell Offer history and daily transaction activity \(count\), range 1Y\./);
   const [prior,last]=closes.slice(-2);
   const history=JSON.parse(await readFile(new URL(`../data/market-history/tibia-coin/${summary('Gentebra').file}`,import.meta.url),'utf8'));
+  const lastStats=history.dailyStatistics.find(row=>row.serverDay===last[0]);
+  const estimated=!lastStats?.sell && history.estimatedDailyStatistics?.some(row=>row.serverDay===last[0] && row.sell);
   const lastDayCount=history.observations.filter(o=>o.serverDay===last[0] && o.sell!=null && o.buy!=null).length;
   assert.equal(await text('#legend'),`${last[0]} Best Sell Offer ${number.format(last[1])} ${signed.format(last[1]-prior[1])} `
-    + `${percent.format(last[1]/prior[1]-1)} since ${prior[0]}${lastDayCount>1?` last of ${lastDayCount}`:''} Daily average N/A`);
-  assert.equal(await text('#volumeLegend'),'Transactions N/A');
+    + `${percent.format(last[1]/prior[1]-1)} since ${prior[0]}${lastDayCount>1?` last of ${lastDayCount}`:''} ${estimated?'Estimated daily average':'Daily average'} N/A`);
+  assert.equal(await text('#volumeLegend'),estimated?`Estimated transactions ${number.format(history.estimatedDailyStatistics.find(row=>row.serverDay===last[0]).sell.transactions)}`:'Transactions N/A');
 
   // The legends follow the crosshair: a day in the September gap names the observations around it,
   // and a day with trading shows its average and volume.

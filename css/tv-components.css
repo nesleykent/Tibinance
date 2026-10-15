@@ -1,0 +1,80 @@
+/* Shared component contracts from TV_REF/REPORT.md §26. Imported by tv.css on every application page.
+   :root scopes the contracts above legacy per-page presentation while keeping domain layouts intact. */
+
+/* TV_REF: B_chart_design/css/202_49050.2927a177231fdd0e24c1.css .menuWrap-lBIxIwtz;
+   css/022_3941.e2495691cea17b3a81c2.css .button-XNUivTou and L_menu_focus_verified.json. */
+:root :is(.tv-app,.tv-page) .site-panel,
+:root .tv-popup { border:0; border-radius:var(--tv-radius-popup); background:var(--tv-popup); color:var(--tv-text); box-shadow:var(--tv-popup-shadow); font:var(--tv-weight-400) var(--tv-size-14)/var(--tv-size-20) var(--tv-font); padding:var(--tv-size-6) 0; }
+:root .site-panel:not([popover]) { z-index:var(--tv-layer-popup); }
+:root :is(.tv-app,.tv-page) .site-menu a { min-height:var(--tv-menu-row); padding:0 var(--tv-size-16); border-radius:var(--tv-size-4); margin:0 var(--tv-size-6); color:var(--tv-text); }
+:root :is(.tv-app,.tv-page) .site-menu a[aria-current],:root .tv-popup :is([aria-checked="true"],.is-active) { background:var(--tv-menu-selected); color:var(--tv-menu-selected-text); font-weight:var(--tv-weight-400); }
+:root :is(.tv-app,.tv-page) .site-menu a[aria-current]::before { display:none; }
+:root .tv-popup :is([aria-checked="true"],.is-active) .tv-hint { color:inherit; }
+:root .tv-popup :is([role^="menuitem"],.tv-item) { min-height:var(--tv-menu-row); }
+/* TV_REF: css/066_59830.736f471a8d64a8122fd8.css .iconWrapper-GZLykNQP small; L_chart_type_menu.json .icon-GZLykNQP. */
+:root .tv-popup svg { flex:none; width:var(--tv-size-18); height:var(--tv-size-18); fill:none; stroke:currentColor; }
+:root :is(.tv-app,.tv-page) .site-menu a:not([aria-current]):hover,:root .site-options li.active { background:var(--tv-popup-hover); }
+:root :is(.tv-app,.tv-page) .site-menu a[aria-current] .site-code { color:inherit; }
+:root .site-picker { padding:var(--tv-size-8); }
+:root .site-search { font-size:var(--tv-size-16); line-height:var(--tv-size-24); }
+:root .site-options li { display:flex; align-items:center; min-height:var(--tv-menu-row); }
+:root .site-options li[hidden] { display:none; }
+
+/* TV_REF: B_chart_design/css/161_88550.ed76caf2ffe014460ba6.css .dialog-GHUH6_1X variants;
+   css/268_34640.acb9f1151f07184a6ed6.css .desktopDialog-miP9eTAe; L_symbol_dialog.json. */
+:root .tv-dialog { z-index:var(--tv-layer-dialog); border-radius:var(--tv-radius-popup); background:var(--tv-popup); box-shadow:var(--tv-popup-shadow); }
+:root .tv-search { width:min(var(--tv-dialog-width),calc(100vw - var(--tv-size-40))); height:min(var(--tv-dialog-height),calc(100dvh - var(--tv-size-64))); max-height:calc(100dvh - var(--tv-size-40)); }
+:root .tv-dialog-head { flex:none; padding:var(--tv-size-20); }
+:root .tv-dialog-head h2 { font:var(--tv-weight-600) var(--tv-size-20)/var(--tv-size-28) var(--tv-font); }
+:root .tv-dialog-search { flex:none; min-width:0; border:var(--tv-size-1) solid var(--tv-border-hover); border-radius:var(--tv-size-8); }
+:root .tv-dialog-search input { min-width:0; font:var(--tv-weight-400) var(--tv-size-16)/var(--tv-size-24) var(--tv-font); }
+:root .tv-dialog-tabs { flex:none; gap:var(--tv-size-4); overflow-x:auto; }
+/* TV_REF: B_chart_design/css/243_33838.70b5126495f7adccaf2f.css .roundTabButton-Wa6TmGN3.xsmall-Wa6TmGN3. */
+:root body .tv-dialog-tabs button { flex:none; height:var(--tv-size-28); padding:0 var(--tv-tab-padding); border-radius:var(--tv-size-14); font:var(--tv-weight-400) var(--tv-size-14)/var(--tv-size-18) var(--tv-font); }
+:root body .tv-dialog-tabs button[aria-pressed="true"] { background:var(--tv-menu-selected); color:var(--tv-menu-selected-text); }
+:root .tv-results .tv-empty { display:grid; grid-template-columns:1fr; justify-items:center; align-content:center; min-height:var(--tv-size-160); gap:var(--tv-size-12); text-align:center; color:var(--tv-text-2); cursor:default; background:transparent; }
+:root .tv-results .tv-empty svg { width:var(--tv-size-44); height:var(--tv-size-44); fill:none; stroke:currentColor; }
+
+/* TV_REF: B_chart_design/css/109_11709.bcd0312befc95fb040a8.css .common-tooltip-Hp4KzOJw / __body. */
+:root .tv-tooltip { z-index:var(--tv-layer-tooltip); padding:var(--tv-size-3) var(--tv-size-8); border-radius:var(--tv-size-2); background:var(--tv-tooltip); color:var(--tv-gray-100); font:var(--tv-weight-400) var(--tv-size-13)/var(--tv-size-18) var(--tv-font); transition:opacity var(--tv-duration-fast) var(--tv-ease); }
+
+/* TV_REF: B_chart_design/css/022_3941.e2495691cea17b3a81c2.css .button-XNUivTou:focus-visible::after.
+   Native outline supplies the same visible 2px ring without copying TV's proprietary pseudo implementation. */
+:root :is(button,a,input,select,textarea,[tabindex],summary):focus-visible { outline:var(--tv-size-2) solid var(--tv-brand); outline-offset:var(--tv-size-2); }
+:root :is(.tv-popup,.site-panel) :focus-visible { outline-offset:calc(var(--tv-size-2) * -1); }
+
+/* TV_REF: A_markets_design/css/001_51889.659a35c515aee892d8b2.css .header-q4dkGMX6;
+   css/286_98158.4628d48ffa24449c8154.css .title-l-QjjAoTcT; L_desktop_light.json / L_phone.json.
+   Use the existing system font: TradingView's proprietary brand face is not redistributed. */
+:root .tv-page :is(.tv-hero,.hero) h1 { font:var(--tv-weight-600) var(--tv-heading-size)/var(--tv-heading-line) var(--tv-font); letter-spacing:-.02em; }
+:root .tv-page :is(.tv-section-head,.section-head,.results-head) h2 { font:var(--tv-weight-600) var(--tv-section-size)/var(--tv-section-line) var(--tv-font); letter-spacing:0; }
+:root .tv-page .tv-hero { padding-top:var(--tv-size-56); }
+:root .tv-page .tv-section { scroll-margin-top:calc(var(--tv-header) + var(--tv-size-24)); }
+:root .tv-page .tv-chips { gap:var(--tv-size-4); }
+:root .tv-page .tv-chips :is(a,button) { height:var(--tv-size-28); padding:0 var(--tv-tab-padding); border:0; border-radius:var(--tv-size-14); background:var(--tv-bg-3); font:var(--tv-weight-400) var(--tv-size-14)/var(--tv-size-18) var(--tv-font); }
+:root .tv-page .tv-chips :is([aria-pressed="true"],[aria-selected="true"]) { background:var(--tv-menu-selected); color:var(--tv-menu-selected-text); }
+/* TV_REF: css/268_34640.acb9f1151f07184a6ed6.css .desktopDialog-miP9eTAe tablet variant. */
+@media (max-width:768px) {
+  :root .tv-search { max-width:var(--tv-size-640); }
+}
+/* TV_REF: L_phone_symbol_dialog.json fullscreen phone search; article dialog adapts to the same available space. */
+@media (max-width:519px) {
+  :root .tv-dialog:not(.tv-news-story),:root .tv-news-story { inset:0; width:100%; max-width:100%; height:100dvh; max-height:100dvh; margin:0; border-radius:0; }
+  :root .tv-dialog-head { padding:var(--tv-size-16); }
+  :root .tv-dialog-search { margin-inline:var(--tv-size-16); }
+  :root .tv-results li { padding-inline:var(--tv-size-16); }
+  :root .tv-results .tv-r-meta { max-width:var(--tv-size-100); overflow-wrap:anywhere; }
+}
+/* TV_REF: the section heading's viewport typography threshold and equivalent content-container tier. */
+@media (max-width:767px) {
+  :root .tv-page { --tv-heading-size:var(--tv-size-32); --tv-heading-line:var(--tv-size-36); --tv-section-size:var(--tv-size-28); --tv-section-line:var(--tv-size-36); }
+}
+
+/* Shared loading/empty/error presentation; status text stays accessible when asynchronous content changes.
+   TV_REF: semantic text/border variables in B_chart_design/L_desktop_light.json and dark CSS capture. */
+:root .tv-status { padding:var(--tv-size-16); color:var(--tv-text-2); font:var(--tv-size-14)/var(--tv-size-20) var(--tv-font); }
+:root .tv-status.is-error { color:var(--tv-warning-text); }
+:root .tv-doc .btn:disabled { background:var(--tv-bg-3); color:var(--tv-text-disabled); box-shadow:none; cursor:default; }
+:root .tv-popup [aria-disabled="true"] { color:var(--tv-text-disabled); cursor:default; }
+:root .tv-tooltip { max-width:min(var(--tv-size-420),calc(100vw - var(--tv-size-16))); white-space:normal; overflow-wrap:anywhere; }
+:root .tv-tooltip[hidden] { display:none; }

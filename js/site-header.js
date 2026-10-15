@@ -13,6 +13,8 @@
  * wires every one on load. searchPicker() builds the other kind, a searchable list of choices, for a page script.
  */
 
+import { initTooltips } from './tv-ui.js';
+
 const GAP = 6, EDGE = 8;
 const POPOVER = 'popover' in HTMLElement.prototype;
 const CHEVRON = '<svg class="site-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg>';
@@ -160,3 +162,5 @@ document.querySelectorAll('[data-site-menu]').forEach(button => {
   const panel = document.getElementById(button.getAttribute('popovertarget') || button.getAttribute('aria-controls'));
   if (panel) linkMenu(button, panel, button.dataset.siteMenu || 'start');
 });
+
+initTooltips();

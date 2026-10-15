@@ -1,3 +1,5 @@
+@import url("./tv-components.css?v=20261015-design");
+
 /*
  * TradingView's design system, for the pages built in its idiom (the Markets and Economy terminals and the overview
  * pages). Values are TradingView's own, read from its live stylesheets and runtime tokens (2026-10-14 build; see the
@@ -161,13 +163,25 @@
   --tv-duration-fast:.15s; --tv-ease:linear;
   /* TODO(design): no TV reference — preserve APP local stacking contexts, above library canvas layers. */
   --tv-layer-inline:1; --tv-layer-replay:7; --tv-layer-float:8; --tv-layer-edit:9;
-  --tv-layer-header:20; --tv-layer-tip:25; --tv-layer-fullscreen:30;
-  --tv-layer-tooltip:50; --tv-layer-popup:60; --tv-layer-heat-tip:70;
+  --tv-layer-header:20; --tv-layer-tip:25; --tv-layer-fullscreen:30; --tv-layer-heat-tip:70;
+  /* TV_REF: css/109_11709.bcd0312befc95fb040a8.css .common-tooltip-Hp4KzOJw;
+     css/202_49050.2927a177231fdd0e24c1.css .menuWrap-lBIxIwtz; L_symbol_dialog.json .dialog-GHUH6_1X. */
+  --tv-layer-tooltip:1000; --tv-layer-popup:100; --tv-layer-dialog:150;
   /* TODO(design): no TV reference — retained APP tooltip/backdrop/swatch opacity. */
   --tv-tooltip-muted:rgb(255 255 255 / .7); --tv-backdrop:rgb(0 0 0 / .35);
   --tv-kbd-bg:rgb(255 255 255 / .15); --tv-swatch-outline:rgb(0 0 0 / .15);
   --tv-text-shadow:0 var(--tv-size-1) var(--tv-size-1) rgb(0 0 0 / .25);
   --tv-thumb-shadow:0 var(--tv-size-1) var(--tv-size-2) rgb(0 0 0 / .12);
+
+  /* TV_REF: B_chart_design/css/268_34640.acb9f1151f07184a6ed6.css .desktopDialog-miP9eTAe;
+     css/243_33838.70b5126495f7adccaf2f.css .roundTabButton-Wa6TmGN3.xsmall-Wa6TmGN3;
+     L_menu_focus_verified.json .button-XNUivTou (40px row). */
+  --tv-dialog-width:840px; --tv-dialog-height:680px;
+  --tv-radius-popup:var(--tv-size-6); --tv-menu-row:var(--tv-size-40); --tv-tab-padding:11px;
+  --tv-menu-selected:var(--tv-gray-800); --tv-menu-selected-text:var(--tv-white);
+  /* TV_REF: A_markets_design/L_desktop_light.json h1.header-q4dkGMX6 / #indices.title-l-QjjAoTcT. */
+  --tv-heading-size:48px; --tv-heading-line:var(--tv-size-52);
+  --tv-section-size:var(--tv-size-36); --tv-section-line:var(--tv-size-44);
 
   /* ---- primitives (TradingView's ramps, light and dark share them) ---- */
   --tv-white:#fff; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-white */ --tv-black:#000; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-black */
@@ -212,8 +226,8 @@
   --tv-input:var(--tv-white);
   --tv-placeholder:var(--tv-text-2);
   --tv-shadow:0 var(--tv-size-2) var(--tv-size-4) rgb(0 0 0 / .2);
-  /* TODO(design): no TV reference — existing compound popup shadow retained. */
-  --tv-popup-shadow:0 var(--tv-size-2) var(--tv-size-4) rgb(0 0 0 / .08), 0 var(--tv-size-4) var(--tv-size-24) rgb(0 0 0 / .12);
+  /* TV_REF: B_chart_design/css/202_49050.2927a177231fdd0e24c1.css .menuWrap-lBIxIwtz. */
+  --tv-popup-shadow:0 var(--tv-size-2) var(--tv-size-4) rgb(0 0 0 / .2);
   /* Pane/text colors are captured. TODO(design): no TV reference for retained APP grid/tint alpha. */
   --tv-chart-text:var(--tv-gray-900);
   --tv-chart-grid:rgb(46 46 46 / .06);
@@ -275,6 +289,7 @@
   --tv-btn-active:var(--tv-blue-200);
   --tv-btn-active-bg:#132042; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-tv-blue-a900 */
   --tv-popup:var(--tv-gray-850);
+  --tv-menu-selected:var(--tv-gray-200); --tv-menu-selected-text:var(--tv-gray-900);
   --tv-popup-hover:var(--tv-gray-800);
   --tv-tooltip:var(--tv-gray-750);
   --tv-row-hover:var(--tv-gray-800);
@@ -282,8 +297,8 @@
   --tv-input:var(--tv-gray-800);
   --tv-placeholder:var(--tv-text-2);
   --tv-shadow:0 var(--tv-size-2) var(--tv-size-4) rgb(0 0 0 / .5);
-  /* TODO(design): no TV reference — existing compound popup shadow retained. */
-  --tv-popup-shadow:0 var(--tv-size-2) var(--tv-size-4) rgb(0 0 0 / .4), 0 var(--tv-size-4) var(--tv-size-24) rgb(0 0 0 / .5);
+  /* TV_REF: same popup rule and --color-shadow-primary-neutral-extra-heavy dark #0006. */
+  --tv-popup-shadow:0 var(--tv-size-2) var(--tv-size-4) rgb(0 0 0 / .4);
   --tv-chart-text:var(--tv-gray-300);
   --tv-chart-grid:rgb(242 242 242 / .06);
   --tv-crosshair:var(--tv-gray-650);

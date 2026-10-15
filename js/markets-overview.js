@@ -11,8 +11,8 @@ import { cssToken } from './theme.js';
 import { tokenPrice as usd } from './tibia-token.js?v=20261015-quality';
 import { RANGES, changeOver, rangeStart } from './market-series.js';
 import { loadEvents, eventsFor, queryEvents, addEventDays } from './events.js';
-import { $, esc, pill, tone, short, whole, logo, percent, summaryChart, heatmap, heatScale, sortableTable, worldSearch, sectionChips } from './tv-overview.js?v=20261015-quality';
-import { topStories } from './tv-news.js?v=20261015-quality';
+import { $, esc, pill, tone, short, whole, logo, percent, summaryChart, heatmap, heatScale, sortableTable, worldSearch, sectionChips } from './tv-overview.js?v=20261015-design';
+import { topStories } from './tv-news.js?v=20261015-design';
 
 const DATA = 'data/market-history/';
 const STALE = 14;

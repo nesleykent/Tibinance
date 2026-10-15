@@ -5,10 +5,11 @@
  * through the context the page connects (js/tv-bridge.js), so a page keeps its own data and state.
  */
 import { cssToken as token, cssPixels } from './theme.js';
+import { openDialog, updateListbox, menuKeyboard } from './tv-ui.js';
 import { bridge, whenConnected } from './tv-bridge.js';
 import { createDrawings, TOOLS, PALETTE } from './tv-drawings.js?v=20261014-tv';
 import { createIndicators, INDICATORS } from './tv-indicators.js?v=20261014-tv';
-import { newsList } from './tv-news.js?v=20261015-quality';
+import { newsList } from './tv-news.js?v=20261015-design';
 
 const $ = id => document.getElementById(id);
 const icon = (name, cls = '') => `<svg${cls ? ` class="${cls}"` : ''} aria-hidden="true"><use href="css/tv-icons.svg#${name}"/></svg>`;
@@ -28,7 +29,7 @@ const indicators = createIndicators({ legend: $('indicatorLegend'), onChange: ()
 // A menu under its button, as TradingView opens its dropdowns: Escape or a press outside closes it.
 let openPopup = null;
 function popup(button, html, { onClick, align = 'start', className = '' } = {}) {
-  closePopup();
+  closePopup(false);
   const el = Object.assign(document.createElement('div'), { className: `tv-popup ${className}`, innerHTML: html });
   el.setAttribute('role', 'menu');
   el.style.position = 'fixed'; el.style.zIndex = token('--tv-layer-popup');
@@ -38,18 +39,20 @@ function popup(button, html, { onClick, align = 'start', className = '' } = {}) 
   el.style.left = `${Math.max(8, Math.min(align === 'end' ? r.right - w : r.left, innerWidth - w - 8))}px`;
   button.setAttribute('aria-expanded', 'true');
   el.addEventListener('click', e => { const item = e.target.closest('[data-value]'); if (item) { onClick?.(item.dataset.value, item, e); } });
-  const outside = e => { if (!el.contains(e.target) && !button.contains(e.target)) closePopup(); };
+  const outside = e => { if (!el.contains(e.target) && !button.contains(e.target)) closePopup(false); };
   document.addEventListener('pointerdown', outside, true);
   openPopup = { el, button, outside };
-  el.querySelector('[data-value],input')?.focus({ preventScroll: true });
+  menuKeyboard(el, closePopup);
   return el;
 }
-function closePopup() {
+function closePopup(focusButton = true) {
   if (!openPopup) return;
   document.removeEventListener('pointerdown', openPopup.outside, true);
   openPopup.button.setAttribute('aria-expanded', 'false');
+  const button = openPopup.button;
   openPopup.el.remove();
   openPopup = null;
+  if (focusButton && button.isConnected) button.focus({ preventScroll: true });
 }
 
 /* ------------------------------------------------------------- chart style */
@@ -83,7 +86,9 @@ function showIndicators() {
       const q = input.value.trim().toLowerCase();
       const shown = Object.entries(INDICATORS).filter(([, s]) => !q || s.name.toLowerCase().includes(q) || s.short.toLowerCase().includes(q));
       list.innerHTML = shown.map(([id, s], i) => `<li role="option" data-id="${id}" class="${i ? '' : 'active'}"><span class="tv-r-name">${esc(s.name)}</span><span class="tv-r-meta">${esc(s.short)}</span><span></span></li>`).join('')
+        + (!shown.length ? '<li class="tv-empty" role="status">No indicator matches.</li>' : '')
         + (indicators.list().length ? `<li class="tv-r-shown" aria-disabled="true"><span class="tv-r-desc">On the chart: ${indicators.list().map(i => esc(i.label)).join(', ')}</span><span></span><span class="tv-r-meta"><button type="button" class="tv-btn" data-clear>Remove all</button></span></li>` : '');
+      updateListbox(input, list);
     };
     input.addEventListener('input', draw);
     input.addEventListener('keydown', e => {
@@ -91,6 +96,7 @@ function showIndicators() {
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
         e.preventDefault(); items[at]?.classList.remove('active');
         items[(at + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length]?.classList.add('active');
+        updateListbox(input, list);
       }
       if (e.key === 'Enter' && items[at]) { indicators.add(items[at].dataset.id); draw(); }
     });
@@ -98,12 +104,11 @@ function showIndicators() {
       if (e.target.closest('[data-clear]')) { indicators.removeAll(); draw(); return; }
       const li = e.target.closest('li[data-id]'); if (li) { indicators.add(li.dataset.id); draw(); }
     });
-    indicatorDialog.addEventListener('click', e => { if (e.target === indicatorDialog || e.target.closest('[data-close]')) indicatorDialog.close(); });
     indicatorDialog.draw = draw;
   }
   indicatorDialog.querySelector('input').value = '';
   indicatorDialog.draw();
-  indicatorDialog.showModal();
+  openDialog(indicatorDialog, { opener: $('tvIndicators') });
 }
 $('tvIndicators')?.addEventListener('click', showIndicators);
 
@@ -145,13 +150,15 @@ function showSearch(prefill = '') {
         <span><span class="tv-r-name">${esc(w.world)}</span>${w.retired ? ' <span class="tv-chip">Retired</span>' : ''}<br><span class="tv-r-desc">${esc(w.meta ?? '')}</span></span>
         <span class="tv-r-last">${w.last == null ? '' : esc(w.lastText ?? ctx.format(w.last))}</span>
         <span class="tv-r-meta ${w.ratio > 0 ? 'up' : w.ratio < 0 ? 'down' : ''}">${w.ratio == null ? '' : percent.format(w.ratio)}</span></li>`).join('')
-        || '<li aria-disabled="true"><span class="tv-r-desc">No world matches.</span></li>';
+        || '<li class="tv-empty" role="status">'+icon('search')+'<span>No world matches.</span></li>';
+      updateListbox(input, list);
     };
     const move = d => {
       const items = [...list.querySelectorAll('li[data-world]')], at = items.findIndex(li => li.classList.contains('active'));
       items[at]?.classList.remove('active'); items[at]?.setAttribute('aria-selected', 'false');
       const next = items[Math.max(0, Math.min(items.length - 1, at + d))];
       next?.classList.add('active'); next?.setAttribute('aria-selected', 'true'); next?.scrollIntoView({ block: 'nearest' });
+      updateListbox(input, list);
     };
     const pick = li => { if (!li) return; searchDialog.close(); ctx.open(li.dataset.world); };
     input.addEventListener('input', draw);
@@ -167,14 +174,12 @@ function showSearch(prefill = '') {
       searchDialog.querySelectorAll('[data-tab]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
       draw(); input.focus();
     });
-    searchDialog.addEventListener('click', e => { if (e.target === searchDialog || e.target.closest('[data-close]')) searchDialog.close(); });
     searchDialog.draw = draw;
   }
   const input = searchDialog.querySelector('input');
   input.value = prefill;
   searchDialog.draw();
-  searchDialog.showModal();
-  input.focus();
+  openDialog(searchDialog, { opener: $('tvSymbol'), focus: input });
 }
 $('tvSymbol')?.addEventListener('click', () => showSearch());
 
@@ -447,5 +452,5 @@ whenConnected(context => {
 addEventListener('tv:theme', () => { ctx?.retheme?.(); drawings?.redraw(); });
 
 // Page lifetime: release timers and temporary outside-click listeners; resume the clock on a cached restore.
-addEventListener('pagehide', () => { closePopup(); stopPlaying(); clearInterval(clockTimer); });
+addEventListener('pagehide', () => { closePopup(false); stopPlaying(); clearInterval(clockTimer); });
 addEventListener('pageshow', e => { if (e.persisted && ctx) startClock(); });
