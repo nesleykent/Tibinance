@@ -15,11 +15,11 @@
  * Daily averages omit incomplete bins. Accumulated gold uses available daily subtotals with coverage in the page
  * readout; wholly missing bins remain whitespace. Hidden series retain their timeline and the explored range.
  */
+import { cssToken as token, cssPixels } from './theme.js';
 import { MEASURES } from './economy-data.js?v=20261014-series';
 import { eventsLayer } from './market-events-layer.js?v=20261014-events';
 
 const HIDDEN = 'rgba(0,0,0,0)';   // Lightweight Charts colours a segment with its first point's colour
-const token = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 export const dayOf = time => typeof time === 'string' ? time
   : typeof time === 'object' ? `${time.year}-${String(time.month).padStart(2, '0')}-${String(time.day).padStart(2, '0')}`
   : new Date(time * 1000).toISOString().slice(0, 10);
@@ -28,17 +28,18 @@ const either = (a, b) => token(a) || token(b);
 export const colors = () => ({ gross: either('--eco-gross', '--ink'), coins: either('--eco-coins', '--sell'), npc: either('--eco-npc', '--buy'), stable: token('--accent'),
   scenario: token('--caution'), price: token('--average') || token('--muted'), text: either('--tv-chart-text', '--muted'), grid: token('--line-faint'),
   rule: token('--line'), crosshair: either('--tv-crosshair', '--line-strong'), ink: token('--ink'), label: either('--tv-crosshair-label', '--ink'),
-  canvas: either('--tv-pane', '--canvas') || '#fff', font: token('--font-ui'),
+  canvas: either('--tv-pane', '--canvas') || token('--tv-white'), font: token('--font-ui'),
   events: { world: token('--event-world'), game: token('--event-game'), market: token('--event-market') } });
 
 // rows: [{time, value}] for every period in order, value null where the period is not complete. Returns the layers
 // over the real points only: `solid` joins neighbouring periods, `dotted` spans the periods between two values.
 export function periodLayers(rows) {
   const solid = [], dotted = [], points = [];
+  const lastValue = rows.findLastIndex(row => row.value !== null);
   rows.forEach((row, i) => {
     if (row.value === null) { solid.push({ time: row.time }); dotted.push({ time: row.time }); return; }
-    const nextValue = rows.slice(i + 1).findIndex(r => r.value !== null);
-    const adjacent = nextValue === 0, spans = nextValue > 0;
+    const adjacent = i + 1 < rows.length && rows[i + 1].value !== null;
+    const spans = !adjacent && i < lastValue;
     solid.push(adjacent ? { time: row.time, value: row.value } : { time: row.time, value: row.value, color: HIDDEN });
     dotted.push(spans ? { time: row.time, value: row.value } : { time: row.time, value: row.value, color: HIDDEN });
     points.push({ time: row.time, value: row.value });
@@ -56,7 +57,7 @@ export function economyChart(container, { onCrosshair } = {}) {
   const axis = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 });
   const chart = L.createChart(container, {
     autoSize: true,
-    layout: { background: { type: 'solid', color: 'transparent' }, textColor: c.text, fontFamily: token('--font-ui'), fontSize: 11,
+    layout: { background: { type: 'solid', color: 'transparent' }, textColor: c.text, fontFamily: token('--font-ui'), fontSize: cssPixels('--tv-size-11'),
       panes: { separatorColor: c.rule } },
     grid: { vertLines: { visible: false }, horzLines: { color: c.grid } },
     leftPriceScale: { visible: true, borderVisible: false, entireTextOnly: true, scaleMargins: { top: 0.16, bottom: 0.06 } },

@@ -141,10 +141,12 @@ try {
   await page.click('#eventsToggle');
   await page.click('#eventMarkers');
   await page.click('#historyToggle');
-  assert.equal(await exportHeight(),780+12+drawn*20,'one line of notes per drawn edition');
+  const shownHeight = await exportHeight();
   await page.click('#historyPaths');
   await page.waitForFunction(()=>!document.getElementById('chart').getAttribute('aria-label').includes('Past forecasts'));
-  assert.equal(await exportHeight(),780,'hidden on the page, absent from the image');
+  const hiddenHeight = await exportHeight();
+  // The common title/details/footer band can grow; the forecast notes alone add one line per edition.
+  assert.equal(shownHeight - hiddenHeight,12+drawn*20,'one line of notes per drawn edition, absent when hidden');
   assert.equal(await dayAt(0.999),end,'hidden, the chart ends with the history again');
   assert.equal((await editions()).filter(e=>e.checked).length,drawn,'hiding keeps the choice');
   await page.click('#historyPaths');

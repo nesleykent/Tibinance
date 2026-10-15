@@ -107,6 +107,26 @@ processing and research reproduction.
 | [`tools/`](tools/) | Dataset builders and optional local processing tools |
 | [`tests/`](tests/) | Unit tests and browser regressions |
 
+Development checks use pinned dev-only tools; they are not loaded by the website:
+
+```sh
+npm ci --ignore-scripts
+npm run lint
+npm run typecheck
+npm test
+npm run build
+```
+
+`build` runs the existing site-integrity validator (including deterministic dataset-builder checks); it does not
+bundle the website or modify published datasets. Type checking is strict checked JavaScript for public config and
+theme access; existing chart/UI modules remain untyped. Lint checks browser correctness without reformatting them.
+
+Public endpoint, cache/refresh durations and default views are defined in `js/config.js`. Static hosting cannot read
+environment variables: export values from `.env.example`, then run `node tools/write_public_config.mjs` before
+serving to emit validated `js/public-config.js`. Only the explicit public whitelist is emitted; never put credentials
+in it. The checked-in empty override module preserves shipped defaults. Neither a bundler nor this optional command
+is required for normal use.
+
 Run the JavaScript unit suite with a current Node.js installation:
 
 ```sh

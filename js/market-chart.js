@@ -20,6 +20,7 @@
  *
  * `scale` multiplies type, line widths and marks, so an export drawn at twice the size keeps the page's proportions.
  */
+import { cssToken as token, cssPixels } from './theme.js';
 import { fmt } from './format.js';
 import { lineLayers, statisticsAt } from './market-series.js';
 import { eventsLayer } from './market-events-layer.js?v=20261014-events';
@@ -31,13 +32,12 @@ export const SIDES = {
   buy: { offer: 'Best Buy Offer', offers: 'Buy Offers' }
 };
 
-const token = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 const dayTick = new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric', timeZone: 'UTC' });
 // The chart's own tokens where the page defines them (css/tv.css: TradingView's canvas colours), else the page's.
 const either = (a, b) => token(a) || token(b);
 export const colors = () => ({ sell: token('--sell'), buy: token('--buy'), line: token('--tv-brand') || null, average: token('--average'), text: either('--tv-chart-text', '--muted'),
   grid: token('--line-faint'), rule: token('--line'), crosshair: either('--tv-crosshair', '--line-strong'), ink: token('--ink'),
-  label: either('--tv-crosshair-label', '--ink'), canvas: either('--tv-pane', '--canvas') || '#fff', font: token('--font-ui'),
+  label: either('--tv-crosshair-label', '--ink'), canvas: either('--tv-pane', '--canvas') || token('--tv-white'), font: token('--font-ui'),
   projection: token('--projection'), projectionRegion: token('--projection-region'),
   history: [token('--accent'), token('--positive'), token('--caution')],
   events: { world: token('--event-world'), game: token('--event-game'), market: token('--event-market') } });
@@ -123,7 +123,7 @@ export function createMarketChart(container, { scale: k = 1, width, height, prof
   const priceFormatter = profile?.format ?? (v => fmt(Math.round(v)));
   const chart = L.createChart(container, {
     ...(width ? { width, height, autoSize: false } : { autoSize: true }),
-    layout: { background: { type: 'solid', color: 'transparent' }, textColor: c.text, fontFamily: token('--font-ui'), fontSize: 11 * k,
+    layout: { background: { type: 'solid', color: 'transparent' }, textColor: c.text, fontFamily: token('--font-ui'), fontSize: cssPixels('--tv-size-11') * k,
       panes: { separatorColor: c.rule, separatorHoverColor: c.crosshair }, attributionLogo: !width },
     grid: { vertLines: { visible: false }, horzLines: { color: c.grid } },
     // Room above the highest price for the status lines, and below the lowest for the volume.

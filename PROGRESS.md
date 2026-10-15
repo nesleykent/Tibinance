@@ -1,3 +1,18 @@
+# GitHub-main quality refactor — 2026-10-14
+
+This task explicitly requests no commit/push/release and sequential work. Historic instructions below do not override that. TV_REF is read-only data. Baseline: GitHub main 1c14ec237f2ce9632da78fa11b9913d97fad341e in /tmp/tibinance-quality-github, initially clean. Both user local checkouts remain untouched by application changes.
+
+- [x] Done — clone the actual GitHub version, inspect its existing TV system and modules, save Phase 1 AUDIT.md before application edits.
+- [x] Done — GitHub baseline: 228 units, all nine integrity/build checks. Phase 2 DESIGN_TOKENS.md saved.
+- [x] Done — shared tokens: 66 dimensions with sources/gaps, named stacking, text contrast shades, visible field focus and reduced motion. Group 1 desktop terminal geometry exactly matches baseline; state group lint/typecheck, 233 units and all nine integrity/build checks pass. Terminal interaction suites pass in Chrome and WebKit.
+- [x] Done — typed validated public config + env-to-static whitelist bridge; API/cache/polling/download/debounce/world/range/staleness consumers updated with defaults preserved. Five config tests pass, strict checkJs passes, lint and all nine site gates pass.
+- [x] Done — linear chart gap calculation (reproduction failed at 42,250 reads for 500 rows; fixed scan preserves zero/gaps/order), cached token formatter and derived precision, CSS canvas measurement reader, popup/clock/poll lifecycle cleanup. Targeted tests pass; final gates running.
+- [ ] In progress — rendered Chrome terminal suite passed; WebKit, responsive/contrast/focus/config/lifecycle checks, diff review and CHANGES.md remain. 320px Markets header overflow fixed by allowing its asset picker to shrink; initial regression reproduced before the fix. Baseline GitHub also fails the old forecast export height assertion (994 vs 832); corrected test isolates the notes-height difference from the newer common details band. Updated user instructions authorize commit and push to GitHub main after verification; no deployment requested.
+
+Resume at first unchecked item. Prior Documents-copy audit/design draft was superseded; do not use it as evidence. Preserve data/ and immutable release/forecast histories. Browser plugin absent; use existing Playwright workflow.
+
+---
+
 # TradingView clone of Markets and Economy, 2026-10-14
 
 - **Instruction:** clone the TradingView chart terminal into the Markets and Economy views and add TradingView

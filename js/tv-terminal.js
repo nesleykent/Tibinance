@@ -4,6 +4,7 @@
  * drawing, the object tree, the bottom toolbar's clock and price-scale modes, and TradingView's hotkeys. It works
  * through the context the page connects (js/tv-bridge.js), so a page keeps its own data and state.
  */
+import { cssToken as token, cssPixels } from './theme.js';
 import { bridge, whenConnected } from './tv-bridge.js';
 import { createDrawings, TOOLS, PALETTE } from './tv-drawings.js?v=20261014-tv';
 import { createIndicators, INDICATORS } from './tv-indicators.js?v=20261014-tv';
@@ -30,15 +31,15 @@ function popup(button, html, { onClick, align = 'start', className = '' } = {}) 
   closePopup();
   const el = Object.assign(document.createElement('div'), { className: `tv-popup ${className}`, innerHTML: html });
   el.setAttribute('role', 'menu');
-  el.style.position = 'fixed'; el.style.zIndex = 60;
+  el.style.position = 'fixed'; el.style.zIndex = token('--tv-layer-popup');
   document.body.append(el);
   const r = button.getBoundingClientRect(), w = el.offsetWidth;
-  el.style.top = `${r.bottom + 4}px`;
+  el.style.top = `${r.bottom + cssPixels('--tv-size-4')}px`;
   el.style.left = `${Math.max(8, Math.min(align === 'end' ? r.right - w : r.left, innerWidth - w - 8))}px`;
   button.setAttribute('aria-expanded', 'true');
   el.addEventListener('click', e => { const item = e.target.closest('[data-value]'); if (item) { onClick?.(item.dataset.value, item, e); } });
   const outside = e => { if (!el.contains(e.target) && !button.contains(e.target)) closePopup(); };
-  setTimeout(() => document.addEventListener('pointerdown', outside, true));
+  document.addEventListener('pointerdown', outside, true);
   openPopup = { el, button, outside };
   el.querySelector('[data-value],input')?.focus({ preventScroll: true });
   return el;
@@ -374,7 +375,9 @@ for (const type of ['pointerup', 'dblclick', 'wheel']) area?.addEventListener(ty
 
 /* ------------------------------------------------------------------- clock */
 // The server's clock: Tibia's server day runs on Central European time; the token's candles on UTC.
+let clockTimer = null;
 function startClock() {
+  clearInterval(clockTimer);
   const el = $('tvClock'); if (!el) return;
   const zone = ctx?.page === 'token' ? 'UTC' : 'Europe/Berlin';
   const f = new Intl.DateTimeFormat('en-GB', { timeZone: zone, hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23', timeZoneName: 'short' });
@@ -383,7 +386,7 @@ function startClock() {
     el.textContent = `${get('hour')}:${get('minute')}:${get('second')} (${zone === 'UTC' ? 'UTC' : get('timeZoneName').replace('GMT+1', 'CET').replace('GMT+2', 'CEST')})`;
   };
   el.title = zone === 'UTC' ? 'UTC: the token candles close at midnight' : 'Server time: a server day runs from 10:00 to 10:00 CET/CEST';
-  tick(); setInterval(tick, 1000);
+  tick(); clockTimer = setInterval(tick, 1000);
 }
 
 /* ----------------------------------------------------------------- hotkeys */
@@ -442,3 +445,7 @@ whenConnected(context => {
   ctx.chart.timeScale().subscribeVisibleLogicalRangeChange(() => showFloat());
 });
 addEventListener('tv:theme', () => { ctx?.retheme?.(); drawings?.redraw(); });
+
+// Page lifetime: release timers and temporary outside-click listeners; resume the clock on a cached restore.
+addEventListener('pagehide', () => { closePopup(); stopPlaying(); clearInterval(clockTimer); });
+addEventListener('pageshow', e => { if (e.persisted && ctx) startClock(); });

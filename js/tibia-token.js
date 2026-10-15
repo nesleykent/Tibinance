@@ -4,7 +4,10 @@ import { eventsLayer } from './market-events-layer.js?v=20261014-events';
 import { eventsFor } from './events.js';
 export const CONTRACT = '0x111B95C2b65CbA53aB4E0AaDA12f55985045E446';
 export const POOL = '0xd2acfaec0e3b556f285fbb9026ede7e87885e611';
-export const tokenPrice = value => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 5, maximumFractionDigits: 5 }).format(value);
+// Asset precision is a domain contract, shared by the formatter and chart's minimum movement.
+const PRICE_DIGITS = 5;
+const priceFormat = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: PRICE_DIGITS, maximumFractionDigits: PRICE_DIGITS });
+export const tokenPrice = value => priceFormat.format(value);
 const price = {
   id: 'token-price', depth: 1,
   add(chart, { line, k, L }) {
@@ -32,7 +35,7 @@ const volume = {
 };
 export const TOKEN_PROFILE = { layers: [price, volume, eventsLayer], priceLayer: price, format: tokenPrice,
   anchor: view => view.prices.map(p => ({ time: p.day, value: p.close })),   // event markers stand on the close
-  priceFormat: { type: 'custom', minMove: 0.00001, formatter: tokenPrice } };
+  priceFormat: { type: 'custom', minMove: 1 / 10 ** PRICE_DIGITS, formatter: tokenPrice } };
 export function tokenView(file, dataset) {
   if (file.asset !== 'tibia-token' || file.contract !== CONTRACT || file.pool !== POOL || file.quote !== 'USD' || file.timezone !== 'UTC') throw new Error('Unexpected TIB history identity or units.');
   if (!/^\d{4}-\d{2}-\d{2}$/.test(file.asOf) || new Date(`${file.asOf}T00:00:00Z`).toISOString().slice(0, 10) !== file.asOf) throw new Error('Invalid acquisition date.');

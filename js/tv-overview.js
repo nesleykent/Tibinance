@@ -3,6 +3,8 @@
  * gradient fading to the page), a squarified heatmap, change pills, symbol logos, sortable tables, the floating
  * tooltip and the world search that opens a world in its terminal.
  */
+import { cssToken as token, cssPixels } from './theme.js';
+
 export const $ = id => document.getElementById(id);
 export const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const icon = name => `<svg aria-hidden="true"><use href="css/tv-icons.svg#${name}"/></svg>`;
@@ -12,7 +14,6 @@ export const pill = r => r == null || !Number.isFinite(r) ? '<span class="tv-pil
 const compact = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 2 });
 export const short = v => (Number.isFinite(v) ? compact.format(v) : 'N/A');
 export const whole = v => (Number.isFinite(v) ? Math.round(v).toLocaleString('en-US') : 'N/A');
-const token = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
 // A logo for a name: its initial on one of TradingView's colours, the same for the same name.
 const LOGO = ['#2962ff', '#089981', '#f23645', '#ff9800', '#9c27b0', '#00bcd4', '#e91e63', '#673ab7', '#4caf50', '#f57c00'];
@@ -29,7 +30,7 @@ export function summaryChart(container, { format = short } = {}) {
   if (!L) { container.textContent = 'Chart unavailable.'; return null; }
   const chart = L.createChart(container, {
     autoSize: true,
-    layout: { background: { type: 'solid', color: 'transparent' }, textColor: token('--tv-text-2'), fontFamily: token('--tv-font'), fontSize: 12, attributionLogo: false },
+    layout: { background: { type: 'solid', color: 'transparent' }, textColor: token('--tv-text-2'), fontFamily: token('--tv-font'), fontSize: cssPixels('--tv-size-12'), attributionLogo: false },
     grid: { vertLines: { visible: false }, horzLines: { color: token('--tv-chart-grid') } },
     rightPriceScale: { borderVisible: false, scaleMargins: { top: 0.1, bottom: 0.05 } },
     timeScale: { borderVisible: false, fixLeftEdge: true, fixRightEdge: true },
@@ -38,13 +39,13 @@ export function summaryChart(container, { format = short } = {}) {
     localization: { priceFormatter: format },
   });
   const area = chart.addSeries(L.AreaSeries, { lineWidth: 2, priceLineVisible: false, lastValueVisible: true, crosshairMarkerRadius: 4 });
-  let color = '#2962ff';
+  let color = token('--tv-brand');
   const paint = () => area.applyOptions({ lineColor: color, topColor: `${color}47`, bottomColor: `${color}00` });
   addEventListener('tv:theme', () => chart.applyOptions({ layout: { textColor: token('--tv-text-2') }, grid: { horzLines: { color: token('--tv-chart-grid') } },
     crosshair: { vertLine: { color: token('--tv-crosshair'), labelBackgroundColor: token('--tv-crosshair-label') }, horzLine: { color: token('--tv-crosshair'), labelBackgroundColor: token('--tv-crosshair-label') } } }));
   return {
     chart,
-    set(data, { color: c = '#2962ff', format: f } = {}) {
+    set(data, { color: c = token('--tv-brand'), format: f } = {}) {
       color = c; paint();
       if (f) area.applyOptions({ priceFormat: { type: 'custom', formatter: f, minMove: 0.00001 } });
       area.setData(data);
