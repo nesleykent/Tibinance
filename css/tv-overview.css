@@ -103,9 +103,9 @@ body.tv-page { min-height:100dvh; background:var(--tv-bg); color:var(--tv-text);
 .tv-heatmap { position:relative; height:var(--tv-size-560); overflow:hidden; border-radius:var(--tv-size-8); background:var(--tv-bg-3); }
 /* TODO(design): no TV reference — retained APP responsive fit threshold. */
 @media (max-width:700px) { .tv-heatmap { height:var(--tv-size-440); } }
-.tv-tile { position:absolute; display:grid; place-content:center; justify-items:center; overflow:hidden; padding:var(--tv-size-2); border:var(--tv-size-1) solid var(--tv-bg); color:var(--tv-black); text-align:center;
+.tv-tile { position:absolute; display:grid; place-content:center; justify-items:center; overflow:hidden; padding:var(--tv-size-2); border:var(--tv-size-1) solid var(--tv-bg); color:var(--tv-white); text-align:center;
   font:var(--tv-weight-600) var(--tv-size-13)/1.2 var(--tv-font); text-decoration:none; text-shadow:var(--tv-text-shadow); }
-.tv-tile:hover { z-index:var(--tv-layer-inline); outline:var(--tv-size-2) solid var(--tv-text); outline-offset:calc(var(--tv-size-2) * -1); color:var(--tv-black); }
+.tv-tile:hover { z-index:var(--tv-layer-inline); outline:var(--tv-size-2) solid var(--tv-text); outline-offset:calc(var(--tv-size-2) * -1); color:var(--tv-white); }
 .tv-tile span { display:block; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .tv-tile .tv-tile-change { font-weight:var(--tv-weight-400); opacity:.95; }
 .tv-heat-scale { display:flex; flex-wrap:wrap; align-items:center; gap:var(--tv-size-2); margin-top:var(--tv-size-12); color:var(--tv-text-2); font-size:var(--tv-size-12); }
@@ -181,7 +181,3 @@ table.tv-table .tv-text-left { text-align:left; }
 .tv-story:hover { background:var(--tv-bg-3); }
 .tv-story-headline { font:var(--tv-weight-600) var(--tv-size-17)/var(--tv-size-24) var(--tv-font); }
 
-/* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-black / --color-white.
-   All seven heat ramps admit black AA text; the darker unavailable-data gray takes white. */
-.tv-tile.is-empty,.tv-tile.is-empty:hover { color:var(--tv-white); }
-.tv-heat-scale span { color:var(--tv-black); }
