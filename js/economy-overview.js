@@ -7,12 +7,13 @@
  * The whole game per day in a month: each world's month total divided by its days with data, summed over the worlds.
  * A change of a sum over worlds: today's sum against the sum of each world's value at the start of the range.
  */
-import { $, esc, pill, tone, short, whole, logo, percent, summaryChart, heatmap, heatScale, sortableTable, worldSearch, sectionChips } from './tv-overview.js?v=20261014-details';
-import { topStories } from './tv-news.js?v=20261015-img';
+import { cssToken } from './theme.js';
+import { $, esc, pill, tone, short, whole, logo, percent, summaryChart, heatmap, heatScale, sortableTable, worldSearch, sectionChips } from './tv-overview.js?v=20261015-quality';
+import { topStories } from './tv-news.js?v=20261015-quality';
 
 const RANGES = ['1M', '3M', '6M', 'YTD', '1Y', 'All'];
 const MEASURE = { gross: 'Gross potential', coins: 'Direct gold', npc: 'NPC potential' };
-const COLOR = { gross: '#2962ff', coins: '#ff9800', npc: '#089981', kills: '#9c27b0' };
+const COLOR = { gross: cssToken('--eco-gross'), coins: cssToken('--eco-coins'), npc: cssToken('--eco-npc'), kills: cssToken('--tv-purple-500') };
 const href = world => `economy.html?world=${encodeURIComponent(world)}`;
 const json = async url => { const r = await fetch(url); if (!r.ok) throw new Error(`${url}: ${r.status}`); return r.json(); };
 const gold = v => (Number.isFinite(v) ? Math.round(v).toLocaleString('en-US') : 'N/A');
@@ -121,7 +122,7 @@ async function main() {
         tip: `<strong>${esc(r.world)}</strong><span class="tv-muted">${esc(r.type)}, ${esc(r.location)}</span><span>${MEASURE[heat.measure]} ${gold(r[heat.measure])} per day</span>`
           + `<span>${heat.range} <b class="${tone(change)}">${change == null ? 'N/A' : percent.format(change)}</b></span><span class="tv-muted">Kill coverage ${r.coverage == null ? 'N/A' : `${(100 * r.coverage).toFixed(1)}%`}</span>` };
     }));
-    $('heatScale').innerHTML = `<span style="background:none;color:var(--tv-text-2);min-width:0;margin-right:8px">${heat.range} change</span>${heatScale(STEPS[heat.range])}`;
+    $('heatScale').innerHTML = `<span style="background:none;color:var(--tv-text-2);min-width:0;margin-right:var(--tv-size-8)">${heat.range} change</span>${heatScale(STEPS[heat.range])}`;
   }
   $('heatMeasure').addEventListener('change', e => { heat.measure = e.target.value; drawHeat(); });
   $('heatRange').addEventListener('change', e => { heat.range = e.target.value; drawHeat(); });

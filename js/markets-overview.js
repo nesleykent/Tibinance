@@ -7,15 +7,16 @@
  * The index: on each server day, the median of every active world's latest Best Offer observed within the previous
  * 14 days (a world without one in that window is left out that day).
  */
+import { cssToken } from './theme.js';
+import { tokenPrice as usd } from './tibia-token.js?v=20261015-quality';
 import { RANGES, changeOver, rangeStart } from './market-series.js';
 import { loadEvents, eventsFor, queryEvents, addEventDays } from './events.js';
-import { $, esc, pill, tone, short, whole, logo, percent, summaryChart, heatmap, heatScale, sortableTable, worldSearch, sectionChips } from './tv-overview.js?v=20261014-details';
-import { topStories } from './tv-news.js?v=20261015-img';
+import { $, esc, pill, tone, short, whole, logo, percent, summaryChart, heatmap, heatScale, sortableTable, worldSearch, sectionChips } from './tv-overview.js?v=20261015-quality';
+import { topStories } from './tv-news.js?v=20261015-quality';
 
 const DATA = 'data/market-history/';
 const STALE = 14;
 const fmt = v => (Number.isFinite(v) ? Math.round(v).toLocaleString('en-US') : 'N/A');
-const usd = v => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 5, maximumFractionDigits: 5 }).format(v);
 const dayNum = d => Date.parse(`${d}T00:00:00Z`) / 86400000;
 const median = v => { const s = [...v].sort((a, b) => a - b), m = s.length >> 1; return s.length ? (s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2) : null; };
 const href = world => `markets.html?world=${encodeURIComponent(world)}`;
@@ -82,11 +83,11 @@ async function main() {
   })();
   const tokenSeries = token ? token.prices.map(p => ({ time: p.day, value: p.close })) : [];
   const SYMBOLS = [
-    { id: 'sell', name: 'TC Sell index', desc: 'Median Best Sell Offer, active worlds', data: sellIndex, color: '#f23645', format: fmt, unit: 'gold per TC' },
-    { id: 'buy', name: 'TC Buy index', desc: 'Median Best Buy Offer, active worlds', data: buyIndex, color: '#2962ff', format: fmt, unit: 'gold per TC' },
-    { id: 'spread', name: 'Spread index', desc: 'Median of Sell less Buy', data: spreadIndex, color: '#ff9800', format: fmt, unit: 'gold' },
-    { id: 'activity', name: 'Market activity', desc: 'Transactions per day, every world', data: activity, color: '#089981', format: whole, unit: 'transactions' },
-    ...(tokenSeries.length ? [{ id: 'tib', name: 'Tibia Token', desc: 'TIB / USD, PancakeSwap V3', data: tokenSeries, color: '#9c27b0', format: usd, unit: 'USD' }] : []),
+    { id: 'sell', name: 'TC Sell index', desc: 'Median Best Sell Offer, active worlds', data: sellIndex, color: cssToken('--tv-red-500'), format: fmt, unit: 'gold per TC' },
+    { id: 'buy', name: 'TC Buy index', desc: 'Median Best Buy Offer, active worlds', data: buyIndex, color: cssToken('--tv-blue-500'), format: fmt, unit: 'gold per TC' },
+    { id: 'spread', name: 'Spread index', desc: 'Median of Sell less Buy', data: spreadIndex, color: cssToken('--tv-orange-500'), format: fmt, unit: 'gold' },
+    { id: 'activity', name: 'Market activity', desc: 'Transactions per day, every world', data: activity, color: cssToken('--tv-green-500'), format: whole, unit: 'transactions' },
+    ...(tokenSeries.length ? [{ id: 'tib', name: 'Tibia Token', desc: 'TIB / USD, PancakeSwap V3', data: tokenSeries, color: cssToken('--tv-purple-500'), format: usd, unit: 'USD' }] : []),
   ];
   const chart = summaryChart($('summaryChart'));
   let current = SYMBOLS[0], range = '1Y';
@@ -133,7 +134,7 @@ async function main() {
         tip: `<strong>${esc(r.world)}</strong><span class="tv-muted">${esc(r.type)}, ${esc(r.location)}</span><span>${heat.side === 'sell' ? 'Sell' : 'Buy'} ${fmt(heat.side === 'sell' ? r.sell : r.buy)}</span>`
           + `<span>${heat.range} <b class="${tone(change)}">${change == null ? 'N/A' : percent.format(change)}</b></span><span class="tv-muted">${whole(r.tx)} transactions in 30 days</span>` };
     }));
-    $('heatScale').innerHTML = `<span class="tv-muted" style="background:none;color:var(--tv-text-2);min-width:0;margin-right:8px">${heat.range} change</span>${heatScale(STEPS[heat.range])}`;
+    $('heatScale').innerHTML = `<span class="tv-muted" style="background:none;color:var(--tv-text-2);min-width:0;margin-right:var(--tv-size-8)">${heat.range} change</span>${heatScale(STEPS[heat.range])}`;
   }
   for (const id of ['heatSize', 'heatRange', 'heatSide']) $(id).addEventListener('change', e => { heat[id.slice(4).toLowerCase()] = e.target.value; drawHeat(); });
   drawHeat();
@@ -169,14 +170,14 @@ async function main() {
   /* ---- events ---- */
   let events = [];
   try { events = eventsFor(await loadEvents()); } catch (error) { console.warn('Events are unavailable.', error); }
-  const GROUP = { world: '#2962ff', game: '#ff9800', market: '#808080' };
+  const GROUP = { world: cssToken('--tv-blue-500'), game: cssToken('--tv-orange-500'), market: cssToken('--tv-gray-500') };
   let period = 'upcoming';
   function drawEvents() {
     const today = new Date().toISOString().slice(0, 10);
     const list = queryEvents(events, { period, today }).sort((a, b) => period === 'upcoming' ? a.start.localeCompare(b.start) : b.start.localeCompare(a.start)).slice(0, 40);
     const days = Map.groupBy(list, e => e.start);
     $('calendar').innerHTML = list.length ? [...days].map(([day, evs]) => `<section class="tv-cal-day"><h3>${new Date(`${day}T00:00:00Z`).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</h3><ul>`
-      + evs.map(e => `<li><span class="tv-cal-when">${e.start === e.end ? esc(e.start) : `${esc(e.start)} to ${esc(e.end)}`}</span><span class="tv-cal-mark" style="--c:${GROUP[e.category.group] ?? '#808080'}" title="${esc(e.category.label)}">${esc(e.category.mark)}</span>`
+      + evs.map(e => `<li><span class="tv-cal-when">${e.start === e.end ? esc(e.start) : `${esc(e.start)} to ${esc(e.end)}`}</span><span class="tv-cal-mark" style="--c:${GROUP[e.category.group] ?? cssToken('--tv-gray-500')}" title="${esc(e.category.label)}">${esc(e.category.mark)}</span>`
         + `<span class="tv-cal-title">${esc(e.title)}<small>${esc(e.description)}</small></span><span class="tv-cal-scope">${e.worlds === 'all' ? 'All worlds' : esc(e.worlds.slice(0, 3).join(', ') + (e.worlds.length > 3 ? ` +${e.worlds.length - 3}` : ''))}</span></li>`).join('')
       + '</ul></section>').join('') : '<p class="tv-muted">No events in this view.</p>';
     document.querySelectorAll('#calendarTabs button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.period === period)));

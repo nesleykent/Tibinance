@@ -106,7 +106,7 @@ export function heatmap(box, { steps }) {
     const { width, height } = box.getBoundingClientRect();
     box.innerHTML = squarify(items, width, height).map(t => {
       const big = t.w > 64 && t.h > 34, size = Math.max(11, Math.min(22, Math.sqrt(t.w * t.h) / 6));
-      return `<a class="tv-tile" href="${esc(t.href)}" data-name="${esc(t.name)}" style="left:${t.x}px;top:${t.y}px;width:${t.w}px;height:${t.h}px;background:${heatColor(t.change, steps())};font-size:${size}px" aria-label="${esc(t.name)} ${t.change == null ? '' : percent.format(t.change)}">`
+      return `<a class="tv-tile${Number.isFinite(t.change) ? '' : ' is-empty'}" href="${esc(t.href)}" data-name="${esc(t.name)}" style="left:${t.x}px;top:${t.y}px;width:${t.w}px;height:${t.h}px;background:${heatColor(t.change, steps())};font-size:${size}px" aria-label="${esc(t.name)} ${t.change == null ? '' : percent.format(t.change)}">`
         + (t.w > 30 && t.h > 18 ? `<span>${esc(t.name)}</span>` : '') + (big ? `<span class="tv-tile-change">${t.change == null ? 'N/A' : percent.format(t.change)}</span>` : '') + '</a>';
     }).join('');
   }

@@ -8,7 +8,7 @@ import { cssToken as token, cssPixels } from './theme.js';
 import { bridge, whenConnected } from './tv-bridge.js';
 import { createDrawings, TOOLS, PALETTE } from './tv-drawings.js?v=20261014-tv';
 import { createIndicators, INDICATORS } from './tv-indicators.js?v=20261014-tv';
-import { newsList } from './tv-news.js?v=20261015-img';
+import { newsList } from './tv-news.js?v=20261015-quality';
 
 const $ = id => document.getElementById(id);
 const icon = (name, cls = '') => `<svg${cls ? ` class="${cls}"` : ''} aria-hidden="true"><use href="css/tv-icons.svg#${name}"/></svg>`;

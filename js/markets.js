@@ -18,7 +18,7 @@
 import { config } from './config.js';
 import { fmt, esc, num } from './format.js';
 import { RANGES, changeOver, dayGrid, daysBetween, marketValues, neighbours, rangeStart, statisticsAt } from './market-series.js';
-import { SIDES, createMarketChart, dayOf } from './market-chart.js?v=20261014-events';
+import { SIDES, createMarketChart, dayOf } from './market-chart.js?v=20261015-quality';
 import { dock } from './markets-dock.js';
 import { marketImage, pageDetails } from './market-export.js?v=20261015-shot';
 import { loadEvents as readEvents, eventsFor, lifecycleSpan, addEventDays } from './events.js';

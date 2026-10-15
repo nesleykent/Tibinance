@@ -44,9 +44,18 @@ for (const route of ['markets.html', 'economy.html', 'markets-overview.html', 'e
         };
         const luminance = rgb => rgb.map(n => n/255).map(n => n <= .04045 ? n/12.92 : ((n+.055)/1.055)**2.4).reduce((v,n,i) => v+n*[.2126,.7152,.0722][i],0);
         const ratio = (a,b) => (Math.max(luminance(a),luminance(b))+.05)/(Math.min(luminance(a),luminance(b))+.05);
-        return Object.fromEntries(['--tv-text','--tv-text-2','--tv-up-text','--tv-down-text','--tv-warning-text','--tv-link'].map(name => [name, ratio(resolve(name),resolve('--tv-bg'))]));
+        return Object.fromEntries(['--tv-bg','--tv-bg-3','--tv-popup','--tv-row-selected'].flatMap(bg => ['--tv-text','--tv-text-2','--tv-up-text','--tv-down-text','--tv-warning-text','--tv-link'].map(name => [`${name}/${bg}`, ratio(resolve(name),resolve(bg))])));
       });
       for (const [name, value] of Object.entries(contrast)) assert.ok(value >= 4.5, `${route} ${theme} ${name} contrast ${value}`);
+      if (route.includes('overview')) {
+        const ratios = await page.locator('.tv-tile').evaluateAll(tiles => {
+          const rgb = value => value.match(/[\d.]+/g).slice(0,3).map(Number);
+          const lum = color => rgb(color).map(n => n/255).map(n => n <= .04045 ? n/12.92 : ((n+.055)/1.055)**2.4).reduce((v,n,i) => v+n*[.2126,.7152,.0722][i],0);
+          return tiles.map(tile => { const s = getComputedStyle(tile), a = lum(s.color), b = lum(s.backgroundColor); return (Math.max(a,b)+.05)/(Math.min(a,b)+.05); });
+        });
+        assert.ok(ratios.length && ratios.every(value => value >= 4.5), `${route} ${theme}: heatmap label contrast`);
+      }
+
     }
     const field = page.locator('input:not([type="file"]):visible').first();
     if (await field.count()) {

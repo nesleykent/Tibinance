@@ -11,12 +11,13 @@
  * sums of every world, creatures), data/market-history/tibia-coin/index.json (world facts, daily Sell Offers),
  * reports/economy/results.json (findings), data/economy/ (sync and access status). The address keeps the view.
  */
+import { cssToken as token } from './theme.js';
 import { config } from './config.js';
 import { fmt, esc, num } from './format.js';
 import { dock } from './markets-dock.js';
 import { MEASURES, INTERVALS, ratePeriods, accumulatedPeriods, rangeChange, rangeStartOf, overviewRows, periodOf, contributions, lastDay, sellOfferPeriods,
   LIQUIDATION_SCENARIOS } from './economy-data.js?v=20261014-global-price';
-import { economyChart, colors } from './economy-chart.js?v=20261014-events';
+import { economyChart, colors } from './economy-chart.js?v=20261015-quality';
 import { connect, changed } from './tv-bridge.js';
 import { loadEvents, eventsFor, within } from './events.js';
 import { eventMarks } from './market-events-ui.js?v=20261015-left2';
@@ -531,7 +532,6 @@ async function exportImage() {
   const shot = chartCanvas($('chart')), c = colors(), pad = 24, ratio = window.devicePixelRatio || 1;
   const canvas = document.createElement('canvas');
   const details = pageDetails();
-  const token = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   canvas.width = shot.width + pad * 2 * ratio; canvas.height = shot.height + (126 + detailsHeight(details)) * ratio;
   const ctx = canvas.getContext('2d'), font = getComputedStyle(document.documentElement).getPropertyValue('--font-ui');
   // The chart's own ground (its pane), not the page's: the terminal's page colour is only the gap between its blocks.
@@ -545,7 +545,7 @@ async function exportImage() {
   ctx.drawImage(shot, pad, 64, shot.width / ratio, shot.height / ratio);
   const right = shot.width / ratio + pad;
   const y = drawDetails(ctx, details, { x: pad, y: 64 + shot.height / ratio, right, ui: font,
-    c: { ink: c.ink, muted: c.text, line: token('--tv-border') || c.grid, lineStrong: token('--tv-border-hover') || c.text, up: token('--tv-up') || '#089981', down: token('--tv-down') || '#f23645' } });
+    c: { ink: c.ink, muted: c.text, line: token('--tv-border') || c.grid, lineStrong: token('--tv-border-hover') || c.text, up: token('--tv-up-text'), down: token('--tv-down-text') } });
   ctx.fillStyle = c.text; ctx.font = `400 12px ${font}`; ctx.textAlign = 'left';
   ctx.fillText(`Tibinance / Economy. Kill statistics through ${view.end}; TibiaWiki loot statistics, CC-BY-SA.`, pad, y + 28);
   ctx.font = `400 11px ${font}`; ctx.fillText(exportedLine(), pad, y + 46);

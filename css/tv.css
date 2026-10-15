@@ -152,11 +152,11 @@
   --tv-size-1440:1440px;
 
 
-  /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-minty-green-700 / --color-ripe-red-700.
+  /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-minty-green-700 / --color-ripe-red-800.
      Text uses AA shades; candle/heatmap colors remain independent. */
-  --tv-up-text:var(--tv-green-700); --tv-down-text:var(--tv-red-700);
-  /* TV_REF: same runtime vars --color-tan-orange-a700 / --color-tv-blue-500. */
-  --tv-warning-text:#8c541c; --tv-buy-text:var(--tv-blue-500);
+  --tv-up-text:var(--tv-green-700); --tv-down-text:var(--tv-red-800);
+  /* TV_REF: same runtime vars --color-tan-orange-a800 / --color-tv-blue-700. */
+  --tv-warning-text:#593a1b; --tv-buy-text:var(--tv-blue-700);
   /* TV_REF: captures/B_chart_design/css/109_11709.bcd0312befc95fb040a8.css .common-tooltip-Hp4KzOJw transition. */
   --tv-duration-fast:.15s; --tv-ease:linear;
   /* TODO(design): no TV reference — preserve APP local stacking contexts, above library canvas layers. */
@@ -181,6 +181,9 @@
   --tv-orange-50:#fff3e0; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-tan-orange-50 */ --tv-orange-300:#ffb74d; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-tan-orange-300 */ --tv-orange-500:#ff9800; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-tan-orange-500 */ --tv-orange-700:#f57c00; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-tan-orange-700 */
   --tv-purple-500:#9c27b0; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-grapes-purple-500 */ --tv-deep-purple-500:#673ab7; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-deep-blue-500 */ --tv-pink-500:#e91e63; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-berry-pink-500 */ --tv-cyan-500:#00bcd4; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-sky-blue-500 */ --tv-lime-500:#4caf50; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-iguana-green-500 */ --tv-yellow-700:#fbc02d; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-banana-yellow-700 */
 
+  /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-ripe-red-800 / --color-tv-blue-800. */
+  --tv-red-800:#991f29; --tv-blue-800:#143eb2;
+
   /* ---- semantic, light (TradingView's --color-* tokens) ---- */
   --tv-bg:var(--tv-white);                 /* background-primary */
   --tv-bg-2:var(--tv-gray-50);             /* background-secondary */
@@ -188,29 +191,30 @@
   --tv-pane:var(--tv-white);               /* pane-bg: the chart */
   --tv-page:var(--tv-gray-150);            /* chart-page-bg: gaps between terminal blocks */
   --tv-text:var(--tv-gray-900);
-  --tv-text-2:var(--tv-gray-550);
+  /* TV_REF: runtime --color-cold-gray-650; adapted for AA even on the selected row. */
+  --tv-text-2:var(--tv-gray-650);
   --tv-text-3:var(--tv-gray-400);
   --tv-text-disabled:var(--tv-gray-300);
   --tv-border:var(--tv-gray-150);
   --tv-border-hover:var(--tv-gray-250);
   --tv-divider:var(--tv-gray-150);
-  --tv-link:var(--tv-blue-500); --tv-link-hover:var(--tv-blue-600);
+  --tv-link:var(--tv-blue-700); --tv-link-hover:var(--tv-blue-800);
   --tv-brand:var(--tv-blue-500);
   --tv-up:var(--tv-green-500); --tv-down:var(--tv-red-500);
   --tv-btn-hover:var(--tv-gray-100);       /* toolbar-button-background-hover */
   --tv-btn-active-bg:var(--tv-blue-50);    /* toolbar-button-background-active */
-  --tv-btn-active:var(--tv-blue-500);      /* toolbar-button-text-active */
+  --tv-btn-active:var(--tv-blue-700);      /* toolbar-button-text-active */
   --tv-popup:var(--tv-white);
   --tv-popup-hover:var(--tv-gray-100);
   --tv-tooltip:var(--tv-gray-800);
   --tv-row-hover:var(--tv-blue-50);        /* list-item-hover-bg */
   --tv-row-selected:var(--tv-blue-100);    /* list-item-bg-selected */
   --tv-input:var(--tv-white);
-  --tv-placeholder:var(--tv-gray-350);
+  --tv-placeholder:var(--tv-text-2);
   --tv-shadow:0 var(--tv-size-2) var(--tv-size-4) rgb(0 0 0 / .2);
   /* TODO(design): no TV reference — existing compound popup shadow retained. */
   --tv-popup-shadow:0 var(--tv-size-2) var(--tv-size-4) rgb(0 0 0 / .08), 0 var(--tv-size-4) var(--tv-size-24) rgb(0 0 0 / .12);
-  /* chart canvas, as TradingView paints it (verified on its canvases) */
+  /* Pane/text colors are captured. TODO(design): no TV reference for retained APP grid/tint alpha. */
   --tv-chart-text:var(--tv-gray-900);
   --tv-chart-grid:rgb(46 46 46 / .06);
   --tv-crosshair:var(--tv-gray-400);
@@ -230,7 +234,7 @@
   --canvas:var(--tv-bg); --surface:var(--tv-popup); --surface-soft:var(--tv-bg-3); --surface-hover:var(--tv-row-hover);
   --line:var(--tv-border); --line-strong:var(--tv-border-hover); --line-faint:var(--tv-chart-grid);
   --ink:var(--tv-text); --muted:var(--tv-text-2);
-  --accent:var(--tv-brand); --accent-soft:var(--tv-blue-50); --on-accent:#fff;
+  --accent:var(--tv-brand); --accent-soft:var(--tv-blue-50); --on-accent:var(--tv-white);
   --control-track:var(--tv-btn-hover); --control-track-hover:var(--tv-gray-150);
   --control-thumb-shadow:var(--tv-shadow);
   --positive:var(--tv-up-text); --negative:var(--tv-down-text); --caution:var(--tv-warning-text);
@@ -242,7 +246,7 @@
   --eco-gross:var(--tv-blue-500); --eco-coins:var(--tv-orange-500); --eco-npc:var(--tv-green-500);
   --font-ui:var(--tv-font); --font-editorial:var(--tv-font);
   --type-base:.875rem; --type-ratio:1.143;
-  --weight-strong:600; --tracking-tight:0; --tracking-caps:0;
+  --weight-strong:var(--tv-weight-600); --tracking-tight:0; --tracking-caps:0;
   --radius:var(--tv-size-6); --radius-sm:var(--tv-size-4);
   --control-height:var(--tv-size-32);
   color-scheme:light;
@@ -259,14 +263,16 @@
   --tv-pane:var(--tv-gray-900);
   --tv-page:var(--tv-gray-800);
   --tv-text:var(--tv-gray-200);
-  --tv-text-2:var(--tv-gray-450);
+  /* TV_REF: runtime --color-cold-gray-400; adapted for AA on dark hover/selected surfaces. */
+  --tv-text-2:var(--tv-gray-400);
   --tv-text-3:var(--tv-gray-400);
   --tv-text-disabled:var(--tv-gray-650);
   --tv-border:var(--tv-gray-750);
   --tv-border-hover:var(--tv-gray-650);
   --tv-divider:var(--tv-gray-700);
-  --tv-link:var(--tv-blue-300); --tv-link-hover:var(--tv-blue-400);
+  --tv-link:var(--tv-blue-300); --tv-link-hover:var(--tv-blue-200);
   --tv-btn-hover:var(--tv-gray-800);
+  --tv-btn-active:var(--tv-blue-200);
   --tv-btn-active-bg:#132042; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-tv-blue-a900 */
   --tv-popup:var(--tv-gray-850);
   --tv-popup-hover:var(--tv-gray-800);
@@ -274,7 +280,7 @@
   --tv-row-hover:var(--tv-gray-800);
   --tv-row-selected:#142e61; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-tv-blue-a800 */
   --tv-input:var(--tv-gray-800);
-  --tv-placeholder:var(--tv-gray-700);
+  --tv-placeholder:var(--tv-text-2);
   --tv-shadow:0 var(--tv-size-2) var(--tv-size-4) rgb(0 0 0 / .5);
   /* TODO(design): no TV reference — existing compound popup shadow retained. */
   --tv-popup-shadow:0 var(--tv-size-2) var(--tv-size-4) rgb(0 0 0 / .4), 0 var(--tv-size-4) var(--tv-size-24) rgb(0 0 0 / .5);

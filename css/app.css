@@ -23,7 +23,7 @@
   --step-n1:calc(var(--step-0) / var(--type-ratio));
   --step-n2:calc(var(--step-n1) / var(--type-ratio));
   --leading-tight:1.2; --leading-text:1.5;
-  --weight-regular:400;
+  --weight-regular:var(--tv-weight-400);
   --unit:var(--tv-size-4);
   --space-0:calc(var(--unit) / 2);
   --space-1:var(--unit);

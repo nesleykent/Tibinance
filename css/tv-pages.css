@@ -107,3 +107,7 @@ body.tv-report { font-size:var(--step-0); line-height:var(--leading-text); }
 .tv-report .evidence { border-radius:var(--tv-size-4); letter-spacing:.02em; }
 .tv-report table.data thead th { color:var(--tv-text-2); }
 .tv-report :is(.seg,select) { border-radius:var(--tv-size-8); }
+
+/* Offer-side text uses sourced AA shades; chart lines keep their original side colors. */
+.tv-doc .trade-side.side-sell { color:var(--tv-down-text); }
+.tv-doc .trade-side.side-buy { color:var(--tv-buy-text); }
