@@ -34,6 +34,7 @@
 <symbol id="rect" viewBox="0 0 28 28"><rect x="6.5" y="8.5" width="15" height="11" fill="none" stroke="currentColor"/><circle cx="6.5" cy="8.5" r="1.5" fill="var(--tv-bg, #fff)" stroke="currentColor"/><circle cx="21.5" cy="19.5" r="1.5" fill="var(--tv-bg, #fff)" stroke="currentColor"/></symbol>
 <symbol id="text" viewBox="0 0 28 28"><path d="M8.5 8.5h11M14 8.5v12M11.5 20.5h5" fill="none" stroke="currentColor"/></symbol>
 <symbol id="measure" viewBox="0 0 28 28"><path d="M14.5 5.5v17M10.5 9.5l4-4 4 4M10.5 18.5l4 4 4-4M6.5 5.5h4M18.5 22.5h4" fill="none" stroke="currentColor"/></symbol>
+<symbol id="external" viewBox="0 0 28 28"><path d="M10.5 17.5l7-7M11.5 10.5h6v6" fill="none" stroke="currentColor"/></symbol>
 <symbol id="arrowup" viewBox="0 0 28 28"><path d="M14 7.5l6 7h-3.5v6h-5v-6H8z" fill="none" stroke="currentColor" stroke-linejoin="round"/></symbol>
 <symbol id="magnet" viewBox="0 0 28 28"><path d="M8.5 7.5v7a5.5 5.5 0 0 0 11 0v-7h-3.5v7a2 2 0 0 1-4 0v-7z" fill="none" stroke="currentColor" stroke-linejoin="round"/><path d="M8.5 10.5h3.5M16 10.5h3.5" fill="none" stroke="currentColor"/></symbol>
 <symbol id="lock" viewBox="0 0 28 28"><rect x="8.5" y="12.5" width="11" height="9" rx="1" fill="none" stroke="currentColor"/><path d="M10.5 12.5v-2.5a3.5 3.5 0 0 1 7 0v2.5" fill="none" stroke="currentColor"/></symbol>

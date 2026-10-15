@@ -158,6 +158,10 @@ try {
     assert.match(await text('#detailNote'),/Characters online 12,345/,'All reads every world online, live');
     assert.ok((await text('#detailNote')).includes(`${total.last.worldDaysCovered.toLocaleString('en-US')}/${total.last.worldDays.toLocaleString('en-US')} world-days`));
   }
+  // Event markers are inspected over the plot, which starts after the gold scale on the left.
+  const [stripLeft,plotLeft]=await page.evaluate(()=>[document.getElementById('eventMarks').getBoundingClientRect().left,document.querySelector('#chart table tr td:nth-child(2)').getBoundingClientRect().left]);
+  assert.ok(Math.abs(stripLeft-plotLeft)<1,`event markers line up with the plot: ${stripLeft} against ${plotLeft}`);
+  assert.match(await page.getAttribute('#detailsWorld .details-link','href'),/^https:\/\/www\.tibia\.com\/community\/\?subtopic=worlds/);
   const globalPriceWindow=await page.evaluate(()=>window.economyTestCharts[0].timeScale().getVisibleLogicalRange());
   await page.click('#priceToggle');
   assert.equal(await page.getAttribute('#priceToggle','aria-pressed'),'false');

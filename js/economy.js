@@ -19,7 +19,7 @@ import { MEASURES, INTERVALS, ratePeriods, accumulatedPeriods, rangeChange, rang
 import { economyChart, colors } from './economy-chart.js?v=20261014-events';
 import { connect, changed } from './tv-bridge.js';
 import { loadEvents, eventsFor, within } from './events.js';
-import { eventMarks } from './market-events-ui.js?v=20261015-tip2';
+import { eventMarks } from './market-events-ui.js?v=20261015-left2';
 import { pageDetails, detailsHeight, drawDetails, exportedLine } from './market-export.js?v=20261015-shot';
 
 const $ = id => document.getElementById(id);
@@ -29,6 +29,7 @@ const REPO = 'https://github.com/nesleykent/Tibinance';   // notes and methodolo
 const KEY = { gross: 'var(--eco-gross, var(--ink))', coins: 'var(--eco-coins, var(--sell))', npc: 'var(--eco-npc, var(--buy))' };
 const percent = new Intl.NumberFormat('en-US', { style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2, signDisplay: 'exceptZero' });
 const signedNumber = new Intl.NumberFormat('en-US', { signDisplay: 'exceptZero', maximumFractionDigits: 0 });
+const worldLink = world => `<a class="details-link" href="https://www.tibia.com/community/?subtopic=worlds${world === 'All' ? '' : `&world=${encodeURIComponent(world)}`}" target="_blank" rel="noopener noreferrer" aria-label="${world === 'All' ? 'Game worlds' : esc(world)} on tibia.com" title="Open on tibia.com"><svg aria-hidden="true"><use href="css/tv-icons.svg#external"/></svg></a>`;
 const tone = v => (v > 0 ? 'up' : v < 0 ? 'down' : '');
 const gold = v => (Number.isFinite(v) ? fmt(Math.round(v)) : 'N/A');
 // In the 300px list, as TradingView abbreviates large figures (its volume, 38.98 M): the exact figure is the cell's title.
@@ -360,7 +361,7 @@ function showDetails() {
   const active = document.activeElement;
   const focusedRange = active.closest('#detailPerformance button')?.dataset.range;
   const p = view.last, s = view.summary, change = rangeChange(view.periods, field(), state.range);
-  $('detailsWorld').textContent = state.world;
+  $('detailsWorld').innerHTML = esc(state.world) + worldLink(state.world);
   $('detailMeta').innerHTML = metaOf(state.world);
   $('detailLast').textContent = p ? gold(p.rate[field()]) : 'N/A';
   $('detailLastLabel').textContent = `${MEASURES[state.measure].name} per day`;

@@ -20,6 +20,12 @@ export function eventMarks({ chart, part, strip, tip }) {
   function place() {
     strip.style.top = '0px';
     strip.style.height = `${chart.paneSize(0).height}px`;
+    // Over the plot only: a price scale on the left (Economy's gold) moves the plot, and the markers with it.
+    let left = 0;
+    try { left = chart.options().leftPriceScale?.visible ? chart.priceScale('left').width() : 0; } catch { /* not laid out yet */ }
+    strip.style.right = 'auto';
+    strip.style.left = `${left}px`;
+    strip.style.width = `${chart.paneSize(0).width}px`;
   }
 
   function render(next) {
