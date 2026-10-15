@@ -36,6 +36,9 @@ class PublishTest(unittest.TestCase):
         for f in TOOLS + DATA:
             (self.a / f).parent.mkdir(parents=True, exist_ok=True)
             shutil.copy(REPO / f, self.a / f)
+        # This fixture copies the real append-only ledger; its forecast count grows over time.
+        self.ledger_hashes = [r['hash'] for line in (self.a / DATA[1]).read_text().splitlines()
+                              if (r := json.loads(line)).get('type') == 'forecast']
         sh(self.a, 'git', 'add', '-A')
         sh(self.a, 'git', 'commit', '--quiet', '-m', 'base')
         sh(self.a, 'git', 'push', '--quiet', 'origin', 'HEAD:main')
@@ -67,7 +70,9 @@ class PublishTest(unittest.TestCase):
         r = self.publish(self.a)
         self.assertIn('published', r.stdout)
         chain = self.origin_chain()
-        self.assertEqual([x['type'] for x in chain].count('forecast'), 1 + 5)  # the edition and the 5 ledger forecasts
+        self.assertEqual([x['type'] for x in chain].count('forecast'), 1 + len(self.ledger_hashes))
+        self.assertCountEqual([x['source']['ledger']['hash'] for x in chain if x.get('product') == 'research-ledger'],
+                              self.ledger_hashes)
         self.assertEqual(sh(self.a, 'git', 'status', '--porcelain').stdout, '')
         self.assertIn('nothing to publish', self.publish(self.a).stdout)
         self.assertEqual(len(self.origin_chain()), len(chain))
@@ -106,7 +111,7 @@ class PublishTest(unittest.TestCase):
         chain = self.origin_chain()
         types = [x['type'] for x in chain]
         self.assertIn('publication-evidence', types)
-        self.assertEqual(types.count('forecast'), 1 + 5 + 1)
+        self.assertEqual(types.count('forecast'), 1 + len(self.ledger_hashes) + 1)
         hashes = [x['contentHash'] for x in chain]
         self.assertEqual(len(hashes), len(set(hashes)))
         sh(self.a, sys.executable, 'tools/forecasts/archive.py', '--check')
