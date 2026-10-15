@@ -1,6 +1,6 @@
 {
  "chain": {
-  "evaluations": 14,
+  "evaluations": 18,
   "head": "f16803d14c277638c0592421705d9e08ac8aa109b8cda58cd0aedcfae8f84678",
   "records": 62
  },
@@ -167,7 +167,7 @@
       "mape": 3.502640795345786,
       "n": 50,
       "observationCutoff": "2026-10-15",
-      "record": "e43a212b423713a19311dc4b1c79c3e6211acc16cd22bbfcf9d7434a45a806b9",
+      "record": "7e060bb7ce08813fd11018552d9a7e0893b75744795576d40f1cbb3badd06963",
       "weekEnding": "2026-10-11"
      }
     ]
@@ -309,7 +309,7 @@
       "mape": 3.751225867519157,
       "n": 52,
       "observationCutoff": "2026-10-15",
-      "record": "6b1b4d41fac76e2e6c7bca31b18e04f9b997fec150eba3e0db0cd1c5fdaa0421",
+      "record": "0ed9843438da4f1490ab308969c8a5a9aa437ff4ca34aca4b70c8bcb5632e261",
       "weekEnding": "2026-10-11"
      }
     ]
