@@ -49,14 +49,14 @@ for(const path of chartFiles)if(/tcVolume|transactions\s*\*\s*25/.test(await rea
 const result={worlds,observations,dailyAcquisitionReports:reports,rollingStatisticsObservations:rolling,sourceCounts,
  qualification:'Observed daily reports remain authoritative. Comparable consecutive rolling 30-day Statistics may supplement a missing side/day only as an explicitly labelled estimate.',
  selection:'Latest acquisition timestamp per observed side and completed reference day; otherwise the closest eligible capture pair to 24 hours (18-30 hours). Conflicting equal observed timestamps fail explicitly.',
- estimatedDailyStatistics:{days:estimatedDays,sides:estimatedSides,method:'rolling-30d-mean-outflow'},
+ estimatedDailyStatistics:{days:estimatedDays,sides:estimatedSides,method:'rolling-30d-reconstructed when the leaving day is reported, else rolling-30d-mean-outflow'},
  availability:counts,affectedWorlds:new Set(affected.map(a=>a.world)).size,affectedWorldDays:affected.length,
  canonicalValuesMissing:{before:missingBefore,after:missingAfter},marketsValuesWithoutCanonicalSource:unsupported,
  plottedBarsWithMissingLegendValue:barsMissing,validStatisticsDroppedBySource:0,serverDayMisalignments:misaligned,
  observationsIncorrectlyCollapsed:duplicates,screenshotsIncorrectlyExcluded:0,tibiaMarketObservationsIncorrectlyExcluded:0,
  legacyChartFieldDependencies:legacyDependencies,affected,
- gentebraExample:{serverDay:'2026-10-03',bestSell:46794,dailyAverage:null,dailyTransactions:null,
-  reason:'Rolling Statistics exist, but no comparable consecutive capture pair supports an estimate for this date; daily N/A is correct.'}};
+ gentebraExample:{serverDay:'2026-10-03',bestSell:46794,dailyAverage:46643,dailyTransactions:181,
+  reason:'No daily report; reconstructed from the 2026-10-03 and 2026-10-04 rolling Statistics and the reported 2026-09-03 day leaving the window.'}};
 if(missingAfter||unsupported||misaligned||barsMissing||duplicates||legacyDependencies)throw new Error('Global audit failed');
 const output=JSON.stringify(result,null,2)+'\n';
 if(process.argv.includes('--write'))await writeFile(new URL('../docs/market-chart-integration-audit.json',import.meta.url),output);

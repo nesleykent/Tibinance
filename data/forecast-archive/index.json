@@ -1,8 +1,8 @@
 {
  "chain": {
   "evaluations": 18,
-  "head": "f85ab8e714902f4ed3542492b59844091afeb93ae0f2f3290a42d25f5c97266d",
-  "records": 68
+  "head": "c2038d34bd369d9b6994cab93caab56d6f6b4b2e3e4154eaee40a5014a5faa49",
+  "records": 76
  },
  "forecasts": [
   {
@@ -883,10 +883,15 @@
     "weeks": []
    },
    "evidence": {
-    "repository": null,
+    "repository": {
+     "at": "2026-10-15T07:46:21Z",
+     "basis": "git-committer-date",
+     "commit": "1301bc769549ddbfa42dc6d5a32b2a7181d27b6b",
+     "uncertainty": "older than the listed push events; published at or after this committer date"
+    },
     "website": null
    },
-   "evidenceLevel": null,
+   "evidenceLevel": "repository",
    "failures": [],
    "horizon": {
     "stepDays": 7,
@@ -904,6 +909,10 @@
     {
      "sha256": "2eed8793b78fdf8f20520b30b5e962547f6bc87b14e0c656a48600b95c810140",
      "surface": "markets-projections"
+    },
+    {
+     "sha256": "19b9a8011ab00ae776f3b20f0ca91b6b6baadb0c3fa7283a7a987d6349b34436",
+     "surface": "markets-projections"
     }
    ],
    "product": "tc-world-scenarios",
@@ -914,7 +923,7 @@
     "research": "from this repository at codeCommit (frozen inputs listed in the snapshot datasets)"
    },
    "seq": 66,
-   "state": "archived",
+   "state": "published",
    "superseded": false,
    "supersededBy": null,
    "target": "Weekly median of daily offers (API daily median; capture median only on days without one), per side, for the Monday to Sunday week that holds the target date; the Research scoring rule"
@@ -934,10 +943,15 @@
     "weeks": []
    },
    "evidence": {
-    "repository": null,
+    "repository": {
+     "at": "2026-10-15T07:46:21Z",
+     "basis": "git-committer-date",
+     "commit": "1301bc769549ddbfa42dc6d5a32b2a7181d27b6b",
+     "uncertainty": "older than the listed push events; published at or after this committer date"
+    },
     "website": null
    },
-   "evidenceLevel": null,
+   "evidenceLevel": "repository",
    "failures": [],
    "horizon": {
     "stepDays": 7,
@@ -962,7 +976,7 @@
     "research": "from this repository at codeCommit"
    },
    "seq": 67,
-   "state": "archived",
+   "state": "published",
    "superseded": false,
    "supersededBy": null,
    "target": "weekly median of daily offers in the week ending on the Sunday that holds the target date"
@@ -1029,14 +1043,19 @@
    "contentHash": "63c1ca8a39c45a3ffbb5dca52bece9d2b6ac51ce24cd2271d75996865f13676b",
    "edition": "tc-world-scenarios/2026-10-03",
    "evidence": {
-    "repository": null,
+    "repository": {
+     "at": "2026-10-05T01:37:16Z",
+     "basis": "git-committer-date",
+     "commit": "276fca5ecc31d71b9ca700b924a655ccf80220ad",
+     "uncertainty": "older than the listed push events; published at or after this committer date"
+    },
     "website": null
    },
-   "evidenceLevel": null,
+   "evidenceLevel": "repository",
    "failures": [],
    "forecast": "3be8620a536c39ae4ba1927847027c545f7942783a560103678ed4066e0ec509",
    "sha256": "adbd53ed748d2bbb82fdce883d72de49721d270fbbd8d40cd7167370b4b13f15",
-   "state": "archived",
+   "state": "published",
    "superseded": false,
    "supersededBy": null,
    "surface": "markets-projections"
@@ -1158,7 +1177,12 @@
    "contentHash": "f808e5fc7aa65915c3bfa462fbbe091f79c2a760a58070a0628d56bdb3bfad76",
    "edition": "tc-world-scenarios/2026-10-05",
    "evidence": {
-    "repository": null,
+    "repository": {
+     "at": "2026-10-15T03:37:13Z",
+     "basis": "git-committer-date",
+     "commit": "ff32698d44ec4f685289cca30a9719655dc53713",
+     "uncertainty": "older than the listed push events; published at or after this committer date"
+    },
     "website": {
      "at": "2026-10-15T03:37:49Z",
      "basis": "github-pages-deployment-success",
@@ -1180,7 +1204,12 @@
    "contentHash": "cf8b0d9e29081cf48ab8bce09d0997119fa707b5cbdf716b9c093a4659361f10",
    "edition": "tc-world-scenarios/2026-10-05",
    "evidence": {
-    "repository": null,
+    "repository": {
+     "at": "2026-10-15T03:51:51Z",
+     "basis": "git-committer-date",
+     "commit": "6f3d34fa8be04c62505b28790b663fa60662fc24",
+     "uncertainty": "older than the listed push events; published at or after this committer date"
+    },
     "website": {
      "at": "2026-10-15T07:17:02Z",
      "basis": "github-pages-deployment-success",
@@ -1202,14 +1231,40 @@
    "contentHash": "0ddd2c88e81c30b415f8b524ec720161800e4bd3339f15f00632383d3d1294a7",
    "edition": "tc-world-scenarios/2026-10-15",
    "evidence": {
-    "repository": null,
+    "repository": {
+     "at": "2026-10-15T07:46:21Z",
+     "basis": "git-committer-date",
+     "commit": "1301bc769549ddbfa42dc6d5a32b2a7181d27b6b",
+     "uncertainty": "older than the listed push events; published at or after this committer date"
+    },
     "website": null
    },
-   "evidenceLevel": null,
+   "evidenceLevel": "repository",
    "failures": [],
    "forecast": "29adf6a097e2876da11ee71594f567b87426f9292e989dccc87a455baf8cc858",
    "sha256": "2eed8793b78fdf8f20520b30b5e962547f6bc87b14e0c656a48600b95c810140",
-   "state": "archived",
+   "state": "published",
+   "superseded": false,
+   "supersededBy": null,
+   "surface": "markets-projections"
+  },
+  {
+   "contentHash": "83e9f7f02881bd0fedabb250ed6eecae91a42363def7fa5f106dc57cb6356dea",
+   "edition": "tc-world-scenarios/2026-10-15",
+   "evidence": {
+    "repository": {
+     "at": "2026-10-15T07:51:38Z",
+     "basis": "git-committer-date",
+     "commit": "627cde5d3dcb0dd89fb88795e49e409eb4d8b09d",
+     "uncertainty": "older than the listed push events; published at or after this committer date"
+    },
+    "website": null
+   },
+   "evidenceLevel": "repository",
+   "failures": [],
+   "forecast": "29adf6a097e2876da11ee71594f567b87426f9292e989dccc87a455baf8cc858",
+   "sha256": "19b9a8011ab00ae776f3b20f0ca91b6b6baadb0c3fa7283a7a987d6349b34436",
+   "state": "published",
    "superseded": false,
    "supersededBy": null,
    "surface": "markets-projections"
