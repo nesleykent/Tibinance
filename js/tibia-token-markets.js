@@ -7,7 +7,7 @@ import { marketImage, pageDetails } from './market-export.js?v=20261015-shot';
 import { dock } from './markets-dock.js';
 import { loadEvents, addEventDays } from './events.js';
 import { eventsPanel } from './market-events-panel.js?v=20261014-rebuild';
-import { eventMarks } from './market-events-ui.js?v=20261015-tip2';
+import { eventMarks } from './market-events-ui.js?v=20261015-left2';
 import { TOKEN_PROFILE, tokenPrice, tokenView, CONTRACT } from './tibia-token.js?v=20261014-events';
 import { connect } from './tv-bridge.js';
 const $ = id => document.getElementById(id);

@@ -22,7 +22,7 @@ import { dock } from './markets-dock.js';
 import { marketImage, pageDetails } from './market-export.js?v=20261015-shot';
 import { loadEvents as readEvents, eventsFor, lifecycleSpan, addEventDays } from './events.js';
 import { eventsPanel } from './market-events-panel.js?v=20261014-rebuild';
-import { eventMarks } from './market-events-ui.js?v=20261015-tip2';
+import { eventMarks } from './market-events-ui.js?v=20261015-left2';
 import { PROJECTIONS, forwardEnd, pointText, projectionFor, weekOf } from './market-projections.js';
 import { screenerPanel } from './market-screener-panel.js?v=20261014-review';
 import { historyPanel } from './market-forecast-history.js?v=20261014-rebuild';
@@ -45,6 +45,7 @@ const ROOMY = '(min-width: 1280px)';
 const $ = id => document.getElementById(id);
 const percent = new Intl.NumberFormat(undefined, { style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2, signDisplay: 'exceptZero' });
 const signedNumber = new Intl.NumberFormat(undefined, { signDisplay: 'exceptZero' });
+const worldLink = world => `<a class="details-link" href="https://www.tibia.com/community/?subtopic=worlds${world === 'All' ? '' : `&world=${encodeURIComponent(world)}`}" target="_blank" rel="noopener noreferrer" aria-label="${world === 'All' ? 'Game worlds' : esc(world)} on tibia.com" title="Open on tibia.com"><svg aria-hidden="true"><use href="css/tv-icons.svg#external"/></svg></a>`;
 const tone = value => value > 0 ? 'up' : value < 0 ? 'down' : '';
 const signedRatio = ratio => ratio == null ? num(null) : `<span class="${tone(ratio)}">${percent.format(ratio)}</span>`;
 const signedDelta = delta => delta == null ? num(null) : `<span class="${tone(delta)}">${signedNumber.format(delta)}</span>`;
@@ -259,7 +260,7 @@ function showQuote() {
   $('lastChange').title = changeTitle;
   $('lastRange').textContent = change ? state.range : '';
 
-  $('detailsWorld').innerHTML = esc(summary.world) + (retired(summary) ? ' <span class="tag">Retired</span>' : '');
+  $('detailsWorld').innerHTML = esc(summary.world) + worldLink(summary.world) + (retired(summary) ? ' <span class="tag">Retired</span>' : '');
   $('detailMeta').innerHTML = [summary.type && esc(summary.type), summary.battleye && `<span class="be-${esc(summary.battleye)}">${esc(summary.battleye)}</span>`,
     summary.location && esc(summary.location)].filter(Boolean).map(x => `<span>${x}</span>`).join('');
   $('detailLast').innerHTML = num(latest?.[side]);
