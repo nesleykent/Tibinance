@@ -1,14 +1,14 @@
 {
  "format": 1,
  "note": "",
- "approver": "Repository owner standing approval; revert to pre-Codex release/0022 state",
+ "approver": "Claude Opus 4.6",
  "artifact": {
-  "bytes": 139913728,
-  "digest": "34daa99ae6d9c98282773b9223e242a52027fe3e69dc96cdb487492a7072beb1",
-  "files": 956
+  "bytes": 141625780,
+  "digest": "45e07423a47dd8bbafd02a9612a53eb7615e8dcc1587c1ac087f7dfe012d8050",
+  "files": 977
  },
- "commit": "3c254b276c555b7e47506ac6a183f433acc73615",
- "createdAt": "2026-10-15T07:35:06.680Z",
+ "commit": "00dc7916a0ae267efc262c2e1e2fdf27af47b4f7",
+ "createdAt": "2026-10-15T07:52:51.068Z",
  "kind": "full",
  "policy": {
   "dataPaths": [
@@ -34,10 +34,10 @@
  },
  "policySha256": "8598ea053fc9fba9189b10e9c9bbbd33f9b89b36ab503161a844995d81008ad9",
  "source": {
-  "commit": "3c254b276c555b7e47506ac6a183f433acc73615"
+  "commit": "00dc7916a0ae267efc262c2e1e2fdf27af47b4f7"
  },
- "tag": "release/0027",
- "tree": "9ab63ed8944046052ae82eda2c5460eba75270e8",
+ "tag": "release/0028",
+ "tree": "8b649df744efe2fad95b0a856e96d658d83af7cd",
  "validation": {
   "checks": [
    {
@@ -78,12 +78,12 @@
    }
   ],
   "validator": {
-   "commit": "3c254b276c555b7e47506ac6a183f433acc73615",
+   "commit": "00dc7916a0ae267efc262c2e1e2fdf27af47b4f7",
    "path": "tools/ci/validate_site.mjs"
   }
  },
  "record": {
-  "seq": 22,
-  "hash": "7999798a44b6bb76bb35e6d3b2dd99bb728913bf5767bc13d4ec7e6b74af5308"
+  "seq": 23,
+  "hash": "98dd5d84f5d99b778af2b9846f1fbeecc55f3d98f09d3b69f7c7b27a99156de4"
  }
 }
