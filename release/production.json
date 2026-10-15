@@ -1,26 +1,43 @@
 {
  "format": 1,
  "note": "",
- "approver": "GitHub Actions forecast archive (validated data release)",
+ "approver": "Repository owner standing approval (\"sim, sempre publique\"); Claude Code verified units 228/228, validate_site, Chrome events, markets, economy, terminal, TIB, projections, canonical suites",
  "artifact": {
-  "bytes": 139881389,
-  "digest": "cfeaf62d262a5b6d34fe47e1047d920486489bd4144e8a8782b8ed33da4ef648",
+  "bytes": 139886169,
+  "digest": "0860a0c12361aa63846952fff1b9eb86aa5df432f6291abd6db8e3bb48ab0214",
   "files": 956
  },
- "commit": "f2e18879cbe463ada1a5eb79c1bfeb5c93b21fc5",
- "createdAt": "2026-10-15T02:15:41.725Z",
- "kind": "data",
+ "commit": "1f7912cecf6c14007de8a5599d556b2d96f7ef7d",
+ "createdAt": "2026-10-15T02:26:29.028Z",
+ "kind": "full",
+ "policy": {
+  "dataPaths": [
+   "data/observations.json",
+   "data/observations.csv",
+   "data/offer-observations.csv",
+   "data/market-update-*.json",
+   "data/rebuild-*.json",
+   "data/market-history/**",
+   "data/market-projections/**",
+   "data/events/events.json",
+   "data/forecast-archive/**",
+   "docs/market-chart-integration-audit.json",
+   "docs/rolling-activity-calculation.json",
+   "reports/tc-cycle/*.json",
+   "reports/tc-cycle/*.csv",
+   "reports/tc-cycle/forecast-ledger.jsonl",
+   "reports/tc-cycle/inputs/**",
+   "data/economy/**",
+   "reports/economy/results.json"
+  ],
+  "note": "Paths a data release may take from main. Everything else (pages, scripts, styles, tooling, docs) reaches production only through a full release, which also approves this file. Research outputs are forecast representations: a data release carrying them must pass the forecast-archive integrity check once the archive exists."
+ },
  "policySha256": "8598ea053fc9fba9189b10e9c9bbbd33f9b89b36ab503161a844995d81008ad9",
  "source": {
-  "base": {
-   "commit": "5fb76128a924e43f0671e4ea437fd7598d859e3f",
-   "tag": "release/0017"
-  },
-  "data": "075a1c748ea772589ab70e2ab0c7bf87deb0fb0e",
-  "policyFrom": "release/0017"
+  "commit": "1f7912cecf6c14007de8a5599d556b2d96f7ef7d"
  },
- "tag": "release/0018",
- "tree": "861efc10bc5c6d7948775828ede344709210ca70",
+ "tag": "release/0019",
+ "tree": "5d79d970ed1c61330f3f1dd0c61d4d7e6211603e",
  "validation": {
   "checks": [
    {
@@ -61,12 +78,12 @@
    }
   ],
   "validator": {
-   "commit": "075a1c748ea772589ab70e2ab0c7bf87deb0fb0e",
+   "commit": "1f7912cecf6c14007de8a5599d556b2d96f7ef7d",
    "path": "tools/ci/validate_site.mjs"
   }
  },
  "record": {
-  "seq": 18,
-  "hash": "0408ce50db8c2b48da85b5be33722a99765b4dc28991daf88e3b82a5831e070f"
+  "seq": 19,
+  "hash": "b8567c84d8f86a5bab5700c73e19c3dc960dce10384861c203200acd43f256b5"
  }
 }
