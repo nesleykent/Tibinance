@@ -8,11 +8,10 @@
  */
 :root {
   --scale-inset:calc(var(--unit) * 3);   /* from the chart's right edge to the end of its price labels */
-  --average:#a9a8b3;   /* the daily average: context for the best offer, never competing with it */
   /* Event markers by group: a world's own lifecycle, the game's events and updates, the market and the Store. */
-  --event-world:var(--accent); --event-game:var(--caution); --event-market:var(--ink);
+
   /* Projections: the central path in ink, as the Research draws its scenario; the projected days faintly tinted. */
-  --projection:var(--ink); --projection-region:rgb(118 118 128 / .06);
+  /* Theme values come from css/tv.css. */
   --watch-width:calc(var(--unit) * 80);
   --rail-width:calc(var(--unit) * 10);
   --toolbar-height:calc(var(--unit) * 11);
@@ -72,7 +71,7 @@ body { display:flex; flex-direction:column; height:100dvh; overflow:hidden; }
    everywhere else. The price scale starts below it (js/markets.js fitHead). It stands above the chart, its markers and
    the message of a world without data, which covers only the chart. In the page its text starts on the page's edge,
    under Tibinance; at full screen it keeps an inset. */
-.chart-head { position:absolute; z-index:6; left:var(--space-4); top:var(--space-2); max-width:calc(100% - var(--space-8) * 2);
+.chart-head { position:absolute; z-index:var(--tv-layer-chart-head); left:var(--space-4); top:var(--space-2); max-width:calc(100% - var(--space-8) * 2);
   display:flex; flex-direction:column; align-items:flex-start; gap:var(--space-2); pointer-events:none; font-family:var(--font-ui); }
 .chart-head :is(button,a) { pointer-events:auto; }
 .head-line { display:flex; flex-wrap:wrap; align-items:baseline; gap:0 var(--space-3); max-width:100%; }
@@ -113,7 +112,7 @@ body { display:flex; flex-direction:column; height:100dvh; overflow:hidden; }
    lies above the chart library's attribution logo (z-index 3), which shares the pane's bottom left corner. */
 /* Clipped sideways to the chart: while the chart catches up with a resize, a marker laid out for the old width must
    not widen the page. */
-.event-marks { position:absolute; z-index:4; inset-inline:0; height:calc(var(--unit) * 3.5); overflow-x:clip; pointer-events:none; }
+.event-marks { position:absolute; z-index:var(--tv-layer-chart-markers); inset-inline:0; height:calc(var(--unit) * 3.5); overflow-x:clip; pointer-events:none; }
 .event-mark { position:absolute; top:0; height:100%; padding:0; border:0; border-radius:calc(var(--unit) * 1.75); background:transparent; cursor:pointer; pointer-events:auto; }
 .event-mark::before { content:""; position:absolute; inset:calc(var(--space-1) * -1) calc(var(--space-0) * -1); }
 .event-mark:focus-visible { outline:var(--rule-strong) solid var(--accent); outline-offset:var(--rule-strong); }
@@ -135,7 +134,7 @@ body { display:flex; flex-direction:column; height:100dvh; overflow:hidden; }
 
 /* Above the chart's canvases (z-index 1 and 2), its logo (3) and the event markers (4), so a message hides a stale
    price scale. */
-.chart-status { position:absolute; z-index:5; inset:0; display:grid; place-items:center; margin:0; color:var(--muted); font-family:var(--font-ui); font-size:var(--step-n1); background:var(--canvas); }
+.chart-status { position:absolute; z-index:var(--tv-layer-chart-status); inset:0; display:grid; place-items:center; margin:0; color:var(--muted); font-family:var(--font-ui); font-size:var(--step-n1); background:var(--canvas); }
 .chart-status[hidden] { display:none; }
 
 /* Line keys, shared by the legends and the help. currentColor is the side colour. */

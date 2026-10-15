@@ -1,7 +1,8 @@
 /*
  * Tibinance: the screenshot pipeline, drawn in the research report's editorial system
- * (reports/tc-cycle/report.css). The tokens below repeat that file's inputs so both pages
- * read as one publication; nothing here is sized by hand.
+ * (reports/tc-cycle/report.css). Layout aliases below retain the original publication geometry;
+ * css/tv.css is the shared source of theme and measured design values.
+ * TODO(design): no TV reference for retained publication layout ratios and widths.
  *
  *   --type-base and --type-ratio  every font size is base × ratio^n (--step-n2 … --step-5)
  *   --unit                        every margin, padding, gap and control size is a
@@ -11,20 +12,8 @@
  * for headings, the UI sans for data, controls and chrome.
  */
 :root {
-  --canvas:#fff; --surface:#fff; --surface-soft:#f5f5f7; --surface-hover:#f2f2f4;
-  --line:#e2e2e7; --line-strong:#b7b7c1; --line-faint:#ededf0; --ink:#24232a; --muted:#62616d;
-  --accent:#7539a6; --accent-soft:#f0e9f6; --on-accent:#fff;
-  --control-track:rgb(118 118 128 / .12); --control-track-hover:rgb(118 118 128 / .18);
-  --control-thumb-shadow:0 1px 3px rgb(0 0 0 / .12), 0 0 0 var(--rule) rgb(0 0 0 / .04);
-  --positive:#246644; --negative:#a42f45; --caution:#805909;
-  --sell:#b4532a; --buy:#2f6db5;   /* the two sides of the Market, as Markets charts them and Trade labels them */
 
-  --font-ui:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  --font-editorial:Georgia,"Times New Roman",serif;
   --font-code:ui-monospace,SFMono-Regular,Menlo,monospace;
-
-  --type-base:1rem;
-  --type-ratio:1.2;
   --step-0:var(--type-base);
   --step-1:calc(var(--step-0) * var(--type-ratio));
   --step-2:calc(var(--step-1) * var(--type-ratio));
@@ -34,10 +23,8 @@
   --step-n1:calc(var(--step-0) / var(--type-ratio));
   --step-n2:calc(var(--step-n1) / var(--type-ratio));
   --leading-tight:1.2; --leading-text:1.5;
-  --weight-regular:400; --weight-strong:600;
-  --tracking-tight:-.02em; --tracking-caps:.06em;
-
-  --unit:4px;
+  --weight-regular:400;
+  --unit:var(--tv-size-4);
   --space-0:calc(var(--unit) / 2);
   --space-1:var(--unit);
   --space-2:calc(var(--unit) * 2);
@@ -47,18 +34,13 @@
   --space-6:calc(var(--unit) * 8);
   --space-7:calc(var(--unit) * 12);
   --space-8:calc(var(--unit) * 16);
-
   --control-type:var(--step-n2);
-  --control-height:calc(var(--unit) * 6);
   --control-pad:var(--space-2);
   --control-inset:var(--space-0);
   --control-radius:var(--radius);
   --control-align:end;
-
   --header-height:calc(var(--unit) * 14);
-  --rule:1px; --rule-strong:2px;
-  --radius:calc(var(--unit) * 2);
-  --radius-sm:var(--unit);
+  --rule:var(--tv-size-1); --rule-strong:var(--tv-size-2);
   --page-width:calc(var(--unit) * 360);
   --page-gutter:calc(clamp(var(--space-6), 10vw, calc(var(--unit) * 40)) + var(--space-2));
   --filter-width:calc(var(--unit) * 40);
@@ -216,8 +198,8 @@ h2 { margin:0; }
 .screenshots-head { flex-wrap:nowrap; }
 .screenshots-head h2 { min-width:0; }
 .reprocess-option { display:flex; flex-direction:column; align-items:center; flex-shrink:0; gap:var(--space-1); margin-left:auto; padding:0; border:0; background:transparent; color:var(--muted); font:var(--weight-regular) var(--step-n2)/var(--leading-text) var(--font-ui); cursor:pointer; white-space:nowrap; }
-.reprocess-track { position:relative; width:calc(var(--unit) * 10); height:var(--control-height); border-radius:var(--control-height); background:var(--control-track); transition:background .15s ease; }
-.reprocess-track::after { content:""; position:absolute; top:var(--control-inset); left:var(--control-inset); width:calc(var(--control-height) - var(--control-inset) * 2); height:calc(var(--control-height) - var(--control-inset) * 2); border-radius:50%; background:var(--surface); box-shadow:var(--control-thumb-shadow); transition:transform .15s ease; }
+.reprocess-track { position:relative; width:calc(var(--unit) * 10); height:var(--control-height); border-radius:var(--control-height); background:var(--control-track); transition:background var(--tv-duration-fast,.15s) var(--tv-ease,linear); }
+.reprocess-track::after { content:""; position:absolute; top:var(--control-inset); left:var(--control-inset); width:calc(var(--control-height) - var(--control-inset) * 2); height:calc(var(--control-height) - var(--control-inset) * 2); border-radius:50%; background:var(--surface); box-shadow:var(--control-thumb-shadow); transition:transform var(--tv-duration-fast,.15s) var(--tv-ease,linear); }
 .reprocess-option:hover .reprocess-track { background:var(--control-track-hover); }
 .reprocess-option[aria-checked="true"] .reprocess-track { background:var(--accent); }
 .reprocess-option[aria-checked="true"] .reprocess-track::after { transform:translateX(calc(var(--unit) * 4)); }
@@ -250,7 +232,7 @@ h2 { margin:0; }
 .colpick .seg-thumb { display:inline-flex; align-items:center; padding:0 var(--control-pad); border-radius:calc(var(--control-radius) - var(--control-inset)); background:var(--surface); box-shadow:var(--control-thumb-shadow); font-family:var(--font-ui); font-size:var(--control-type); font-weight:var(--weight-strong); line-height:var(--leading-tight); white-space:nowrap; }
 .colpick[open] .seg-thumb { color:var(--accent); }
 .colpick summary::-webkit-details-marker { display:none; }
-.colpick-list { position:absolute; right:0; top:calc(100% + var(--space-1)); z-index:var(--layer-sticky); display:grid; gap:var(--space-1); min-width:max-content; margin:0; padding:var(--space-2) var(--space-3); border:var(--rule) solid var(--line-strong); border-radius:var(--radius); background:var(--surface); box-shadow:0 var(--space-1) var(--space-4) rgb(0 0 0 / .12); font-size:var(--step-n1); }
+.colpick-list { position:absolute; right:0; top:calc(100% + var(--space-1)); z-index:var(--layer-sticky); display:grid; gap:var(--space-1); min-width:max-content; margin:0; padding:var(--space-2) var(--space-3); border:var(--rule) solid var(--line-strong); border-radius:var(--radius); background:var(--surface); box-shadow:var(--tv-popup-shadow); font-size:var(--step-n1); }
 .colpick-list label { display:flex; align-items:center; gap:var(--space-2); min-height:var(--control-height); cursor:pointer; }
 .colpick-list input { accent-color:var(--accent); margin:0; }
 
@@ -277,7 +259,7 @@ th.sorted .sort-button { color:var(--accent); }
 table.data tr.has-older { cursor:pointer; }
 .expand { display:inline-flex; align-items:center; padding:0; border:0; background:none; color:inherit; font:inherit; cursor:pointer; }
 .chev,.chev-space { display:inline-block; width:var(--space-3); color:var(--muted); }
-.chev { transition:transform .15s; }
+.chev { transition:transform var(--tv-duration-fast,.15s) var(--tv-ease,linear); }
 .expand[aria-expanded="true"] .chev { transform:rotate(90deg); color:var(--accent); }
 table.data tr.older-row { background:var(--surface-soft); color:var(--muted); }
 .be { font-weight:var(--weight-strong); }

@@ -8,17 +8,178 @@
  * html[data-theme="dark"|"light"], set before first paint by js/tv-theme.js; charts re-read the tokens on change.
  */
 :root {
+  /* TV_REF: captures/B_chart_design/css/142_26129.009764da61bd8c8c44be.css
+     .squareTabButton-RKKTRhZ6.xsmall-RKKTRhZ6 / .selected-RKKTRhZ6, regular / selected weights. */
+  --tv-weight-400:400; --tv-weight-600:600;
+  /* TV_REF: captures/B_chart_design/css/068_94186.b336cd117bc17ca17c02.css .segmentedControlBase-Wsyc2cnT. */
+  --tv-weight-500:500;
+  /* TV_REF: captures/B_chart_design/css/016_82046.ba71f0dcbab09081fb23.css .title-BrwpoJXK. */
+  --tv-weight-700:700;
+  /* TODO(design): no TV reference — APP overlay order above the chart library canvases. */
+  --tv-layer-chart-markers:4; --tv-layer-chart-status:5; --tv-layer-chart-head:6;
+  /* Shared measurement scale; exact provenance is kept beside each value. */
+  /* TV_REF: captures/B_chart_design/css/001_49206.74fb425b6024ec62b4e0.css `.ka-input` / `border` */
+  --tv-size-1:1px;
+  /* TV_REF: captures/B_chart_design/css/047_72689.93a06fc3186a1f3f7e6b.css `.estimate-fygOwDCL` / `outline` */
+  --tv-size-1_5:1.5px;
+  /* TV_REF: captures/B_chart_design/css/001_49206.74fb425b6024ec62b4e0.css `.ka-row` / `border-bottom` */
+  --tv-size-2:2px;
+  /* TODO(design): no TV reference — retained APP dimension. */
+  --tv-size-2_5:2.5px;
+  /* TV_REF: captures/B_chart_design/css/001_49206.74fb425b6024ec62b4e0.css `.ka-icon-sort` / `margin-left` */
+  --tv-size-3:3px;
+  /* TV_REF: captures/B_chart_design/css/002_106.4d908074e220a0a4f285.css `.content-T7cdv1gs.small-T7cdv1gs` / `gap` */
+  --tv-size-4:4px;
+  /* TV_REF: captures/B_chart_design/css/001_49206.74fb425b6024ec62b4e0.css `.ka-icon-group-arrow` / `margin-right` */
+  --tv-size-5:5px;
+  /* TV_REF: captures/B_chart_design/css/002_106.4d908074e220a0a4f285.css `.range-T7cdv1gs.small-T7cdv1gs` / `height` */
+  --tv-size-6:6px;
+  /* TV_REF: captures/B_chart_design/css/001_49206.74fb425b6024ec62b4e0.css `.ka-drag-over-row` / `box-shadow` */
+  --tv-size-7:7px;
+  /* TV_REF: captures/B_chart_design/css/001_49206.74fb425b6024ec62b4e0.css `.ka-cell` / `padding` */
+  --tv-size-8:8px;
+  /* TV_REF: captures/B_chart_design/css/001_49206.74fb425b6024ec62b4e0.css `.ka-icon` / `font-size` */
+  --tv-size-10:10px;
+  /* TV_REF: captures/B_chart_design/css/003_49855.69a6187d3b29677c26ee.css `.label-Ab1bR7Gq` / `font-size` */
+  --tv-size-11:11px;
+  /* TV_REF: captures/B_chart_design/css/001_49206.74fb425b6024ec62b4e0.css `.ka-validation-message` / `font-size` */
+  --tv-size-12:12px;
+  /* TV_REF: captures/B_chart_design/css/003_49855.69a6187d3b29677c26ee.css `.shortcuts-kReVM2Bx,.shortcuts-kReVM2Bx .buttonGroup-kReVM2Bx` / `margin-inline-end` */
+  --tv-size-13:13px;
+  /* TV_REF: captures/B_chart_design/css/001_49206.74fb425b6024ec62b4e0.css `.ka` / `font-size` */
+  --tv-size-14:14px;
+  /* TV_REF: captures/B_chart_design/css/001_49206.74fb425b6024ec62b4e0.css `.ka-thead-cell` / `padding` */
+  --tv-size-15:15px;
+  /* TV_REF: captures/B_chart_design/css/002_106.4d908074e220a0a4f285.css `.title-T7cdv1gs.small-T7cdv1gs` / `--ui-lib-typography-line-height` */
+  --tv-size-16:16px;
+  /* TV_REF: captures/B_chart_design/css/018_54295.6aa607a1b91640415b1b.css `.closeButtonWrapper-VCG5FydF.mobile-VCG5FydF` / `inset-inline-end` */
+  --tv-size-17:17px;
+  /* TV_REF: captures/B_chart_design/css/001_49206.74fb425b6024ec62b4e0.css `.ka-paging-page-index,.ka-paging-size` / `min-width` */
+  --tv-size-18:18px;
+  /* TV_REF: captures/B_chart_design/css/001_49206.74fb425b6024ec62b4e0.css `.ka-thead-cell` / `padding` */
+  --tv-size-20:20px;
+  /* TV_REF: captures/B_chart_design/css/003_49855.69a6187d3b29677c26ee.css `.shortcuts-kReVM2Bx .buttonGroup-kReVM2Bx .button-kReVM2Bx.withIcon-kReVM2Bx` / `height` */
+  --tv-size-22:22px;
+  /* TV_REF: captures/B_chart_design/css/003_49855.69a6187d3b29677c26ee.css `.item-EGIzBROd` / `--ui-lib-typography-line-height` */
+  --tv-size-24:24px;
+  /* TV_REF: captures/B_chart_design/css/003_49855.69a6187d3b29677c26ee.css `.flagWrap-ql4iq1lU` / `height` */
+  --tv-size-26:26px;
+  /* TV_REF: captures/B_chart_design/css/003_49855.69a6187d3b29677c26ee.css `.handle-ulEgLB3r` / `width` */
+  --tv-size-28:28px;
+  /* TV_REF: captures/B_chart_design/css/003_49855.69a6187d3b29677c26ee.css `.separator-Ab1bR7Gq` / `height` */
+  --tv-size-30:30px;
+  /* TV_REF: captures/B_chart_design/css/003_49855.69a6187d3b29677c26ee.css `.symbol-ALH_8bJI .upgradeAccessTileItem-ALH_8bJI` / `margin-inline-end` */
+  --tv-size-32:32px;
+  /* TV_REF: captures/B_chart_design/css/003_49855.69a6187d3b29677c26ee.css `.button-CBjOwjj0` / `height` */
+  --tv-size-34:34px;
+  /* TV_REF: captures/B_chart_design/css/003_49855.69a6187d3b29677c26ee.css `.description-_pwluNeI` / `max-height` */
+  --tv-size-36:36px;
+  /* TV_REF: captures/B_chart_design/css/004_54339.607095526612119b0f4a.css `.wrap-xBDgWlXR` / `height` */
+  --tv-size-38:38px;
+  /* TV_REF: captures/B_chart_design/css/001_49206.74fb425b6024ec62b4e0.css `.ka-empty-cell` / `min-width` */
+  --tv-size-40:40px;
+  /* TV_REF: captures/B_chart_design/css/056_41998.1f41c43bccc40961b740.css `.button-SEyQozUN` / `height` */
+  --tv-size-44:44px;
+  /* TV_REF: captures/B_chart_design/css/237_47360.5dbabc4194e8938c9f41.css `.widgetbar-tabs` / `width` */
+  --tv-size-45:45px;
+  /* TV_REF: captures/B_chart_design/css/080_3415.d368caa64d494a4087cc.css `.tv-button--icon.tv-button--size_large` / `height` */
+  --tv-size-46:46px;
+  /* TV_REF: captures/B_chart_design/css/084_22630.2ead71b05ae3c9f09367.css `.control-FuKse5bD` / `width` */
+  --tv-size-52:52px;
+  /* TV_REF: captures/B_chart_design/css/034_80547.f5113b405d05229bb4e9.css `.roundButton-LEXhwY2Z` / `height` */
+  --tv-size-56:56px;
+  /* TV_REF: captures/B_chart_design/css/082_84942.2948977f955c31dc3f3c.css `.content-B562enCp` / `max-height` */
+  --tv-size-64:64px;
+  /* TV_REF: captures/B_chart_design/css/060_9402.ace32ea52a70f78f348e.css `.input-SYCRNWvr` / `width` */
+  --tv-size-68:68px;
+  /* TV_REF: captures/B_chart_design/css/138_59937.fc69e6c020c645aa7877.css `.chartPreview-b3x6mvDB` / `height` */
+  --tv-size-78:78px;
+  /* TV_REF: captures/B_chart_design/css/085_8395.ddb660da41bcb62d7de8.css `:root,[data-query-type=container]>*` / `--v-rhythm-spacing-2-tablet` */
+  --tv-size-88:88px;
+  /* TV_REF: captures/B_chart_design/css/206_61330.e3d01616e79520a0d5bd.css `.title-W3vB3mvu` / `max-height` */
+  --tv-size-96:96px;
+  /* TV_REF: captures/B_chart_design/css/001_49206.74fb425b6024ec62b4e0.css `.ka-no-data-row` / `height` */
+  --tv-size-100:100px;
+  /* TV_REF: captures/B_chart_design/css/080_3415.d368caa64d494a4087cc.css `.tv-button--size_promo` / `border-radius` */
+  --tv-size-120:120px;
+  /* TODO(design): no TV reference — retained APP dimension. */
+  --tv-size-132:132px;
+  /* TV_REF: captures/B_chart_design/css/032_65088.b1bc6e7e9aba8544214c.css `.date-NrJ8eKrr` / `max-width` */
+  --tv-size-150:150px;
+  /* TV_REF: captures/B_chart_design/css/082_84942.2948977f955c31dc3f3c.css `.container-D2IvuoE0` / `--strategy-chart-height` */
+  --tv-size-160:160px;
+  /* TV_REF: captures/B_chart_design/css/003_49855.69a6187d3b29677c26ee.css `.menu-xQ2p3_Wq` / `min-width` */
+  --tv-size-180:180px;
+  /* TV_REF: captures/B_chart_design/css/001_49206.74fb425b6024ec62b4e0.css `.ka-validation-message` / `max-width` */
+  --tv-size-200:200px;
+  /* TV_REF: captures/B_chart_design/css/062_2896.037042a9c19751bc73d5.css `.container-medium-F50gnfeY` / `width` */
+  --tv-size-220:220px;
+  /* TV_REF: captures/B_chart_design/css/151_92088.518a2703fb06972945bc.css `.popover-UIr5vnnJ` / `--ui-lib-in-positioner-minWidth` */
+  --tv-size-240:240px;
+  /* TODO(design): no TV reference — retained APP dimension. */
+  --tv-size-243:243px;
+  /* TV_REF: captures/B_chart_design/css/118_86605.a5eaeb30f7d269f97b41.css `.drawer-iii118oN.positionLeft-iii118oN` / `min-width` */
+  --tv-size-260:260px;
+  /* TV_REF: captures/B_chart_design/css/232_38487.3e59d7e7a204088e5b81.css `@media (min-width:568px){.middleSlot-D3CWQ49D` / `max-width` */
+  --tv-size-300:300px;
+  /* TV_REF: captures/B_chart_design/css/078_97625.b024707d2d5296921dc0.css `.menu-OjWQ1m5F` / `max-width` */
+  --tv-size-340:340px;
+  /* TV_REF: captures/B_chart_design/css/183_98830.d0b51ff6cc34a7d177ff.css `.description-e3xz1aVr` / `max-height` */
+  --tv-size-360:360px;
+  /* TV_REF: captures/B_chart_design/css/045_4924.89efd23a089fdd5c799c.css `.popupWidgetWidth-OjNGlYa7` / `--ui-lib-in-positioner-maxWidth` */
+  --tv-size-380:380px;
+  /* TV_REF: captures/B_chart_design/css/109_11709.bcd0312befc95fb040a8.css `.common-tooltip__body--with-hotkey-Hp4KzOJw` / `max-width` */
+  --tv-size-420:420px;
+  /* TODO(design): no TV reference — retained APP dimension. */
+  --tv-size-440:440px;
+  /* TODO(design): no TV reference — retained APP dimension. */
+  --tv-size-520:520px;
+  /* TV_REF: captures/B_chart_design/css/079_37406.9dfbe1b31180e1a0a43c.css `.tabletDialog-Y08MXaH6` / `max-width` */
+  --tv-size-560:560px;
+  /* TODO(design): no TV reference — retained APP dimension. */
+  --tv-size-620:620px;
+  /* TV_REF: captures/B_chart_design/css/079_37406.9dfbe1b31180e1a0a43c.css `@media (max-width:768px){.desktopDialog-Y08MXaH6` / `max-width` */
+  --tv-size-640:640px;
+  /* TODO(design): no TV reference — retained APP dimension. */
+  --tv-size-720:720px;
+  /* TODO(design): no TV reference — retained APP dimension. */
+  --tv-size-760:760px;
+  /* TODO(design): no TV reference — retained APP dimension. */
+  --tv-size-860:860px;
+  /* TODO(design): no TV reference — retained APP dimension. */
+  --tv-size-880:880px;
+  /* TODO(design): no TV reference — retained APP dimension. */
+  --tv-size-1440:1440px;
+
+
+  /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-minty-green-700 / --color-ripe-red-700.
+     Text uses AA shades; candle/heatmap colors remain independent. */
+  --tv-up-text:var(--tv-green-700); --tv-down-text:var(--tv-red-700);
+  /* TV_REF: same runtime vars --color-tan-orange-a700 / --color-tv-blue-500. */
+  --tv-warning-text:#8c541c; --tv-buy-text:var(--tv-blue-500);
+  /* TV_REF: captures/B_chart_design/css/109_11709.bcd0312befc95fb040a8.css .common-tooltip-Hp4KzOJw transition. */
+  --tv-duration-fast:.15s; --tv-ease:linear;
+  /* TODO(design): no TV reference — preserve APP local stacking contexts, above library canvas layers. */
+  --tv-layer-inline:1; --tv-layer-replay:7; --tv-layer-float:8; --tv-layer-edit:9;
+  --tv-layer-header:20; --tv-layer-tip:25; --tv-layer-fullscreen:30;
+  --tv-layer-tooltip:50; --tv-layer-popup:60; --tv-layer-heat-tip:70;
+  /* TODO(design): no TV reference — retained APP tooltip/backdrop/swatch opacity. */
+  --tv-tooltip-muted:rgb(255 255 255 / .7); --tv-backdrop:rgb(0 0 0 / .35);
+  --tv-kbd-bg:rgb(255 255 255 / .15); --tv-swatch-outline:rgb(0 0 0 / .15);
+  --tv-text-shadow:0 var(--tv-size-1) var(--tv-size-1) rgb(0 0 0 / .25);
+  --tv-thumb-shadow:0 var(--tv-size-1) var(--tv-size-2) rgb(0 0 0 / .12);
+
   /* ---- primitives (TradingView's ramps, light and dark share them) ---- */
-  --tv-white:#fff; --tv-black:#000;
-  --tv-gray-50:#f9f9f9; --tv-gray-100:#f2f2f2; --tv-gray-150:#ebebeb; --tv-gray-200:#dbdbdb; --tv-gray-250:#c9c9c9;
-  --tv-gray-300:#b8b8b8; --tv-gray-350:#a8a8a8; --tv-gray-400:#9c9c9c; --tv-gray-450:#8c8c8c; --tv-gray-500:#808080;
-  --tv-gray-550:#707070; --tv-gray-600:#636363; --tv-gray-650:#575757; --tv-gray-700:#4a4a4a; --tv-gray-750:#3d3d3d;
-  --tv-gray-800:#2e2e2e; --tv-gray-850:#1f1f1f; --tv-gray-900:#0f0f0f;
-  --tv-red-50:#ffebec; --tv-red-100:#fccbcd; --tv-red-300:#f77c80; --tv-red-400:#f7525f; --tv-red-500:#f23645; --tv-red-600:#cc2f3c; --tv-red-700:#b22833;
-  --tv-green-50:#daf2ee; --tv-green-100:#ace5dc; --tv-green-300:#42bda8; --tv-green-400:#22ab94; --tv-green-500:#089981; --tv-green-600:#06806b; --tv-green-700:#056656;
-  --tv-blue-50:#e3effd; --tv-blue-100:#bbd9fb; --tv-blue-200:#90bff9; --tv-blue-300:#5b9cf6; --tv-blue-400:#3179f5; --tv-blue-500:#2962ff; --tv-blue-600:#1e53e5; --tv-blue-700:#1848cc;
-  --tv-orange-50:#fff3e0; --tv-orange-300:#ffb74d; --tv-orange-500:#ff9800; --tv-orange-700:#f57c00;
-  --tv-purple-500:#9c27b0; --tv-deep-purple-500:#673ab7; --tv-pink-500:#e91e63; --tv-cyan-500:#00bcd4; --tv-lime-500:#4caf50; --tv-yellow-700:#fbc02d;
+  --tv-white:#fff; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-white */ --tv-black:#000; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-black */
+  --tv-gray-50:#f9f9f9; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-cold-gray-50 */ --tv-gray-100:#f2f2f2; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-cold-gray-100 */ --tv-gray-150:#ebebeb; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-cold-gray-150 */ --tv-gray-200:#dbdbdb; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-cold-gray-200 */ --tv-gray-250:#c9c9c9; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-cold-gray-250 */
+  --tv-gray-300:#b8b8b8; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-cold-gray-300 */ --tv-gray-350:#a8a8a8; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-cold-gray-350 */ --tv-gray-400:#9c9c9c; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-cold-gray-400 */ --tv-gray-450:#8c8c8c; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-cold-gray-450 */ --tv-gray-500:#808080; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-cold-gray-500 */
+  --tv-gray-550:#707070; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-cold-gray-550 */ --tv-gray-600:#636363; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-cold-gray-600 */ --tv-gray-650:#575757; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-cold-gray-650 */ --tv-gray-700:#4a4a4a; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-cold-gray-700 */ --tv-gray-750:#3d3d3d; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-cold-gray-750 */
+  --tv-gray-800:#2e2e2e; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-cold-gray-800 */ --tv-gray-850:#1f1f1f; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-cold-gray-850 */ --tv-gray-900:#0f0f0f; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-cold-gray-900 */
+  --tv-red-50:#ffebec; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-ripe-red-50 */ --tv-red-100:#fccbcd; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-ripe-red-100 */ --tv-red-300:#f77c80; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-ripe-red-300 */ --tv-red-400:#f7525f; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-ripe-red-400 */ --tv-red-500:#f23645; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-ripe-red-500 */ --tv-red-600:#cc2f3c; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-ripe-red-600 */ --tv-red-700:#b22833; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-ripe-red-700 */
+  --tv-green-50:#daf2ee; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-minty-green-50 */ --tv-green-100:#ace5dc; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-minty-green-100 */ --tv-green-300:#42bda8; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-minty-green-300 */ --tv-green-400:#22ab94; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-minty-green-400 */ --tv-green-500:#089981; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-minty-green-500 */ --tv-green-600:#06806b; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-minty-green-600 */ --tv-green-700:#056656; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-minty-green-700 */
+  --tv-blue-50:#e3effd; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-tv-blue-50 */ --tv-blue-100:#bbd9fb; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-tv-blue-100 */ --tv-blue-200:#90bff9; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-tv-blue-200 */ --tv-blue-300:#5b9cf6; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-tv-blue-300 */ --tv-blue-400:#3179f5; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-tv-blue-400 */ --tv-blue-500:#2962ff; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-tv-blue-500 */ --tv-blue-600:#1e53e5; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-tv-blue-600 */ --tv-blue-700:#1848cc; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-tv-blue-700 */
+  --tv-orange-50:#fff3e0; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-tan-orange-50 */ --tv-orange-300:#ffb74d; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-tan-orange-300 */ --tv-orange-500:#ff9800; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-tan-orange-500 */ --tv-orange-700:#f57c00; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-tan-orange-700 */
+  --tv-purple-500:#9c27b0; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-grapes-purple-500 */ --tv-deep-purple-500:#673ab7; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-deep-blue-500 */ --tv-pink-500:#e91e63; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-berry-pink-500 */ --tv-cyan-500:#00bcd4; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-sky-blue-500 */ --tv-lime-500:#4caf50; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-iguana-green-500 */ --tv-yellow-700:#fbc02d; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-banana-yellow-700 */
 
   /* ---- semantic, light (TradingView's --color-* tokens) ---- */
   --tv-bg:var(--tv-white);                 /* background-primary */
@@ -46,8 +207,9 @@
   --tv-row-selected:var(--tv-blue-100);    /* list-item-bg-selected */
   --tv-input:var(--tv-white);
   --tv-placeholder:var(--tv-gray-350);
-  --tv-shadow:0 2px 4px rgb(0 0 0 / .2);
-  --tv-popup-shadow:0 2px 4px rgb(0 0 0 / .08), 0 4px 24px rgb(0 0 0 / .12);
+  --tv-shadow:0 var(--tv-size-2) var(--tv-size-4) rgb(0 0 0 / .2);
+  /* TODO(design): no TV reference — existing compound popup shadow retained. */
+  --tv-popup-shadow:0 var(--tv-size-2) var(--tv-size-4) rgb(0 0 0 / .08), 0 var(--tv-size-4) var(--tv-size-24) rgb(0 0 0 / .12);
   /* chart canvas, as TradingView paints it (verified on its canvases) */
   --tv-chart-text:var(--tv-gray-900);
   --tv-chart-grid:rgb(46 46 46 / .06);
@@ -57,12 +219,12 @@
 
   /* ---- type and density: TradingView's system stack, 14px base, 13px data ---- */
   --tv-font:-apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,Ubuntu,sans-serif;
-  --tv-header:38px;      /* the terminal's top toolbar */
-  --tv-left:52px;        /* the drawing toolbar */
-  --tv-right:45px;       /* the right icon rail */
-  --tv-widget:300px;     /* the widget bar */
-  --tv-bottom:38px;      /* the bottom toolbar */
-  --tv-gap:4px;          /* chart-page-bg between blocks */
+  --tv-header:var(--tv-size-38);      /* the terminal's top toolbar */
+  --tv-left:var(--tv-size-52);        /* the drawing toolbar */
+  --tv-right:var(--tv-size-45);       /* the right icon rail */
+  --tv-widget:var(--tv-size-300);     /* the widget bar */
+  --tv-bottom:var(--tv-size-38);      /* the bottom toolbar */
+  --tv-gap:var(--tv-size-4);          /* chart-page-bg between blocks */
 
   /* ---- Tibinance's tokens, rebound to TradingView's ---- */
   --canvas:var(--tv-bg); --surface:var(--tv-popup); --surface-soft:var(--tv-bg-3); --surface-hover:var(--tv-row-hover);
@@ -71,7 +233,7 @@
   --accent:var(--tv-brand); --accent-soft:var(--tv-blue-50); --on-accent:#fff;
   --control-track:var(--tv-btn-hover); --control-track-hover:var(--tv-gray-150);
   --control-thumb-shadow:var(--tv-shadow);
-  --positive:var(--tv-up); --negative:var(--tv-down); --caution:var(--tv-orange-500);
+  --positive:var(--tv-up-text); --negative:var(--tv-down-text); --caution:var(--tv-warning-text);
   --sell:var(--tv-red-500); --buy:var(--tv-blue-500);   /* TradingView's SELL and BUY buttons */
   --average:var(--tv-gray-400);
   --event-world:var(--tv-purple-500); --event-game:var(--tv-orange-500); --event-market:var(--tv-gray-550);   /* world events apart from the Buy blue */
@@ -81,12 +243,16 @@
   --font-ui:var(--tv-font); --font-editorial:var(--tv-font);
   --type-base:.875rem; --type-ratio:1.143;
   --weight-strong:600; --tracking-tight:0; --tracking-caps:0;
-  --radius:6px; --radius-sm:4px;
-  --control-height:32px;
+  --radius:var(--tv-size-6); --radius-sm:var(--tv-size-4);
+  --control-height:var(--tv-size-32);
   color-scheme:light;
 }
 
 :root[data-theme="dark"] {
+  /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-minty-green-300,
+     --color-ripe-red-300, --color-tan-orange-300 and --color-tv-blue-200. */
+  --tv-up-text:var(--tv-green-300); --tv-down-text:var(--tv-red-300);
+  --tv-warning-text:var(--tv-orange-300); --tv-buy-text:var(--tv-blue-200);
   --tv-bg:var(--tv-black);
   --tv-bg-2:var(--tv-gray-850);
   --tv-bg-3:var(--tv-gray-800);
@@ -101,16 +267,17 @@
   --tv-divider:var(--tv-gray-700);
   --tv-link:var(--tv-blue-300); --tv-link-hover:var(--tv-blue-400);
   --tv-btn-hover:var(--tv-gray-800);
-  --tv-btn-active-bg:#132042;
+  --tv-btn-active-bg:#132042; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-tv-blue-a900 */
   --tv-popup:var(--tv-gray-850);
   --tv-popup-hover:var(--tv-gray-800);
   --tv-tooltip:var(--tv-gray-750);
   --tv-row-hover:var(--tv-gray-800);
-  --tv-row-selected:#142e61;
+  --tv-row-selected:#142e61; /* TV_REF: captures/B_chart_design/design_tokens_runtime.json vars --color-tv-blue-a800 */
   --tv-input:var(--tv-gray-800);
   --tv-placeholder:var(--tv-gray-700);
-  --tv-shadow:0 2px 4px rgb(0 0 0 / .5);
-  --tv-popup-shadow:0 2px 4px rgb(0 0 0 / .4), 0 4px 24px rgb(0 0 0 / .5);
+  --tv-shadow:0 var(--tv-size-2) var(--tv-size-4) rgb(0 0 0 / .5);
+  /* TODO(design): no TV reference — existing compound popup shadow retained. */
+  --tv-popup-shadow:0 var(--tv-size-2) var(--tv-size-4) rgb(0 0 0 / .4), 0 var(--tv-size-4) var(--tv-size-24) rgb(0 0 0 / .5);
   --tv-chart-text:var(--tv-gray-300);
   --tv-chart-grid:rgb(242 242 242 / .06);
   --tv-crosshair:var(--tv-gray-650);
@@ -123,46 +290,56 @@
 
 /* ---- base ---- */
 html { scrollbar-gutter:auto; }
-body { background:var(--tv-bg); color:var(--tv-text); font:400 14px/1.43 var(--tv-font); -webkit-font-smoothing:antialiased; }
+body { background:var(--tv-bg); color:var(--tv-text); font:var(--tv-weight-400) var(--tv-size-14)/1.43 var(--tv-font); -webkit-font-smoothing:antialiased; }
 a { color:var(--tv-link); text-decoration:none; }
 a:hover { color:var(--tv-link-hover); }
-:focus-visible { outline:2px solid var(--tv-brand); outline-offset:-2px; }
+:focus-visible { outline:var(--tv-size-2) solid var(--tv-brand); outline-offset:calc(var(--tv-size-2) * -1); }
 * { scrollbar-width:thin; scrollbar-color:var(--tv-border-hover) transparent; }
-.up { color:var(--tv-up); } .down { color:var(--tv-down); }
+.up { color:var(--tv-up-text); } .down { color:var(--tv-down-text); }
 
 /* ---- TradingView controls ---- */
 /* A toolbar button: text or icon on nothing, the hover fill on hover, blue text on a light-blue fill when active. */
-.tv-btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; min-width:34px; height:34px; padding:0 8px; border:0; border-radius:4px;
-  background:transparent; color:var(--tv-text); font:inherit; font-size:14px; white-space:nowrap; cursor:pointer; }
-.tv-btn:hover { background:var(--tv-btn-hover); }
+.tv-btn { display:inline-flex; align-items:center; justify-content:center; gap:var(--tv-size-6); min-width:var(--tv-size-34); height:var(--tv-size-34); padding:0 var(--tv-size-8); border:0; border-radius:var(--tv-size-4);
+  background:transparent; color:var(--tv-text); font:inherit; font-size:var(--tv-size-14); white-space:nowrap; cursor:pointer; }
+.tv-btn:hover:not(:disabled) { background:var(--tv-btn-hover); }
 .tv-btn:is([aria-pressed="true"],[aria-checked="true"],.is-active) { background:var(--tv-btn-active-bg); color:var(--tv-btn-active); }
 .tv-btn:disabled { color:var(--tv-text-disabled); background:transparent; cursor:default; }
-.tv-btn svg { width:28px; height:28px; fill:none; stroke:currentColor; stroke-width:1; }
-.tv-btn.tv-icon { width:34px; padding:0; }
-.tv-divider { flex:none; width:1px; height:22px; margin:0 4px; background:var(--tv-divider); }
-.tv-chip { display:inline-flex; align-items:center; gap:4px; height:24px; padding:0 8px; border-radius:4px; background:var(--tv-bg-3); color:var(--tv-text); font-size:13px; }
+.tv-btn svg { width:var(--tv-size-28); height:var(--tv-size-28); fill:none; stroke:currentColor; stroke-width:1; }
+.tv-btn.tv-icon { width:var(--tv-size-34); padding:0; }
+.tv-divider { flex:none; width:var(--tv-size-1); height:var(--tv-size-22); margin:0 var(--tv-size-4); background:var(--tv-divider); }
+.tv-chip { display:inline-flex; align-items:center; gap:var(--tv-size-4); height:var(--tv-size-24); padding:0 var(--tv-size-8); border-radius:var(--tv-size-4); background:var(--tv-bg-3); color:var(--tv-text); font-size:var(--tv-size-13); }
 
 /* A popup menu, as TradingView draws its dropdowns. */
-.tv-popup { margin:0; padding:6px 0; min-width:200px; border:0; border-radius:6px; background:var(--tv-popup); color:var(--tv-text); box-shadow:var(--tv-popup-shadow); font:14px/20px var(--tv-font); }
+.tv-popup { margin:0; padding:var(--tv-size-6) 0; min-width:var(--tv-size-200); border:0; border-radius:var(--tv-size-6); background:var(--tv-popup); color:var(--tv-text); box-shadow:var(--tv-popup-shadow); font:var(--tv-size-14)/var(--tv-size-20) var(--tv-font); }
 .tv-popup [role="menuitem"],.tv-popup [role="menuitemradio"],.tv-popup [role="menuitemcheckbox"],.tv-popup .tv-item {
-  display:flex; align-items:center; gap:10px; width:100%; min-height:36px; padding:0 16px; border:0; background:none; color:inherit; font:inherit; text-align:left; cursor:pointer; }
+  display:flex; align-items:center; gap:var(--tv-size-10); width:100%; min-height:var(--tv-size-36); padding:0 var(--tv-size-16); border:0; background:none; color:inherit; font:inherit; text-align:left; cursor:pointer; }
 .tv-popup :is([role^="menuitem"],.tv-item):hover { background:var(--tv-popup-hover); }
-.tv-popup :is([aria-checked="true"],.is-active) { background:var(--tv-brand); color:#fff; }
-.tv-popup hr { height:1px; margin:6px 0; border:0; background:var(--tv-divider); }
-.tv-popup .tv-hint { margin-left:auto; color:var(--tv-text-2); font-size:13px; }
-.tv-popup :is([aria-checked="true"],.is-active) .tv-hint { color:#fff; }
+.tv-popup :is([aria-checked="true"],.is-active) { background:var(--tv-brand); color:var(--tv-white); }
+.tv-popup hr { height:var(--tv-size-1); margin:var(--tv-size-6) 0; border:0; background:var(--tv-divider); }
+.tv-popup .tv-hint { margin-left:auto; color:var(--tv-text-2); font-size:var(--tv-size-13); }
+.tv-popup :is([aria-checked="true"],.is-active) .tv-hint { color:var(--tv-white); }
 
 /* Inputs and dialogs. */
-.tv-input { height:34px; padding:0 12px; border:1px solid var(--tv-border-hover); border-radius:6px; background:var(--tv-input); color:var(--tv-text); font:inherit; }
+.tv-input { height:var(--tv-size-34); padding:0 var(--tv-size-12); border:var(--tv-size-1) solid var(--tv-border-hover); border-radius:var(--tv-size-6); background:var(--tv-input); color:var(--tv-text); font:inherit; }
 .tv-input::placeholder { color:var(--tv-placeholder); }
 .tv-input:focus { border-color:var(--tv-brand); outline:0; }
-.tv-dialog { padding:0; border:0; border-radius:8px; background:var(--tv-popup); color:var(--tv-text); box-shadow:var(--tv-popup-shadow); }
-.tv-dialog::backdrop { background:rgb(0 0 0 / .35); }
-.tv-tooltip { position:fixed; z-index:50; padding:4px 8px; border-radius:4px; background:var(--tv-tooltip); color:#fff; font-size:13px; pointer-events:none; white-space:nowrap; }
-.tv-kbd { padding:0 4px; border-radius:3px; background:rgb(255 255 255 / .15); font-size:12px; }
+.tv-dialog { padding:0; border:0; border-radius:var(--tv-size-8); background:var(--tv-popup); color:var(--tv-text); box-shadow:var(--tv-popup-shadow); }
+.tv-dialog::backdrop { background:var(--tv-backdrop); }
+.tv-tooltip { position:fixed; z-index:var(--tv-layer-tooltip); padding:var(--tv-size-4) var(--tv-size-8); border-radius:var(--tv-size-4); background:var(--tv-tooltip); color:var(--tv-white); font-size:var(--tv-size-13); pointer-events:none; white-space:nowrap; }
+.tv-kbd { padding:0 var(--tv-size-4); border-radius:var(--tv-size-3); background:var(--tv-kbd-bg); font-size:var(--tv-size-12); }
 
 /* Performance tiles, as the details widget draws them: tinted by the sign of the change. */
-.tv-perf { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
-.tv-perf > * { display:grid; justify-items:center; gap:2px; padding:8px 4px; border:0; border-radius:6px; font:inherit; line-height:1.2; cursor:pointer; }
+.tv-perf { display:grid; grid-template-columns:repeat(3,1fr); gap:var(--tv-size-6); }
+.tv-perf > * { display:grid; justify-items:center; gap:var(--tv-size-2); padding:var(--tv-size-8) var(--tv-size-4); border:0; border-radius:var(--tv-size-6); font:inherit; line-height:1.2; cursor:pointer; }
 .tv-perf .up { background:var(--tv-up-soft); }
 .tv-perf .down { background:var(--tv-down-soft); }
+
+/* TV_REF: captures/B_chart_design/css/068_94186.b336cd117bc17ca17c02.css
+   .segmentedControlBase-Wsyc2cnT:after uses a 2px focus border and 4px expansion. */
+:root :is(.tv-input,.tv-dialog input,.tv-terminal .filter,.tv-doc .field,.tv-doc .filter,.tv-doc .trade-input):focus-visible {
+  outline:var(--tv-size-2) solid var(--tv-brand); outline-offset:var(--tv-size-2);
+}
+/* Nonessential transitions yield to the viewer's motion preference. */
+@media (prefers-reduced-motion:reduce) {
+  *,*::before,*::after { transition:none!important; animation:none!important; scroll-behavior:auto!important; }
+}
