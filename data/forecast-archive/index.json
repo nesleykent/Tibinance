@@ -1,8 +1,8 @@
 {
  "chain": {
   "evaluations": 18,
-  "head": "6a14cfe7a3dc6d3adcb02b3c9eae01db07b8b07fa08521a2324d61ec1ab8fd49",
-  "records": 65
+  "head": "f85ab8e714902f4ed3542492b59844091afeb93ae0f2f3290a42d25f5c97266d",
+  "records": 68
  },
  "forecasts": [
   {
@@ -867,6 +867,105 @@
    "superseded": false,
    "supersededBy": null,
    "target": "Weekly median of daily Sell Offers (API daily median; capture median only on days without one) for the Monday to Sunday week that holds the target date; the Research scoring rule"
+  },
+  {
+   "archiveBasis": "live",
+   "archivedAt": "2026-10-15T07:41:40+00:00",
+   "contentHash": "29adf6a097e2876da11ee71594f567b87426f9292e989dccc87a455baf8cc858",
+   "createdAt": {
+    "basis": "generation time is not recorded by analyze.py; no later than archive.archivedAt",
+    "value": null
+   },
+   "dataCutoff": "2026-10-15",
+   "edition": "tc-world-scenarios/2026-10-15",
+   "evaluation": {
+    "points": 0,
+    "weeks": []
+   },
+   "evidence": {
+    "repository": null,
+    "website": null
+   },
+   "evidenceLevel": null,
+   "failures": [],
+   "horizon": {
+    "stepDays": 7,
+    "steps": 52,
+    "unit": "week"
+   },
+   "inputs": "08e92e01306c662640f524eb493bcae19c163ffafe0abcc254a0b7c16382d671",
+   "interval": "heuristic-stress-band",
+   "model": {
+    "id": "C+S+H transfer",
+    "version": "9db672afd85345272e30ec26453b3a68b621d4c756f3d485883712eedba31519"
+   },
+   "outputs": "b52f6999ea28a127aa91f397918657c4d45903ba09cac66b027219d593ce70c6",
+   "presentations": [
+    {
+     "sha256": "2eed8793b78fdf8f20520b30b5e962547f6bc87b14e0c656a48600b95c810140",
+     "surface": "markets-projections"
+    }
+   ],
+   "product": "tc-world-scenarios",
+   "provenance": "authentic",
+   "reproducibility": {
+    "missing": [],
+    "prediction": "complete inputs (tools/forecasts/reproduce.py rebuilds the outputs)",
+    "research": "from this repository at codeCommit (frozen inputs listed in the snapshot datasets)"
+   },
+   "seq": 66,
+   "state": "archived",
+   "superseded": false,
+   "supersededBy": null,
+   "target": "Weekly median of daily offers (API daily median; capture median only on days without one), per side, for the Monday to Sunday week that holds the target date; the Research scoring rule"
+  },
+  {
+   "archiveBasis": "live",
+   "archivedAt": "2026-10-15T07:41:40+00:00",
+   "contentHash": "6030026200e0812dd24cab0ea16ac756b2d146011c9df2f823c6c125d9437697",
+   "createdAt": {
+    "basis": "ledger recordedAt",
+    "value": "2026-10-15T07:41:35+00:00"
+   },
+   "dataCutoff": "2026-10-15",
+   "edition": "research-ledger/2026-10-15",
+   "evaluation": {
+    "points": 0,
+    "weeks": []
+   },
+   "evidence": {
+    "repository": null,
+    "website": null
+   },
+   "evidenceLevel": null,
+   "failures": [],
+   "horizon": {
+    "stepDays": 7,
+    "steps": 52,
+    "unit": "week"
+   },
+   "inputs": null,
+   "interval": "simulated-p10-p90",
+   "model": {
+    "id": "Research ledger: C, S, H, C+S, C+S+H; simulated fan; world transfers",
+    "version": "9db672afd85345272e30ec26453b3a68b621d4c756f3d485883712eedba31519"
+   },
+   "outputs": "dbda95faf13a4eb066674bcb76588bfdbcaf2f4f07e8c27c6638d738ee1a65ca",
+   "presentations": [],
+   "product": "research-ledger",
+   "provenance": "authentic",
+   "reproducibility": {
+    "missing": [
+     "fan and world transfers need the full Research pipeline"
+    ],
+    "prediction": "partial",
+    "research": "from this repository at codeCommit"
+   },
+   "seq": 67,
+   "state": "archived",
+   "superseded": false,
+   "supersededBy": null,
+   "target": "weekly median of daily offers in the week ending on the Sunday that holds the target date"
   }
  ],
  "format": 1,
@@ -1095,6 +1194,22 @@
    "forecast": "073bbb981ac794ad3c0c6b6bdedaac74596517ad16b0f0883a916e89d52ab04f",
    "sha256": "5f8b08af52aca9a8c94602c14186046e0e11165a4745d4274db7565536b51f9b",
    "state": "published",
+   "superseded": false,
+   "supersededBy": null,
+   "surface": "markets-projections"
+  },
+  {
+   "contentHash": "0ddd2c88e81c30b415f8b524ec720161800e4bd3339f15f00632383d3d1294a7",
+   "edition": "tc-world-scenarios/2026-10-15",
+   "evidence": {
+    "repository": null,
+    "website": null
+   },
+   "evidenceLevel": null,
+   "failures": [],
+   "forecast": "29adf6a097e2876da11ee71594f567b87426f9292e989dccc87a455baf8cc858",
+   "sha256": "2eed8793b78fdf8f20520b30b5e962547f6bc87b14e0c656a48600b95c810140",
+   "state": "archived",
    "superseded": false,
    "supersededBy": null,
    "surface": "markets-projections"
