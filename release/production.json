@@ -1,14 +1,14 @@
 {
  "format": 1,
  "note": "",
- "approver": "Claude Opus 4.6",
+ "approver": "Owner standing approval (publish-to-main); Claude verified 241 JS tests, validate_site 9/9, Gentebra 2026-10-03 legend in browser",
  "artifact": {
-  "bytes": 141625780,
-  "digest": "45e07423a47dd8bbafd02a9612a53eb7615e8dcc1587c1ac087f7dfe012d8050",
+  "bytes": 141622793,
+  "digest": "e08a7f889388a3b964aad7756e81ce88162963381f993bf953abe3105460dce8",
   "files": 977
  },
- "commit": "00dc7916a0ae267efc262c2e1e2fdf27af47b4f7",
- "createdAt": "2026-10-15T07:52:51.068Z",
+ "commit": "c0e0332b551bdbd340fb7db3c466428e937996e5",
+ "createdAt": "2026-10-15T07:55:05.045Z",
  "kind": "full",
  "policy": {
   "dataPaths": [
@@ -34,10 +34,10 @@
  },
  "policySha256": "8598ea053fc9fba9189b10e9c9bbbd33f9b89b36ab503161a844995d81008ad9",
  "source": {
-  "commit": "00dc7916a0ae267efc262c2e1e2fdf27af47b4f7"
+  "commit": "c0e0332b551bdbd340fb7db3c466428e937996e5"
  },
- "tag": "release/0028",
- "tree": "8b649df744efe2fad95b0a856e96d658d83af7cd",
+ "tag": "release/0029",
+ "tree": "5b082c1b38a34c7c5c79fc2c3b18462e9c973a80",
  "validation": {
   "checks": [
    {
@@ -78,12 +78,12 @@
    }
   ],
   "validator": {
-   "commit": "00dc7916a0ae267efc262c2e1e2fdf27af47b4f7",
+   "commit": "c0e0332b551bdbd340fb7db3c466428e937996e5",
    "path": "tools/ci/validate_site.mjs"
   }
  },
  "record": {
-  "seq": 23,
-  "hash": "98dd5d84f5d99b778af2b9846f1fbeecc55f3d98f09d3b69f7c7b27a99156de4"
+  "seq": 24,
+  "hash": "1fc920562998c060ccc0065ff1b17f4a166ffcd4a8f2a307385b54981327d6ec"
  }
 }
