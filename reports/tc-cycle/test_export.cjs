@@ -36,15 +36,12 @@ const {chromium} = require('playwright');
           }
           // Inspect the PNG pixels, not just the live DOM: CSS-only legend marks
           // can retain their labels while silently collapsing in the serialized SVG.
-          for (const label of figure.querySelectorAll('.legend > span:has(.sw)')) {
-            const rect = label.getBoundingClientRect();
-            if (rect.width <= 20 || rect.height <= 10) throw new Error('Missing whole-label surface');
-            const x = Math.floor((rect.left - bounds.left + 1) * 2), y = Math.floor((rect.top - bounds.top + rect.height / 2) * 2);
-            const actual = [...this.getContext('2d').getImageData(x, y, 1, 1).data].slice(0, 3);
-            const probe = document.createElement('canvas').getContext('2d');
-            probe.fillStyle = getComputedStyle(label).borderLeftColor; probe.fillRect(0, 0, 1, 1);
-            const expected = [...probe.getImageData(0, 0, 1, 1).data].slice(0, 3);
-            if (actual.reduce((sum, value, i) => sum + Math.abs(value - expected[i]), 0) > 30) throw new Error('PNG is missing its colored legend label');
+          for (const swatch of figure.querySelectorAll('.legend .sw.dot')) {
+            const rect = swatch.getBoundingClientRect();
+            const x = Math.floor((rect.left - bounds.left + rect.width / 2) * 2);
+            const y = Math.floor((rect.top - bounds.top + rect.height / 2) * 2);
+            const [r, g, b] = this.getContext('2d').getImageData(x, y, 1, 1).data;
+            if (r + g + b > 750) throw new Error('PNG is missing a legend dot');
           }
           return encode.apply(this, args);
         };

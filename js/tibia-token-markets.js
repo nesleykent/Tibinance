@@ -4,7 +4,7 @@ import { esc } from './format.js';
 import { RANGES, changeOver, rangeStart, dayGrid } from './market-series.js';
 // Version the changed shared modules: GitHub Pages can retain pre-TIB code in browser caches.
 import { createMarketChart, dayOf } from './market-chart.js?v=20261015-quality-estimates';
-import { marketImage, pageDetails } from './market-export.js?v=20261015-legends';
+import { marketImage, pageDetails } from './market-export.js?v=20261015-shot';
 import { dock } from './markets-dock.js';
 import { loadEvents, addEventDays } from './events.js';
 import { eventsPanel } from './market-events-panel.js?v=20261014-rebuild';
@@ -48,7 +48,6 @@ function quote() {
 }
 function legend(day) {
   const rest = day == null;
-  $('chartHead').classList.toggle('is-crosshair', !rest);
   day ??= view?.end;
   const p = view?.byDay.get(day);
   // The candle's open, high and low beside its close, as a terminal reads a bar.
@@ -58,8 +57,7 @@ function legend(day) {
   // The chart's status stands over its top: the price scale starts below it (js/market-chart.js fitTop).
   if (rest) market.fitTop?.($('chartHead'));
 }
-const headResize = new ResizeObserver(() => requestAnimationFrame(() => market.fitTop?.($('chartHead'))));
-headResize.observe($('chart')); headResize.observe($('chartHead'));
+new ResizeObserver(() => requestAnimationFrame(() => market.fitTop?.($('chartHead')))).observe($('chart'));
 function applyRange() {
   $('range').querySelectorAll('button').forEach(b => b.setAttribute('aria-checked', String(b.dataset.range === range)));
   if (view.grid.length) {

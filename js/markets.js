@@ -20,7 +20,7 @@ import { fmt, esc, num } from './format.js';
 import { RANGES, changeOver, dayGrid, daysBetween, marketValues, neighbours, rangeStart, statisticsAt } from './market-series.js';
 import { SIDES, createMarketChart, dayOf } from './market-chart.js?v=20261015-quality-estimates';
 import { dock } from './markets-dock.js';
-import { marketImage, pageDetails } from './market-export.js?v=20261015-legends';
+import { marketImage, pageDetails } from './market-export.js?v=20261015-shot';
 import { loadEvents as readEvents, eventsFor, lifecycleSpan, addEventDays } from './events.js';
 import { eventsPanel } from './market-events-panel.js?v=20261014-rebuild';
 import { eventMarks } from './market-events-ui.js?v=20261015-left2';
@@ -164,7 +164,6 @@ function applyRange(attempt = 0) {
 function showLegend(day) {
   const view = state.view, rest = day == null;
   if (!view) return;
-  $('chartHead').classList.toggle('is-crosshair', !rest);
   $('projectionLegend').innerHTML = '';
   $('historyLegend').innerHTML = historyRow(day ?? view.latestDay);
   if (!view.latestDay) { $('legend').innerHTML = ''; $('volumeLegend').innerHTML = ''; return; }
@@ -302,8 +301,7 @@ function showPerformance() {
 
 // The status stands over the chart's top; the price scale starts below it (js/market-chart.js fitTop).
 const fitHead = () => market.fitTop?.($('chartHead'));
-const headResize = new ResizeObserver(() => requestAnimationFrame(fitHead));
-headResize.observe($('chart')); headResize.observe($('chartHead'));
+new ResizeObserver(() => requestAnimationFrame(fitHead)).observe($('chart'));
 
 // The chart's accessible description: the history, and the projection when it is shown.
 function describeChart() {

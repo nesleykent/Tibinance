@@ -4,12 +4,11 @@
  * drawing, the object tree, the bottom toolbar's clock and price-scale modes, and TradingView's hotkeys. It works
  * through the context the page connects (js/tv-bridge.js), so a page keeps its own data and state.
  */
-import { initSeriesSurfaces } from './chart-legend.js';
 import { cssToken as token, cssPixels } from './theme.js';
 import { openDialog, updateListbox, menuKeyboard } from './tv-ui.js';
 import { bridge, whenConnected } from './tv-bridge.js';
 import { createDrawings, TOOLS, PALETTE } from './tv-drawings.js?v=20261014-tv';
-import { createIndicators, INDICATORS } from './tv-indicators.js?v=20261015-legends';
+import { createIndicators, INDICATORS } from './tv-indicators.js?v=20261014-tv';
 import { newsList } from './tv-news.js?v=20261015-design';
 
 const $ = id => document.getElementById(id);
@@ -437,8 +436,6 @@ function viewChanged() {
   drawingsChanged('load');
 }
 whenConnected(context => {
-  context.indicatorKeys = indicators.keys;
-  context.exportIndicators = indicators.exportTo;
   ctx = context;
   if (!ctx.worlds) { const b = $('tvSymbol'); if (b) { b.disabled = true; b.title = ctx.symbol?.() ?? ''; } }
   if (!ctx.screener) $('tvCompare')?.setAttribute('hidden', '');
@@ -457,5 +454,3 @@ addEventListener('tv:theme', () => { ctx?.retheme?.(); drawings?.redraw(); });
 // Page lifetime: release timers and temporary outside-click listeners; resume the clock on a cached restore.
 addEventListener('pagehide', () => { closePopup(false); stopPlaying(); clearInterval(clockTimer); });
 addEventListener('pageshow', e => { if (e.persisted && ctx) startClock(); });
-
-initSeriesSurfaces();

@@ -3,7 +3,7 @@ import globals from 'globals';
 
 export default [
   {
-    files: ['js/**/*.js', 'tools/write_public_config.mjs', 'tests/config.test.mjs', 'tests/chart-refactor.test.mjs', 'tests/quality-browser.mjs', 'tests/design-system-browser.mjs', 'tests/legend-browser.mjs'],
+    files: ['js/**/*.js', 'tools/write_public_config.mjs', 'tests/config.test.mjs', 'tests/chart-refactor.test.mjs', 'tests/quality-browser.mjs', 'tests/design-system-browser.mjs'],
     languageOptions: { ecmaVersion: 'latest', sourceType: 'module', globals: { ...globals.browser, ...globals.node, Tesseract: 'readonly' } },
     rules: {
       'no-dupe-args': 'error',

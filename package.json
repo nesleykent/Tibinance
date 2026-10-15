@@ -3,10 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "lint": "eslint js tools/write_public_config.mjs tests/config.test.mjs tests/chart-refactor.test.mjs tests/quality-browser.mjs tests/design-system-browser.mjs tests/legend-browser.mjs",
+    "lint": "eslint js tools/write_public_config.mjs tests/config.test.mjs tests/chart-refactor.test.mjs tests/quality-browser.mjs tests/design-system-browser.mjs",
     "typecheck": "tsc --project jsconfig.json",
     "test": "node --test tests/*.test.mjs",
-    "test:legends": "node tests/legend-browser.mjs",
     "test:design": "node tests/design-system-browser.mjs",
     "build": "node tools/ci/validate_site.mjs"
   },
