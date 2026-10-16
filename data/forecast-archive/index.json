@@ -1,8 +1,8 @@
 {
  "chain": {
   "evaluations": 18,
-  "head": "4a2fed1371e1ea6e145dc0220e8a33377d7fb51abf85dcb41f3e63a3f421ab76",
-  "records": 93
+  "head": "acd4f7ea72aad0e893bb8d5eeb5fc0fc756cb4879d3134909a389971c7e26e0a",
+  "records": 94
  },
  "forecasts": [
   {
@@ -1496,7 +1496,12 @@
    "contentHash": "418082c81d1453ec23707929fa366655d65f38a83dd18494105c97a687d8f6d2",
    "edition": "tc-world-scenarios/2026-10-15",
    "evidence": {
-    "repository": null,
+    "repository": {
+     "at": "2026-10-15T08:54:08Z",
+     "basis": "github-push-event",
+     "commit": "3d94c26a8cd6d1003889e6ec51bd7a93294a935e",
+     "uncertainty": "exact time GitHub received the push"
+    },
     "website": {
      "at": "2026-10-15T08:56:26Z",
      "basis": "github-pages-deployment-success",
