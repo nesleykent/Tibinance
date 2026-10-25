@@ -1,6 +1,6 @@
 /*
  * Tibia's news, as TradingView shows a symbol's: a list of headlines with their time and kind, each opening its whole
- * story in a dialog. Read from the TibiaData API (api.tibiadata.com, v4), which serves tibia.com's news archive and
+ * story in a dialog. Read from the TibiaData API (api.tibiadata.com, v5), which serves tibia.com's news archive and
  * ticker with CORS: the latest items for the list, one item's content for its story. Nothing is stored; a story's HTML is
  * reduced to plain text structure and links before it is shown (sanitize), and every story links to tibia.com.
  *

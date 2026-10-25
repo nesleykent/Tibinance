@@ -14,7 +14,7 @@ try {
   const context=await browser.newContext({locale:'en-US',viewport:{width:1440,height:900},colorScheme:'light'});
   // Tibia's news from TibiaData, fixed here: a story with what must never reach the page (a script, a handler, a
   // javascript: link) and a headline with a middle dot, which Tibinance writes as a comma.
-  await context.route('https://api.tibiadata.com/v4/news/**',route=>{
+  await context.route('https://api.tibiadata.com/v5/news/**',route=>{
     const url=route.request().url();
     if (url.endsWith('/latest')) return route.fulfill({json:{news:[
       {id:9019,date:'2026-10-13',news:'Fixes and Changes\u00a0',category:'development',type:'news',url:'https://www.tibia.com/news/?subtopic=newsarchive&id=9019'},

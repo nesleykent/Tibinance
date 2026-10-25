@@ -8,7 +8,7 @@ import { createConfig, config, ENV_KEYS } from '../js/config.js';
 
 test('public defaults preserve existing URLs, durations and views and are immutable', () => {
   assert.deepEqual(config, {
-    apiBaseUrl: 'https://api.tibiadata.com/v4', worldsCacheMs: 21600000, onlineRefreshMs: 300000,
+    apiBaseUrl: 'https://api.tibiadata.com/v5', worldsCacheMs: 21600000, onlineRefreshMs: 300000,
     downloadRevokeMs: 10000, announcementDelayMs: 700, defaultWorld: 'Antica',
     marketRange: '1Y', economyRange: 'All', staleDays: 7
   });

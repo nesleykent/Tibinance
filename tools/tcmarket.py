@@ -23,12 +23,13 @@ import re
 import sqlite3
 import sys
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta
 from offer_tracking import SCHEMA as OFFER_SCHEMA, PROCESSING_VERSION, normalize_ends_at, persist_offers, export_offers
 
-API = "https://api.tibiadata.com/v4"
+API = "https://api.tibiadata.com/v5"
 HERE = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(HERE, "tc_prices.db")
 CACHE_PATH = os.path.join(HERE, ".api_cache.json")
@@ -91,19 +92,30 @@ def _save_cache(cache):
 
 
 def _get(url, retries=3):
+    # TibiaData v5: 404 = the character/world does not exist and 400 = a malformed
+    # request; both are final. 502 = tibia.com/upstream failure; that is retried.
     last = None
     for attempt in range(retries):
         try:
             req = urllib.request.Request(url, headers={"User-Agent": "tcmarket/1.0"})
             with urllib.request.urlopen(req, timeout=20) as r:
                 return json.loads(r.read().decode())
+        except urllib.error.HTTPError as exc:
+            if exc.code == 404:
+                raise PipelineError(
+                    f"TibiaData returned 404 for {url} - the character name is most likely "
+                    "misspelled or does not exist"
+                ) from exc
+            if exc.code == 400:
+                raise PipelineError(f"TibiaData rejected the request: {url} (HTTP 400)") from exc
+            last = exc
         except Exception as exc:  # noqa: BLE001 - network flake, retry
             last = exc
+        if attempt + 1 < retries:
             time.sleep(1.5 * (attempt + 1))
-    if "502" in str(last):
+    if isinstance(last, urllib.error.HTTPError) and last.code == 502:
         raise PipelineError(
-            f"TibiaData returned 502 for {url} - the character name is most likely "
-            "misspelled or does not exist (the API also 502s during an outage)"
+            f"TibiaData returned 502 for {url} - tibia.com could not be reached, try again later"
         )
     raise PipelineError(f"TibiaData request failed: {url} ({last})")
 
@@ -119,7 +131,7 @@ def fetch_character(name):
 
 
 def fetch_worlds(force=False):
-    """Returns {world_name: entry} from /v4/worlds, cached for WORLDS_TTL."""
+    """Returns {world_name: entry} from /v5/worlds, cached for WORLDS_TTL."""
     cache = _load_cache()
     entry = cache.get("worlds")
     if not force and entry and time.time() - entry["fetched_at"] < WORLDS_TTL:

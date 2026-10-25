@@ -9,8 +9,8 @@ consolidated output) is executed by the script.
 
 ```
 filename ──► character + capture timestamp
-         ──► TibiaData v4 /character/{name}  ──► world          (live, never cached)
-         ──► TibiaData v4 /worlds            ──► PvP type + BattlEye  (6h cache)
+         ──► TibiaData v5 /character/{name}  ──► world          (live, never cached)
+         ──► TibiaData v5 /worlds            ──► PvP type + BattlEye  (6h cache)
          ──► market rows                     ──► best prices + volumes
          ──► validation ──► SQLite (tc_prices.db) ──► markdown table
 ```

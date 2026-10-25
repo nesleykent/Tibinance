@@ -2,7 +2,7 @@
 //
 //   node tools/economy/population/sample_tibiadata.mjs <directory>
 //
-// One request (api.tibiadata.com/v4/worlds) gives every world's players online at that moment, as tibia.com shows it.
+// One request (api.tibiadata.com/v5/worlds) gives every world's players online at that moment, as tibia.com shows it.
 // Each run appends one line to <directory>/<YYYY-MM>.jsonl: the TibiaData timestamp and the count per world.
 // The manual online-sampler workflow keeps these on data/online-samples. It is disabled pending explicit re-enabling.
 // This series starts when sampling started: it is never merged into, or presented as, the historical GuildStats
@@ -12,7 +12,7 @@ import { appendFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 const dir = process.argv[2] ?? 'samples';
-const r = await fetch('https://api.tibiadata.com/v4/worlds', { headers: { 'User-Agent': 'TibinanceResearch/1.0 (https://github.com/nesleykent/Tibinance)' } });
+const r = await fetch('https://api.tibiadata.com/v5/worlds', { headers: { 'User-Agent': 'TibinanceResearch/1.0 (https://github.com/nesleykent/Tibinance)' } });
 if (!r.ok) throw new Error(`TibiaData: HTTP ${r.status}`);
 const body = await r.json();
 const at = body.information?.timestamp;

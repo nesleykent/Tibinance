@@ -45,7 +45,7 @@ function range(env, key, fallback) {
 
 /** @param {Readonly<Record<string, unknown>>} [env] @returns {AppConfig} */
 export function createConfig(env = {}) {
-  const base = text(env, 'TIBINANCE_API_BASE_URL', 'https://api.tibiadata.com/v4');
+  const base = text(env, 'TIBINANCE_API_BASE_URL', 'https://api.tibiadata.com/v5');
   let url;
   try { url = new URL(base); } catch { throw new Error('TIBINANCE_API_BASE_URL must be an absolute HTTPS URL'); }
   if (url.protocol !== 'https:' || url.username || url.password || url.search || url.hash) {
