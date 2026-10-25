@@ -41,11 +41,11 @@ async function main() {
   await mkdir(HISTORY, { recursive: true });
 
   if (args.includes('--worlds')) {
-    const body = JSON.parse(await get('https://api.tibiadata.com/v4/worlds'));
+    const body = JSON.parse(await get('https://api.tibiadata.com/v5/worlds'));
     const worlds = body.worlds.regular_worlds.map(w => ({ name: w.name, location: w.location, pvp_type: w.pvp_type,
       battleye_protected: w.battleye_protected, battleye_date: w.battleye_date, premium_only: w.premium_only,
       transfer_type: w.transfer_type, game_world_type: w.game_world_type })).sort((a, b) => a.name.localeCompare(b.name));
-    await writeFile(join(INPUTS, 'worlds.json'), JSON.stringify({ source: 'https://api.tibiadata.com/v4/worlds',
+    await writeFile(join(INPUTS, 'worlds.json'), JSON.stringify({ source: 'https://api.tibiadata.com/v5/worlds',
       retrievedAt: body.information.timestamp, worlds }, null, 1) + '\n');
     console.log(`world snapshot: ${worlds.length} worlds at ${body.information.timestamp}`);
   }

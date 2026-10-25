@@ -10,7 +10,7 @@ const shots = process.env.TIBINANCE_SCREENSHOTS;
 const launch = () => engine === 'webkit' ? webkit.launch({ headless: true }) : chromium.launch({ headless: true, channel: 'chrome' });
 const news = { news: [{ id: 9019, date: '2026-10-13', news: 'Changes', category: 'development', type: 'news', url: 'https://www.tibia.com/' }] };
 const worlds = { worlds: { players_online: 100, regular_worlds: [{ name: 'Antica', players_online: 50 }, { name: 'Secura', players_online: 50 }] } };
-const fixtures = context => context.route('**/v4/**', route => route.fulfill({ json: route.request().url().includes('/news/') ? news : worlds }));
+const fixtures = context => context.route('**/v5/**', route => route.fulfill({ json: route.request().url().includes('/news/') ? news : worlds }));
 const ready = async page => {
   await page.waitForFunction(() => !document.querySelector('[aria-busy="true"]'));
   await page.evaluate(() => document.fonts.ready);
@@ -64,7 +64,7 @@ const browser = await launch();
 try {
   const context = await browser.newContext();
   await fixtures(context);
-  await context.route('**/js/public-config.js', route => route.fulfill({ contentType: 'text/javascript', body: "export const publicConfig = {TIBINANCE_API_BASE_URL:'https://public.example.test/v4',TIBINANCE_DEFAULT_WORLD:'Secura',TIBINANCE_MARKET_RANGE:'3M',TIBINANCE_ECONOMY_RANGE:'6M'};" }));
+  await context.route('**/js/public-config.js', route => route.fulfill({ contentType: 'text/javascript', body: "export const publicConfig = {TIBINANCE_API_BASE_URL:'https://public.example.test/v5',TIBINANCE_DEFAULT_WORLD:'Secura',TIBINANCE_MARKET_RANGE:'3M',TIBINANCE_ECONOMY_RANGE:'6M'};" }));
   await context.addInitScript(() => {
     const start = window.setInterval.bind(window), clear = window.clearInterval.bind(window), timers = new Map();
     window.setInterval = (callback, ms, ...args) => { const id = start(callback, ms, ...args); timers.set(id, ms); return id; };

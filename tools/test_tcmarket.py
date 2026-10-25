@@ -126,5 +126,31 @@ class OfferTrackingTests(unittest.TestCase):
             capture, *_ = tc.process(source, json.loads(first['raw_sell']), json.loads(first['raw_buy']), conn=self.conn, reprocess=True)
         self.assertEqual(capture['world'], 'Ustebra')
 
+
+class TibiaDataErrorTests(unittest.TestCase):
+    """TibiaData v5: 404/400 are final, 502 is an upstream outage worth retrying."""
+
+    def http_error(self, code):
+        import urllib.error
+        return urllib.error.HTTPError('https://api.tibiadata.com/v5/character/x', code, 'err', {}, None)
+
+    def test_not_found_is_final_and_names_the_character(self):
+        with patch.object(tc.urllib.request, 'urlopen', side_effect=self.http_error(404)) as urlopen, \
+                patch.object(tc.time, 'sleep') as sleep:
+            with self.assertRaisesRegex(tc.PipelineError, '404.*misspelled or does not exist'):
+                tc._get('https://api.tibiadata.com/v5/character/x')
+        self.assertEqual(urlopen.call_count, 1)
+        sleep.assert_not_called()
+
+    def test_upstream_failure_is_retried_then_reported_as_outage(self):
+        with patch.object(tc.urllib.request, 'urlopen', side_effect=self.http_error(502)) as urlopen, \
+                patch.object(tc.time, 'sleep'):
+            with self.assertRaisesRegex(tc.PipelineError, '502.*try again later'):
+                tc._get('https://api.tibiadata.com/v5/character/x')
+        self.assertEqual(urlopen.call_count, 3)
+
+    def test_api_base_is_v5(self):
+        self.assertEqual(tc.API, 'https://api.tibiadata.com/v5')
+
 if __name__ == '__main__':
     unittest.main()

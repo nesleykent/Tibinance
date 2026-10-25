@@ -335,7 +335,7 @@ function drawWatchlist() {
 }
 
 /* ----------------------------------------------------------------- details */
-// Characters online now, read live from TibiaData (api.tibiadata.com/v4/worlds, tibia.com's world list, CORS *):
+// Characters online now, read live from TibiaData (api.tibiadata.com/v5/worlds, tibia.com's world list, CORS *):
 // {at, total, worlds: Map(name -> count)}, refreshed every five minutes while the page is open; {failed: true} when it
 // does not answer, which the details say instead of showing an older count.
 let online = null;

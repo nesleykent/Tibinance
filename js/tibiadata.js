@@ -1,4 +1,4 @@
-// TibiaData API v4. Sends Access-Control-Allow-Origin: *, so the browser can
+// TibiaData API v5. Sends Access-Control-Allow-Origin: *, so the browser can
 // call it directly - no proxy, no server, nothing to pay for.
 import { config } from './config.js';
 const API = config.apiBaseUrl;
@@ -9,17 +9,19 @@ async function getJSON(url) {
   try {
     r = await fetch(url, { cache: 'no-store', headers: { Accept: 'application/json' } });
   } catch (e) {
-    // TibiaData answers an unknown character with a 502 that carries no CORS
-    // header, so the browser reports it as a bare network failure rather than
-    // as a status. Both causes are named, because we cannot tell them apart.
-    throw new Error('TibiaData could not be reached; check the character name ' +
-                    'in the filename is spelled exactly as in game, and that you ' +
-                    'are online');
+    // v5 errors carry CORS headers, so a bare network failure now means the
+    // API was not reached at all (offline, blocked, or an edge outage).
+    throw new Error('TibiaData could not be reached; check that you are online');
   }
   if (!r.ok) {
-    if (r.status === 502) {
-      throw new Error('TibiaData returned 502; the character name is most likely ' +
+    // v5: 404 = the resource does not exist, 502 = tibia.com/upstream failed.
+    if (r.status === 404) {
+      throw new Error('TibiaData returned 404; the character name is most likely ' +
                       'misspelled or does not exist');
+    }
+    if (r.status === 502) {
+      throw new Error('TibiaData returned 502; tibia.com could not be reached, ' +
+                      'try again later');
     }
     throw new Error(`TibiaData request failed (HTTP ${r.status})`);
   }

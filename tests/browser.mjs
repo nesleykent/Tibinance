@@ -136,8 +136,8 @@ try {
   await page.getByRole('button', { name: 'Discard All', exact: true }).click();
   // Optional real OCR + file upload flow, requires the local sample and CDN access.
   if (process.env.TIBINANCE_SAMPLE) {
-    await page.route('**/api.tibiadata.com/v4/character/**', r => r.fulfill({ json: { character: { character: { world: 'Ustebra' } } } }));
-    await page.route('**/api.tibiadata.com/v4/worlds', r => r.fulfill({ json: { worlds: { regular_worlds: [{ name: 'Ustebra', pvp_type: 'Open PvP', battleye_protected: true, battleye_date: 'release' }] } } }));
+    await page.route('**/api.tibiadata.com/v5/character/**', r => r.fulfill({ json: { character: { character: { world: 'Ustebra' } } } }));
+    await page.route('**/api.tibiadata.com/v5/worlds', r => r.fulfill({ json: { worlds: { regular_worlds: [{ name: 'Ustebra', pvp_type: 'Open PvP', battleye_protected: true, battleye_date: 'release' }] } } }));
     const buffer = await readFile(process.env.TIBINANCE_SAMPLE);
     const file = { name: '2026-09-21_124317718_Private Name_Hotkey.webp', mimeType: 'image/webp', buffer };
     await page.locator('#file').setInputFiles(file);

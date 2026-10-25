@@ -20,8 +20,8 @@ try {
        'export async function extractMarketStatistics(context, onStep = () => {}) {',
        'export async function extractMarketStatistics(context, onStep = () => {}) { throw Error("private OCR failure");')}));
    await page.route('**/data/observations.json',r=>r.fulfill({json:[]}));
-   await page.route('**/api.tibiadata.com/v4/character/**',r=>r.fulfill({json:{character:{character:{world:'Antica'}}}}));
-   await page.route('**/api.tibiadata.com/v4/worlds',r=>r.fulfill({json:{worlds:{regular_worlds:[{name:'Antica',pvp_type:'Open PvP',battleye_protected:true,battleye_date:'2017-01-01'}]}}}));
+   await page.route('**/api.tibiadata.com/v5/character/**',r=>r.fulfill({json:{character:{character:{world:'Antica'}}}}));
+   await page.route('**/api.tibiadata.com/v5/worlds',r=>r.fulfill({json:{worlds:{regular_worlds:[{name:'Antica',pvp_type:'Open PvP',battleye_protected:true,battleye_date:'2017-01-01'}]}}}));
    await page.goto(root);await page.waitForFunction(()=>document.getElementById('capturesLoading').hidden);
    return page;
  };

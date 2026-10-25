@@ -18,7 +18,7 @@ const goldWorlds=gold.worlds.filter(w=>w!==goldAll && !w.ended && w.week?.gross)
 const browser=await (engine==='webkit' ? webkit.launch({headless:true}) : chromium.launch({headless:true,...(process.env.TIBINANCE_CHROME ? {executablePath:process.env.TIBINANCE_CHROME} : {channel:'chrome'})}));
 try {
   const context=await browser.newContext({locale:'en-US',viewport:{width:1440,height:900},colorScheme:'light'});
-  await context.route('https://api.tibiadata.com/v4/news/**',route=>route.request().url().endsWith('/latest')
+  await context.route('https://api.tibiadata.com/v5/news/**',route=>route.request().url().endsWith('/latest')
     ? route.fulfill({json:{news:[{id:9019,date:'2026-10-13',news:'Fixes and Changes',category:'development',type:'news',url:'https://www.tibia.com/news/?subtopic=newsarchive&id=9019'},
         {id:8990,date:'2026-10-01',news:'Adjustment of Market Fee and Exercise Weapons',category:'development',type:'news',url:'https://www.tibia.com/news/?subtopic=newsarchive&id=8990'}]}})
     : route.fulfill({json:{news:{id:8990,content_html:'<p>The Market fee will be raised to 2.5%.</p>'}}}));
