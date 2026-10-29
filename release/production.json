@@ -1,26 +1,26 @@
 {
  "format": 1,
  "note": "",
- "approver": "GitHub Actions economy data (validated data release)",
+ "approver": "GitHub Actions token and currency sync (validated data release)",
  "artifact": {
-  "bytes": 142158972,
-  "digest": "570af147cebb64561cce41eb4b36b0e0f19b08d9e4637007426c96df153daead",
+  "bytes": 142159373,
+  "digest": "26a208b6bb95e672a8633cdd43179596857ffafcb5ea1622cefdd47871e93459",
   "files": 1012
  },
- "commit": "8342d2e44afe17259c54e242dc91cb5d5db71ac8",
- "createdAt": "2026-10-29T10:27:02.986Z",
+ "commit": "c029ef299027afcf478cabc419572c3efe2afd19",
+ "createdAt": "2026-10-29T23:20:23.401Z",
  "kind": "data",
  "policySha256": "68d95fbce8c90529b2ad839b7a8572e131b797cf430968bb4a64d90eb2bd0de5",
  "source": {
   "base": {
-   "commit": "f2b85a6ba3781ac8127ce2eadca30f1e00b60790",
-   "tag": "release/0068"
+   "commit": "8342d2e44afe17259c54e242dc91cb5d5db71ac8",
+   "tag": "release/0069"
   },
-  "data": "a32d225a7a787ad1510367e5a1c3b40220154d1c",
+  "data": "fa6fdcfa398d482c10e593dbe5950562967cd8b7",
   "policyFrom": "release/0046"
  },
- "tag": "release/0069",
- "tree": "f4a02d149af6f2a574abbe52817862a200c3cd71",
+ "tag": "release/0070",
+ "tree": "59ba8c7768935a5e103676b3c7f34f8da2c53bab",
  "validation": {
   "checks": [
    {
@@ -65,12 +65,12 @@
    }
   ],
   "validator": {
-   "commit": "a32d225a7a787ad1510367e5a1c3b40220154d1c",
+   "commit": "fa6fdcfa398d482c10e593dbe5950562967cd8b7",
    "path": "tools/ci/validate_site.mjs"
   }
  },
  "record": {
-  "seq": 64,
-  "hash": "ab75c04961b85a3ef4cbaea44bed02b8815871cf91df5cb7376e8106b7c84708"
+  "seq": 65,
+  "hash": "a622b249503ff23c2623dbc50931e798105c7322db8f8ae95e1eb724f70af21f"
  }
 }
