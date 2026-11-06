@@ -528,6 +528,37 @@
    ],
    "indexSha256": "3b1491f6428b6e0c5bbced8051101c1d9bd6e95c635190a87e65002c2e81354c",
    "code": "d3ab7bb713526392fef380021bf8ffaf71905434"
+  },
+  {
+   "methodology": 1,
+   "evidence": {
+    "lootRecords": 263003,
+    "liveSamples": 2035,
+    "latestLootRevision": "2026-10-13T21:40:13Z",
+    "prices": {
+     "revId": 1203407,
+     "revTimestamp": "2026-08-24T18:15:53Z"
+    },
+    "versions": 817,
+    "creatureMap": {
+     "matched": 1401,
+     "races": 1750
+    }
+   },
+   "killstats": [
+    {
+     "id": "archive",
+     "repo": "tibiamaps/tibia-kill-stats-from-2022-08-23-to-2025-12-04",
+     "commit": "8aaa41d7f82cbb38305c7a2d8e5029e5480f74f6"
+    },
+    {
+     "id": "current",
+     "repo": "tibiamaps/tibia-kill-stats",
+     "commit": "4e805eb499f63c2071ecb57da2f94391bb336479"
+    }
+   ],
+   "indexSha256": "97707f4739855f721c44627cbda36ceda39686ec9f3e4b21b11a514cc27208b1",
+   "code": "b97a5dc11929a1562eb85576d8473c2729a6bb22"
   }
  ]
 }
