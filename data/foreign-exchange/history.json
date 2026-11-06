@@ -3,8 +3,8 @@
   "provider": "ecb",
   "source": "European Central Bank via Frankfurter v2",
   "sourceUrl": "https://frankfurter.dev/",
-  "requestUrl": "https://api.frankfurter.dev/v2/providers/ecb/rates?base=EUR&quotes=BRL,USD&from=2026-10-28&to=2026-11-06",
-  "fetchedAt": "2026-11-06T00:18:27.135Z",
+  "requestUrl": "https://api.frankfurter.dev/v2/providers/ecb/rates?base=EUR&quotes=BRL,USD&from=2026-10-29&to=2026-11-06",
+  "fetchedAt": "2026-11-06T23:44:24.123Z",
   "timing": "ECB daily reference observations, normally published around 16:00 CET on working days. Exact publication time is not supplied by the API.",
   "rates": [
     {
@@ -1704,6 +1704,12 @@
       "EUR": 1,
       "BRL": 6.1355,
       "USD": 1.1224
+    },
+    {
+      "day": "2026-11-06",
+      "EUR": 1,
+      "BRL": 6.1449,
+      "USD": 1.1165
     }
   ]
 }
