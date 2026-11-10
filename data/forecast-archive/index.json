@@ -1,8 +1,8 @@
 {
  "chain": {
   "evaluations": 18,
-  "head": "acd4f7ea72aad0e893bb8d5eeb5fc0fc756cb4879d3134909a389971c7e26e0a",
-  "records": 94
+  "head": "b5c38e63d180b8e6ab531d91e82af69428369157cc81637e243782bde1681e4f",
+  "records": 102
  },
  "forecasts": [
   {
@@ -117,6 +117,10 @@
     {
      "at": "2026-10-13T20:44:09Z",
      "reason": "GitHub Pages deployment 7049603323 ended in error"
+    },
+    {
+     "at": "2026-11-10T11:56:33Z",
+     "reason": "GitHub Pages deployment 7681190566 ended in failure"
     }
    ],
    "horizon": {
@@ -259,6 +263,10 @@
     {
      "at": "2026-10-13T20:44:09Z",
      "reason": "GitHub Pages deployment 7049603323 ended in error"
+    },
+    {
+     "at": "2026-11-10T11:56:33Z",
+     "reason": "GitHub Pages deployment 7681190566 ended in failure"
     }
    ],
    "horizon": {
@@ -482,6 +490,10 @@
     {
      "at": "2026-10-13T20:44:09Z",
      "reason": "GitHub Pages deployment 7049603323 ended in error"
+    },
+    {
+     "at": "2026-11-10T11:56:33Z",
+     "reason": "GitHub Pages deployment 7681190566 ended in failure"
     }
    ],
    "horizon": {
@@ -629,6 +641,10 @@
     {
      "at": "2026-10-13T20:44:09Z",
      "reason": "GitHub Pages deployment 7049603323 ended in error"
+    },
+    {
+     "at": "2026-11-10T11:56:33Z",
+     "reason": "GitHub Pages deployment 7681190566 ended in failure"
     }
    ],
    "horizon": {
@@ -777,6 +793,10 @@
     {
      "at": "2026-10-13T20:44:09Z",
      "reason": "GitHub Pages deployment 7049603323 ended in error"
+    },
+    {
+     "at": "2026-11-10T11:56:33Z",
+     "reason": "GitHub Pages deployment 7681190566 ended in failure"
     }
    ],
    "horizon": {
@@ -898,7 +918,12 @@
     }
    },
    "evidenceLevel": "website",
-   "failures": [],
+   "failures": [
+    {
+     "at": "2026-11-10T11:56:33Z",
+     "reason": "GitHub Pages deployment 7681190566 ended in failure"
+    }
+   ],
    "horizon": {
     "stepDays": 7,
     "steps": 52,
@@ -980,7 +1005,12 @@
     }
    },
    "evidenceLevel": "website",
-   "failures": [],
+   "failures": [
+    {
+     "at": "2026-11-10T11:56:33Z",
+     "reason": "GitHub Pages deployment 7681190566 ended in failure"
+    }
+   ],
    "horizon": {
     "stepDays": 7,
     "steps": 52,
@@ -1511,7 +1541,12 @@
     }
    },
    "evidenceLevel": "website",
-   "failures": [],
+   "failures": [
+    {
+     "at": "2026-11-10T11:56:33Z",
+     "reason": "GitHub Pages deployment 7681190566 ended in failure"
+    }
+   ],
    "forecast": "29adf6a097e2876da11ee71594f567b87426f9292e989dccc87a455baf8cc858",
    "sha256": "4c06ee2cf2edb860cf862fb7fd05b5483bf65bfc6aa3b7040fbe389d47b60b92",
    "state": "published",
