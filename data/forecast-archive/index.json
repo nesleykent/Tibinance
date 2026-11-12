@@ -1,8 +1,8 @@
 {
  "chain": {
-  "evaluations": 18,
-  "head": "b5c38e63d180b8e6ab531d91e82af69428369157cc81637e243782bde1681e4f",
-  "records": 102
+  "evaluations": 31,
+  "head": "c82e7f5f3717691d802ca309518c5a3bf2adf098c819baf0a37dc96103c3fb73",
+  "records": 103
  },
  "forecasts": [
   {
@@ -17,7 +17,7 @@
    "dataCutoff": "2026-09-28",
    "edition": "tc-world-scenarios/2026-09-28",
    "evaluation": {
-    "points": 52,
+    "points": 126,
     "weeks": [
      {
       "bias": 5.8422083125238755,
@@ -27,6 +27,15 @@
       "observationCutoff": "2026-10-14",
       "record": "30f54d74da62ca8b2fbfc07770ea9e0e1666e6614c9b8f1665e44308f05c20c4",
       "weekEnding": "2026-10-11"
+     },
+     {
+      "bias": 3.308375343515087,
+      "coverage": 0.8648648648648649,
+      "mape": 4.2126603406041,
+      "n": 74,
+      "observationCutoff": "2026-11-11",
+      "record": "17ed3917a94c015ea7b3b4fc220a8311378cd525666a8bf737523c7069780e7f",
+      "weekEnding": "2026-10-18"
      }
     ]
    },
@@ -84,7 +93,7 @@
    "dataCutoff": "2026-09-28",
    "edition": "research-ledger/2026-09-28",
    "evaluation": {
-    "points": 10,
+    "points": 20,
     "weeks": [
      {
       "bias": 6.856540202961854,
@@ -94,6 +103,15 @@
       "observationCutoff": "2026-10-14",
       "record": "16df50cda39662f34210a9153055abfc795e4bdb81655a11d44731bb53f2f484",
       "weekEnding": "2026-10-11"
+     },
+     {
+      "bias": 3.840232711781173,
+      "coverage": null,
+      "mape": 3.8402327117811774,
+      "n": 10,
+      "observationCutoff": "2026-11-11",
+      "record": "83608b365477320084ea594f91212a40a7c646884a2994435c1e7f5f217bbdd9",
+      "weekEnding": "2026-10-18"
      }
     ]
    },
@@ -163,7 +181,7 @@
    "dataCutoff": "2026-10-02",
    "edition": "tc-world-scenarios/2026-10-02",
    "evaluation": {
-    "points": 50,
+    "points": 122,
     "weeks": [
      {
       "bias": 2.1105196967697797,
@@ -173,6 +191,15 @@
       "observationCutoff": "2026-10-15",
       "record": "7e060bb7ce08813fd11018552d9a7e0893b75744795576d40f1cbb3badd06963",
       "weekEnding": "2026-10-11"
+     },
+     {
+      "bias": -0.247531540636481,
+      "coverage": 0.9861111111111112,
+      "mape": 3.10041699908189,
+      "n": 72,
+      "observationCutoff": "2026-11-11",
+      "record": "c2a7d4e8eda35850af7604e197e346df79c9be3ca793f8c36aa59a0e5637b3ad",
+      "weekEnding": "2026-10-18"
      }
     ]
    },
@@ -230,7 +257,7 @@
    "dataCutoff": "2026-10-02",
    "edition": "research-ledger/2026-10-02",
    "evaluation": {
-    "points": 10,
+    "points": 20,
     "weeks": [
      {
       "bias": 2.8559991190102396,
@@ -240,6 +267,15 @@
       "observationCutoff": "2026-10-14",
       "record": "4bcd3d69edc68e694ca9950c39a00ee670c20f8067997ab21c7344aa71e5c3c5",
       "weekEnding": "2026-10-11"
+     },
+     {
+      "bias": 0.2044617452757258,
+      "coverage": null,
+      "mape": 0.8203904061191128,
+      "n": 10,
+      "observationCutoff": "2026-11-11",
+      "record": "a8733ff7420c9fbbd01123a7fac7501a209b2c58f8c3439e6e6f69da024cd3b2",
+      "weekEnding": "2026-10-18"
      }
     ]
    },
@@ -309,7 +345,7 @@
    "dataCutoff": "2026-10-02",
    "edition": "tc-world-scenarios/2026-10-02",
    "evaluation": {
-    "points": 52,
+    "points": 126,
     "weeks": [
      {
       "bias": 2.298210779780539,
@@ -319,6 +355,15 @@
       "observationCutoff": "2026-10-15",
       "record": "0ed9843438da4f1490ab308969c8a5a9aa437ff4ca34aca4b70c8bcb5632e261",
       "weekEnding": "2026-10-11"
+     },
+     {
+      "bias": -0.15999112721078382,
+      "coverage": 0.9864864864864865,
+      "mape": 3.089009140135694,
+      "n": 74,
+      "observationCutoff": "2026-11-11",
+      "record": "b2648114abe8f67fb6f99526f5ee30f5b2e919e7ebce1b816a110aaeff88d1e8",
+      "weekEnding": "2026-10-18"
      }
     ]
    },
@@ -377,7 +422,7 @@
    "dataCutoff": "2026-10-03",
    "edition": "tc-world-scenarios/2026-10-03",
    "evaluation": {
-    "points": 52,
+    "points": 126,
     "weeks": [
      {
       "bias": 0.43232158959385714,
@@ -387,6 +432,15 @@
       "observationCutoff": "2026-10-14",
       "record": "419a2e481c7f3e8c5fc6ba23e96ea16bf146b6a84b8db0df5e6e793f7d576454",
       "weekEnding": "2026-10-11"
+     },
+     {
+      "bias": -1.2824413389162947,
+      "coverage": 0.9594594594594594,
+      "mape": 2.807623462140355,
+      "n": 74,
+      "observationCutoff": "2026-11-11",
+      "record": "7b9af59d7411c6d9a2c12e2cb46347cd184d858956a7a84f5b22acf9a75a85a1",
+      "weekEnding": "2026-10-18"
      }
     ]
    },
@@ -457,7 +511,7 @@
    "dataCutoff": "2026-10-03",
    "edition": "research-ledger/2026-10-03",
    "evaluation": {
-    "points": 10,
+    "points": 20,
     "weeks": [
      {
       "bias": 1.361580252029545,
@@ -467,6 +521,15 @@
       "observationCutoff": "2026-10-14",
       "record": "0f3d8e081e2fbec9667870bfaa12ff89837ff12b43b459ce09c228d670a38d09",
       "weekEnding": "2026-10-11"
+     },
+     {
+      "bias": -1.2634316500750764,
+      "coverage": null,
+      "mape": 1.285125713227241,
+      "n": 10,
+      "observationCutoff": "2026-11-11",
+      "record": "2210f9d34969f809a21caf43c014538c452918de44993838354c46ccc52330f2",
+      "weekEnding": "2026-10-18"
      }
     ]
    },
@@ -536,7 +599,7 @@
    "dataCutoff": "2026-10-04",
    "edition": "tc-world-scenarios/2026-10-04",
    "evaluation": {
-    "points": 52,
+    "points": 126,
     "weeks": [
      {
       "bias": 0.7024288721825501,
@@ -546,6 +609,15 @@
       "observationCutoff": "2026-10-14",
       "record": "24ccd921a65d9a4b6db3c9247f779a2f3c0071bc9f38c152dc6873746271cfdb",
       "weekEnding": "2026-10-11"
+     },
+     {
+      "bias": -1.2347850177420703,
+      "coverage": 0.9864864864864865,
+      "mape": 2.6283567385942304,
+      "n": 74,
+      "observationCutoff": "2026-11-11",
+      "record": "c4e91b0c77b2d7226375fbc8d3e933187fef3c108efdaa10cde75ebb20b651ac",
+      "weekEnding": "2026-10-18"
      }
     ]
    },
@@ -608,7 +680,7 @@
    "dataCutoff": "2026-10-04",
    "edition": "research-ledger/2026-10-04",
    "evaluation": {
-    "points": 10,
+    "points": 20,
     "weeks": [
      {
       "bias": 1.6364271248127094,
@@ -618,6 +690,15 @@
       "observationCutoff": "2026-10-14",
       "record": "e2bbd0e12a2340a5c33a2a7e584862f7f0fb9eec4b8f18a4382aa66f3e4dc3f0",
       "weekEnding": "2026-10-11"
+     },
+     {
+      "bias": -1.0048447917946979,
+      "coverage": null,
+      "mape": 1.0794179721980117,
+      "n": 10,
+      "observationCutoff": "2026-11-11",
+      "record": "600b1de9e0a450e868467906744b366152fa8fab22256255696ccd0a2a0e4a97",
+      "weekEnding": "2026-10-18"
      }
     ]
    },
@@ -687,8 +768,18 @@
    "dataCutoff": "2026-10-05",
    "edition": "tc-world-scenarios/2026-10-05",
    "evaluation": {
-    "points": 0,
-    "weeks": []
+    "points": 74,
+    "weeks": [
+     {
+      "bias": -2.122441960991786,
+      "coverage": 0.9324324324324325,
+      "mape": 2.8990886237438405,
+      "n": 74,
+      "observationCutoff": "2026-11-11",
+      "record": "55d3d8e0a30189f93fc25cf9956bde7c7c759877e19c136339aadaa8eb58128d",
+      "weekEnding": "2026-10-18"
+     }
+    ]
    },
    "evidence": {
     "repository": {
@@ -770,8 +861,18 @@
    "dataCutoff": "2026-10-05",
    "edition": "research-ledger/2026-10-05",
    "evaluation": {
-    "points": 0,
-    "weeks": []
+    "points": 10,
+    "weeks": [
+     {
+      "bias": -1.80422540663848,
+      "coverage": null,
+      "mape": 1.8042254066384793,
+      "n": 10,
+      "observationCutoff": "2026-11-11",
+      "record": "b2dd3d50131c773dd69eb1708774c0fb2a6102ee48c131fa76180f0b953130f7",
+      "weekEnding": "2026-10-18"
+     }
+    ]
    },
    "evidence": {
     "repository": {
@@ -960,6 +1061,10 @@
     {
      "sha256": "4c06ee2cf2edb860cf862fb7fd05b5483bf65bfc6aa3b7040fbe389d47b60b92",
      "surface": "markets-projections"
+    },
+    {
+     "sha256": "7181bbc66135df38b5fe538d10126b4f99e1b2560a016b07e8d22b21f1e14475",
+     "surface": "markets-projections"
     }
    ],
    "product": "tc-world-scenarios",
@@ -1050,8 +1155,18 @@
    "dataCutoff": "2026-10-15",
    "edition": "tc-gold-challenger/2026-10-15/2026-10-11",
    "evaluation": {
-    "points": 0,
-    "weeks": []
+    "points": 26,
+    "weeks": [
+     {
+      "bias": -3.350225393378315,
+      "coverage": null,
+      "mape": 3.5975204038779247,
+      "n": 26,
+      "observationCutoff": "2026-11-11",
+      "record": "8b07a8e2c3e13790742b2330a7c16d73562edee56ff36d5572acf0aad4215fd4",
+      "weekEnding": "2026-10-18"
+     }
+    ]
    },
    "evidence": {
     "repository": null,
@@ -1101,8 +1216,18 @@
    "dataCutoff": "2026-10-15",
    "edition": "tc-gold-challenger/2026-10-15/2026-10-11",
    "evaluation": {
-    "points": 0,
-    "weeks": []
+    "points": 26,
+    "weeks": [
+     {
+      "bias": -3.350225393378315,
+      "coverage": null,
+      "mape": 3.5975204038779243,
+      "n": 26,
+      "observationCutoff": "2026-11-11",
+      "record": "175a15159da9263257dadb538ace8bfe00cd341bab70e9d9ef10622e90dd9d12",
+      "weekEnding": "2026-10-18"
+     }
+    ]
    },
    "evidence": {
     "repository": null,
@@ -1550,6 +1675,22 @@
    "forecast": "29adf6a097e2876da11ee71594f567b87426f9292e989dccc87a455baf8cc858",
    "sha256": "4c06ee2cf2edb860cf862fb7fd05b5483bf65bfc6aa3b7040fbe389d47b60b92",
    "state": "published",
+   "superseded": false,
+   "supersededBy": null,
+   "surface": "markets-projections"
+  },
+  {
+   "contentHash": "35719361991812b5603350da87785c6b315e73b6396ff468db578af0a910e341",
+   "edition": "tc-world-scenarios/2026-10-15",
+   "evidence": {
+    "repository": null,
+    "website": null
+   },
+   "evidenceLevel": null,
+   "failures": [],
+   "forecast": "29adf6a097e2876da11ee71594f567b87426f9292e989dccc87a455baf8cc858",
+   "sha256": "7181bbc66135df38b5fe538d10126b4f99e1b2560a016b07e8d22b21f1e14475",
+   "state": "archived",
    "superseded": false,
    "supersededBy": null,
    "surface": "markets-projections"

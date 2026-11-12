@@ -2,13 +2,12 @@
  "format": 1,
  "sources": {
   "tibiamarket": {
-   "lastDataChange": "2026-10-14T21:56:14.758Z",
+   "lastDataChange": "2026-11-12T00:58:46.113Z",
    "lastUpdatedWorlds": [
-    "Antica",
-    "Bravoria"
+    "Monza"
    ],
-   "lastNewRows": 38,
-   "sourceLatestUpdate": "2026-10-14T21:39:40.846806",
+   "lastNewRows": 30,
+   "sourceLatestUpdate": "2026-11-11T18:10:26.039485",
    "conflicts": []
   }
  },
