@@ -268,9 +268,9 @@
  {
   "world": "Monza",
   "url": "https://api.tibiamarket.top/item_history?server=Monza&item_id=22118&start_days_ago=2000&end_days_ago=-1",
-  "retrievedAt": "2026-11-12T00:58:46.111Z",
-  "rows": 664,
-  "sha256": "281990e9f9b9da289524fbf1f58240c4a8c7a0aab831e0f639cb9b1cd200c017"
+  "retrievedAt": "2026-11-12T23:51:32.803Z",
+  "rows": 665,
+  "sha256": "44eec9830ff0739cde30b277b40be536453432f05a60fa07b110ee75f84db386"
  },
  {
   "world": "Mystera",
