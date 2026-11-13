@@ -16,9 +16,9 @@
  {
   "world": "Antica",
   "url": "https://api.tibiamarket.top/item_history?server=Antica&item_id=22118&start_days_ago=2000&end_days_ago=-1",
-  "retrievedAt": "2026-10-14T21:56:02.090Z",
-  "rows": 1681,
-  "sha256": "f552c0077c9813c578a2d034859e55611575a30cc172f6878872bbaf5643ad52"
+  "retrievedAt": "2026-11-13T23:51:03.615Z",
+  "rows": 1711,
+  "sha256": "5bb30b1fbd3ab487b4489cc403f3c794aa95599553cb76c8fae0ae604944fa03"
  },
  {
   "world": "Blumera",
