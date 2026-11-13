@@ -9,7 +9,7 @@
   "pair": "TIB / USDT",
   "quote": "USD",
   "timezone": "UTC",
-  "asOf": "2026-11-12",
+  "asOf": "2026-11-13",
   "source": "GeckoTerminal public pool OHLCV API",
   "sourceUrl": "https://www.geckoterminal.com/bsc/pools/0xd2acfaec0e3b556f285fbb9026ede7e87885e611",
   "coverageNote": "Public API history begins on 2025-10-06. Earlier candles require provider access unavailable to this dataset. No pre-coverage prices are estimated.",
@@ -3229,6 +3229,14 @@
       "low": 0.03509866368193389,
       "close": 0.037306048154221595,
       "volumeUsd": 2551.4168244921916
+    },
+    {
+      "day": "2026-11-12",
+      "open": 0.037306048154221595,
+      "high": 0.039576127299336294,
+      "low": 0.035016868974494395,
+      "close": 0.0365734047790581,
+      "volumeUsd": 1608.2956492527971
     }
   ]
 }
