@@ -1,10 +1,10 @@
 {
   "worlds": 116,
-  "observations": 13398,
-  "dailyAcquisitionReports": 46040,
-  "rollingStatisticsObservations": 12377,
+  "observations": 13399,
+  "dailyAcquisitionReports": 46070,
+  "rollingStatisticsObservations": 12378,
   "sourceCounts": {
-    "tibiamarket": 12782,
+    "tibiamarket": 12783,
     "screenshot": 616
   },
   "qualification": "Observed daily reports remain authoritative. Comparable consecutive rolling 30-day Statistics may supplement a missing side/day only as an explicitly labelled estimate.",
@@ -16,22 +16,22 @@
   },
   "availability": {
     "before": {
-      "transactions": 90850,
-      "averagePrice": 90850,
-      "highestPrice": 90850,
-      "lowestPrice": 90850,
-      "dailyAveragePoints": 90470,
-      "bestSell": 12800,
-      "bestBuy": 12800
+      "transactions": 90910,
+      "averagePrice": 90910,
+      "highestPrice": 90910,
+      "lowestPrice": 90910,
+      "dailyAveragePoints": 90530,
+      "bestSell": 12801,
+      "bestBuy": 12801
     },
     "after": {
-      "transactions": 90894,
-      "averagePrice": 90894,
-      "highestPrice": 90894,
-      "lowestPrice": 90894,
-      "dailyAveragePoints": 91872,
-      "bestSell": 12800,
-      "bestBuy": 12800
+      "transactions": 90954,
+      "averagePrice": 90954,
+      "highestPrice": 90954,
+      "lowestPrice": 90954,
+      "dailyAveragePoints": 91932,
+      "bestSell": 12801,
+      "bestBuy": 12801
     }
   },
   "affectedWorlds": 5,
