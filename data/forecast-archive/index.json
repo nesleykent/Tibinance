@@ -1,8 +1,8 @@
 {
  "chain": {
   "evaluations": 31,
-  "head": "ac61a8c8f6a984c71c1fdc341b6d88efd4a5e4f57852c9831d107c807852faa3",
-  "records": 107
+  "head": "9c62e18e4aedb53f283b2b9d83b2ebfa5cb0b6016ecfccf660dbece6c871b9a1",
+  "records": 108
  },
  "forecasts": [
   {
@@ -1316,6 +1316,57 @@
     "research": "from this repository at codeCommit with the economy caches rebuilt (PROGRESS.md)"
    },
    "seq": 104,
+   "state": "archived",
+   "superseded": false,
+   "supersededBy": null,
+   "target": "Weekly median of daily Sell Offers (API daily median; capture median only on days without one) for the Monday to Sunday week that holds the target date; the Research scoring rule"
+  },
+  {
+   "archiveBasis": "generation",
+   "archivedAt": "2026-11-13T11:33:03+00:00",
+   "contentHash": "1acfc3b23dc45d66e7e7514188b5f74257f0a2a1ab939af6320adc4b98a25fc8",
+   "createdAt": {
+    "basis": "generation time",
+    "value": "2026-11-13T11:33:03+00:00"
+   },
+   "dataCutoff": "2026-11-12",
+   "edition": "tc-gold-challenger/2026-11-12/2026-11-08",
+   "evaluation": {
+    "points": 0,
+    "weeks": []
+   },
+   "evidence": {
+    "repository": null,
+    "website": null
+   },
+   "evidenceLevel": null,
+   "failures": [],
+   "horizon": {
+    "stepDays": 7,
+    "steps": 3,
+    "unit": "week",
+    "weeks": [
+     1,
+     4,
+     13
+    ]
+   },
+   "inputs": "887dc318ed4222db63a07cb14efca155c094d018c8d99f1c504a5e8e38d4af35",
+   "interval": "none",
+   "model": {
+    "id": "E gold challenger",
+    "version": "b1553583415ea45118843aabcd7c88de06dea48e91203874262b1998f47ebb30"
+   },
+   "outputs": "6098a28708e4550d3f0abfc2f1e966f81703b0b99d97996921606571697f9c7c",
+   "presentations": [],
+   "product": "tc-gold-challenger",
+   "provenance": "authentic",
+   "reproducibility": {
+    "missing": [],
+    "prediction": "complete inputs (tools/forecasts/reproduce.py rebuilds the outputs)",
+    "research": "from this repository at codeCommit with the economy caches rebuilt (PROGRESS.md)"
+   },
+   "seq": 108,
    "state": "archived",
    "superseded": false,
    "supersededBy": null,
