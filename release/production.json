@@ -1,26 +1,26 @@
 {
  "format": 1,
  "note": "",
- "approver": "GitHub Actions forecast archive (validated data release)",
+ "approver": "GitHub Actions market sync (validated data release)",
  "artifact": {
-  "bytes": 142658139,
-  "digest": "88ca3ee43dc6a79c530c2e43a523acda52f377746e705fc64504b9950898709e",
+  "bytes": 142661270,
+  "digest": "a5c120b2beac79343249bd740fe32ecf0c6134ce196b826b72fd005aae1f12e3",
   "files": 1019
  },
- "commit": "da3f9e982d673481747fe55e9d2ff09fec160b44",
- "createdAt": "2026-11-14T13:42:19.166Z",
+ "commit": "75899541e96c80a65837ec001e9359fb4a1cdd72",
+ "createdAt": "2026-11-14T22:44:36.973Z",
  "kind": "data",
  "policySha256": "68d95fbce8c90529b2ad839b7a8572e131b797cf430968bb4a64d90eb2bd0de5",
  "source": {
   "base": {
-   "commit": "5d9b9410ecf442f17dab6ddafa8960c7e01ddafd",
-   "tag": "release/0105"
+   "commit": "da3f9e982d673481747fe55e9d2ff09fec160b44",
+   "tag": "release/0106"
   },
-  "data": "0673915c649792bfb44ae46fc943979c67fe0684",
+  "data": "fe329ae567227cd9d22e0bf4b17106bb9be83b54",
   "policyFrom": "release/0046"
  },
- "tag": "release/0106",
- "tree": "29972979993328bffa80a7465e1a4d767496dd89",
+ "tag": "release/0107",
+ "tree": "31394f99d33284cafce9d4ed18c38b396edbc649",
  "validation": {
   "checks": [
    {
@@ -65,12 +65,12 @@
    }
   ],
   "validator": {
-   "commit": "0673915c649792bfb44ae46fc943979c67fe0684",
+   "commit": "fe329ae567227cd9d22e0bf4b17106bb9be83b54",
    "path": "tools/ci/validate_site.mjs"
   }
  },
  "record": {
-  "seq": 101,
-  "hash": "fd28ab9e11f513176c33730c4528abfb42af2c3fa84587de974b1cc093acee96"
+  "seq": 102,
+  "hash": "1bd39b9b86a1cdeb44539244c5b053f3050d0cd2f9b7a8138eb3105c5210b5ff"
  }
 }
