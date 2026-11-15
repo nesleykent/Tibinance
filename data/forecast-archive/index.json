@@ -1,8 +1,8 @@
 {
  "chain": {
   "evaluations": 31,
-  "head": "0f971ec1c783f966cb75cfb6d4351ed0f874cd60ffa261421edd69611a5a450a",
-  "records": 114
+  "head": "61f6263756e61f9bdad920beacb572911993b06596073ab165b14f7a6592ce47",
+  "records": 117
  },
  "forecasts": [
   {
@@ -1902,7 +1902,12 @@
    "contentHash": "d14111edb433f3404ab0d5846bd01f7ad34aad9f34f07d3ccbd4f68b610b34d3",
    "edition": "tc-world-scenarios/2026-10-15",
    "evidence": {
-    "repository": null,
+    "repository": {
+     "at": "2026-11-13T23:52:13Z",
+     "basis": "github-push-event-upper-bound",
+     "commit": "ab3970779eb906857ef10cdb4cba41b03d82e5b3",
+     "uncertainty": "main already held it before this push; it was published earlier than this time"
+    },
     "website": {
      "at": "2026-11-13T23:53:21Z",
      "basis": "github-pages-deployment-success",
@@ -1924,14 +1929,25 @@
    "contentHash": "7886abb96387e71b3b8dc4c05a641daa3ece02c7ac11cfde4c8a673a2f212244",
    "edition": "tc-world-scenarios/2026-10-15",
    "evidence": {
-    "repository": null,
-    "website": null
+    "repository": {
+     "at": "2026-11-14T22:44:11Z",
+     "basis": "github-push-event",
+     "commit": "fe329ae567227cd9d22e0bf4b17106bb9be83b54",
+     "uncertainty": "exact time GitHub received the push"
+    },
+    "website": {
+     "at": "2026-11-14T22:45:44Z",
+     "basis": "github-pages-deployment-success",
+     "deployment": 7795029229,
+     "release": "release/0107",
+     "uncertainty": "time of the successful deployment status; caches may serve the previous site for a few minutes"
+    }
    },
-   "evidenceLevel": null,
+   "evidenceLevel": "website",
    "failures": [],
    "forecast": "29adf6a097e2876da11ee71594f567b87426f9292e989dccc87a455baf8cc858",
    "sha256": "bd80a13e5213d44e6795268811aa4aae6c64829d1f75d344eb2bf1181b9fc35c",
-   "state": "archived",
+   "state": "published",
    "superseded": false,
    "supersededBy": null,
    "surface": "markets-projections"
