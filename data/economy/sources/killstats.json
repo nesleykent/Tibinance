@@ -12,9 +12,9 @@
   {
    "id": "current",
    "repo": "tibiamaps/tibia-kill-stats",
-   "commit": "8ab22be0c1baacec17b0bd5716db189d62d5310e",
-   "committedAt": "2026-11-20T10:47:15Z",
-   "files": 31546
+   "commit": "56a2b90b047784abed95eedbd487ec6740c8850e",
+   "committedAt": "2026-11-21T10:30:53Z",
+   "files": 31636
   }
  ],
  "races": 1750,
@@ -173,7 +173,7 @@
    "sourceKey": "3ccae4c808e5230267e7c06425bf26cfff18be5e770c928ac2220bbd38b641d0"
   },
   "2026-11": {
-   "sourceKey": "eb86d14ccea6b252078c0ccf5cafc0cf344231546dc46b501811e503c4d35a11"
+   "sourceKey": "d6ca574ea55c0c505748b3975eda70d4f23c3196a065372113527f0f402906eb"
   }
  },
  "conflicts": [],
@@ -7872,6 +7872,11 @@
    "at": "2026-11-20T10:47:15Z",
    "upstream": "current",
    "commit": "8ab22be0c1baacec17b0bd5716db189d62d5310e"
+  },
+  "2026-11-21": {
+   "at": "2026-11-21T10:30:53Z",
+   "upstream": "current",
+   "commit": "56a2b90b047784abed95eedbd487ec6740c8850e"
   }
  },
  "worlds": {
@@ -8442,8 +8447,8 @@
   "Antica": {
    "dir": "antica",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -8806,9 +8811,9 @@
      ]
     },
     "2026-11": {
-     "source": "6aa6b707b6d39b6edde9ee34da71e6ffafd2501e40571ad919a93914c8fe7d40",
-     "partition": "10bd7b2ffe678c2e54e111c42ec3599dcb9c11c10c9c1a03e93607b5ed24a110",
-     "days": 20,
+     "source": "c310a0ccc9275fb6eff3c638b8dd6fb73336d0f54b8c3142d8a66914487766f8",
+     "partition": "a98c81938c380d1924058374d9b7dd5deece86d6949518eafec44100695cdb38",
+     "days": 21,
      "recovered": []
     }
    }
@@ -8922,8 +8927,8 @@
   "Astera": {
    "dir": "astera",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -9286,9 +9291,9 @@
      ]
     },
     "2026-11": {
-     "source": "0f9bde5d811365f5acb8274be47e4c5c52414d6409082f7b7b8018c7e634a619",
-     "partition": "940eebab097443be7e3bb24e695bedd970288a89568c321e7746e0c2244e6790",
-     "days": 20,
+     "source": "1078955a299f4ce8486f805a4837861c27efb0eee4e34bd3e2d838ff06cd123d",
+     "partition": "acfc4eca52fb4102a579b9ba53090f86d372e9c4fdef60857f6b4918b84477ea",
+     "days": 21,
      "recovered": []
     }
    }
@@ -9710,8 +9715,8 @@
   "Belobra": {
    "dir": "belobra",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -10074,9 +10079,9 @@
      ]
     },
     "2026-11": {
-     "source": "d2c439deb3b5d401cddecfff7b545885e9432e3168c65e50d348bfd5622e0ff6",
-     "partition": "61ba637b77c835b9ac8b5431d41f38b6ca57e9fdbb7ad043798fe10fa7a9116e",
-     "days": 20,
+     "source": "56426d7a6467ae30cb8ebe19f7061360d9e333a6627f3323eff9b8405a33b7ea",
+     "partition": "24a9a1c2915d06f1b10df1e5e3df10dc46183ac0a9203432a605226b68696999",
+     "days": 21,
      "recovered": []
     }
    }
@@ -10375,8 +10380,8 @@
   "Bona": {
    "dir": "bona",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -10739,9 +10744,9 @@
      ]
     },
     "2026-11": {
-     "source": "57c60a3c2858a629c47df1e6e9937e1d57526d3dfa1f564b26d5a60f800884ba",
-     "partition": "42d87b06ca5238f6a4bef48a0a112ae1ca7098a7c2265524f294545498d6c96e",
-     "days": 20,
+     "source": "bab2b3789252ce56b9affcb191edbcc4a267c989b77c9bc007487d6b6dbd6d68",
+     "partition": "f47bd123a76a137a9e50abd7263b277bb5520e994d25aa48a8aed8aac9aba6ab",
+     "days": 21,
      "recovered": []
     }
    }
@@ -11022,8 +11027,8 @@
   "Calmera": {
    "dir": "calmera",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -11386,9 +11391,9 @@
      ]
     },
     "2026-11": {
-     "source": "536431bedc5b0cf41ea7d91c8c3b5f5ae50c9b19b785c1fffad8bf6f3549771d",
-     "partition": "e62acb358d36c3ea00c438a2598642e447c0070888811f6592dd28877f573276",
-     "days": 20,
+     "source": "808bee40886917533efbaef0804cf107864886ee062eb4662b3101403d62a407",
+     "partition": "c38f970f0ec487ab6596787f606a31f11daba0ef0e4281f6fc3ee2c28982cb41",
+     "days": 21,
      "recovered": []
     }
    }
@@ -11765,8 +11770,8 @@
   "Celebra": {
    "dir": "celebra",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -12129,9 +12134,9 @@
      ]
     },
     "2026-11": {
-     "source": "ceeae4734127a55abbb93b28160562a0ec653f80acfc7be3329927e98767a132",
-     "partition": "4cd2955473c07e35947ff2021b9d2a0a1afb187f4121e36dd67e1980ad585890",
-     "days": 20,
+     "source": "749cbc71232bcc1601ab9d777c7c827b7c6f11bb43733585def1863ac73bb100",
+     "partition": "fa8f42eef0278e79c7dfe9f66659935d7645e74983405904e89b6a18dc883d21",
+     "days": 21,
      "recovered": []
     }
    }
@@ -12139,8 +12144,8 @@
   "Celesta": {
    "dir": "celesta",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -12503,9 +12508,9 @@
      ]
     },
     "2026-11": {
-     "source": "65c771700809b2126532230d4e2f6de7f0f05a97a0344e362793c58b8050f0bb",
-     "partition": "d88e2c374607330871ca10de300b96cb2edd5b9ce22b02479ff0948740201830",
-     "days": 20,
+     "source": "ab7db3a06791a5dd22d4962ea234b3c667de5267943b8cd01b6608bb6d18cfd9",
+     "partition": "3c92516f3772835ae72a7b6245f24e6db44d50fb63b820ba7397fe86d30d8632",
+     "days": 21,
      "recovered": []
     }
    }
@@ -12602,8 +12607,8 @@
   "Collabra": {
    "dir": "collabra",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -12966,9 +12971,9 @@
      ]
     },
     "2026-11": {
-     "source": "e5c51ced01adab0b5b2954775771b050875a35a9b2b63c5a60e511f0132f2c53",
-     "partition": "70401438cc59d0f62620b4e5e8b3a59eae3fe0577541b0c97bfd88cccb5d4ac0",
-     "days": 20,
+     "source": "3350748e0e30b92f811b459181cd9a42d6cf5ca9e69db17e924a2dde90c11b34",
+     "partition": "15e113503efb9c195e0733abe5c5b7fd6deb29b70a23ef4cf6db5aeb3a949b0c",
+     "days": 21,
      "recovered": []
     }
    }
@@ -13178,8 +13183,8 @@
   "Descubra": {
    "dir": "descubra",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -13542,9 +13547,9 @@
      ]
     },
     "2026-11": {
-     "source": "8d19a248c125a7b83fa5eaf3cccb1a8297142cd47a23780a8d247779c49c9230",
-     "partition": "5aaa6da79b74bace64ea82421ac2c524860d2998964d9f88c80b5fc8579ee491",
-     "days": 20,
+     "source": "fa201adecfe62b4f1860a52b3d9b42f8f7c98d9fdbbea9cfe31275c043732971",
+     "partition": "f3b40161f5522728af1eb982613d5a97d33ae702250c28c38c441ea709131252",
+     "days": 21,
      "recovered": []
     }
    }
@@ -13552,8 +13557,8 @@
   "Deslumbra": {
    "dir": "deslumbra",
    "first": "2026-10-27",
-   "last": "2026-11-20",
-   "files": 25,
+   "last": "2026-11-21",
+   "files": 26,
    "missing": [],
    "recovered": [],
    "partitions": {
@@ -13564,9 +13569,9 @@
      "recovered": []
     },
     "2026-11": {
-     "source": "041566925b0d627a0d33f40036791b0a9a78038b9eafb331e7c64b52d0dda9f3",
-     "partition": "9180e570f0979f00d10f25f97b086026ccabaa23511487d76a27a7107ee02bfa",
-     "days": 20,
+     "source": "e598e2d28dd727b68ee8352de20312c9868f69e1a72b003270b362bf8be8bd58",
+     "partition": "602152691ced51d303c43e503f2702c6884f5fcee07a37566ef34bee6ca96e8f",
+     "days": 21,
      "recovered": []
     }
    }
@@ -13574,8 +13579,8 @@
   "Dia": {
    "dir": "dia",
    "first": "2023-02-09",
-   "last": "2026-11-20",
-   "files": 1370,
+   "last": "2026-11-21",
+   "files": 1371,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -13902,9 +13907,9 @@
      ]
     },
     "2026-11": {
-     "source": "20af8cdda540b10aa5bf03278af21d7dcfcbf2cea45bc5d8504b6313bf142e06",
-     "partition": "ea2b8baadb18d253971a130bce136d3b171a7ed848c907562e9e3e46eec29fe2",
-     "days": 20,
+     "source": "19e46dbb7b2a76d2575d809944a5f2dac60d5b58bfbea7193a96d5ebe4a4f091",
+     "partition": "b844a4414628fec0f4d7b9aa6538daba86a97a3b72a10fdbe444a9e794f95e2c",
+     "days": 21,
      "recovered": []
     }
    }
@@ -14131,8 +14136,8 @@
   "Dracobra": {
    "dir": "dracobra",
    "first": "2025-10-30",
-   "last": "2026-11-20",
-   "files": 382,
+   "last": "2026-11-21",
+   "files": 383,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -14232,9 +14237,9 @@
      ]
     },
     "2026-11": {
-     "source": "2c26905b83eb7df08e7363a6c522457f667b5705a3d6261c3e41f32e5a01b3f2",
-     "partition": "11762dae524b28040b0c242c95a78262aeb18384d3217f9af9f92e0848d2f74e",
-     "days": 20,
+     "source": "6d962cfb92bc4528aa56e015e817d696d8ac0c4789f9bb7e8ab8e8ddbfd375b9",
+     "partition": "8639d07bb60f276ee9a2a2b5166c2ededda846f3fce354ff13ae9bc7e57e0132",
+     "days": 21,
      "recovered": []
     }
    }
@@ -14242,8 +14247,8 @@
   "Eclipta": {
    "dir": "eclipta",
    "first": "2025-11-07",
-   "last": "2026-11-20",
-   "files": 374,
+   "last": "2026-11-21",
+   "files": 375,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -14337,9 +14342,9 @@
      ]
     },
     "2026-11": {
-     "source": "169b6b5b4070ac0ccc6ea20bdc76b4de5ca7b5e9379fe36ea17266560559649e",
-     "partition": "6bc31e0ab9dea592a22d25e0e8ea2864956675651b520f62a5e5bf12faf54fc0",
-     "days": 20,
+     "source": "d3b701ea9bf120712841c1e01fc64fa8af09c3fc46a279b3f4eea1e9f52f041f",
+     "partition": "368dfcddde984af673618ae18d14d49d1feda95707d52a82f81b3157e56caa20",
+     "days": 21,
      "recovered": []
     }
    }
@@ -14347,8 +14352,8 @@
   "Epoca": {
    "dir": "epoca",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -14711,9 +14716,9 @@
      ]
     },
     "2026-11": {
-     "source": "6fd7a7ebfa35b720f168219c8bcfa9dfc2e2f96bbea8e8caa31f0d8f3d9c2a00",
-     "partition": "26b4b625c9412bc6ef495bae9958f1f4353d6c5109dfb23e25df333685ac7f3d",
-     "days": 20,
+     "source": "3b47110b46f0bfa2fec8f01e11c1c9e3b3125af6ec2a80a450e9b32d988e530b",
+     "partition": "b0bb035dcb70a89f1e7df720af5fc91ebe3624db454c47c83b54a9e614a3397f",
+     "days": 21,
      "recovered": []
     }
    }
@@ -14721,8 +14726,8 @@
   "Escura": {
    "dir": "escura",
    "first": "2025-08-28",
-   "last": "2026-11-20",
-   "files": 445,
+   "last": "2026-11-21",
+   "files": 446,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -14834,9 +14839,9 @@
      ]
     },
     "2026-11": {
-     "source": "e3975f871a9cc25aa04002f8483ea078f93d62929ecec225d28cc05eb8521f70",
-     "partition": "d0b6dee88b257d16aa22bcb536e3903ace6306bce14d854530c53cf0cc46c559",
-     "days": 20,
+     "source": "61b7b1ab382e6ce60204a1c76e8269b091ea20db7415680c976d6ef5403a139d",
+     "partition": "cee58fd4d9e48553a19b705edb13057c107700e4f4699630a1bddf84916796f3",
+     "days": 21,
      "recovered": []
     }
    }
@@ -15558,8 +15563,8 @@
   "Farsabra": {
    "dir": "farsabra",
    "first": "2026-10-29",
-   "last": "2026-11-20",
-   "files": 23,
+   "last": "2026-11-21",
+   "files": 24,
    "missing": [],
    "recovered": [],
    "partitions": {
@@ -15570,9 +15575,9 @@
      "recovered": []
     },
     "2026-11": {
-     "source": "21eaea295b5c8f604d016ca59077dfee3243b3f29a9efe02f3d7f626b223e2fc",
-     "partition": "ba1cb69757c177a148e71e30543dbabc740602a6d80ddeba669507677508e6db",
-     "days": 20,
+     "source": "60ed4d56d9e14eabf7032ebb65f3946e021e40965ef75dd2e396c6cbe1e9f5c2",
+     "partition": "3fa78fcf73f18586dd35cc09133d46c26176db1b87d6328fc9b46b60e2968ada",
+     "days": 21,
      "recovered": []
     }
    }
@@ -15580,8 +15585,8 @@
   "Faunera": {
    "dir": "faunera",
    "first": "2026-10-27",
-   "last": "2026-11-20",
-   "files": 25,
+   "last": "2026-11-21",
+   "files": 26,
    "missing": [],
    "recovered": [],
    "partitions": {
@@ -15592,9 +15597,9 @@
      "recovered": []
     },
     "2026-11": {
-     "source": "ba5ab65df5e6b059456d5c5f754b275273f8a2af489856f36801372a7cc8f23b",
-     "partition": "e2ddedf82cfc2eb308ee3a84a549a1bb36aafcf0654661d833758ac0a175be05",
-     "days": 20,
+     "source": "06bb1f74a00826797cb00f4f156e25641cf9016cc8883dc12d27cd236dd5e639",
+     "partition": "05c861339599a6e6344e90e463d8b228117a4649f076434b0ef3f333ab411605",
+     "days": 21,
      "recovered": []
     }
    }
@@ -15708,8 +15713,8 @@
   "Ferobra": {
    "dir": "ferobra",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -16072,9 +16077,9 @@
      ]
     },
     "2026-11": {
-     "source": "5c5aefb47bd6b64ee021a49402742bb7a7dd1abddfb215933ea64117a1b95ddd",
-     "partition": "6538819862614bf8e2744fed36468848939115cd1b4091eb03888d3011db7d6f",
-     "days": 20,
+     "source": "5d7426654fde380f786ab26fe54da76ed5910624b0d9b2dc262d34f0d64797b9",
+     "partition": "5c40e15ee689381277885d02ee4e882e53a09a778fd66159e6c273cbc866ced2",
+     "days": 21,
      "recovered": []
     }
    }
@@ -16182,8 +16187,8 @@
   "Firmera": {
    "dir": "firmera",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -16546,9 +16551,9 @@
      ]
     },
     "2026-11": {
-     "source": "44aa793dc1a19af6a069662072ee445e3bff69b7c68e93e727bd05df8d790cfb",
-     "partition": "c1493260f4562e76a1a642e1b39ac0a3d054d2dd0b0ab69a23eb23f7f82b1895",
-     "days": 20,
+     "source": "609c049fd640755ab91a5eb5cb13671f4146dd87b3dc311bcef74a0b01cf1cb0",
+     "partition": "de38ac0d4bd7dbe896f73a87f0bafe0268bd9f83c4bf258363c7d7a952b9ff5b",
+     "days": 21,
      "recovered": []
     }
    }
@@ -16741,8 +16746,8 @@
   "Floribra": {
    "dir": "floribra",
    "first": "2026-05-21",
-   "last": "2026-11-20",
-   "files": 180,
+   "last": "2026-11-21",
+   "files": 181,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -16794,9 +16799,9 @@
      ]
     },
     "2026-11": {
-     "source": "710f0b905a48188f3925f4bc4d568e1b2e1a0c2de66c66ba33cdeea18f27b53c",
-     "partition": "906ed2f8368df6791f3f7ddc89ab85d7b5aa95efc2f846f50717a8063ceee0a5",
-     "days": 20,
+     "source": "7130659c77cb18338127721d7de10bb31d7a3930ca0986ccb0c3580599da5805",
+     "partition": "f350de6c876324543ab997774ccf36d6a41a10a5a7a319da28bc17a34fad6d77",
+     "days": 21,
      "recovered": []
     }
    }
@@ -16804,8 +16809,8 @@
   "Gentebra": {
    "dir": "gentebra",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -17168,9 +17173,9 @@
      ]
     },
     "2026-11": {
-     "source": "77e8587941cca2f953e98a6533cb87f3adf8fd51fe0d5d496f33cf1416efd99d",
-     "partition": "fdc411b7e1d36203f0c5263f9d8fed03be7e4596909e6c9d7c9e19bcc9b4e5a0",
-     "days": 20,
+     "source": "3f790c01f715bf55890305921910ebf8e787566a8a6ea1f5fcb03d418a02c1bf",
+     "partition": "1154f0b0a6f313fde682f429507a1a5806459cfeb491790a75421435243f2513",
+     "days": 21,
      "recovered": []
     }
    }
@@ -17178,8 +17183,8 @@
   "Gladera": {
    "dir": "gladera",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -17542,9 +17547,9 @@
      ]
     },
     "2026-11": {
-     "source": "068f34c5c9911b43da4ad84ee806a3b8c6ec63eebcf10b9bddf13cd9f4a071e1",
-     "partition": "d2c3c85a061c17f5a9d30431242c5e50870658a1886febf132bbfa10186969bd",
-     "days": 20,
+     "source": "2d2c59229d0852f899a4d55d8f9122080ee84e1b69dd88355b072a9c579284ea",
+     "partition": "2f96aca6a306afa903dd2e32a16443109fe921c054899d334d65b33d959a5d8b",
+     "days": 21,
      "recovered": []
     }
    }
@@ -18064,8 +18069,8 @@
   "Harmonia": {
    "dir": "harmonia",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -18428,9 +18433,9 @@
      ]
     },
     "2026-11": {
-     "source": "72fc62f0f6178ab2cacc5a5471d4d3d3aa73ca3033495bd107ba49eb2d5dafa9",
-     "partition": "59ce996904ba1284cdab1fc72dc162dd51a6aac197a46ac348a999c14226501b",
-     "days": 20,
+     "source": "745670cb5220a24fa24c86d938dd07203f2ea55ad94d738f89e76d6c0f20faa6",
+     "partition": "f3942795cd6846d31461ce5eca5324fca12c6adc67e0c53ae75d169f4be3b829",
+     "days": 21,
      "recovered": []
     }
    }
@@ -18438,8 +18443,8 @@
   "Havera": {
    "dir": "havera",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -18802,9 +18807,9 @@
      ]
     },
     "2026-11": {
-     "source": "4d931968ccd6e4714ae0b34e02d61ccf152980efe8a0fb4abc74610333247956",
-     "partition": "e40018c6dd7f1f506ab0cb306cd246083c5f7cbf3f274cb118cd8aa2d1dddb0f",
-     "days": 20,
+     "source": "9ed87b35b61d5a800f82c738f9c9321ec81635bd22bcfa2e109cf6465206ef10",
+     "partition": "d2411511a954df9c4879deaf842dc7e9e2e84e893937c8f5ce73d28c06c83413",
+     "days": 21,
      "recovered": []
     }
    }
@@ -18812,8 +18817,8 @@
   "Honbra": {
    "dir": "honbra",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -19176,9 +19181,9 @@
      ]
     },
     "2026-11": {
-     "source": "5fdf7dd0e72f9c9e429beb7930bd722cfe66f0f88eddd959cc4532f45a4e5672",
-     "partition": "ef0d5d582787ae87da821e1cea5f5788efcb9a40e74978a5c4ac4cbd677c8989",
-     "days": 20,
+     "source": "a91dee0b536ca4b8ab83dd5a4c7b14cf0c62e6df5487023c762dd17912013a3e",
+     "partition": "9365dbfe9fd7db59061e6596a6e8a5c981cd4d5773f6a760fcc4daf4acd18055",
+     "days": 21,
      "recovered": []
     }
    }
@@ -19186,8 +19191,8 @@
   "Hostera": {
    "dir": "hostera",
    "first": "2025-10-30",
-   "last": "2026-11-20",
-   "files": 382,
+   "last": "2026-11-21",
+   "files": 383,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -19287,9 +19292,9 @@
      ]
     },
     "2026-11": {
-     "source": "e80c7f634700379677b67d535978ba40461ebff706cfea3da67dc6760292b86f",
-     "partition": "47e2c80c4ac73dedfc69281e1960eb9cf4b87b25d9204be584f3b9512291e643",
-     "days": 20,
+     "source": "498012fac887c8c7e4dad463b96d0c833ba91174e0aa0d6ba1372fdf41aee0a1",
+     "partition": "98cb1cedac816db8b09cbad128aadf0c3950edf884c377977b816233a4124489",
+     "days": 21,
      "recovered": []
     }
    }
@@ -19297,8 +19302,8 @@
   "Idyllia": {
    "dir": "idyllia",
    "first": "2025-10-30",
-   "last": "2026-11-20",
-   "files": 382,
+   "last": "2026-11-21",
+   "files": 383,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -19398,9 +19403,9 @@
      ]
     },
     "2026-11": {
-     "source": "d5af0ca959e8d9fa462779b4c1581a93113554f3493f06113e1001258833e033",
-     "partition": "e34f171c7b33d599017382461dac4dbd74f3bd9bf1ce4f21478b96768d7bfb65",
-     "days": 20,
+     "source": "907af30bd5fca226e31b88436145341479dc87794e119ca537a0067806f28dc5",
+     "partition": "70e25d3a085c4226a0e7624542db23553999f255b597fddcef6d2a368b4cd8bb",
+     "days": 21,
      "recovered": []
     }
    }
@@ -19408,8 +19413,8 @@
   "Ignibra": {
    "dir": "ignibra",
    "first": "2026-02-19",
-   "last": "2026-11-20",
-   "files": 271,
+   "last": "2026-11-21",
+   "files": 272,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -19479,9 +19484,9 @@
      ]
     },
     "2026-11": {
-     "source": "54fab0aca094b8aba060557fc246cb0a27db6b229dff77e065eabfa712ed124a",
-     "partition": "ec224867f2be8b5d1f246ecbb16b7f809294c21c1cfdb5bba648a1c108daf4d5",
-     "days": 20,
+     "source": "bf5f011b118439a42b904aa2d73bb1e7cd7701d183741058d8e9234794faf04c",
+     "partition": "565aee9dd9c8c76cce85407cda528887f6dea52a62fffadb1508a8f314c1c543",
+     "days": 21,
      "recovered": []
     }
    }
@@ -19940,8 +19945,8 @@
   "Inabra": {
    "dir": "inabra",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -20304,9 +20309,9 @@
      ]
     },
     "2026-11": {
-     "source": "d3d297b257d86cc8fb67ea5f225b428f7b9a4202102b84cdfaf6940f2373bfda",
-     "partition": "f1d77ed15e588ef371d1a770f0f5d728f0bf54be4b0f3d2597c13576b167b23e",
-     "days": 20,
+     "source": "53ddcf3a7e0898ea5800a5dde32c8ac880fc4da0af36584d6931e301d5a9b69f",
+     "partition": "aa2a565dd9307173ef7bd296f7bdacde1d12e3ce116a0dcb605cdb094927330b",
+     "days": 21,
      "recovered": []
     }
    }
@@ -20314,8 +20319,8 @@
   "Issobra": {
    "dir": "issobra",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -20678,9 +20683,9 @@
      ]
     },
     "2026-11": {
-     "source": "6106812ed5ac2a1fb1424ee0221b5212f53b480a7eeeae5244f06c037baca3ca",
-     "partition": "9f03a62c7a9f0b34550cb174bade706da8db465c8ab3ea2dab388070e4a1f3be",
-     "days": 20,
+     "source": "8eede1bccb72626703cc0df843d7656762988dd6f547340042fa1f6fceba7ecb",
+     "partition": "8f867fe698ffb8a8a8ea59ad04a7a1165808ae49099c935edd70acc1ac46397e",
+     "days": 21,
      "recovered": []
     }
    }
@@ -20914,8 +20919,8 @@
   "Jadebra": {
    "dir": "jadebra",
    "first": "2023-08-29",
-   "last": "2026-11-20",
-   "files": 1172,
+   "last": "2026-11-21",
+   "files": 1173,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -21189,9 +21194,9 @@
      ]
     },
     "2026-11": {
-     "source": "0464ab94b4a93d8503c994bb5e8690bb5035ab46173b7a7faa2ba45735454ee3",
-     "partition": "ff2f7ef17abc9e5cc04a9ec0da945f66a73d37ce7e6fa86c203b1343220a2d99",
-     "days": 20,
+     "source": "15cfd593a0f7b07c5e87840c48e14ad79ae3a9cd1ed771d5a7d2335b24179910",
+     "partition": "8b5dc453234dfef96ac2f7696669e39a7707cb56a03ba79acad4f7d8ac1395a5",
+     "days": 21,
      "recovered": []
     }
    }
@@ -21396,8 +21401,8 @@
   "Jambra": {
    "dir": "jambra",
    "first": "2026-10-27",
-   "last": "2026-11-20",
-   "files": 25,
+   "last": "2026-11-21",
+   "files": 26,
    "missing": [],
    "recovered": [],
    "partitions": {
@@ -21408,9 +21413,9 @@
      "recovered": []
     },
     "2026-11": {
-     "source": "b334250813dbc268da6f270f0d2e38dff24b2835e1665769c059a79277cd773c",
-     "partition": "5e3cc0feae6f123388b4c1bd01d7be3d878185aae4ff5268730b65597f042808",
-     "days": 20,
+     "source": "0e8fd22fe3149d1be767d96538ddc77cfa84b805318099887697535b4a179c17",
+     "partition": "2c127e00c0d871b438a9e9db1c6f6ca5301c2cb26c7b5e54fc765be1dd52cbcd",
+     "days": 21,
      "recovered": []
     }
    }
@@ -21418,8 +21423,8 @@
   "Jinxibra": {
    "dir": "jinxibra",
    "first": "2026-08-27",
-   "last": "2026-11-20",
-   "files": 82,
+   "last": "2026-11-21",
+   "files": 83,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -21453,9 +21458,9 @@
      ]
     },
     "2026-11": {
-     "source": "9e057ef56bf29c4b88097882539fcfd4c673ab9db07bbda4c1084586ec891a9e",
-     "partition": "3de675551bb0826f214e869caa7b4528077eb1260c1055b360899f6244b7868a",
-     "days": 20,
+     "source": "43c15d973474b1ba16270d6af1fd107d3fd86a853ceab44d2f893ae533b62e47",
+     "partition": "1ace0bc0a80869435c3e5b573e86b336c88be07eefea08ce67a99d33805f9a69",
+     "days": 21,
      "recovered": []
     }
    }
@@ -21463,8 +21468,8 @@
   "Junera": {
    "dir": "junera",
    "first": "2026-05-21",
-   "last": "2026-11-20",
-   "files": 180,
+   "last": "2026-11-21",
+   "files": 181,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -21516,9 +21521,9 @@
      ]
     },
     "2026-11": {
-     "source": "99892d5038fbc0d024d5fd10123183718e60f841fdafcdb30eae42f0da06842b",
-     "partition": "ebfcf070c7b53c1487a5f209570a3483bd4b1bb0d513a48e20551d3e4eba2c83",
-     "days": 20,
+     "source": "529790cce96eea5777ee56f29b312f4a817e67cc1a2d84723b452c429da5ff2a",
+     "partition": "a7a7ebbc6ff50ff9784f8eb18978c836c9d9f379f0ef5c5f96d30c1570527736",
+     "days": 21,
      "recovered": []
     }
    }
@@ -21526,8 +21531,8 @@
   "Kalanta": {
    "dir": "kalanta",
    "first": "2025-11-07",
-   "last": "2026-11-20",
-   "files": 374,
+   "last": "2026-11-21",
+   "files": 375,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -21621,9 +21626,9 @@
      ]
     },
     "2026-11": {
-     "source": "5d40920218633eaa06227ff8eb66e12733e998281d9171c14620dc558e40a224",
-     "partition": "14f918ea32e9d74816ccb25de1a1d3160e51665f59723e267b80501d3a5dfa93",
-     "days": 20,
+     "source": "e2671407369c9ae6091425c47165304738d2c0a23f226828773b2fe3a34cab7b",
+     "partition": "3e95c168149f3898bcf7adc09414cbddaa39bbbe673f71b808fd701c6d00e9f0",
+     "days": 21,
      "recovered": []
     }
    }
@@ -21631,8 +21636,8 @@
   "Kalibra": {
    "dir": "kalibra",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -21995,9 +22000,9 @@
      ]
     },
     "2026-11": {
-     "source": "6540bdec6786a8a98533a9e6e5570f9c983837541825b2d68589128f5bc0124f",
-     "partition": "c2580d5b670ec91620d88f3db9e60a0ee2ece3fb13ea2ba1b63646c685238a51",
-     "days": 20,
+     "source": "4c80718b29bf7a06051ff86931cccccc0a659794c6209e1148990496132b8aff",
+     "partition": "0fd06f158cec676ff91bbf8beaf29473b707f256473c94646b7fb593eed260e2",
+     "days": 21,
      "recovered": []
     }
    }
@@ -22130,8 +22135,8 @@
   "Kanda": {
    "dir": "kanda",
    "first": "2026-02-19",
-   "last": "2026-11-20",
-   "files": 271,
+   "last": "2026-11-21",
+   "files": 272,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -22201,9 +22206,9 @@
      ]
     },
     "2026-11": {
-     "source": "0c598f2202087786ab4be1b2ea10a6a63a822d45e62b31d71419857cd99390c4",
-     "partition": "55c7df66faed2ed25361f10e02c0d4e1e64f328ff4a8a832d603e18b5ead2061",
-     "days": 20,
+     "source": "d6df18f6dcd7e2c00e28e2d3c6d4d7fdec2208e819e7cc99ac67e6cf5323e02c",
+     "partition": "685806a3d3e247d4b18a3b67512d73d13f4f0702d321ed09f08b9034a1443a86",
+     "days": 21,
      "recovered": []
     }
    }
@@ -22413,8 +22418,8 @@
   "Karmeya": {
    "dir": "karmeya",
    "first": "2024-09-10",
-   "last": "2026-11-20",
-   "files": 797,
+   "last": "2026-11-21",
+   "files": 798,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -22592,9 +22597,9 @@
      ]
     },
     "2026-11": {
-     "source": "6069a1d8c7b9510f68008a67c8f942e3cf7492aec33163c8073d021941913687",
-     "partition": "634bc02f7a5ea6b9a2f79567b66fa0266953051d7cf78cd62f39c37f2a6a38bc",
-     "days": 20,
+     "source": "c851a2c57def6df1686ca00fd861333bbc43b11f653e942ce688013291b2cf0e",
+     "partition": "d0bc56cbdedb6f97e04a98e9c9e9e98f8871eace8dcccb75b7466d1c6fc0ba68",
+     "days": 21,
      "recovered": []
     }
    }
@@ -22927,8 +22932,8 @@
   "Lobera": {
    "dir": "lobera",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -23291,9 +23296,9 @@
      ]
     },
     "2026-11": {
-     "source": "8ec8841cea98921840bb90da7677db45cc66636740d8b2844a889cdfe5d4f85e",
-     "partition": "73a9d9d20c6a9f8b59ad75975ce54261243a451e3c2c3d1d431832aaa2e370b8",
-     "days": 20,
+     "source": "9a56e1ed8996007dbcecfa5e84605724b26591fe1f7a19ac392a9b088d894360",
+     "partition": "71c1e48352ce5b72e10bf5f6586d16ef5b68727af76e9374f57c31d4b6dfc956",
+     "days": 21,
      "recovered": []
     }
    }
@@ -23301,8 +23306,8 @@
   "Luminera": {
    "dir": "luminera",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -23665,9 +23670,9 @@
      ]
     },
     "2026-11": {
-     "source": "db6b63f8b75e06c9a5552626295664c91cc53158f36e82a1b7d79147cde89a7e",
-     "partition": "dd22a9c0665ee7b44f6279d32aa7b3971241695f28554cfcab176c39ed6516ee",
-     "days": 20,
+     "source": "7ed01708dff20109f66e8bbe912b45e3deb6f86a756e915d524d3b2a884b9435",
+     "partition": "d4622c63cf30c16b1583b32b8888264954c0a084c21f27073b4a35cf1ff5c642",
+     "days": 21,
      "recovered": []
     }
    }
@@ -23675,8 +23680,8 @@
   "Lutabra": {
    "dir": "lutabra",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -24039,9 +24044,9 @@
      ]
     },
     "2026-11": {
-     "source": "cce6eab4bfdd4776c8958edb788e4343beb3e0fa12c1a4b5686ed01e47ebc3e1",
-     "partition": "46829556f833814b22ac02b09df0cd0b206aecbd4001e9337881908bc33e04c5",
-     "days": 20,
+     "source": "c7310b96398bee404a5edd0674a50711c650de9f2aad47212771b149eb95fd25",
+     "partition": "3dfa112991bbb7724250bc864a97d67f32d9160bf0c45b1f911a1b453c59eb8b",
+     "days": 21,
      "recovered": []
     }
    }
@@ -24174,8 +24179,8 @@
   "Maligna": {
    "dir": "maligna",
    "first": "2026-05-21",
-   "last": "2026-11-20",
-   "files": 180,
+   "last": "2026-11-21",
+   "files": 181,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -24227,9 +24232,9 @@
      ]
     },
     "2026-11": {
-     "source": "315841f1587890e93b1eb8ac531d4d5a05a0e4aeeb6dd370136159a5c9bc915f",
-     "partition": "ac07853ffaf070b357a81e5de7d4302db0f8117d4912e6dbba41e48dd2050743",
-     "days": 20,
+     "source": "27b03cccfb7157a3bcaa0ebd1091160262649653a044c17aff67290a250ffaa7",
+     "partition": "145a521c934c72284f54907624c6b23e5b137f662ef3f549556ecb49cf9df254",
+     "days": 21,
      "recovered": []
     }
    }
@@ -24549,8 +24554,8 @@
   "Menera": {
    "dir": "menera",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -24913,9 +24918,9 @@
      ]
     },
     "2026-11": {
-     "source": "afa65f31f8c517b45fb4b7e1bb79e3c9380bf1762acf97152ee3970529078784",
-     "partition": "b9788bc0be48e44020bdaf0b84e6c899f4f5a9391318f123c1080ff83e341074",
-     "days": 20,
+     "source": "00c2b74954a168a65bb2f246fa714560a8cb8eb73b5f0c7c2b8b20e04a212abc",
+     "partition": "a2aee669a937f65da04d9cdffc569a7145dec872a2f86b7914565560716043a2",
+     "days": 21,
      "recovered": []
     }
    }
@@ -24923,8 +24928,8 @@
   "Monstera": {
    "dir": "monstera",
    "first": "2025-11-07",
-   "last": "2026-11-20",
-   "files": 374,
+   "last": "2026-11-21",
+   "files": 375,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -25018,9 +25023,9 @@
      ]
     },
     "2026-11": {
-     "source": "143418af99fbd206cab868bf09ebfe74c8eb6c3156a89536da33b968b74ed0a3",
-     "partition": "409e5b8f39cce9b956f892e222fd463916ab0fe434e382f4446d27d21c4bf29e",
-     "days": 20,
+     "source": "2e948b4ece82310fad1cffa0f147195497eddde76071798e4968fb2a61502181",
+     "partition": "9f1c3e833f347128a47ef77ffbde4f3a94b780e7773afbcfad90c2455d48cde5",
+     "days": 21,
      "recovered": []
     }
    }
@@ -25028,8 +25033,8 @@
   "Monza": {
    "dir": "monza",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -25392,9 +25397,9 @@
      ]
     },
     "2026-11": {
-     "source": "7db1ea2dd0c1a305e7ad879bd26186fedc87489a9189d152126d2f074d471215",
-     "partition": "a5e66d31a99e7f2260143dd170186b419c65bf41b3577caf2df23e5aa837c01b",
-     "days": 20,
+     "source": "0635c4671863f6d951a801a50c14ba2cd617c300dcc45a82687e3335b1f4794d",
+     "partition": "1931f6ebd6a7a5b30c7e4bbaefcf363707f885157fb0b0e9e3ca4a4e24fea6b0",
+     "days": 21,
      "recovered": []
     }
    }
@@ -25402,8 +25407,8 @@
   "Mortabra": {
    "dir": "mortabra",
    "first": "2026-10-27",
-   "last": "2026-11-20",
-   "files": 25,
+   "last": "2026-11-21",
+   "files": 26,
    "missing": [],
    "recovered": [],
    "partitions": {
@@ -25414,9 +25419,9 @@
      "recovered": []
     },
     "2026-11": {
-     "source": "082415e27f0b207b786652df5ff90273ac35bab2b5a94ad47b20fb3185c6d772",
-     "partition": "4fa4d22aa3f268408404aaa2945f9b78772d3465a04d57627c5b34987a504e04",
-     "days": 20,
+     "source": "ff14397acd5cf8155fc3a244dd5cd9e4493b643365b8465d9601733e65706603",
+     "partition": "18d34607b539f369d7e17955db4dee7f498ac92da4ee2eca4cb5b42799948fdb",
+     "days": 21,
      "recovered": []
     }
    }
@@ -25732,8 +25737,8 @@
   "Mystera": {
    "dir": "mystera",
    "first": "2025-08-28",
-   "last": "2026-11-20",
-   "files": 445,
+   "last": "2026-11-21",
+   "files": 446,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -25845,9 +25850,9 @@
      ]
     },
     "2026-11": {
-     "source": "7bede6716426795266c653e3a2d1e44d294f911e9996383a0bf85c3bf4b96177",
-     "partition": "b4d9d51f5b9d2c2b971800ed21aef27e93cec1726eab3d482fd0bcc3896199fd",
-     "days": 20,
+     "source": "efb9a5ec0699987833bd1d3c01a2d005aeb3217ab6c86c30f49f025da5babe0e",
+     "partition": "a0a479c975e13fa46ee152620a79eec925b5a841d393678967a8c0330858462c",
+     "days": 21,
      "recovered": []
     }
    }
@@ -26057,8 +26062,8 @@
   "Nebulera": {
    "dir": "nebulera",
    "first": "2026-10-29",
-   "last": "2026-11-20",
-   "files": 23,
+   "last": "2026-11-21",
+   "files": 24,
    "missing": [],
    "recovered": [],
    "partitions": {
@@ -26069,9 +26074,9 @@
      "recovered": []
     },
     "2026-11": {
-     "source": "c57507bbad0a3b53d19bafdb3bb7811479c6ec44f75c14f47b058268ad6048d4",
-     "partition": "2017332951c580c4272016299ebfddcffe2c6b4593ad0d69ae1e3611091d3ec3",
-     "days": 20,
+     "source": "2204c20b18c7ea58807bed98281c7eac1b7995c1692ead7d10d462f089658975",
+     "partition": "4e5128f90f60641a5da03bedae389006b008a11028055660f94aecacb4ee2435",
+     "days": 21,
      "recovered": []
     }
    }
@@ -26079,8 +26084,8 @@
   "Nefera": {
    "dir": "nefera",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -26443,9 +26448,9 @@
      ]
     },
     "2026-11": {
-     "source": "0e456303bbb8fca38352e77c861db267456ac5b09f975889eb99d24f463522b1",
-     "partition": "39a240cd00134f0ee9adf8dda4bef308a20dce5e8fe7884b148eec4dcd96a181",
-     "days": 20,
+     "source": "e57696a78d958b11385fe15d7ed470862cb70fecb709dc2c8d29dbfaadfc1f67",
+     "partition": "96317d67a509c12bf282517b40b4d7f84ce5b75b55af290afe1c19afcdf3636f",
+     "days": 21,
      "recovered": []
     }
    }
@@ -26453,8 +26458,8 @@
   "Nevia": {
    "dir": "nevia",
    "first": "2023-08-29",
-   "last": "2026-11-20",
-   "files": 1172,
+   "last": "2026-11-21",
+   "files": 1173,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -26728,9 +26733,9 @@
      ]
     },
     "2026-11": {
-     "source": "1f8f0c3f484adcf510c58781e8221e555eb247990b17db555d875492e22537a5",
-     "partition": "12ac6b546bb3448fb713df591bfe1608fd613f2cc7752284e759a6d2c6f78515",
-     "days": 20,
+     "source": "a77d2bebce47029bd9604f9197c2faed53a7542b548117b40bd0b3c10f699ea4",
+     "partition": "70b6c531e3869bdf36c6b72e82c9bfd614379f6ac202b3858f5f073d60bd97e3",
+     "days": 21,
      "recovered": []
     }
    }
@@ -26738,8 +26743,8 @@
   "Nociva": {
    "dir": "nociva",
    "first": "2026-10-27",
-   "last": "2026-11-20",
-   "files": 25,
+   "last": "2026-11-21",
+   "files": 26,
    "missing": [],
    "recovered": [],
    "partitions": {
@@ -26750,9 +26755,9 @@
      "recovered": []
     },
     "2026-11": {
-     "source": "91ac82d8e4fc582cfbaf7fb469ccd7d636ac5d42992436c1178190157e073811",
-     "partition": "c4b766ca539b1233d1fdef381e981fa56d5574dc6ae5d600c8d3c828139dbd5c",
-     "days": 20,
+     "source": "0ee77395a131651ec10008c3d5dc97f2ca1ffc9b7453eacb0c68bc08de766607",
+     "partition": "d0c9043d29aa84d23492c833a98002d2ea8f093a194c0cba4f02293022056bf2",
+     "days": 21,
      "recovered": []
     }
    }
@@ -27206,8 +27211,8 @@
   "Oceanis": {
    "dir": "oceanis",
    "first": "2024-04-11",
-   "last": "2026-11-20",
-   "files": 948,
+   "last": "2026-11-21",
+   "files": 949,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -27421,9 +27426,9 @@
      ]
     },
     "2026-11": {
-     "source": "441f2811b7def231db7b51a97d66e6e0c4d1865baee4d8eb1bfb83880118d439",
-     "partition": "3f3f3c91148f79a52af7813330d01038900f9ad8a312b13418332a26d814dfab",
-     "days": 20,
+     "source": "b08d22a87c95f66aee466e83f2509ea358f477732eace634d71e7c8100289d71",
+     "partition": "f01a818b9e3a6fb866388dae344b1a4ed3523d97e304c8ce8c477eebc3979948",
+     "days": 21,
      "recovered": []
     }
    }
@@ -27643,8 +27648,8 @@
   "Ombra": {
    "dir": "ombra",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -28007,9 +28012,9 @@
      ]
     },
     "2026-11": {
-     "source": "c1d5ef2d5ded23a16b2bf9758c46b74893e261ad5ff4d458f93af98fbe0163de",
-     "partition": "52457358f91bd172cb2f5b7f19e5ad887c596cda6f67ad23626281f1aec5154a",
-     "days": 20,
+     "source": "50a6f6a0b249924946a949ea738e7de7050579cfcdd1d99ff3b03092ba49b941",
+     "partition": "88370ce422d078243160eea31ed7ce6229ad81fef5a54321c4cc8bd34cb0936f",
+     "days": 21,
      "recovered": []
     }
    }
@@ -28123,8 +28128,8 @@
   "Opulera": {
    "dir": "opulera",
    "first": "2026-02-19",
-   "last": "2026-11-20",
-   "files": 271,
+   "last": "2026-11-21",
+   "files": 272,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -28194,9 +28199,9 @@
      ]
     },
     "2026-11": {
-     "source": "9938196ec9510872a7b692cca62c1cd05b5897404176ef9c841c7bb8bff12525",
-     "partition": "1d7fb7dd87405905dda7885bc0933d98336bb9b83012fe80517951b6188a1bdb",
-     "days": 20,
+     "source": "2b4bb769dc7fa790eea2f5c0111756d29c0f77e0f7165c8273b547815b203b5b",
+     "partition": "9d674d12bab4ef5d3e6aceae011be3e449f1a17a58423e8d99a977762f24c63d",
+     "days": 21,
      "recovered": []
     }
    }
@@ -28204,8 +28209,8 @@
   "Ourobra": {
    "dir": "ourobra",
    "first": "2024-09-10",
-   "last": "2026-11-20",
-   "files": 797,
+   "last": "2026-11-21",
+   "files": 798,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -28383,9 +28388,9 @@
      ]
     },
     "2026-11": {
-     "source": "7f6be843d59bb6c203aa3a5be17a950a73ac8c2655b6ba8eaf2ebe730c34bd49",
-     "partition": "cf316a5259921b8308d303805becabf9521d84a1b0736568f5a4cc3666b38fb4",
-     "days": 20,
+     "source": "a123bbfb13706c691386e8d967d1dfe679adb641d533ce75e31d945c6ce637bb",
+     "partition": "ce6e9faa38718595eb0f4cc6ae0c5f948ca7a8e707b4b7868a22ca6e007d17da",
+     "days": 21,
      "recovered": []
     }
    }
@@ -28595,8 +28600,8 @@
   "Pacera": {
    "dir": "pacera",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -28959,9 +28964,9 @@
      ]
     },
     "2026-11": {
-     "source": "f8a135d8c2ba4e94406d7e1f4767cdd7d6218417aea96724b25dfc8323b7bacb",
-     "partition": "4716cfee47cf0c5063184c5150c979d07fea432ebbfbcd6c2ddede5a55cd6d51",
-     "days": 20,
+     "source": "917199c4fd65751f1b1edf2785058c937ede90fed0e795fe9378ff572c44bfb1",
+     "partition": "450e8c712c655649c702b5d08fe1c93338027190049349e05a674e3a574337d4",
+     "days": 21,
      "recovered": []
     }
    }
@@ -28969,8 +28974,8 @@
   "Peloria": {
    "dir": "peloria",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -29333,9 +29338,9 @@
      ]
     },
     "2026-11": {
-     "source": "a86cfadb13cf8e05efd702e7849bfa773fe8a8239bfbda569fb9aa9d13bd9da1",
-     "partition": "d54e1d9704e3cd3374f74083753d79974a10495a9fc269a8ea16281999e3bee8",
-     "days": 20,
+     "source": "054f6bf654039504871015782d8368d683bc11c678cec43437d1f2bf3b93cd6d",
+     "partition": "58a71a781142b7d66b8211e8222f516cfc5a152e4f0b570a50cc59149bc54135",
+     "days": 21,
      "recovered": []
     }
    }
@@ -29343,8 +29348,8 @@
   "Penumbra": {
    "dir": "penumbra",
    "first": "2025-08-28",
-   "last": "2026-11-20",
-   "files": 445,
+   "last": "2026-11-21",
+   "files": 446,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -29456,9 +29461,9 @@
      ]
     },
     "2026-11": {
-     "source": "4e139f672a11b471ddd7b8bb03d8a98a724e69a8b6b227dcea53c75f39daa33c",
-     "partition": "54dc1e2c60ece18bd903dd45a7cf38f5ab69528f54687ed4ecd312f64d83e825",
-     "days": 20,
+     "source": "e464233885782d059a839804c711d10c7b2463ef0a5c474418b22d62b76ab05a",
+     "partition": "73ad3a3c5a9c527c87b1bd8d44878e98c6758e3308cbb60cbb86d6b3cd785fd2",
+     "days": 21,
      "recovered": []
     }
    }
@@ -29466,8 +29471,8 @@
   "Premia": {
    "dir": "premia",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -29830,9 +29835,9 @@
      ]
     },
     "2026-11": {
-     "source": "f16891b0d710e753b20b6248bff34dcb5dbe8ca7f1e51de9301ecc26ade9dffc",
-     "partition": "e9a5279b946a18896715486d3b35b7dd82977b89ad45807f22a243e2125ae4fb",
-     "days": 20,
+     "source": "97770cf10f1a072f3db91b9eafcf7e417c40a2ebf03188f72633d32141461e54",
+     "partition": "f85b265a90fb687ecd3e65fae260b98a599db0eb4526549dc270ad918cf016af",
+     "days": 21,
      "recovered": []
     }
    }
@@ -30066,8 +30071,8 @@
   "Quelibra": {
    "dir": "quelibra",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -30430,9 +30435,9 @@
      ]
     },
     "2026-11": {
-     "source": "c8cb15992d54452bc57907346832730654393313226eb88aa33b271ee2226d41",
-     "partition": "e156c91ce3f30ab21f19ef5540fb61925877d36a551fd88cc7d8995cab0348c8",
-     "days": 20,
+     "source": "5fc735ac58f8a5551b5f9ddbfceb4d9599c28a23e39d26d281c24462772f69b3",
+     "partition": "bad8e6edaca3cef96263294ba9b893256a8fc98af55df3cabfe1535038907b5d",
+     "days": 21,
      "recovered": []
     }
    }
@@ -30440,8 +30445,8 @@
   "Quidera": {
    "dir": "quidera",
    "first": "2024-09-10",
-   "last": "2026-11-20",
-   "files": 797,
+   "last": "2026-11-21",
+   "files": 798,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -30619,9 +30624,9 @@
      ]
     },
     "2026-11": {
-     "source": "7173d8aad2821b7849dacdbb5ca14f633abf2c2910035299ae404716098a0044",
-     "partition": "d6bbbcde6ad73b946d3fc8e4a059012f017169e350f2caaa0657d7c69a2793ca",
-     "days": 20,
+     "source": "6b77bef6a9ba5ffe98dd2caa6e41134e9999b095f1458b0ae82a68b8a6728b2d",
+     "partition": "805260508ba083acec0fc210fd3414da0e6cf8089ff4af9a51ea1806946970c1",
+     "days": 21,
      "recovered": []
     }
    }
@@ -30629,8 +30634,8 @@
   "Quintera": {
    "dir": "quintera",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -30993,9 +30998,9 @@
      ]
     },
     "2026-11": {
-     "source": "6f45761480b849bae70320c9bfdc29e9d5fb97b8ad26ec9ae8d48abe61dd5bb8",
-     "partition": "6fbd94b0d54b9c2a555532f415a96becc2721662688e5d2d4026dbeac93f6c27",
-     "days": 20,
+     "source": "ac18a133f964896923c1a2a978770aebe389bcd4a6e518bf878a7ed4255df7db",
+     "partition": "65a2a53dafd586dc933fc37b38ba8eda832fab45494c87fac9d12846248ccafb",
+     "days": 21,
      "recovered": []
     }
    }
@@ -31003,8 +31008,8 @@
   "Quirina": {
    "dir": "quirina",
    "first": "2026-10-29",
-   "last": "2026-11-20",
-   "files": 23,
+   "last": "2026-11-21",
+   "files": 24,
    "missing": [],
    "recovered": [],
    "partitions": {
@@ -31015,9 +31020,9 @@
      "recovered": []
     },
     "2026-11": {
-     "source": "d6cedbd39db3c11ab7788a54e66c6e807fe45d8d341c6515e1a11fcf4dff4287",
-     "partition": "23d48ea9b20d63ab4265a2a6e8538b60dad25bb541a05554adb1b804bd02ff1e",
-     "days": 20,
+     "source": "88e4ffa26e3d4bcb61d1f794babe36143b191030378eb5fd491a898e4e91b333",
+     "partition": "29b9f558c65aa611168587db950aa76b5e333a97e5dfe1073aff868497f1e1a2",
+     "days": 21,
      "recovered": []
     }
    }
@@ -31025,8 +31030,8 @@
   "Rasteibra": {
    "dir": "rasteibra",
    "first": "2023-08-29",
-   "last": "2026-11-20",
-   "files": 1172,
+   "last": "2026-11-21",
+   "files": 1173,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -31300,9 +31305,9 @@
      ]
     },
     "2026-11": {
-     "source": "9fda36d7aa8943b60fa2d06e7d2f1f84427d07087486af61771cebea4632ba8c",
-     "partition": "f853e25c2c982b8753f11a60d85bb6c7b40a11c011479a5dc1555d024819aeaf",
-     "days": 20,
+     "source": "880d5c02ff7037d90f560806a4bb7842afb3848b03001eddcb48f559bac5bcb5",
+     "partition": "60f8c058ce3a514d89ee1a7ca653bbef3c08ca0e5a40fb72c41edca5afad8b29",
+     "days": 21,
      "recovered": []
     }
    }
@@ -31310,8 +31315,8 @@
   "Refugia": {
    "dir": "refugia",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -31674,9 +31679,9 @@
      ]
     },
     "2026-11": {
-     "source": "81f11678d7158f75d14fb5833cd26a48e5a8a7a006ffa4948ad071c31fe07c24",
-     "partition": "a64fb3a342658b40de10d8293289c0744f1354a7471ee0efa2967de154520f32",
-     "days": 20,
+     "source": "1f43b4369cc9a6f5c6c38f764102fe3fd909eafa6c3b3447f501111b7aeb6cdb",
+     "partition": "f4d3eb98ac5b75c4bb33701164fa84391d967cec4796f822e96dbb91e558052c",
+     "days": 21,
      "recovered": []
     }
    }
@@ -31790,8 +31795,8 @@
   "Retalia": {
    "dir": "retalia",
    "first": "2023-08-29",
-   "last": "2026-11-20",
-   "files": 1172,
+   "last": "2026-11-21",
+   "files": 1173,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -32065,9 +32070,9 @@
      ]
     },
     "2026-11": {
-     "source": "ca1784daab4b1e4a74f9112668dee167d9eb640c3e15ce5158248e291c51ad62",
-     "partition": "321b76da7146587674e3767a58cc7cf1ea852f5e235e3eec954c4a01726431fb",
-     "days": 20,
+     "source": "3717ce94200142291e61425717df11e55a6595a1fe058e28f5a6b94c1978ad9c",
+     "partition": "ebcfe495c92be5dc02710291266391aa2cd790e82c7725b124be2e79c7bf7421",
+     "days": 21,
      "recovered": []
     }
    }
@@ -32378,8 +32383,8 @@
   "Secura": {
    "dir": "secura",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -32742,9 +32747,9 @@
      ]
     },
     "2026-11": {
-     "source": "86b0f81bf6924be10e9b3708f5304b2ad9338c764edc46ecc950602f87281ffc",
-     "partition": "79902a366de477f918449f5d7f234b08e2171f7113f9875bd26e6436e05d485a",
-     "days": 20,
+     "source": "81d098b4f88533bfbe63104cf5a88847685aac892f2a9d5531022e594b451b67",
+     "partition": "196236d39f041f3229db197710b73409aa5d61f9823e1942f61b220d86ab499c",
+     "days": 21,
      "recovered": []
     }
    }
@@ -32752,8 +32757,8 @@
   "Serdebra": {
    "dir": "serdebra",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -33116,9 +33121,9 @@
      ]
     },
     "2026-11": {
-     "source": "03e1836697335a2e21f5d88bb960ddee37f88b89ddef5a724391835b60ea7ef4",
-     "partition": "ab930d5e706d456a095e3b402da0e212c160952232f90ed792ace0ef04461333",
-     "days": 20,
+     "source": "2f47b14eacecc47144c2389c9165c4a48b8406cc779db001716548631b6ed3f7",
+     "partition": "ba82ae4f7b86779739338a250056111288dfcbaa38c9122dffd820702dee3b82",
+     "days": 21,
      "recovered": []
     }
    }
@@ -33126,8 +33131,8 @@
   "Sinistra": {
    "dir": "sinistra",
    "first": "2026-08-27",
-   "last": "2026-11-20",
-   "files": 82,
+   "last": "2026-11-21",
+   "files": 83,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -33161,9 +33166,9 @@
      ]
     },
     "2026-11": {
-     "source": "ee81097fbb385d7bab2a9993af8ef9c0bf528720d0d730407a1e17ff240c6aa2",
-     "partition": "38714822e19c27c82c131dc43acae20c1df5140b90c69e02431c1bae45d02424",
-     "days": 20,
+     "source": "4b0f27943da7e44a098f2aa8eba8152d3af9badd59790f1dc17e1ba6ea3ff596",
+     "partition": "f93bffc79c5f86297e11cead2f4655971451d471e2ef5069b2bdd4f65210fc91",
+     "days": 21,
      "recovered": []
     }
    }
@@ -33171,8 +33176,8 @@
   "Solidera": {
    "dir": "solidera",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -33535,9 +33540,9 @@
      ]
     },
     "2026-11": {
-     "source": "ba3a6f9f7b6652bb11a12003dfb65becdd2e8fb5cfd6547428de5e0c7f1c5420",
-     "partition": "f1785b8fa7ed64a145e93a3290a4eb0e935ec3f41921840f4a95f83cdfb33248",
-     "days": 20,
+     "source": "4034aebf893f24c8e14780dc3d3eef8ce2787ce2c98ce6d9493a546b7f411a17",
+     "partition": "ff7bfc38253e4b3c54b3ec87c85d6dbe6b559ea409e790b423506022958bc835",
+     "days": 21,
      "recovered": []
     }
    }
@@ -33759,8 +33764,8 @@
   "Stralis": {
    "dir": "stralis",
    "first": "2024-04-11",
-   "last": "2026-11-20",
-   "files": 948,
+   "last": "2026-11-21",
+   "files": 949,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -33974,9 +33979,9 @@
      ]
     },
     "2026-11": {
-     "source": "a1d626137882c8b92a958170f456419e11f454121c78ccd3b637e7222ad6baba",
-     "partition": "1c0bbeaa8b183953263b90f961b18c6a2d3198867ef2f2e046a5bb3550920d85",
-     "days": 20,
+     "source": "0e3b8a47cf692ef59b8393a96b2c844c6cb39eec84576680a7c66dff29f09fd6",
+     "partition": "b73a5ffe4aea13cc91f2029cf0a64b84c42f580949ab4361a5f69e5a02674682",
+     "days": 21,
      "recovered": []
     }
    }
@@ -34292,8 +34297,8 @@
   "Talera": {
    "dir": "talera",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -34656,9 +34661,9 @@
      ]
     },
     "2026-11": {
-     "source": "9018ce72e830eb20749c49a217ea618afd7399f7278eddb0525668a1fe603c83",
-     "partition": "eebdfad1a1b9b338ce3bec0b447b1f1df556771c782c0a81f8d7d1bb105b8690",
-     "days": 20,
+     "source": "85caae080efd819fe681c358ac41851f5b35dffbe1c794ea70b8deb3fce07a3f",
+     "partition": "75ed5fcfa46a1be473cf57a76ba081423d66c25e3a0ea534b672e9fb990f6a85",
+     "days": 21,
      "recovered": []
     }
    }
@@ -34885,8 +34890,8 @@
   "Tempestera": {
    "dir": "tempestera",
    "first": "2025-11-07",
-   "last": "2026-11-20",
-   "files": 374,
+   "last": "2026-11-21",
+   "files": 375,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -34980,9 +34985,9 @@
      ]
     },
     "2026-11": {
-     "source": "809a5e75ef0a65c86d1885d4081ff36c3894237b6cffc620230219139ba0a229",
-     "partition": "e01f0e48710e2d9562e0d1a6ca33fd74592999d32d4b5c98077d1ab694c127cb",
-     "days": 20,
+     "source": "54296e41ed666efa0b1f6cbcd19fc67c77b5b8a20b376ea63bd51881cb1e79fa",
+     "partition": "2f22e3e060812ea24f9565e2975d45e1866b833bd71cd4c21cf0f22ca338453b",
+     "days": 21,
      "recovered": []
     }
    }
@@ -34990,8 +34995,8 @@
   "Terribra": {
    "dir": "terribra",
    "first": "2025-11-07",
-   "last": "2026-11-20",
-   "files": 374,
+   "last": "2026-11-21",
+   "files": 375,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -35085,9 +35090,9 @@
      ]
     },
     "2026-11": {
-     "source": "b31d81997cfb95c2d576024965e006a8ef4eccec877217b961c32b82f8b1715f",
-     "partition": "1e7f97fcbfba3e360e21497c9f690c9bdaee1481b98977af8b3af60f000af160",
-     "days": 20,
+     "source": "1b2a5016f82191782d2842d66c374b6ca196600c1138675ee1589b8869d50b88",
+     "partition": "a5ba37226721a7da0414f23c320c1777af4ebb3988c9dfc05fd0a5c70d0fc8c3",
+     "days": 21,
      "recovered": []
     }
    }
@@ -35095,8 +35100,8 @@
   "Thyria": {
    "dir": "thyria",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -35459,9 +35464,9 @@
      ]
     },
     "2026-11": {
-     "source": "ad5c3b10352329159e0f872f82cee2ef77307f4cea3b6c033d4a5b9fa0b68c43",
-     "partition": "87db51db15e027d2dfb0473276a1ac2049d677f04a7758038a6ff955ce92fb1f",
-     "days": 20,
+     "source": "f516684d61096c8f299481236de19157430ae3d6d2110c046cf6a11935d6389f",
+     "partition": "71ebc18a1f032ee1f9d3f5acd876a669ad8efe2d874d9676bd7acc25ccfb3460",
+     "days": 21,
      "recovered": []
     }
    }
@@ -35469,8 +35474,8 @@
   "Tornabra": {
    "dir": "tornabra",
    "first": "2023-08-24",
-   "last": "2026-11-20",
-   "files": 1177,
+   "last": "2026-11-21",
+   "files": 1178,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -35744,9 +35749,9 @@
      ]
     },
     "2026-11": {
-     "source": "c3ed8c13dff7eea42587a653b9285868aecebe94b6aaba0c087686018387de14",
-     "partition": "8ff8f41aecbd6de3fd05e93d92b4f63d8ae17fb227763a7935dfc247d18163d2",
-     "days": 20,
+     "source": "2218dce0594a07b7b7f681f60c113284ae28c9dc16baa65f83b3fa45374ad192",
+     "partition": "abb7735583640990cd6ece157d968d8fc840fb5b8dc5f2d900a729711248d6e9",
+     "days": 21,
      "recovered": []
     }
    }
@@ -36009,8 +36014,8 @@
   "Ulmyra": {
    "dir": "ulmyra",
    "first": "2026-10-27",
-   "last": "2026-11-20",
-   "files": 25,
+   "last": "2026-11-21",
+   "files": 26,
    "missing": [],
    "recovered": [],
    "partitions": {
@@ -36021,9 +36026,9 @@
      "recovered": []
     },
     "2026-11": {
-     "source": "994fcd8646d9c995fe5ec52b41e772c2d7f2d3d7e59161d8b813d3d3ce85527f",
-     "partition": "f9fd7e3d9fd781911ac643103960af8b8d935f84ad5136a88a908036bea57c9f",
-     "days": 20,
+     "source": "e414be7173aa0530e260bc9bb1300037bf7bdfafa7d23d0a7db0794929d92528",
+     "partition": "d7702bce21b32fcc7ed35c56908254100b4fe3568c0182080324abac4d2a0204",
+     "days": 21,
      "recovered": []
     }
    }
@@ -36031,8 +36036,8 @@
   "Unebra": {
    "dir": "unebra",
    "first": "2024-05-16",
-   "last": "2026-11-20",
-   "files": 913,
+   "last": "2026-11-21",
+   "files": 914,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -36240,9 +36245,9 @@
      ]
     },
     "2026-11": {
-     "source": "eb10f7388bdc88b729dc2fb5297e36b25365884087accb8205b2e2538a433e0c",
-     "partition": "e9e3ce1446bba6b9123ea0159e56f418de545073d566f5975f7909f7d1d14df9",
-     "days": 20,
+     "source": "c2500ef16824ea24f453aac71d1fa287c65fad3b4962b985d281150f27f34ff2",
+     "partition": "a6af22d2425097c14a53e8adfd1aedf49a1ac526167634b3bef177e7585aea66",
+     "days": 21,
      "recovered": []
     }
    }
@@ -36250,8 +36255,8 @@
   "Ustebra": {
    "dir": "ustebra",
    "first": "2023-08-29",
-   "last": "2026-11-20",
-   "files": 1172,
+   "last": "2026-11-21",
+   "files": 1173,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -36525,9 +36530,9 @@
      ]
     },
     "2026-11": {
-     "source": "a4ff3279be6adbbd483a1cfda3c2bbcde87c861e7080f72ca72940cb8c6ddddd",
-     "partition": "8458b377cbea87f4e4913a7b32722ae5c578ff6745121bc6c3ca796ec2ee7f87",
-     "days": 20,
+     "source": "75fda31c14e95e287ee54c2d084921fc16ff1d1b80e78d7fbfd82e0a98d3a56a",
+     "partition": "ccffe8f1c404fcefd25af22eeed73f48d82c0c69b0eed88a5ce7038cca24b42a",
+     "days": 21,
      "recovered": []
     }
    }
@@ -36868,8 +36873,8 @@
   "Venebra": {
    "dir": "venebra",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -37232,9 +37237,9 @@
      ]
     },
     "2026-11": {
-     "source": "7918bdba7e54552beac608dae2563372b632e8565005e2040fb71a80ae987898",
-     "partition": "f69f5027328b828ed0fe79d06e213f88d0916b0e0bfc624dc9ab1e9b5f7bc68b",
-     "days": 20,
+     "source": "3e8604a2769006f14ad99f3730f3aeaa967788d3bbb664f8ee7ef6fe8ad41c71",
+     "partition": "b271aa42c41b30e472b2a6a4f7ae5449b3c1f9822988b6afbf3e6f836a950fb0",
+     "days": 21,
      "recovered": []
     }
    }
@@ -37348,8 +37353,8 @@
   "Victoris": {
    "dir": "victoris",
    "first": "2024-04-11",
-   "last": "2026-11-20",
-   "files": 948,
+   "last": "2026-11-21",
+   "files": 949,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -37563,9 +37568,9 @@
      ]
     },
     "2026-11": {
-     "source": "e256e3f777aea168228549212a84348681c0599e6532499b5c8416f55b45a370",
-     "partition": "b5ef9dbeb65962736e92d4e1a2821511d5352890a43a47cc8a8bf963f0a9eb09",
-     "days": 20,
+     "source": "2cb1ff0eb7d34c82edff9413b6ad085814726e109af6d82bc3d7c09cbcc71271",
+     "partition": "f2b4f9b63a2cea6d632597476ba3264ee48b6b00c537583f98a4529c75c98805",
+     "days": 21,
      "recovered": []
     }
    }
@@ -37929,8 +37934,8 @@
   "Vunira": {
    "dir": "vunira",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -38293,9 +38298,9 @@
      ]
     },
     "2026-11": {
-     "source": "de320cb228bef9cc2288232a91b7780d47a873ccac3cb5aedf6f1ca1cb310b43",
-     "partition": "c20db00a417207c72f5ffb6625bad264379749240ddcaf51599214c7d2ec50e4",
-     "days": 20,
+     "source": "8e00e281851991b61dea161357b886f874d84a44183db8a53777b31a703aea0a",
+     "partition": "b77882b1d0424a4d870ce3eba13a68c80a5c95dae636fe521b33b64f8d57cc60",
+     "days": 21,
      "recovered": []
     }
    }
@@ -38488,8 +38493,8 @@
   "Westera": {
    "dir": "westera",
    "first": "2026-10-27",
-   "last": "2026-11-20",
-   "files": 25,
+   "last": "2026-11-21",
+   "files": 26,
    "missing": [],
    "recovered": [],
    "partitions": {
@@ -38500,9 +38505,9 @@
      "recovered": []
     },
     "2026-11": {
-     "source": "65842a2d0dddf63dbcdb8e12576c71fe19f45adac4f0ee86495c9c698a5713e3",
-     "partition": "196a55ebae853e866385f7af798a7d192ce07b983cf38a89f25d94eccb4aa9cf",
-     "days": 20,
+     "source": "c59dbd2ffa1deb8ce0a4edd6754915a51a8970dfe24ddc3210dadd817eafd669",
+     "partition": "e8a456d23843c4e83e05593685895aea8a072d07fb1a435ab62a6903403caa99",
+     "days": 21,
      "recovered": []
     }
    }
@@ -38510,8 +38515,8 @@
   "Wickera": {
    "dir": "wickera",
    "first": "2026-08-27",
-   "last": "2026-11-20",
-   "files": 82,
+   "last": "2026-11-21",
+   "files": 83,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -38545,9 +38550,9 @@
      ]
     },
     "2026-11": {
-     "source": "421dd9035b2c76f8f363ba9c752a2c16fd6ba3ca4a7cb6ad5d196d72f3b381f4",
-     "partition": "6d7c8614455e10f476bb1992f9606de54f11c5697de0ae5ba4acc5557084cb07",
-     "days": 20,
+     "source": "d1ffb9a4b7cbfdab61a541a29849ed5f56a5498ab386d8a926417df66fd5b232",
+     "partition": "0cb5c46ff979938cbd29b90f736ffe8f7a02f733bcb5b8eb1d9f92f0a28dba92",
+     "days": 21,
      "recovered": []
     }
    }
@@ -38752,8 +38757,8 @@
   "Wintera": {
    "dir": "wintera",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -39116,9 +39121,9 @@
      ]
     },
     "2026-11": {
-     "source": "47e0deeb2e56990a868c3e31e61b06401a30cf390a19202070ce979a348fcdf2",
-     "partition": "2d8285fc787dc6ce4a2f280b7ab4a523a3830db19676af584f4879a722e18f8a",
-     "days": 20,
+     "source": "8be3f63a6b047b2b4302efab1285ed470f276a23ab62a896d9debca70308b423",
+     "partition": "cfd5a6f8291dc0b338b744e7bd6de8a3b7a0f737c95b90da42eaa49d27eb209f",
+     "days": 21,
      "recovered": []
     }
    }
@@ -39481,8 +39486,8 @@
   "Xyla": {
    "dir": "xyla",
    "first": "2024-09-10",
-   "last": "2026-11-20",
-   "files": 797,
+   "last": "2026-11-21",
+   "files": 798,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -39660,9 +39665,9 @@
      ]
     },
     "2026-11": {
-     "source": "169ab4964c0911d280f4bf71bb069432a4e0269a43d83741f2e6cfe3134814c9",
-     "partition": "4bb4ae17abf3a20e585698025110bdb423e21d4f5988aee6b6469e5db8a8f52c",
-     "days": 20,
+     "source": "87984e63bccfaf74546abec473d8dac2bfb84a6d2c8550a19398b13c2f3240d7",
+     "partition": "823ed51b9c8ab51636086737eb6727e045baeed3326f0ea71a250ca266a523c4",
+     "days": 21,
      "recovered": []
     }
    }
@@ -39890,8 +39895,8 @@
   "Yonabra": {
    "dir": "yonabra",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -40254,9 +40259,9 @@
      ]
     },
     "2026-11": {
-     "source": "d4c8b0da0f834bbc7e1d86c1b08a6085473a5ab615900521233b0118ee5b05ba",
-     "partition": "6db82de56a1bff5565460712d3010da910de0756986c46a2dad50587ecd904e0",
-     "days": 20,
+     "source": "a804e9b3da74b3564db1a73bf80e8123255b5fdb926951aec408f3b2820f5a35",
+     "partition": "cd559160eff0fb136c1765604a8207ed0fb8fe2f0a2d0963c3d65b8dd71e77f8",
+     "days": 21,
      "recovered": []
     }
    }
@@ -40264,8 +40269,8 @@
   "Yovera": {
    "dir": "yovera",
    "first": "2023-08-29",
-   "last": "2026-11-20",
-   "files": 1172,
+   "last": "2026-11-21",
+   "files": 1173,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -40539,9 +40544,9 @@
      ]
     },
     "2026-11": {
-     "source": "bfad92a172c99e6bb42ee874bb8cd3d77d3803e83a8ccc4c4745ea098fb20196",
-     "partition": "8a385e71342cef4e99a3ac71944590b6974779a6d3e735b9c6dde965a2352297",
-     "days": 20,
+     "source": "b0633c411a7fdb72ed69ce5476cf4e0c2fba4b4019145635a7203431f0c316fa",
+     "partition": "257ff793e869c1f5c60c4d2d0768cd4953991e3b74547fc4a5b7d0156d5f2566",
+     "days": 21,
      "recovered": []
     }
    }
@@ -41025,8 +41030,8 @@
   "Zuna": {
    "dir": "zuna",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -41389,9 +41394,9 @@
      ]
     },
     "2026-11": {
-     "source": "2b3023ffa3c9a46ab5b837b2e1ba58d91ca59e6d157831ef29755b58e8f35fc2",
-     "partition": "c637feb25389a9ee1b5c4942b6a2b0b00190cec2006ef5e2e3cc318fa7dc0ce9",
-     "days": 20,
+     "source": "ae240147a22b43fbcfb52afc513c6810779119956bd9ece612d13fa17cdda5a0",
+     "partition": "f6d751d2d3d293d13b3b3a30edd7b68d288c7d6ececa791ec3443313c9eb2b4c",
+     "days": 21,
      "recovered": []
     }
    }
@@ -41399,8 +41404,8 @@
   "Zunera": {
    "dir": "zunera",
    "first": "2022-08-23",
-   "last": "2026-11-20",
-   "files": 1540,
+   "last": "2026-11-21",
+   "files": 1541,
    "missing": [
     "2026-10-23",
     "2026-10-24",
@@ -41763,9 +41768,9 @@
      ]
     },
     "2026-11": {
-     "source": "3a2e24e146117367aaf8ad4832eb15034cb719419821239b6963c522297d702d",
-     "partition": "f87f1422bbbf1679ef9e0f67d62e8c34445238118c6dc717fbb519c645322ce6",
-     "days": 20,
+     "source": "d2579553cc5d4e0dfa275df524f64ac93dc3e914c3ab8d9b3dea7dc7fcb21b5b",
+     "partition": "d16481e56becfd8732918fe0c6316bb22389193db6587a711f5c8147da3af79a",
+     "days": 21,
      "recovered": []
     }
    }
